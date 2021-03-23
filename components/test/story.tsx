@@ -1,8 +1,9 @@
-import React from 'react';
 import { Story } from '@storybook/react';
+
+import { Test } from '.';
 
 export default {
   title: 'Test',
 };
 
-export const Test: Story = () => <h1>Test</h1>;
+export const TestStory: Story = () => <Test />;
