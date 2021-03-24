@@ -1,0 +1,14 @@
+.git
+.gitignore
+.github
+.DS_Store
+.eslintignore
+.prettierignore
+.prettierrc.json
+.eslintrc.json
+.keys
+README.md
+.env.example
+node_modules
+tmp
+.next
