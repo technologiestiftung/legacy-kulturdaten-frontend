@@ -1,5 +1,8 @@
 # Kulturdaten.Berlin Frontend
 
+![Beta](https://github.com/technologiestiftung/kulturdaten-frontend/workflows/Deploy%3A%20Beta/badge.svg)
+![Live](https://github.com/technologiestiftung/kulturdaten-frontend/workflows/Deploy%3A%20Live/badge.svg)
+
 The frontend for the Kulturdaten.Berlin API.
 
 ## Developing
