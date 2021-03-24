@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "test": "jest",
     "lint": "eslint .",
+    "test": "jest",
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
