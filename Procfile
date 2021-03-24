@@ -1,0 +1,1 @@
+web: npx next start -p 5000
