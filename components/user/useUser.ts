@@ -2,7 +2,15 @@ import { useContext, useEffect } from 'react';
 import useSWR from 'swr';
 import getConfig from 'next/config';
 
-import { call, AuthValidate, authValidateRequest, AuthInfo, authInfoRequest } from '../../lib/api';
+import {
+  call,
+  AuthValidate,
+  authValidateRequest,
+  AuthInfo,
+  authInfoRequest,
+  AuthLogout,
+  authLogoutRequest,
+} from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie } from '../../lib/cookies';
@@ -55,9 +63,16 @@ export const useUser = (): { user: User; logoutUser: () => void } => {
 
   return {
     user,
-    logoutUser: () => {
+    logoutUser: async () => {
       deleteCookie({ name: 'AUTH_TOKEN', path: '/' } as Cookie);
       logoutUser();
+
+      try {
+        await call<AuthLogout>(authLogoutRequest(value));
+      } catch (e) {
+        console.error(e);
+      }
+
       router.push('/');
     },
   };

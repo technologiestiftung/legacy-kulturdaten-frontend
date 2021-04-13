@@ -100,6 +100,36 @@ export const authLoginRequest = (body: AuthLogin['request']['body']): AuthLogin[
 });
 
 /**
+ * /auth/logout
+ */
+
+export interface AuthLogout extends ApiCall {
+  request: {
+    route: '/auth/logout';
+    method: 'POST';
+    headers: {
+      Authorization: string;
+    };
+    body: null;
+  };
+  response: {
+    status: number;
+    message: string;
+  };
+}
+
+export const authLogoutRequest = (
+  token: AuthLogout['request']['headers']['Authorization']
+): AuthLogout['request'] => ({
+  route: '/auth/logout',
+  method: 'POST',
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+  body: null,
+});
+
+/**
  * /auth/validate
  */
 
