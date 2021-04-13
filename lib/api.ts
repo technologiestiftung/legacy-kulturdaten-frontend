@@ -4,6 +4,13 @@ const {
   publicRuntimeConfig: { api },
 } = getConfig();
 
+type StructuredData =
+  | string
+  | number
+  | boolean
+  | Array<StructuredData>
+  | { [key: string]: StructuredData };
+
 interface ApiCall {
   request: {
     route: string;
@@ -12,11 +19,9 @@ interface ApiCall {
       'Content-Type'?: 'application/json' | 'multipart/form-data';
       'Authorization'?: string;
     };
-    body: {
-      [key: string]: any;
-    };
+    body: { [key: string]: StructuredData };
   };
-  response: { [key: string]: any };
+  response: { [key: string]: StructuredData };
 }
 
 /**

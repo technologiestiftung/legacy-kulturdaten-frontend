@@ -7,9 +7,7 @@ import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie } from '../../lib/cookies';
 
-export type User = {
-  id: string;
-};
+export type User = AuthInfo['response']['user'];
 
 const {
   publicRuntimeConfig: { api },
@@ -34,8 +32,9 @@ export const useUser = (): { user: User; logoutUser: () => void } => {
 
   useEffect(() => {
     if (valid === true) {
-      console.log('setUser');
-      setUser(((userData as unknown) as any)?.user as User);
+      if (userData?.user) {
+        setUser(userData.user);
+      }
       authenticateUser();
     } else if (valid === false || userDataError || validationError) {
       if (router.pathname !== '/auth/login') {

@@ -10,9 +10,7 @@ type UserContext = {
 };
 
 export const UserContext = React.createContext<UserContext>({
-  user: {
-    id: 'test',
-  },
+  user: null,
   setUser: () => {
     //
   },
