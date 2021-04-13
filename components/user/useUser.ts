@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 import useSWR from 'swr';
 import getConfig from 'next/config';
 
-import { getCurrentUserInfo, validateUser } from '../../lib/api';
+import { call, AuthValidate, authValidateRequest, AuthInfo, authInfoRequest } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie } from '../../lib/cookies';
@@ -21,13 +21,15 @@ export const useUser = (): { user: User; logoutUser: () => void } => {
   const { user, setUser, logoutUser, isAuthenticated, authenticateUser } = useContext(UserContext);
   const router = useRouter();
 
-  const { data: valid, error: validationError } = useSWR(
-    new URL('auth/validate', api).toString(),
-    () => validateUser(value)
+  const { data, error: validationError } = useSWR(new URL('auth/validate', api).toString(), () =>
+    call<AuthValidate>(authValidateRequest(value))
   );
+
+  const valid = data?.valid;
+
   const { data: userData, error: userDataError } = useSWR(
     new URL('auth/info', api).toString(),
-    () => getCurrentUserInfo(value)
+    () => call<AuthInfo>(authInfoRequest(value))
   );
 
   useEffect(() => {
