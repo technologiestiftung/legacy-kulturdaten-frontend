@@ -5,17 +5,10 @@ import getConfig from 'next/config';
 import { getCurrentUserInfo, validateUser } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/dist/client/router';
+import { getCookie } from '../../lib/cookies';
 
 export type User = {
   id: string;
-};
-
-export type Cookie = {
-  name: string;
-  value: string;
-  path: string;
-  maxAgeInS?: number;
-  domain?: string;
 };
 
 const {
@@ -23,20 +16,8 @@ const {
 } = getConfig();
 
 export const useUser = (): User => {
-  const cookie =
-    typeof document !== 'undefined'
-      ? document.cookie
-          .split('; ')
-          .filter((cookie: string) => cookie.split('=')[0] === 'AUTH_TOKEN')
-          .reduce<Pick<Cookie, 'name' | 'value'>>(
-            (map, obj) => {
-              return { name: obj.split('=')[0], value: obj.split('=')[1] };
-            },
-            { name: undefined, value: undefined }
-          )
-      : undefined;
-
-  const value = cookie?.value;
+  const authCookie = getCookie('AUTH_TOKEN');
+  const value = authCookie?.value;
   const { user, setUser, isAuthenticated, authenticateUser } = useContext(UserContext);
   const router = useRouter();
 

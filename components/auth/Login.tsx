@@ -1,12 +1,13 @@
 import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 
 import { login } from '../../lib/api';
+import { setCookie } from '../../lib/cookies';
 import { UserContext } from '../user/UserContext';
 
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const { user, setUser, isAuthenticated, authenticateUser } = useContext(UserContext);
+  const { isAuthenticated, authenticateUser } = useContext(UserContext);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -15,11 +16,9 @@ export const LoginForm: React.FC = () => {
     const resp = await login(email, password);
 
     if (resp.status === 200) {
-      // authenticateUser(true);
-
       const token = resp.token.token;
 
-      document.cookie = `AUTH_TOKEN=${token}; path=/; max-age=1209600; samesite=strict`;
+      setCookie({ name: 'AUTH_TOKEN', value: token, path: '/', maxAgeInS: 1209600 });
       authenticateUser();
     }
   };
