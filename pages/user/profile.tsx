@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
+import Link from 'next/link';
 
 import { UserContextProvider } from '../../components/user/UserContext';
 import { Profile } from '../../components/user/Profile';
@@ -10,8 +11,16 @@ const ProfilePage: NextPage = () => {
   useEffect(() => {
     setLoaded(true);
   }, [setLoaded]);
-
-  return <UserContextProvider>{loaded ? <Profile /> : <div>...loading</div>}</UserContextProvider>;
+  return (
+    <>
+      <div>
+        <Link href="/">
+          <a>Home page</a>
+        </Link>
+      </div>
+      <UserContextProvider>{loaded ? <Profile /> : <div>...loading</div>}</UserContextProvider>
+    </>
+  );
 };
 
 export default ProfilePage;

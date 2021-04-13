@@ -1,13 +1,23 @@
-import { ChangeEvent, FormEvent, useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 
 import { login } from '../../lib/api';
 import { setCookie } from '../../lib/cookies';
 import { UserContext } from '../user/UserContext';
+import { useUser } from '../user/useUser';
 
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const { isAuthenticated, authenticateUser } = useContext(UserContext);
+  const router = useRouter();
+  useUser();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace('/user/profile');
+    }
+  }, [isAuthenticated, router]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -53,5 +63,5 @@ export const LoginForm: React.FC = () => {
     </form>
   );
 
-  return <div>{isAuthenticated ? <div>logged in</div> : form}</div>;
+  return <div>{form}</div>;
 };

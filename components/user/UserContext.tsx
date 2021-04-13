@@ -6,6 +6,7 @@ type UserContext = {
   setUser: (user: User) => void;
   isAuthenticated: boolean;
   authenticateUser: () => void;
+  logoutUser: () => void;
 };
 
 export const UserContext = React.createContext<UserContext>({
@@ -19,6 +20,9 @@ export const UserContext = React.createContext<UserContext>({
   authenticateUser: () => {
     //
   },
+  logoutUser: () => {
+    //
+  },
 });
 
 type UserContextProviderProps = {
@@ -28,9 +32,7 @@ type UserContextProviderProps = {
 export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   children,
 }: UserContextProviderProps) => {
-  const [stateUser, setStateUser] = useState<User>({
-    id: null,
-  });
+  const [stateUser, setStateUser] = useState<User>();
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(false);
 
   return (
@@ -41,6 +43,11 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
         isAuthenticated: userIsAuthenticated,
         authenticateUser: () => {
           setUserIsAuthenticated(true);
+        },
+        logoutUser: () => {
+          console.log('hey');
+          setStateUser(undefined);
+          setUserIsAuthenticated(false);
         },
       }}
     >
