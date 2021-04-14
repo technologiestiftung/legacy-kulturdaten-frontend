@@ -12,17 +12,18 @@ const {
   publicRuntimeConfig: { authTokenCookieName },
 } = getConfig();
 
-const authCookie = (value: string): Cookie => ({
+const authCookie = (value: string, remember: boolean): Cookie => ({
   'name': authTokenCookieName,
   'value': value,
   'path': routes.index,
-  'max-age': 1209600,
+  'max-age': remember ? 1209600 : undefined,
 });
 
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<Error>();
+  const [remember, setRemember] = useState<boolean>(false);
   const { isAuthenticated, authenticateUser } = useContext(UserContext);
   const router = useRouter();
   useUser();
@@ -43,7 +44,7 @@ export const LoginForm: React.FC = () => {
       if (resp.status === 200) {
         const token = resp.token.token;
 
-        setCookie(authCookie(token));
+        setCookie(authCookie(token, remember));
         authenticateUser();
       }
     } catch (e) {
@@ -75,6 +76,15 @@ export const LoginForm: React.FC = () => {
             id="login-password"
             required
           />
+        </div>
+        <div>
+          <input
+            id="login-remember"
+            type="checkbox"
+            checked={remember}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setRemember(e.target.checked)}
+          />
+          <label htmlFor="login-remember">keep me logged in</label>
         </div>
         <div>
           <input type="submit" value="login" />
