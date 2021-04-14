@@ -30,7 +30,7 @@ export const LoginForm: React.FC = () => {
       if (resp.status === 200) {
         const token = resp.token.token;
 
-        setCookie({ name: 'AUTH_TOKEN', value: token, path: '/', maxAgeInS: 1209600 });
+        setCookie({ 'name': 'AUTH_TOKEN', 'value': token, 'path': '/', 'max-age': 1209600 });
         authenticateUser();
       }
     } catch (e) {

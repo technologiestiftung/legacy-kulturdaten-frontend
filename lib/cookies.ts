@@ -1,9 +1,9 @@
 export type Cookie = {
-  name: string;
-  value: string;
-  path?: string;
-  domain?: string;
-  maxAgeInS?: number;
+  'name': string;
+  'value': string;
+  'path'?: string;
+  'domain'?: string;
+  'max-age'?: number;
 };
 
 export const getCookie = (name: string): Cookie => {
@@ -23,8 +23,8 @@ export const getCookie = (name: string): Cookie => {
   return cookie;
 };
 
-export const setCookie = ({ name, value, path, domain, maxAgeInS }: Cookie): void => {
-  document.cookie = `${name}=${value};${maxAgeInS ? `max-age=${maxAgeInS};` : ''}${
+export const setCookie = ({ name, value, path, domain, 'max-age': maxAge }: Cookie): void => {
+  document.cookie = `${name}=${value};${maxAge ? `max-age=${maxAge};` : ''}${
     domain ? `domain=${domain};` : ''
   }${path ? `path=${path};` : ''}samesite=strict`;
 };
