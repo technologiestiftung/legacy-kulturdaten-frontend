@@ -7,7 +7,7 @@ export enum Routes {
 
 export const routes: { [key in Routes]: string } = {
   index: '/',
-  userProfile: '/user/profile/',
-  login: '/auth/login/',
-  register: '/auth/register/',
+  userProfile: '/user/profile',
+  login: '/auth/login',
+  register: '/auth/register',
 };
