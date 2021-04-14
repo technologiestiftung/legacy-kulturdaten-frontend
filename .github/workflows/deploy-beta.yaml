@@ -1,9 +1,6 @@
 ---
 name: 'Deploy: Beta'
 
-env:
-  API: https://beta.api.kulturdaten.berlin
-
 on:
   push:
     branches:

@@ -1,9 +1,6 @@
 ---
 name: 'Test'
 
-env:
-  API: https://beta.api.kulturdaten.berlin
-
 on:
   push:
     paths:

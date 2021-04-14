@@ -1,7 +1,7 @@
 module.exports = {
   publicRuntimeConfig: {
     defaultLocale: 'de-DE',
-    api: process.env.API,
+    api: 'https://beta.api.kulturdaten.berlin',
     authTokenCookieName: 'AUTH_TOKEN',
   },
   trailingSlash: true,
