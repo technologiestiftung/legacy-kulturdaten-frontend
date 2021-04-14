@@ -43,7 +43,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
           setUserIsAuthenticated(true);
         },
         logoutUser: () => {
-          console.log('hey');
           setStateUser(undefined);
           setUserIsAuthenticated(false);
         },

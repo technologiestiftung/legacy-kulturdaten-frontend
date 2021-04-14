@@ -3,11 +3,12 @@ import Link from 'next/link';
 
 import { UserContextProvider } from '../../components/user/UserContext';
 import { LoginForm } from '../../components/auth/Login';
+import { routes } from '../../lib/routes';
 
 const LoginPage: NextPage = () => (
   <>
     <div>
-      <Link href="/">
+      <Link href={routes.index}>
         <a>Home page</a>
       </Link>
     </div>

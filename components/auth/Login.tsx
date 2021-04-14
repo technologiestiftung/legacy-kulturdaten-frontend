@@ -1,10 +1,23 @@
 import { useRouter } from 'next/router';
 import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import getConfig from 'next/config';
 
 import { call, AuthLogin, authLoginRequest } from '../../lib/api';
-import { setCookie } from '../../lib/cookies';
+import { Cookie, setCookie } from '../../lib/cookies';
+import { routes } from '../../lib/routes';
 import { UserContext } from '../user/UserContext';
 import { useUser } from '../user/useUser';
+
+const {
+  publicRuntimeConfig: { authTokenCookieName },
+} = getConfig();
+
+const authCookie = (value: string): Cookie => ({
+  'name': authTokenCookieName,
+  'value': value,
+  'path': routes.index,
+  'max-age': 1209600,
+});
 
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -16,7 +29,7 @@ export const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace('/user/profile');
+      router.replace(routes.userProfile);
     }
   }, [isAuthenticated, router]);
 
@@ -30,7 +43,7 @@ export const LoginForm: React.FC = () => {
       if (resp.status === 200) {
         const token = resp.token.token;
 
-        setCookie({ 'name': 'AUTH_TOKEN', 'value': token, 'path': '/', 'max-age': 1209600 });
+        setCookie(authCookie(token));
         authenticateUser();
       }
     } catch (e) {

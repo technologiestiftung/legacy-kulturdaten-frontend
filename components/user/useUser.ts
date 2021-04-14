@@ -10,32 +10,34 @@ import {
   authInfoRequest,
   AuthLogout,
   authLogoutRequest,
+  getApiUrlString,
+  ApiRoutes,
 } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie } from '../../lib/cookies';
+import { routes } from '../../lib/routes';
+
+const {
+  publicRuntimeConfig: { authTokenCookieName },
+} = getConfig();
 
 export type User = AuthInfo['response']['user'];
 
-const {
-  publicRuntimeConfig: { api },
-} = getConfig();
-
 export const useUser = (): { user: User; logoutUser: () => void } => {
-  const authCookie = getCookie('AUTH_TOKEN');
+  const authCookie = getCookie(authTokenCookieName);
   const value = authCookie?.value;
   const { user, setUser, logoutUser, isAuthenticated, authenticateUser } = useContext(UserContext);
   const router = useRouter();
 
-  const { data, error: validationError } = useSWR(new URL('auth/validate', api).toString(), () =>
+  const { data, error: validationError } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
     call<AuthValidate>(authValidateRequest(value))
   );
 
   const valid = data?.valid;
 
-  const { data: userData, error: userDataError } = useSWR(
-    new URL('auth/info', api).toString(),
-    () => call<AuthInfo>(authInfoRequest(value))
+  const { data: userData, error: userDataError } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
+    call<AuthInfo>(authInfoRequest(value))
   );
 
   useEffect(() => {
@@ -45,8 +47,8 @@ export const useUser = (): { user: User; logoutUser: () => void } => {
       }
       authenticateUser();
     } else if (valid === false || userDataError || validationError) {
-      if (router.pathname !== '/auth/login') {
-        router.replace('/auth/login');
+      if (router.pathname !== routes.login) {
+        router.replace(routes.login);
       }
     }
   }, [
@@ -64,7 +66,7 @@ export const useUser = (): { user: User; logoutUser: () => void } => {
   return {
     user,
     logoutUser: async () => {
-      deleteCookie({ name: 'AUTH_TOKEN', path: '/' } as Cookie);
+      deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
       logoutUser();
 
       try {
@@ -73,7 +75,7 @@ export const useUser = (): { user: User; logoutUser: () => void } => {
         console.error(e);
       }
 
-      router.push('/');
+      router.push(routes.index);
     },
   };
 };

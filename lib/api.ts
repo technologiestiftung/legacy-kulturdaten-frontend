@@ -24,13 +24,32 @@ interface ApiCall {
   response: { [key: string]: StructuredData };
 }
 
+export enum ApiRoutes {
+  authRegister = 'authRegister',
+  authLogin = 'authLogin',
+  authLogout = 'authLogout',
+  authValidate = 'authValidate',
+  authInfo = 'authInfo',
+}
+
+export const apiRoutes: { [key in ApiRoutes]: string } = {
+  authRegister: '/auth/register',
+  authLogin: '/auth/login',
+  authLogout: '/auth/logout',
+  authValidate: '/auth/validate',
+  authInfo: '/auth/info',
+};
+
+export const getApiUrl = (apiRoute: ApiRoutes): URL => new URL(apiRoutes[apiRoute], api);
+export const getApiUrlString = (apiRoute: ApiRoutes): string => getApiUrl(apiRoute).toString();
+
 /**
  * /auth/register
  */
 
 export interface AuthRegister extends ApiCall {
   request: {
-    route: '/auth/register';
+    route: typeof apiRoutes.authRegister;
     method: 'POST';
     headers: {
       'Content-Type': 'application/json';
@@ -56,7 +75,7 @@ export interface AuthRegister extends ApiCall {
 export const authRegisterRequest = (
   body: AuthRegister['request']['body']
 ): AuthRegister['request'] => ({
-  route: '/auth/register',
+  route: apiRoutes.authRegister,
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -70,7 +89,7 @@ export const authRegisterRequest = (
 
 export interface AuthLogin extends ApiCall {
   request: {
-    route: '/auth/login';
+    route: typeof apiRoutes.authLogin;
     method: 'POST';
     headers: {
       'Content-Type': 'application/json';
@@ -91,7 +110,7 @@ export interface AuthLogin extends ApiCall {
 }
 
 export const authLoginRequest = (body: AuthLogin['request']['body']): AuthLogin['request'] => ({
-  route: '/auth/login',
+  route: apiRoutes.authLogin,
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -105,7 +124,7 @@ export const authLoginRequest = (body: AuthLogin['request']['body']): AuthLogin[
 
 export interface AuthLogout extends ApiCall {
   request: {
-    route: '/auth/logout';
+    route: typeof apiRoutes.authLogout;
     method: 'POST';
     headers: {
       Authorization: string;
@@ -121,10 +140,10 @@ export interface AuthLogout extends ApiCall {
 export const authLogoutRequest = (
   token: AuthLogout['request']['headers']['Authorization']
 ): AuthLogout['request'] => ({
-  route: '/auth/logout',
+  route: apiRoutes.authLogout,
   method: 'POST',
   headers: {
-    Authorization: `Bearer ${token}`,
+    Authorization: makeBearer(token),
   },
   body: null,
 });
@@ -135,7 +154,7 @@ export const authLogoutRequest = (
 
 export interface AuthValidate extends ApiCall {
   request: {
-    route: '/auth/validate';
+    route: typeof apiRoutes.authValidate;
     method: 'POST';
     headers: {
       Authorization: string;
@@ -150,10 +169,10 @@ export interface AuthValidate extends ApiCall {
 export const authValidateRequest = (
   token: AuthValidate['request']['headers']['Authorization']
 ): AuthValidate['request'] => ({
-  route: '/auth/validate',
+  route: apiRoutes.authValidate,
   method: 'POST',
   headers: {
-    Authorization: `Bearer ${token}`,
+    Authorization: makeBearer(token),
   },
   body: null,
 });
@@ -164,7 +183,7 @@ export const authValidateRequest = (
 
 export interface AuthInfo extends ApiCall {
   request: {
-    route: '/auth/info';
+    route: typeof apiRoutes.authInfo;
     method: 'POST';
     headers: {
       Authorization: string;
@@ -186,10 +205,10 @@ export interface AuthInfo extends ApiCall {
 export const authInfoRequest = (
   token: AuthInfo['request']['headers']['Authorization']
 ): AuthInfo['request'] => ({
-  route: '/auth/info',
+  route: apiRoutes.authInfo,
   method: 'POST',
   headers: {
-    Authorization: `Bearer ${token}`,
+    Authorization: makeBearer(token),
   },
   body: null,
 });
@@ -209,6 +228,7 @@ export const call = async <T extends ApiCall>(request: T['request']): Promise<T[
 
     const data: T['response'] = await resp.json();
 
+    // TODO: Optimize when API became generalized
     switch (resp.status) {
       case 200: {
         return data;
@@ -226,3 +246,9 @@ export const call = async <T extends ApiCall>(request: T['request']): Promise<T[
     throw e;
   }
 };
+
+/**
+ * Helpers
+ */
+
+const makeBearer = (token: string) => `Bearer ${token}`;

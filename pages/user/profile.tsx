@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { UserContextProvider } from '../../components/user/UserContext';
 import { Profile } from '../../components/user/Profile';
+import { routes } from '../../lib/routes';
 
 const ProfilePage: NextPage = () => {
   const [loaded, setLoaded] = useState<boolean>(false);
@@ -11,10 +12,11 @@ const ProfilePage: NextPage = () => {
   useEffect(() => {
     setLoaded(true);
   }, [setLoaded]);
+
   return (
     <>
       <div>
-        <Link href="/">
+        <Link href={routes.index}>
           <a>Home page</a>
         </Link>
       </div>
