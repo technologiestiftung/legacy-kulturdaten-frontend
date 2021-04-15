@@ -15,7 +15,7 @@ import {
 } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
-import { Cookie, deleteCookie, setCookie } from '../../lib/cookies';
+import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { routes } from '../../lib/routes';
 
 const {
@@ -32,73 +32,66 @@ export const useUser = (): {
 } => {
   const router = useRouter();
 
-  const {
-    user,
-    setUser,
-    logoutUser,
-    isAuthenticated,
-    authenticateUser,
-    userToken,
-    setUserToken,
-  } = useContext(UserContext);
+  const { user, setUser, invalidateUser, isAuthenticated, authenticateUser } = useContext(
+    UserContext
+  );
 
-  const { data, error: validationError } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
-    userToken ? call<AuthValidate>(authValidateRequest(userToken)) : { valid: undefined }
+  const { data, mutate: mutateValidate } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
+    getCookie(authTokenCookieName)?.value
+      ? call<AuthValidate>(authValidateRequest(getCookie(authTokenCookieName)?.value))
+      : { valid: undefined }
   );
 
   const userTokenIsValid = data?.valid;
 
-  const { data: userData, error: userDataError } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
-    userToken ? call<AuthInfo>(authInfoRequest(userToken)) : undefined
+  const { data: userData } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
+    getCookie(authTokenCookieName)?.value
+      ? call<AuthInfo>(authInfoRequest(getCookie(authTokenCookieName)?.value))
+      : undefined
   );
 
-  const invalidateUser = useCallback(() => {
-    if (userToken) {
-      call<AuthLogout>(authLogoutRequest(userToken)).catch((e) => console.error(e));
+  const logoutUser = useCallback(() => {
+    if (getCookie(authTokenCookieName)?.value) {
+      call<AuthLogout>(authLogoutRequest(getCookie(authTokenCookieName)?.value)).catch((e) =>
+        console.error(e)
+      );
     }
-    setUserToken(undefined);
     deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
-    logoutUser();
-  }, [setUserToken, logoutUser, userToken]);
+    mutateValidate();
+    invalidateUser();
+  }, [invalidateUser, mutateValidate]);
 
   useEffect(() => {
-    if (userTokenIsValid === false && userToken) {
-      invalidateUser();
-    } else if (userTokenIsValid === true) {
-      if (userData?.user) {
-        setUser(userData.user);
-        authenticateUser();
+    if (getCookie(authTokenCookieName)?.value) {
+      if (userTokenIsValid === false) {
+        logoutUser();
+      } else if (userTokenIsValid === true && !isAuthenticated) {
+        if (userData?.user) {
+          setUser(userData.user);
+          authenticateUser();
+        }
       }
-    } else if (!userToken || userDataError || validationError) {
+    } else if (!getCookie(authTokenCookieName)?.value && isAuthenticated) {
+      logoutUser();
+    } else {
       if (router.pathname !== routes.login) {
         router.replace(routes.login);
       }
     }
-  }, [
-    isAuthenticated,
-    authenticateUser,
-    userData,
-    setUser,
-    userToken,
-    validationError,
-    userDataError,
-    router,
-    userTokenIsValid,
-    invalidateUser,
-  ]);
+  }, [isAuthenticated, authenticateUser, userData, setUser, router, userTokenIsValid, logoutUser]);
 
   return {
     user,
     isLoggedIn: isAuthenticated,
     login: (cookie: Cookie, redirectRoute: string) => {
       setCookie(cookie);
-      setUserToken(cookie.value);
-      authenticateUser();
       router.replace(redirectRoute);
     },
     logout: async () => {
-      invalidateUser();
-      router.push(routes.index);
+      logoutUser();
+      requestAnimationFrame(() => {
+        router.push(routes.index);
+      });
     },
   };
 };
