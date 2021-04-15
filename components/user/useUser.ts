@@ -69,7 +69,7 @@ export const useUser = (): {
         setUser(userData.user);
         authenticateUser();
       }
-    } else if (!userToken || userTokenIsValid === false || userDataError || validationError) {
+    } else if (!userToken || userDataError || validationError) {
       if (router.pathname !== routes.login) {
         router.replace(routes.login);
       }
