@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import useSWR from 'swr';
 import getConfig from 'next/config';
 
@@ -30,6 +30,8 @@ export const useUser = (): {
   login: (cookie: Cookie, redirectRoute: string) => void;
   logout: () => void;
 } => {
+  const router = useRouter();
+
   const {
     user,
     setUser,
@@ -39,7 +41,6 @@ export const useUser = (): {
     userToken,
     setUserToken,
   } = useContext(UserContext);
-  const router = useRouter();
 
   const { data, error: validationError } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
     userToken ? call<AuthValidate>(authValidateRequest(userToken)) : { valid: undefined }
@@ -51,11 +52,18 @@ export const useUser = (): {
     userToken ? call<AuthInfo>(authInfoRequest(userToken)) : undefined
   );
 
+  const invalidateUser = useCallback(() => {
+    if (userToken) {
+      call<AuthLogout>(authLogoutRequest(userToken)).catch((e) => console.error(e));
+    }
+    setUserToken(undefined);
+    deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
+    logoutUser();
+  }, [setUserToken, logoutUser, userToken]);
+
   useEffect(() => {
     if (userTokenIsValid === false && userToken) {
-      setUserToken(undefined);
-      deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
-      logoutUser();
+      invalidateUser();
     } else if (userTokenIsValid === true) {
       if (userData?.user) {
         setUser(userData.user);
@@ -72,12 +80,11 @@ export const useUser = (): {
     userData,
     setUser,
     userToken,
-    setUserToken,
     validationError,
     userDataError,
     router,
     userTokenIsValid,
-    logoutUser,
+    invalidateUser,
   ]);
 
   return {
@@ -87,20 +94,10 @@ export const useUser = (): {
       setCookie(cookie);
       setUserToken(cookie.value);
       authenticateUser();
-
       router.replace(redirectRoute);
     },
     logout: async () => {
-      setUserToken(undefined);
-      deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
-      logoutUser();
-
-      try {
-        await call<AuthLogout>(authLogoutRequest(userToken));
-      } catch (e) {
-        console.error(e);
-      }
-
+      invalidateUser();
       router.push(routes.index);
     },
   };
