@@ -71,7 +71,7 @@ export const useUser = (): {
           authenticateUser();
         }
       }
-    } else if (!getCookie(authTokenCookieName)?.value && isAuthenticated) {
+    } else if (isAuthenticated) {
       logoutUser();
     } else {
       if (router.pathname !== routes.login) {
