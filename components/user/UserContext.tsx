@@ -1,5 +1,12 @@
 import React, { ReactNode, useState } from 'react';
+import getConfig from 'next/config';
+
+import { getCookie } from '../../lib/cookies';
 import { User } from './useUser';
+
+const {
+  publicRuntimeConfig: { authTokenCookieName },
+} = getConfig();
 
 type UserContext = {
   user: User;
@@ -7,6 +14,8 @@ type UserContext = {
   isAuthenticated: boolean;
   authenticateUser: () => void;
   logoutUser: () => void;
+  userToken: string;
+  setUserToken: (token: string) => void;
 };
 
 export const UserContext = React.createContext<UserContext>({
@@ -21,6 +30,10 @@ export const UserContext = React.createContext<UserContext>({
   logoutUser: () => {
     //
   },
+  userToken: undefined,
+  setUserToken: () => {
+    //
+  },
 });
 
 type UserContextProviderProps = {
@@ -32,6 +45,9 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 }: UserContextProviderProps) => {
   const [stateUser, setStateUser] = useState<User>();
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(false);
+  const [stateUserToken, setStateUserToken] = useState<string>(
+    getCookie(authTokenCookieName)?.value
+  );
 
   return (
     <UserContext.Provider
@@ -46,6 +62,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
           setStateUser(undefined);
           setUserIsAuthenticated(false);
         },
+        userToken: stateUserToken,
+        setUserToken: (token: string) => setStateUserToken(token),
       }}
     >
       {children}

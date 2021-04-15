@@ -15,7 +15,7 @@ import {
 } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
-import { Cookie, deleteCookie, getCookie } from '../../lib/cookies';
+import { Cookie, deleteCookie, setCookie } from '../../lib/cookies';
 import { routes } from '../../lib/routes';
 
 const {
@@ -24,53 +24,79 @@ const {
 
 export type User = AuthInfo['response']['user'];
 
-export const useUser = (): { user: User; logoutUser: () => void } => {
-  const authCookie = getCookie(authTokenCookieName);
-  const value = authCookie?.value;
-  const { user, setUser, logoutUser, isAuthenticated, authenticateUser } = useContext(UserContext);
+export const useUser = (): {
+  user: User;
+  isLoggedIn: boolean;
+  login: (cookie: Cookie, redirectRoute: string) => void;
+  logout: () => void;
+} => {
+  const {
+    user,
+    setUser,
+    logoutUser,
+    isAuthenticated,
+    authenticateUser,
+    userToken,
+    setUserToken,
+  } = useContext(UserContext);
   const router = useRouter();
 
   const { data, error: validationError } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
-    call<AuthValidate>(authValidateRequest(value))
+    userToken ? call<AuthValidate>(authValidateRequest(userToken)) : { valid: undefined }
   );
 
-  const valid = data?.valid;
+  const userTokenIsValid = data?.valid;
 
   const { data: userData, error: userDataError } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
-    call<AuthInfo>(authInfoRequest(value))
+    userToken ? call<AuthInfo>(authInfoRequest(userToken)) : undefined
   );
 
   useEffect(() => {
-    if (valid === true) {
+    if (userTokenIsValid === false && userToken) {
+      setUserToken(undefined);
+      deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
+      logoutUser();
+    } else if (userTokenIsValid === true) {
       if (userData?.user) {
         setUser(userData.user);
+        authenticateUser();
       }
-      authenticateUser();
-    } else if (valid === false || userDataError || validationError) {
+    } else if (!userToken || userTokenIsValid === false || userDataError || validationError) {
       if (router.pathname !== routes.login) {
         router.replace(routes.login);
       }
     }
   }, [
-    authenticateUser,
-    setUser,
-    userData,
     isAuthenticated,
-    value,
+    authenticateUser,
+    userData,
+    setUser,
+    userToken,
+    setUserToken,
     validationError,
     userDataError,
     router,
-    valid,
+    userTokenIsValid,
+    logoutUser,
   ]);
 
   return {
     user,
-    logoutUser: async () => {
+    isLoggedIn: isAuthenticated,
+    login: (cookie: Cookie, redirectRoute: string) => {
+      setCookie(cookie);
+      setUserToken(cookie.value);
+      authenticateUser();
+
+      router.replace(redirectRoute);
+    },
+    logout: async () => {
+      setUserToken(undefined);
       deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
       logoutUser();
 
       try {
-        await call<AuthLogout>(authLogoutRequest(value));
+        await call<AuthLogout>(authLogoutRequest(userToken));
       } catch (e) {
         console.error(e);
       }

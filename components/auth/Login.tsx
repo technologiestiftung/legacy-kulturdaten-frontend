@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 
 import { call, AuthLogin, authLoginRequest } from '../../lib/api';
-import { Cookie, setCookie } from '../../lib/cookies';
+import { Cookie } from '../../lib/cookies';
 import { routes } from '../../lib/routes';
-import { UserContext } from '../user/UserContext';
 import { useUser } from '../user/useUser';
 
 const {
@@ -24,15 +23,14 @@ export const LoginForm: React.FC = () => {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<Error>();
   const [remember, setRemember] = useState<boolean>(false);
-  const { isAuthenticated, authenticateUser } = useContext(UserContext);
+  const { isLoggedIn, login } = useUser();
   const router = useRouter();
-  useUser();
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isLoggedIn) {
       router.replace(routes.userProfile);
     }
-  }, [isAuthenticated, router]);
+  }, [isLoggedIn, router]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -44,8 +42,7 @@ export const LoginForm: React.FC = () => {
       if (resp.status === 200) {
         const token = resp.token.token;
 
-        setCookie(authCookie(token, remember));
-        authenticateUser();
+        login(authCookie(token, remember), routes.userProfile);
       }
     } catch (e) {
       setError(e);
