@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import useSWR from 'swr';
 import getConfig from 'next/config';
 
@@ -15,7 +15,7 @@ import {
 } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
-import { Cookie, deleteCookie, getCookie } from '../../lib/cookies';
+import { Cookie, deleteCookie, setCookie } from '../../lib/cookies';
 import { routes } from '../../lib/routes';
 
 const {
@@ -24,57 +24,80 @@ const {
 
 export type User = AuthInfo['response']['user'];
 
-export const useUser = (): { user: User; logoutUser: () => void } => {
-  const authCookie = getCookie(authTokenCookieName);
-  const value = authCookie?.value;
-  const { user, setUser, logoutUser, isAuthenticated, authenticateUser } = useContext(UserContext);
+export const useUser = (): {
+  user: User;
+  isLoggedIn: boolean;
+  login: (cookie: Cookie, redirectRoute: string) => void;
+  logout: () => void;
+} => {
   const router = useRouter();
 
+  const {
+    user,
+    setUser,
+    logoutUser,
+    isAuthenticated,
+    authenticateUser,
+    userToken,
+    setUserToken,
+  } = useContext(UserContext);
+
   const { data, error: validationError } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
-    call<AuthValidate>(authValidateRequest(value))
+    userToken ? call<AuthValidate>(authValidateRequest(userToken)) : { valid: undefined }
   );
 
-  const valid = data?.valid;
+  const userTokenIsValid = data?.valid;
 
   const { data: userData, error: userDataError } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
-    call<AuthInfo>(authInfoRequest(value))
+    userToken ? call<AuthInfo>(authInfoRequest(userToken)) : undefined
   );
 
+  const invalidateUser = useCallback(() => {
+    if (userToken) {
+      call<AuthLogout>(authLogoutRequest(userToken)).catch((e) => console.error(e));
+    }
+    setUserToken(undefined);
+    deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
+    logoutUser();
+  }, [setUserToken, logoutUser, userToken]);
+
   useEffect(() => {
-    if (valid === true) {
+    if (userTokenIsValid === false && userToken) {
+      invalidateUser();
+    } else if (userTokenIsValid === true) {
       if (userData?.user) {
         setUser(userData.user);
+        authenticateUser();
       }
-      authenticateUser();
-    } else if (valid === false || userDataError || validationError) {
+    } else if (!userToken || userDataError || validationError) {
       if (router.pathname !== routes.login) {
         router.replace(routes.login);
       }
     }
   }, [
-    authenticateUser,
-    setUser,
-    userData,
     isAuthenticated,
-    value,
+    authenticateUser,
+    userData,
+    setUser,
+    userToken,
     validationError,
     userDataError,
     router,
-    valid,
+    userTokenIsValid,
+    invalidateUser,
   ]);
 
   return {
     user,
-    logoutUser: async () => {
-      deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
-      logoutUser();
-
-      try {
-        await call<AuthLogout>(authLogoutRequest(value));
-      } catch (e) {
-        console.error(e);
-      }
-
+    isLoggedIn: isAuthenticated,
+    login: (cookie: Cookie, redirectRoute: string) => {
+      setCookie(cookie);
+      setUserToken(cookie.value);
+      authenticateUser();
+      router.replace(redirectRoute);
+    },
+    logout: async () => {
+      invalidateUser();
       router.push(routes.index);
     },
   };

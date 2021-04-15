@@ -1,14 +1,14 @@
 import { useUser } from './useUser';
 
 export const Profile: React.FC = () => {
-  const { user, logoutUser } = useUser();
+  const { user, logout } = useUser();
 
   return (
     <div>
       <pre>{JSON.stringify(user, null, 2)}</pre>
       <button
         onClick={() => {
-          logoutUser();
+          logout();
         }}
       >
         Logout
