@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 
 import { LoginForm } from '../../../components/auth/Login';
-import { routes } from '../../../lib/routes';
+import { routes } from '../../../config/routes';
 
 const LoginPage: NextPage = () => (
   <>

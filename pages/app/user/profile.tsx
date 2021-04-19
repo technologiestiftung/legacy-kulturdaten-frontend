@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 
 import { Profile } from '../../../components/user/Profile';
-import { routes } from '../../../lib/routes';
+import { routes } from '../../../config/routes';
 
 const ProfilePage: NextPage = () => {
   const [loaded, setLoaded] = useState<boolean>(false);

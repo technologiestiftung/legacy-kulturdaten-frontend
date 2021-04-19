@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 
 import { RegisterForm } from '../../../components/auth/Register';
-import { routes } from '../../../lib/routes';
+import { routes } from '../../../config/routes';
 
 const RegisterPage: NextPage = () => (
   <>
