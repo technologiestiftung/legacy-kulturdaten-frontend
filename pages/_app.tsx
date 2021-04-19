@@ -5,12 +5,10 @@ import { Reset } from '../components/globals/Reset';
 
 function App({ Component, pageProps }: AppProps): React.ReactElement {
   return (
-    <>
-      <UserContextProvider>
-        <Reset />
-        <Component {...pageProps} />
-      </UserContextProvider>
-    </>
+    <UserContextProvider>
+      <Reset />
+      <Component {...pageProps} />
+    </UserContextProvider>
   );
 }
 

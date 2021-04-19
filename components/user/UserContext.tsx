@@ -8,6 +8,7 @@ type UserContext = {
   isAuthenticated: boolean;
   authenticateUser: () => void;
   invalidateUser: () => void;
+  rand: number;
 };
 
 export const UserContext = React.createContext<UserContext>({
@@ -22,6 +23,7 @@ export const UserContext = React.createContext<UserContext>({
   invalidateUser: () => {
     //
   },
+  rand: Math.random() * 100,
 });
 
 type UserContextProviderProps = {
@@ -33,6 +35,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 }: UserContextProviderProps) => {
   const [stateUser, setStateUser] = useState<User>();
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(false);
+  const [rand] = useState<number>(Math.random() * 100);
 
   return (
     <UserContext.Provider
@@ -47,6 +50,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
           setStateUser(undefined);
           setUserIsAuthenticated(false);
         },
+        rand,
       }}
     >
       {children}

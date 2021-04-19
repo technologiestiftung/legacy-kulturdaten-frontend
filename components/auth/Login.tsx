@@ -14,7 +14,7 @@ const {
 const authCookie = (value: string, remember: boolean): Cookie => ({
   'name': authTokenCookieName,
   'value': value,
-  'path': routes.index,
+  'path': routes.index(),
   'max-age': remember ? 1209600 : undefined,
 });
 
@@ -28,7 +28,7 @@ export const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace(routes.userProfile);
+      router.replace(routes.dashboard());
     }
   }, [isLoggedIn, router]);
 
@@ -42,7 +42,7 @@ export const LoginForm: React.FC = () => {
       if (resp.status === 200) {
         const token = resp.token.token;
 
-        login(authCookie(token, remember), routes.userProfile);
+        login(authCookie(token, remember), routes.dashboard());
       }
     } catch (e) {
       setError(e);
