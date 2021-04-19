@@ -1,7 +1,6 @@
 .next
 node_modules
 out
-next.config.js
 babel.config.js
 .storybook
 storybook-static
