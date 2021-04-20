@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 import { routes } from '../../config/routes';
 import { useUser } from '../../components/user/useUser';
+import { AppWrapper } from '../../components/wrappers/AppWrapper';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -17,7 +18,7 @@ const StyledLi = styled.li`
 const DashboardPage: NextPage = () => {
   useUser();
   return (
-    <>
+    <AppWrapper>
       <h1>App Index/Dashboard</h1>
       <StyledUl>
         <StyledLi>
@@ -26,7 +27,7 @@ const DashboardPage: NextPage = () => {
           </Link>
         </StyledLi>
       </StyledUl>
-    </>
+    </AppWrapper>
   );
 };
 

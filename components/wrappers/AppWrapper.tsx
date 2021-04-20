@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Navigation } from '../Navigation';
 
 import { useUser } from '../user/useUser';
 
@@ -15,6 +16,7 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
   return (
     <>
       <UseUser />
+      <Navigation />
       {children}
     </>
   );
