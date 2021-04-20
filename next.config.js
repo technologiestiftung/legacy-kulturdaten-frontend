@@ -10,7 +10,6 @@ module.exports = {
     defaultLocale: 'catchAll',
   },
   async redirects() {
-    console.log(this);
     return [
       {
         source: '/catchAll',
