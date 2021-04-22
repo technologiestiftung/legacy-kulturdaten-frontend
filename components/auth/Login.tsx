@@ -4,7 +4,7 @@ import getConfig from 'next/config';
 
 import { call, AuthLogin, authLoginRequest } from '../../lib/api';
 import { Cookie } from '../../lib/cookies';
-import { routes } from '../../config/routes';
+import { routes } from '../../lib/routing';
 import { useUser } from '../user/useUser';
 
 const {

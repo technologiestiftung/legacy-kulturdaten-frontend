@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 
-import { routes } from '../../config/routes';
+import { routes } from '../../lib/routing';
 import { useUser } from '../../components/user/useUser';
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
 

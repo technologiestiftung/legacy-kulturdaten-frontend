@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'node:querystring';
 
-import { Route, useActiveRoute, useIsRouteStringActive, routes } from '../../config/routes';
+import { Route, useActiveRoute, useIsRouteStringActive, routes } from '../../lib/routing';
 
 const StyledNavigation = styled.nav`
   border: 2px solid black;

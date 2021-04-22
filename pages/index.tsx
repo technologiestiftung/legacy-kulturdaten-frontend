@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { routes } from '../config/routes';
+import { routes } from '../lib/routing';
 
 const StyledUl = styled.ul`
   list-style: disc inside;

@@ -16,7 +16,7 @@ import {
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
-import { routes } from '../../config/routes';
+import { routes } from '../../lib/routing';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
