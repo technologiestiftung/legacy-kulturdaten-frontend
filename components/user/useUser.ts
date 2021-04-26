@@ -16,7 +16,7 @@ import {
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
-import { routes } from '../../lib/routes';
+import { routes } from '../../lib/routing';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -56,7 +56,7 @@ export const useUser = (): {
         console.error(e)
       );
     }
-    deleteCookie({ name: authTokenCookieName, path: routes.index } as Cookie);
+    deleteCookie({ name: authTokenCookieName, path: routes.index() } as Cookie);
     mutateValidate();
     invalidateUser();
   }, [invalidateUser, mutateValidate]);
@@ -74,8 +74,8 @@ export const useUser = (): {
     } else if (isAuthenticated) {
       logoutUser();
     } else {
-      if (router.pathname !== routes.login) {
-        router.replace(routes.login);
+      if (router.asPath !== routes.login()) {
+        router.replace(routes.login());
       }
     }
   }, [isAuthenticated, authenticateUser, userData, setUser, router, userTokenIsValid, logoutUser]);
@@ -89,9 +89,9 @@ export const useUser = (): {
     },
     logout: async () => {
       logoutUser();
-      requestAnimationFrame(() => {
-        router.push(routes.index);
-      });
+      setTimeout(() => {
+        router.push(routes.index());
+      }, 500);
     },
   };
 };

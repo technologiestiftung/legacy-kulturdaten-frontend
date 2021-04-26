@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { routes } from '../lib/routes';
+import { routes } from '../lib/routing';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -18,18 +18,18 @@ const IndexPage: NextPage = () => {
       <h1>Hello Kulturdaten Frontend!</h1>
       <StyledUl>
         <StyledLi>
-          <Link href={routes.login}>
+          <Link href={routes.login()}>
             <a>Login</a>
           </Link>
         </StyledLi>
         <StyledLi>
-          <Link href={routes.register}>
+          <Link href={routes.register()}>
             <a>Register</a>
           </Link>
         </StyledLi>
         <StyledLi>
-          <Link href={routes.userProfile}>
-            <a>User Profile</a>
+          <Link href={routes.dashboard()}>
+            <a>Dashboard</a>
           </Link>
         </StyledLi>
       </StyledUl>
