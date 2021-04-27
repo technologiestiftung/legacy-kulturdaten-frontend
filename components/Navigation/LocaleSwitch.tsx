@@ -1,23 +1,17 @@
-import { useRouter } from 'next/router';
 import { ChangeEvent } from 'react';
-import { Locale, locales, routes } from '../../config/routes';
-import { useActiveRoute, useLocale } from '../../lib/routing';
+import { Locale, locales } from '../../config/routes';
+import { useLocale, useSwitchLocale } from '../../lib/routing';
 
 export const LocaleSwitch: React.FC = () => {
   const activeLocale = useLocale();
-  const activeRoute = useActiveRoute();
-  const router = useRouter();
+  const switchLocale = useSwitchLocale();
 
   const select = (
     <select
-      name="language"
+      name="locale"
       value={activeLocale}
       onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-        router.push(
-          routes[activeRoute]({ locale: e.target.value as Locale, query: router.query }),
-          null,
-          { locale: e.target.value }
-        );
+        switchLocale(e.target.value as Locale);
       }}
     >
       {Object.entries(locales).map(([key, { name }], index) => (

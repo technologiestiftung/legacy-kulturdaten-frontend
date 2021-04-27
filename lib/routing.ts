@@ -89,4 +89,13 @@ export const useLocale = (): Locale => {
   return locale;
 };
 
+export const useSwitchLocale = (): ((locale: Locale) => void) => {
+  const router = useRouter();
+  const activeRoute = useActiveRoute();
+
+  return (locale: Locale) => {
+    router.push(routes[activeRoute]({ locale, query: router.query }), null, { locale });
+  };
+};
+
 export { routes, Routes };
