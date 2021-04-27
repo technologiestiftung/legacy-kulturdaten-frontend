@@ -34,6 +34,11 @@ const IndexPage: NextPage = () => {
             <a>Dashboard</a>
           </Link>
         </StyledLi>
+        <StyledLi>
+          <Link href={routes.imprint({ locale })}>
+            <a>Impressum/Imprint</a>
+          </Link>
+        </StyledLi>
       </StyledUl>
     </>
   );
