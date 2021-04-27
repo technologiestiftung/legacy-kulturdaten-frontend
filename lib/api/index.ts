@@ -21,7 +21,7 @@ export interface ApiCall {
     };
     body: { [key: string]: StructuredData };
   };
-  response: { [key: string]: StructuredData };
+  response: { status: number; body: { [key: string]: StructuredData } };
 }
 
 /**
@@ -49,7 +49,7 @@ export const apiRoutes: { [key in ApiRoutes]: string } = {
  * @param request
  * @returns
  */
-export const call = async <T extends ApiCall>(request: T['request']): Promise<T['response']> => {
+export const call = async <T extends ApiCall>({ request, response }: T): Promise<T['response']> => {
   try {
     const resp = await fetch(new URL(request.route, api).toString(), {
       method: request.method,
@@ -57,20 +57,23 @@ export const call = async <T extends ApiCall>(request: T['request']): Promise<T[
       body: JSON.stringify(request.body, null, 2),
     });
 
-    const data: T['response'] = await resp.json();
+    const body: T['response']['body'] = await resp.json();
 
     // TODO: Optimize when API became generalized
     switch (resp.status) {
-      case 200: {
-        return data;
+      case response.status: {
+        return {
+          status: response.status,
+          body,
+        };
       }
       case 422: {
-        const regError = new Error(JSON.stringify(data));
+        const regError = new Error(JSON.stringify(body));
         regError.name = 'reg error';
         throw regError;
       }
       default: {
-        throw new Error(JSON.stringify(data));
+        throw new Error(JSON.stringify(body));
       }
     }
   } catch (e) {
@@ -91,12 +94,12 @@ export const makeBearer = (token: string): string => `Bearer ${token}`;
  */
 
 export type { AuthInfo } from './routes/auth/info';
-export { authInfoRequest } from './routes/auth/info';
+export { authInfoBlueprint } from './routes/auth/info';
 export type { AuthLogin } from './routes/auth/login';
-export { authLoginRequest } from './routes/auth/login';
+export { authLoginBlueprint } from './routes/auth/login';
 export type { AuthLogout } from './routes/auth/logout';
-export { authLogoutRequest } from './routes/auth/logout';
+export { authLogoutBlueprint } from './routes/auth/logout';
 export type { AuthRegister } from './routes/auth/register';
-export { authRegisterRequest } from './routes/auth/register';
+export { authRegisterBlueprint } from './routes/auth/register';
 export type { AuthValidate } from './routes/auth/validate';
-export { authValidateRequest } from './routes/auth/validate';
+export { authValidateBlueprint } from './routes/auth/validate';

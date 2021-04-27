@@ -14,24 +14,35 @@ export interface AuthInfo extends ApiCall {
     body: null;
   };
   response: {
-    user: {
-      id: number;
-      email: string;
-      remember_me_token?: null;
-      created_at: string;
-      updated_at: string;
+    status: 200;
+    body: {
+      data: {
+        type: 'user';
+        attributes: {
+          id: number;
+          email: string;
+          remember_me_token?: null;
+          created_at: string;
+          updated_at: string;
+        };
+      };
     };
-    status: number;
   };
 }
 
-export const authInfoRequest = (
+export const authInfoBlueprint = (
   token: AuthInfo['request']['headers']['Authorization']
-): AuthInfo['request'] => ({
-  route: apiRoutes.authInfo,
-  method: 'POST',
-  headers: {
-    Authorization: makeBearer(token),
+): AuthInfo => ({
+  request: {
+    route: apiRoutes.authInfo,
+    method: 'POST',
+    headers: {
+      Authorization: makeBearer(token),
+    },
+    body: null,
   },
-  body: null,
+  response: {
+    status: 200,
+    body: undefined,
+  },
 });

@@ -18,24 +18,35 @@ export interface AuthRegister extends ApiCall {
     };
   };
   response: {
-    user: {
-      email: string;
-      created_at: string;
-      updated_at: string;
-      id: number;
+    status: 200;
+    body: {
+      data: {
+        type: 'user';
+        attributes: {
+          email: string;
+          created_at: string;
+          updated_at: string;
+          id: number;
+        };
+      };
+      meta: {
+        message: string;
+      };
     };
-    status: number;
-    message: string;
   };
 }
 
-export const authRegisterRequest = (
-  body: AuthRegister['request']['body']
-): AuthRegister['request'] => ({
-  route: apiRoutes.authRegister,
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
+export const authRegisterBlueprint = (body: AuthRegister['request']['body']): AuthRegister => ({
+  request: {
+    route: apiRoutes.authRegister,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body,
   },
-  body,
+  response: {
+    status: 200,
+    body: undefined,
+  },
 });

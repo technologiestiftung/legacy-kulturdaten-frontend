@@ -17,20 +17,29 @@ export interface AuthLogin extends ApiCall {
     };
   };
   response: {
-    token: {
-      type: 'bearer';
-      token: string;
+    status: 200;
+    body: {
+      data: null;
+      meta: {
+        type: 'bearer';
+        token: string;
+        message: string;
+      };
     };
-    status: number;
-    message: string;
   };
 }
 
-export const authLoginRequest = (body: AuthLogin['request']['body']): AuthLogin['request'] => ({
-  route: apiRoutes.authLogin,
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
+export const authLoginBlueprint = (body: AuthLogin['request']['body']): AuthLogin => ({
+  request: {
+    route: apiRoutes.authLogin,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body,
   },
-  body,
+  response: {
+    status: 200,
+    body: undefined,
+  },
 });
