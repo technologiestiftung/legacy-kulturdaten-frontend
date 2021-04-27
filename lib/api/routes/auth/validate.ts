@@ -14,17 +14,24 @@ export interface AuthValidate extends ApiCall {
     body: null;
   };
   response: {
-    valid: boolean;
+    status: 200;
+    body: { data: null; meta: { valid: boolean } };
   };
 }
 
-export const authValidateRequest = (
+export const authValidateBlueprint = (
   token: AuthValidate['request']['headers']['Authorization']
-): AuthValidate['request'] => ({
-  route: apiRoutes.authValidate,
-  method: 'POST',
-  headers: {
-    Authorization: makeBearer(token),
+): AuthValidate => ({
+  request: {
+    route: apiRoutes.authValidate,
+    method: 'POST',
+    headers: {
+      Authorization: makeBearer(token),
+    },
+    body: null,
   },
-  body: null,
+  response: {
+    status: 200,
+    body: undefined,
+  },
 });

@@ -14,18 +14,29 @@ export interface AuthLogout extends ApiCall {
     body: null;
   };
   response: {
-    status: number;
-    message: string;
+    status: 200;
+    body: {
+      data: null;
+      meta: {
+        message: string;
+      };
+    };
   };
 }
 
-export const authLogoutRequest = (
+export const authLogoutBlueprint = (
   token: AuthLogout['request']['headers']['Authorization']
-): AuthLogout['request'] => ({
-  route: apiRoutes.authLogout,
-  method: 'POST',
-  headers: {
-    Authorization: makeBearer(token),
+): AuthLogout => ({
+  request: {
+    route: apiRoutes.authLogout,
+    method: 'POST',
+    headers: {
+      Authorization: makeBearer(token),
+    },
+    body: null,
   },
-  body: null,
+  response: {
+    status: 200,
+    body: undefined,
+  },
 });
