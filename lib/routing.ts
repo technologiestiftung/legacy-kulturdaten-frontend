@@ -6,18 +6,14 @@ import { Locale, routes, Routes } from '../config/routes';
 
 export type Route = (props: { locale: Locale; query?: ParsedUrlQuery }) => string;
 
-export const isRouteActive = (
+const isRouteActive = (
   currentRoute: string,
   route: Routes,
   locale: Locale,
   query?: ParsedUrlQuery
 ): boolean => currentRoute === routes[route]({ locale, query });
 
-export const getActiveRoute = (
-  currentRoute: string,
-  locale: Locale,
-  query?: ParsedUrlQuery
-): Routes => {
+const getActiveRoute = (currentRoute: string, locale: Locale, query?: ParsedUrlQuery): Routes => {
   const foundRoute = Object.entries(routes).find(
     ([, route]) => route({ locale, query }) === currentRoute
   );
