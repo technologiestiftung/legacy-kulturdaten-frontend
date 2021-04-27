@@ -8,6 +8,19 @@ export enum Locale {
   'en-DE' = 'en-DE',
 }
 
+export const locales: {
+  [key in Locale]: {
+    name: string;
+  };
+} = {
+  'de-DE': {
+    name: 'Deutsch',
+  },
+  'en-DE': {
+    name: 'English',
+  },
+};
+
 /**
  * All routes present in the app
  */
@@ -37,7 +50,7 @@ export const routes: { [key in Routes]: Route } = {
   providers: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.providers][locale]}/`,
   provider: ({ query, locale }) => `${routes.providers({ locale })}${query?.entry}/`,
-  imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}`,
+  imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
 
 /**

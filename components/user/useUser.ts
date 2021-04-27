@@ -75,7 +75,7 @@ export const useUser = (): {
     } else if (isAuthenticated) {
       logoutUser();
     } else {
-      if (router.asPath !== routes.login({ locale })) {
+      if (locale && router.asPath !== routes.login({ locale })) {
         router.replace(routes.login({ locale }));
       }
     }

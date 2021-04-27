@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 
 import { LoginForm } from '../../../components/auth/Login';
+import { LanguageSwitch } from '../../../components/Navigation/LanguageSwitch';
 import { routes, useLocale } from '../../../lib/routing';
 
 const LoginPage: NextPage = () => {
@@ -15,6 +16,7 @@ const LoginPage: NextPage = () => {
         </Link>
       </div>
       <LoginForm />
+      <LanguageSwitch />
     </>
   );
 };

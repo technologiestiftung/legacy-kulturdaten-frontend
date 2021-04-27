@@ -2,6 +2,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import { routes, useLocale } from '../lib/routing';
+import { LanguageSwitch } from '../components/Navigation/LanguageSwitch';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -40,6 +41,9 @@ const IndexPage: NextPage = () => {
           </Link>
         </StyledLi>
       </StyledUl>
+      <div>
+        <LanguageSwitch />
+      </div>
     </>
   );
 };
