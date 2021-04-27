@@ -89,6 +89,10 @@ export const useLocale = (): Locale => {
   return locale;
 };
 
+/**
+ * Provides a function to switch the locale in the frontend
+ * @returns The function to switch the locale
+ */
 export const useSwitchLocale = (): ((locale: Locale) => void) => {
   const router = useRouter();
   const activeRoute = useActiveRoute();
