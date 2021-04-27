@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 
 import { Locale, routes, Routes } from '../config/routes';
+import { setCookie } from './cookies';
 
 export type Route = (props: { locale: Locale; query?: ParsedUrlQuery }) => string;
 
@@ -89,6 +90,16 @@ export const useLocale = (): Locale => {
   return locale;
 };
 
+const setUserLocalePreference = (locale: Locale): void => {
+  // Sets Next.js compatible cookie for locale routing
+  setCookie({
+    'name': 'NEXT_LOCALE',
+    'value': locale,
+    'path': '/',
+    'max-age': 365 * 24 * 60 * 60,
+  });
+};
+
 /**
  * Provides a function to switch the locale in the frontend
  * @returns The function to switch the locale
@@ -99,6 +110,7 @@ export const useSwitchLocale = (): ((locale: Locale) => void) => {
 
   return (locale: Locale) => {
     router.push(routes[activeRoute]({ locale, query: router.query }), null, { locale });
+    setUserLocalePreference(locale);
   };
 };
 
