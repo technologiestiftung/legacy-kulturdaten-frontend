@@ -16,7 +16,7 @@ import {
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
-import { routes } from '../../lib/routing';
+import { routes, useLocale } from '../../lib/routing';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -31,6 +31,7 @@ export const useUser = (): {
   logout: () => void;
 } => {
   const router = useRouter();
+  const locale = useLocale();
 
   const { user, setUser, invalidateUser, isAuthenticated, authenticateUser } = useContext(
     UserContext
@@ -56,10 +57,10 @@ export const useUser = (): {
         console.error(e)
       );
     }
-    deleteCookie({ name: authTokenCookieName, path: routes.index() } as Cookie);
+    deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate();
     invalidateUser();
-  }, [invalidateUser, mutateValidate]);
+  }, [invalidateUser, mutateValidate, locale]);
 
   useEffect(() => {
     if (getCookie(authTokenCookieName)?.value) {
@@ -74,11 +75,20 @@ export const useUser = (): {
     } else if (isAuthenticated) {
       logoutUser();
     } else {
-      if (router.asPath !== routes.login()) {
-        router.replace(routes.login());
+      if (router.asPath !== routes.login({ locale })) {
+        router.replace(routes.login({ locale }));
       }
     }
-  }, [isAuthenticated, authenticateUser, userData, setUser, router, userTokenIsValid, logoutUser]);
+  }, [
+    isAuthenticated,
+    authenticateUser,
+    userData,
+    setUser,
+    router,
+    userTokenIsValid,
+    logoutUser,
+    locale,
+  ]);
 
   return {
     user,
@@ -90,7 +100,7 @@ export const useUser = (): {
     logout: async () => {
       logoutUser();
       setTimeout(() => {
-        router.push(routes.index());
+        router.push(routes.index({ locale }));
       }, 500);
     },
   };

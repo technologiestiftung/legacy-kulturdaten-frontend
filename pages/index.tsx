@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from '@emotion/styled';
-import { routes } from '../lib/routing';
+import { routes, useLocale } from '../lib/routing';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -13,22 +13,24 @@ const StyledLi = styled.li`
 `;
 
 const IndexPage: NextPage = () => {
+  const locale = useLocale();
+
   return (
     <>
       <h1>Hello Kulturdaten Frontend!</h1>
       <StyledUl>
         <StyledLi>
-          <Link href={routes.login()}>
+          <Link href={routes.login({ locale })}>
             <a>Login</a>
           </Link>
         </StyledLi>
         <StyledLi>
-          <Link href={routes.register()}>
+          <Link href={routes.register({ locale })}>
             <a>Register</a>
           </Link>
         </StyledLi>
         <StyledLi>
-          <Link href={routes.dashboard()}>
+          <Link href={routes.dashboard({ locale })}>
             <a>Dashboard</a>
           </Link>
         </StyledLi>
