@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 
-import { call, AuthLogin, authLoginRequest } from '../../lib/api';
+import { call, AuthLogin, authLoginBlueprint } from '../../lib/api';
 import { Cookie } from '../../lib/cookies';
 import { routes } from '../../lib/routing';
 import { useUser } from '../user/useUser';
@@ -37,10 +37,10 @@ export const LoginForm: React.FC = () => {
     e.stopPropagation();
 
     try {
-      const resp = await call<AuthLogin>(authLoginRequest({ email, password }));
+      const resp = await call<AuthLogin>(authLoginBlueprint({ email, password }));
 
       if (resp.status === 200) {
-        const token = resp.token.token;
+        const token = resp.body.meta.token;
 
         login(authCookie(token, remember), routes.dashboard());
       }

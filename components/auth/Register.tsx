@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 
-import { call, AuthRegister, authRegisterRequest } from '../../lib/api';
+import { call, AuthRegister, authRegisterBlueprint } from '../../lib/api';
 
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -16,7 +16,7 @@ export const RegisterForm: React.FC = () => {
 
     try {
       const resp = await call<AuthRegister>(
-        authRegisterRequest({
+        authRegisterBlueprint({
           email,
           password,
           password_confirmation: passwordConfirmation,

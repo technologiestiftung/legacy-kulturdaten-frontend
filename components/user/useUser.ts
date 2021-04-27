@@ -5,11 +5,11 @@ import getConfig from 'next/config';
 import {
   call,
   AuthValidate,
-  authValidateRequest,
+  authValidateBlueprint,
   AuthInfo,
-  authInfoRequest,
+  authInfoBlueprint,
   AuthLogout,
-  authLogoutRequest,
+  authLogoutBlueprint,
   getApiUrlString,
   ApiRoutes,
 } from '../../lib/api';
@@ -22,7 +22,7 @@ const {
   publicRuntimeConfig: { authTokenCookieName },
 } = getConfig();
 
-export type User = AuthInfo['response']['user'];
+export type User = AuthInfo['response']['body']['data']['attributes'];
 
 export const useUser = (): {
   user: User;
@@ -38,21 +38,21 @@ export const useUser = (): {
 
   const { data, mutate: mutateValidate } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
     getCookie(authTokenCookieName)?.value
-      ? call<AuthValidate>(authValidateRequest(getCookie(authTokenCookieName)?.value))
-      : { valid: undefined }
+      ? call<AuthValidate>(authValidateBlueprint(getCookie(authTokenCookieName)?.value))
+      : { body: { meta: { valid: undefined } } }
   );
 
-  const userTokenIsValid = data?.valid;
+  const userTokenIsValid = data?.body?.meta?.valid;
 
-  const { data: userData } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
+  const { data: userResponse } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
     getCookie(authTokenCookieName)?.value
-      ? call<AuthInfo>(authInfoRequest(getCookie(authTokenCookieName)?.value))
+      ? call<AuthInfo>(authInfoBlueprint(getCookie(authTokenCookieName)?.value))
       : undefined
   );
 
   const logoutUser = useCallback(() => {
     if (getCookie(authTokenCookieName)?.value) {
-      call<AuthLogout>(authLogoutRequest(getCookie(authTokenCookieName)?.value)).catch((e) =>
+      call<AuthLogout>(authLogoutBlueprint(getCookie(authTokenCookieName)?.value)).catch((e) =>
         console.error(e)
       );
     }
@@ -62,12 +62,14 @@ export const useUser = (): {
   }, [invalidateUser, mutateValidate]);
 
   useEffect(() => {
+    const userData = userResponse?.body.data.attributes;
+
     if (getCookie(authTokenCookieName)?.value) {
       if (userTokenIsValid === false) {
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
-        if (userData?.user) {
-          setUser(userData.user);
+        if (userData) {
+          setUser(userData);
           authenticateUser();
         }
       }
@@ -78,7 +80,15 @@ export const useUser = (): {
         router.replace(routes.login());
       }
     }
-  }, [isAuthenticated, authenticateUser, userData, setUser, router, userTokenIsValid, logoutUser]);
+  }, [
+    isAuthenticated,
+    authenticateUser,
+    userResponse,
+    setUser,
+    router,
+    userTokenIsValid,
+    logoutUser,
+  ]);
 
   return {
     user,
