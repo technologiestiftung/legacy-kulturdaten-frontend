@@ -3,7 +3,7 @@ import { ChangeEvent } from 'react';
 import { Locale, locales, routes } from '../../config/routes';
 import { useActiveRoute, useLocale } from '../../lib/routing';
 
-export const LanguageSwitch: React.FC = () => {
+export const LocaleSwitch: React.FC = () => {
   const activeLocale = useLocale();
   const activeRoute = useActiveRoute();
   const router = useRouter();

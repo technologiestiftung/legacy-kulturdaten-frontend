@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import MD from 'markdown-to-jsx';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { LanguageSwitch } from '../components/Navigation/LanguageSwitch';
+import { LocaleSwitch } from '../components/Navigation/LocaleSwitch';
 
 interface ContentPageProps {
   markdownContent: string;
@@ -14,7 +14,7 @@ const ContentPage: NextPage<ContentPageProps> = ({ markdownContent }: ContentPag
       <div>Content page outside of /app</div>
       <div>{markdownContent ? <MD>{markdownContent}</MD> : ''}</div>
       <div>
-        <LanguageSwitch />
+        <LocaleSwitch />
       </div>
     </div>
   );
