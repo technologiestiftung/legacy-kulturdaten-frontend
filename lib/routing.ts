@@ -25,6 +25,11 @@ export const getActiveRoute = (
   return foundRoute ? (foundRoute[0] as Routes) : undefined;
 };
 
+/**
+ * States if a given route string represents the currently active route
+ * @param routeString - The route as a string
+ * @returns If the route is active
+ */
 export const useIsRouteStringActive = (routeString: string): boolean => {
   const [isActive, setIsActive] = useState<boolean>();
   const router = useRouter();
@@ -36,6 +41,13 @@ export const useIsRouteStringActive = (routeString: string): boolean => {
   return isActive;
 };
 
+/**
+ * States if a given route if the currently active route
+ * @param route - The route as a Route object
+ * @param locale - The locale
+ * @param query - Optional query parameters
+ * @returns If the route is active
+ */
 export const useIsRouteActive = (
   route: Routes,
   locale: Locale,
@@ -51,6 +63,10 @@ export const useIsRouteActive = (
   return routeActive;
 };
 
+/**
+ * Provides the currently active route identifier
+ * @returns The currently active route as a Routes enum identifier
+ */
 export const useActiveRoute = (): Routes => {
   const [route, setRoute] = useState<Routes>();
   const router = useRouter();
@@ -62,6 +78,10 @@ export const useActiveRoute = (): Routes => {
   return route;
 };
 
+/**
+ * Provides the current Locale
+ * @returns The current Locale
+ */
 export const useLocale = (): Locale => {
   const [locale, setLocale] = useState<Locale>();
   const router = useRouter();

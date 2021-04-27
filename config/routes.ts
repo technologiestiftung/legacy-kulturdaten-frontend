@@ -1,10 +1,16 @@
 import { Route } from '../lib/routing';
 
+/**
+ * All locales used in the app
+ */
 export enum Locale {
   'de-DE' = 'de-DE',
   'en-DE' = 'en-DE',
 }
 
+/**
+ * All routes present in the app
+ */
 export enum Routes {
   index = 'index',
   dashboard = 'dashboard',
@@ -16,6 +22,9 @@ export enum Routes {
   imprint = 'imprint',
 }
 
+/**
+ * Functions for all valid routes returning relative paths
+ */
 export const routes: { [key in Routes]: Route } = {
   index: ({ locale }) => `/${localizedRoutes[Routes.index][locale]}`,
   dashboard: ({ locale }) => `/${localizedRoutes[Routes.dashboard][locale]}/`,
@@ -31,6 +40,9 @@ export const routes: { [key in Routes]: Route } = {
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}`,
 };
 
+/**
+ * Localized parts for all route's paths
+ */
 const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   index: {
     'de-DE': '',

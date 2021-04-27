@@ -6,6 +6,11 @@ export type Cookie = {
   'max-age'?: number;
 };
 
+/**
+ * Gets a browser cookie
+ * @param name - The cookie's name
+ * @returns A Cookie object describing the browser cookie
+ */
 export const getCookie = (name: string): Cookie => {
   const cookie =
     typeof document !== 'undefined'
@@ -23,12 +28,20 @@ export const getCookie = (name: string): Cookie => {
   return cookie;
 };
 
+/**
+ * Sets a cookie in the browser
+ * @param props - Props object describing the cookie
+ */
 export const setCookie = ({ name, value, path, domain, 'max-age': maxAge }: Cookie): void => {
   document.cookie = `${name}=${value};${maxAge ? `max-age=${maxAge};` : ''}${
     domain ? `domain=${domain};` : ''
   }${path ? `path=${path};` : ''}samesite=strict`;
 };
 
+/**
+ * Deletes a cookie in the browser
+ * @param props - Props object describing the cookie
+ */
 export const deleteCookie = ({ name, path, domain }: Cookie): void => {
   document.cookie = `${name}= ;path=${path};${
     domain ? `domain=${domain};` : ''
