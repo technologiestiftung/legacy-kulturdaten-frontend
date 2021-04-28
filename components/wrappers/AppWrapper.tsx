@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Navigation } from '../Navigation';
+import { LocaleSwitch } from '../Navigation/LocaleSwitch';
 
 import { useUser } from '../user/useUser';
 
@@ -18,6 +19,9 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
       <UseUser />
       <Navigation />
       {children}
+      <div>
+        <LocaleSwitch />
+      </div>
     </>
   );
 };

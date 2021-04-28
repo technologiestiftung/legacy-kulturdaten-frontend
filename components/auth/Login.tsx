@@ -4,17 +4,18 @@ import getConfig from 'next/config';
 
 import { call, AuthLogin, authLoginBlueprint } from '../../lib/api';
 import { Cookie } from '../../lib/cookies';
-import { routes } from '../../lib/routing';
+import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
+import { Locale } from '../../config/routes';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
 } = getConfig();
 
-const authCookie = (value: string, remember: boolean): Cookie => ({
+const authCookie = (value: string, remember: boolean, locale: Locale): Cookie => ({
   'name': authTokenCookieName,
   'value': value,
-  'path': routes.index(),
+  'path': routes.index({ locale }),
   'max-age': remember ? 1209600 : undefined,
 });
 
@@ -26,11 +27,13 @@ export const LoginForm: React.FC = () => {
   const { isLoggedIn, login } = useUser();
   const router = useRouter();
 
+  const locale = useLocale();
+
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace(routes.dashboard());
+      router.replace(routes.dashboard({ locale }));
     }
-  }, [isLoggedIn, router]);
+  }, [isLoggedIn, router, locale]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -42,7 +45,7 @@ export const LoginForm: React.FC = () => {
       if (resp.status === 200) {
         const token = resp.body.meta.token;
 
-        login(authCookie(token, remember), routes.dashboard());
+        login(authCookie(token, remember, locale), routes.dashboard({ locale }));
       }
     } catch (e) {
       setError(e);
