@@ -59,19 +59,19 @@ export const Navigation: React.FC = () => {
             <a>User profile</a>
           </Link>
         </NavLink>
-        <NavLink route={routes.providers} locale={locale}>
-          <Link href={routes.providers({ locale })}>
-            <a>Providers</a>
+        <NavLink route={routes.organizers} locale={locale}>
+          <Link href={routes.organizers({ locale })}>
+            <a>Organizers</a>
           </Link>
         </NavLink>
-        <NavLink route={routes.provider} query={{ entry: 'example1' }} locale={locale}>
-          <Link href={routes.provider({ query: { entry: 'example1' }, locale })}>
-            <a>Provider Example 1</a>
+        <NavLink route={routes.organizer} query={{ entry: 'example1' }} locale={locale}>
+          <Link href={routes.organizer({ query: { entry: 'example1' }, locale })}>
+            <a>Organizer Example 1</a>
           </Link>
         </NavLink>
-        <NavLink route={routes.provider} query={{ entry: 'example2' }} locale={locale}>
-          <Link href={routes.provider({ query: { entry: 'example2' }, locale })}>
-            <a>Provider Example 2</a>
+        <NavLink route={routes.organizer} query={{ entry: 'example2' }} locale={locale}>
+          <Link href={routes.organizer({ query: { entry: 'example2' }, locale })}>
+            <a>Organizer Example 2</a>
           </Link>
         </NavLink>
       </StyledUl>

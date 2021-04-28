@@ -30,8 +30,8 @@ export enum Routes {
   login = 'login',
   register = 'register',
   userProfile = 'userProfile',
-  providers = 'providers',
-  provider = 'provider',
+  organizers = 'organizers',
+  organizer = 'organizer',
   imprint = 'imprint',
 }
 
@@ -47,9 +47,9 @@ export const routes: { [key in Routes]: Route } = {
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.login][locale]}/`,
   register: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.register][locale]}/`,
-  providers: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.providers][locale]}/`,
-  provider: ({ query, locale }) => `${routes.providers({ locale })}${query?.entry}/`,
+  organizers: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizers][locale]}/`,
+  organizer: ({ query, locale }) => `${routes.organizers({ locale })}${query?.entry}/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
 
@@ -77,11 +77,11 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'auth/register',
     'en-DE': 'auth/register',
   },
-  providers: {
-    'de-DE': 'providers',
-    'en-DE': 'providers',
+  organizers: {
+    'de-DE': 'organizers',
+    'en-DE': 'organizers',
   },
-  provider: {
+  organizer: {
     'de-DE': '',
     'en-DE': '',
   },
