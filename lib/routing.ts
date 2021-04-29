@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 
-import { Locale, routes, Routes } from '../config/routes';
+import { routes, Routes } from '../config/routes';
+import { Locale } from '../config/locales';
 import { setCookie } from './cookies';
 
 export type Route = (props: { locale: Locale; query?: ParsedUrlQuery }) => string;

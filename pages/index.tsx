@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 import { routes, useLocale } from '../lib/routing';
 import { LocaleSwitch } from '../components/Navigation/LocaleSwitch';
+import { useT } from '../lib/i18n';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -15,6 +16,7 @@ const StyledLi = styled.li`
 
 const IndexPage: NextPage = () => {
   const locale = useLocale();
+  const t = useT();
 
   return (
     <>
@@ -41,6 +43,11 @@ const IndexPage: NextPage = () => {
           </Link>
         </StyledLi>
       </StyledUl>
+      <div>
+        <h2>Localized test content</h2>
+        <p>fun: {t('foo.bar')}</p>
+        <p>param: {t('foo.coo', { x: 2 })}</p>
+      </div>
       <div>
         <LocaleSwitch />
       </div>
