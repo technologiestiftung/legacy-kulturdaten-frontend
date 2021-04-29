@@ -1,29 +1,15 @@
 import { ReactElement } from 'react';
 
-import { Locale } from '../config/routes';
+import { Locale } from '../config/locales';
 import { useLocale } from './routing';
+import localizations from '../i18n';
 
 type LocalizationParams = { [key: string]: string | number | boolean };
 
 type localizationFunction = (params: LocalizationParams) => string | ReactElement;
 
-type Localization = {
+export type Localization = {
   [key: string]: localizationFunction | Localization;
-};
-
-const localizations: { [key in Locale]: Localization } = {
-  'de-DE': {
-    foo: {
-      bar: () => 'Spaß',
-      coo: ({ x }) => `Wert ${x}`,
-    },
-  },
-  'en-DE': {
-    foo: {
-      bar: () => 'fun',
-      coo: ({ x }) => `Value ${x}`,
-    },
-  },
 };
 
 /**
@@ -36,7 +22,7 @@ const localizations: { [key in Locale]: Localization } = {
 const t = (locale: Locale, key: string, params?: LocalizationParams): string | ReactElement => {
   const localization = localizations[locale];
 
-  const found = key.split('.').reduce<localizationFunction | Localization>((before, currentKey) => {
+  const entry = key.split('.').reduce<localizationFunction | Localization>((before, currentKey) => {
     if (typeof before === 'object') {
       const foundEntry = Object.getOwnPropertyDescriptor(before, currentKey)?.value;
       if (foundEntry) {
@@ -49,8 +35,8 @@ const t = (locale: Locale, key: string, params?: LocalizationParams): string | R
     }
   }, localization);
 
-  if (typeof found === 'function') {
-    return found(params);
+  if (typeof entry === 'function') {
+    return entry(params);
   }
   throw new Error(`Key '${key}' points to object`);
 };

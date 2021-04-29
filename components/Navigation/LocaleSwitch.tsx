@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react';
-import { Locale, locales } from '../../config/routes';
+import { Locale, locales } from '../../config/locales';
 import { useLocale, useSwitchLocale } from '../../lib/routing';
 
 export const LocaleSwitch: React.FC = () => {

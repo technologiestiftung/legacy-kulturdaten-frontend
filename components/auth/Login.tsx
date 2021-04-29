@@ -6,7 +6,7 @@ import { call, AuthLogin, authLoginBlueprint } from '../../lib/api';
 import { Cookie } from '../../lib/cookies';
 import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
-import { Locale } from '../../config/routes';
+import { Locale } from '../../config/locales';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },

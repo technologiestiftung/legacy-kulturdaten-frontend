@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import { ParsedUrlQuery } from 'node:querystring';
-import { Locale } from '../../config/routes';
+import { Locale } from '../../config/locales';
 
 import {
   Route,
