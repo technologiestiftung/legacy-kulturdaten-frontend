@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
-import { Breakpoint, useBreakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { MenuButton, MenuButtonState } from './MenuButton';
 
 const HeaderContainer = styled.header`
@@ -25,34 +25,29 @@ const HeaderLink = styled.a`
 interface HeaderProps {
   title: string;
   Link: React.FC<{ content: React.ReactElement }>;
+  openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 }
 
-export const Header: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+export const Header: React.FC<HeaderProps> = ({ title, Link, openState }: HeaderProps) => {
+  const initialState = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = openState || initialState;
 
-  const breakpoint = useBreakpoint();
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
 
   return (
-    <>
-      <HeaderContainer>
-        {!isWideOrWider ? (
-          <MenuButton
-            onClick={() => {
-              setMenuOpen(!menuOpen);
-            }}
-            state={menuOpen ? MenuButtonState.close : MenuButtonState.open}
-          />
-        ) : (
-          ''
-        )}
+    <HeaderContainer>
+      {!isWideOrWider ? (
+        <MenuButton
+          onClick={() => {
+            setMenuOpen(!menuOpen);
+          }}
+          state={menuOpen ? MenuButtonState.close : MenuButtonState.open}
+        />
+      ) : (
+        ''
+      )}
 
-        <Link content={<HeaderLink>{title}</HeaderLink>} />
-      </HeaderContainer>
-      <div>
-        <div>Current breakpoint: {breakpoint}</div>
-        <div>Mid or wider: {isWideOrWider.toString()}</div>
-      </div>
-    </>
+      <Link content={<HeaderLink>{title}</HeaderLink>} />
+    </HeaderContainer>
   );
 };
