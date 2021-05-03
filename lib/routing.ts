@@ -85,7 +85,7 @@ export const useLocale = (): Locale => {
   const router = useRouter();
 
   useEffect(() => {
-    setLocale(router.locale as Locale);
+    setLocale((router?.locale as Locale) || Locale['de-DE']);
   }, [router]);
 
   return locale;

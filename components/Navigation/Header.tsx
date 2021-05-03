@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { Breakpoint, useBreakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { MenuButton, MenuButtonState } from './MenuButton';
 
 const HeaderContainer = styled.header`
   width: 100%;
@@ -20,21 +22,30 @@ const HeaderLink = styled.a`
   color: inherit;
 `;
 
-const Hamburger = styled.button``;
-
 interface HeaderProps {
   title: string;
   Link: React.FC<{ content: React.ReactElement }>;
 }
 
 export const Header: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
   const breakpoint = useBreakpoint();
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
 
   return (
     <>
       <HeaderContainer>
-        {!isWideOrWider ? <Hamburger>=</Hamburger> : ''}
+        {!isWideOrWider ? (
+          <MenuButton
+            onClick={() => {
+              setMenuOpen(!menuOpen);
+            }}
+            state={menuOpen ? MenuButtonState.close : MenuButtonState.open}
+          />
+        ) : (
+          ''
+        )}
 
         <Link content={<HeaderLink>{title}</HeaderLink>} />
       </HeaderContainer>
