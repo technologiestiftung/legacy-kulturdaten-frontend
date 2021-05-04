@@ -1,6 +1,11 @@
 import styled from '@emotion/styled';
 import { useContext } from 'react';
-import { Breakpoint, useBreakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import {
+  Breakpoint,
+  useBreakpoint,
+  useBreakpointOrWider,
+  WindowContext,
+} from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 
 import { MainMenuProps } from '../navigation/mainMenu/MainMenu';
@@ -105,6 +110,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const currentBreakpoint = useBreakpoint();
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
   const { mainMenuOpen, setMainMenuOpen } = useContext(NavigationContext);
+  const { rendered } = useContext(WindowContext);
 
   const isMidBreakpoint = currentBreakpoint === Breakpoint.mid;
   const showMenuOverlay = mainMenuOpen && isMidBreakpoint;
@@ -124,7 +130,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <Container>
       <MenuSlot>{mainMenu}</MenuSlot>
-      {titleAndContent}
+      {rendered ? titleAndContent : ''}
       {showMenuOverlay ? <MainMenuOverlay onClick={() => setMainMenuOpen(false)} /> : ''}
     </Container>
   );

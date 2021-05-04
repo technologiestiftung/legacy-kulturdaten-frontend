@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 
 import { ArrowRightSvg } from './ArrowRightSvg';
 import { useIsRouteStringActive } from '../../lib/routing';
+import { useContext } from 'react';
+import { NavigationContext } from './NavigationContext';
 
 const StyledA = styled.a<{ active?: boolean }>`
   color: inherit;
@@ -30,10 +32,11 @@ export interface MenuLinkProps {
 export const MenuLink: React.FC<MenuLinkProps> = ({ title, href, active }: MenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active || isRouteActive;
+  const { setMainMenuOpen } = useContext(NavigationContext);
 
   return (
     <Link href={href} passHref>
-      <StyledA title={title} active={linkIsActive}>
+      <StyledA title={title} onClick={() => setMainMenuOpen(false)} active={linkIsActive}>
         {linkIsActive ? <ArrowRightSvg /> : ''}
         {title}
       </StyledA>

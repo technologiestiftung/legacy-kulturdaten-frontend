@@ -6,7 +6,7 @@ import { Header } from '../header/Header';
 import { Sub, SubProps } from './Sub';
 import { MenuIcon, MenuIconName } from '../MenuIcon';
 import { MenuLink } from '../MenuLink';
-import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { NavigationContext } from '../NavigationContext';
 
 const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
@@ -26,13 +26,22 @@ const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
       : ''};
 `;
 
-const StyledMainMenuContent = styled.div`
+const StyledMainMenuContent = styled.div<{ show: boolean }>`
+  display: none;
+  visibility: hidden;
   overflow-y: auto;
   overflow-x: hidden;
   border-bottom: 1px solid var(--grey-400);
   flex-grow: 1;
   width: 100%;
-  /* position: absolute; */
+
+  ${({ show }) =>
+    show
+      ? css`
+          display: block;
+          visibility: inherit;
+        `
+      : ''}
 `;
 
 const StyledMainMenuSubs = styled.div``;
@@ -52,22 +61,20 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
   const { mainMenuOpen } = useContext(NavigationContext);
 
-  const showMenuContent = isWideOrWider || mainMenuOpen;
+  const { rendered } = useContext(WindowContext);
+
+  const showMenuContent = rendered && (isWideOrWider || mainMenuOpen);
 
   return (
     <StyledMainMenu fullscreen={showMenuContent}>
       <StyledMainMenuHeader>
         <Header title={title} Link={Link} />
       </StyledMainMenuHeader>
-      {showMenuContent ? (
-        <StyledMainMenuContent>
-          <StyledMainMenuSubs>
-            {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
-          </StyledMainMenuSubs>
-        </StyledMainMenuContent>
-      ) : (
-        ''
-      )}
+      <StyledMainMenuContent show={showMenuContent}>
+        <StyledMainMenuSubs>
+          {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
+        </StyledMainMenuSubs>
+      </StyledMainMenuContent>
     </StyledMainMenu>
   );
 };

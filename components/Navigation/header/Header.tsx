@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useContext } from 'react';
-import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { NavigationContext } from '../NavigationContext';
 import { MenuButton, MenuButtonState } from './MenuButton';
 
@@ -30,12 +30,12 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
   const { mainMenuOpen, setMainMenuOpen } = useContext(NavigationContext);
-
+  const { rendered } = useContext(WindowContext);
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
 
   return (
     <HeaderContainer>
-      {!isWideOrWider ? (
+      {rendered && !isWideOrWider ? (
         <MenuButton
           onClick={() => {
             setMainMenuOpen(!mainMenuOpen);

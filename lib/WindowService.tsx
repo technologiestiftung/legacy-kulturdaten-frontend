@@ -3,11 +3,13 @@ import React, { ReactNode, useContext, useEffect, useMemo, useState } from 'reac
 type WindowContext = {
   innerWidth: number;
   innerHeight: number;
+  rendered: boolean;
 };
 
 export const WindowContext = React.createContext<WindowContext>({
   innerWidth: 0,
   innerHeight: 0,
+  rendered: false,
 });
 
 type WindowContextProviderProps = {
@@ -23,8 +25,13 @@ export const WindowContextProvider: React.FC<WindowContextProviderProps> = ({
   const [innerHeight, setinnerHeight] = useState<number>(
     typeof window !== 'undefined' ? window.innerHeight : 0
   );
+  const [rendered, setRendered] = useState<boolean>(false);
 
   useEffect(() => {
+    setInnerWidth(window.innerWidth);
+    setinnerHeight(window.innerHeight);
+    setRendered(true);
+
     window.addEventListener('resize', () => {
       setInnerWidth(window.innerWidth);
       setinnerHeight(window.innerHeight);
@@ -36,6 +43,7 @@ export const WindowContextProvider: React.FC<WindowContextProviderProps> = ({
       value={{
         innerWidth,
         innerHeight,
+        rendered,
       }}
     >
       {children}
