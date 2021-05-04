@@ -1,6 +1,13 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { MenuIconName } from './mainMenu/MainMenu';
+
+export enum MenuIconName {
+  start = 'start',
+  organizer = 'organizer',
+  offer = 'offer',
+  location = 'location',
+  user = 'user',
+}
 
 const StartSvg: React.FC = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,7 +1,9 @@
 import { Story } from '@storybook/react';
 import React from 'react';
 import { Header } from './header/Header';
-import { MenuIconName, useMainMenu } from './mainMenu/MainMenu';
+import { useMainMenu } from './mainMenu/MainMenu';
+import { MenuIconName } from './MenuIcon';
+import { AppLayout } from '../layouts/AppLayout';
 
 export default {
   title: 'Navigation',
@@ -95,5 +97,7 @@ export const MainMenuStory: Story = () => {
     TestLink
   );
 
-  return mainMenu;
+  return (
+    <AppLayout mainMenu={mainMenu} content={<div>Content</div>} titleBar={<div>Page title</div>} />
+  );
 };

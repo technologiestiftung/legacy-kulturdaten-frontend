@@ -2,13 +2,13 @@ import styled from '@emotion/styled';
 import { MenuLinkProps } from '../MenuLink';
 
 const StyledSub = styled.div<{ active?: boolean }>`
-  border: 1px solid var(--grey-400);
-  border-top: none;
   width: 100%;
+  margin-top: -1px;
   background: ${({ active }) => (active ? 'var(--white)' : 'var(--grey-200)')};
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
+  box-shadow: 0px -1px 0px var(--grey-400);
 `;
 
 const StyledSubHead = styled.div`
@@ -16,7 +16,6 @@ const StyledSubHead = styled.div`
   flex-direction: row;
   justify-content: space-between;
   padding: 0.375rem 0.75rem;
-  border-bottom: 1px solid var(--grey-400);
 `;
 
 const StyledSubTitle = styled.div``;
@@ -26,6 +25,7 @@ const StyledSubContent = styled.div`
   padding: 1.125rem 0.75rem;
   display: grid;
   grid-row-gap: 0.75rem;
+  box-shadow: 0px 1px 0px var(--grey-400), inset 0px 1px 0px var(--grey-400);
 `;
 
 const StyledSubItem = styled.div``;

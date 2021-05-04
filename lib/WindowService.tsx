@@ -49,7 +49,7 @@ export enum Breakpoint {
   wide = 'wide',
 }
 
-const breakpoints: { [key in Breakpoint]: number } = {
+export const breakpoints: { [key in Breakpoint]: number } = {
   default: 0,
   mid: 768,
   wide: 1200,

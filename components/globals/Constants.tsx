@@ -1,4 +1,5 @@
 import { Global, css } from '@emotion/react';
+import { breakpoints, Breakpoint } from '../../lib/WindowService';
 
 export const CSSVars: React.FC = () => (
   <Global
@@ -39,3 +40,6 @@ export const CSSVars: React.FC = () => (
     `}
   />
 );
+
+export const mq = (breakpoint: Breakpoint): string =>
+  `@media screen and (min-width: ${breakpoints[breakpoint]}px)`;

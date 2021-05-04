@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 
 import { Header } from '../header/Header';
 import { Sub, SubProps } from './Sub';
-import { MenuIcon } from '../MenuIcon';
+import { MenuIcon, MenuIconName } from '../MenuIcon';
 import { MenuLink } from '../MenuLink';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { NavigationContext } from '../NavigationContext';
@@ -13,7 +13,9 @@ const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   background: var(--grey-200);
   display: flex;
   flex-direction: column;
-  justify-content: stretch;
+  border: 1px solid var(--grey-400);
+  border-bottom: none;
+  position: relative;
 
   ${({ fullscreen }) =>
     fullscreen
@@ -21,12 +23,16 @@ const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
           height: 100vh;
           overflow: hidden;
         `
-      : ''}
+      : ''};
 `;
 
 const StyledMainMenuContent = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
+  border-bottom: 1px solid var(--grey-400);
+  flex-grow: 1;
+  width: 100%;
+  /* position: absolute; */
 `;
 
 const StyledMainMenuSubs = styled.div``;
@@ -36,7 +42,7 @@ const StyledMainMenuHeader = styled.div`
   left: 0;
 `;
 
-interface MainMenuProps {
+export interface MainMenuProps {
   subs: React.ReactElement<SubProps>[];
   title: string;
   Link: React.FC<{ content: React.ReactElement }>;
@@ -65,14 +71,6 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
     </StyledMainMenu>
   );
 };
-
-export enum MenuIconName {
-  start = 'start',
-  organizer = 'organizer',
-  offer = 'offer',
-  location = 'location',
-  user = 'user',
-}
 
 type MenuStructure = {
   title: string;
