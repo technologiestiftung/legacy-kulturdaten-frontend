@@ -1,11 +1,11 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
 import { Header } from '../header/Header';
 import { Sub, SubProps } from './Sub';
 import { MenuIcon, MenuIconName } from '../MenuIcon';
-import { MenuLink } from '../MenuLink';
+import { MenuLink, MenuLinkProps } from '../MenuLink';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { NavigationContext } from '../NavigationContext';
 
@@ -34,6 +34,7 @@ const StyledMainMenuContent = styled.div<{ show: boolean }>`
   border-bottom: 1px solid var(--grey-400);
   flex-grow: 1;
   width: 100%;
+  padding-bottom: env(safe-area-inset-bottom);
 
   ${({ show }) =>
     show
@@ -79,13 +80,28 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
   );
 };
 
+export enum MenuAction {
+  link = 'link',
+  button = 'button',
+}
+
+type MenuActionLink = {
+  title: string;
+  href: string;
+  active?: boolean;
+};
+
+type MenuActionButton = {
+  title: string;
+  call: () => void;
+};
+
 type MenuStructure = {
   title: string;
   icon: MenuIconName;
-  links: {
-    title: string;
-    href: string;
-    active?: boolean;
+  actions: {
+    type: MenuAction;
+    action: MenuActionLink | MenuActionButton;
   }[];
 }[];
 
@@ -94,30 +110,41 @@ export const useMainMenu = (
   title: string,
   Link: React.FC<{ content: React.ReactElement }>
 ): React.ReactElement => {
-  const activeSub = useMemo(
-    () =>
-      structure.reduce<number>((activeIndex, item, index) => {
-        for (let i = 0; i < item.links.length; i += 1) {
-          if (item.links[i].active) {
-            return index;
-          }
+  const { setMainMenuOpen } = useContext(NavigationContext);
+  const subs = structure.map(({ title, icon, actions }, index) => {
+    const renderedActions = actions?.map(({ type, action }, actionIndex) => {
+      switch (type) {
+        case MenuAction.link: {
+          return <MenuLink key={actionIndex} {...(action as MenuLinkProps)} subMenuKey={index} />;
         }
-        return activeIndex;
-      }, 0),
-    [structure]
-  );
 
-  const subs = structure.map(({ title, icon, links }, index) => {
-    const renderedLinks = links.map(({ title, href, active }, linkIndex) => (
-      <MenuLink title={title} href={href} active={active} key={linkIndex} />
-    ));
+        case MenuAction.button: {
+          const { title, call } = action as MenuActionButton;
+          return (
+            <button
+              onClick={() => {
+                call();
+                setMainMenuOpen(false);
+              }}
+            >
+              {title}
+            </button>
+          );
+        }
+
+        default: {
+          break;
+        }
+      }
+    });
+
     return (
       <Sub
-        active={activeSub === index}
         title={title}
         icon={<MenuIcon type={icon} />}
-        links={renderedLinks}
+        actions={renderedActions}
         key={index}
+        subMenuKey={index}
       />
     );
   });

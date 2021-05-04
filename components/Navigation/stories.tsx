@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react';
 import React from 'react';
 import { Header } from './header/Header';
-import { useMainMenu } from './mainMenu/MainMenu';
+import { MenuAction, useMainMenu } from './mainMenu/MainMenu';
 import { MenuIconName } from './MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
 
@@ -24,71 +24,108 @@ export const MainMenuStory: Story = () => {
       {
         title: 'Start',
         icon: MenuIconName.start,
-        links: [
+        actions: [
           {
-            title: 'Dashboard',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Dashboard',
+              href: '#',
+              active: true,
+            },
           },
           {
-            title: 'Benachrichtigungen',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Benachrichtigungen',
+              href: '#',
+            },
           },
         ],
       },
       {
         title: 'Anbieter:innen',
         icon: MenuIconName.organizer,
-        links: [
+        actions: [
           {
-            title: 'Alle Anbieter:innen',
-            href: '#',
-            active: true,
+            type: MenuAction.link,
+            action: {
+              title: 'Alle Anbieter:innen',
+              href: '#',
+            },
           },
           {
-            title: 'Meine Anbieter:innen',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Anbieter:innen',
+              href: '#',
+            },
           },
         ],
       },
       {
         title: 'Angebote',
         icon: MenuIconName.offer,
-        links: [
+        actions: [
           {
-            title: 'Alle Angebote',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Alle Angebote',
+              href: '#',
+            },
           },
           {
-            title: 'Meine Angebote',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Angebote',
+              href: '#',
+            },
           },
         ],
       },
       {
         title: 'Orte',
         icon: MenuIconName.location,
-        links: [
+        actions: [
           {
-            title: 'Alle Orte',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Alle Orte',
+              href: '#',
+            },
           },
           {
-            title: 'Meine Orte',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Orte',
+              href: '#',
+            },
           },
         ],
       },
       {
         title: 'Nutzer:in',
         icon: MenuIconName.user,
-        links: [
+        actions: [
           {
-            title: 'Meine Einstellungen',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Mein Profil',
+              href: '#',
+            },
           },
           {
-            title: 'Abmelden',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Einstellungen',
+              href: '#',
+            },
+          },
+          {
+            type: MenuAction.link,
+            action: {
+              title: 'Abmelden',
+              href: '#',
+            },
           },
         ],
       },

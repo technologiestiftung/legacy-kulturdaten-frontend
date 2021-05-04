@@ -13,6 +13,10 @@ export enum Routes {
   userProfile = 'userProfile',
   organizers = 'organizers',
   organizer = 'organizer',
+  offers = 'offers',
+  offer = 'offer',
+  locations = 'locations',
+  location = 'location',
   imprint = 'imprint',
 }
 
@@ -31,6 +35,12 @@ export const routes: { [key in Routes]: Route } = {
   organizers: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizers][locale]}/`,
   organizer: ({ query, locale }) => `${routes.organizers({ locale })}${query?.entry}/`,
+  offers: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offers][locale]}/`,
+  offer: ({ query, locale }) => `${routes.offers({ locale })}${query?.entry}/`,
+  locations: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.locations][locale]}/`,
+  location: ({ query, locale }) => `${routes.locations({ locale })}${query?.entry}/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
 
@@ -63,6 +73,22 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'en-DE': 'organizers',
   },
   organizer: {
+    'de-DE': '',
+    'en-DE': '',
+  },
+  offers: {
+    'de-DE': 'offers',
+    'en-DE': 'offers',
+  },
+  offer: {
+    'de-DE': '',
+    'en-DE': '',
+  },
+  locations: {
+    'de-DE': 'locations',
+    'en-DE': 'locations',
+  },
+  location: {
     'de-DE': '',
     'en-DE': '',
   },

@@ -11,12 +11,6 @@ import { mq } from '../globals/Constants';
 import { MainMenuProps } from '../navigation/mainMenu/MainMenu';
 import { NavigationContext } from '../navigation/NavigationContext';
 
-interface AppLayoutProps {
-  mainMenu: React.ReactElement<MainMenuProps>;
-  titleBar: React.ReactNode;
-  content: React.ReactNode;
-}
-
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -102,6 +96,12 @@ const MainMenuOverlay = styled.div`
   cursor: pointer;
 `;
 
+interface AppLayoutProps {
+  mainMenu: React.ReactElement<MainMenuProps>;
+  content: React.ReactNode;
+  titleBar?: React.ReactNode;
+}
+
 export const AppLayout: React.FC<AppLayoutProps> = ({
   mainMenu,
   titleBar,
@@ -117,12 +117,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
   const titleAndContent = isWideOrWider ? (
     <TitleAndContentContainer>
-      <TitleBarSlot>{titleBar}</TitleBarSlot>
+      {titleBar ? <TitleBarSlot>{titleBar}</TitleBarSlot> : ''}
       <ContentSlot>{content}</ContentSlot>
     </TitleAndContentContainer>
   ) : (
     <>
-      <TitleBarSlot>{titleBar}</TitleBarSlot>
+      {titleBar ? <TitleBarSlot>{titleBar}</TitleBarSlot> : ''}
       <ContentSlot>{content}</ContentSlot>
     </>
   );

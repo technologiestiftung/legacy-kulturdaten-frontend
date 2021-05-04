@@ -1,5 +1,6 @@
+import React, { useContext } from 'react';
 import styled from '@emotion/styled';
-import { MenuLinkProps } from '../MenuLink';
+import { NavigationContext } from '../NavigationContext';
 
 const StyledSub = styled.div<{ active?: boolean }>`
   width: 100%;
@@ -33,20 +34,24 @@ const StyledSubItem = styled.div``;
 export interface SubProps {
   title: string;
   icon: React.ReactElement;
-  links: React.ReactElement<MenuLinkProps>[];
-  active?: boolean;
+  subMenuKey: number;
+  actions: React.ReactElement[];
 }
 
-export const Sub: React.FC<SubProps> = ({ title, icon, links, active }: SubProps) => (
-  <StyledSub active={active}>
-    <StyledSubHead>
-      <StyledSubIcon>{icon}</StyledSubIcon>
-      <StyledSubTitle>{title}</StyledSubTitle>
-    </StyledSubHead>
-    <StyledSubContent>
-      {links.map((item, index) => (
-        <StyledSubItem key={index}>{item}</StyledSubItem>
-      ))}
-    </StyledSubContent>
-  </StyledSub>
-);
+export const Sub: React.FC<SubProps> = ({ title, icon, actions, subMenuKey }: SubProps) => {
+  const { activeSubMenu } = useContext(NavigationContext);
+
+  return (
+    <StyledSub active={activeSubMenu === subMenuKey}>
+      <StyledSubHead>
+        <StyledSubIcon>{icon}</StyledSubIcon>
+        <StyledSubTitle>{title}</StyledSubTitle>
+      </StyledSubHead>
+      <StyledSubContent>
+        {actions.map((item, index) => (
+          <StyledSubItem key={index}>{item}</StyledSubItem>
+        ))}
+      </StyledSubContent>
+    </StyledSub>
+  );
+};

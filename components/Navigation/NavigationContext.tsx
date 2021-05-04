@@ -3,6 +3,8 @@ import React, { ReactNode, useState } from 'react';
 type NavigationContext = {
   mainMenuOpen: boolean;
   setMainMenuOpen: (open: boolean) => void;
+  activeSubMenu: number;
+  setActiveSubMenu: (subMenuKey: number) => void;
 };
 
 export const NavigationContext = React.createContext<NavigationContext>({
@@ -10,16 +12,21 @@ export const NavigationContext = React.createContext<NavigationContext>({
   setMainMenuOpen: () => {
     //
   },
+  activeSubMenu: undefined,
+  setActiveSubMenu: () => {
+    //
+  },
 });
 
-type NavigationContextProviderProps = {
+interface NavigationContextProviderProps {
   children: ReactNode;
-};
+}
 
 export const NavigationContextProvider: React.FC<NavigationContextProviderProps> = ({
   children,
 }: NavigationContextProviderProps) => {
   const [mainMenuOpenState, setMainMenuOpenState] = useState<boolean>(false);
+  const [activeSubMenuState, setActiveSubMenuState] = useState<number>();
 
   return (
     <NavigationContext.Provider
@@ -28,6 +35,8 @@ export const NavigationContextProvider: React.FC<NavigationContextProviderProps>
         setMainMenuOpen: (open) => {
           setMainMenuOpenState(open);
         },
+        activeSubMenu: activeSubMenuState,
+        setActiveSubMenu: (subMenuKey) => setActiveSubMenuState(subMenuKey),
       }}
     >
       {children}

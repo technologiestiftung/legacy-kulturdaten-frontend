@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { routes, useLocale } from '../../lib/routing';
 import { AppLayout } from '../layouts/AppLayout';
 import { LocaleSwitch } from '../navigation/LocaleSwitch';
-import { useMainMenu } from '../navigation/mainMenu/MainMenu';
+import { MenuAction, useMainMenu } from '../navigation/mainMenu/MainMenu';
 import { MenuIconName } from '../navigation/MenuIcon';
+import { NavigationContext } from '../navigation/NavigationContext';
 
 import { useUser } from '../user/useUser';
 
@@ -23,90 +24,142 @@ const TestLink: React.FC<{ content: React.ReactElement }> = ({
   content: React.ReactElement;
 }) => {
   const locale = useLocale();
+  const { setMainMenuOpen } = useContext(NavigationContext);
 
   return (
     <Link href={routes.dashboard({ locale })} passHref>
-      {content}
+      {React.cloneElement(content, { onClick: () => setMainMenuOpen(false) })}
     </Link>
   );
 };
 
 export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
   const locale = useLocale();
+  const { logout } = useUser();
 
   const mainMenu = useMainMenu(
     [
       {
         title: 'Start',
         icon: MenuIconName.start,
-        links: [
+        actions: [
           {
-            title: 'Dashboard',
-            href: routes.dashboard({ locale }),
+            type: MenuAction.link,
+            action: {
+              title: 'Dashboard',
+              href: routes.dashboard({ locale }),
+            },
           },
           {
-            title: 'Benachrichtigungen',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Benachrichtigungen',
+              href: '#',
+            },
           },
         ],
       },
       {
         title: 'Anbieter:innen',
         icon: MenuIconName.organizer,
-        links: [
+        actions: [
           {
-            title: 'Alle Anbieter:innen',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Alle Anbieter:innen',
+              href: routes.organizers({ locale }),
+            },
           },
           {
-            title: 'Meine Anbieter:innen',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Anbieter:innen',
+              href: routes.organizer({
+                locale,
+                query: {
+                  id: '1',
+                },
+              }),
+            },
           },
         ],
       },
       {
         title: 'Angebote',
         icon: MenuIconName.offer,
-        links: [
+        actions: [
           {
-            title: 'Alle Angebote',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Alle Angebote',
+              href: routes.offers({ locale }),
+            },
           },
           {
-            title: 'Meine Angebote',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Angebote',
+              href: routes.offer({
+                locale,
+                query: {
+                  id: '1',
+                },
+              }),
+            },
           },
         ],
       },
       {
         title: 'Orte',
         icon: MenuIconName.location,
-        links: [
+        actions: [
           {
-            title: 'Alle Orte',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Alle Orte',
+              href: routes.locations({ locale }),
+            },
           },
           {
-            title: 'Meine Orte',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Orte',
+              href: routes.location({
+                locale,
+                query: {
+                  id: '1',
+                },
+              }),
+            },
           },
         ],
       },
       {
         title: 'Nutzer:in',
         icon: MenuIconName.user,
-        links: [
+        actions: [
           {
-            title: 'Mein Profil',
-            href: routes.userProfile({ locale }),
+            type: MenuAction.link,
+            action: {
+              title: 'Mein Profil',
+              href: routes.userProfile({ locale }),
+            },
           },
           {
-            title: 'Meine Einstellungen',
-            href: '#',
+            type: MenuAction.link,
+            action: {
+              title: 'Meine Einstellungen',
+              href: '#',
+            },
           },
           {
-            title: 'Abmelden',
-            href: '#',
+            type: MenuAction.button,
+            action: {
+              title: 'Abmelden',
+              call: () => {
+                logout();
+              },
+            },
           },
         ],
       },
