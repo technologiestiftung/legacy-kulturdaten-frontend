@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import { routes, useLocale } from '../lib/routing';
-import { LocaleSwitch } from '../components/Navigation/LocaleSwitch';
+import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 import { useT } from '../lib/i18n';
 
 const StyledUl = styled.ul`

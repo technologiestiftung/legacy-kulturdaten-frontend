@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { MouseEventHandler } from 'react';
 
-import { useT } from '../../lib/i18n';
+import { useT } from '../../../lib/i18n';
 
 interface SVGProps {
   state: MenuButtonState;

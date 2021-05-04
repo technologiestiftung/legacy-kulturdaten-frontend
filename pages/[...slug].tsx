@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import MD from 'markdown-to-jsx';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { LocaleSwitch } from '../components/Navigation/LocaleSwitch';
+import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 
 interface ContentPageProps {
   markdownContent: string;

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
-import { Navigation } from '../Navigation';
-import { LocaleSwitch } from '../Navigation/LocaleSwitch';
+import { Navigation } from '../navigation';
+import { LocaleSwitch } from '../navigation/LocaleSwitch';
 
 import { useUser } from '../user/useUser';
 

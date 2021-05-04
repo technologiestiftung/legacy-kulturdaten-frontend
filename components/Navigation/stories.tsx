@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react';
 import React from 'react';
-import { Header } from './Header';
-import { MenuIconName, useMainMenu } from './MainMenu';
+import { Header } from './header/Header';
+import { MenuIconName, useMainMenu } from './mainMenu/MainMenu';
 
 export default {
   title: 'Navigation',
@@ -17,7 +17,7 @@ export const HeaderStory: Story = () => <Header title="Kulturdaten.Berlin" Link=
 HeaderStory.storyName = 'Header';
 
 export const MainMenuStory: Story = () => {
-  const [mainMenu] = useMainMenu(
+  const mainMenu = useMainMenu(
     [
       {
         title: 'Start',

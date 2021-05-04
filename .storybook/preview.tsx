@@ -4,6 +4,7 @@ import { CSSVars } from '../components/globals/Constants';
 import { Typography } from '../components/globals/Typography';
 import { Reset } from '../components/globals/Reset';
 import { WindowContextProvider } from '../lib/WindowService';
+import { NavigationContextProvider } from '../components/navigation/NavigationContext';
 
 addDecorator((story) => {
   return (
@@ -12,7 +13,9 @@ addDecorator((story) => {
       <CSSVars />
       <Global />
       <Typography />
-      <WindowContextProvider>{story()}</WindowContextProvider>
+      <WindowContextProvider>
+        <NavigationContextProvider>{story()}</NavigationContextProvider>
+      </WindowContextProvider>
     </>
   );
 });

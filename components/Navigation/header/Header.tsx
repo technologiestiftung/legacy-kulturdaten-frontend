@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { useContext } from 'react';
+import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { NavigationContext } from '../NavigationContext';
 import { MenuButton, MenuButtonState } from './MenuButton';
 
 const HeaderContainer = styled.header`
@@ -25,12 +26,10 @@ const HeaderLink = styled.a`
 interface HeaderProps {
   title: string;
   Link: React.FC<{ content: React.ReactElement }>;
-  openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 }
 
-export const Header: React.FC<HeaderProps> = ({ title, Link, openState }: HeaderProps) => {
-  const initialState = useState<boolean>(false);
-  const [menuOpen, setMenuOpen] = openState || initialState;
+export const Header: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
+  const { mainMenuOpen, setMainMenuOpen } = useContext(NavigationContext);
 
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
 
@@ -39,9 +38,9 @@ export const Header: React.FC<HeaderProps> = ({ title, Link, openState }: Header
       {!isWideOrWider ? (
         <MenuButton
           onClick={() => {
-            setMenuOpen(!menuOpen);
+            setMainMenuOpen(!mainMenuOpen);
           }}
-          state={menuOpen ? MenuButtonState.close : MenuButtonState.open}
+          state={mainMenuOpen ? MenuButtonState.close : MenuButtonState.open}
         />
       ) : (
         ''
