@@ -18,6 +18,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  align-content: flex-start;
 
   ${mq(Breakpoint.mid)} {
     grid-template-columns: repeat(11, 1fr);
@@ -29,7 +30,7 @@ const Container = styled.div`
 `;
 
 const MenuSlot = styled.div`
-  position: sticky;
+  position: relative;
   top: 0;
   left: 0;
   height: 3rem;
@@ -67,10 +68,6 @@ const ContentSlot = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 100%;
-
-  > * {
-    min-height: 200vh;
-  }
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;

@@ -98,6 +98,15 @@ export const MainMenuStory: Story = () => {
   );
 
   return (
-    <AppLayout mainMenu={mainMenu} content={<div>Content</div>} titleBar={<div>Page title</div>} />
+    <AppLayout
+      mainMenu={mainMenu}
+      content={
+        <div>
+          Content Content Content Content Content Content Content Content Content Content Content
+          Content Content Content Content Content Content Content Content Content{' '}
+        </div>
+      }
+      titleBar={<div>Page title</div>}
+    />
   );
 };
