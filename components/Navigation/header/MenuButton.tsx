@@ -22,8 +22,12 @@ const SVG: React.FC<SVGProps> = ({ state }: SVGProps) => {
       <title id="menu-button-icon">
         {state === MenuButtonState.open ? t('menu.button.open') : t('menu.button.close')}
       </title>
-      <path d="M5 8H19" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
-      <path d="M19 16H5" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
+      <g>
+        <path d="M5 8H19" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
+      </g>
+      <g>
+        <path d="M19 16H5" stroke="#111111" strokeWidth="2" strokeLinecap="round" />
+      </g>
     </svg>
   );
 };
@@ -39,78 +43,42 @@ const StyledMenuButton = styled.button<{ state: MenuButtonState }>`
   display: block;
   cursor: pointer;
 
-  @keyframes topToClose {
-    0% {
-      transform: translateY(0) rotateZ(0deg);
-    }
-    50% {
-      transform: translateY(calc(4 / 24 * 100%)) rotateZ(0deg);
-    }
-    100% {
-      transform: translateY(calc(4 / 24 * 100%)) rotateZ(45deg);
-    }
-  }
-
-  @keyframes topToOpen {
-    0% {
-      transform: translateY(calc(4 / 24 * 100%)) rotateZ(45deg);
-    }
-    50% {
-      transform: translateY(calc(4 / 24 * 100%)) rotateZ(0deg);
-    }
-    100% {
-      transform: translateY(0) rotateZ(0deg);
-    }
-  }
-
-  @keyframes bottomToClose {
-    0% {
-      transform: translateY(0) rotateZ(0deg);
-    }
-    50% {
-      transform: translateY(calc(4 / 24 * -100%)) rotateZ(0deg);
-    }
-    100% {
-      transform: translateY(calc(4 / 24 * -100%)) rotateZ(-45deg);
-    }
-  }
-
-  @keyframes bottomToOpen {
-    0% {
-      transform: translateY(calc(4 / 24 * -100%)) rotateZ(-45deg);
-    }
-    50% {
-      transform: translateY(calc(4 / 24 * -100%)) rotateZ(0deg);
-    }
-    100% {
-      transform: translateY(0) rotateZ(0deg);
-    }
-  }
-
   svg {
     display: block;
     position: relative;
 
-    path {
+    g {
       stroke: var(--black);
+      animation-duration: 0.125s;
+      transition: transform
+        ${({ state }) => (state === MenuButtonState.open ? '0.0625s 0.0625s' : '0.0625s')};
+
+      path {
+        transition: transform
+          ${({ state }) => (state === MenuButtonState.open ? '0.0625s' : '0.0625s 0.0625s')};
+      }
     }
 
-    path:nth-of-type(1) {
+    g:nth-of-type(1) {
       transform-origin: 50% calc(50% - (4 / 24 * 100%));
-      animation-duration: 0.125s;
-      animation-name: ${({ state }) =>
-        state === MenuButtonState.open ? 'topToOpen' : 'topToClose'};
       transform: ${({ state }) =>
-        state === MenuButtonState.open ? '' : 'translateY(calc(4 / 24 * 100%)) rotateZ(45deg)'};
+        state === MenuButtonState.open ? '' : 'translateY(calc(4 / 24 * 100%))'};
+
+      path {
+        transform-origin: 50% calc(50% - (4 / 24 * 100%));
+        transform: ${({ state }) => (state === MenuButtonState.open ? '' : 'rotateZ(45deg)')};
+      }
     }
 
-    path:nth-of-type(2) {
+    g:nth-of-type(2) {
       transform-origin: 50% calc(50% + (4 / 24 * 100%));
-      animation-duration: 0.125s;
-      animation-name: ${({ state }) =>
-        state === MenuButtonState.open ? 'bottomToOpen' : 'bottomToClose'};
       transform: ${({ state }) =>
-        state === MenuButtonState.open ? '' : 'translateY(calc(4 / 24 * -100%)) rotateZ(-45deg)'};
+        state === MenuButtonState.open ? '' : 'translateY(calc(4 / 24 * -100%))'};
+
+      path {
+        transform-origin: 50% calc(50% + (4 / 24 * 100%));
+        transform: ${({ state }) => (state === MenuButtonState.open ? '' : 'rotateZ(-45deg)')};
+      }
     }
   }
 `;
