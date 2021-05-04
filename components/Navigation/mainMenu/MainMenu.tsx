@@ -1,13 +1,34 @@
+import React, { useContext, useMemo } from 'react';
 import styled from '@emotion/styled';
-import React, { useMemo } from 'react';
+import { css } from '@emotion/react';
 
 import { Header } from '../header/Header';
 import { Sub, SubProps } from './Sub';
 import { MenuIcon } from '../MenuIcon';
 import { MenuLink } from '../MenuLink';
+import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { NavigationContext } from '../NavigationContext';
 
-const StyledMainMenu = styled.div``;
-const StyledMainMenuContent = styled.div``;
+const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
+  background: var(--grey-200);
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+
+  ${({ fullscreen }) =>
+    fullscreen
+      ? css`
+          height: 100vh;
+          overflow: hidden;
+        `
+      : ''}
+`;
+
+const StyledMainMenuContent = styled.div`
+  overflow-y: auto;
+  overflow-x: hidden;
+`;
+
 const StyledMainMenuSubs = styled.div``;
 const StyledMainMenuHeader = styled.div`
   position: sticky;
@@ -22,16 +43,25 @@ interface MainMenuProps {
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMenuProps) => {
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const { mainMenuOpen } = useContext(NavigationContext);
+
+  const showMenuContent = isWideOrWider || mainMenuOpen;
+
   return (
-    <StyledMainMenu>
+    <StyledMainMenu fullscreen={showMenuContent}>
       <StyledMainMenuHeader>
         <Header title={title} Link={Link} />
       </StyledMainMenuHeader>
-      <StyledMainMenuContent>
-        <StyledMainMenuSubs>
-          {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
-        </StyledMainMenuSubs>
-      </StyledMainMenuContent>
+      {showMenuContent ? (
+        <StyledMainMenuContent>
+          <StyledMainMenuSubs>
+            {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
+          </StyledMainMenuSubs>
+        </StyledMainMenuContent>
+      ) : (
+        ''
+      )}
     </StyledMainMenu>
   );
 };
