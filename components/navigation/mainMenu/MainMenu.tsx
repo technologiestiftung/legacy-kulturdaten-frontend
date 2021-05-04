@@ -20,7 +20,7 @@ const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   ${({ fullscreen }) =>
     fullscreen
       ? css`
-          height: 100vh;
+          height: var(--app-height);
           overflow: hidden;
         `
       : ''};

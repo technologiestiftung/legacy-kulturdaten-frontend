@@ -30,11 +30,22 @@ export const WindowContextProvider: React.FC<WindowContextProviderProps> = ({
   useEffect(() => {
     setInnerWidth(window.innerWidth);
     setinnerHeight(window.innerHeight);
+    document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
     setRendered(true);
 
     window.addEventListener('resize', () => {
       setInnerWidth(window.innerWidth);
       setinnerHeight(window.innerHeight);
+
+      let isWritingAppHeight = false;
+
+      requestAnimationFrame(() => {
+        if (!isWritingAppHeight) {
+          isWritingAppHeight = true;
+          document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+          isWritingAppHeight = false;
+        }
+      });
     });
   }, []);
 

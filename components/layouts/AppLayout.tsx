@@ -15,7 +15,7 @@ const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 100%;
-  height: 100vh;
+  height: var(--app-height);
   overflow: hidden;
   align-content: flex-start;
 

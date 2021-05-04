@@ -30,6 +30,8 @@ export const CSSVars: React.FC = () => (
         --font-size-700: 1.5rem;
         --line-height-700: 2.25rem;
 
+        --app-height: 100vh;
+
         @media screen and (min-width: 768px) {
           --font-size-600: 1.5rem;
           --line-height-600: 2.25rem;
