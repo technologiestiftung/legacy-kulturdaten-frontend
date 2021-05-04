@@ -1,42 +1,24 @@
-import Link from 'next/link';
-import React, { ReactNode, useContext } from 'react';
-import { routes, useLocale } from '../../lib/routing';
+import { Story } from '@storybook/react';
+import React from 'react';
+import { Header } from './header/Header';
+import { MenuAction, useMainMenu } from './mainMenu/MainMenu';
+import { MenuIconName } from './MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
-import { LocaleSwitch } from '../navigation/LocaleSwitch';
-import { MenuAction, useMainMenu } from '../navigation/mainMenu/MainMenu';
-import { MenuIconName } from '../navigation/MenuIcon';
-import { NavigationContext } from '../navigation/NavigationContext';
 
-import { useUser } from '../user/useUser';
-
-interface AppWrapperProps {
-  children: ReactNode;
-}
-
-const UseUser: React.FC = () => {
-  useUser();
-  return null;
+export default {
+  title: 'Navigation',
 };
 
 const TestLink: React.FC<{ content: React.ReactElement }> = ({
   content,
 }: {
   content: React.ReactElement;
-}) => {
-  const locale = useLocale();
-  const { setMainMenuOpen } = useContext(NavigationContext);
+}) => <>{React.cloneElement(content, { href: '#' })}</>;
 
-  return (
-    <Link href={routes.dashboard({ locale })} passHref>
-      {React.cloneElement(content, { onClick: () => setMainMenuOpen(false) })}
-    </Link>
-  );
-};
+export const HeaderStory: Story = () => <Header title="Kulturdaten.Berlin" Link={TestLink} />;
+HeaderStory.storyName = 'Header';
 
-export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
-  const locale = useLocale();
-  const { logout } = useUser();
-
+export const MainMenuStory: Story = () => {
   const mainMenu = useMainMenu(
     [
       {
@@ -47,14 +29,15 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             type: MenuAction.link,
             action: {
               title: 'Dashboard',
-              href: routes.dashboard({ locale }),
+              href: '#',
+              active: true,
             },
           },
           {
             type: MenuAction.link,
             action: {
               title: 'Benachrichtigungen',
-              href: routes.userNotifications({ locale }),
+              href: '#',
             },
           },
         ],
@@ -67,19 +50,14 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             type: MenuAction.link,
             action: {
               title: 'Alle Anbieter:innen',
-              href: routes.organizers({ locale }),
+              href: '#',
             },
           },
           {
             type: MenuAction.link,
             action: {
               title: 'Meine Anbieter:innen',
-              href: routes.organizer({
-                locale,
-                query: {
-                  id: '1',
-                },
-              }),
+              href: '#',
             },
           },
         ],
@@ -92,19 +70,14 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             type: MenuAction.link,
             action: {
               title: 'Alle Angebote',
-              href: routes.offers({ locale }),
+              href: '#',
             },
           },
           {
             type: MenuAction.link,
             action: {
               title: 'Meine Angebote',
-              href: routes.offer({
-                locale,
-                query: {
-                  id: '1',
-                },
-              }),
+              href: '#',
             },
           },
         ],
@@ -117,19 +90,14 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             type: MenuAction.link,
             action: {
               title: 'Alle Orte',
-              href: routes.locations({ locale }),
+              href: '#',
             },
           },
           {
             type: MenuAction.link,
             action: {
               title: 'Meine Orte',
-              href: routes.location({
-                locale,
-                query: {
-                  id: '1',
-                },
-              }),
+              href: '#',
             },
           },
         ],
@@ -142,23 +110,21 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             type: MenuAction.link,
             action: {
               title: 'Mein Profil',
-              href: routes.userProfile({ locale }),
+              href: '#',
             },
           },
           {
             type: MenuAction.link,
             action: {
               title: 'Meine Einstellungen',
-              href: routes.userSettings({ locale }),
+              href: '#',
             },
           },
           {
-            type: MenuAction.button,
+            type: MenuAction.link,
             action: {
               title: 'Abmelden',
-              call: () => {
-                logout();
-              },
+              href: '#',
             },
           },
         ],
@@ -169,20 +135,15 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
   );
 
   return (
-    <>
-      <UseUser />
-      <AppLayout
-        mainMenu={mainMenu}
-        content={
-          <>
-            {children}
-            <div>
-              <LocaleSwitch />
-            </div>
-          </>
-        }
-        titleBar={<div>Page title</div>}
-      />
-    </>
+    <AppLayout
+      mainMenu={mainMenu}
+      content={
+        <div>
+          Content Content Content Content Content Content Content Content Content Content Content
+          Content Content Content Content Content Content Content Content Content{' '}
+        </div>
+      }
+      titleBar={<div>Page title</div>}
+    />
   );
 };

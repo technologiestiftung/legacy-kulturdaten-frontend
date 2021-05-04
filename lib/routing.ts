@@ -33,7 +33,7 @@ export const useIsRouteStringActive = (routeString: string): boolean => {
   const router = useRouter();
 
   useEffect(() => {
-    setIsActive(routeString === router.asPath);
+    setIsActive(routeString === router?.asPath);
   }, [router, routeString]);
 
   return isActive;
@@ -55,7 +55,7 @@ export const useIsRouteActive = (
   const router = useRouter();
 
   useEffect(() => {
-    setRouteActive(isRouteActive(router.asPath, route, locale, query));
+    setRouteActive(isRouteActive(router?.asPath, route, locale, query));
   }, [route, router, locale, query]);
 
   return routeActive;
@@ -70,7 +70,7 @@ export const useActiveRoute = (): Routes => {
   const router = useRouter();
 
   useEffect(() => {
-    setRoute(getActiveRoute(router.asPath, router.locale as Locale, router.query));
+    setRoute(getActiveRoute(router?.asPath, router?.locale as Locale, router?.query));
   }, [router]);
 
   return route;
@@ -85,7 +85,7 @@ export const useLocale = (): Locale => {
   const router = useRouter();
 
   useEffect(() => {
-    setLocale(router.locale as Locale);
+    setLocale((router?.locale as Locale) || Locale['de-DE']);
   }, [router]);
 
   return locale;

@@ -5,4 +5,10 @@ export const deDE: Localization = {
     bar: () => 'Spaß',
     coo: ({ x }) => `Wert ${x}`,
   },
+  menu: {
+    button: {
+      open: () => 'Menü öffnen',
+      close: () => 'Menü schließen',
+    },
+  },
 };

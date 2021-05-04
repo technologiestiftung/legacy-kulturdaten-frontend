@@ -5,4 +5,10 @@ export const enDE: Localization = {
     bar: () => 'fun',
     coo: ({ x }) => `Value ${x}`,
   },
+  menu: {
+    button: {
+      open: () => 'open menu',
+      close: () => 'close menu',
+    },
+  },
 };
