@@ -54,7 +54,7 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             type: MenuAction.link,
             action: {
               title: 'Benachrichtigungen',
-              href: '#',
+              href: routes.userNotifications({ locale }),
             },
           },
         ],
@@ -149,7 +149,7 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             type: MenuAction.link,
             action: {
               title: 'Meine Einstellungen',
-              href: '#',
+              href: routes.userSettings({ locale }),
             },
           },
           {

@@ -11,6 +11,8 @@ export enum Routes {
   login = 'login',
   register = 'register',
   userProfile = 'userProfile',
+  userSettings = 'userSettings',
+  userNotifications = 'userNotifications',
   organizers = 'organizers',
   organizer = 'organizer',
   offers = 'offers',
@@ -28,6 +30,14 @@ export const routes: { [key in Routes]: Route } = {
   dashboard: ({ locale }) => `/${localizedRoutes[Routes.dashboard][locale]}/`,
   userProfile: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.userProfile][locale]}/`,
+  userSettings: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${
+      localizedRoutes[Routes.userSettings][locale]
+    }/`,
+  userNotifications: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${
+      localizedRoutes[Routes.userNotifications][locale]
+    }/`,
   login: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.login][locale]}/`,
   register: ({ locale }) =>
@@ -59,6 +69,14 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   userProfile: {
     'de-DE': 'user/profile',
     'en-DE': 'user/profile',
+  },
+  userSettings: {
+    'de-DE': 'user/settings',
+    'en-DE': 'user/settings',
+  },
+  userNotifications: {
+    'de-DE': 'user/notifications',
+    'en-DE': 'user/notifications',
   },
   login: {
     'de-DE': 'auth/login',
