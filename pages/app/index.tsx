@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../../components/user/useUser';
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
+import { TitleBar } from '../../components/navigation/TitleBar';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -19,8 +20,10 @@ const DashboardPage: NextPage = () => {
   useUser();
   const locale = useLocale();
 
+  const titleBar = <TitleBar title="Dashboard" />;
+
   return (
-    <AppWrapper>
+    <AppWrapper titleBar={titleBar}>
       <h1>App Index/Dashboard</h1>
       <StyledUl>
         <StyledLi>

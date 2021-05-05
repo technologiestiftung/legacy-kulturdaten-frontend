@@ -6,12 +6,9 @@ import { LocaleSwitch } from '../navigation/LocaleSwitch';
 import { MenuAction, useMainMenu } from '../navigation/mainMenu/MainMenu';
 import { MenuIconName } from '../navigation/MenuIcon';
 import { NavigationContext } from '../navigation/NavigationContext';
+import { TitleBarProps } from '../navigation/TitleBar';
 
 import { useUser } from '../user/useUser';
-
-interface AppWrapperProps {
-  children: ReactNode;
-}
 
 const UseUser: React.FC = () => {
   useUser();
@@ -33,7 +30,12 @@ const TestLink: React.FC<{ content: React.ReactElement }> = ({
   );
 };
 
-export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
+interface AppWrapperProps {
+  children: ReactNode;
+  titleBar?: React.ReactElement<TitleBarProps>;
+}
+
+export const AppWrapper: React.FC<AppWrapperProps> = ({ children, titleBar }: AppWrapperProps) => {
   const locale = useLocale();
   const { logout } = useUser();
 
@@ -181,7 +183,7 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
             </div>
           </>
         }
-        titleBar={<div>Page title</div>}
+        titleBar={titleBar}
       />
     </>
   );

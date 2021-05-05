@@ -4,6 +4,7 @@ import { Header } from './header/Header';
 import { MenuAction, useMainMenu } from './mainMenu/MainMenu';
 import { MenuIconName } from './MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
+import { TitleBar } from './TitleBar';
 
 export default {
   title: 'Navigation',
@@ -147,3 +148,5 @@ export const MainMenuStory: Story = () => {
     />
   );
 };
+
+export const TitleBarStory: Story = () => <TitleBar title="Page Title" />;
