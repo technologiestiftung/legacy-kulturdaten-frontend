@@ -107,7 +107,7 @@ const MainMenuOverlay = styled.div`
 interface AppLayoutProps {
   mainMenu: React.ReactElement<MainMenuProps>;
   content: React.ReactNode;
-  titleBar?: React.ReactNode;
+  titleBar: React.ReactNode;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({

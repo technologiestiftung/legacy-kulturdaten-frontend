@@ -16,6 +16,24 @@ const StyledLi = styled.li`
   padding-bottom: 1rem;
 `;
 
+const StyledTestContent = styled.div`
+  width: 100%;
+  display: grid;
+  padding: 0.75rem;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 1.5rem;
+  column-gap: 1.5rem;
+`;
+
+const StyledTestContentBox = styled.div`
+  height: 20rem;
+  width: 100%;
+  border: 1px solid var(--grey-400);
+  padding: 1.5rem;
+  font-weight: 700;
+  border-radius: 0.75rem;
+`;
+
 const DashboardPage: NextPage = () => {
   useUser();
   const locale = useLocale();
@@ -24,7 +42,6 @@ const DashboardPage: NextPage = () => {
 
   return (
     <AppWrapper titleBar={titleBar}>
-      <h1>App Index/Dashboard</h1>
       <StyledUl>
         <StyledLi>
           <Link href={routes.userProfile({ locale })}>
@@ -32,6 +49,11 @@ const DashboardPage: NextPage = () => {
           </Link>
         </StyledLi>
       </StyledUl>
+      <StyledTestContent>
+        {[...Array(10)].map((i) => (
+          <StyledTestContentBox key={i}>Test Content</StyledTestContentBox>
+        ))}
+      </StyledTestContent>
     </AppWrapper>
   );
 };
