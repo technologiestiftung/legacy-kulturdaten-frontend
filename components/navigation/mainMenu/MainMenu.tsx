@@ -158,3 +158,10 @@ export const useMainMenu = (
 
   return renderedMainMenu;
 };
+
+export const useMainMenuOverlayVisible = (): boolean => {
+  const { mainMenuOpen } = useContext(NavigationContext);
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+
+  return mainMenuOpen && !isWideOrWider;
+};
