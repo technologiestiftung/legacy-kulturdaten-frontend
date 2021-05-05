@@ -1,14 +1,10 @@
 import styled from '@emotion/styled';
-import { useContext } from 'react';
-import {
-  Breakpoint,
-  useBreakpoint,
-  useBreakpointOrWider,
-  WindowContext,
-} from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { useContext, useEffect, useRef } from 'react';
+import 'wicg-inert';
 
-import { MainMenuProps } from '../navigation/mainMenu/MainMenu';
+import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
+import { MainMenuProps, useMainMenuOverlayVisible } from '../navigation/mainMenu/MainMenu';
 import { NavigationContext } from '../navigation/NavigationContext';
 
 const Container = styled.div`
@@ -48,7 +44,7 @@ const MenuSlot = styled.div`
   }
 `;
 
-const TitleBarSlot = styled.div`
+const TitleBarSlot = styled.div<{ disabled?: boolean }>`
   position: relative;
   grid-column: 1 / span 4;
 
@@ -61,7 +57,7 @@ const TitleBarSlot = styled.div`
   }
 `;
 
-const ContentSlot = styled.div`
+const ContentSlot = styled.div<{ disabled?: boolean }>`
   position: relative;
   grid-column: 1 / span 4;
   overflow-y: auto;
@@ -107,23 +103,44 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   titleBar,
   content,
 }: AppLayoutProps) => {
-  const currentBreakpoint = useBreakpoint();
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
-  const { mainMenuOpen, setMainMenuOpen } = useContext(NavigationContext);
+  const isMainMenuOverlayVisible = useMainMenuOverlayVisible();
+  const { setMainMenuOpen } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
+  const titleBarRef = useRef<HTMLDivElement>();
+  const contentSlotRef = useRef<HTMLDivElement>();
 
-  const isMidBreakpoint = currentBreakpoint === Breakpoint.mid;
-  const showMenuOverlay = mainMenuOpen && isMidBreakpoint;
+  // Add "inert" attribute to elements behind MainMenuOverlay.
+  // Inert is a new web standard which marks elements as not interactive while keeping them visible.
+  // Think of "visiblity: hidden" but still visible.
+  // Used for preventing not/partially visible elements from being focusable via tabbing.
+  useEffect(() => {
+    if (isMainMenuOverlayVisible) {
+      titleBarRef.current?.setAttribute('inert', '');
+      contentSlotRef.current?.setAttribute('inert', '');
+    } else {
+      titleBarRef.current?.removeAttribute('inert');
+      contentSlotRef.current?.removeAttribute('inert');
+    }
+  }, [isMainMenuOverlayVisible]);
+
+  const renderedTitleBar = titleBar ? (
+    <TitleBarSlot ref={titleBarRef}>{titleBar}</TitleBarSlot>
+  ) : (
+    ''
+  );
+
+  const renderedContentSlot = <ContentSlot ref={contentSlotRef}>{content}</ContentSlot>;
 
   const titleAndContent = isWideOrWider ? (
     <TitleAndContentContainer>
-      {titleBar ? <TitleBarSlot>{titleBar}</TitleBarSlot> : ''}
-      <ContentSlot>{content}</ContentSlot>
+      {renderedTitleBar}
+      {renderedContentSlot}
     </TitleAndContentContainer>
   ) : (
     <>
-      {titleBar ? <TitleBarSlot>{titleBar}</TitleBarSlot> : ''}
-      <ContentSlot>{content}</ContentSlot>
+      {renderedTitleBar}
+      {renderedContentSlot}
     </>
   );
 
@@ -131,7 +148,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     <Container>
       <MenuSlot>{mainMenu}</MenuSlot>
       {rendered ? titleAndContent : ''}
-      {showMenuOverlay ? <MainMenuOverlay onClick={() => setMainMenuOpen(false)} /> : ''}
+      {isMainMenuOverlayVisible ? <MainMenuOverlay onClick={() => setMainMenuOpen(false)} /> : ''}
     </Container>
   );
 };
