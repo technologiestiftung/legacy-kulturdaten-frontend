@@ -62,22 +62,24 @@ const StyledMenuButton = styled.button<{ state: MenuButtonState }>`
     g:nth-of-type(1) {
       transform-origin: 50% calc(50% - (4 / 24 * 100%));
       transform: ${({ state }) =>
-        state === MenuButtonState.open ? '' : 'translateY(calc(4 / 24 * 100%))'};
+        state === MenuButtonState.open ? 'translateY(0)' : 'translateY(calc(4 / 24 * 100%))'};
 
       path {
         transform-origin: 50% calc(50% - (4 / 24 * 100%));
-        transform: ${({ state }) => (state === MenuButtonState.open ? '' : 'rotateZ(45deg)')};
+        transform: ${({ state }) =>
+          state === MenuButtonState.open ? 'rotateZ(0)' : 'rotateZ(45deg)'};
       }
     }
 
     g:nth-of-type(2) {
       transform-origin: 50% calc(50% + (4 / 24 * 100%));
       transform: ${({ state }) =>
-        state === MenuButtonState.open ? '' : 'translateY(calc(4 / 24 * -100%))'};
+        state === MenuButtonState.open ? 'translateY(0)' : 'translateY(calc(4 / 24 * -100%))'};
 
       path {
         transform-origin: 50% calc(50% + (4 / 24 * 100%));
-        transform: ${({ state }) => (state === MenuButtonState.open ? '' : 'rotateZ(-45deg)')};
+        transform: ${({ state }) =>
+          state === MenuButtonState.open ? 'rotateZ(0)' : 'rotateZ(-45deg)'};
       }
     }
   }
