@@ -62,7 +62,10 @@ const ContentSlot = styled.div<{ disabled?: boolean }>`
   grid-column: 1 / span 4;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 100%;
+  justify-self: stretch;
+  align-self: stretch;
+  flex-grow: 1;
+  flex-shrink: 1;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
@@ -76,6 +79,8 @@ const ContentSlot = styled.div<{ disabled?: boolean }>`
 const TitleAndContentContainer = styled.div`
   max-height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   ${mq(Breakpoint.wide)} {
     grid-column: 3 / -1;
