@@ -8,6 +8,7 @@ import { MenuIcon, MenuIconName } from '../MenuIcon';
 import { MenuLink, MenuLinkProps } from '../MenuLink';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { NavigationContext } from '../NavigationContext';
+import { useKeyboard } from '../../../lib/useKeyboard';
 
 const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   background: var(--grey-200);
@@ -60,9 +61,14 @@ export interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMenuProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
-  const { mainMenuOpen } = useContext(NavigationContext);
+  const { mainMenuOpen, setMainMenuOpen } = useContext(NavigationContext);
 
   const { rendered } = useContext(WindowContext);
+
+  useKeyboard(['Esc', 'Escape'], () => {
+    console.log('use keyboard Escape');
+    setMainMenuOpen(false);
+  });
 
   const showMenuContent = rendered && (isWideOrWider || mainMenuOpen);
 
