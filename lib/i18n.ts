@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, useCallback } from 'react';
 
 import { Locale } from '../config/locales';
 import { useLocale } from './routing';
@@ -47,9 +47,10 @@ const t = (locale: Locale, key: string, params?: LocalizationParams): string | R
  */
 export const useT = (): ((key: string, params?: LocalizationParams) => string | ReactElement) => {
   const locale = useLocale();
+  const tCallback = useCallback((key, params) => t(locale, key, params), [locale]);
 
   if (locale) {
-    return (key, params) => t(locale, key, params);
+    return tCallback;
   }
 
   return () => undefined;

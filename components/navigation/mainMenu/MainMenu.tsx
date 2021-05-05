@@ -9,6 +9,7 @@ import { MenuLink, MenuLinkProps } from '../MenuLink';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { NavigationContext } from '../NavigationContext';
 import { useKeyboard } from '../../../lib/useKeyboard';
+import { LocaleSwitch } from '../LocaleSwitch';
 
 const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   background: var(--grey-200);
@@ -80,6 +81,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
         <StyledMainMenuSubs>
           {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
         </StyledMainMenuSubs>
+        <LocaleSwitch />
       </StyledMainMenuContent>
     </StyledMainMenu>
   );

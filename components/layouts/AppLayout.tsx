@@ -10,16 +10,21 @@ import { NavigationContext } from '../navigation/NavigationContext';
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto 1fr;
   width: 100%;
   height: var(--app-height);
   overflow: hidden;
   align-content: flex-start;
+  justify-items: stretch;
 
   ${mq(Breakpoint.mid)} {
     grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: auto 1fr;
   }
 
   ${mq(Breakpoint.wide)} {
+    grid-template-rows: auto;
+    align-content: flex-start;
     grid-template-columns: repeat(12, 1fr);
   }
 `;
@@ -32,6 +37,7 @@ const MenuSlot = styled.div`
   max-height: 3rem;
   z-index: 1000;
   grid-column: 1 / span 4;
+  align-self: flex-start;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / span 3;
@@ -47,12 +53,14 @@ const MenuSlot = styled.div`
 const TitleBarSlot = styled.div<{ disabled?: boolean }>`
   position: relative;
   grid-column: 1 / span 4;
+  align-self: flex-start;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 4 / -1;
   }
 
   ${mq(Breakpoint.wide)} {
+    align-self: stretch;
     grid-column: 3 / -1;
   }
 `;
@@ -62,13 +70,15 @@ const ContentSlot = styled.div<{ disabled?: boolean }>`
   grid-column: 1 / span 4;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 100%;
+  box-shadow: inset -1px -1px 0px var(--grey-400), inset 1px 0px 0px var(--grey-400);
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
   }
 
   ${mq(Breakpoint.wide)} {
+    flex-grow: 1;
+    box-shadow: inset -1px -1px 0px var(--grey-400);
     grid-column: 3 / -1;
   }
 `;
@@ -76,6 +86,8 @@ const ContentSlot = styled.div<{ disabled?: boolean }>`
 const TitleAndContentContainer = styled.div`
   max-height: 100%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   ${mq(Breakpoint.wide)} {
     grid-column: 3 / -1;
@@ -95,7 +107,7 @@ const MainMenuOverlay = styled.div`
 interface AppLayoutProps {
   mainMenu: React.ReactElement<MainMenuProps>;
   content: React.ReactNode;
-  titleBar?: React.ReactNode;
+  titleBar: React.ReactNode;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({

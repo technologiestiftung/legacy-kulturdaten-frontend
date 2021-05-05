@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 
@@ -81,12 +81,8 @@ export const useActiveRoute = (): Routes => {
  * @returns The current Locale
  */
 export const useLocale = (): Locale => {
-  const [locale, setLocale] = useState<Locale>();
   const router = useRouter();
-
-  useEffect(() => {
-    setLocale((router?.locale as Locale) || Locale['de-DE']);
-  }, [router]);
+  const locale = useMemo<Locale>(() => router?.locale as Locale, [router.locale]);
 
   return locale;
 };
