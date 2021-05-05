@@ -65,10 +65,9 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
 
   const { rendered } = useContext(WindowContext);
 
-  useKeyboard(['Esc', 'Escape'], () => {
-    console.log('use keyboard Escape');
+  useKeyboard(() => {
     setMainMenuOpen(false);
-  });
+  }, ['Esc', 'Escape']);
 
   const showMenuContent = rendered && (isWideOrWider || mainMenuOpen);
 

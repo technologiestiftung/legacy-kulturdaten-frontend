@@ -1,9 +1,14 @@
 import { useCallback, useEffect } from 'react';
 
-export const useKeyboard = (keys: string[], callback: (e: KeyboardEvent) => void): void => {
+/**
+ * Hook to listen to keyboard events
+ * @param callback - Function to call when a key is pressed
+ * @param keys - Optional list of keys which should exclusively trigger the callback
+ */
+export const useKeyboard = (callback: (e: KeyboardEvent) => void, keys?: string[]): void => {
   const keyboardCallback = useCallback(
     (e: KeyboardEvent) => {
-      if (e && keys.includes(e.key)) {
+      if (!keys || keys.includes(e?.key)) {
         callback(e);
       }
     },
