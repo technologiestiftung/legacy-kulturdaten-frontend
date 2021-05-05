@@ -5,6 +5,29 @@ export const deDE: Localization = {
     bar: () => 'Spaß',
     coo: ({ x }) => `Wert ${x}`,
   },
+  test: {
+    content: () => 'Test Inhalt',
+  },
+  categories: {
+    organizers: {
+      title: {
+        plural: () => 'Anbieter:innen',
+        singular: () => 'Anbieter:in',
+      },
+    },
+    offers: {
+      title: {
+        plural: () => 'Angebote',
+        singular: () => 'Angebot',
+      },
+    },
+    locations: {
+      title: {
+        plural: () => 'Orte',
+        singular: () => 'Ort',
+      },
+    },
+  },
   menu: {
     title: () => 'Kulturdaten.Berlin',
     button: {

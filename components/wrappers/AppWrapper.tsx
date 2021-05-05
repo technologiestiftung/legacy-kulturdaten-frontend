@@ -3,7 +3,6 @@ import React, { ReactNode, useContext } from 'react';
 import { useT } from '../../lib/i18n';
 import { routes, useLocale } from '../../lib/routing';
 import { AppLayout } from '../layouts/AppLayout';
-import { LocaleSwitch } from '../navigation/LocaleSwitch';
 import { MenuAction, useMainMenu } from '../navigation/mainMenu/MainMenu';
 import { MenuIconName } from '../navigation/MenuIcon';
 import { NavigationContext } from '../navigation/NavigationContext';
@@ -175,18 +174,7 @@ export const AppWrapper: React.FC<AppWrapperProps> = ({ children, titleBar }: Ap
   return (
     <>
       <UseUser />
-      <AppLayout
-        mainMenu={mainMenu}
-        content={
-          <>
-            {children}
-            <div>
-              <LocaleSwitch />
-            </div>
-          </>
-        }
-        titleBar={titleBar}
-      />
+      <AppLayout mainMenu={mainMenu} content={children} titleBar={titleBar} />
     </>
   );
 };

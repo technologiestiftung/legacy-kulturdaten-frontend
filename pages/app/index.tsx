@@ -6,6 +6,7 @@ import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../../components/user/useUser';
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
 import { TitleBar } from '../../components/navigation/TitleBar';
+import { useT } from '../../lib/i18n';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -37,21 +38,22 @@ const StyledTestContentBox = styled.div`
 const DashboardPage: NextPage = () => {
   useUser();
   const locale = useLocale();
+  const t = useT();
 
-  const titleBar = <TitleBar title="Dashboard" />;
+  const titleBar = <TitleBar title={t('menu.start.actions.dashboard') as string} />;
 
   return (
     <AppWrapper titleBar={titleBar}>
       <StyledUl>
         <StyledLi>
           <Link href={routes.userProfile({ locale })}>
-            <a>User profile</a>
+            <a>Link: {t('menu.user.actions.profile')}</a>
           </Link>
         </StyledLi>
       </StyledUl>
       <StyledTestContent>
         {[...Array(10)].map((i) => (
-          <StyledTestContentBox key={i}>Test Content</StyledTestContentBox>
+          <StyledTestContentBox key={i}>{t('test.content')}</StyledTestContentBox>
         ))}
       </StyledTestContent>
     </AppWrapper>

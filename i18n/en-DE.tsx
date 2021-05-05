@@ -5,6 +5,29 @@ export const enDE: Localization = {
     bar: () => 'fun',
     coo: ({ x }) => `Value ${x}`,
   },
+  test: {
+    content: () => 'Test Content',
+  },
+  categories: {
+    organizers: {
+      title: {
+        plural: () => 'Organizers',
+        singular: () => 'Organizer',
+      },
+    },
+    offers: {
+      title: {
+        plural: () => 'Offers',
+        singular: () => 'Offer',
+      },
+    },
+    locations: {
+      title: {
+        plural: () => 'Locations',
+        singular: () => 'Location',
+      },
+    },
+  },
   menu: {
     title: () => 'Kulturdaten.Berlin',
     button: {
