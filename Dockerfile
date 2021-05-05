@@ -9,7 +9,7 @@ RUN npm i
 COPY . /app/
 
 RUN npm run build-storybook && \
-  mkdir public && mv storybook-static public/storybook
+  mv storybook-static public/storybook
 
 RUN npm run build
 
