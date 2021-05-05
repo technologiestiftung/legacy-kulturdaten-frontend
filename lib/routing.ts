@@ -82,7 +82,7 @@ export const useActiveRoute = (): Routes => {
  */
 export const useLocale = (): Locale => {
   const router = useRouter();
-  const locale = useMemo<Locale>(() => router?.locale as Locale, [router.locale]);
+  const locale = useMemo<Locale>(() => router?.locale as Locale, [router?.locale]);
 
   return locale;
 };

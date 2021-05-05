@@ -33,6 +33,7 @@ const StyledTestContentBox = styled.div`
   border: 1px solid var(--grey-400);
   padding: 1.5rem;
   font-weight: 700;
+  border-radius: 0.75rem;
 `;
 
 export const NavigationStory: Story = () => {
