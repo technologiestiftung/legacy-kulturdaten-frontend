@@ -38,6 +38,7 @@ const t = (locale: Locale, key: string, params?: LocalizationParams): string | R
   if (typeof entry === 'function') {
     return entry(params);
   }
+
   throw new Error(`Key '${key}' points to object`);
 };
 
@@ -47,7 +48,12 @@ const t = (locale: Locale, key: string, params?: LocalizationParams): string | R
  */
 export const useT = (): ((key: string, params?: LocalizationParams) => string | ReactElement) => {
   const locale = useLocale();
-  const tCallback = useCallback((key, params) => t(locale, key, params), [locale]);
+
+  const correctedLocale = locale === ('catchAll' as Locale) ? Locale['de-DE'] : locale;
+
+  const tCallback = useCallback((key, params) => t(correctedLocale, key, params), [
+    correctedLocale,
+  ]);
 
   if (locale) {
     return tCallback;
