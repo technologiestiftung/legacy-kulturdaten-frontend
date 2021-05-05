@@ -77,7 +77,7 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
               href: routes.organizer({
                 locale,
                 query: {
-                  id: '1',
+                  entry: '1',
                 },
               }),
             },
@@ -102,7 +102,7 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
               href: routes.offer({
                 locale,
                 query: {
-                  id: '1',
+                  entry: '1',
                 },
               }),
             },
@@ -127,7 +127,7 @@ export const AppWrapper: React.FC = ({ children }: AppWrapperProps) => {
               href: routes.location({
                 locale,
                 query: {
-                  id: '1',
+                  entry: '1',
                 },
               }),
             },
