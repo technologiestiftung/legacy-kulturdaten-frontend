@@ -99,16 +99,13 @@ export const MenuButton: React.FC<MenuButtonProps> = ({
 }: MenuButtonProps) => {
   const t = useT();
 
+  const description =
+    state === MenuButtonState.open
+      ? (t('menu.button.open') as string)
+      : (t('menu.button.close') as string);
+
   return (
-    <StyledMenuButton
-      title={
-        state === MenuButtonState.open
-          ? (t('menu.button.open') as string)
-          : (t('menu.button.close') as string)
-      }
-      state={state}
-      onClick={onClick}
-    >
+    <StyledMenuButton title={description} aria-label={description} state={state} onClick={onClick}>
       <SVG state={state} />
     </StyledMenuButton>
   );
