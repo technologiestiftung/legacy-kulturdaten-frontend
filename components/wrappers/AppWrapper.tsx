@@ -158,8 +158,9 @@ export const AppWrapper: React.FC<AppWrapperProps> = ({ children, titleBar }: Ap
           {
             type: MenuAction.button,
             action: {
-              title: t('menu.user.actions.logout') as string,
-              call: () => {
+              label: t('menu.user.actions.logout') as string,
+              icon: 'LogOut',
+              onClick: () => {
                 logout();
               },
             },

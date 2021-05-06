@@ -52,8 +52,8 @@ const DashboardPage: NextPage = () => {
         </StyledLi>
       </StyledUl>
       <StyledTestContent>
-        {[...Array(10)].map((i) => (
-          <StyledTestContentBox key={i}>{t('test.content')}</StyledTestContentBox>
+        {[...Array(10)].map((i, index) => (
+          <StyledTestContentBox key={index}>{t('test.content')}</StyledTestContentBox>
         ))}
       </StyledTestContent>
     </AppWrapper>

@@ -10,6 +10,7 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/Wi
 import { NavigationContext } from '../NavigationContext';
 import { useKeyboard } from '../../../lib/useKeyboard';
 import { LocaleSwitch } from '../LocaleSwitch';
+import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 
 const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   background: var(--grey-200);
@@ -99,8 +100,10 @@ type MenuActionLink = {
 };
 
 type MenuActionButton = {
-  title: string;
-  call: () => void;
+  label: string;
+  onClick: () => void;
+  icon?: string;
+  iconPosition?: IconPosition;
 };
 
 type MenuStructure = {
@@ -126,16 +129,20 @@ export const useMainMenu = (
         }
 
         case MenuAction.button: {
-          const { title, call } = action as MenuActionButton;
+          const { label, onClick, icon, iconPosition } = action as MenuActionButton;
           return (
-            <button
+            <Button
               onClick={() => {
-                call();
+                onClick();
                 setMainMenuOpen(false);
               }}
+              variant={ButtonVariant.minimal}
+              size={ButtonSize.small}
+              icon={icon}
+              iconPosition={iconPosition}
             >
-              {title}
-            </button>
+              {label}
+            </Button>
           );
         }
 
