@@ -63,6 +63,8 @@ const selectVariants: { [key in SelectVariant]: SerializedStyles } = {
   `,
   minimal: css`
     background: inherit;
+    color: currentColor;
+    border-color: currentColor;
     transition: box-shadow var(--transition-duration);
 
     &:hover {
