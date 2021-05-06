@@ -70,5 +70,9 @@ export const deDE: Localization = {
         logout: () => 'Abmelden',
       },
     },
+    localeSwitch: {
+      label: () => 'Sprache / Language',
+      description: () => 'Sprache wählen, choose Language',
+    },
   },
 };

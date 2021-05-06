@@ -11,6 +11,7 @@ const StyledA = styled.a<{ active?: boolean }>`
   text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
   display: flex;
   align-items: center;
+  width: 100%;
 
   &:hover {
     text-decoration: underline;

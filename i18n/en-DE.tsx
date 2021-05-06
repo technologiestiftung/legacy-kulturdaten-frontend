@@ -70,5 +70,9 @@ export const enDE: Localization = {
         logout: () => 'Logout',
       },
     },
+    localeSwitch: {
+      label: () => 'Language / Sprache',
+      description: () => 'Choose Language, Sprache wählen',
+    },
   },
 };

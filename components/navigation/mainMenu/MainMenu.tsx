@@ -81,8 +81,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
       <StyledMainMenuContent show={showMenuContent}>
         <StyledMainMenuSubs>
           {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
+          <Sub actions={[<LocaleSwitch key={1} />]} subMenuKey={subs.length} />
         </StyledMainMenuSubs>
-        <LocaleSwitch />
       </StyledMainMenuContent>
     </StyledMainMenu>
   );
@@ -107,8 +107,8 @@ type MenuActionButton = {
 };
 
 type MenuStructure = {
-  title: string;
-  icon: MenuIconName;
+  title?: string;
+  icon?: MenuIconName;
   actions: {
     type: MenuAction;
     action: MenuActionLink | MenuActionButton;

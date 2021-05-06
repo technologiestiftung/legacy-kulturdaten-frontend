@@ -39,6 +39,10 @@ export const CSSVars: React.FC = () => (
 
         --transition-duration: 0.125s;
 
+        --shadow: 2px 2px 10px -4px var(--black-o70);
+        --shadow-hover: 2px 2px 12px -2px var(--black-o70);
+        --shadow-active: 2px 2px 8px -4px var(--black-o70);
+
         @media screen and (min-width: 768px) {
           --font-size-600: 1.5rem;
           --line-height-600: 2.25rem;
