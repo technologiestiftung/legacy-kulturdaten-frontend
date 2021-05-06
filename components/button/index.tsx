@@ -179,7 +179,7 @@ export const Button: React.FC<ButtonProps> = ({
     variant={variant}
   >
     <StyledButtonSpan>{children}</StyledButtonSpan>
-    {icon && feather.hasOwnProperty(icon) ? (
+    {icon && feather[icon] ? (
       <StyledButtonIcon size={size} position={iconPosition}>
         {React.createElement(feather[icon], { size: buttonSizeIconSizeMaP[size] })}
       </StyledButtonIcon>
