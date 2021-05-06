@@ -11,9 +11,14 @@ export const CSSVars: React.FC = () => (
         --grey-400: #aaaaaa;
         --grey-600: #474747;
         --black: #111111;
+        --black-o70: rgba(17, 17, 17, 0.7);
         --yellow: #e6ea81;
-        --green: #41b496;
+        --green-light: #41b496;
+        --green-mid: #46948c;
         --red: #e60032;
+        --red-50: #f28098;
+        --blue: #1e3791;
+
         --cyan-dark: #2e91d2;
         --mustard: #dcc82d;
 
@@ -31,6 +36,8 @@ export const CSSVars: React.FC = () => (
         --line-height-700: 2.25rem;
 
         --app-height: 100vh;
+
+        --transition-duration: 0.125s;
 
         @media screen and (min-width: 768px) {
           --font-size-600: 1.5rem;

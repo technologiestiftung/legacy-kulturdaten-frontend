@@ -49,7 +49,6 @@ const StyledMenuButton = styled.button<{ state: MenuButtonState }>`
 
     g {
       stroke: var(--black);
-      animation-duration: 0.125s;
       transition: transform
         ${({ state }) => (state === MenuButtonState.open ? '0.0625s 0.0625s' : '0.0625s')};
 
