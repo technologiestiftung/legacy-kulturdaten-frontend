@@ -74,14 +74,14 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
     border: 1px solid var(--black);
     transition: box-shadow var(--transition-duration);
 
-    box-shadow: 2px 2px 10px -4px var(--black-o70);
+    box-shadow: var(--shadow);
 
     &:hover {
-      box-shadow: 2px 2px 12px -2px var(--black-o70), inset 0px 0px 0px 1px var(--black);
+      box-shadow: var(--shadow-hover), inset 0px 0px 0px 1px var(--black);
     }
 
     &:active {
-      box-shadow: 2px 2px 8px -4px var(--black-o70);
+      box-shadow: var(--shadow-active);
     }
   `,
   minimal: css`
@@ -91,11 +91,11 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
     transition: box-shadow var(--transition-duration);
 
     &:hover {
-      box-shadow: inset 0px 0px 0px 2px currentColor;
+      box-shadow: inset 0px 0px 0px 1px currentColor;
     }
 
     &:active {
-      box-shadow: inset 0px 0px 0px 1px currentColor;
+      box-shadow: inset 0px 0px 0px 0px currentColor;
     }
   `,
 };
@@ -105,6 +105,7 @@ const StyledButton = styled.button<{
   size: ButtonSize;
   variant: ButtonVariant;
 }>`
+  margin: 0;
   appearance: none;
   display: inline-flex;
   flex-direction: row;
@@ -144,7 +145,7 @@ const StyledButtonIcon = styled.div<{ size: ButtonSize; position: IconPosition }
   }
 `;
 
-const buttonSizeIconSizeMaP: { [key in ButtonSize]: number } = {
+const buttonSizeIconSizeMap: { [key in ButtonSize]: number } = {
   default: 18,
   small: 16,
   big: 24,
@@ -181,7 +182,7 @@ export const Button: React.FC<ButtonProps> = ({
     <StyledButtonSpan>{children}</StyledButtonSpan>
     {icon && feather[icon] ? (
       <StyledButtonIcon size={size} position={iconPosition}>
-        {React.createElement(feather[icon], { size: buttonSizeIconSizeMaP[size] })}
+        {React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
       </StyledButtonIcon>
     ) : (
       ''

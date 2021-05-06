@@ -1,4 +1,4 @@
-import { ReactElement, useCallback } from 'react';
+import { ReactElement, useCallback, useMemo } from 'react';
 
 import { Locale } from '../config/locales';
 import { useLocale } from './routing';
@@ -49,13 +49,17 @@ const t = (locale: Locale, key: string, params?: LocalizationParams): string | R
 export const useT = (): ((key: string, params?: LocalizationParams) => string | ReactElement) => {
   const locale = useLocale();
 
-  const correctedLocale = locale === ('catchAll' as Locale) ? Locale['de-DE'] : locale;
+  const correctedLocale = useMemo(
+    () =>
+      typeof locale === 'undefined' || locale === ('catchAll' as Locale) ? Locale['de-DE'] : locale,
+    [locale]
+  );
 
   const tCallback = useCallback((key, params) => t(correctedLocale, key, params), [
     correctedLocale,
   ]);
 
-  if (locale) {
+  if (correctedLocale) {
     return tCallback;
   }
 

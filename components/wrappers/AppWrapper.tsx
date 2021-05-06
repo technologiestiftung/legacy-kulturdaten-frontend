@@ -155,6 +155,10 @@ export const AppWrapper: React.FC<AppWrapperProps> = ({ children, titleBar }: Ap
               href: routes.userSettings({ locale }),
             },
           },
+        ],
+      },
+      {
+        actions: [
           {
             type: MenuAction.button,
             action: {

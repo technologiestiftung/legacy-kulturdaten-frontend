@@ -44,8 +44,8 @@ export const NavigationStory: Story = () => {
       mainMenu={mainMenu}
       content={
         <StyledTestContent>
-          {[...Array(10)].map((i) => (
-            <StyledTestContentBox key={i}>Test Content</StyledTestContentBox>
+          {[...Array(10)].map((i, index) => (
+            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
           ))}
         </StyledTestContent>
       }
@@ -158,11 +158,18 @@ const testMenuStructure = [
           href: '#',
         },
       },
+    ],
+  },
+  {
+    actions: [
       {
-        type: MenuAction.link,
+        type: MenuAction.button,
         action: {
-          title: 'Abmelden',
-          href: '#',
+          label: 'Abmelden',
+          onClick: () => {
+            //
+          },
+          icon: 'LogOut',
         },
       },
     ],
