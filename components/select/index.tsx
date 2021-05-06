@@ -83,7 +83,6 @@ const StyledSelect = styled.select<{
   font-size: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).fontSize};
   line-height: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).lineHeight};
   padding: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).padding};
-
   position: relative;
   width: 100%;
   cursor: pointer;
@@ -103,16 +102,9 @@ const StyledSelectIcon = styled.div<{ size: SelectSize }>`
   flex-direction: row;
 `;
 
-const StyledSelectChevron = styled.div<{ size: SelectSize }>`
-  pointer-events: none;
-  position: absolute;
-  top: 0;
-  height: ${({ size }) => (size === SelectSize.default ? '2.25rem' : '3rem')};
+const StyledSelectChevron = styled(StyledSelectIcon)`
   right: 0.75rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
+  left: initial;
 `;
 
 const StyledSelectAndChevron = styled.div`
