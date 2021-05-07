@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/technologiestiftung/kulturdaten-frontend#readme",
   "dependencies": {
-    "@emotion/react": "11.1.5",
+    "@emotion/react": "11.4.0",
     "@emotion/styled": "11.3.0",
     "markdown-to-jsx": "6.11.4",
     "next": "10.2.0",
