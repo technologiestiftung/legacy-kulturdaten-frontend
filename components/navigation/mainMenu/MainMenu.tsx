@@ -3,9 +3,10 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
 import { Header } from '../header/Header';
+import { HeaderLinkProps } from '../header/HeaderLink';
 import { Sub, SubProps } from './Sub';
-import { MenuIcon, MenuIconName } from '../MenuIcon';
-import { MenuLink, MenuLinkProps } from '../MenuLink';
+import { MenuIcon, MenuIconName } from './MenuIcon';
+import { MenuLink, MenuLinkProps } from './MenuLink';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { NavigationContext } from '../NavigationContext';
 import { useKeyboard } from '../../../lib/useKeyboard';
@@ -58,7 +59,7 @@ const StyledMainMenuHeader = styled.div`
 export interface MainMenuProps {
   subs: React.ReactElement<SubProps>[];
   title: string;
-  Link: React.FC<{ content: React.ReactElement }>;
+  Link: React.FC<HeaderLinkProps>;
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMenuProps) => {
@@ -106,7 +107,7 @@ type MenuActionButton = {
   iconPosition?: IconPosition;
 };
 
-type MenuStructure = {
+export type MenuStructure = {
   title?: string;
   icon?: MenuIconName;
   actions: {
@@ -118,7 +119,7 @@ type MenuStructure = {
 export const useMainMenu = (
   structure: MenuStructure,
   title: string,
-  Link: React.FC<{ content: React.ReactElement }>
+  Link: React.FC<HeaderLinkProps>
 ): React.ReactElement => {
   const { setMainMenuOpen } = useContext(NavigationContext);
   const subs = structure.map(({ title, icon, actions }, index) => {

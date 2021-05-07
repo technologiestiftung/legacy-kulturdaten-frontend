@@ -4,19 +4,18 @@ import styled from '@emotion/styled';
 
 import { Header } from './header/Header';
 import { MenuAction, useMainMenu } from './mainMenu/MainMenu';
-import { MenuIconName } from './MenuIcon';
+import { MenuIconName } from './mainMenu/MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
+import { HeaderLinkProps } from './header/HeaderLink';
 
 export default {
   title: 'Navigation',
 };
 
-const TestLink: React.FC<{ content: React.ReactElement }> = ({
-  content,
-}: {
-  content: React.ReactElement;
-}) => <>{React.cloneElement(content, { href: '#' })}</>;
+const TestLink: React.FC<HeaderLinkProps> = ({ children }: { children: React.ReactElement }) => (
+  <>{React.cloneElement(children, { href: '#' })}</>
+);
 
 const StyledTestContent = styled.div`
   width: 100%;

@@ -1,0 +1,149 @@
+import { useT } from '../lib/i18n';
+import { routes, useLocale } from '../lib/routing';
+import { MenuAction, MenuStructure } from '../components/navigation/mainMenu/MainMenu';
+import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
+import { useUser } from '../components/user/useUser';
+
+export const useAppTitle = (): string => {
+  const t = useT();
+
+  return t('menu.title') as string;
+};
+
+export const useMenuStructure = (): MenuStructure => {
+  const t = useT();
+  const locale = useLocale();
+  const { logout } = useUser();
+
+  return [
+    {
+      title: t('menu.start.title') as string,
+      icon: MenuIconName.start,
+      actions: [
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.start.actions.dashboard') as string,
+            href: routes.dashboard({ locale }),
+          },
+        },
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.start.actions.notifications') as string,
+            href: routes.userNotifications({ locale }),
+          },
+        },
+      ],
+    },
+    {
+      title: t('menu.organizers.title') as string,
+      icon: MenuIconName.organizer,
+      actions: [
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.organizers.actions.all') as string,
+            href: routes.organizers({ locale }),
+          },
+        },
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.organizers.actions.my') as string,
+            href: routes.organizer({
+              locale,
+              query: {
+                entry: '1',
+              },
+            }),
+          },
+        },
+      ],
+    },
+    {
+      title: t('menu.offers.title') as string,
+      icon: MenuIconName.offer,
+      actions: [
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.offers.actions.all') as string,
+            href: routes.offers({ locale }),
+          },
+        },
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.offers.actions.my') as string,
+            href: routes.offer({
+              locale,
+              query: {
+                entry: '1',
+              },
+            }),
+          },
+        },
+      ],
+    },
+    {
+      title: t('menu.locations.title') as string,
+      icon: MenuIconName.location,
+      actions: [
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.locations.actions.all') as string,
+            href: routes.locations({ locale }),
+          },
+        },
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.locations.actions.my') as string,
+            href: routes.location({
+              locale,
+              query: {
+                entry: '1',
+              },
+            }),
+          },
+        },
+      ],
+    },
+    {
+      title: t('menu.user.title') as string,
+      icon: MenuIconName.user,
+      actions: [
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.user.actions.profile') as string,
+            href: routes.userProfile({ locale }),
+          },
+        },
+        {
+          type: MenuAction.link,
+          action: {
+            title: t('menu.user.actions.settings') as string,
+            href: routes.userSettings({ locale }),
+          },
+        },
+      ],
+    },
+    {
+      actions: [
+        {
+          type: MenuAction.button,
+          action: {
+            label: t('menu.user.actions.logout') as string,
+            icon: 'LogOut',
+            onClick: () => {
+              logout();
+            },
+          },
+        },
+      ],
+    },
+  ];
+};

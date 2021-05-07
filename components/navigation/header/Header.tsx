@@ -18,14 +18,14 @@ const HeaderContainer = styled.header`
   line-height: var(--line-height-300);
 `;
 
-const HeaderLink = styled.a`
+const StyledLink = styled.a`
   text-decoration: none;
   color: inherit;
 `;
 
 interface HeaderProps {
   title: string;
-  Link: React.FC<{ content: React.ReactElement }>;
+  Link: React.FC<{ children: React.ReactElement<HTMLAnchorElement> }>;
 }
 
 export const Header: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
         ''
       )}
 
-      <Link content={<HeaderLink>{title}</HeaderLink>} />
+      <Link>{<StyledLink>{title}</StyledLink>}</Link>
     </HeaderContainer>
   );
 };

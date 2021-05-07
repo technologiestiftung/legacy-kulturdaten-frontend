@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
 
-import { ArrowRightSvg } from './ArrowRightSvg';
-import { useIsRouteStringActive } from '../../lib/routing';
+import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
+import { useIsRouteStringActive } from '../../../lib/routing';
 import { useContext, useEffect } from 'react';
-import { NavigationContext } from './NavigationContext';
+import { NavigationContext } from '../NavigationContext';
 
 const StyledA = styled.a<{ active?: boolean }>`
   color: inherit;
