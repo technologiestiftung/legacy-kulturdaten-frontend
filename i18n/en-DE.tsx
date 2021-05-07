@@ -1,12 +1,26 @@
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
-  foo: {
-    bar: () => 'fun',
-    coo: ({ x }) => `Value ${x}`,
-  },
   test: {
     content: () => 'Test Content',
+  },
+  start: {
+    login: () => 'Login',
+    register: () => 'Register',
+    dashboard: () => 'App Dashboard',
+    imprint: () => 'Imprint',
+  },
+  login: {
+    email: () => 'Email',
+    password: () => 'Password',
+    remember: () => 'Stay logged in',
+    submit: () => 'Login',
+  },
+  register: {
+    email: () => 'Email',
+    password: () => 'Password',
+    confirmPassword: () => 'Confirm password',
+    submit: () => 'Register',
   },
   categories: {
     organizers: {

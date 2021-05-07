@@ -1,12 +1,26 @@
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
-  foo: {
-    bar: () => 'Spaß',
-    coo: ({ x }) => `Wert ${x}`,
-  },
   test: {
     content: () => 'Test Inhalt',
+  },
+  start: {
+    login: () => 'Login',
+    register: () => 'Registrierung',
+    dashboard: () => 'App Dashboard',
+    imprint: () => 'Impressum',
+  },
+  login: {
+    email: () => 'E-Mail',
+    password: () => 'Passwort',
+    remember: () => 'Eingeloggt bleiben',
+    submit: () => 'Anmelden',
+  },
+  register: {
+    email: () => 'E-Mail',
+    password: () => 'Passwort',
+    confirmPassword: () => 'Passwort bestätigen',
+    submit: () => 'Registrieren',
   },
   categories: {
     organizers: {

@@ -14,44 +14,47 @@ const StyledLi = styled.li`
   padding-bottom: 1rem;
 `;
 
+export const StyledTestContainer = styled.div`
+  max-width: 25rem;
+  padding: 1.5rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+`;
+
 const IndexPage: NextPage = () => {
   const locale = useLocale();
   const t = useT();
 
   return (
-    <>
-      <h1>Hello Kulturdaten Frontend!</h1>
+    <StyledTestContainer>
+      <h1>Kulturdaten.Berlin</h1>
       <StyledUl>
         <StyledLi>
           <Link href={routes.login({ locale })}>
-            <a>Login</a>
+            <a>{t('start.login')}</a>
           </Link>
         </StyledLi>
         <StyledLi>
           <Link href={routes.register({ locale })}>
-            <a>Register</a>
+            <a>{t('start.register')}</a>
           </Link>
         </StyledLi>
         <StyledLi>
           <Link href={routes.dashboard({ locale })}>
-            <a>Dashboard</a>
+            <a>{t('start.dashboard')}</a>
           </Link>
         </StyledLi>
         <StyledLi>
           <Link href={routes.imprint({ locale })}>
-            <a>Impressum/Imprint</a>
+            <a>{t('start.imprint')}</a>
           </Link>
         </StyledLi>
       </StyledUl>
       <div>
-        <h2>Localized test content</h2>
-        <p>fun: {t('foo.bar')}</p>
-        <p>param: {t('foo.coo', { x: 2 })}</p>
-      </div>
-      <div>
         <LocaleSwitch />
       </div>
-    </>
+    </StyledTestContainer>
   );
 };
 
