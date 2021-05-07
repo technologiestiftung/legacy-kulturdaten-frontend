@@ -1,6 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 
+import { StyledTestFormContainer, StyledTestInput } from './Login';
 import { call, AuthRegister, authRegisterBlueprint } from '../../lib/api';
+import { useT } from '../../lib/i18n';
 
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -8,6 +10,7 @@ export const RegisterForm: React.FC = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
   const [error, setError] = useState<Error>();
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const t = useT();
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -31,13 +34,13 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <StyledTestFormContainer>
       {!submitted || error ? (
         <form onSubmit={submitHandler}>
           <div>
-            <label htmlFor="register-email">email</label>
+            <label htmlFor="register-email">{t('register.email')}</label>
             <br />
-            <input
+            <StyledTestInput
               value={email}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               type="email"
@@ -46,9 +49,9 @@ export const RegisterForm: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="register-password">password</label>
+            <label htmlFor="register-password">{t('register.password')}</label>
             <br />
-            <input
+            <StyledTestInput
               value={password}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               type="password"
@@ -57,9 +60,9 @@ export const RegisterForm: React.FC = () => {
             />
           </div>
           <div>
-            <label htmlFor="register-password-confirmation">confirm password</label>
+            <label htmlFor="register-password-confirmation">{t('register.confirmPassword')}</label>
             <br />
-            <input
+            <StyledTestInput
               value={passwordConfirmation}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setPasswordConfirmation(e.target.value)
@@ -70,7 +73,7 @@ export const RegisterForm: React.FC = () => {
             />
           </div>
           <div>
-            <input type="submit" value="register" />
+            <input type="submit" value={t('register.submit') as string} />
           </div>
         </form>
       ) : (
@@ -86,6 +89,6 @@ export const RegisterForm: React.FC = () => {
       ) : (
         ''
       )}
-    </div>
+    </StyledTestFormContainer>
   );
 };

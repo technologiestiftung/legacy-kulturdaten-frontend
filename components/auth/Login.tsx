@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import getConfig from 'next/config';
+import styled from '@emotion/styled';
 
 import { call, AuthLogin, authLoginBlueprint } from '../../lib/api';
 import { Cookie } from '../../lib/cookies';
 import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
+import { useT } from '../../lib/i18n';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -19,6 +21,17 @@ const authCookie = (value: string, remember: boolean, locale: Locale): Cookie =>
   'max-age': remember ? 1209600 : undefined,
 });
 
+export const StyledTestFormContainer = styled.div`
+  margin: 1.5rem 0;
+`;
+
+export const StyledTestInput = styled.input`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+  margin-bottom: 0.75rem;
+  width: 100%;
+`;
+
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -26,8 +39,8 @@ export const LoginForm: React.FC = () => {
   const [remember, setRemember] = useState<boolean>(false);
   const { isLoggedIn, login } = useUser();
   const router = useRouter();
-
   const locale = useLocale();
+  const t = useT();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -53,12 +66,12 @@ export const LoginForm: React.FC = () => {
   };
 
   const form = (
-    <div>
+    <StyledTestFormContainer>
       <form onSubmit={submitHandler}>
         <div>
-          <label htmlFor="login-email">email</label>
+          <label htmlFor="login-email">{t('login.email')}</label>
           <br />
-          <input
+          <StyledTestInput
             type="email"
             value={email}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
@@ -67,9 +80,9 @@ export const LoginForm: React.FC = () => {
           />
         </div>
         <div>
-          <label htmlFor="login-password">password</label>
+          <label htmlFor="login-password">{t('login.password')}</label>
           <br />
-          <input
+          <StyledTestInput
             type="password"
             value={password}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
@@ -84,14 +97,14 @@ export const LoginForm: React.FC = () => {
             checked={remember}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setRemember(e.target.checked)}
           />
-          <label htmlFor="login-remember">keep me logged in</label>
+          <label htmlFor="login-remember">{t('login.remember')}</label>
         </div>
         <div>
-          <input type="submit" value="login" />
+          <input type="submit" value={t('login.submit') as string} />
         </div>
       </form>
       {error ? <div>{error.message}</div> : ''}
-    </div>
+    </StyledTestFormContainer>
   );
 
   return <div>{form}</div>;

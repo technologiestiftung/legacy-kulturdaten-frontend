@@ -2,21 +2,35 @@ import fs from 'fs';
 import path from 'path';
 import MD from 'markdown-to-jsx';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import Link from 'next/link';
 import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
+import { StyledTestContainer } from '.';
+import { routes, useLocale } from '../lib/routing';
+import styled from '@emotion/styled';
 
 interface ContentPageProps {
   markdownContent: string;
 }
 
+const StyledTestMDContainer = styled.div`
+  margin: 1.5rem 0;
+`;
+
 const ContentPage: NextPage<ContentPageProps> = ({ markdownContent }: ContentPageProps) => {
+  const locale = useLocale();
+
   return (
-    <div>
-      <div>Content page outside of /app</div>
-      <div>{markdownContent ? <MD>{markdownContent}</MD> : ''}</div>
+    <StyledTestContainer>
+      <Link href={routes.index({ locale })}>
+        <a>Kulturdaten.Berlin</a>
+      </Link>
+      <StyledTestMDContainer>
+        <div>{markdownContent ? <MD>{markdownContent}</MD> : ''}</div>
+      </StyledTestMDContainer>
       <div>
         <LocaleSwitch />
       </div>
-    </div>
+    </StyledTestContainer>
   );
 };
 

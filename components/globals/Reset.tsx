@@ -128,6 +128,11 @@ export const Reset: React.FC = () => (
         border-collapse: collapse;
         border-spacing: 0;
       }
+      input,
+      select,
+      button {
+        box-sizing: border-box;
+      }
       html,
       body {
         max-width: 100%;

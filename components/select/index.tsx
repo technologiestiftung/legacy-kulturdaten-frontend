@@ -97,7 +97,8 @@ const StyledSelectIcon = styled.div<{ size: SelectSize }>`
   position: absolute;
   left: 0.75rem;
   top: 0;
-  height: ${({ size }) => (size === SelectSize.default ? '2.25rem' : '3rem')};
+  height: ${({ size }) =>
+    size === SelectSize.default ? 'calc(2.25rem + 2px)' : 'calc(3rem + 2px)'};
   display: flex;
   justify-content: center;
   align-items: center;
