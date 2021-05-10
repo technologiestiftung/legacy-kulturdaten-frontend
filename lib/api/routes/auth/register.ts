@@ -14,7 +14,7 @@ export interface AuthRegister extends ApiCall {
     body: {
       email: string;
       password: string;
-      password_confirmation: string;
+      passwordConfirmation: string;
     };
   };
   response: {
@@ -24,8 +24,8 @@ export interface AuthRegister extends ApiCall {
         type: 'user';
         attributes: {
           email: string;
-          created_at: string;
-          updated_at: string;
+          createdAt: string;
+          updatedAt: string;
           id: number;
         };
       };
