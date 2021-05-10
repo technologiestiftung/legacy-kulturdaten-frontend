@@ -2,9 +2,7 @@
 name: 'Deploy: Preview'
 
 # yamllint disable-line rule:truthy
-on:
-  # onl run this workflow on pull request events
-  pull_request
+on: pull_request
 
 jobs:
   verify:
@@ -47,7 +45,7 @@ jobs:
           command: review-apps:create
           git_remote_url: 'ssh://dokku@kulturdaten-berlin.anyvent.cloud:22/review.kulturdaten.berlin'
           review_app_name: review.${{ github.event.pull_request.number }}.kulturdaten.berlin
-          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
 
   destroy:
     runs-on: ubuntu-latest
