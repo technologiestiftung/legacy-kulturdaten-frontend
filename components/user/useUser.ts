@@ -26,6 +26,7 @@ export type User = AuthInfo['response']['body']['data']['attributes'];
 
 export const useUser = (): {
   user: User;
+  authToken: string;
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
   logout: () => void;
@@ -94,6 +95,7 @@ export const useUser = (): {
 
   return {
     user,
+    authToken: getCookie(authTokenCookieName)?.value,
     isLoggedIn: isAuthenticated,
     login: (cookie: Cookie, redirectRoute: string) => {
       setCookie(cookie);
