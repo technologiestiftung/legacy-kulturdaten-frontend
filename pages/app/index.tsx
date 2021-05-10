@@ -40,14 +40,14 @@ const DashboardPage: NextPage = () => {
   const locale = useLocale();
   const t = useT();
 
-  const titleBar = <TitleBar title={t('menu.start.actions.dashboard') as string} />;
+  const titleBar = <TitleBar title={t('menu.start.items.dashboard') as string} />;
 
   return (
     <AppWrapper titleBar={titleBar}>
       <StyledUl>
         <StyledLi>
           <Link href={routes.userProfile({ locale })}>
-            <a>Link: {t('menu.user.actions.profile')}</a>
+            <a>Link: {t('menu.user.items.profile')}</a>
           </Link>
         </StyledLi>
       </StyledUl>

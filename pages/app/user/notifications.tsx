@@ -8,7 +8,7 @@ const NotificationsPage: NextPage = () => {
   const t = useT();
 
   return (
-    <AppWrapper titleBar={<TitleBar title={t('menu.start.actions.notifications') as string} />}>
+    <AppWrapper titleBar={<TitleBar title={t('menu.start.items.notifications') as string} />}>
       TBD
     </AppWrapper>
   );
