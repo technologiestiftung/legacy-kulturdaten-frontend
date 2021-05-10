@@ -5,7 +5,7 @@ export const CSSVars: React.FC = () => (
   <Global
     styles={css`
       html {
-        --white: #f9f9f9;
+        --white: red;
         --grey-200: #e6e6e6;
         --grey-350: #c8c8c8;
         --grey-400: #aaaaaa;
