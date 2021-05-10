@@ -12,6 +12,7 @@ import { NavigationContext } from '../NavigationContext';
 import { useKeyboard } from '../../../lib/useKeyboard';
 import { LocaleSwitch } from '../LocaleSwitch';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
+import { SubDivider } from './SubDivider';
 
 const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   background: var(--grey-200);
@@ -92,6 +93,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
 export enum MenuItem {
   link = 'link',
   button = 'button',
+  divider = 'divider',
 }
 
 type MenuItemLink = {
@@ -145,6 +147,10 @@ export const useMainMenu = (
               {label}
             </Button>
           );
+        }
+
+        case MenuItem.divider: {
+          return <SubDivider />;
         }
 
         default: {
