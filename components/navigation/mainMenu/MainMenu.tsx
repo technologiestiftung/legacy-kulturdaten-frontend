@@ -82,25 +82,25 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
       <StyledMainMenuContent show={showMenuContent}>
         <StyledMainMenuSubs>
           {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
-          <Sub actions={[<LocaleSwitch key={1} />]} subMenuKey={subs.length} />
+          <Sub items={[<LocaleSwitch key={1} />]} subMenuKey={subs.length} />
         </StyledMainMenuSubs>
       </StyledMainMenuContent>
     </StyledMainMenu>
   );
 };
 
-export enum MenuAction {
+export enum MenuItem {
   link = 'link',
   button = 'button',
 }
 
-type MenuActionLink = {
+type MenuItemLink = {
   title: string;
   href: string;
   active?: boolean;
 };
 
-type MenuActionButton = {
+type MenuItemButton = {
   label: string;
   onClick: () => void;
   icon?: string;
@@ -110,9 +110,9 @@ type MenuActionButton = {
 export type MenuStructure = {
   title?: string;
   icon?: MenuIconName;
-  actions: {
-    type: MenuAction;
-    action: MenuActionLink | MenuActionButton;
+  items: {
+    type: MenuItem;
+    action?: MenuItemLink | MenuItemButton;
   }[];
 }[];
 
@@ -122,15 +122,15 @@ export const useMainMenu = (
   Link: React.FC<HeaderLinkProps>
 ): React.ReactElement => {
   const { setMainMenuOpen } = useContext(NavigationContext);
-  const subs = structure.map(({ title, icon, actions }, index) => {
-    const renderedActions = actions?.map(({ type, action }, actionIndex) => {
+  const subs = structure.map(({ title, icon, items }, index) => {
+    const renderedItems = items?.map(({ type, action }, actionIndex) => {
       switch (type) {
-        case MenuAction.link: {
+        case MenuItem.link: {
           return <MenuLink key={actionIndex} {...(action as MenuLinkProps)} subMenuKey={index} />;
         }
 
-        case MenuAction.button: {
-          const { label, onClick, icon, iconPosition } = action as MenuActionButton;
+        case MenuItem.button: {
+          const { label, onClick, icon, iconPosition } = action as MenuItemButton;
           return (
             <Button
               onClick={() => {
@@ -157,7 +157,7 @@ export const useMainMenu = (
       <Sub
         title={title}
         icon={<MenuIcon type={icon} />}
-        actions={renderedActions}
+        items={renderedItems}
         key={index}
         subMenuKey={index}
       />

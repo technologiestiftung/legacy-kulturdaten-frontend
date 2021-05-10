@@ -50,35 +50,35 @@ export const enDE: Localization = {
     },
     start: {
       title: () => 'Start',
-      actions: {
+      items: {
         dashboard: () => 'Dashboard',
         notifications: () => 'Notifications',
       },
     },
     organizers: {
       title: () => 'Organizers',
-      actions: {
+      items: {
         all: () => 'All Organizers',
         my: () => 'My Organizers',
       },
     },
     offers: {
       title: () => 'Offers',
-      actions: {
+      items: {
         all: () => 'All Offers',
         my: () => 'My Offers',
       },
     },
     locations: {
       title: () => 'Locations',
-      actions: {
+      items: {
         all: () => 'All Locations',
         my: () => 'My Locations',
       },
     },
     user: {
       title: () => 'User',
-      actions: {
+      items: {
         profile: () => 'My Profile',
         settings: () => 'My Settings',
         logout: () => 'Logout',

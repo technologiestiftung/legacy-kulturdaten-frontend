@@ -50,35 +50,35 @@ export const deDE: Localization = {
     },
     start: {
       title: () => 'Start',
-      actions: {
+      items: {
         dashboard: () => 'Dashboard',
         notifications: () => 'Benachrichtigungen',
       },
     },
     organizers: {
       title: () => 'Anbieter:innen',
-      actions: {
+      items: {
         all: () => 'Alle Anbieter:innen',
         my: () => 'Meine Anbieter:innen',
       },
     },
     offers: {
       title: () => 'Angebote',
-      actions: {
+      items: {
         all: () => 'Alle Angebote',
         my: () => 'Meine Angebote',
       },
     },
     locations: {
       title: () => 'Orte',
-      actions: {
+      items: {
         all: () => 'Alle Orte',
         my: () => 'Meine Orte',
       },
     },
     user: {
       title: () => 'Nutzer:in',
-      actions: {
+      items: {
         profile: () => 'Mein Profil',
         settings: () => 'Meine Einstellungen',
         logout: () => 'Abmelden',
