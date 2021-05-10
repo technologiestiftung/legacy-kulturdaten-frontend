@@ -36,10 +36,10 @@ export interface SubProps {
   title?: string;
   icon?: React.ReactElement;
   subMenuKey: number;
-  actions: React.ReactElement[];
+  items: React.ReactElement[];
 }
 
-export const Sub: React.FC<SubProps> = ({ title, icon, actions, subMenuKey }: SubProps) => {
+export const Sub: React.FC<SubProps> = ({ title, icon, items, subMenuKey }: SubProps) => {
   const { activeSubMenu } = useContext(NavigationContext);
 
   return (
@@ -51,7 +51,7 @@ export const Sub: React.FC<SubProps> = ({ title, icon, actions, subMenuKey }: Su
         </StyledSubHead>
       )}
       <StyledSubContent>
-        {actions.map((item, index) => (
+        {items.map((item, index) => (
           <StyledSubItem key={index}>{item}</StyledSubItem>
         ))}
       </StyledSubContent>

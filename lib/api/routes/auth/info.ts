@@ -21,9 +21,9 @@ export interface AuthInfo extends ApiCall {
         attributes: {
           id: number;
           email: string;
-          remember_me_token?: null;
-          created_at: string;
-          updated_at: string;
+          rememberMeToken?: null;
+          createdAt: string;
+          updatedAt: string;
         };
       };
     };

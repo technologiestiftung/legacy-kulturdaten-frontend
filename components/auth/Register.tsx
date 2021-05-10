@@ -22,7 +22,7 @@ export const RegisterForm: React.FC = () => {
         authRegisterBlueprint({
           email,
           password,
-          password_confirmation: passwordConfirmation,
+          passwordConfirmation: passwordConfirmation,
         })
       );
       setSubmitted(true);
