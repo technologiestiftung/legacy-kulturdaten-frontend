@@ -61,7 +61,7 @@ const testMenuStructure = [
   {
     title: 'Start',
     icon: MenuIconName.start,
-    actions: [
+    items: [
       {
         type: MenuItem.link,
         action: {
@@ -82,7 +82,7 @@ const testMenuStructure = [
   {
     title: 'Anbieter:innen',
     icon: MenuIconName.organizer,
-    actions: [
+    items: [
       {
         type: MenuItem.link,
         action: {
@@ -102,7 +102,7 @@ const testMenuStructure = [
   {
     title: 'Angebote',
     icon: MenuIconName.offer,
-    actions: [
+    items: [
       {
         type: MenuItem.link,
         action: {
@@ -122,7 +122,7 @@ const testMenuStructure = [
   {
     title: 'Orte',
     icon: MenuIconName.location,
-    actions: [
+    items: [
       {
         type: MenuItem.link,
         action: {
@@ -142,7 +142,7 @@ const testMenuStructure = [
   {
     title: 'Nutzer:in',
     icon: MenuIconName.user,
-    actions: [
+    items: [
       {
         type: MenuItem.link,
         action: {
@@ -160,7 +160,7 @@ const testMenuStructure = [
     ],
   },
   {
-    actions: [
+    items: [
       {
         type: MenuItem.button,
         action: {
