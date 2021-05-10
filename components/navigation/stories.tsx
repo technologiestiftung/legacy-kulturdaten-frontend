@@ -3,7 +3,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Header } from './header/Header';
-import { MenuAction, useMainMenu } from './mainMenu/MainMenu';
+import { MenuItem, useMainMenu } from './mainMenu/MainMenu';
 import { MenuIconName } from './mainMenu/MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
@@ -63,7 +63,7 @@ const testMenuStructure = [
     icon: MenuIconName.start,
     actions: [
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Dashboard',
           href: '#',
@@ -71,7 +71,7 @@ const testMenuStructure = [
         },
       },
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Benachrichtigungen',
           href: '#',
@@ -84,14 +84,14 @@ const testMenuStructure = [
     icon: MenuIconName.organizer,
     actions: [
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Alle Anbieter:innen',
           href: '#',
         },
       },
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Meine Anbieter:innen',
           href: '#',
@@ -104,14 +104,14 @@ const testMenuStructure = [
     icon: MenuIconName.offer,
     actions: [
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Alle Angebote',
           href: '#',
         },
       },
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Meine Angebote',
           href: '#',
@@ -124,14 +124,14 @@ const testMenuStructure = [
     icon: MenuIconName.location,
     actions: [
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Alle Orte',
           href: '#',
         },
       },
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Meine Orte',
           href: '#',
@@ -144,14 +144,14 @@ const testMenuStructure = [
     icon: MenuIconName.user,
     actions: [
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Mein Profil',
           href: '#',
         },
       },
       {
-        type: MenuAction.link,
+        type: MenuItem.link,
         action: {
           title: 'Meine Einstellungen',
           href: '#',
@@ -162,7 +162,7 @@ const testMenuStructure = [
   {
     actions: [
       {
-        type: MenuAction.button,
+        type: MenuItem.button,
         action: {
           label: 'Abmelden',
           onClick: () => {
