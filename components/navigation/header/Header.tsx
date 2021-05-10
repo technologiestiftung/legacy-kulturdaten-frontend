@@ -46,7 +46,9 @@ export const Header: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
         ''
       )}
 
-      <Link>{<StyledLink>{title}</StyledLink>}</Link>
+      <Link>
+        <StyledLink>{title}</StyledLink>
+      </Link>
     </HeaderContainer>
   );
 };

@@ -1,0 +1,626 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MainMenu renders 1`] = `
+<div>
+  <div
+    class="css-8eqs8y-StyledMainMenu ey6w9bd3"
+  >
+    <div
+      class="css-1up9p1u-StyledMainMenuHeader ey6w9bd0"
+    >
+      <header
+        class="css-1p8v3tm-HeaderContainer e1sn27871"
+      >
+        <button
+          aria-label="Menü öffnen"
+          class="css-1290inr-StyledMenuButton e91bmyz0"
+          title="Menü öffnen"
+        >
+          <svg
+            aria-labelledby="menu-button-icon"
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title
+              id="menu-button-icon"
+            >
+              Menü öffnen
+            </title>
+            <g>
+              <path
+                d="M5 8H19"
+                stroke="#111111"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </g>
+            <g>
+              <path
+                d="M19 16H5"
+                stroke="#111111"
+                stroke-linecap="round"
+                stroke-width="2"
+              />
+            </g>
+          </svg>
+        </button>
+        <a
+          class="css-1kagrgy-StyledLink e1sn27870"
+          href="/undefined"
+        >
+          Test Title
+        </a>
+      </header>
+    </div>
+    <div
+      class="css-1q24dsu-StyledMainMenuContent ey6w9bd2"
+    >
+      <div
+        class="css-7b8bp5-StyledMainMenuSubs ey6w9bd1"
+      >
+        <div
+          class="css-1m41mao-StyledSub e136466r5"
+        >
+          <div
+            class="css-15v88sk-StyledSubHead e136466r4"
+          >
+            <div
+              class="css-1mfwjf3-StyledSubIcon e136466r2"
+            >
+              <div
+                class="css-1qgbttw-StyledMenuicon e1g2h9ar0"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5.25 9.75L12 4.5L18.75 9.75V18C18.75 18.3978 18.592 18.7794 18.3107 19.0607C18.0294 19.342 17.6478 19.5 17.25 19.5H6.75C6.35218 19.5 5.97064 19.342 5.68934 19.0607C5.40804 18.7794 5.25 18.3978 5.25 18V9.75Z"
+                    stroke="#111111"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M9.75 19.5V12H14.25V19.5"
+                    stroke="#111111"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="css-1brgdsk-StyledSubTitle e136466r3"
+            >
+              Start
+            </div>
+          </div>
+          <div
+            class="css-1h9g97m-StyledSubContent e136466r1"
+          >
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-1wahcwk-StyledA e1l78fsc0"
+                href="/#"
+                title="Dashboard"
+              >
+                <svg
+                  fill="none"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  width="18"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.75 9H14.25"
+                    stroke="#111111"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M9 3.75L14.25 9L9 14.25"
+                    stroke="#111111"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                </svg>
+                Dashboard
+              </a>
+            </div>
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Benachrichtigungen"
+              >
+                
+                Benachrichtigungen
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-ff2lms-StyledSub e136466r5"
+        >
+          <div
+            class="css-15v88sk-StyledSubHead e136466r4"
+          >
+            <div
+              class="css-1mfwjf3-StyledSubIcon e136466r2"
+            >
+              <div
+                class="css-1qgbttw-StyledMenuicon e1g2h9ar0"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M17.1823 4.32248C16.6842 2.46356 14.3606 1.84094 12.9997 3.20177L3.20178 12.9997C1.84095 14.3606 2.46357 16.6842 4.3225 17.1823L17.7068 20.7686C19.5657 21.2667 21.2667 19.5657 20.7686 17.7067L17.1823 4.32248Z"
+                    fill="#E60032"
+                    stroke="url(#paint2_linear)"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="paint2_linear"
+                      x1="8.19702"
+                      x2="19.697"
+                      y1="8.6969"
+                      y2="20.1969"
+                    >
+                      <stop
+                        stop-color="#E58EA1"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#9F0B2B"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+            <div
+              class="css-1brgdsk-StyledSubTitle e136466r3"
+            >
+              Anbieter:innen
+            </div>
+          </div>
+          <div
+            class="css-1h9g97m-StyledSubContent e136466r1"
+          >
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Alle Anbieter:innen"
+              >
+                
+                Alle Anbieter:innen
+              </a>
+            </div>
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Meine Anbieter:innen"
+              >
+                
+                Meine Anbieter:innen
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-ff2lms-StyledSub e136466r5"
+        >
+          <div
+            class="css-15v88sk-StyledSubHead e136466r4"
+          >
+            <div
+              class="css-1mfwjf3-StyledSubIcon e136466r2"
+            >
+              <div
+                class="css-1qgbttw-StyledMenuicon e1g2h9ar0"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    fill="#273B8A"
+                    height="17"
+                    rx="2.5"
+                    stroke="url(#paint1_linear)"
+                    transform="rotate(-15 1.58978 5.98959)"
+                    width="17"
+                    x="1.58978"
+                    y="5.98959"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="paint1_linear"
+                      x1="2.20215"
+                      x2="18.2021"
+                      y1="6.34314"
+                      y2="22.3431"
+                    >
+                      <stop
+                        stop-color="#6984EF"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#000B37"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+            <div
+              class="css-1brgdsk-StyledSubTitle e136466r3"
+            >
+              Angebote
+            </div>
+          </div>
+          <div
+            class="css-1h9g97m-StyledSubContent e136466r1"
+          >
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Alle Angebote"
+              >
+                
+                Alle Angebote
+              </a>
+            </div>
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Meine Angebote"
+              >
+                
+                Meine Angebote
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-ff2lms-StyledSub e136466r5"
+        >
+          <div
+            class="css-15v88sk-StyledSubHead e136466r4"
+          >
+            <div
+              class="css-1mfwjf3-StyledSubIcon e136466r2"
+            >
+              <div
+                class="css-1qgbttw-StyledMenuicon e1g2h9ar0"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    fill="#46948C"
+                    r="9.5"
+                    stroke="url(#paint0_linear)"
+                  />
+                  <defs>
+                    <lineargradient
+                      gradientUnits="userSpaceOnUse"
+                      id="paint0_linear"
+                      x1="4.5"
+                      x2="19"
+                      y1="5"
+                      y2="19.5"
+                    >
+                      <stop
+                        stop-color="#6FC1B9"
+                      />
+                      <stop
+                        offset="1"
+                        stop-color="#1B645C"
+                      />
+                    </lineargradient>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+            <div
+              class="css-1brgdsk-StyledSubTitle e136466r3"
+            >
+              Orte
+            </div>
+          </div>
+          <div
+            class="css-1h9g97m-StyledSubContent e136466r1"
+          >
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Alle Orte"
+              >
+                
+                Alle Orte
+              </a>
+            </div>
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Meine Orte"
+              >
+                
+                Meine Orte
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-ff2lms-StyledSub e136466r5"
+        >
+          <div
+            class="css-15v88sk-StyledSubHead e136466r4"
+          >
+            <div
+              class="css-1mfwjf3-StyledSubIcon e136466r2"
+            >
+              <div
+                class="css-1qgbttw-StyledMenuicon e1g2h9ar0"
+              >
+                <svg
+                  fill="none"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M18 18.75V17.25C18 16.4544 17.6839 15.6913 17.1213 15.1287C16.5587 14.5661 15.7956 14.25 15 14.25H9C8.20435 14.25 7.44129 14.5661 6.87868 15.1287C6.31607 15.6913 6 16.4544 6 17.25V18.75"
+                    stroke="#111111"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M12 11.25C13.6569 11.25 15 9.90685 15 8.25C15 6.59315 13.6569 5.25 12 5.25C10.3431 5.25 9 6.59315 9 8.25C9 9.90685 10.3431 11.25 12 11.25Z"
+                    stroke="#111111"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="css-1brgdsk-StyledSubTitle e136466r3"
+            >
+              Nutzer:in
+            </div>
+          </div>
+          <div
+            class="css-1h9g97m-StyledSubContent e136466r1"
+          >
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Mein Profil"
+              >
+                
+                Mein Profil
+              </a>
+            </div>
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <a
+                class="css-cjivcy-StyledA e1l78fsc0"
+                href="/#"
+                title="Meine Einstellungen"
+              >
+                
+                Meine Einstellungen
+              </a>
+            </div>
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <div
+                class="css-hgfigs-SubDivider e1pe1px00"
+              />
+            </div>
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <button
+                class="css-sryp67-StyledButton-minimal e1asxjmr2"
+                color="default"
+              >
+                <span
+                  class="css-1ts8fox-StyledButtonSpan e1asxjmr1"
+                >
+                  Abmelden
+                </span>
+                <div
+                  class="css-1wucyrk-StyledButtonIcon e1asxjmr0"
+                >
+                  <svg
+                    fill="none"
+                    height="16"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"
+                    />
+                    <polyline
+                      points="16 17 21 12 16 7"
+                    />
+                    <line
+                      x1="21"
+                      x2="9"
+                      y1="12"
+                      y2="12"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="css-ff2lms-StyledSub e136466r5"
+        >
+          <div
+            class="css-1h9g97m-StyledSubContent e136466r1"
+          />
+        </div>
+        <div
+          class="css-ff2lms-StyledSub e136466r5"
+        >
+          <div
+            class="css-1h9g97m-StyledSubContent e136466r1"
+          >
+            <div
+              class="css-w03ot7-StyledSubItem e136466r0"
+            >
+              <div
+                class="css-1dc2ar3-StyledSelectContainer e1vif2fk4"
+              >
+                <label
+                  class="css-1lmhznq-StyledLabel e1d1vdpj0"
+                  for="locale"
+                >
+                  Sprache / Language
+                </label>
+                <div
+                  class="css-15csdm1-StyledSelectAndChevron e1vif2fk0"
+                >
+                  <select
+                    aria-label="Sprache wählen, choose Language"
+                    class="css-1jajov3-StyledSelect-minimal e1vif2fk3"
+                    id="locale"
+                  >
+                    <option
+                      value="de-DE"
+                    >
+                      Deutsch
+                    </option>
+                    <option
+                      value="en-DE"
+                    >
+                      English
+                    </option>
+                  </select>
+                  <div
+                    class="css-o4rktt-StyledSelectIcon e1vif2fk2"
+                  >
+                    <svg
+                      fill="none"
+                      height="18"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="18"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <line
+                        x1="2"
+                        x2="22"
+                        y1="12"
+                        y2="12"
+                      />
+                      <path
+                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="css-1hj2sr-StyledSelectIcon-StyledSelectChevron e1vif2fk1"
+                  >
+                    <svg
+                      fill="none"
+                      height="18"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="18"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="6 9 12 15 18 9"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+</div>
+`;
