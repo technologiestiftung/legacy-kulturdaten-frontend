@@ -12,7 +12,6 @@ export interface OrganizerShow extends ApiCall {
     headers: {
       Authorization: string;
     };
-    body: null;
   };
   response: {
     status: 200;
@@ -32,7 +31,6 @@ export const organizerShowBlueprint = (
     headers: {
       Authorization: makeBearer(token),
     },
-    body: null,
   },
   response: {
     status: 200,

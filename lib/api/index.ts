@@ -20,7 +20,7 @@ export interface ApiCall {
       'Content-Type'?: 'application/json' | 'multipart/form-data';
       'Authorization'?: string;
     };
-    body: { [key: string]: StructuredData };
+    body?: { [key: string]: StructuredData };
   };
   response: { status: number; body: { [key: string]: StructuredData } };
 }
