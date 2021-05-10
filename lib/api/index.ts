@@ -1,4 +1,5 @@
 import getConfig from 'next/config';
+import { apiVersion } from '../../config/api';
 
 const {
   publicRuntimeConfig: { api },
@@ -34,14 +35,28 @@ export enum ApiRoutes {
   authLogout = 'authLogout',
   authValidate = 'authValidate',
   authInfo = 'authInfo',
+  organizerList = 'organizerList',
+  organizerShow = 'organizerShow',
+  organizerCreate = 'organizerCreate',
+  organizerUpdate = 'organizerUpdate',
+  organizerDelete = 'organizerDelete',
 }
 
-export const apiRoutes: { [key in ApiRoutes]: string } = {
-  authRegister: '/auth/register',
-  authLogin: '/auth/login',
-  authLogout: '/auth/logout',
-  authValidate: '/auth/validate',
-  authInfo: '/auth/info',
+export type ApiRoute = (query?: { [key: string]: string }) => string;
+
+export const apiRoutes: {
+  [key in ApiRoutes]: ApiRoute;
+} = {
+  authRegister: () => '/auth/register',
+  authLogin: () => '/auth/login',
+  authLogout: () => '/auth/logout',
+  authValidate: () => '/auth/validate',
+  authInfo: () => '/auth/info',
+  organizerList: () => `/${apiVersion}/organizer`,
+  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerCreate: () => `/${apiVersion}/organizer`,
+  organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
 };
 
 /**
@@ -85,8 +100,10 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
  * Helpers
  */
 
-export const getApiUrl = (apiRoute: ApiRoutes): URL => new URL(apiRoutes[apiRoute], api);
-export const getApiUrlString = (apiRoute: ApiRoutes): string => getApiUrl(apiRoute).toString();
+export const getApiUrl = (apiRoute: ApiRoutes, query?: { [key: string]: string }): URL =>
+  new URL(apiRoutes[apiRoute](query), api);
+export const getApiUrlString = (apiRoute: ApiRoutes, query?: { [key: string]: string }): string =>
+  getApiUrl(apiRoute, query).toString();
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 
 /**
@@ -103,3 +120,5 @@ export type { AuthRegister } from './routes/auth/register';
 export { authRegisterBlueprint } from './routes/auth/register';
 export type { AuthValidate } from './routes/auth/validate';
 export { authValidateBlueprint } from './routes/auth/validate';
+export type { OrganizerList } from './routes/organizer/list';
+export { organizerListBlueprint } from './routes/organizer/list';

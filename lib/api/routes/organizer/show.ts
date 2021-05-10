@@ -1,13 +1,14 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { Organizer } from '../../types/organizer';
 
 /**
- * /auth/validate
+ * /auth/info
  */
 
-export interface AuthValidate extends ApiCall {
+export interface OrganizerShow extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
-    method: 'POST';
+    method: 'GET';
     headers: {
       Authorization: string;
     };
@@ -15,16 +16,19 @@ export interface AuthValidate extends ApiCall {
   };
   response: {
     status: 200;
-    body: { data: null; meta: { valid: boolean } };
+    body: {
+      data: Organizer;
+    };
   };
 }
 
-export const authValidateBlueprint = (
-  token: AuthValidate['request']['headers']['Authorization']
-): AuthValidate => ({
+export const organizerShowBlueprint = (
+  token: OrganizerShow['request']['headers']['Authorization'],
+  id: string
+): OrganizerShow => ({
   request: {
-    route: apiRoutes.authValidate(),
-    method: 'POST',
+    route: apiRoutes.organizerShow({ id }),
+    method: 'GET',
     headers: {
       Authorization: makeBearer(token),
     },

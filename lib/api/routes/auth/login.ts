@@ -1,4 +1,4 @@
-import { apiRoutes, ApiCall } from '../..';
+import { apiRoutes, ApiCall, ApiRoute } from '../..';
 
 /**
  * /auth/login
@@ -6,7 +6,7 @@ import { apiRoutes, ApiCall } from '../..';
 
 export interface AuthLogin extends ApiCall {
   request: {
-    route: typeof apiRoutes.authLogin;
+    route: ReturnType<ApiRoute>;
     method: 'POST';
     headers: {
       'Content-Type': 'application/json';
@@ -31,7 +31,7 @@ export interface AuthLogin extends ApiCall {
 
 export const authLoginBlueprint = (body: AuthLogin['request']['body']): AuthLogin => ({
   request: {
-    route: apiRoutes.authLogin,
+    route: apiRoutes.authLogin(),
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

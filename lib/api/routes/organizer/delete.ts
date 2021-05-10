@@ -1,13 +1,13 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
 
 /**
- * /auth/logout
+ * /auth/info
  */
 
-export interface AuthLogout extends ApiCall {
+export interface OrganizerDelete extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
-    method: 'POST';
+    method: 'DELETE';
     headers: {
       Authorization: string;
     };
@@ -18,18 +18,19 @@ export interface AuthLogout extends ApiCall {
     body: {
       data: null;
       meta: {
-        message: string;
+        message: 'Organizer deleted successfully';
       };
     };
   };
 }
 
-export const authLogoutBlueprint = (
-  token: AuthLogout['request']['headers']['Authorization']
-): AuthLogout => ({
+export const organizerDeleteBlueprint = (
+  token: OrganizerDelete['request']['headers']['Authorization'],
+  id: string
+): OrganizerDelete => ({
   request: {
-    route: apiRoutes.authLogout(),
-    method: 'POST',
+    route: apiRoutes.organizerDelete({ id }),
+    method: 'DELETE',
     headers: {
       Authorization: makeBearer(token),
     },

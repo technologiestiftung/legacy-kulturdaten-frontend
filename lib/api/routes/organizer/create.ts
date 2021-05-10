@@ -1,45 +1,41 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { Organizer } from '../../types/organizer';
 
 /**
  * /auth/info
  */
 
-export interface AuthInfo extends ApiCall {
+export interface OrganizerCreate extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'POST';
     headers: {
       Authorization: string;
     };
-    body: null;
+    body: Organizer;
   };
   response: {
     status: 200;
     body: {
-      data: {
-        type: 'user';
-        attributes: {
-          id: number;
-          email: string;
-          rememberMeToken?: null;
-          createdAt: string;
-          updatedAt: string;
-        };
+      data: Organizer;
+      meta: {
+        message: 'Organizer created successfully';
       };
     };
   };
 }
 
-export const authInfoBlueprint = (
-  token: AuthInfo['request']['headers']['Authorization']
-): AuthInfo => ({
+export const organizerShowBlueprint = (
+  token: OrganizerCreate['request']['headers']['Authorization'],
+  organizer: Organizer
+): OrganizerCreate => ({
   request: {
-    route: apiRoutes.authInfo(),
+    route: apiRoutes.organizerCreate(),
     method: 'POST',
     headers: {
       Authorization: makeBearer(token),
     },
-    body: null,
+    body: organizer,
   },
   response: {
     status: 200,
