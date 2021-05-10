@@ -30,9 +30,9 @@
     "next": "10.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-feather": "^2.0.9",
+    "react-feather": "2.0.9",
     "swr": "0.5.5",
-    "wicg-inert": "^3.1.1"
+    "wicg-inert": "3.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.13.16",
@@ -42,8 +42,8 @@
     "@storybook/addon-essentials": "6.2.9",
     "@storybook/addon-knobs": "6.2.9",
     "@storybook/react": "6.2.9",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/react-hooks": "^5.1.2",
+    "@testing-library/react": "11.2.6",
+    "@testing-library/react-hooks": "5.1.2",
     "@types/jest": "26.0.22",
     "@types/node": "14.14.43",
     "@types/react": "17.0.3",
