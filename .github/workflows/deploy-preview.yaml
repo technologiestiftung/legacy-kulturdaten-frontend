@@ -2,7 +2,9 @@
 name: 'Deploy: Preview'
 
 # yamllint disable-line rule:truthy
-on: pull_request
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
 
 jobs:
   verify:
@@ -31,7 +33,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     # only run when a pull request is opened
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     steps:
       - name: Cloning repo
         uses: actions/checkout@v2
@@ -43,7 +45,7 @@ jobs:
         with:
           # create a review app
           command: review-apps:create
-          git_remote_url: 'ssh://dokku@kulturdaten-berlin.anyvent.cloud:22/review.kulturdaten.berlin'
+          git_remote_url: 'ssh://dokku@kulturdaten-berlin.anyvent.cloud:22/beta.kulturdaten.berlin'
           review_app_name: review.${{ github.event.pull_request.number }}.kulturdaten.berlin
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
 
@@ -57,6 +59,6 @@ jobs:
         with:
           # destroy a review app
           command: review-apps:destroy
-          review_app_name: review.${{ github.event.pull_request.number }}.kulturdaten.berlin
           git_remote_url: 'ssh://dokku@kulturdaten-berlin.anyvent.cloud:22/beta.kulturdaten.berlin'
+          review_app_name: review.${{ github.event.pull_request.number }}.kulturdaten.berlin
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
