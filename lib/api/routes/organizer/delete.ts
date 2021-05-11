@@ -26,10 +26,10 @@ export interface OrganizerDelete extends ApiCall {
 
 export const organizerDeleteBlueprint = (
   token: OrganizerDelete['request']['headers']['Authorization'],
-  id: string
+  query: { id: string }
 ): OrganizerDelete => ({
   request: {
-    route: apiRoutes.organizerDelete({ id }),
+    route: apiRoutes.organizerDelete({ id: query.id }),
     method: 'DELETE',
     headers: {
       Authorization: makeBearer(token),

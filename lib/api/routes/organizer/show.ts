@@ -23,10 +23,10 @@ export interface OrganizerShow extends ApiCall {
 
 export const organizerShowBlueprint = (
   token: OrganizerShow['request']['headers']['Authorization'],
-  id: string
+  query: { id: string }
 ): OrganizerShow => ({
   request: {
-    route: apiRoutes.organizerShow({ id }),
+    route: apiRoutes.organizerShow({ id: query.id }),
     method: 'GET',
     headers: {
       Authorization: makeBearer(token),

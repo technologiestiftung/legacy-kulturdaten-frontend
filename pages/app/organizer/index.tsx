@@ -4,18 +4,17 @@ import { TitleBar } from '../../../components/navigation/TitleBar';
 import { AppWrapper } from '../../../components/wrappers/AppWrapper';
 import {
   ApiRoutes,
-  call,
   getApiUrlString,
   OrganizerList,
   organizerListBlueprint,
+  useApiCall,
 } from '../../../lib/api';
-import { useUser } from '../../../components/user/useUser';
 
 const OrganizerListPage: NextPage = () => {
-  const { authToken } = useUser();
+  const call = useApiCall();
 
   const { data, error } = useSWR(getApiUrlString(ApiRoutes.organizerList), () =>
-    call<OrganizerList>(organizerListBlueprint(authToken))
+    call<OrganizerList>(organizerListBlueprint)
   );
   return (
     <AppWrapper titleBar={<TitleBar title="Organizer List" />}>

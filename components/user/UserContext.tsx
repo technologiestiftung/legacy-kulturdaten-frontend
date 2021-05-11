@@ -78,7 +78,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   );
 };
 
-export const useUserToken = (): string => {
+export const useAuthToken = (): string => {
   const { authToken } = useContext(UserContext);
 
   return authToken;

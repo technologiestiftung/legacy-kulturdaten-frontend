@@ -11,7 +11,7 @@ import {
   authLogoutBlueprint,
   getApiUrlString,
   ApiRoutes,
-  useCall,
+  useApiCall,
 } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
@@ -50,23 +50,23 @@ export const useUser = (): {
 
   const router = useRouter();
   const locale = useLocale();
-  const call = useCall(authTokenFromStateOrCookie);
+  const call = useApiCall(authTokenFromStateOrCookie);
 
   const { data, mutate: mutateValidate } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
     authTokenFromStateOrCookie
-      ? call<AuthValidate>(authValidateBlueprint())
+      ? call<AuthValidate>(authValidateBlueprint)
       : { body: { meta: { valid: undefined } } }
   );
 
   const userTokenIsValid = data?.body?.meta?.valid;
 
   const { data: userResponse } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
-    authTokenFromStateOrCookie ? call<AuthInfo>(authInfoBlueprint()) : undefined
+    authTokenFromStateOrCookie ? call<AuthInfo>(authInfoBlueprint) : undefined
   );
 
   const logoutUser = useCallback(() => {
     if (authTokenFromStateOrCookie) {
-      call<AuthLogout>(authLogoutBlueprint()).catch((e) => console.error(e));
+      call<AuthLogout>(authLogoutBlueprint).catch((e) => console.error(e));
     }
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate();

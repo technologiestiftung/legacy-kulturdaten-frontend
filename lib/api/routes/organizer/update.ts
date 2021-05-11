@@ -27,15 +27,15 @@ export interface OrganizerUpdate extends ApiCall {
 
 export const organizerUpdateBlueprint = (
   token: OrganizerUpdate['request']['headers']['Authorization'],
-  id: string
+  query: { id: string; organizer: Organizer }
 ): OrganizerUpdate => ({
   request: {
-    route: apiRoutes.organizerUpdate({ id }),
+    route: apiRoutes.organizerUpdate({ id: query.id }),
     method: 'PATCH',
     headers: {
       Authorization: makeBearer(token),
     },
-    body: null,
+    body: query.organizer,
   },
   response: {
     status: 200,

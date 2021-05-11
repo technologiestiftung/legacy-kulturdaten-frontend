@@ -3,7 +3,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 import styled from '@emotion/styled';
 
-import { call, AuthLogin, authLoginBlueprint } from '../../lib/api';
+import { AuthLogin, authLoginBlueprint, useApiCall } from '../../lib/api';
 import { Cookie } from '../../lib/cookies';
 import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
@@ -41,6 +41,7 @@ export const LoginForm: React.FC = () => {
   const router = useRouter();
   const locale = useLocale();
   const t = useT();
+  const call = useApiCall();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -53,7 +54,7 @@ export const LoginForm: React.FC = () => {
     e.stopPropagation();
 
     try {
-      const resp = await call<AuthLogin>(authLoginBlueprint({ email, password }));
+      const resp = await call<AuthLogin>(authLoginBlueprint, { body: { email, password } });
 
       if (resp.status === 200) {
         const token = resp.body.meta.token;

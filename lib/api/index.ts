@@ -1,6 +1,6 @@
 import getConfig from 'next/config';
 import { useCallback } from 'react';
-import { useUserToken } from '../../components/user/UserContext';
+import { useAuthToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
 
 const {
@@ -105,24 +105,19 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
   }
 };
 
-export const useCall = (token?: string): typeof call => {
-  const authToken = useUserToken();
+export const useApiCall = (
+  overrideAuthToken?: string
+): (<T extends ApiCall>(
+  blueprint: ApiCallBlueprint,
+  query?: unknown
+) => Promise<T['response']>) => {
+  const authToken = useAuthToken();
 
   const cb = useCallback(
-    <T extends ApiCall>(info: T): Promise<T['response']> => {
-      const mutatedInfo = {
-        response: info.response,
-        request: {
-          ...info.request,
-          headers: {
-            Authorization: makeBearer(token || authToken),
-          },
-        },
-      };
-
-      return call<T>(mutatedInfo as T);
+    <T extends ApiCall>(blueprint: ApiCallBlueprint, query?: unknown): Promise<T['response']> => {
+      return call<T>(blueprint(overrideAuthToken || authToken, query) as T);
     },
-    [token, authToken]
+    [overrideAuthToken, authToken]
   );
 
   return cb;

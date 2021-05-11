@@ -1,4 +1,4 @@
-import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallBlueprint } from '../..';
 import { Organizer } from '../../types/organizer';
 
 /**
@@ -21,7 +21,7 @@ export interface OrganizerList extends ApiCall {
   };
 }
 
-export const organizerListBlueprint = (
+export const organizerListBlueprint: ApiCallBlueprint = (
   token: OrganizerList['request']['headers']['Authorization']
 ): OrganizerList => ({
   request: {

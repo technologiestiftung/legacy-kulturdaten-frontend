@@ -1,4 +1,4 @@
-import { apiRoutes, ApiCall, ApiRoute } from '../..';
+import { apiRoutes, ApiCall, ApiRoute, ApiCallBlueprint } from '../..';
 
 /**
  * /auth/login
@@ -29,14 +29,17 @@ export interface AuthLogin extends ApiCall {
   };
 }
 
-export const authLoginBlueprint = (body: AuthLogin['request']['body']): AuthLogin => ({
+export const authLoginBlueprint: ApiCallBlueprint = (
+  token: string,
+  query: { body: AuthLogin['request']['body'] }
+): AuthLogin => ({
   request: {
     route: apiRoutes.authLogin(),
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body,
+    body: query.body,
   },
   response: {
     status: 200,

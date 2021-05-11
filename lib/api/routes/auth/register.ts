@@ -1,4 +1,4 @@
-import { apiRoutes, ApiCall, ApiRoute } from '../..';
+import { apiRoutes, ApiCall, ApiRoute, ApiCallBlueprint } from '../..';
 
 /**
  * /auth/register
@@ -36,14 +36,17 @@ export interface AuthRegister extends ApiCall {
   };
 }
 
-export const authRegisterBlueprint = (body: AuthRegister['request']['body']): AuthRegister => ({
+export const authRegisterBlueprint: ApiCallBlueprint = (
+  token: string,
+  query: { body: AuthRegister['request']['body'] }
+): AuthRegister => ({
   request: {
     route: apiRoutes.authRegister(),
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body,
+    body: query.body,
   },
   response: {
     status: 200,
