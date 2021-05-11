@@ -25,7 +25,7 @@ export interface OrganizerUpdate extends ApiCall {
   };
 }
 
-export const organizerUpdateBlueprint = (
+export const organizerUpdateFactory = (
   token: OrganizerUpdate['request']['headers']['Authorization'],
   query: { id: string; organizer: Organizer }
 ): OrganizerUpdate => ({

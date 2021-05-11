@@ -21,7 +21,7 @@ export interface OrganizerShow extends ApiCall {
   };
 }
 
-export const organizerShowBlueprint = (
+export const organizerShowFactory = (
   token: OrganizerShow['request']['headers']['Authorization'],
   query: { id: string }
 ): OrganizerShow => ({

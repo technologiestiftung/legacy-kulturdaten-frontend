@@ -6,7 +6,7 @@ import {
   ApiRoutes,
   getApiUrlString,
   OrganizerList,
-  organizerListBlueprint,
+  organizerListFactory,
   useApiCall,
 } from '../../../lib/api';
 
@@ -14,7 +14,7 @@ const OrganizerListPage: NextPage = () => {
   const call = useApiCall();
 
   const { data, error } = useSWR(getApiUrlString(ApiRoutes.organizerList), () =>
-    call<OrganizerList>(organizerListBlueprint)
+    call<OrganizerList>(organizerListFactory)
   );
   return (
     <AppWrapper titleBar={<TitleBar title="Organizer List" />}>

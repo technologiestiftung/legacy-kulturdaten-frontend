@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 import { StyledTestFormContainer, StyledTestInput } from './Login';
-import { AuthRegister, authRegisterBlueprint, useApiCall } from '../../lib/api';
+import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
 import { useT } from '../../lib/i18n';
 
 export const RegisterForm: React.FC = () => {
@@ -19,7 +19,7 @@ export const RegisterForm: React.FC = () => {
     setError(undefined);
 
     try {
-      const resp = await call<AuthRegister>(authRegisterBlueprint, {
+      const resp = await call<AuthRegister>(authRegisterFactory, {
         body: {
           email,
           password,

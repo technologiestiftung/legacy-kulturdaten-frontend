@@ -1,4 +1,4 @@
-import { apiRoutes, ApiCall, ApiRoute, ApiCallBlueprint } from '../..';
+import { apiRoutes, ApiCall, ApiRoute, ApiCallFactory } from '../..';
 
 /**
  * /auth/login
@@ -29,7 +29,7 @@ export interface AuthLogin extends ApiCall {
   };
 }
 
-export const authLoginBlueprint: ApiCallBlueprint = (
+export const authLoginFactory: ApiCallFactory = (
   token: string,
   query: { body: AuthLogin['request']['body'] }
 ): AuthLogin => ({

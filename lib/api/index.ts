@@ -27,7 +27,7 @@ export interface ApiCall {
   response: { status: number; body: { [key: string]: StructuredData } };
 }
 
-export type ApiCallBlueprint = (
+export type ApiCallFactory = (
   token: ApiCall['request']['headers']['Authorization'],
   query?: unknown
 ) => ApiCall;
@@ -107,15 +107,12 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
 
 export const useApiCall = (
   overrideAuthToken?: string
-): (<T extends ApiCall>(
-  blueprint: ApiCallBlueprint,
-  query?: unknown
-) => Promise<T['response']>) => {
+): (<T extends ApiCall>(factory: ApiCallFactory, query?: unknown) => Promise<T['response']>) => {
   const authToken = useAuthToken();
 
   const cb = useCallback(
-    <T extends ApiCall>(blueprint: ApiCallBlueprint, query?: unknown): Promise<T['response']> => {
-      return call<T>(blueprint(overrideAuthToken || authToken, query) as T);
+    <T extends ApiCall>(factory: ApiCallFactory, query?: unknown): Promise<T['response']> => {
+      return call<T>(factory(overrideAuthToken || authToken, query) as T);
     },
     [overrideAuthToken, authToken]
   );
@@ -138,14 +135,14 @@ export const makeBearer = (token: string): string => `Bearer ${token}`;
  */
 
 export type { AuthInfo } from './routes/auth/info';
-export { authInfoBlueprint } from './routes/auth/info';
+export { authInfoFactory } from './routes/auth/info';
 export type { AuthLogin } from './routes/auth/login';
-export { authLoginBlueprint } from './routes/auth/login';
+export { authLoginFactory } from './routes/auth/login';
 export type { AuthLogout } from './routes/auth/logout';
-export { authLogoutBlueprint } from './routes/auth/logout';
+export { authLogoutFactory } from './routes/auth/logout';
 export type { AuthRegister } from './routes/auth/register';
-export { authRegisterBlueprint } from './routes/auth/register';
+export { authRegisterFactory } from './routes/auth/register';
 export type { AuthValidate } from './routes/auth/validate';
-export { authValidateBlueprint } from './routes/auth/validate';
+export { authValidateFactory } from './routes/auth/validate';
 export type { OrganizerList } from './routes/organizer/list';
-export { organizerListBlueprint } from './routes/organizer/list';
+export { organizerListFactory } from './routes/organizer/list';

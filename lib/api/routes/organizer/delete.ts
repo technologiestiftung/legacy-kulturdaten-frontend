@@ -24,7 +24,7 @@ export interface OrganizerDelete extends ApiCall {
   };
 }
 
-export const organizerDeleteBlueprint = (
+export const organizerDeleteFactory = (
   token: OrganizerDelete['request']['headers']['Authorization'],
   query: { id: string }
 ): OrganizerDelete => ({

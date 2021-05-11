@@ -4,11 +4,11 @@ import getConfig from 'next/config';
 
 import {
   AuthValidate,
-  authValidateBlueprint,
+  authValidateFactory,
   AuthInfo,
-  authInfoBlueprint,
+  authInfoFactory,
   AuthLogout,
-  authLogoutBlueprint,
+  authLogoutFactory,
   getApiUrlString,
   ApiRoutes,
   useApiCall,
@@ -54,19 +54,19 @@ export const useUser = (): {
 
   const { data, mutate: mutateValidate } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
     authTokenFromStateOrCookie
-      ? call<AuthValidate>(authValidateBlueprint)
+      ? call<AuthValidate>(authValidateFactory)
       : { body: { meta: { valid: undefined } } }
   );
 
   const userTokenIsValid = data?.body?.meta?.valid;
 
   const { data: userResponse } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
-    authTokenFromStateOrCookie ? call<AuthInfo>(authInfoBlueprint) : undefined
+    authTokenFromStateOrCookie ? call<AuthInfo>(authInfoFactory) : undefined
   );
 
   const logoutUser = useCallback(() => {
     if (authTokenFromStateOrCookie) {
-      call<AuthLogout>(authLogoutBlueprint).catch((e) => console.error(e));
+      call<AuthLogout>(authLogoutFactory).catch((e) => console.error(e));
     }
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate();

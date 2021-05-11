@@ -1,4 +1,4 @@
-import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallBlueprint } from '../..';
+import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
 
 /**
  * /auth/logout
@@ -24,7 +24,7 @@ export interface AuthLogout extends ApiCall {
   };
 }
 
-export const authLogoutBlueprint: ApiCallBlueprint = (
+export const authLogoutFactory: ApiCallFactory = (
   token: AuthLogout['request']['headers']['Authorization']
 ): AuthLogout => ({
   request: {

@@ -1,4 +1,4 @@
-import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallBlueprint } from '../..';
+import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
 
 /**
  * /auth/validate
@@ -19,7 +19,7 @@ export interface AuthValidate extends ApiCall {
   };
 }
 
-export const authValidateBlueprint: ApiCallBlueprint = (
+export const authValidateFactory: ApiCallFactory = (
   token: AuthValidate['request']['headers']['Authorization']
 ): AuthValidate => ({
   request: {
