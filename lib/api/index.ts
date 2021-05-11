@@ -70,6 +70,8 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
       method: request.method,
       headers: request.headers,
       body: JSON.stringify(request.body, null, 2),
+    }).catch((e: ErrorEvent) => {
+      throw e;
     });
 
     const body: T['response']['body'] = await resp.json();
