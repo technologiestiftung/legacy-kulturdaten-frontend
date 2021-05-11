@@ -1,9 +1,8 @@
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 import getConfig from 'next/config';
 
 import {
-  call,
   AuthValidate,
   authValidateBlueprint,
   AuthInfo,
@@ -12,6 +11,7 @@ import {
   authLogoutBlueprint,
   getApiUrlString,
   ApiRoutes,
+  useCall,
 } from '../../lib/api';
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
@@ -22,7 +22,9 @@ const {
   publicRuntimeConfig: { authTokenCookieName },
 } = getConfig();
 
-export type User = AuthInfo['response']['body']['data']['attributes'];
+export interface User {
+  authToken: string;
+}
 
 export const useUser = (): {
   user: User;
@@ -31,47 +33,56 @@ export const useUser = (): {
   login: (cookie: Cookie, redirectRoute: string) => void;
   logout: () => void;
 } => {
-  const router = useRouter();
-  const locale = useLocale();
+  const {
+    authToken,
+    setAuthToken,
+    user,
+    setUser,
+    invalidateUser,
+    isAuthenticated,
+    authenticateUser,
+  } = useContext(UserContext);
 
-  const { user, setUser, invalidateUser, isAuthenticated, authenticateUser } = useContext(
-    UserContext
+  const authTokenFromStateOrCookie = useMemo(
+    () => authToken || getCookie(authTokenCookieName)?.value,
+    [authToken]
   );
 
+  const router = useRouter();
+  const locale = useLocale();
+  const call = useCall(authTokenFromStateOrCookie);
+
   const { data, mutate: mutateValidate } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
-    getCookie(authTokenCookieName)?.value
-      ? call<AuthValidate>(authValidateBlueprint(getCookie(authTokenCookieName)?.value))
+    authTokenFromStateOrCookie
+      ? call<AuthValidate>(authValidateBlueprint())
       : { body: { meta: { valid: undefined } } }
   );
 
   const userTokenIsValid = data?.body?.meta?.valid;
 
   const { data: userResponse } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
-    getCookie(authTokenCookieName)?.value
-      ? call<AuthInfo>(authInfoBlueprint(getCookie(authTokenCookieName)?.value))
-      : undefined
+    authTokenFromStateOrCookie ? call<AuthInfo>(authInfoBlueprint()) : undefined
   );
 
   const logoutUser = useCallback(() => {
-    if (getCookie(authTokenCookieName)?.value) {
-      call<AuthLogout>(authLogoutBlueprint(getCookie(authTokenCookieName)?.value)).catch((e) =>
-        console.error(e)
-      );
+    if (authTokenFromStateOrCookie) {
+      call<AuthLogout>(authLogoutBlueprint()).catch((e) => console.error(e));
     }
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate();
     invalidateUser();
-  }, [invalidateUser, mutateValidate, locale]);
+  }, [invalidateUser, mutateValidate, locale, call, authTokenFromStateOrCookie]);
 
   useEffect(() => {
-    const userData = userResponse?.body.data.attributes;
+    const userData = (userResponse?.body.data.attributes as unknown) as User;
 
-    if (getCookie(authTokenCookieName)?.value) {
+    if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
         if (userData) {
           setUser(userData);
+          setAuthToken(authTokenFromStateOrCookie);
           authenticateUser();
         }
       }
@@ -91,14 +102,18 @@ export const useUser = (): {
     userTokenIsValid,
     logoutUser,
     locale,
+    authTokenFromStateOrCookie,
+    setAuthToken,
+    mutateValidate,
   ]);
 
   return {
     user,
-    authToken: getCookie(authTokenCookieName)?.value,
+    authToken: authTokenFromStateOrCookie,
     isLoggedIn: isAuthenticated,
     login: (cookie: Cookie, redirectRoute: string) => {
       setCookie(cookie);
+      setAuthToken(authTokenFromStateOrCookie);
       router.replace(redirectRoute);
     },
     logout: async () => {

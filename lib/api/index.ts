@@ -1,4 +1,6 @@
 import getConfig from 'next/config';
+import { useCallback } from 'react';
+import { useUserToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
 
 const {
@@ -16,7 +18,7 @@ export interface ApiCall {
   request: {
     route: string;
     method: 'POST' | 'GET' | 'PATCH' | 'DELETE';
-    headers: {
+    headers?: {
       'Content-Type'?: 'application/json' | 'multipart/form-data';
       'Authorization'?: string;
     };
@@ -24,6 +26,11 @@ export interface ApiCall {
   };
   response: { status: number; body: { [key: string]: StructuredData } };
 }
+
+export type ApiCallBlueprint = (
+  token: ApiCall['request']['headers']['Authorization'],
+  query?: unknown
+) => ApiCall;
 
 /**
  * Define routes
@@ -96,6 +103,29 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
   } catch (e) {
     throw e;
   }
+};
+
+export const useCall = (token?: string): typeof call => {
+  const authToken = useUserToken();
+
+  const cb = useCallback(
+    <T extends ApiCall>(info: T): Promise<T['response']> => {
+      const mutatedInfo = {
+        response: info.response,
+        request: {
+          ...info.request,
+          headers: {
+            Authorization: makeBearer(token || authToken),
+          },
+        },
+      };
+
+      return call<T>(mutatedInfo as T);
+    },
+    [token, authToken]
+  );
+
+  return cb;
 };
 
 /**
