@@ -37,20 +37,20 @@ export const useMenuStructure = (): MenuStructure => {
       ],
     },
     {
-      title: t('menu.organizers.title') as string,
+      title: t('menu.organizer.title') as string,
       icon: MenuIconName.organizer,
       items: [
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.organizers.items.all') as string,
-            href: routes.organizers({ locale }),
+            title: t('menu.organizer.items.all') as string,
+            href: routes.organizer({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.organizers.items.my') as string,
+            title: t('menu.organizer.items.my') as string,
             href: routes.organizer({
               locale,
               query: {
@@ -62,20 +62,20 @@ export const useMenuStructure = (): MenuStructure => {
       ],
     },
     {
-      title: t('menu.offers.title') as string,
+      title: t('menu.offer.title') as string,
       icon: MenuIconName.offer,
       items: [
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.offers.items.all') as string,
-            href: routes.offers({ locale }),
+            title: t('menu.offer.items.all') as string,
+            href: routes.offer({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.offers.items.my') as string,
+            title: t('menu.offer.items.my') as string,
             href: routes.offer({
               locale,
               query: {
@@ -87,20 +87,20 @@ export const useMenuStructure = (): MenuStructure => {
       ],
     },
     {
-      title: t('menu.locations.title') as string,
+      title: t('menu.location.title') as string,
       icon: MenuIconName.location,
       items: [
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.locations.items.all') as string,
-            href: routes.locations({ locale }),
+            title: t('menu.location.items.all') as string,
+            href: routes.location({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.locations.items.my') as string,
+            title: t('menu.location.items.my') as string,
             href: routes.location({
               locale,
               query: {

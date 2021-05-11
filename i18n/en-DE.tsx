@@ -23,19 +23,19 @@ export const enDE: Localization = {
     submit: () => 'Register',
   },
   categories: {
-    organizers: {
+    organizer: {
       title: {
         plural: () => 'Organizers',
         singular: () => 'Organizer',
       },
     },
-    offers: {
+    offer: {
       title: {
         plural: () => 'Offers',
         singular: () => 'Offer',
       },
     },
-    locations: {
+    location: {
       title: {
         plural: () => 'Locations',
         singular: () => 'Location',
@@ -55,21 +55,21 @@ export const enDE: Localization = {
         notifications: () => 'Notifications',
       },
     },
-    organizers: {
+    organizer: {
       title: () => 'Organizers',
       items: {
         all: () => 'All Organizers',
         my: () => 'My Organizers',
       },
     },
-    offers: {
+    offer: {
       title: () => 'Offers',
       items: {
         all: () => 'All Offers',
         my: () => 'My Offers',
       },
     },
-    locations: {
+    location: {
       title: () => 'Locations',
       items: {
         all: () => 'All Locations',

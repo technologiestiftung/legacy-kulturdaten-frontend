@@ -23,19 +23,19 @@ export const deDE: Localization = {
     submit: () => 'Registrieren',
   },
   categories: {
-    organizers: {
+    organizer: {
       title: {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',
       },
     },
-    offers: {
+    offer: {
       title: {
         plural: () => 'Angebote',
         singular: () => 'Angebot',
       },
     },
-    locations: {
+    location: {
       title: {
         plural: () => 'Orte',
         singular: () => 'Ort',
@@ -55,21 +55,21 @@ export const deDE: Localization = {
         notifications: () => 'Benachrichtigungen',
       },
     },
-    organizers: {
+    organizer: {
       title: () => 'Anbieter:innen',
       items: {
         all: () => 'Alle Anbieter:innen',
         my: () => 'Meine Anbieter:innen',
       },
     },
-    offers: {
+    offer: {
       title: () => 'Angebote',
       items: {
         all: () => 'Alle Angebote',
         my: () => 'Meine Angebote',
       },
     },
-    locations: {
+    location: {
       title: () => 'Orte',
       items: {
         all: () => 'Alle Orte',

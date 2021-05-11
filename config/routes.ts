@@ -13,11 +13,8 @@ export enum Routes {
   userProfile = 'userProfile',
   userSettings = 'userSettings',
   userNotifications = 'userNotifications',
-  organizers = 'organizers',
   organizer = 'organizer',
-  offers = 'offers',
   offer = 'offer',
-  locations = 'locations',
   location = 'location',
   imprint = 'imprint',
 }
@@ -42,15 +39,18 @@ export const routes: { [key in Routes]: Route } = {
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.login][locale]}/`,
   register: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.register][locale]}/`,
-  organizers: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizers][locale]}/`,
-  organizer: ({ query, locale }) => `${routes.organizers({ locale })}${query?.entry}/`,
-  offers: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offers][locale]}/`,
-  offer: ({ query, locale }) => `${routes.offers({ locale })}${query?.entry}/`,
-  locations: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.locations][locale]}/`,
-  location: ({ query, locale }) => `${routes.locations({ locale })}${query?.entry}/`,
+  organizer: ({ query, locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizer][locale]}/${
+      query?.entry ? `${query?.entry}/` : ''
+    }`,
+  offer: ({ query, locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offer][locale]}/${
+      query?.entry ? `${query?.entry}/` : ''
+    }`,
+  location: ({ query, locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.location][locale]}/${
+      query?.entry ? `${query?.entry}/` : ''
+    }`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
 
@@ -86,29 +86,17 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'auth/register',
     'en-DE': 'auth/register',
   },
-  organizers: {
-    'de-DE': 'organizers',
-    'en-DE': 'organizers',
-  },
   organizer: {
-    'de-DE': '',
-    'en-DE': '',
-  },
-  offers: {
-    'de-DE': 'offers',
-    'en-DE': 'offers',
+    'de-DE': 'organizer',
+    'en-DE': 'organizer',
   },
   offer: {
-    'de-DE': '',
-    'en-DE': '',
-  },
-  locations: {
-    'de-DE': 'locations',
-    'en-DE': 'locations',
+    'de-DE': 'offer',
+    'en-DE': 'offer',
   },
   location: {
-    'de-DE': '',
-    'en-DE': '',
+    'de-DE': 'location',
+    'en-DE': 'location',
   },
   imprint: {
     'de-DE': 'impressum',
