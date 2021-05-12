@@ -2,7 +2,7 @@
 
 exports[`MainMenu renders 1`] = `
 <div>
-  <div
+  <nav
     class="css-8eqs8y-StyledMainMenu ey6w9bd3"
   >
     <div
@@ -620,7 +620,7 @@ exports[`MainMenu renders 1`] = `
         </div>
       </div>
     </div>
-  </div>
+  </nav>
    
 </div>
 `;
