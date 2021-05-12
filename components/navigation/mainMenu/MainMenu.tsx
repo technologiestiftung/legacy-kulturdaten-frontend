@@ -83,7 +83,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
       <StyledMainMenuContent show={showMenuContent}>
         <StyledMainMenuSubs>
           {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
-          <Sub items={[<LocaleSwitch key={1} />]} subMenuKey={subs.length} />
+          <Sub items={[<LocaleSwitch key={1} />]} />
         </StyledMainMenuSubs>
       </StyledMainMenuContent>
     </StyledMainMenu>
@@ -112,6 +112,7 @@ type MenuItemButton = {
 export type MenuStructure = {
   title?: string;
   icon?: MenuIconName;
+  isActive?: boolean;
   items: {
     type: MenuItem;
     action?: MenuItemLink | MenuItemButton;
@@ -124,7 +125,7 @@ export const useMainMenu = (
   Link: React.FC<HeaderLinkProps>
 ): React.ReactElement => {
   const { setMainMenuOpen } = useContext(NavigationContext);
-  const subs = structure.map(({ title, icon, items }, index) => {
+  const subs = structure.map(({ title, icon, items, isActive }, index) => {
     const renderedItems = items?.map(({ type, action }, actionIndex) => {
       switch (type) {
         case MenuItem.link: {
@@ -165,7 +166,7 @@ export const useMainMenu = (
         icon={<MenuIcon type={icon} />}
         items={renderedItems}
         key={index}
-        subMenuKey={index}
+        isActive={isActive}
       />
     );
   });

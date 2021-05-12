@@ -3,6 +3,8 @@ import { routes, useLocale } from '../lib/routing';
 import { MenuItem, MenuStructure } from '../components/navigation/mainMenu/MainMenu';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { useUser } from '../components/user/useUser';
+import { useRouter } from 'next/router';
+import { Categories } from './categories';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -14,11 +16,15 @@ export const useMenuStructure = (): MenuStructure => {
   const t = useT();
   const locale = useLocale();
   const { logout } = useUser();
+  const router = useRouter();
 
   return [
     {
       title: t('menu.start.title') as string,
       icon: MenuIconName.start,
+      isActive:
+        router.asPath === routes.dashboard({ locale }) ||
+        router.asPath === routes.userNotifications({ locale }),
       items: [
         {
           type: MenuItem.link,
@@ -39,6 +45,7 @@ export const useMenuStructure = (): MenuStructure => {
     {
       title: t('menu.organizer.title') as string,
       icon: MenuIconName.organizer,
+      isActive: router.query?.category === Categories.organizer,
       items: [
         {
           type: MenuItem.link,
@@ -64,6 +71,7 @@ export const useMenuStructure = (): MenuStructure => {
     {
       title: t('menu.offer.title') as string,
       icon: MenuIconName.offer,
+      isActive: router.query?.category === Categories.offer,
       items: [
         {
           type: MenuItem.link,
@@ -89,6 +97,7 @@ export const useMenuStructure = (): MenuStructure => {
     {
       title: t('menu.location.title') as string,
       icon: MenuIconName.location,
+      isActive: router.query?.category === Categories.location,
       items: [
         {
           type: MenuItem.link,
@@ -114,6 +123,9 @@ export const useMenuStructure = (): MenuStructure => {
     {
       title: t('menu.user.title') as string,
       icon: MenuIconName.user,
+      isActive:
+        router.asPath === routes.userProfile({ locale }) ||
+        router.asPath === routes.userSettings({ locale }),
       items: [
         {
           type: MenuItem.link,

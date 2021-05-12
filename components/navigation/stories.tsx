@@ -82,6 +82,7 @@ const testMenuStructure = [
   {
     title: 'Anbieter:innen',
     icon: MenuIconName.organizer,
+    isActive: true,
     items: [
       {
         type: MenuItem.link,

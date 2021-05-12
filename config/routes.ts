@@ -55,7 +55,7 @@ export const routes: { [key in Routes]: Route } = {
 };
 
 /**
- * Localized parts for all route's paths
+ * Localized parts for all routes' paths
  */
 const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   index: {

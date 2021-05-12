@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
 import { useIsRouteStringActive } from '../../../lib/routing';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { NavigationContext } from '../NavigationContext';
 
 const StyledA = styled.a<{ active?: boolean }>`
@@ -43,18 +43,11 @@ export interface MenuLinkProps extends InternalMenuLinkProps {
 const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   title,
   href,
-  subMenuKey,
   active,
 }: InternalMenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active || isRouteActive;
-  const { setMainMenuOpen, setActiveSubMenu } = useContext(NavigationContext);
-
-  useEffect(() => {
-    if (linkIsActive) {
-      setActiveSubMenu(subMenuKey);
-    }
-  }, [linkIsActive, setActiveSubMenu, subMenuKey]);
+  const { setMainMenuOpen } = useContext(NavigationContext);
 
   return (
     <Link href={href} passHref>
