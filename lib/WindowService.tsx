@@ -66,12 +66,14 @@ export enum Breakpoint {
   default = 'default',
   mid = 'mid',
   wide = 'wide',
+  ultra = 'ultra',
 }
 
 export const breakpoints: { [key in Breakpoint]: number } = {
   default: 0,
   mid: 768,
   wide: 1200,
+  ultra: 1600,
 };
 
 export const useBreakpoint = (): Breakpoint => {

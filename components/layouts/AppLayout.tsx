@@ -27,6 +27,10 @@ const Container = styled.div`
     align-content: flex-start;
     grid-template-columns: repeat(12, 1fr);
   }
+
+  ${mq(Breakpoint.ultra)} {
+    grid-template-columns: 133px 133px repeat(10, 1fr);
+  }
 `;
 
 const MenuSlot = styled.div`
