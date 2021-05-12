@@ -46,7 +46,7 @@ jobs:
           # create a review app
           command: review-apps:create
           git_remote_url: 'ssh://dokku@kulturdaten-berlin.anyvent.cloud:22/beta.kulturdaten.berlin'
-          review_app_name: review.${{ github.event.pull_request.number }}.kulturdaten.berlin
+          review_app_name: pr-${{ github.event.pull_request.number }}
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
 
   destroy:
@@ -60,5 +60,5 @@ jobs:
           # destroy a review app
           command: review-apps:destroy
           git_remote_url: 'ssh://dokku@kulturdaten-berlin.anyvent.cloud:22/beta.kulturdaten.berlin'
-          review_app_name: review.${{ github.event.pull_request.number }}.kulturdaten.berlin
+          review_app_name: pr-${{ github.event.pull_request.number }}
           ssh_private_key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
