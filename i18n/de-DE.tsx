@@ -22,11 +22,12 @@ export const deDE: Localization = {
     confirmPassword: () => 'Passwort bestätigen',
     submit: () => 'Registrieren',
   },
-  labels: {
+  general: {
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
     created: () => 'erstellt',
     updated: () => 'geändert',
+    create: () => 'erstelle',
   },
   categories: {
     organizer: {

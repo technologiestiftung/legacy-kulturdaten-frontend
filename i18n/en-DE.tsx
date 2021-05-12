@@ -22,11 +22,12 @@ export const enDE: Localization = {
     confirmPassword: () => 'Confirm password',
     submit: () => 'Register',
   },
-  labels: {
+  general: {
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',
     updated: () => 'updated',
+    create: () => 'create',
   },
   categories: {
     organizer: {

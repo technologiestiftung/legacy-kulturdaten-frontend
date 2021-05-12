@@ -67,10 +67,10 @@ const CategoryListPage: NextPage = () => {
       <AppWrapper titleBar={<TitleBar title={title.plural} />}>
         <Table
           columns={[
-            { title: t('labels.name') as string, bold: true },
-            { title: t('labels.city') as string },
-            { title: t('labels.created') as string },
-            { title: t('labels.updated') as string },
+            { title: t('general.name') as string, bold: true },
+            { title: t('general.city') as string },
+            { title: t('general.created') as string },
+            { title: t('general.updated') as string },
           ]}
           content={tableContent}
         />

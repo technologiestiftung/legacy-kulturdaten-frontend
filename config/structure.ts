@@ -58,11 +58,8 @@ export const useMenuStructure = (): MenuStructure => {
           type: MenuItem.link,
           action: {
             title: t('menu.offer.items.create') as string,
-            href: routes.offer({
+            href: routes.createOffer({
               locale,
-              query: {
-                entry: '1',
-              },
             }),
           },
         },
@@ -84,11 +81,8 @@ export const useMenuStructure = (): MenuStructure => {
           type: MenuItem.link,
           action: {
             title: t('menu.organizer.items.create') as string,
-            href: routes.organizer({
+            href: routes.createOrganizer({
               locale,
-              query: {
-                entry: '1',
-              },
             }),
           },
         },
@@ -110,11 +104,8 @@ export const useMenuStructure = (): MenuStructure => {
           type: MenuItem.link,
           action: {
             title: t('menu.location.items.create') as string,
-            href: routes.location({
+            href: routes.createLocation({
               locale,
-              query: {
-                entry: '1',
-              },
             }),
           },
         },

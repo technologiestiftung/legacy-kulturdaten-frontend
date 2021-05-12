@@ -27,6 +27,7 @@ const StyledTitle = styled.h1<{ skeleton?: boolean }>`
   font-weight: 700;
   padding: 0.75rem 0;
   order: 1;
+  text-transform: capitalize;
 
   ${mq(Breakpoint.mid)} {
     order: 0;

@@ -14,8 +14,11 @@ export enum Routes {
   userSettings = 'userSettings',
   userNotifications = 'userNotifications',
   organizer = 'organizer',
+  createOrganizer = 'createOrganizer',
   offer = 'offer',
+  createOffer = 'createOffer',
   location = 'location',
+  createLocation = 'createLocation',
   imprint = 'imprint',
 }
 
@@ -43,19 +46,29 @@ export const routes: { [key in Routes]: Route } = {
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizer][locale]}/${
       query?.entry ? `${query?.entry}/` : ''
     }`,
+  createOrganizer: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${
+      localizedRoutes[Routes.createOrganizer][locale]
+    }/`,
   offer: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offer][locale]}/${
       query?.entry ? `${query?.entry}/` : ''
     }`,
+  createOffer: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.createOffer][locale]}/`,
   location: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.location][locale]}/${
       query?.entry ? `${query?.entry}/` : ''
     }`,
+  createLocation: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${
+      localizedRoutes[Routes.createLocation][locale]
+    }/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
 
 /**
- * Localized parts for all routes' paths
+ * Localized parts for all routes paths
  */
 const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   index: {
@@ -90,13 +103,25 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'organizer',
     'en-DE': 'organizer',
   },
+  createOrganizer: {
+    'de-DE': 'organizer/create',
+    'en-DE': 'organizer/create',
+  },
   offer: {
     'de-DE': 'offer',
     'en-DE': 'offer',
   },
+  createOffer: {
+    'de-DE': 'offer/create',
+    'en-DE': 'offer/create',
+  },
   location: {
     'de-DE': 'location',
     'en-DE': 'location',
+  },
+  createLocation: {
+    'de-DE': 'location/create',
+    'en-DE': 'location/create',
   },
   imprint: {
     'de-DE': 'impressum',
