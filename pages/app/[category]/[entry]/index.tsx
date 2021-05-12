@@ -3,10 +3,12 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { contentGrid, mq } from '../../../../components/globals/Constants';
+import { Tabs } from '../../../../components/navigation/tabs';
 import { TitleBar } from '../../../../components/navigation/TitleBar';
 import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
 import { Categories, useCategories } from '../../../../config/categories';
 import { getApiUrlString, useApiCall } from '../../../../lib/api';
+import { useLocale } from '../../../../lib/routing';
 import { Breakpoint } from '../../../../lib/WindowService';
 
 const EntryTitle = styled.h2`
@@ -56,6 +58,7 @@ const EntryIndexPage: NextPage = () => {
   const router = useRouter();
   const categories = useCategories();
   const call = useApiCall();
+  const locale = useLocale();
 
   const category = router?.query?.category as Categories;
   const entryId = router?.query?.entry as string;
@@ -71,8 +74,24 @@ const EntryIndexPage: NextPage = () => {
 
   const title = (data?.body as any)?.data?.attributes?.name;
 
+  const tabLinks = [
+    { title: 'Übersicht', path: '' },
+    { title: 'Informationen', path: 'info/' },
+    { title: 'Zugriffsrechte', path: 'rights/' },
+    { title: 'Export', path: 'export/' },
+  ].map(({ title, path }) => {
+    const href = `${categoryStructure?.routes.list({ locale, query: router.query })}${path}`;
+
+    return {
+      title,
+      href,
+      isActive: router.asPath === href,
+    };
+  });
+
   return (
     <AppWrapper titleBar={<TitleBar title={title} />}>
+      <Tabs links={tabLinks} />
       <EntryContainer>
         <EntryHead>
           <EntryTitle>{title}</EntryTitle>

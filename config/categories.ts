@@ -4,6 +4,7 @@ import { organizerCreateFactory } from '../lib/api/routes/organizer/create';
 import { useT } from '../lib/i18n';
 import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
+import { Route, Routes, routes } from '../lib/routing';
 
 export enum Categories {
   organizer = 'organizer',
@@ -22,6 +23,10 @@ export const useCategories: () => {
       singular: string;
       plural: string;
     };
+    routes: {
+      list: Route;
+      create: Route;
+    };
     api: {
       list: categoryApi;
       show: categoryApi;
@@ -38,6 +43,10 @@ export const useCategories: () => {
       title: {
         singular: t('categories.organizer.title.singular') as string,
         plural: t('categories.organizer.title.plural') as string,
+      },
+      routes: {
+        list: routes[Routes.organizer],
+        create: routes[Routes.createOrganizer],
       },
       api: {
         list: {

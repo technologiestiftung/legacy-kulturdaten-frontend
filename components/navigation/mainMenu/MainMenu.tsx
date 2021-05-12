@@ -14,7 +14,7 @@ import { LocaleSwitch } from '../LocaleSwitch';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { SubDivider } from './SubDivider';
 
-const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
+const StyledMainMenu = styled.nav<{ fullscreen?: boolean }>`
   background: var(--grey-200);
   display: flex;
   flex-direction: column;
