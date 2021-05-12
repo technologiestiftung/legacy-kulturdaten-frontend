@@ -43,22 +43,22 @@ export const useMenuStructure = (): MenuStructure => {
       ],
     },
     {
-      title: t('menu.organizer.title') as string,
-      icon: MenuIconName.organizer,
-      isActive: router.query?.category === Categories.organizer,
+      title: t('menu.offer.title') as string,
+      icon: MenuIconName.offer,
+      isActive: router.query?.category === Categories.offer,
       items: [
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.organizer.items.all') as string,
-            href: routes.organizer({ locale }),
+            title: t('menu.offer.items.overview') as string,
+            href: routes.offer({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.organizer.items.my') as string,
-            href: routes.organizer({
+            title: t('menu.offer.items.create') as string,
+            href: routes.offer({
               locale,
               query: {
                 entry: '1',
@@ -69,22 +69,22 @@ export const useMenuStructure = (): MenuStructure => {
       ],
     },
     {
-      title: t('menu.offer.title') as string,
-      icon: MenuIconName.offer,
-      isActive: router.query?.category === Categories.offer,
+      title: t('menu.organizer.title') as string,
+      icon: MenuIconName.organizer,
+      isActive: router.query?.category === Categories.organizer,
       items: [
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.offer.items.all') as string,
-            href: routes.offer({ locale }),
+            title: t('menu.organizer.items.overview') as string,
+            href: routes.organizer({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.offer.items.my') as string,
-            href: routes.offer({
+            title: t('menu.organizer.items.create') as string,
+            href: routes.organizer({
               locale,
               query: {
                 entry: '1',
@@ -102,14 +102,14 @@ export const useMenuStructure = (): MenuStructure => {
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.location.items.all') as string,
+            title: t('menu.location.items.overview') as string,
             href: routes.location({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.location.items.my') as string,
+            title: t('menu.location.items.create') as string,
             href: routes.location({
               locale,
               query: {

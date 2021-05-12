@@ -64,22 +64,22 @@ export const deDE: Localization = {
     organizer: {
       title: () => 'Anbieter:innen',
       items: {
-        all: () => 'Alle Anbieter:innen',
-        my: () => 'Meine Anbieter:innen',
+        overview: () => 'Übersicht',
+        create: () => 'Erstelle Anbieter:in',
       },
     },
     offer: {
       title: () => 'Angebote',
       items: {
-        all: () => 'Alle Angebote',
-        my: () => 'Meine Angebote',
+        overview: () => 'Übersicht',
+        create: () => 'Erstelle Angebot',
       },
     },
     location: {
       title: () => 'Orte',
       items: {
-        all: () => 'Alle Orte',
-        my: () => 'Meine Orte',
+        overview: () => 'Übersicht',
+        create: () => 'Erstelle Ort',
       },
     },
     user: {

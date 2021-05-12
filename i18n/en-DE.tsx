@@ -64,22 +64,22 @@ export const enDE: Localization = {
     organizer: {
       title: () => 'Organizers',
       items: {
-        all: () => 'All Organizers',
-        my: () => 'My Organizers',
+        overview: () => 'Overview',
+        create: () => 'Create Organizer',
       },
     },
     offer: {
       title: () => 'Offers',
       items: {
-        all: () => 'All Offers',
-        my: () => 'My Offers',
+        overview: () => 'Overview',
+        create: () => 'Create Offer',
       },
     },
     location: {
       title: () => 'Locations',
       items: {
-        all: () => 'All Locations',
-        my: () => 'My Locations',
+        overview: () => 'Overview',
+        create: () => 'Create Location',
       },
     },
     user: {
