@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { contentGrid, mq } from '../globals/Constants';
 
 const StyledTitleBar = styled.div`
   display: flex;
@@ -13,6 +13,11 @@ const StyledTitleBar = styled.div`
   ${mq(Breakpoint.mid)} {
     border-left: none;
   }
+
+  ${mq(Breakpoint.wide)} {
+    padding: 0;
+    ${contentGrid(10)}
+  }
 `;
 
 const StyledTitle = styled.h1`
@@ -24,6 +29,11 @@ const StyledTitle = styled.h1`
 
   ${mq(Breakpoint.mid)} {
     order: 0;
+  }
+
+  ${mq(Breakpoint.wide)} {
+    order: 0;
+    grid-column: 2 / -2;
   }
 `;
 

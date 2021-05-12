@@ -4,7 +4,6 @@ import { NavigationContext } from '../NavigationContext';
 
 export const StyledSub = styled.div<{ active?: boolean }>`
   width: 100%;
-  margin-top: -1px;
   background: ${({ active }) => (active ? 'var(--white)' : 'var(--grey-200)')};
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);

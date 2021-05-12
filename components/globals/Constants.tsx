@@ -1,4 +1,4 @@
-import { Global, css } from '@emotion/react';
+import { Global, css, SerializedStyles } from '@emotion/react';
 import { breakpoints, Breakpoint } from '../../lib/WindowService';
 
 export const CSSVars: React.FC = () => (
@@ -56,3 +56,9 @@ export const CSSVars: React.FC = () => (
 
 export const mq = (breakpoint: Breakpoint): string =>
   `@media screen and (min-width: ${breakpoints[breakpoint]}px)`;
+
+export const contentGrid = (columnCount: number): SerializedStyles => css`
+  display: grid;
+  grid-template-columns: repeat(${columnCount}, 1fr);
+  column-gap: 0;
+`;

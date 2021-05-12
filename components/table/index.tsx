@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { contentGrid, mq } from '../globals/Constants';
 
 interface TableProps {
   columns: {
@@ -36,11 +36,20 @@ const StyledRow = styled.div<{ columnCount: number; isTitleRow?: boolean }>`
     column-gap: 1.5rem;
     grid-template-rows: auto;
   }
+
+  ${mq(Breakpoint.wide)} {
+    grid-column: 2 / -2;
+  }
 `;
 
 const StyledRowWrapper = styled.div`
   box-shadow: inset 0px -1px 0px var(--grey-400);
   padding: 0 0.75rem;
+
+  ${mq(Breakpoint.wide)} {
+    padding: 0;
+    ${contentGrid(10)}
+  }
 `;
 
 const StyledCell = styled.div<{ isTitleRow?: boolean; bold?: boolean }>`
