@@ -187,12 +187,12 @@ export const Button: React.FC<ButtonProps> = ({
       variant={variant}
       id={id}
       name={name}
-      type="button"
-      onClick={(e: MouseEvent<HTMLInputElement>) => onClick(e)}
+      type="submit"
+      onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
     />
   ) : (
     <StyledButton
-      onClick={(e: MouseEvent<HTMLButtonElement>) => onClick(e)}
+      onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
       aria-label={description}
       color={color}
       size={size}

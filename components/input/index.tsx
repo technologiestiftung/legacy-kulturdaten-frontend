@@ -57,11 +57,11 @@ const StyledError = styled.div`
 `;
 
 export enum InputType {
-  button = 'button',
   date = 'date',
   email = 'email',
   number = 'number',
   password = 'password',
+  submit = 'submit',
   tel = 'tel',
   text = 'text',
   time = 'time',
@@ -97,7 +97,7 @@ export const Input: React.FC<InputProps> = (props: InputProps) => {
 
   return (
     <StyledInputContainer>
-      {props.type === InputType.button ? (
+      {props.type === InputType.submit ? (
         <Button asInput>{props.value}</Button>
       ) : (
         <>
