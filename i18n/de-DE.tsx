@@ -4,6 +4,12 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  forms: {
+    required: () => 'Pflichtfeld',
+    errors: {
+      passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
+    },
+  },
   start: {
     login: () => 'Login',
     register: () => 'Registrierung',

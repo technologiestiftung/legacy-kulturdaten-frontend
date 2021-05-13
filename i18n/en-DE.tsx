@@ -4,6 +4,12 @@ export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
   },
+  forms: {
+    required: () => 'required',
+    errors: {
+      passwordConfirm: () => 'The entered passwords do not match.',
+    },
+  },
   start: {
     login: () => 'Login',
     register: () => 'Register',
