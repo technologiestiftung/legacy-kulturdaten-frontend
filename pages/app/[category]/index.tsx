@@ -45,18 +45,20 @@ const CategoryListPage: NextPage = () => {
   const tableContent = useMemo(
     () =>
       data?.body?.data
-        ? Object.values(data?.body?.data).map(({ attributes, id }, index) => [
-            <EntryLink
-              key={index}
-              category={router?.query?.category as Categories}
-              title={attributes.name}
-              locale={locale}
-              id={id}
-            />,
-            attributes.address.city,
-            attributes.createdAt,
-            attributes.updatedAt,
-          ])
+        ? Object.values(data?.body?.data)
+            .reverse()
+            .map(({ attributes, id }, index) => [
+              <EntryLink
+                key={index}
+                category={router?.query?.category as Categories}
+                title={attributes.name}
+                locale={locale}
+                id={id}
+              />,
+              attributes.address.city,
+              attributes.createdAt,
+              attributes.updatedAt,
+            ])
         : [],
     [data, locale, router]
   );
