@@ -10,7 +10,8 @@ export interface OrganizerUpdate extends ApiCall {
     route: ReturnType<ApiRoute>;
     method: 'PATCH';
     headers: {
-      Authorization: string;
+      'Authorization': string;
+      'Content-Type': 'application/json';
     };
     body: Organizer;
   };
@@ -33,7 +34,8 @@ export const organizerUpdateFactory = (
     route: apiRoutes.organizerUpdate({ id: query.id }),
     method: 'PATCH',
     headers: {
-      Authorization: makeBearer(token),
+      'Authorization': makeBearer(token),
+      'Content-Type': 'application/json',
     },
     body: query.organizer,
   },

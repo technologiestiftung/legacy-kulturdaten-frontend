@@ -10,7 +10,8 @@ export interface OrganizerCreate extends ApiCall {
     route: ReturnType<ApiRoute>;
     method: 'POST';
     headers: {
-      Authorization: string;
+      'Authorization': string;
+      'Content-Type': 'application/json';
     };
     body: Organizer;
   };
@@ -33,7 +34,8 @@ export const organizerCreateFactory: ApiCallFactory = (
     route: apiRoutes.organizerCreate(),
     method: 'POST',
     headers: {
-      Authorization: makeBearer(token),
+      'Authorization': makeBearer(token),
+      'Content-Type': 'application/json',
     },
     body: query.organizer,
   },

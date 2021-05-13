@@ -9,7 +9,8 @@ export interface OrganizerDelete extends ApiCall {
     route: ReturnType<ApiRoute>;
     method: 'DELETE';
     headers: {
-      Authorization: string;
+      'Authorization': string;
+      'Content-Type': 'application/json';
     };
     body: null;
   };
@@ -32,7 +33,8 @@ export const organizerDeleteFactory = (
     route: apiRoutes.organizerDelete({ id: query.id }),
     method: 'DELETE',
     headers: {
-      Authorization: makeBearer(token),
+      'Authorization': makeBearer(token),
+      'Content-Type': 'application/json',
     },
     body: null,
   },
