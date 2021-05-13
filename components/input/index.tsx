@@ -2,11 +2,13 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ChangeEventHandler, useState } from 'react';
 import { useT } from '../../lib/i18n';
+import { Button } from '../button';
 import { Label, StyledLabel } from '../label';
 
 const StyledInputContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 
   ${StyledLabel} {
     padding-bottom: 0.75rem;
@@ -55,6 +57,7 @@ const StyledError = styled.div`
 `;
 
 export enum InputType {
+  button = 'button',
   date = 'date',
   email = 'email',
   number = 'number',
@@ -66,7 +69,6 @@ export enum InputType {
 }
 
 interface InputProps {
-  label: string;
   type: InputType;
   autoComplete?: string;
   autofocus?: boolean;
@@ -75,6 +77,7 @@ interface InputProps {
   id?: string;
   hint?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
+  label?: string;
   min?: number | string;
   minLength?: number;
   max?: number | string;
@@ -94,18 +97,24 @@ export const Input: React.FC<InputProps> = (props: InputProps) => {
 
   return (
     <StyledInputContainer>
-      {props.label && (
-        <Label htmlFor={props.id}>
-          {props.label}
-          {props.required ? ` (${t('forms.required')})` : ''}
-        </Label>
+      {props.type === InputType.button ? (
+        <Button asInput>{props.value}</Button>
+      ) : (
+        <>
+          {props.label && (
+            <Label htmlFor={props.id}>
+              {props.label}
+              {props.required ? ` (${t('forms.required')})` : ''}
+            </Label>
+          )}
+          <StyledInput
+            {...props}
+            pristine={pristine}
+            valid={props.valid}
+            onBlur={() => setPristine(false)}
+          />
+        </>
       )}
-      <StyledInput
-        {...props}
-        pristine={pristine}
-        valid={props.valid}
-        onBlur={() => setPristine(false)}
-      />
       {!pristine && props.error && <StyledError>{props.error}</StyledError>}
     </StyledInputContainer>
   );

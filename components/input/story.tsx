@@ -123,3 +123,31 @@ export const InputUrlStory: Story = () => (
 );
 
 InputUrlStory.storyName = 'URL Input';
+
+export const InputButtonStory: Story = () => (
+  <StyledTestWrapper>
+    <StyledCell>
+      <Input type={InputType.button} id="id-2" label="Submit" placeholder="some-url.com" />
+    </StyledCell>
+  </StyledTestWrapper>
+);
+
+InputButtonStory.storyName = 'Button Input';
+
+export const InputLoginStory: Story = () => (
+  <StyledTestWrapper>
+    <StyledCell>
+      <Input type={InputType.email} id="id-1" label="Email" placeholder="user@provider.com" />
+    </StyledCell>
+    <div />
+    <StyledCell>
+      <Input type={InputType.password} id="id-2" label="Password" />
+    </StyledCell>
+    <div />
+    <StyledCell>
+      <Input type={InputType.button} id="id-3" value="Login" placeholder="some-url.com" />
+    </StyledCell>
+  </StyledTestWrapper>
+);
+
+InputLoginStory.storyName = 'Login example';
