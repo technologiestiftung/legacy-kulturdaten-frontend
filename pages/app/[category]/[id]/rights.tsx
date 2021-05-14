@@ -11,29 +11,6 @@ import { getApiUrlString, useApiCall } from '../../../../lib/api';
 import { useLocale } from '../../../../lib/routing';
 import { Breakpoint } from '../../../../lib/WindowService';
 
-const EntryTitle = styled.h2`
-  font-size: var(--font-size-700);
-  line-height: var(--line-height-700);
-  font-weight: 700;
-`;
-const EntryDescription = styled.div`
-  padding-top: 1.5rem;
-  font-size: var(--font-size-600);
-  line-height: var(--line-height-600);
-
-  ${mq(Breakpoint.wide)} {
-    padding-top: 2.25rem;
-  }
-`;
-const EntryHead = styled.div`
-  grid-column: 1 / -1;
-  padding: 3.75rem 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    padding: 6.75rem 0;
-    grid-column: 2 / span 4;
-  }
-`;
 const EntryContent = styled.div`
   grid-column: 1 / -1;
   padding: 0 0.75rem;
@@ -54,14 +31,14 @@ const EntryContainer = styled.div`
   }
 `;
 
-const EntryIndexPage: NextPage = () => {
+const EntryRightPage: NextPage = () => {
   const router = useRouter();
   const categories = useCategories();
   const call = useApiCall();
   const locale = useLocale();
 
   const category = router?.query?.category as Categories;
-  const entryId = router?.query?.entry as string;
+  const entryId = router?.query?.id as string;
 
   const categoryStructure = categories[category];
   const apiCallFactory = categoryStructure?.api.show.factory;
@@ -93,14 +70,8 @@ const EntryIndexPage: NextPage = () => {
     <AppWrapper titleBar={<TitleBar title={title} />}>
       <Tabs links={tabLinks} />
       <EntryContainer>
-        <EntryHead>
-          <EntryTitle>{title}</EntryTitle>
-          <EntryDescription>
-            Placeholder: Erat elit mauris rhoncus purus ac in risus. Felis, orci leo viverra enim,
-            nunc, dolor amet, risus orci. Consectetur lacus libero.
-          </EntryDescription>
-        </EntryHead>
         <EntryContent>
+          <h2>Zugriffsrechte</h2>
           <div>Data:</div>
           <pre>{JSON.stringify(data?.body, null, 2)}</pre>
         </EntryContent>
@@ -109,4 +80,4 @@ const EntryIndexPage: NextPage = () => {
   );
 };
 
-export default EntryIndexPage;
+export default EntryRightPage;

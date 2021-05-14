@@ -44,7 +44,7 @@ export const routes: { [key in Routes]: Route } = {
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.register][locale]}/`,
   organizer: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizer][locale]}/${
-      query?.entry ? `${query?.entry}/` : ''
+      query?.id ? `${query?.id}/` : ''
     }`,
   createOrganizer: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${
@@ -52,13 +52,13 @@ export const routes: { [key in Routes]: Route } = {
     }/`,
   offer: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offer][locale]}/${
-      query?.entry ? `${query?.entry}/` : ''
+      query?.id ? `${query?.id}/` : ''
     }`,
   createOffer: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.createOffer][locale]}/`,
   location: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.location][locale]}/${
-      query?.entry ? `${query?.entry}/` : ''
+      query?.id ? `${query?.id}/` : ''
     }`,
   createLocation: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${

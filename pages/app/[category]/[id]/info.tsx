@@ -31,14 +31,14 @@ const EntryContainer = styled.div`
   }
 `;
 
-const EntryRightPage: NextPage = () => {
+const EntryInfoPage: NextPage = () => {
   const router = useRouter();
   const categories = useCategories();
   const call = useApiCall();
   const locale = useLocale();
 
   const category = router?.query?.category as Categories;
-  const entryId = router?.query?.entry as string;
+  const entryId = router?.query?.id as string;
 
   const categoryStructure = categories[category];
   const apiCallFactory = categoryStructure?.api.show.factory;
@@ -71,7 +71,7 @@ const EntryRightPage: NextPage = () => {
       <Tabs links={tabLinks} />
       <EntryContainer>
         <EntryContent>
-          <h2>Zugriffsrechte</h2>
+          <h2>Informationen</h2>
           <div>Data:</div>
           <pre>{JSON.stringify(data?.body, null, 2)}</pre>
         </EntryContent>
@@ -80,4 +80,4 @@ const EntryRightPage: NextPage = () => {
   );
 };
 
-export default EntryRightPage;
+export default EntryInfoPage;

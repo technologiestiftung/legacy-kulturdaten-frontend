@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'node:querystring';
 import React from 'react';
+import useSWR from 'swr';
 import { Categories, useCategories } from '../config/categories';
-import { ApiCallFactory, ApiRoutes } from './api';
+import { ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { Route } from './routing';
 
 export type categoryApi = {
@@ -11,6 +13,16 @@ export type categoryApi = {
 
 export interface CategoryPage {
   category: Category;
+}
+
+export interface CategoryEntryPage extends CategoryPage {
+  entry: CategoryEntry;
+}
+
+export interface CategoryEntry {
+  attributes: {
+    name: string;
+  };
 }
 
 export type Category = {
@@ -46,4 +58,16 @@ export const useCategory = (): Category => {
 
 export const useList = () => null;
 
-export const useEntry = () => null;
+export const useEntry = (category: Category, query: ParsedUrlQuery): CategoryEntry => {
+  const call = useApiCall();
+
+  const apiCallFactory = category?.api.show.factory;
+  const apiCallRoute = category?.api.show.route;
+
+  const { data } = useSWR(
+    apiCallRoute && query ? getApiUrlString(apiCallRoute, query) : undefined,
+    () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
+  );
+
+  return (data?.body as any)?.data;
+};

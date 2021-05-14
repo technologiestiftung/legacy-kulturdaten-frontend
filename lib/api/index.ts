@@ -1,4 +1,5 @@
 import getConfig from 'next/config';
+import { ParsedUrlQuery } from 'node:querystring';
 import { useCallback } from 'react';
 import { useAuthToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
@@ -49,7 +50,7 @@ export enum ApiRoutes {
   organizerDelete = 'organizerDelete',
 }
 
-export type ApiRoute = (query?: { [key: string]: string }) => string;
+export type ApiRoute = (query?: ParsedUrlQuery) => string;
 
 export const apiRoutes: {
   [key in ApiRoutes]: ApiRoute;
@@ -124,9 +125,9 @@ export const useApiCall = (
  * Helpers
  */
 
-export const getApiUrl = (apiRoute: ApiRoutes, query?: { [key: string]: string }): URL =>
+export const getApiUrl = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): URL =>
   new URL(apiRoutes[apiRoute](query), api);
-export const getApiUrlString = (apiRoute: ApiRoutes, query?: { [key: string]: string }): string =>
+export const getApiUrlString = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): string =>
   getApiUrl(apiRoute, query).toString();
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 

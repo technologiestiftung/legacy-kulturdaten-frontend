@@ -99,9 +99,6 @@ export const OrganizerCreatePage: React.FC<OrganizerCreatePageProps> = ({
             e.preventDefault();
             e.stopPropagation();
 
-            console.log(e);
-            console.log(formState);
-
             try {
               const resp = await call<OrganizerCreate>(category.api.create.factory, {
                 organizer: {
@@ -118,7 +115,7 @@ export const OrganizerCreatePage: React.FC<OrganizerCreatePageProps> = ({
               if (resp.status === 200) {
                 const id = resp.body.data.id;
 
-                router.push(routes[Routes.organizer]({ locale, query: { entry: id } }));
+                router.push(routes[Routes.organizer]({ locale, query: { id } }));
               }
             } catch (e) {
               console.error(e);
