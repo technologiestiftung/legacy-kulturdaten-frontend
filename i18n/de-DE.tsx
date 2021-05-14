@@ -51,6 +51,9 @@ export const deDE: Localization = {
         zipCode: () => 'Postleitzahl',
         city: () => 'Stadt',
         submit: () => 'anlegen',
+        save: () => 'speichern',
+        edit: () => 'Informationen bearbeiten',
+        editCancel: () => 'Bearbeitung abbrechen',
       },
       tabs: {
         overview: () => 'Übersicht',

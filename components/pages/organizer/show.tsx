@@ -4,8 +4,8 @@ import { TitleBar } from '../../navigation/TitleBar';
 import { AppWrapper } from '../../wrappers/AppWrapper';
 import { CategoryEntryPage, useEntry, useTabs } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
-import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
+import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 
 const EntryTitle = styled.h2`
   font-size: var(--font-size-700);
@@ -54,7 +54,7 @@ export const OrganizerShowPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
-  const entry = useEntry<OrganizerShow, Organizer>(category, query);
+  const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const tabs = useTabs(category);
 
   const title = entry?.attributes?.name;

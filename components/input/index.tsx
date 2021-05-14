@@ -41,6 +41,11 @@ const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
     color: var(--grey-600);
   }
 
+  &:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+
   ${({ pristine, valid }) =>
     !pristine && valid === false
       ? errorStyle
@@ -103,7 +108,7 @@ export const Input: React.FC<InputProps> = (props: InputProps) => {
   return (
     <StyledInputContainer>
       {props.type === InputType.submit ? (
-        <Button color={props.color} size={ButtonSize.default} asInput>
+        <Button color={props.color} size={ButtonSize.default} asInput disabled={props.disabled}>
           {props.value}
         </Button>
       ) : (

@@ -81,21 +81,24 @@ export const useList = <C extends ApiCall, T extends CategoryEntry[]>(
   return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
 };
 
-export const useEntry = <C extends ApiCall, T extends CategoryEntry>(
+export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   category: Category,
   query: ParsedUrlQuery
-): T => {
+): {
+  entry: T;
+  mutate: (data?: C['response'], shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
+} => {
   const call = useApiCall();
 
   const apiCallFactory = category?.api.show.factory;
   const apiCallRoute = category?.api.show.route;
 
-  const { data } = useSWR(
+  const { data, mutate } = useSWR<C['response']>(
     apiCallRoute && query ? getApiUrlString(apiCallRoute, query) : undefined,
-    () => (apiCallRoute && query ? call<C>(apiCallFactory, query) : undefined)
+    () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
-  return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
+  return { entry: ((data?.body as any)?.data as unknown) as T, mutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {

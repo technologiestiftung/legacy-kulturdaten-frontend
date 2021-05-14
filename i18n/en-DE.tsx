@@ -43,7 +43,7 @@ export const enDE: Localization = {
       },
       form: {
         create: () => 'Create new organizer',
-        baseInfo: () => 'Base information',
+        baseInfo: () => 'Basic information',
         address: () => 'Address',
         name: () => 'Organizer Name',
         street1: () => 'Street and house number',
@@ -51,6 +51,9 @@ export const enDE: Localization = {
         zipCode: () => 'Zip code',
         city: () => 'City',
         submit: () => 'create',
+        save: () => 'save',
+        edit: () => 'edit information',
+        editCancel: () => 'cancel editing',
       },
       tabs: {
         overview: () => 'Overview',

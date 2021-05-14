@@ -83,6 +83,10 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
     &:active {
       box-shadow: var(--shadow-active);
     }
+
+    &:disabled {
+      box-shadow: var(--shadow);
+    }
   `,
   minimal: css`
     border: 1px solid currentColor;
@@ -96,6 +100,10 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
 
     &:active {
       box-shadow: inset 0px 0px 0px 0px currentColor;
+    }
+
+    &:disabled {
+      box-shadow: none;
     }
   `,
 };
@@ -121,6 +129,11 @@ const StyledButton = styled.button<{
   cursor: pointer;
 
   ${({ variant }) => buttonVariants[variant]}
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.25;
+  }
 `;
 
 const StyledButtonSpan = styled.span``;
@@ -155,6 +168,7 @@ interface ButtonProps {
   children: React.ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   description?: string;
+  disabled?: boolean;
   color?: ButtonColor;
   icon?: string;
   iconPosition?: IconPosition;
@@ -169,6 +183,7 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   description,
+  disabled,
   color = ButtonColor.default,
   size = ButtonSize.default,
   variant = ButtonVariant.default,
@@ -189,6 +204,7 @@ export const Button: React.FC<ButtonProps> = ({
       name={name}
       type="submit"
       onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
+      disabled={disabled}
     />
   ) : (
     <StyledButton
