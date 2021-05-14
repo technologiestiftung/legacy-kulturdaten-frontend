@@ -1,17 +1,17 @@
 import { useRouter } from 'next/router';
 import { Table } from '../../../components/table';
-import useSWR from 'swr';
 import { TitleBar } from '../../../components/navigation/TitleBar';
 import { AppWrapper } from '../../../components/wrappers/AppWrapper';
 import { Categories } from '../../../config/categories';
-import { useApiCall, getApiUrlString } from '../../../lib/api';
+import { OrganizerList } from '../../../lib/api';
 import { useT } from '../../../lib/i18n';
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { Routes, routes } from '../../../config/routes';
 import { useLocale } from '../../../lib/routing';
 import { Locale } from '../../../config/locales';
-import { CategoryPage } from '../../../lib/categories';
+import { CategoryPage, useList } from '../../../lib/categories';
+import { Organizer } from '../../../lib/api/types/organizer';
 
 interface EntryLinkProps {
   category: Categories;
@@ -21,34 +21,21 @@ interface EntryLinkProps {
 }
 
 const EntryLink: React.FC<EntryLinkProps> = ({ category, title, id, locale }: EntryLinkProps) => (
-  <Link href={routes[(category as string) as Routes]({ locale, query: { entry: id } })}>
+  <Link href={routes[(category as string) as Routes]({ locale, query: { id } })}>
     <a>{title}</a>
   </Link>
 );
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface OrganizerListPageProps extends CategoryPage {}
-
-export const OrganizerListPage: React.FC<OrganizerListPageProps> = ({
-  category,
-}: OrganizerListPageProps) => {
+export const OrganizerListPage: React.FC<CategoryPage> = ({ category }: CategoryPage) => {
   const router = useRouter();
   const t = useT();
   const locale = useLocale();
-
-  const apiCallFactory = category?.api.list.factory;
-  const apiCallRoute = category?.api.list.route;
-
-  const call = useApiCall();
-
-  const { data } = useSWR(apiCallRoute ? getApiUrlString(apiCallRoute) : undefined, () =>
-    category ? call(apiCallFactory) : undefined
-  );
+  const list = useList<OrganizerList, Organizer[]>(category);
 
   const tableContent = useMemo(
     () =>
-      data?.body?.data
-        ? Object.values(data?.body?.data)
+      list
+        ? Object.values(list)
             .reverse()
             .map(({ attributes, id }, index) => [
               <EntryLink
@@ -63,7 +50,7 @@ export const OrganizerListPage: React.FC<OrganizerListPageProps> = ({
               attributes.updatedAt,
             ])
         : [],
-    [data, locale, router]
+    [list, locale, router]
   );
 
   const { title } = category;

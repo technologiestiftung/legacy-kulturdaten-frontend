@@ -3,7 +3,7 @@ import { ParsedUrlQuery } from 'node:querystring';
 import React from 'react';
 import useSWR from 'swr';
 import { Categories, useCategories } from '../config/categories';
-import { ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { Route } from './routing';
 
 export type categoryApi = {
@@ -16,7 +16,7 @@ export interface CategoryPage {
 }
 
 export interface CategoryEntryPage extends CategoryPage {
-  entry: CategoryEntry;
+  query: ParsedUrlQuery;
 }
 
 export interface CategoryEntry {
@@ -56,9 +56,26 @@ export const useCategory = (): Category => {
   return category;
 };
 
-export const useList = () => null;
+export const useList = <C extends ApiCall, T extends CategoryEntry[]>(
+  category: Category,
+  query?: ParsedUrlQuery
+): T => {
+  const call = useApiCall();
 
-export const useEntry = (category: Category, query: ParsedUrlQuery): CategoryEntry => {
+  const apiCallFactory = category?.api.list.factory;
+  const apiCallRoute = category?.api.list.route;
+
+  const { data } = useSWR(apiCallRoute ? getApiUrlString(apiCallRoute) : undefined, () =>
+    category ? call<C>(apiCallFactory, query) : undefined
+  );
+
+  return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
+};
+
+export const useEntry = <C extends ApiCall, T extends CategoryEntry>(
+  category: Category,
+  query: ParsedUrlQuery
+): T => {
   const call = useApiCall();
 
   const apiCallFactory = category?.api.show.factory;
@@ -66,8 +83,8 @@ export const useEntry = (category: Category, query: ParsedUrlQuery): CategoryEnt
 
   const { data } = useSWR(
     apiCallRoute && query ? getApiUrlString(apiCallRoute, query) : undefined,
-    () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
+    () => (apiCallRoute && query ? call<C>(apiCallFactory, query) : undefined)
   );
 
-  return (data?.body as any)?.data;
+  return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
 };

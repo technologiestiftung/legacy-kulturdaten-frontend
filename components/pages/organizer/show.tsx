@@ -4,9 +4,11 @@ import { contentGrid, mq } from '../../globals/Constants';
 import { Tabs } from '../../navigation/tabs';
 import { TitleBar } from '../../navigation/TitleBar';
 import { AppWrapper } from '../../wrappers/AppWrapper';
-import { CategoryEntryPage } from '../../../lib/categories';
+import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
 import { Breakpoint } from '../../../lib/WindowService';
+import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { Organizer } from '../../../lib/api/types/organizer';
 
 const EntryTitle = styled.h2`
   font-size: var(--font-size-700);
@@ -51,15 +53,13 @@ const EntryContainer = styled.div`
   }
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface OrganigerShowPageProps extends CategoryEntryPage {}
-
-export const OrganizerShowPage: React.FC<OrganigerShowPageProps> = ({
+export const OrganizerShowPage: React.FC<CategoryEntryPage> = ({
   category,
-  entry,
-}: OrganigerShowPageProps) => {
+  query,
+}: CategoryEntryPage) => {
   const router = useRouter();
   const locale = useLocale();
+  const entry = useEntry<OrganizerShow, Organizer>(category, query);
 
   const title = entry?.attributes?.name;
 

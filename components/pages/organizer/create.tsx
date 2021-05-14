@@ -64,12 +64,7 @@ const StyledH3 = styled.h3`
   font-weight: 700;
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface OrganizerCreatePageProps extends CategoryPage {}
-
-export const OrganizerCreatePage: React.FC<OrganizerCreatePageProps> = ({
-  category,
-}: OrganizerCreatePageProps) => {
+export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: CategoryPage) => {
   const router = useRouter();
   const locale = useLocale();
   const t = useT();
