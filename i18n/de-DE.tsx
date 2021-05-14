@@ -52,6 +52,12 @@ export const deDE: Localization = {
         city: () => 'Stadt',
         submit: () => 'anlegen',
       },
+      tabs: {
+        overview: () => 'Übersicht',
+        info: () => 'Informationen',
+        rights: () => 'Zugriffsrechte',
+        export: () => 'Export',
+      },
     },
     offer: {
       title: {

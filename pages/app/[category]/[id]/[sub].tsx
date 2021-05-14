@@ -5,12 +5,14 @@ import { useCategory } from '../../../../lib/categories';
 import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
 import { TitleBar } from '../../../../components/navigation/TitleBar';
 
-const EntryInfoPage: NextPage = () => {
+const EntrySubPage: NextPage = () => {
   const router = useRouter();
   const category = useCategory();
 
-  if (category) {
-    return React.createElement(category?.pages.update, { category, query: router?.query });
+  const subPath = router?.query.sub as string;
+
+  if (category && category.pages[subPath]) {
+    return React.createElement(category?.pages[subPath], { category, query: router?.query });
   }
 
   const title = 'TBD';
@@ -18,4 +20,4 @@ const EntryInfoPage: NextPage = () => {
   return <AppWrapper titleBar={<TitleBar title={title} />}>TBD</AppWrapper>;
 };
 
-export default EntryInfoPage;
+export default EntrySubPage;

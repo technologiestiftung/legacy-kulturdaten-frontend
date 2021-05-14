@@ -39,13 +39,13 @@ export type Category = {
     list: React.FC<CategoryPage>;
     create: React.FC<CategoryPage>;
     show: React.FC<CategoryEntryPage>;
-    update: React.FC<CategoryEntryPage>;
+    info: React.FC<CategoryEntryPage>;
     rights: React.FC<CategoryEntryPage>;
     export: React.FC<CategoryEntryPage>;
   };
   tabs: {
     title: string;
-    path: string;
+    sub?: string;
   }[];
   api: {
     list: categoryApi;
@@ -102,13 +102,8 @@ export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
   const router = useRouter();
   const locale = useLocale();
 
-  const tabLinks = [
-    { title: 'Übersicht', path: '' },
-    { title: 'Informationen', path: 'info/' },
-    { title: 'Zugriffsrechte', path: 'rights/' },
-    { title: 'Export', path: 'export/' },
-  ].map(({ title, path }) => {
-    const href = `${category?.routes.list({ locale, query: router.query })}${path}`;
+  const tabLinks = category.tabs.map(({ title, sub }) => {
+    const href = `${category?.routes.list({ locale, query: { ...router.query, sub } })}`;
 
     return {
       title,

@@ -2,7 +2,7 @@ import { CategoryEntryPage, useEntry, useTabs } from '../../../lib/categories';
 import { TitleBar } from '../../navigation/TitleBar';
 import { AppWrapper } from '../../wrappers/AppWrapper';
 
-export const OrganizerUpdatePage: React.FC<CategoryEntryPage> = ({
+export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {

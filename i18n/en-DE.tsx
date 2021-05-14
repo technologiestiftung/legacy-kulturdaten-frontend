@@ -52,6 +52,12 @@ export const enDE: Localization = {
         city: () => 'City',
         submit: () => 'create',
       },
+      tabs: {
+        overview: () => 'Overview',
+        info: () => 'Information',
+        rights: () => 'Access rights',
+        export: () => 'Export',
+      },
     },
     offer: {
       title: {

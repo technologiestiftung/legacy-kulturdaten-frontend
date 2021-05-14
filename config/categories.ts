@@ -8,7 +8,7 @@ import { Routes, routes } from '../lib/routing';
 import { Category } from '../lib/categories';
 import { OrganizerListPage } from '../components/pages/organizer/list';
 import { OrganizerCreatePage } from '../components/pages/organizer/create';
-import { OrganizerUpdatePage } from '../components/pages/organizer/update';
+import { OrganizerInfoPage } from '../components/pages/organizer/info';
 import { OrganizerShowPage } from '../components/pages/organizer/show';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
@@ -38,15 +38,15 @@ export const useCategories: () => {
         list: OrganizerListPage,
         create: OrganizerCreatePage,
         show: OrganizerShowPage,
-        update: OrganizerUpdatePage,
+        info: OrganizerInfoPage,
         rights: OrganizerRightsPage,
         export: OrganizerExportPage,
       },
       tabs: [
-        { title: 'Übersicht', path: '' },
-        { title: 'Informationen', path: 'info/' },
-        { title: 'Zugriffsrechte', path: 'rights/' },
-        { title: 'Export', path: 'export/' },
+        { title: t('categories.organizer.tabs.overview') as string },
+        { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
+        { title: t('categories.organizer.tabs.rights') as string, sub: 'rights' },
+        { title: t('categories.organizer.tabs.export') as string, sub: 'export' },
       ],
       api: {
         list: {

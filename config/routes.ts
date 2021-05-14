@@ -44,7 +44,7 @@ export const routes: { [key in Routes]: Route } = {
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.register][locale]}/`,
   organizer: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizer][locale]}/${
-      query?.id ? `${query?.id}/` : ''
+      query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
   createOrganizer: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${
