@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ChangeEventHandler, useState } from 'react';
 import { useT } from '../../lib/i18n';
-import { Button } from '../button';
+import { Button, ButtonColor, ButtonSize } from '../button';
 import { Label, StyledLabel } from '../label';
 
 const StyledInputContainer = styled.div`
@@ -15,20 +15,24 @@ const StyledInputContainer = styled.div`
   }
 `;
 
+const borderShadow = 'inset 0px 0px 0px 1px var(--black)';
+const errorBorderShadow = 'inset 0px 0px 0px 1px var(--error)';
+const errorShadow = '0px 0px 0px 2px var(--error-o50)';
+
 const errorStyle = css`
-  box-shadow: inset 0px 0px 0px 2px var(--error), var(--shadow-inset);
+  box-shadow: ${errorBorderShadow}, ${errorShadow}, var(--shadow-inset);
 `;
 
 const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
   appearance: none;
   border: none;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   padding: 0.375rem 0.75rem;
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   background: var(--white);
   color: var(--black);
-  box-shadow: inset 0px 0px 0px 1px var(--black), var(--shadow-inset);
+  box-shadow: ${borderShadow}, var(--shadow-inset);
   width: 100%;
   margin: 0;
   box-sizing: border-box;
@@ -72,6 +76,7 @@ interface InputProps {
   type: InputType;
   autoComplete?: string;
   autofocus?: boolean;
+  color?: ButtonColor;
   disabled?: boolean;
   error?: string;
   id?: string;
@@ -98,7 +103,9 @@ export const Input: React.FC<InputProps> = (props: InputProps) => {
   return (
     <StyledInputContainer>
       {props.type === InputType.submit ? (
-        <Button asInput>{props.value}</Button>
+        <Button color={props.color} size={ButtonSize.default} asInput>
+          {props.value}
+        </Button>
       ) : (
         <>
           {props.label && (
