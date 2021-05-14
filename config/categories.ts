@@ -1,10 +1,13 @@
-import { ApiCallFactory, ApiRoutes, organizerListFactory } from '../lib/api';
+import { ApiRoutes, organizerListFactory } from '../lib/api';
 import { organizerShowFactory } from '../lib/api/routes/organizer/show';
 import { organizerCreateFactory } from '../lib/api/routes/organizer/create';
 import { useT } from '../lib/i18n';
 import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
-import { Route, Routes, routes } from '../lib/routing';
+import { Routes, routes } from '../lib/routing';
+import { Category } from '../lib/categories';
+import { OrganizerListPage } from '../components/pages/organizer/list';
+import { OrganizerCreatePage } from '../components/pages/organizer/create';
 
 export enum Categories {
   organizer = 'organizer',
@@ -12,29 +15,8 @@ export enum Categories {
   location = 'location',
 }
 
-type categoryApi = {
-  route: ApiRoutes;
-  factory: ApiCallFactory;
-};
-
 export const useCategories: () => {
-  [key in Categories]: {
-    title: {
-      singular: string;
-      plural: string;
-    };
-    routes: {
-      list: Route;
-      create: Route;
-    };
-    api: {
-      list: categoryApi;
-      show: categoryApi;
-      create: categoryApi;
-      update: categoryApi;
-      delete: categoryApi;
-    };
-  };
+  [key in Categories]: Category;
 } = () => {
   const t = useT();
 
@@ -47,6 +29,10 @@ export const useCategories: () => {
       routes: {
         list: routes[Routes.organizer],
         create: routes[Routes.createOrganizer],
+      },
+      pages: {
+        list: OrganizerListPage,
+        create: OrganizerCreatePage,
       },
       api: {
         list: {

@@ -41,6 +41,17 @@ export const enDE: Localization = {
         plural: () => 'Organizers',
         singular: () => 'Organizer',
       },
+      form: {
+        create: () => 'Create new organizer',
+        baseInfo: () => 'Base information',
+        address: () => 'Address',
+        name: () => 'Organizer Name',
+        street1: () => 'Street and house number',
+        street2: () => 'Additional address',
+        zipCode: () => 'Zip code',
+        city: () => 'City',
+        submit: () => 'create',
+      },
     },
     offer: {
       title: {

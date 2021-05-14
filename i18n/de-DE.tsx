@@ -41,6 +41,17 @@ export const deDE: Localization = {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',
       },
+      form: {
+        create: () => 'Neue Anbieter:in anlegen',
+        baseInfo: () => 'Grundlagen',
+        address: () => 'Adresse',
+        name: () => 'Bezeichnung der Anbieter:in',
+        street1: () => 'Straße und Hausnummer',
+        street2: () => 'Adresszusatz',
+        zipCode: () => 'Postleitzahl',
+        city: () => 'Stadt',
+        submit: () => 'anlegen',
+      },
     },
     offer: {
       title: {
@@ -72,21 +83,21 @@ export const deDE: Localization = {
       title: () => 'Anbieter:innen',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Erstelle Anbieter:in',
+        create: () => 'Anbieter:in anlegen',
       },
     },
     offer: {
       title: () => 'Angebote',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Erstelle Angebot',
+        create: () => 'Angebot anlegen',
       },
     },
     location: {
       title: () => 'Orte',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Erstelle Ort',
+        create: () => 'Ort anlegen',
       },
     },
     user: {
