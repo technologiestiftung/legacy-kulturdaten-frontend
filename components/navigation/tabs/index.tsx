@@ -68,7 +68,7 @@ const StyledTabLink = styled.a<{ isActive?: boolean }>`
   }
 `;
 
-interface TabsProps {
+export interface TabsProps {
   links: {
     title: string;
     href: string;

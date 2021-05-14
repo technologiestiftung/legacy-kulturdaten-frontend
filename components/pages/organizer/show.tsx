@@ -1,11 +1,8 @@
 import styled from '@emotion/styled';
-import { useRouter } from 'next/router';
 import { contentGrid, mq } from '../../globals/Constants';
-import { Tabs } from '../../navigation/tabs';
 import { TitleBar } from '../../navigation/TitleBar';
 import { AppWrapper } from '../../wrappers/AppWrapper';
-import { CategoryEntryPage, useEntry } from '../../../lib/categories';
-import { useLocale } from '../../../lib/routing';
+import { CategoryEntryPage, useEntry, useTabs } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
@@ -57,30 +54,14 @@ export const OrganizerShowPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
-  const router = useRouter();
-  const locale = useLocale();
   const entry = useEntry<OrganizerShow, Organizer>(category, query);
+  const tabs = useTabs(category);
 
   const title = entry?.attributes?.name;
 
-  const tabLinks = [
-    { title: 'Übersicht', path: '' },
-    { title: 'Informationen', path: 'info/' },
-    { title: 'Zugriffsrechte', path: 'rights/' },
-    { title: 'Export', path: 'export/' },
-  ].map(({ title, path }) => {
-    const href = `${category?.routes.list({ locale, query: router.query })}${path}`;
-
-    return {
-      title,
-      href,
-      isActive: router.asPath === href,
-    };
-  });
-
   return (
     <AppWrapper titleBar={<TitleBar title={title} />}>
-      <Tabs links={tabLinks} />
+      {tabs}
       <EntryContainer>
         <EntryHead>
           <EntryTitle>{title}</EntryTitle>

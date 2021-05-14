@@ -1,15 +1,21 @@
+import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { TitleBar } from '../../../../components/navigation/TitleBar';
-import { OrganizerShowPage } from '../../../../components/pages/organizer/show';
+import { useCategory } from '../../../../lib/categories';
 import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
-import { useCategory, useEntry } from '../../../../lib/categories';
+import { TitleBar } from '../../../../components/navigation/TitleBar';
 
 const EntryIndexPage: NextPage = () => {
   const router = useRouter();
   const category = useCategory();
 
-  return <OrganizerShowPage category={category} query={router?.query} />;
+  if (category) {
+    return React.createElement(category?.pages.show, { category, query: router?.query });
+  }
+
+  const title = 'TBD';
+
+  return <AppWrapper titleBar={<TitleBar title={title} />}>TBD</AppWrapper>;
 };
 
 export default EntryIndexPage;

@@ -8,6 +8,10 @@ import { Routes, routes } from '../lib/routing';
 import { Category } from '../lib/categories';
 import { OrganizerListPage } from '../components/pages/organizer/list';
 import { OrganizerCreatePage } from '../components/pages/organizer/create';
+import { OrganizerUpdatePage } from '../components/pages/organizer/update';
+import { OrganizerShowPage } from '../components/pages/organizer/show';
+import { OrganizerRightsPage } from '../components/pages/organizer/rights';
+import { OrganizerExportPage } from '../components/pages/organizer/export';
 
 export enum Categories {
   organizer = 'organizer',
@@ -33,7 +37,17 @@ export const useCategories: () => {
       pages: {
         list: OrganizerListPage,
         create: OrganizerCreatePage,
+        show: OrganizerShowPage,
+        update: OrganizerUpdatePage,
+        rights: OrganizerRightsPage,
+        export: OrganizerExportPage,
       },
+      tabs: [
+        { title: 'Übersicht', path: '' },
+        { title: 'Informationen', path: 'info/' },
+        { title: 'Zugriffsrechte', path: 'rights/' },
+        { title: 'Export', path: 'export/' },
+      ],
       api: {
         list: {
           route: ApiRoutes.organizerList,

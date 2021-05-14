@@ -2,9 +2,10 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 import React from 'react';
 import useSWR from 'swr';
+import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { Categories, useCategories } from '../config/categories';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
-import { Route } from './routing';
+import { Route, useLocale } from './routing';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -37,7 +38,15 @@ export type Category = {
   pages: {
     list: React.FC<CategoryPage>;
     create: React.FC<CategoryPage>;
+    show: React.FC<CategoryEntryPage>;
+    update: React.FC<CategoryEntryPage>;
+    rights: React.FC<CategoryEntryPage>;
+    export: React.FC<CategoryEntryPage>;
   };
+  tabs: {
+    title: string;
+    path: string;
+  }[];
   api: {
     list: categoryApi;
     show: categoryApi;
@@ -87,4 +96,30 @@ export const useEntry = <C extends ApiCall, T extends CategoryEntry>(
   );
 
   return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
+};
+
+export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
+  const router = useRouter();
+  const locale = useLocale();
+
+  const tabLinks = [
+    { title: 'Übersicht', path: '' },
+    { title: 'Informationen', path: 'info/' },
+    { title: 'Zugriffsrechte', path: 'rights/' },
+    { title: 'Export', path: 'export/' },
+  ].map(({ title, path }) => {
+    const href = `${category?.routes.list({ locale, query: router.query })}${path}`;
+
+    return {
+      title,
+      href,
+      isActive: router.asPath === href,
+    };
+  });
+
+  if (tabLinks.length > 0) {
+    return <Tabs links={tabLinks} />;
+  }
+
+  return null;
 };
