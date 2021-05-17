@@ -127,12 +127,12 @@ InputUrlStory.storyName = 'URL Input';
 export const InputButtonStory: Story = () => (
   <StyledTestWrapper>
     <StyledCell>
-      <Input type={InputType.button} id="id-2" label="Submit" placeholder="some-url.com" />
+      <Input type={InputType.submit} id="id-2" label="Submit" placeholder="some-url.com" />
     </StyledCell>
   </StyledTestWrapper>
 );
 
-InputButtonStory.storyName = 'Button Input';
+InputButtonStory.storyName = 'Submit/Button Input';
 
 export const InputLoginStory: Story = () => (
   <StyledTestWrapper>
@@ -145,7 +145,7 @@ export const InputLoginStory: Story = () => (
     </StyledCell>
     <div />
     <StyledCell>
-      <Input type={InputType.button} id="id-3" value="Login" placeholder="some-url.com" />
+      <Input type={InputType.submit} id="id-3" value="Login" placeholder="some-url.com" />
     </StyledCell>
   </StyledTestWrapper>
 );
