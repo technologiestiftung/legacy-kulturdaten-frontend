@@ -3,6 +3,8 @@ import { routes, useLocale } from '../lib/routing';
 import { MenuItem, MenuStructure } from '../components/navigation/mainMenu/MainMenu';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { useUser } from '../components/user/useUser';
+import { useRouter } from 'next/router';
+import { Categories } from './categories';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -14,11 +16,15 @@ export const useMenuStructure = (): MenuStructure => {
   const t = useT();
   const locale = useLocale();
   const { logout } = useUser();
+  const router = useRouter();
 
   return [
     {
       title: t('menu.start.title') as string,
       icon: MenuIconName.start,
+      isActive:
+        router.asPath === routes.dashboard({ locale }) ||
+        router.asPath === routes.userNotifications({ locale }),
       items: [
         {
           type: MenuItem.link,
@@ -37,75 +43,69 @@ export const useMenuStructure = (): MenuStructure => {
       ],
     },
     {
-      title: t('menu.organizers.title') as string,
-      icon: MenuIconName.organizer,
-      items: [
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.organizers.items.all') as string,
-            href: routes.organizers({ locale }),
-          },
-        },
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.organizers.items.my') as string,
-            href: routes.organizer({
-              locale,
-              query: {
-                entry: '1',
-              },
-            }),
-          },
-        },
-      ],
-    },
-    {
-      title: t('menu.offers.title') as string,
+      title: t('menu.offer.title') as string,
       icon: MenuIconName.offer,
+      isActive: router.query?.category === Categories.offer,
       items: [
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.offers.items.all') as string,
-            href: routes.offers({ locale }),
+            title: t('menu.offer.items.overview') as string,
+            href: routes.offer({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.offers.items.my') as string,
-            href: routes.offer({
+            title: t('menu.offer.items.create') as string,
+            href: routes.createOffer({
               locale,
-              query: {
-                entry: '1',
-              },
             }),
           },
         },
       ],
     },
     {
-      title: t('menu.locations.title') as string,
-      icon: MenuIconName.location,
+      title: t('menu.organizer.title') as string,
+      icon: MenuIconName.organizer,
+      isActive: router.query?.category === Categories.organizer,
       items: [
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.locations.items.all') as string,
-            href: routes.locations({ locale }),
+            title: t('menu.organizer.items.overview') as string,
+            href: routes.organizer({ locale }),
           },
         },
         {
           type: MenuItem.link,
           action: {
-            title: t('menu.locations.items.my') as string,
-            href: routes.location({
+            title: t('menu.organizer.items.create') as string,
+            href: routes.createOrganizer({
               locale,
-              query: {
-                entry: '1',
-              },
+            }),
+          },
+        },
+      ],
+    },
+    {
+      title: t('menu.location.title') as string,
+      icon: MenuIconName.location,
+      isActive: router.query?.category === Categories.location,
+      items: [
+        {
+          type: MenuItem.link,
+          action: {
+            title: t('menu.location.items.overview') as string,
+            href: routes.location({ locale }),
+          },
+        },
+        {
+          type: MenuItem.link,
+          action: {
+            title: t('menu.location.items.create') as string,
+            href: routes.createLocation({
+              locale,
             }),
           },
         },
@@ -114,6 +114,9 @@ export const useMenuStructure = (): MenuStructure => {
     {
       title: t('menu.user.title') as string,
       icon: MenuIconName.user,
+      isActive:
+        router.asPath === routes.userProfile({ locale }) ||
+        router.asPath === routes.userSettings({ locale }),
       items: [
         {
           type: MenuItem.link,

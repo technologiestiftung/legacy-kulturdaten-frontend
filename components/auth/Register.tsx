@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 import { StyledTestFormContainer, StyledTestInput } from './Login';
-import { call, AuthRegister, authRegisterBlueprint } from '../../lib/api';
+import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
 import { useT } from '../../lib/i18n';
 
 export const RegisterForm: React.FC = () => {
@@ -11,6 +11,7 @@ export const RegisterForm: React.FC = () => {
   const [error, setError] = useState<Error>();
   const [submitted, setSubmitted] = useState<boolean>(false);
   const t = useT();
+  const call = useApiCall();
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -18,13 +19,13 @@ export const RegisterForm: React.FC = () => {
     setError(undefined);
 
     try {
-      const resp = await call<AuthRegister>(
-        authRegisterBlueprint({
+      const resp = await call<AuthRegister>(authRegisterFactory, {
+        body: {
           email,
           password,
           passwordConfirmation: passwordConfirmation,
-        })
-      );
+        },
+      });
       setSubmitted(true);
       console.log(resp);
     } catch (e) {

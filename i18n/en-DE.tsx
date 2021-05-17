@@ -4,6 +4,12 @@ export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
   },
+  forms: {
+    required: () => 'required',
+    errors: {
+      passwordConfirm: () => 'The entered passwords do not match.',
+    },
+  },
   start: {
     login: () => 'Login',
     register: () => 'Register',
@@ -22,20 +28,47 @@ export const enDE: Localization = {
     confirmPassword: () => 'Confirm password',
     submit: () => 'Register',
   },
+  general: {
+    name: () => 'name',
+    city: () => 'city',
+    created: () => 'created',
+    updated: () => 'updated',
+    create: () => 'create',
+  },
   categories: {
-    organizers: {
+    organizer: {
       title: {
         plural: () => 'Organizers',
         singular: () => 'Organizer',
       },
+      form: {
+        create: () => 'Create new organizer',
+        baseInfo: () => 'Basic information',
+        address: () => 'Address',
+        name: () => 'Organizer Name',
+        street1: () => 'Street and house number',
+        street2: () => 'Additional address',
+        zipCode: () => 'Zip code',
+        city: () => 'City',
+        submit: () => 'create',
+        save: () => 'save',
+        edit: () => 'edit information',
+        editCancel: () => 'cancel editing',
+      },
+      tabs: {
+        overview: () => 'Overview',
+        info: () => 'Information',
+        rights: () => 'Access rights',
+        export: () => 'Export',
+      },
     },
-    offers: {
+    offer: {
       title: {
         plural: () => 'Offers',
         singular: () => 'Offer',
       },
     },
-    locations: {
+    location: {
       title: {
         plural: () => 'Locations',
         singular: () => 'Location',
@@ -55,25 +88,25 @@ export const enDE: Localization = {
         notifications: () => 'Notifications',
       },
     },
-    organizers: {
+    organizer: {
       title: () => 'Organizers',
       items: {
-        all: () => 'All Organizers',
-        my: () => 'My Organizers',
+        overview: () => 'Overview',
+        create: () => 'Create Organizer',
       },
     },
-    offers: {
+    offer: {
       title: () => 'Offers',
       items: {
-        all: () => 'All Offers',
-        my: () => 'My Offers',
+        overview: () => 'Overview',
+        create: () => 'Create Offer',
       },
     },
-    locations: {
+    location: {
       title: () => 'Locations',
       items: {
-        all: () => 'All Locations',
-        my: () => 'My Locations',
+        overview: () => 'Overview',
+        create: () => 'Create Location',
       },
     },
     user: {

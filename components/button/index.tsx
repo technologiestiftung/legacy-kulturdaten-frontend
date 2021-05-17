@@ -83,6 +83,10 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
     &:active {
       box-shadow: var(--shadow-active);
     }
+
+    &:disabled {
+      box-shadow: var(--shadow);
+    }
   `,
   minimal: css`
     border: 1px solid currentColor;
@@ -96,6 +100,10 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
 
     &:active {
       box-shadow: inset 0px 0px 0px 0px currentColor;
+    }
+
+    &:disabled {
+      box-shadow: none;
     }
   `,
 };
@@ -121,6 +129,11 @@ const StyledButton = styled.button<{
   cursor: pointer;
 
   ${({ variant }) => buttonVariants[variant]}
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.25;
+  }
 `;
 
 const StyledButtonSpan = styled.span``;
@@ -153,11 +166,15 @@ const buttonSizeIconSizeMap: { [key in ButtonSize]: number } = {
 
 interface ButtonProps {
   children: React.ReactNode;
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   description?: string;
+  disabled?: boolean;
   color?: ButtonColor;
   icon?: string;
   iconPosition?: IconPosition;
+  id?: string;
+  name?: string;
+  asInput?: boolean;
   size?: ButtonSize;
   variant?: ButtonVariant;
 }
@@ -166,26 +183,46 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   description,
+  disabled,
   color = ButtonColor.default,
   size = ButtonSize.default,
   variant = ButtonVariant.default,
+  asInput,
   icon,
   iconPosition = IconPosition.right,
-}: ButtonProps) => (
-  <StyledButton
-    onClick={(e) => onClick(e)}
-    aria-label={description}
-    color={color}
-    size={size}
-    variant={variant}
-  >
-    <StyledButtonSpan>{children}</StyledButtonSpan>
-    {icon && feather[icon] ? (
-      <StyledButtonIcon size={size} position={iconPosition}>
-        {React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
-      </StyledButtonIcon>
-    ) : (
-      ''
-    )}
-  </StyledButton>
-);
+  id,
+  name,
+}: ButtonProps) =>
+  asInput ? (
+    <StyledButton
+      as="input"
+      value={children as string}
+      color={color}
+      size={size}
+      variant={variant}
+      id={id}
+      name={name}
+      type="submit"
+      onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
+      disabled={disabled}
+    />
+  ) : (
+    <StyledButton
+      onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
+      aria-label={description}
+      color={color}
+      size={size}
+      variant={variant}
+      id={id}
+      name={name}
+    >
+      <StyledButtonSpan>{children}</StyledButtonSpan>
+      {icon && feather[icon] ? (
+        <StyledButtonIcon size={size} position={iconPosition}>
+          {React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
+        </StyledButtonIcon>
+      ) : (
+        ''
+      )}
+    </StyledButton>
+  );

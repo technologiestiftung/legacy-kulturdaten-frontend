@@ -4,6 +4,12 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  forms: {
+    required: () => 'Pflichtfeld',
+    errors: {
+      passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
+    },
+  },
   start: {
     login: () => 'Login',
     register: () => 'Registrierung',
@@ -22,20 +28,47 @@ export const deDE: Localization = {
     confirmPassword: () => 'Passwort bestätigen',
     submit: () => 'Registrieren',
   },
+  general: {
+    name: () => 'Bezeichnung',
+    city: () => 'Stadt',
+    created: () => 'erstellt',
+    updated: () => 'geändert',
+    create: () => 'erstelle',
+  },
   categories: {
-    organizers: {
+    organizer: {
       title: {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',
       },
+      form: {
+        create: () => 'Neue Anbieter:in anlegen',
+        baseInfo: () => 'Grundlagen',
+        address: () => 'Adresse',
+        name: () => 'Bezeichnung der Anbieter:in',
+        street1: () => 'Straße und Hausnummer',
+        street2: () => 'Adresszusatz',
+        zipCode: () => 'Postleitzahl',
+        city: () => 'Stadt',
+        submit: () => 'anlegen',
+        save: () => 'speichern',
+        edit: () => 'Informationen bearbeiten',
+        editCancel: () => 'Bearbeitung abbrechen',
+      },
+      tabs: {
+        overview: () => 'Übersicht',
+        info: () => 'Informationen',
+        rights: () => 'Zugriffsrechte',
+        export: () => 'Export',
+      },
     },
-    offers: {
+    offer: {
       title: {
         plural: () => 'Angebote',
         singular: () => 'Angebot',
       },
     },
-    locations: {
+    location: {
       title: {
         plural: () => 'Orte',
         singular: () => 'Ort',
@@ -55,25 +88,25 @@ export const deDE: Localization = {
         notifications: () => 'Benachrichtigungen',
       },
     },
-    organizers: {
+    organizer: {
       title: () => 'Anbieter:innen',
       items: {
-        all: () => 'Alle Anbieter:innen',
-        my: () => 'Meine Anbieter:innen',
+        overview: () => 'Übersicht',
+        create: () => 'Anbieter:in anlegen',
       },
     },
-    offers: {
+    offer: {
       title: () => 'Angebote',
       items: {
-        all: () => 'Alle Angebote',
-        my: () => 'Meine Angebote',
+        overview: () => 'Übersicht',
+        create: () => 'Angebot anlegen',
       },
     },
-    locations: {
+    location: {
       title: () => 'Orte',
       items: {
-        all: () => 'Alle Orte',
-        my: () => 'Meine Orte',
+        overview: () => 'Übersicht',
+        create: () => 'Ort anlegen',
       },
     },
     user: {

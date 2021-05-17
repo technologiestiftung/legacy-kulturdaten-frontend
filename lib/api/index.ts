@@ -1,4 +1,8 @@
 import getConfig from 'next/config';
+import { ParsedUrlQuery } from 'node:querystring';
+import { useCallback } from 'react';
+import { useAuthToken } from '../../components/user/UserContext';
+import { apiVersion } from '../../config/api';
 
 const {
   publicRuntimeConfig: { api },
@@ -15,14 +19,19 @@ export interface ApiCall {
   request: {
     route: string;
     method: 'POST' | 'GET' | 'PATCH' | 'DELETE';
-    headers: {
+    headers?: {
       'Content-Type'?: 'application/json' | 'multipart/form-data';
       'Authorization'?: string;
     };
-    body: { [key: string]: StructuredData };
+    body?: { [key: string]: StructuredData };
   };
   response: { status: number; body: { [key: string]: StructuredData } };
 }
+
+export type ApiCallFactory = (
+  token: ApiCall['request']['headers']['Authorization'],
+  query?: unknown
+) => ApiCall;
 
 /**
  * Define routes
@@ -34,14 +43,28 @@ export enum ApiRoutes {
   authLogout = 'authLogout',
   authValidate = 'authValidate',
   authInfo = 'authInfo',
+  organizerList = 'organizerList',
+  organizerShow = 'organizerShow',
+  organizerCreate = 'organizerCreate',
+  organizerUpdate = 'organizerUpdate',
+  organizerDelete = 'organizerDelete',
 }
 
-export const apiRoutes: { [key in ApiRoutes]: string } = {
-  authRegister: '/auth/register',
-  authLogin: '/auth/login',
-  authLogout: '/auth/logout',
-  authValidate: '/auth/validate',
-  authInfo: '/auth/info',
+export type ApiRoute = (query?: ParsedUrlQuery) => string;
+
+export const apiRoutes: {
+  [key in ApiRoutes]: ApiRoute;
+} = {
+  authRegister: () => '/auth/register',
+  authLogin: () => '/auth/login',
+  authLogout: () => '/auth/logout',
+  authValidate: () => '/auth/validate',
+  authInfo: () => '/auth/info',
+  organizerList: () => `/${apiVersion}/organizer`,
+  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerCreate: () => `/${apiVersion}/organizer`,
+  organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
 };
 
 /**
@@ -55,6 +78,8 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
       method: request.method,
       headers: request.headers,
       body: JSON.stringify(request.body, null, 2),
+    }).catch((e: ErrorEvent) => {
+      throw e;
     });
 
     const body: T['response']['body'] = await resp.json();
@@ -81,12 +106,29 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
   }
 };
 
+export const useApiCall = (
+  overrideAuthToken?: string
+): (<T extends ApiCall>(factory: ApiCallFactory, query?: unknown) => Promise<T['response']>) => {
+  const authToken = useAuthToken();
+
+  const cb = useCallback(
+    <T extends ApiCall>(factory: ApiCallFactory, query?: unknown): Promise<T['response']> => {
+      return call<T>(factory(overrideAuthToken || authToken, query) as T);
+    },
+    [overrideAuthToken, authToken]
+  );
+
+  return cb;
+};
+
 /**
  * Helpers
  */
 
-export const getApiUrl = (apiRoute: ApiRoutes): URL => new URL(apiRoutes[apiRoute], api);
-export const getApiUrlString = (apiRoute: ApiRoutes): string => getApiUrl(apiRoute).toString();
+export const getApiUrl = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): URL =>
+  new URL(apiRoutes[apiRoute](query), api);
+export const getApiUrlString = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): string =>
+  getApiUrl(apiRoute, query).toString();
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 
 /**
@@ -94,12 +136,14 @@ export const makeBearer = (token: string): string => `Bearer ${token}`;
  */
 
 export type { AuthInfo } from './routes/auth/info';
-export { authInfoBlueprint } from './routes/auth/info';
+export { authInfoFactory } from './routes/auth/info';
 export type { AuthLogin } from './routes/auth/login';
-export { authLoginBlueprint } from './routes/auth/login';
+export { authLoginFactory } from './routes/auth/login';
 export type { AuthLogout } from './routes/auth/logout';
-export { authLogoutBlueprint } from './routes/auth/logout';
+export { authLogoutFactory } from './routes/auth/logout';
 export type { AuthRegister } from './routes/auth/register';
-export { authRegisterBlueprint } from './routes/auth/register';
+export { authRegisterFactory } from './routes/auth/register';
 export type { AuthValidate } from './routes/auth/validate';
-export { authValidateBlueprint } from './routes/auth/validate';
+export { authValidateFactory } from './routes/auth/validate';
+export type { OrganizerList } from './routes/organizer/list';
+export { organizerListFactory } from './routes/organizer/list';

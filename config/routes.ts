@@ -13,12 +13,12 @@ export enum Routes {
   userProfile = 'userProfile',
   userSettings = 'userSettings',
   userNotifications = 'userNotifications',
-  organizers = 'organizers',
   organizer = 'organizer',
-  offers = 'offers',
+  createOrganizer = 'createOrganizer',
   offer = 'offer',
-  locations = 'locations',
+  createOffer = 'createOffer',
   location = 'location',
+  createLocation = 'createLocation',
   imprint = 'imprint',
 }
 
@@ -42,20 +42,33 @@ export const routes: { [key in Routes]: Route } = {
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.login][locale]}/`,
   register: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.register][locale]}/`,
-  organizers: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizers][locale]}/`,
-  organizer: ({ query, locale }) => `${routes.organizers({ locale })}${query?.entry}/`,
-  offers: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offers][locale]}/`,
-  offer: ({ query, locale }) => `${routes.offers({ locale })}${query?.entry}/`,
-  locations: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.locations][locale]}/`,
-  location: ({ query, locale }) => `${routes.locations({ locale })}${query?.entry}/`,
+  organizer: ({ query, locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizer][locale]}/${
+      query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
+    }`,
+  createOrganizer: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${
+      localizedRoutes[Routes.createOrganizer][locale]
+    }/`,
+  offer: ({ query, locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offer][locale]}/${
+      query?.id ? `${query?.id}/` : ''
+    }`,
+  createOffer: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.createOffer][locale]}/`,
+  location: ({ query, locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.location][locale]}/${
+      query?.id ? `${query?.id}/` : ''
+    }`,
+  createLocation: ({ locale }) =>
+    `/${localizedRoutes[Routes.dashboard][locale]}/${
+      localizedRoutes[Routes.createLocation][locale]
+    }/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
 
 /**
- * Localized parts for all route's paths
+ * Localized parts for all routes paths
  */
 const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   index: {
@@ -86,29 +99,29 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'auth/register',
     'en-DE': 'auth/register',
   },
-  organizers: {
-    'de-DE': 'organizers',
-    'en-DE': 'organizers',
-  },
   organizer: {
-    'de-DE': '',
-    'en-DE': '',
+    'de-DE': 'organizer',
+    'en-DE': 'organizer',
   },
-  offers: {
-    'de-DE': 'offers',
-    'en-DE': 'offers',
+  createOrganizer: {
+    'de-DE': 'organizer/create',
+    'en-DE': 'organizer/create',
   },
   offer: {
-    'de-DE': '',
-    'en-DE': '',
+    'de-DE': 'offer',
+    'en-DE': 'offer',
   },
-  locations: {
-    'de-DE': 'locations',
-    'en-DE': 'locations',
+  createOffer: {
+    'de-DE': 'offer/create',
+    'en-DE': 'offer/create',
   },
   location: {
-    'de-DE': '',
-    'en-DE': '',
+    'de-DE': 'location',
+    'en-DE': 'location',
+  },
+  createLocation: {
+    'de-DE': 'location/create',
+    'en-DE': 'location/create',
   },
   imprint: {
     'de-DE': 'impressum',

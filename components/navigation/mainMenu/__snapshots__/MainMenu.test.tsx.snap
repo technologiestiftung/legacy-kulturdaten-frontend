@@ -2,7 +2,7 @@
 
 exports[`MainMenu renders 1`] = `
 <div>
-  <div
+  <nav
     class="css-8eqs8y-StyledMainMenu ey6w9bd3"
   >
     <div
@@ -62,7 +62,7 @@ exports[`MainMenu renders 1`] = `
         class="css-7b8bp5-StyledMainMenuSubs ey6w9bd1"
       >
         <div
-          class="css-1m41mao-StyledSub e136466r5"
+          class="css-nvofqz-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -154,7 +154,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-ff2lms-StyledSub e136466r5"
+          class="css-nvofqz-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -234,7 +234,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-ff2lms-StyledSub e136466r5"
+          class="css-nvofqz-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -319,7 +319,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-ff2lms-StyledSub e136466r5"
+          class="css-nvofqz-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -401,7 +401,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-ff2lms-StyledSub e136466r5"
+          class="css-nvofqz-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -480,7 +480,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <button
-                class="css-sryp67-StyledButton-minimal e1asxjmr2"
+                class="css-1jcrdjy-StyledButton-minimal e1asxjmr2"
                 color="default"
               >
                 <span
@@ -521,14 +521,14 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-ff2lms-StyledSub e136466r5"
+          class="css-nvofqz-StyledSub e136466r5"
         >
           <div
             class="css-1h9g97m-StyledSubContent e136466r1"
           />
         </div>
         <div
-          class="css-ff2lms-StyledSub e136466r5"
+          class="css-nvofqz-StyledSub e136466r5"
         >
           <div
             class="css-1h9g97m-StyledSubContent e136466r1"
@@ -537,7 +537,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <div
-                class="css-1dc2ar3-StyledSelectContainer e1vif2fk4"
+                class="css-1b8cuts-StyledSelectContainer e1vif2fk4"
               >
                 <label
                   class="css-1lmhznq-StyledLabel e1d1vdpj0"
@@ -620,7 +620,7 @@ exports[`MainMenu renders 1`] = `
         </div>
       </div>
     </div>
-  </div>
+  </nav>
    
 </div>
 `;

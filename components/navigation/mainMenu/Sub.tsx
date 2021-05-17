@@ -1,10 +1,7 @@
-import React, { useContext } from 'react';
 import styled from '@emotion/styled';
-import { NavigationContext } from '../NavigationContext';
 
 export const StyledSub = styled.div<{ active?: boolean }>`
   width: 100%;
-  margin-top: -1px;
   background: ${({ active }) => (active ? 'var(--white)' : 'var(--grey-200)')};
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -35,15 +32,13 @@ const StyledSubItem = styled.div``;
 export interface SubProps {
   title?: string;
   icon?: React.ReactElement;
-  subMenuKey: number;
   items: React.ReactElement[];
+  isActive?: boolean;
 }
 
-export const Sub: React.FC<SubProps> = ({ title, icon, items, subMenuKey }: SubProps) => {
-  const { activeSubMenu } = useContext(NavigationContext);
-
+export const Sub: React.FC<SubProps> = ({ title, icon, items, isActive }: SubProps) => {
   return (
-    <StyledSub active={activeSubMenu === subMenuKey}>
+    <StyledSub active={isActive}>
       {title && (
         <StyledSubHead>
           {icon && <StyledSubIcon>{icon}</StyledSubIcon>}

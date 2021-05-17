@@ -22,7 +22,7 @@ const StyledSelectContainer = styled.div`
   position: relative;
 
   ${StyledLabel} {
-    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
   }
 `;
 

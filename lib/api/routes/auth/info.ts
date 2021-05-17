@@ -1,4 +1,4 @@
-import { apiRoutes, makeBearer, ApiCall } from '../..';
+import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
 
 /**
  * /auth/info
@@ -6,7 +6,7 @@ import { apiRoutes, makeBearer, ApiCall } from '../..';
 
 export interface AuthInfo extends ApiCall {
   request: {
-    route: typeof apiRoutes.authInfo;
+    route: ReturnType<ApiRoute>;
     method: 'POST';
     headers: {
       Authorization: string;
@@ -30,11 +30,11 @@ export interface AuthInfo extends ApiCall {
   };
 }
 
-export const authInfoBlueprint = (
+export const authInfoFactory: ApiCallFactory = (
   token: AuthInfo['request']['headers']['Authorization']
 ): AuthInfo => ({
   request: {
-    route: apiRoutes.authInfo,
+    route: apiRoutes.authInfo(),
     method: 'POST',
     headers: {
       Authorization: makeBearer(token),

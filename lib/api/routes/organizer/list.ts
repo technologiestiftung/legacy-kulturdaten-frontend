@@ -1,39 +1,35 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
+import { Organizer } from '../../types/organizer';
 
 /**
- * /auth/logout
+ * /auth/info
  */
 
-export interface AuthLogout extends ApiCall {
+export interface OrganizerList extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
-    method: 'POST';
+    method: 'GET';
     headers: {
       Authorization: string;
     };
-    body: null;
   };
   response: {
     status: 200;
     body: {
-      data: null;
-      meta: {
-        message: string;
-      };
+      data: Organizer[];
     };
   };
 }
 
-export const authLogoutFactory: ApiCallFactory = (
-  token: AuthLogout['request']['headers']['Authorization']
-): AuthLogout => ({
+export const organizerListFactory: ApiCallFactory = (
+  token: OrganizerList['request']['headers']['Authorization']
+): OrganizerList => ({
   request: {
-    route: apiRoutes.authLogout(),
-    method: 'POST',
+    route: apiRoutes.organizerList(),
+    method: 'GET',
     headers: {
       Authorization: makeBearer(token),
     },
-    body: null,
   },
   response: {
     status: 200,
