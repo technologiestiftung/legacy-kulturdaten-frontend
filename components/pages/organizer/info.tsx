@@ -61,12 +61,6 @@ const CreateFormCluster = styled.div`
   }
 `;
 
-const StyledH2 = styled.h2`
-  font-size: var(--font-size-600);
-  line-height: var(--line-height-600);
-  font-weight: 700;
-  /* padding-bottom: var(--line-height-600); */
-`;
 const StyledH3 = styled.h3`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
