@@ -82,7 +82,7 @@ const shadowMap2 = {
 const shadowMap1 = 'inset 0px 0px 0px 1px var(--grey-400)';
 
 /**
- *
+ * Creates border like attributes to be used with css `box-shadow`
  * @param sides - Defines for 1 to 4 sides to have a border or not. Following CSS padding and margin logic: [true/false] controls all sides. [true/false, true/false] controls vertical and horizontal, [true/false, true/false, true/false, true/false] controls individual sides clockwise starting from top
  * @returns
  */
