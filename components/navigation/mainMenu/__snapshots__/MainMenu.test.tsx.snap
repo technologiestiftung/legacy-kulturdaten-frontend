@@ -175,12 +175,12 @@ exports[`MainMenu renders 1`] = `
                   <path
                     d="M17.1823 4.32248C16.6842 2.46356 14.3606 1.84094 12.9997 3.20177L3.20178 12.9997C1.84095 14.3606 2.46357 16.6842 4.3225 17.1823L17.7068 20.7686C19.5657 21.2667 21.2667 19.5657 20.7686 17.7067L17.1823 4.32248Z"
                     fill="#E60032"
-                    stroke="url(#paint2_linear)"
+                    stroke="url(#uid-9836983788820_linear)"
                   />
                   <defs>
                     <lineargradient
                       gradientUnits="userSpaceOnUse"
-                      id="paint2_linear"
+                      id="uid-9836983788820_linear"
                       x1="8.19702"
                       x2="19.697"
                       y1="8.6969"
@@ -256,7 +256,7 @@ exports[`MainMenu renders 1`] = `
                     fill="#273B8A"
                     height="17"
                     rx="2.5"
-                    stroke="url(#paint1_linear)"
+                    stroke="url(#uid-4252270489158_linear)"
                     transform="rotate(-15 1.58978 5.98959)"
                     width="17"
                     x="1.58978"
@@ -265,7 +265,7 @@ exports[`MainMenu renders 1`] = `
                   <defs>
                     <lineargradient
                       gradientUnits="userSpaceOnUse"
-                      id="paint1_linear"
+                      id="uid-4252270489158_linear"
                       x1="2.20215"
                       x2="18.2021"
                       y1="6.34314"
@@ -342,12 +342,12 @@ exports[`MainMenu renders 1`] = `
                     cy="12"
                     fill="#46948C"
                     r="9.5"
-                    stroke="url(#paint0_linear)"
+                    stroke="url(#uid-8823386984454_linear)"
                   />
                   <defs>
                     <lineargradient
                       gradientUnits="userSpaceOnUse"
-                      id="paint0_linear"
+                      id="uid-8823386984454_linear"
                       x1="4.5"
                       x2="19"
                       y1="5"
