@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { FormEvent, useEffect, useState } from 'react';
-import { useApiCall } from '../../../lib/api';
+import { mutate as mutateSwr } from 'swr';
+import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
@@ -121,6 +122,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                 },
                 false
               );
+              mutateSwr(getApiUrlString(category.api.list.route));
               setEditing(false);
             }
           } catch (e) {
