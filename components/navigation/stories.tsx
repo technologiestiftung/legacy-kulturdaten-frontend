@@ -194,12 +194,11 @@ export const SecondaryMenuStory: Story = () => {
     <Table
       columns={[{ title: 'Column 1' }, { title: 'Column 2' }, { title: 'Column 3' }]}
       content={[
-        ['Lorem', 'Ipsum', 'Dolor'],
-        ['Lorem', 'Ipsum', 'Dolor'],
-        ['Lorem', 'Ipsum', 'Dolor'],
-        ['Lorem', 'Ipsum', 'Dolor'],
-        ['Lorem', 'Ipsum', 'Dolor'],
-        ['Lorem', 'Ipsum', 'Dolor'],
+        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
+        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
+        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
+        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
+        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
       ]}
       narrow
     />

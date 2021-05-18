@@ -50,6 +50,7 @@ const StyledTabLink = styled.a<{ isActive?: boolean }>`
     display: inline-block;
     margin: 0 0.375rem 0 0;
     padding: 0;
+    flex-shrink: 0;
   }
 
   ${mq(Breakpoint.mid)} {
@@ -73,7 +74,7 @@ export interface TabsProps {
 export const Tabs: React.FC<TabsProps> = ({ links }: TabsProps) => (
   <StyledTabs>
     {links.map(({ title, href, isActive }, index) => (
-      <Link key={index} href={href} passHref shallow replace>
+      <Link key={index} href={href} passHref shallow>
         <StyledTabLink isActive={isActive}>
           {isActive ? <ArrowRightSvg /> : ''}
           {title}

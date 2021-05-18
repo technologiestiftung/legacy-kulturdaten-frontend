@@ -21,6 +21,7 @@ const StyledA = styled.a<{ active?: boolean }>`
     display: inline-block;
     margin: 0 0.375rem 0 0;
     padding: 0;
+    flex-shrink: 0;
   }
 `;
 

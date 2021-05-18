@@ -110,7 +110,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-1wahcwk-StyledA e1l78fsc0"
+                class="css-3vwwsb-StyledA e1l78fsc0"
                 href="/#"
                 title="Dashboard"
               >
@@ -143,7 +143,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Benachrichtigungen"
               >
@@ -175,12 +175,12 @@ exports[`MainMenu renders 1`] = `
                   <path
                     d="M17.1823 4.32248C16.6842 2.46356 14.3606 1.84094 12.9997 3.20177L3.20178 12.9997C1.84095 14.3606 2.46357 16.6842 4.3225 17.1823L17.7068 20.7686C19.5657 21.2667 21.2667 19.5657 20.7686 17.7067L17.1823 4.32248Z"
                     fill="#E60032"
-                    stroke="url(#uid-9836983788820_linear)"
+                    stroke="url(#uid-8148578437151_linear)"
                   />
                   <defs>
                     <lineargradient
                       gradientUnits="userSpaceOnUse"
-                      id="uid-9836983788820_linear"
+                      id="uid-8148578437151_linear"
                       x1="8.19702"
                       x2="19.697"
                       y1="8.6969"
@@ -211,7 +211,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Alle Anbieter:innen"
               >
@@ -223,7 +223,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Meine Anbieter:innen"
               >
@@ -256,7 +256,7 @@ exports[`MainMenu renders 1`] = `
                     fill="#273B8A"
                     height="17"
                     rx="2.5"
-                    stroke="url(#uid-4252270489158_linear)"
+                    stroke="url(#uid-2017870507113_linear)"
                     transform="rotate(-15 1.58978 5.98959)"
                     width="17"
                     x="1.58978"
@@ -265,7 +265,7 @@ exports[`MainMenu renders 1`] = `
                   <defs>
                     <lineargradient
                       gradientUnits="userSpaceOnUse"
-                      id="uid-4252270489158_linear"
+                      id="uid-2017870507113_linear"
                       x1="2.20215"
                       x2="18.2021"
                       y1="6.34314"
@@ -296,7 +296,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Alle Angebote"
               >
@@ -308,7 +308,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Meine Angebote"
               >
@@ -342,12 +342,12 @@ exports[`MainMenu renders 1`] = `
                     cy="12"
                     fill="#46948C"
                     r="9.5"
-                    stroke="url(#uid-8823386984454_linear)"
+                    stroke="url(#uid-7269088444956_linear)"
                   />
                   <defs>
                     <lineargradient
                       gradientUnits="userSpaceOnUse"
-                      id="uid-8823386984454_linear"
+                      id="uid-7269088444956_linear"
                       x1="4.5"
                       x2="19"
                       y1="5"
@@ -378,7 +378,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Alle Orte"
               >
@@ -390,7 +390,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Meine Orte"
               >
@@ -449,7 +449,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Mein Profil"
               >
@@ -461,7 +461,7 @@ exports[`MainMenu renders 1`] = `
               class="css-w03ot7-StyledSubItem e136466r0"
             >
               <a
-                class="css-cjivcy-StyledA e1l78fsc0"
+                class="css-4e1znm-StyledA e1l78fsc0"
                 href="/#"
                 title="Meine Einstellungen"
               >

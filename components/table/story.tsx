@@ -6,15 +6,15 @@ export default {
 };
 
 const testContent = [
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
-  ['Altes Museum', 'Lorem Ipsum', '11.05.2021'],
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
+  { contents: ['Altes Museum', 'Lorem Ipsum', '11.05.2021'] },
 ];
 
 export const TableDefaultStory: Story = () => (

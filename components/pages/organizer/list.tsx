@@ -2,30 +2,15 @@ import { useRouter } from 'next/router';
 import { Table, TableProps } from '../../../components/table';
 import { TitleBar, TitleBarProps } from '../../../components/navigation/TitleBar';
 import { AppWrapper } from '../../../components/wrappers/AppWrapper';
-import { Categories } from '../../../config/categories';
 import { OrganizerList } from '../../../lib/api';
 import { useT } from '../../../lib/i18n';
 import React, { useMemo } from 'react';
-import Link from 'next/link';
 import { Routes, routes } from '../../../config/routes';
 import { useLocale } from '../../../lib/routing';
-import { Locale } from '../../../config/locales';
 import { Category, CategoryPage, useList } from '../../../lib/categories';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { MenuIcon } from '../../navigation/mainMenu/MenuIcon';
-
-interface EntryLinkProps {
-  category: Categories;
-  title: string;
-  id: string;
-  locale: Locale;
-}
-
-const EntryLink: React.FC<EntryLinkProps> = ({ category, title, id, locale }: EntryLinkProps) => (
-  <Link href={routes[(category as string) as Routes]({ locale, query: { id, sub: 'overview' } })}>
-    <a>{title}</a>
-  </Link>
-);
+import { TableLink, StyledTableLinkText } from '../../table/TableLink';
 
 export const useOrganizerMenu = (
   category: Category,
@@ -48,6 +33,10 @@ export const useOrganizerMenu = (
   return { titleBar, content: table };
 };
 
+interface ListLinkProps {
+  children: React.ReactNode;
+}
+
 export const useOrganizerTable = (
   list: Organizer[],
   narrow?: boolean
@@ -61,16 +50,29 @@ export const useOrganizerTable = (
       list
         ? Object.values(list)
             .reverse()
-            .map(({ attributes, id }, index) => [
-              <EntryLink
-                key={index}
-                category={router?.query?.category as Categories}
-                title={attributes.name}
-                locale={locale}
-                id={id}
-              />,
-              attributes.address.city,
-            ])
+            .map(({ attributes, id }, index) => {
+              const href = (sub?: string) =>
+                routes[(router?.query?.category as string) as Routes]({
+                  locale,
+                  query: { id, sub },
+                });
+
+              const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
+                <TableLink href={href('overview')} isActive={router.asPath.includes(href())}>
+                  {children}
+                </TableLink>
+              );
+
+              return {
+                contents: [
+                  <StyledTableLinkText key={`${index}-1`} isActive={router.asPath.includes(href())}>
+                    {attributes.name}
+                  </StyledTableLinkText>,
+                  attributes.address.city,
+                ],
+                Wrapper: ListLink,
+              };
+            })
         : [],
     [list, locale, router]
   );
