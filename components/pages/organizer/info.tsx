@@ -28,7 +28,7 @@ const CreateWrapper = styled.div`
 
 const InfoHead = styled.div`
   grid-column: 1 / -1;
-  padding: 0;
+  padding: 3.25rem 0 0;
 
   ${mq(Breakpoint.mid)} {
     padding: 5.25rem 0 0;
