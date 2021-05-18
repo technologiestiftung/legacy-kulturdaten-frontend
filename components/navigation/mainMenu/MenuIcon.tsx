@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { usePseudoUID } from '../../../lib/uid';
 
 export enum MenuIconName {
   start = 'start',
@@ -28,75 +29,87 @@ const StartSvg: React.FC = () => (
   </svg>
 );
 
-const LocationSvg: React.FC = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="12" cy="12" r="9.5" fill="#46948C" stroke="url(#paint0_linear)" />
-    <defs>
-      <linearGradient
-        id="paint0_linear"
-        x1="4.5"
-        y1="5"
-        x2="19"
-        y2="19.5"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stopColor="#6FC1B9" />
-        <stop offset="1" stopColor="#1B645C" />
-      </linearGradient>
-    </defs>
-  </svg>
-);
+const LocationSvg: React.FC = () => {
+  const id = usePseudoUID();
 
-const OfferSvg: React.FC = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect
-      x="1.58978"
-      y="5.98959"
-      width="17"
-      height="17"
-      rx="2.5"
-      transform="rotate(-15 1.58978 5.98959)"
-      fill="#273B8A"
-      stroke="url(#paint1_linear)"
-    />
-    <defs>
-      <linearGradient
-        id="paint1_linear"
-        x1="2.20215"
-        y1="6.34314"
-        x2="18.2021"
-        y2="22.3431"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stopColor="#6984EF" />
-        <stop offset="1" stopColor="#000B37" />
-      </linearGradient>
-    </defs>
-  </svg>
-);
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="9.5" fill="#46948C" stroke={`url(#${id}_linear)`} />
+      <defs>
+        <linearGradient
+          id={`${id}_linear`}
+          x1="4.5"
+          y1="5"
+          x2="19"
+          y2="19.5"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6FC1B9" />
+          <stop offset="1" stopColor="#1B645C" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
 
-const OrganizerSvg: React.FC = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M17.1823 4.32248C16.6842 2.46356 14.3606 1.84094 12.9997 3.20177L3.20178 12.9997C1.84095 14.3606 2.46357 16.6842 4.3225 17.1823L17.7068 20.7686C19.5657 21.2667 21.2667 19.5657 20.7686 17.7067L17.1823 4.32248Z"
-      fill="#E60032"
-      stroke="url(#paint2_linear)"
-    />
-    <defs>
-      <linearGradient
-        id="paint2_linear"
-        x1="8.19702"
-        y1="8.6969"
-        x2="19.697"
-        y2="20.1969"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stopColor="#E58EA1" />
-        <stop offset="1" stopColor="#9F0B2B" />
-      </linearGradient>
-    </defs>
-  </svg>
-);
+const OfferSvg: React.FC = () => {
+  const id = usePseudoUID();
+
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect
+        x="1.58978"
+        y="5.98959"
+        width="17"
+        height="17"
+        rx="2.5"
+        transform="rotate(-15 1.58978 5.98959)"
+        fill="#273B8A"
+        stroke={`url(#${id}_linear)`}
+      />
+      <defs>
+        <linearGradient
+          id={`${id}_linear`}
+          x1="2.20215"
+          y1="6.34314"
+          x2="18.2021"
+          y2="22.3431"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#6984EF" />
+          <stop offset="1" stopColor="#000B37" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
+const OrganizerSvg: React.FC = () => {
+  const id = usePseudoUID();
+
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M17.1823 4.32248C16.6842 2.46356 14.3606 1.84094 12.9997 3.20177L3.20178 12.9997C1.84095 14.3606 2.46357 16.6842 4.3225 17.1823L17.7068 20.7686C19.5657 21.2667 21.2667 19.5657 20.7686 17.7067L17.1823 4.32248Z"
+        fill="#E60032"
+        stroke={`url(#${id}_linear)`}
+      />
+      <defs>
+        <linearGradient
+          id={`${id}_linear`}
+          x1="8.19702"
+          y1="8.6969"
+          x2="19.697"
+          y2="20.1969"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="#E58EA1" />
+          <stop offset="1" stopColor="#9F0B2B" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
 
 const UserSvg: React.FC = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
