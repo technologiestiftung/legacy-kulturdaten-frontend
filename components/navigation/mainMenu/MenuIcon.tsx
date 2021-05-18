@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePseudoUID } from '../../../lib/uid';
 
 export enum MenuIconName {
@@ -30,7 +30,12 @@ const StartSvg: React.FC = () => (
 );
 
 const LocationSvg: React.FC = () => {
-  const id = usePseudoUID();
+  const [id, setId] = useState<string>();
+  const pseudoId = usePseudoUID();
+
+  useEffect(() => {
+    setId(pseudoId);
+  }, [pseudoId]);
 
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +58,12 @@ const LocationSvg: React.FC = () => {
 };
 
 const OfferSvg: React.FC = () => {
-  const id = usePseudoUID();
+  const [id, setId] = useState<string>();
+  const pseudoId = usePseudoUID();
+
+  useEffect(() => {
+    setId(pseudoId);
+  }, [pseudoId]);
 
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +95,12 @@ const OfferSvg: React.FC = () => {
 };
 
 const OrganizerSvg: React.FC = () => {
-  const id = usePseudoUID();
+  const [id, setId] = useState<string>();
+  const pseudoId = usePseudoUID();
+
+  useEffect(() => {
+    setId(pseudoId);
+  }, [pseudoId]);
 
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
