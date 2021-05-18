@@ -66,3 +66,49 @@ export const contentGrid = (columnCount: number): SerializedStyles => css`
   grid-template-columns: repeat(${columnCount}, 1fr);
   column-gap: 0;
 `;
+
+const shadowMap4 = {
+  top: 'inset 0px 1px 0px var(--grey-400)',
+  right: 'inset -1px 0px 0px var(--grey-400)',
+  bottom: 'inset 0px -1px 0px var(--grey-400)',
+  left: 'inset 1px 0px 0px var(--grey-400)',
+};
+
+const shadowMap2 = {
+  topBottom: `${shadowMap4.top}, ${shadowMap4.bottom}`,
+  rightLeft: `${shadowMap4.right}, ${shadowMap4.left}`,
+};
+
+const shadowMap1 = 'inset 0px 0px 0px 1px var(--grey-400)';
+
+/**
+ * Creates border like attributes to be used with css `box-shadow`
+ * @param sides - Defines for 1 to 4 sides to have a border or not. Following CSS padding and margin logic: [true/false] controls all sides. [true/false, true/false] controls vertical and horizontal, [true/false, true/false, true/false, true/false] controls individual sides clockwise starting from top
+ * @returns
+ */
+export const insetBorder = (...sides: boolean[]): string => {
+  switch (sides.length) {
+    case 1: {
+      return sides[0] ? shadowMap1 : '';
+    }
+
+    case 2:
+    case 3:
+    case 4:
+    default: {
+      return sides
+        .reduce<string>((combined, value, index) => {
+          const shadow =
+            sides.length === 2
+              ? Object.values(shadowMap2)[index]
+              : Object.values(shadowMap4)[index];
+          if (value && shadow) {
+            return `${shadow}, ${combined}`;
+          } else {
+            return combined;
+          }
+        }, '')
+        .slice(0, -2);
+    }
+  }
+};

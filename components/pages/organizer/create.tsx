@@ -110,7 +110,7 @@ export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: Catego
               if (resp.status === 200) {
                 const id = resp.body.data.id;
 
-                router.push(routes[Routes.organizer]({ locale, query: { id } }));
+                router.push(routes[Routes.organizer]({ locale, query: { id, sub: 'overview' } }));
               }
             } catch (e) {
               console.error(e);

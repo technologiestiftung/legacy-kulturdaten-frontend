@@ -3,7 +3,7 @@
 exports[`Header renders 1`] = `
 <div>
   <header
-    class="css-1p8v3tm-HeaderContainer e1sn27871"
+    class="css-uhk237-HeaderContainer e1sn27871"
   >
     <button
       aria-label="Menü öffnen"

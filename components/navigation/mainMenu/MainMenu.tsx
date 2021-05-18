@@ -13,13 +13,12 @@ import { useKeyboard } from '../../../lib/useKeyboard';
 import { LocaleSwitch } from '../LocaleSwitch';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { SubDivider } from './SubDivider';
+import { insetBorder } from '../../globals/Constants';
 
 const StyledMainMenu = styled.nav<{ fullscreen?: boolean }>`
   background: var(--grey-200);
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--grey-400);
-  border-bottom: none;
   position: relative;
 
   ${({ fullscreen }) =>
@@ -40,6 +39,7 @@ const StyledMainMenuContent = styled.div<{ show: boolean }>`
   flex-grow: 1;
   width: 100%;
   padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: ${insetBorder(false, true)};
 
   ${({ show }) =>
     show
@@ -51,6 +51,7 @@ const StyledMainMenuContent = styled.div<{ show: boolean }>`
 `;
 
 const StyledMainMenuSubs = styled.div``;
+
 const StyledMainMenuHeader = styled.div`
   position: sticky;
   top: 0;
