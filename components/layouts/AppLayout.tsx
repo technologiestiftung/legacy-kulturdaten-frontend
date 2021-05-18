@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useContext, useEffect, useRef } from 'react';
 import 'wicg-inert';
@@ -6,8 +7,10 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/Windo
 import { mq } from '../globals/Constants';
 import { MainMenuProps, useMainMenuOverlayVisible } from '../navigation/mainMenu/MainMenu';
 import { NavigationContext } from '../navigation/NavigationContext';
+import { TitleBarProps } from '../navigation/TitleBar';
+import { useUser } from '../user/useUser';
 
-const Container = styled.div`
+const Container = styled.div<{ hasSecondaryMenu?: boolean }>`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: auto auto 1fr;
@@ -19,7 +22,6 @@ const Container = styled.div`
 
   ${mq(Breakpoint.mid)} {
     grid-template-columns: repeat(11, 1fr);
-    grid-template-rows: auto 1fr;
   }
 
   ${mq(Breakpoint.wide)} {
@@ -29,8 +31,17 @@ const Container = styled.div`
   }
 
   ${mq(Breakpoint.ultra)} {
-    grid-template-columns: 133px 133px repeat(10, 1fr);
+    grid-template-columns: repeat(2, 133px) repeat(10, 1fr);
   }
+
+  ${({ hasSecondaryMenu }) =>
+    hasSecondaryMenu
+      ? css`
+          ${mq(Breakpoint.ultra)} {
+            grid-template-columns: repeat(4, 133px) repeat(8, 1fr);
+          }
+        `
+      : ''}
 `;
 
 const MenuSlot = styled.div`
@@ -54,12 +65,14 @@ const MenuSlot = styled.div`
   }
 `;
 
-const TitleBarSlot = styled.div<{ disabled?: boolean }>`
+const TitleBarSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean }>`
   position: relative;
   grid-column: 1 / span 4;
   align-self: flex-start;
+  grid-row: 2 / span 1;
 
   ${mq(Breakpoint.mid)} {
+    grid-row: 1 / span 1;
     grid-column: 4 / -1;
   }
 
@@ -67,9 +80,22 @@ const TitleBarSlot = styled.div<{ disabled?: boolean }>`
     align-self: stretch;
     grid-column: 3 / -1;
   }
+
+  ${({ hasSecondaryMenu }) =>
+    hasSecondaryMenu
+      ? css`
+          /* ${mq(Breakpoint.mid)} {
+            grid-column: 7 / -1;
+          } */
+
+          ${mq(Breakpoint.wide)} {
+            grid-column: 6 / -1;
+          }
+        `
+      : ''}
 `;
 
-const ContentSlot = styled.div<{ disabled?: boolean }>`
+const ContentSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean }>`
   position: relative;
   grid-column: 1 / span 4;
   overflow-y: auto;
@@ -78,16 +104,80 @@ const ContentSlot = styled.div<{ disabled?: boolean }>`
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
+    grid-row: 2 / -1;
   }
 
   ${mq(Breakpoint.wide)} {
     flex-grow: 1;
     box-shadow: inset -1px -1px 0px var(--grey-400);
     grid-column: 3 / -1;
+    grid-row: auto;
+  }
+
+  ${({ hasSecondaryMenu }) =>
+    hasSecondaryMenu
+      ? css`
+          ${mq(Breakpoint.mid)} {
+            grid-column: 4 / -1;
+            box-shadow: inset -1px -1px 0px var(--grey-400);
+          }
+
+          ${mq(Breakpoint.wide)} {
+            grid-column: 6 / -1;
+          }
+        `
+      : ''}
+`;
+
+const SecondarySlot = styled.div`
+  max-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  grid-column: 3 / span 2;
+  grid-row: 1 / -1;
+`;
+
+const SecondaryTitleSlot = styled.div`
+  position: relative;
+  /* overflow: hidden; */
+  background: var(--grey-200);
+
+  /* display: flex; */
+  ${mq(Breakpoint.mid)} {
+    grid-column: 1 / span 3;
+    grid-row: 2 / span 1;
+    flex-grow: 1;
+    box-shadow: inset -1px 0px 0px var(--grey-400), inset 1px 0px 0px var(--grey-400);
+  }
+
+  ${mq(Breakpoint.wide)} {
+    box-shadow: inset -1px 0px 0px var(--grey-400);
+    align-self: stretch;
   }
 `;
 
-const TitleAndContentContainer = styled.div`
+const SecondaryMenuSlot = styled.div`
+  position: relative;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--grey-200);
+  box-shadow: inset 1px 0px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400);
+  border-bottom: 1px solid var(--grey-400);
+
+  ${mq(Breakpoint.mid)} {
+    grid-column: 1 / span 3;
+    grid-row: 3 / -1;
+    flex-grow: 1;
+  }
+
+  ${mq(Breakpoint.wide)} {
+    flex-grow: 1;
+    box-shadow: inset -1px 0px 0px var(--grey-400);
+  }
+`;
+
+const TitleAndContentContainer = styled.div<{ hasSecondaryMenu?: boolean }>`
   max-height: 100%;
   overflow: hidden;
   display: flex;
@@ -95,7 +185,17 @@ const TitleAndContentContainer = styled.div`
 
   ${mq(Breakpoint.wide)} {
     grid-column: 3 / -1;
+    grid-row: 1 / -1;
   }
+
+  ${({ hasSecondaryMenu }) =>
+    hasSecondaryMenu
+      ? css`
+          ${mq(Breakpoint.wide)} {
+            grid-column: 5 / -1;
+          }
+        `
+      : ''}
 `;
 
 const MainMenuOverlay = styled.div`
@@ -111,20 +211,29 @@ const MainMenuOverlay = styled.div`
 interface AppLayoutProps {
   mainMenu: React.ReactElement<MainMenuProps>;
   content: React.ReactNode;
-  titleBar: React.ReactNode;
+  titleBar: React.ReactElement<TitleBarProps>;
+  secondaryMenu?: {
+    titleBar: React.ReactElement<TitleBarProps>;
+    content: React.ReactNode;
+  };
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   mainMenu,
   titleBar,
   content,
+  secondaryMenu,
 }: AppLayoutProps) => {
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
   const isMainMenuOverlayVisible = useMainMenuOverlayVisible();
   const { setMainMenuOpen } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const titleBarRef = useRef<HTMLDivElement>();
   const contentSlotRef = useRef<HTMLDivElement>();
+  useUser();
+
+  const hasSecondaryMenu = typeof secondaryMenu !== 'undefined';
 
   // Add "inert" attribute to elements behind MainMenuOverlay.
   // Inert is a new web standard which marks elements as not interactive while keeping them visible.
@@ -141,15 +250,21 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   }, [isMainMenuOverlayVisible]);
 
   const renderedTitleBar = titleBar ? (
-    <TitleBarSlot ref={titleBarRef}>{titleBar}</TitleBarSlot>
+    <TitleBarSlot ref={titleBarRef} hasSecondaryMenu={hasSecondaryMenu}>
+      {titleBar}
+    </TitleBarSlot>
   ) : (
     ''
   );
 
-  const renderedContentSlot = <ContentSlot ref={contentSlotRef}>{content}</ContentSlot>;
+  const renderedContentSlot = (
+    <ContentSlot hasSecondaryMenu={hasSecondaryMenu} ref={contentSlotRef}>
+      {content}
+    </ContentSlot>
+  );
 
   const titleAndContent = isWideOrWider ? (
-    <TitleAndContentContainer>
+    <TitleAndContentContainer hasSecondaryMenu={hasSecondaryMenu}>
       {renderedTitleBar}
       {renderedContentSlot}
     </TitleAndContentContainer>
@@ -160,11 +275,26 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     </>
   );
 
+  const renderedSecondaryMenu = secondaryMenu ? (
+    isWideOrWider ? (
+      <SecondarySlot>
+        <SecondaryTitleSlot>{secondaryMenu.titleBar}</SecondaryTitleSlot>
+        <SecondaryMenuSlot>{secondaryMenu.content}</SecondaryMenuSlot>
+      </SecondarySlot>
+    ) : isMidOrWider ? (
+      <>
+        <SecondaryTitleSlot>{secondaryMenu.titleBar}</SecondaryTitleSlot>
+        <SecondaryMenuSlot>{secondaryMenu.content}</SecondaryMenuSlot>
+      </>
+    ) : null
+  ) : null;
+
   return (
-    <Container>
+    <Container hasSecondaryMenu={hasSecondaryMenu}>
       <MenuSlot>{mainMenu}</MenuSlot>
-      {rendered ? titleAndContent : ''}
-      {isMainMenuOverlayVisible ? <MainMenuOverlay onClick={() => setMainMenuOpen(false)} /> : ''}
+      {rendered && renderedSecondaryMenu}
+      {rendered && titleAndContent}
+      {isMainMenuOverlayVisible && <MainMenuOverlay onClick={() => setMainMenuOpen(false)} />}
     </Container>
   );
 };

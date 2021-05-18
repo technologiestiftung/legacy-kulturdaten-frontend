@@ -27,3 +27,17 @@ export const TableDefaultStory: Story = () => (
     content={testContent}
   />
 );
+TableDefaultStory.storyName = 'Table default';
+
+export const TableNarrowStory: Story = () => (
+  <Table
+    columns={[
+      { title: 'Bezeichnung', bold: true },
+      { title: 'Lorem' },
+      { title: 'Bearbeitungsdatum' },
+    ]}
+    content={testContent}
+    narrow
+  />
+);
+TableNarrowStory.storyName = 'Table narrow';

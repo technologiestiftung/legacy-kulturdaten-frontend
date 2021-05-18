@@ -8,6 +8,7 @@ import { MenuIconName } from './mainMenu/MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
 import { HeaderLinkProps } from './header/HeaderLink';
+import { Table } from '../table';
 
 export default {
   title: 'Navigation',
@@ -185,3 +186,41 @@ MainMenuStory.storyName = 'Main Menu';
 
 export const TitleBarStory: Story = () => <TitleBar title="Page Title" />;
 TitleBarStory.storyName = 'Title Bar';
+
+export const SecondaryMenuStory: Story = () => {
+  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+
+  const secondaryMenu = (
+    <Table
+      columns={[{ title: 'Column 1' }, { title: 'Column 2' }, { title: 'Column 3' }]}
+      content={[
+        ['Lorem', 'Ipsum', 'Dolor'],
+        ['Lorem', 'Ipsum', 'Dolor'],
+        ['Lorem', 'Ipsum', 'Dolor'],
+        ['Lorem', 'Ipsum', 'Dolor'],
+        ['Lorem', 'Ipsum', 'Dolor'],
+        ['Lorem', 'Ipsum', 'Dolor'],
+      ]}
+      narrow
+    />
+  );
+
+  return (
+    <AppLayout
+      mainMenu={mainMenu}
+      content={
+        <StyledTestContent>
+          {[...Array(10)].map((i, index) => (
+            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
+          ))}
+        </StyledTestContent>
+      }
+      titleBar={<TitleBar title="Page Title" />}
+      secondaryMenu={{
+        titleBar: <TitleBar title="Category Title" secondary />,
+        content: secondaryMenu,
+      }}
+    />
+  );
+};
+SecondaryMenuStory.storyName = 'Navigation with Secondary Menu';

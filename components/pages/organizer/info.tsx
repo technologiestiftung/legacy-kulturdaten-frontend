@@ -4,14 +4,12 @@ import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { CategoryEntryPage, useEntry, useTabs } from '../../../lib/categories';
+import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Button, ButtonColor } from '../../button';
 import { contentGrid, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
-import { TitleBar } from '../../navigation/TitleBar';
-import { AppWrapper } from '../../wrappers/AppWrapper';
 
 const CreateWrapper = styled.div`
   padding: 0 0.75rem;
@@ -72,7 +70,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   query,
 }: CategoryEntryPage) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const tabs = useTabs(category);
   const call = useApiCall();
   const t = useT();
 
@@ -84,137 +81,134 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   }, [entry]);
 
   return (
-    <AppWrapper titleBar={<TitleBar title={entry?.attributes.name} />}>
-      {tabs}
-      <CreateWrapper>
-        <InfoHead>
-          <Button
-            onClick={() => {
-              if (editing) {
-                setFormState(entry?.attributes);
-              }
-              setEditing(!editing);
-            }}
-          >
-            {editing
-              ? (t('categories.organizer.form.editCancel') as string)
-              : (t('categories.organizer.form.edit') as string)}
-          </Button>
-        </InfoHead>
-        <CreateForm
-          aria-disabled={!editing}
-          onSubmit={async (e: FormEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            try {
-              const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                organizer: formState,
-                id: entry.id,
-              });
-
-              if (resp.status === 200) {
-                mutate(
-                  {
-                    status: 200,
-                    body: {
-                      data: {
-                        ...entry,
-                        attributes: formState,
-                      },
-                    },
-                  },
-                  false
-                );
-                setEditing(false);
-              }
-            } catch (e) {
-              console.error(e);
+    <CreateWrapper>
+      <InfoHead>
+        <Button
+          onClick={() => {
+            if (editing) {
+              setFormState(entry?.attributes);
             }
+            setEditing(!editing);
           }}
         >
-          {/* <StyledH2>{t('categories.organizer.form.create')}</StyledH2> */}
-          <StyledH3>{t('categories.organizer.form.baseInfo')}</StyledH3>
-          <CreateFormCluster>
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.name') as string}
-              id="create-name"
-              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-              value={formState?.name}
-              required
-              disabled={!editing}
-            />
-          </CreateFormCluster>
-          <StyledH3>{t('categories.organizer.form.address')}</StyledH3>
-          <CreateFormCluster>
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.street1') as string}
-              id="create-street"
-              value={formState?.address.street1}
-              onChange={(e) =>
-                setFormState({
-                  ...formState,
-                  address: { ...formState.address, street1: e.target.value },
-                })
-              }
-              required
-              disabled={!editing}
-            />
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.street2') as string}
-              id="create-street2"
-              value={formState?.address.street2}
-              onChange={(e) =>
-                setFormState({
-                  ...formState,
-                  address: { ...formState.address, street2: e.target.value },
-                })
-              }
-              disabled={!editing}
-            />
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.zipCode') as string}
-              id="create-zip"
-              value={formState?.address.zipCode}
-              onChange={(e) =>
-                setFormState({
-                  ...formState,
-                  address: { ...formState.address, zipCode: e.target.value },
-                })
-              }
-              required
-              disabled={!editing}
-            />
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.city') as string}
-              id="create-city"
-              value={formState?.address.city}
-              onChange={(e) =>
-                setFormState({
-                  ...formState,
-                  address: { ...formState.address, city: e.target.value },
-                })
-              }
-              required
-              disabled={!editing}
-            />
-          </CreateFormCluster>
-          <div />
-          <CreateFormCluster>
-            <Input
-              type={InputType.submit}
-              value={t('categories.organizer.form.save') as string}
-              color={ButtonColor.green}
-              disabled={!editing}
-            />
-          </CreateFormCluster>
-        </CreateForm>
-      </CreateWrapper>
-    </AppWrapper>
+          {editing
+            ? (t('categories.organizer.form.editCancel') as string)
+            : (t('categories.organizer.form.edit') as string)}
+        </Button>
+      </InfoHead>
+      <CreateForm
+        aria-disabled={!editing}
+        onSubmit={async (e: FormEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          try {
+            const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+              organizer: formState,
+              id: entry.id,
+            });
+
+            if (resp.status === 200) {
+              mutate(
+                {
+                  status: 200,
+                  body: {
+                    data: {
+                      ...entry,
+                      attributes: formState,
+                    },
+                  },
+                },
+                false
+              );
+              setEditing(false);
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+      >
+        {/* <StyledH2>{t('categories.organizer.form.create')}</StyledH2> */}
+        <StyledH3>{t('categories.organizer.form.baseInfo')}</StyledH3>
+        <CreateFormCluster>
+          <Input
+            type={InputType.text}
+            label={t('categories.organizer.form.name') as string}
+            id="create-name"
+            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+            value={formState?.name}
+            required
+            disabled={!editing}
+          />
+        </CreateFormCluster>
+        <StyledH3>{t('categories.organizer.form.address')}</StyledH3>
+        <CreateFormCluster>
+          <Input
+            type={InputType.text}
+            label={t('categories.organizer.form.street1') as string}
+            id="create-street"
+            value={formState?.address.street1}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                address: { ...formState.address, street1: e.target.value },
+              })
+            }
+            required
+            disabled={!editing}
+          />
+          <Input
+            type={InputType.text}
+            label={t('categories.organizer.form.street2') as string}
+            id="create-street2"
+            value={formState?.address.street2}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                address: { ...formState.address, street2: e.target.value },
+              })
+            }
+            disabled={!editing}
+          />
+          <Input
+            type={InputType.text}
+            label={t('categories.organizer.form.zipCode') as string}
+            id="create-zip"
+            value={formState?.address.zipCode}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                address: { ...formState.address, zipCode: e.target.value },
+              })
+            }
+            required
+            disabled={!editing}
+          />
+          <Input
+            type={InputType.text}
+            label={t('categories.organizer.form.city') as string}
+            id="create-city"
+            value={formState?.address.city}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                address: { ...formState.address, city: e.target.value },
+              })
+            }
+            required
+            disabled={!editing}
+          />
+        </CreateFormCluster>
+        <div />
+        <CreateFormCluster>
+          <Input
+            type={InputType.submit}
+            value={t('categories.organizer.form.save') as string}
+            color={ButtonColor.green}
+            disabled={!editing}
+          />
+        </CreateFormCluster>
+      </CreateForm>
+    </CreateWrapper>
   );
 };

@@ -18,8 +18,6 @@ const StyledMainMenu = styled.nav<{ fullscreen?: boolean }>`
   background: var(--grey-200);
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--grey-400);
-  border-bottom: none;
   position: relative;
 
   ${({ fullscreen }) =>

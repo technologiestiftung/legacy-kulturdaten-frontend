@@ -6,7 +6,8 @@ export const StyledSub = styled.div<{ active?: boolean }>`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
-  box-shadow: 0px -1px 0px var(--grey-400);
+  box-shadow: 0px -1px 0px var(--grey-400), inset 1px 0px 0px var(--grey-400),
+    inset -1px 0px 0px var(--grey-400);
 `;
 
 const StyledSubHead = styled.div`

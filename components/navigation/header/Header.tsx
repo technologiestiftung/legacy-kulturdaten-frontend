@@ -12,7 +12,7 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  border-bottom: 1px solid var(--grey-400);
+  box-shadow: inset 0px 0px 0px 1px var(--grey-400);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);

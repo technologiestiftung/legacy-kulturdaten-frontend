@@ -57,12 +57,6 @@ const StyledTabLink = styled.a<{ isActive?: boolean }>`
       box-shadow: inset -1px -1px 0px var(--grey-400);
     }
     &:nth-of-type(4n-3) {
-      box-shadow: inset -1px -1px 0px var(--grey-400), inset 1px 0px 0px var(--grey-400);
-    }
-  }
-
-  ${mq(Breakpoint.wide)} {
-    &:nth-of-type(4n-3) {
       box-shadow: inset -1px -1px 0px var(--grey-400);
     }
   }
@@ -79,7 +73,7 @@ export interface TabsProps {
 export const Tabs: React.FC<TabsProps> = ({ links }: TabsProps) => (
   <StyledTabs>
     {links.map(({ title, href, isActive }, index) => (
-      <Link key={index} href={href} passHref>
+      <Link key={index} href={href} passHref shallow replace>
         <StyledTabLink isActive={isActive}>
           {isActive ? <ArrowRightSvg /> : ''}
           {title}

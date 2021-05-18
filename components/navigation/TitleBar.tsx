@@ -3,21 +3,41 @@ import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, mq } from '../globals/Constants';
 
-const StyledTitleBar = styled.div`
+const StyledTitleBar = styled.div<{ secondary?: boolean; reversed?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 0.75rem;
-  background: var(--white);
-  border: 1px solid var(--grey-400);
+  background: ${({ secondary }) => (secondary ? 'var(--grey-200)' : 'var(--white)')};
+  flex-direction: ${({ reversed }) => (reversed ? 'row-reverse' : 'row')};
+  /* border: 1px solid var(--grey-400); */
+  box-shadow: inset 1px 0px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
+    inset 0px -1px 0px var(--grey-400);
 
   ${mq(Breakpoint.mid)} {
-    border-left: none;
+    ${({ secondary }) =>
+      !secondary
+        ? css`
+            box-shadow: inset 0px 1px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
+              inset 0px -1px 0px var(--grey-400);
+          `
+        : css`
+            box-shadow: inset 1px 0px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
+              inset 0px -1px 0px var(--grey-400);
+          `}
   }
 
   ${mq(Breakpoint.wide)} {
-    padding: 0;
-    ${contentGrid(10)}
+    ${({ secondary }) =>
+      !secondary
+        ? css`
+            padding: 0;
+            ${contentGrid(10)}
+          `
+        : css`
+            box-shadow: inset 0px 1px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
+              inset 0px -1px 0px var(--grey-400);
+          `}
   }
 `;
 
@@ -57,10 +77,17 @@ const StyledAction = styled.div``;
 export interface TitleBarProps {
   title: string;
   action?: React.ReactElement;
+  secondary?: boolean;
+  reversed?: boolean;
 }
 
-export const TitleBar: React.FC<TitleBarProps> = ({ title, action }: TitleBarProps) => (
-  <StyledTitleBar>
+export const TitleBar: React.FC<TitleBarProps> = ({
+  title,
+  action,
+  secondary,
+  reversed,
+}: TitleBarProps) => (
+  <StyledTitleBar secondary={secondary} reversed={reversed}>
     <StyledTitle skeleton={typeof title === 'undefined'}>{title}</StyledTitle>
     {action ? <StyledAction>{action}</StyledAction> : ''}
   </StyledTitleBar>
