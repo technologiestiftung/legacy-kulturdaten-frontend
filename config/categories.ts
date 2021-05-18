@@ -9,7 +9,7 @@ import { Category } from '../lib/categories';
 import { OrganizerListPage, useOrganizerMenu } from '../components/pages/organizer/list';
 import { OrganizerCreatePage } from '../components/pages/organizer/create';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
-import { OrganizerShowPage } from '../components/pages/organizer/show';
+import { OrganizerOverviewPage } from '../components/pages/organizer/overview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
@@ -40,7 +40,7 @@ export const useCategories: () => {
       pages: {
         list: OrganizerListPage,
         create: OrganizerCreatePage,
-        overview: OrganizerShowPage,
+        overview: OrganizerOverviewPage,
         info: OrganizerInfoPage,
         rights: OrganizerRightsPage,
         export: OrganizerExportPage,

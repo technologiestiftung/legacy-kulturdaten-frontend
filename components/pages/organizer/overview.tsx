@@ -48,7 +48,7 @@ const EntryContainer = styled.div`
   }
 `;
 
-export const OrganizerShowPage: React.FC<CategoryEntryPage> = ({
+export const OrganizerOverviewPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
