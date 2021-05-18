@@ -138,7 +138,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             label={t('categories.organizer.form.name') as string}
             id="create-name"
             onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-            value={formState?.name}
+            value={formState?.name || ''}
             required
             disabled={!editing}
           />
@@ -149,7 +149,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             type={InputType.text}
             label={t('categories.organizer.form.street1') as string}
             id="create-street"
-            value={formState?.address.street1}
+            value={formState?.address.street1 || ''}
             onChange={(e) =>
               setFormState({
                 ...formState,
@@ -163,7 +163,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             type={InputType.text}
             label={t('categories.organizer.form.street2') as string}
             id="create-street2"
-            value={formState?.address.street2}
+            value={formState?.address.street2 || ''}
             onChange={(e) =>
               setFormState({
                 ...formState,
@@ -176,7 +176,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             type={InputType.text}
             label={t('categories.organizer.form.zipCode') as string}
             id="create-zip"
-            value={formState?.address.zipCode}
+            value={formState?.address.zipCode || ''}
             onChange={(e) =>
               setFormState({
                 ...formState,
@@ -190,7 +190,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             type={InputType.text}
             label={t('categories.organizer.form.city') as string}
             id="create-city"
-            value={formState?.address.city}
+            value={formState?.address.city || ''}
             onChange={(e) =>
               setFormState({
                 ...formState,
