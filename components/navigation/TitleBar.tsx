@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
-import { contentGrid, mq } from '../globals/Constants';
+import { insetBorder, contentGrid, mq } from '../globals/Constants';
 
 const StyledTitleBar = styled.div<{ secondary?: boolean; reversed?: boolean }>`
   display: flex;
@@ -10,20 +10,16 @@ const StyledTitleBar = styled.div<{ secondary?: boolean; reversed?: boolean }>`
   padding: 0 0.75rem;
   background: ${({ secondary }) => (secondary ? 'var(--grey-200)' : 'var(--white)')};
   flex-direction: ${({ reversed }) => (reversed ? 'row-reverse' : 'row')};
-  /* border: 1px solid var(--grey-400); */
-  box-shadow: inset 1px 0px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
-    inset 0px -1px 0px var(--grey-400);
+  box-shadow: ${insetBorder(false, true, true, true)};
 
   ${mq(Breakpoint.mid)} {
     ${({ secondary }) =>
       !secondary
         ? css`
-            box-shadow: inset 0px 1px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
-              inset 0px -1px 0px var(--grey-400);
+            box-shadow: ${insetBorder(true, true, true)};
           `
         : css`
-            box-shadow: inset 1px 0px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
-              inset 0px -1px 0px var(--grey-400);
+            box-shadow: ${insetBorder(false, true, true, true)};
           `}
   }
 
@@ -35,8 +31,7 @@ const StyledTitleBar = styled.div<{ secondary?: boolean; reversed?: boolean }>`
             ${contentGrid(10)}
           `
         : css`
-            box-shadow: inset 0px 1px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400),
-              inset 0px -1px 0px var(--grey-400);
+            box-shadow: ${insetBorder(true, true, true)};
           `}
   }
 `;

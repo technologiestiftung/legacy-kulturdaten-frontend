@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { contentGrid, mq } from '../globals/Constants';
+import { insetBorder, contentGrid, mq } from '../globals/Constants';
 
 const StyledTable = styled.div`
   display: grid;
@@ -35,7 +35,7 @@ const StyledRow = styled.div<{ columnCount: number; isTitleRow?: boolean; narrow
 `;
 
 const StyledRowWrapper = styled.div<{ narrow?: boolean }>`
-  box-shadow: inset 0px -1px 0px var(--grey-400);
+  box-shadow: ${insetBorder(false, false, true)};
   padding: 0 0.75rem;
 
   ${({ narrow }) =>
@@ -86,15 +86,9 @@ export interface TableProps {
   }[];
   content: (string | React.ReactElement)[][];
   narrow?: boolean;
-  secondary?: boolean;
 }
 
-export const Table: React.FC<TableProps> = ({
-  columns,
-  content,
-  narrow = false,
-  secondary = false,
-}: TableProps) => {
+export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }: TableProps) => {
   const columnCount = columns.length;
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 

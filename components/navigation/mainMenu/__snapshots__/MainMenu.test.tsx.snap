@@ -3,13 +3,13 @@
 exports[`MainMenu renders 1`] = `
 <div>
   <nav
-    class="css-8eqs8y-StyledMainMenu ey6w9bd3"
+    class="css-1r63qli-StyledMainMenu ey6w9bd3"
   >
     <div
       class="css-1up9p1u-StyledMainMenuHeader ey6w9bd0"
     >
       <header
-        class="css-1p8v3tm-HeaderContainer e1sn27871"
+        class="css-uhk237-HeaderContainer e1sn27871"
       >
         <button
           aria-label="Menü öffnen"
@@ -56,13 +56,13 @@ exports[`MainMenu renders 1`] = `
       </header>
     </div>
     <div
-      class="css-1q24dsu-StyledMainMenuContent ey6w9bd2"
+      class="css-ex4skc-StyledMainMenuContent ey6w9bd2"
     >
       <div
         class="css-7b8bp5-StyledMainMenuSubs ey6w9bd1"
       >
         <div
-          class="css-nvofqz-StyledSub e136466r5"
+          class="css-cwaagl-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -154,7 +154,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-nvofqz-StyledSub e136466r5"
+          class="css-cwaagl-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -234,7 +234,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-nvofqz-StyledSub e136466r5"
+          class="css-cwaagl-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -319,7 +319,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-nvofqz-StyledSub e136466r5"
+          class="css-cwaagl-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -401,7 +401,7 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-nvofqz-StyledSub e136466r5"
+          class="css-cwaagl-StyledSub e136466r5"
         >
           <div
             class="css-15v88sk-StyledSubHead e136466r4"
@@ -521,14 +521,14 @@ exports[`MainMenu renders 1`] = `
           </div>
         </div>
         <div
-          class="css-nvofqz-StyledSub e136466r5"
+          class="css-cwaagl-StyledSub e136466r5"
         >
           <div
             class="css-1h9g97m-StyledSubContent e136466r1"
           />
         </div>
         <div
-          class="css-nvofqz-StyledSub e136466r5"
+          class="css-cwaagl-StyledSub e136466r5"
         >
           <div
             class="css-1h9g97m-StyledSubContent e136466r1"

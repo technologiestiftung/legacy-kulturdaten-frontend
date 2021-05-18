@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef } from 'react';
 import 'wicg-inert';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { insetBorder, mq } from '../globals/Constants';
 import { MainMenuProps, useMainMenuOverlayVisible } from '../navigation/mainMenu/MainMenu';
 import { NavigationContext } from '../navigation/NavigationContext';
 import { TitleBarProps } from '../navigation/TitleBar';
@@ -100,7 +100,7 @@ const ContentSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean 
   grid-column: 1 / span 4;
   overflow-y: auto;
   overflow-x: hidden;
-  box-shadow: inset -1px -1px 0px var(--grey-400), inset 1px 0px 0px var(--grey-400);
+  box-shadow: ${insetBorder(false, true, true, true)};
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
@@ -109,7 +109,7 @@ const ContentSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean 
 
   ${mq(Breakpoint.wide)} {
     flex-grow: 1;
-    box-shadow: inset -1px -1px 0px var(--grey-400);
+    box-shadow: ${insetBorder(false, true, true)};
     grid-column: 3 / -1;
     grid-row: auto;
   }
@@ -119,7 +119,7 @@ const ContentSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean 
       ? css`
           ${mq(Breakpoint.mid)} {
             grid-column: 4 / -1;
-            box-shadow: inset -1px -1px 0px var(--grey-400);
+            box-shadow: ${insetBorder(false, true, true)};
           }
 
           ${mq(Breakpoint.wide)} {
@@ -148,11 +148,11 @@ const SecondaryTitleSlot = styled.div`
     grid-column: 1 / span 3;
     grid-row: 2 / span 1;
     flex-grow: 1;
-    box-shadow: inset -1px 0px 0px var(--grey-400), inset 1px 0px 0px var(--grey-400);
+    box-shadow: ${insetBorder(true, true, false)};
   }
 
   ${mq(Breakpoint.wide)} {
-    box-shadow: inset -1px 0px 0px var(--grey-400);
+    box-shadow: ${insetBorder(false, true, false)};
     align-self: stretch;
   }
 `;
@@ -162,7 +162,7 @@ const SecondaryMenuSlot = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--grey-200);
-  box-shadow: inset 1px 0px 0px var(--grey-400), inset -1px 0px 0px var(--grey-400);
+  box-shadow: ${insetBorder(false, true, false, true)};
   border-bottom: 1px solid var(--grey-400);
 
   ${mq(Breakpoint.mid)} {
@@ -173,7 +173,7 @@ const SecondaryMenuSlot = styled.div`
 
   ${mq(Breakpoint.wide)} {
     flex-grow: 1;
-    box-shadow: inset -1px 0px 0px var(--grey-400);
+    box-shadow: ${insetBorder(false, true, false)};
   }
 `;
 

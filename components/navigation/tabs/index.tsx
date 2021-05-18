@@ -2,13 +2,13 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
 import { Breakpoint } from '../../../lib/WindowService';
-import { mq } from '../../globals/Constants';
+import { insetBorder, mq } from '../../globals/Constants';
 import { css } from '@emotion/react';
 
 const StyledTabs = styled.nav`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  box-shadow: inset -1px -1px 0px var(--grey-400);
+  box-shadow: ${insetBorder(false, true, true)};
   background: var(--grey-200);
 
   ${mq(Breakpoint.mid)} {
@@ -25,12 +25,12 @@ const StyledTabLink = styled.a<{ isActive?: boolean }>`
   text-decoration: none;
   padding: 0.75rem;
   background: var(--grey-200);
-  box-shadow: inset -1px -1px 0px var(--grey-400);
+  box-shadow: ${insetBorder(false, true, true)};
   flex-direction: row;
   align-items: center;
 
   &:nth-of-type(2n-1) {
-    box-shadow: inset -1px -1px 0px var(--grey-400), inset 1px 0px 0px var(--grey-400);
+    box-shadow: ${insetBorder(false, true, true, true)};
   }
 
   ${({ isActive }) =>
@@ -54,10 +54,10 @@ const StyledTabLink = styled.a<{ isActive?: boolean }>`
 
   ${mq(Breakpoint.mid)} {
     &:nth-of-type(2n-1) {
-      box-shadow: inset -1px -1px 0px var(--grey-400);
+      box-shadow: ${insetBorder(false, true, true)};
     }
     &:nth-of-type(4n-3) {
-      box-shadow: inset -1px -1px 0px var(--grey-400);
+      box-shadow: ${insetBorder(false, true, true)};
     }
   }
 `;

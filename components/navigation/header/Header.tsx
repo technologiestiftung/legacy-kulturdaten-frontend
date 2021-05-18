@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useContext } from 'react';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
+import { insetBorder } from '../../globals/Constants';
 import { NavigationContext } from '../NavigationContext';
 import { MenuButton, MenuButtonState } from './MenuButton';
 
@@ -12,7 +13,7 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  box-shadow: inset 0px 0px 0px 1px var(--grey-400);
+  box-shadow: ${insetBorder(true)};
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
