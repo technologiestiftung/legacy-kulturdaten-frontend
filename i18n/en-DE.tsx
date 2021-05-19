@@ -34,6 +34,8 @@ export const enDE: Localization = {
     created: () => 'created',
     updated: () => 'updated',
     create: () => 'create',
+    close: () => 'close',
+    back: () => 'back',
   },
   categories: {
     organizer: {

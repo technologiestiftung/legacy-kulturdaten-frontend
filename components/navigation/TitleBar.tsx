@@ -3,13 +3,17 @@ import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
 import { insetBorder, contentGrid, mq } from '../globals/Constants';
 
-const StyledTitleBar = styled.div<{ secondary?: boolean; reversed?: boolean }>`
+const StyledTitleBarContainer = styled.div<{ reversed?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 0.75rem;
-  background: ${({ secondary }) => (secondary ? 'var(--grey-200)' : 'var(--white)')};
   flex-direction: ${({ reversed }) => (reversed ? 'row-reverse' : 'row')};
+  grid-column: 2 / -2;
+`;
+
+const StyledTitleBar = styled.div<{ secondary?: boolean }>`
+  background: ${({ secondary }) => (secondary ? 'var(--grey-200)' : 'var(--white)')};
   box-shadow: ${insetBorder(false, true, true, true)};
 
   ${mq(Breakpoint.mid)} {
@@ -82,8 +86,10 @@ export const TitleBar: React.FC<TitleBarProps> = ({
   secondary,
   reversed,
 }: TitleBarProps) => (
-  <StyledTitleBar secondary={secondary} reversed={reversed}>
-    <StyledTitle skeleton={typeof title === 'undefined'}>{title}</StyledTitle>
-    {action ? <StyledAction>{action}</StyledAction> : ''}
+  <StyledTitleBar secondary={secondary}>
+    <StyledTitleBarContainer reversed={reversed}>
+      <StyledTitle skeleton={typeof title === 'undefined'}>{title}</StyledTitle>
+      {action ? <StyledAction>{action}</StyledAction> : ''}
+    </StyledTitleBarContainer>
   </StyledTitleBar>
 );

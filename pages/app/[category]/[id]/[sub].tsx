@@ -9,6 +9,10 @@ import { OrganizerList } from '../../../../lib/api';
 import { Organizer } from '../../../../lib/api/types/organizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../../lib/WindowService';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
+import { Button, ButtonSize, IconPosition } from '../../../../components/button';
+import { useT } from '../../../../lib/i18n';
+import Link from 'next/link';
+import { useLocale } from '../../../../lib/routing';
 
 const EntrySubPage: NextPage = () => {
   const router = useRouter();
@@ -19,12 +23,35 @@ const EntrySubPage: NextPage = () => {
   const secMenu = useOrganizerMenu(category, list);
   const { entry } = useEntry<Organizer, OrganizerShow>(category, router?.query);
   const title = entry?.attributes?.name;
+  const t = useT();
+  const locale = useLocale();
 
   const subPath = router?.query.sub as string;
 
+  const mobileButton = (
+    <Button size={ButtonSize.small} icon="ArrowLeft" iconPosition={IconPosition.left}>
+      {t('general.back')}
+    </Button>
+  );
+
+  const tabletDesktopButton = (
+    <Button size={ButtonSize.small} icon="X" iconPosition={IconPosition.right}>
+      {t('general.close')}
+    </Button>
+  );
+
+  const titleBarLink = (
+    <Link href={category.routes.list({ locale })}>
+      <a>{isMidOrWider ? tabletDesktopButton : mobileButton}</a>
+    </Link>
+  );
+
   if (category) {
     return (
-      <AppWrapper titleBar={<TitleBar title={title} />} secondaryMenu={secMenu}>
+      <AppWrapper
+        titleBar={<TitleBar title={title} action={titleBarLink} />}
+        secondaryMenu={secMenu}
+      >
         {tabs}
         {React.createElement(category?.pages[subPath], { category, query: router?.query })}
       </AppWrapper>

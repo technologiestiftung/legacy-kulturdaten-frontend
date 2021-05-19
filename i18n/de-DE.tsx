@@ -34,6 +34,8 @@ export const deDE: Localization = {
     created: () => 'erstellt',
     updated: () => 'geändert',
     create: () => 'erstelle',
+    close: () => 'schließen',
+    back: () => 'zurück',
   },
   categories: {
     organizer: {
