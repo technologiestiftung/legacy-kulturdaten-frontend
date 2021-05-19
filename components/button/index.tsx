@@ -72,7 +72,7 @@ const buttonSizes: {
 const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
   default: css`
     border: 1px solid var(--black);
-    transition: box-shadow var(--transition-duration);
+    transition: box-shadow var(--transition-duration), transform var(--transition-duration);
 
     box-shadow: var(--shadow);
 
@@ -81,7 +81,8 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
     }
 
     &:active {
-      box-shadow: var(--shadow-active);
+      box-shadow: var(--shadow-active), inset 0px 0px 0px 1px var(--black);
+      transform: translateY(0.125rem);
     }
 
     &:disabled {
@@ -92,14 +93,14 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
     border: 1px solid currentColor;
     background: inherit;
     color: currentColor;
-    transition: box-shadow var(--transition-duration);
+    transition: box-shadow var(--transition-duration), transform var(--transition-duration);
 
     &:hover {
       box-shadow: inset 0px 0px 0px 1px currentColor;
     }
 
     &:active {
-      box-shadow: inset 0px 0px 0px 0px currentColor;
+      transform: translateY(0.0625rem);
     }
 
     &:disabled {
