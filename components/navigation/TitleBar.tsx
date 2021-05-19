@@ -7,7 +7,6 @@ const StyledTitleBarContainer = styled.div<{ reversed?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.75rem;
   flex-direction: ${({ reversed }) => (reversed ? 'row-reverse' : 'row')};
   grid-column: 2 / -2;
 `;
@@ -15,6 +14,7 @@ const StyledTitleBarContainer = styled.div<{ reversed?: boolean }>`
 const StyledTitleBar = styled.div<{ secondary?: boolean }>`
   background: ${({ secondary }) => (secondary ? 'var(--grey-200)' : 'var(--white)')};
   box-shadow: ${insetBorder(false, true, true, true)};
+  padding: 0 0.75rem;
 
   ${mq(Breakpoint.mid)} {
     ${({ secondary }) =>
