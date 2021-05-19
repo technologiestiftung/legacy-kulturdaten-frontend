@@ -41,7 +41,7 @@ const EntrySubPage: NextPage = () => {
   );
 
   const titleBarLink = (
-    <Link href={category.routes.list({ locale })}>
+    <Link href={category?.routes.list({ locale })}>
       <a>{isMidOrWider ? tabletDesktopButton : mobileButton}</a>
     </Link>
   );
