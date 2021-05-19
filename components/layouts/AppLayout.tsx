@@ -136,24 +136,22 @@ const SecondarySlot = styled.div`
   flex-direction: column;
   grid-column: 3 / span 2;
   grid-row: 1 / -1;
+  justify-content: flex-start;
 `;
 
 const SecondaryTitleSlot = styled.div`
   position: relative;
-  /* overflow: hidden; */
   background: var(--grey-200);
+  flex-grow: 0;
 
-  /* display: flex; */
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / span 3;
     grid-row: 2 / span 1;
-    flex-grow: 1;
     box-shadow: ${insetBorder(true, true, false)};
   }
 
   ${mq(Breakpoint.wide)} {
     box-shadow: ${insetBorder(false, true, false)};
-    align-self: stretch;
   }
 `;
 
@@ -164,15 +162,14 @@ const SecondaryMenuSlot = styled.div`
   background: var(--grey-200);
   box-shadow: ${insetBorder(false, true, false, true)};
   border-bottom: 1px solid var(--grey-400);
+  flex-grow: 1;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / span 3;
     grid-row: 3 / -1;
-    flex-grow: 1;
   }
 
   ${mq(Breakpoint.wide)} {
-    flex-grow: 1;
     box-shadow: ${insetBorder(false, true, false)};
   }
 `;
