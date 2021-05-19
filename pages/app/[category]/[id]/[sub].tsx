@@ -13,6 +13,11 @@ import { Button, ButtonSize, IconPosition } from '../../../../components/button'
 import { useT } from '../../../../lib/i18n';
 import Link from 'next/link';
 import { useLocale } from '../../../../lib/routing';
+import styled from '@emotion/styled';
+
+const StyledA = styled.a`
+  text-decoration: none;
+`;
 
 const EntrySubPage: NextPage = () => {
   const router = useRouter();
@@ -42,7 +47,9 @@ const EntrySubPage: NextPage = () => {
 
   const titleBarLink = (
     <Link href={category?.routes.list({ locale })}>
-      <a>{isMidOrWider ? tabletDesktopButton : mobileButton}</a>
+      <StyledA css="text-decoration: none;">
+        {isMidOrWider ? tabletDesktopButton : mobileButton}
+      </StyledA>
     </Link>
   );
 
