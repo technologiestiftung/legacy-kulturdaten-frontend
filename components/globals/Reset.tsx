@@ -132,6 +132,8 @@ export const Reset: React.FC = () => (
       select,
       button {
         box-sizing: border-box;
+        font-family: var(--font-family);
+        font-weight: var(--font-weight-normal);
       }
       html,
       body {

@@ -1,5 +1,6 @@
 import { Global, css, SerializedStyles } from '@emotion/react';
 import { breakpoints, Breakpoint } from '../../lib/WindowService';
+import { fontFamily } from './Typography';
 
 export const CSSVars: React.FC = () => (
   <Global
@@ -37,6 +38,8 @@ export const CSSVars: React.FC = () => (
         --line-height-600: 1.5rem;
         --font-size-700: 1.5rem;
         --line-height-700: 2.25rem;
+
+        --font-family: ${fontFamily}, Helvetica, sans-serif;
 
         --app-height: 100vh;
 

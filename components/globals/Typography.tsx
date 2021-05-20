@@ -1,6 +1,6 @@
 import { Global, css } from '@emotion/react';
 
-const fontFamily = 'IBM Plex Sans';
+export const fontFamily = 'IBM Plex Sans';
 
 export const Typography: React.FC = () => (
   <Global
