@@ -228,7 +228,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const { rendered } = useContext(WindowContext);
   const titleBarRef = useRef<HTMLDivElement>();
   const contentSlotRef = useRef<HTMLDivElement>();
-  useUser();
 
   const hasSecondaryMenu = typeof secondaryMenu !== 'undefined';
 

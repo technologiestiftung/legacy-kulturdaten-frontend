@@ -36,28 +36,6 @@ const StyledTestContentBox = styled.div`
   border-radius: 0.75rem;
 `;
 
-export const NavigationStory: Story = () => {
-  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
-
-  return (
-    <AppLayout
-      mainMenu={mainMenu}
-      content={
-        <StyledTestContent>
-          {[...Array(10)].map((i, index) => (
-            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
-          ))}
-        </StyledTestContent>
-      }
-      titleBar={<TitleBar title="Page Title" />}
-    />
-  );
-};
-NavigationStory.storyName = 'Navigation complete';
-
-export const HeaderStory: Story = () => <Header title="Kulturdaten.Berlin" Link={TestLink} />;
-HeaderStory.storyName = 'Header';
-
 const testMenuStructure = [
   {
     title: 'Start',
@@ -176,6 +154,28 @@ const testMenuStructure = [
     ],
   },
 ];
+
+export const NavigationStory: Story = () => {
+  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+
+  return (
+    <AppLayout
+      mainMenu={mainMenu}
+      content={
+        <StyledTestContent>
+          {[...Array(10)].map((i, index) => (
+            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
+          ))}
+        </StyledTestContent>
+      }
+      titleBar={<TitleBar title="Page Title" />}
+    />
+  );
+};
+NavigationStory.storyName = 'Navigation complete';
+
+export const HeaderStory: Story = () => <Header title="Kulturdaten.Berlin" Link={TestLink} />;
+HeaderStory.storyName = 'Header';
 
 export const MainMenuStory: Story = () => {
   const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
