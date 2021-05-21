@@ -8,7 +8,6 @@ import { insetBorder, mq } from '../globals/Constants';
 import { MainMenuProps, useMainMenuOverlayVisible } from '../navigation/mainMenu/MainMenu';
 import { NavigationContext } from '../navigation/NavigationContext';
 import { TitleBarProps } from '../navigation/TitleBar';
-import { useUser } from '../user/useUser';
 
 const Container = styled.div<{ hasSecondaryMenu?: boolean }>`
   display: grid;

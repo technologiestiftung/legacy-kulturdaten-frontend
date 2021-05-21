@@ -94,6 +94,9 @@ export const OrganizerListPage: React.FC<CategoryPage> = ({ category }: Category
   const table = useOrganizerTable(list);
 
   const { title } = category;
+  const action = category.icon ? <MenuIcon type={category.icon} /> : undefined;
 
-  return <AppWrapper titleBar={<TitleBar title={title.plural} />}>{table}</AppWrapper>;
+  return (
+    <AppWrapper titleBar={<TitleBar title={title.plural} action={action} />}>{table}</AppWrapper>
+  );
 };
