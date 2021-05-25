@@ -50,7 +50,7 @@ export const useOrganizerTable = (
       list
         ? Object.values(list)
             .reverse()
-            .map(({ attributes, id }, index) => {
+            .map(({ attributes, relations, id }, index) => {
               const href = (sub?: string) =>
                 routes[(router?.query?.category as string) as Routes]({
                   locale,
@@ -68,7 +68,7 @@ export const useOrganizerTable = (
                   <StyledTableLinkText key={`${index}-1`} isActive={router.asPath.includes(href())}>
                     {attributes.name}
                   </StyledTableLinkText>,
-                  attributes.address.city,
+                  relations?.address?.attributes?.city,
                 ],
                 Wrapper: ListLink,
               };
