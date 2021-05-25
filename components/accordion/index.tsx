@@ -30,9 +30,7 @@ const accordionContentGrid = css`
 `;
 
 const StyledAccordionItemHead = styled.div`
-  ${accordionContentGrid}
-
-  border-top: 2px solid var(--black);
+  ${accordionContentGrid}/* border-top: 2px solid var(--black); */
 `;
 
 const StyledAccordionItemHeadContainer = styled.div`
@@ -42,14 +40,14 @@ const StyledAccordionItemHeadContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 0.75rem;
-  box-shadow: ${insetBorder(false, true)};
+  box-shadow: ${insetBorder(true, true, false, true)};
 
   ${mq(Breakpoint.mid)} {
-    box-shadow: ${insetBorder(false, true, false, false)};
+    box-shadow: ${insetBorder(true, true, false, false)};
   }
 
   ${mq(Breakpoint.ultra)} {
-    box-shadow: ${insetBorder(false, true)};
+    box-shadow: ${insetBorder(true, true, false, true)};
     grid-column: 2 / -2;
   }
 `;

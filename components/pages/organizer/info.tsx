@@ -19,13 +19,13 @@ const CreateWrapper = styled.div``;
 
 const InfoHead = styled.div`
   background: var(--white);
-  box-shadow: ${insetBorder(false, true, true, true)};
+  box-shadow: ${insetBorder(false, true, false, true)}, 0px 1px 0px var(--grey-400);
   padding: 0.375rem 0;
 
   ${contentGrid(4)}
 
   ${mq(Breakpoint.mid)} {
-    box-shadow: ${insetBorder(false, true, true)};
+    box-shadow: ${insetBorder(false, true, false, false)}, 0px 1px 0px var(--grey-400);
     position: sticky;
     top: 0;
     left: 0;
@@ -73,9 +73,12 @@ const CreateForm = styled.form``;
 
 const FormGrid = styled.div`
   display: grid;
+  grid-row-gap: 1.5rem;
+  grid-column-gap: 1.5rem;
+  padding: 1.5rem 0.75rem;
 
   ${mq(Breakpoint.mid)} {
-    grid-template-columns: 50% 50%;
+    grid-template-columns: 1fr 1fr;
   }
 `;
 
@@ -85,10 +88,10 @@ export enum FormItemWidth {
 }
 
 const FormItem = styled.div<{ width: FormItemWidth }>`
-  padding: 0.75rem;
+  /* padding: 0 0.75rem; */
 
   grid-column: ${({ width }) => (width === FormItemWidth.full ? '1 / -1' : '')};
-  box-shadow: ${insetBorder(true, true, false)};
+  /* box-shadow: ${insetBorder(true, true, false)}; */
 `;
 
 export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
@@ -151,7 +154,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             </Select>
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Select label="Sparte" id="ff1">
+            <Select label="Sparte" id="ff2">
               <option>Geschichte</option>
             </Select>
           </FormItem>
@@ -222,7 +225,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
           }
         }}
       >
-        <Accordion initiallyCollapsed={false} items={items} />
+        <Accordion initiallyCollapsed={true} items={items} />
       </CreateForm>
     </CreateWrapper>
   );
