@@ -30,7 +30,8 @@ const accordionContentGrid = css`
 `;
 
 const StyledAccordionItemHead = styled.div`
-  ${accordionContentGrid}/* border-top: 2px solid var(--black); */
+  ${accordionContentGrid} /* border-top: 2px solid var(--black); */
+  box-shadow: ${insetBorder(true, false, false)};
 `;
 
 const StyledAccordionItemHeadContainer = styled.div`
@@ -38,16 +39,17 @@ const StyledAccordionItemHeadContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
   padding: 0.75rem 0.75rem;
-  box-shadow: ${insetBorder(true, true, false, true)};
+  box-shadow: ${insetBorder(false, true)};
 
   ${mq(Breakpoint.mid)} {
-    box-shadow: ${insetBorder(true, true, false, false)};
+    box-shadow: ${insetBorder(false, true, false, false)};
   }
 
   ${mq(Breakpoint.ultra)} {
-    box-shadow: ${insetBorder(true, true, false, true)};
+    box-shadow: ${insetBorder(false, true)};
     grid-column: 2 / -2;
   }
 `;
@@ -56,6 +58,7 @@ const StyledAccordionItemTitle = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: 700;
+  padding: 0.4375rem 0.75rem 0.4375rem 0;
 `;
 const StyledAccordionItemButton = styled.div``;
 const StyledAccordionItemContent = styled.div`

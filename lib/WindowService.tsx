@@ -33,7 +33,7 @@ export const WindowContextProvider: React.FC<WindowContextProviderProps> = ({
     document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
     setRendered(true);
 
-    window.addEventListener('resize', () => {
+    const computeResize = () => {
       setInnerWidth(window.innerWidth);
       setinnerHeight(window.innerHeight);
 
@@ -46,6 +46,10 @@ export const WindowContextProvider: React.FC<WindowContextProviderProps> = ({
           isWritingAppHeight = false;
         }
       });
+    };
+
+    window.addEventListener('resize', () => {
+      computeResize();
     });
   }, []);
 

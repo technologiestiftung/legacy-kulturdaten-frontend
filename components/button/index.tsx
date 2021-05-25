@@ -87,6 +87,7 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
 
     &:disabled {
       box-shadow: var(--shadow);
+      transform: none;
     }
   `,
   minimal: css`
@@ -105,6 +106,7 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
 
     &:disabled {
       box-shadow: none;
+      transform: none;
     }
   `,
 };
@@ -113,6 +115,7 @@ const StyledButton = styled.button<{
   color: ButtonColor;
   size: ButtonSize;
   variant: ButtonVariant;
+  disabled?: boolean;
 }>`
   margin: 0;
   appearance: none;
@@ -216,6 +219,7 @@ export const Button: React.FC<ButtonProps> = ({
       variant={variant}
       id={id}
       name={name}
+      disabled={disabled}
     >
       <StyledButtonSpan>{children}</StyledButtonSpan>
       {icon && feather[icon] ? (

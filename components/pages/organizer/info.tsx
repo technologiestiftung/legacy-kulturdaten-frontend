@@ -1,4 +1,6 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { SerializedStyles } from '@emotion/utils';
 import { FormEvent, useEffect, useState } from 'react';
 import { mutate as mutateSwr } from 'swr';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
@@ -21,6 +23,8 @@ const InfoHead = styled.div`
   background: var(--white);
   box-shadow: ${insetBorder(false, true, false, true)}, 0px 1px 0px var(--grey-400);
   padding: 0.375rem 0;
+  position: relative;
+  z-index: 1;
 
   ${contentGrid(4)}
 
@@ -76,22 +80,35 @@ const FormGrid = styled.div`
   grid-row-gap: 1.5rem;
   grid-column-gap: 1.5rem;
   padding: 1.5rem 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    grid-template-columns: 1fr 1fr;
-  }
+  grid-template-columns: repeat(4, 1fr);
 `;
 
 export enum FormItemWidth {
+  quarter = 'quarter',
   half = 'half',
   full = 'full',
 }
 
+const formItemWidthMap: { [key in FormItemWidth]: SerializedStyles } = {
+  quarter: css`
+    grid-column: span 2;
+
+    ${mq(Breakpoint.mid)} {
+      grid-column: span 1;
+    }
+  `,
+  half: css`
+    grid-column: span 2;
+  `,
+  full: css`
+    grid-column: span 4;
+  `,
+};
+
 const FormItem = styled.div<{ width: FormItemWidth }>`
   /* padding: 0 0.75rem; */
 
-  grid-column: ${({ width }) => (width === FormItemWidth.full ? '1 / -1' : '')};
-  /* box-shadow: ${insetBorder(true, true, false)}; */
+  ${({ width }) => formItemWidthMap[width]}/* box-shadow: ${insetBorder(true, true, false)}; */
 `;
 
 export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
@@ -123,43 +140,169 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     ? (t('categories.organizer.form.editCancel') as string)
     : (t('categories.organizer.form.edit') as string);
   const editButtonIcon = editing ? 'XOctagon' : 'Edit';
+  const editButtonColor = editing ? ButtonColor.yellow : ButtonColor.blue;
 
   const items = [
     {
-      title: 'Bezeichnung',
+      title: t('categories.organizer.form.name') as string,
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
-            <Input label="Deutsch" type={InputType.text} value=" " />
+            <Input
+              label={t('categories.organizer.form.nameGerman') as string}
+              type={InputType.text}
+              value=" "
+            />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Input label="Englisch" type={InputType.text} value=" " />
+            <Input
+              label={t('categories.organizer.form.nameEnglish') as string}
+              type={InputType.text}
+              value=" "
+            />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Input label="Deutsch: Einfache Sprache" type={InputType.text} value=" " />
+            <Input
+              label={t('categories.organizer.form.nameGermanSimple') as string}
+              type={InputType.text}
+              value=" "
+            />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Input label="Englisch: Einfache Sprache" type={InputType.text} value=" " />
+            <Input
+              label={t('categories.organizer.form.nameEnglishSimple') as string}
+              type={InputType.text}
+              value=" "
+            />
           </FormItem>
         </FormGrid>
       ),
     },
     {
-      title: 'Einordnung',
+      title: t('categories.organizer.form.classification') as string,
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
-            <Select label="Typ" id="ff1">
+            <Select label={t('categories.organizer.form.type') as string} id="ff1">
               <option>Museum</option>
             </Select>
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Select label="Sparte" id="ff2">
+            <Select label={t('categories.organizer.form.subject') as string} id="ff2">
               <option>Geschichte</option>
             </Select>
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input label="Tags" type={InputType.text} value=" " />
+            <Input
+              label={t('categories.organizer.form.tags') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+        </FormGrid>
+      ),
+    },
+    {
+      title: t('categories.organizer.form.description') as string,
+      content: (
+        <FormGrid>
+          <FormItem width={FormItemWidth.full}>
+            <Input
+              label={t('categories.organizer.form.descriptionGerman') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.full}>
+            <Input
+              label={t('categories.organizer.form.descriptionEnglish') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.full}>
+            <Input
+              label={t('categories.organizer.form.descriptionGermanSimple') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.full}>
+            <Input
+              label={t('categories.organizer.form.descriptionEnglishSimple') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+        </FormGrid>
+      ),
+    },
+    {
+      title: t('categories.organizer.form.address') as string,
+      content: (
+        <FormGrid>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.street1') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.street2') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.quarter}>
+            <Input
+              label={t('categories.organizer.form.zipCode') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.quarter}>
+            <Input
+              label={t('categories.organizer.form.city') as string}
+              type={InputType.text}
+              value=" "
+            />
+          </FormItem>
+        </FormGrid>
+      ),
+    },
+    {
+      title: t('categories.organizer.form.contact') as string,
+      content: (
+        <FormGrid>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.tel') as string}
+              type={InputType.tel}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.email') as string}
+              type={InputType.email}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.website') as string}
+              type={InputType.url}
+              value=" "
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.full}>
+            <Input
+              label={t('categories.organizer.form.social') as string}
+              type={InputType.text}
+              value=" "
+            />
           </FormItem>
         </FormGrid>
       ),
@@ -170,7 +313,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     <CreateWrapper>
       <InfoHead>
         <InfoHeadContainer>
-          <InfoH2>Informationen</InfoH2>
+          <InfoH2>{t('categories.organizer.tabs.info')}</InfoH2>
           <InfoHeadButtons>
             <InfoHeadButton>
               <Button
@@ -184,7 +327,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                   setEditing(!editing);
                 }}
                 icon={editButtonIcon}
-                color={ButtonColor.yellow}
+                color={editButtonColor}
               >
                 {editButtonLabel}
               </Button>
@@ -196,6 +339,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                 }}
                 icon="CheckSquare"
                 color={ButtonColor.green}
+                disabled={!editing}
               >
                 {t('categories.organizer.form.save')}
               </Button>
@@ -225,7 +369,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
           }
         }}
       >
-        <Accordion initiallyCollapsed={true} items={items} />
+        <Accordion initiallyCollapsed={false} items={items} />
       </CreateForm>
     </CreateWrapper>
   );
