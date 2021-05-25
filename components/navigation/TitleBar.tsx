@@ -6,7 +6,7 @@ import { insetBorder, contentGrid, mq } from '../globals/Constants';
 const StyledTitleBarContainer = styled.div<{ reversed?: boolean }>`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: ${({ reversed }) => (reversed ? 'row-reverse' : 'row')};
   grid-column: 1 / -1;
 
@@ -56,15 +56,20 @@ const StyledTitleBar = styled.div<{ secondary?: boolean; secondaryPresent?: bool
   }
 `;
 
-const StyledTitle = styled.h1<{ skeleton?: boolean }>`
+const StyledTitle = styled.h1<{ skeleton?: boolean; reversed?: boolean; hasAction?: boolean }>`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
-  padding: 0.75rem 0;
+  padding: ${({ reversed, hasAction }) =>
+    reversed || hasAction ? '0.75rem 0 0.75rem 0.75rem' : '0.75rem 0.75rem 0.75rem 0'};
   order: 1;
+  text-align: ${({ reversed, hasAction }) => (reversed || hasAction ? 'right' : 'inherit')};
 
   ${mq(Breakpoint.mid)} {
     order: 0;
+
+    padding: ${({ reversed }) =>
+      reversed ? '0.75rem 0 0.75rem 0.75rem' : '0.75rem 0.75rem 0.75rem 0'};
   }
 
   ${mq(Breakpoint.ultra)} {
@@ -86,7 +91,9 @@ const StyledTitle = styled.h1<{ skeleton?: boolean }>`
       : ''}
 `;
 
-const StyledAction = styled.div``;
+const StyledAction = styled.div`
+  margin-top: 0.4375rem;
+`;
 
 export interface TitleBarProps {
   title: string;
@@ -105,7 +112,13 @@ export const TitleBar: React.FC<TitleBarProps> = ({
 }: TitleBarProps) => (
   <StyledTitleBar secondary={secondary} secondaryPresent={secondaryPresent}>
     <StyledTitleBarContainer reversed={reversed}>
-      <StyledTitle skeleton={typeof title === 'undefined'}>{title}</StyledTitle>
+      <StyledTitle
+        reversed={reversed}
+        skeleton={typeof title === 'undefined'}
+        hasAction={typeof action !== 'undefined'}
+      >
+        {title}
+      </StyledTitle>
       {action ? <StyledAction>{action}</StyledAction> : ''}
     </StyledTitleBarContainer>
   </StyledTitleBar>

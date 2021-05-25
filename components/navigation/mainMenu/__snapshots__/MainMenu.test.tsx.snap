@@ -540,7 +540,7 @@ exports[`MainMenu renders 1`] = `
                 class="css-1b8cuts-StyledSelectContainer e1vif2fk4"
               >
                 <label
-                  class="css-1lmhznq-StyledLabel e1d1vdpj0"
+                  class="css-1hpw0kl-StyledLabel e1d1vdpj0"
                   for="locale"
                 >
                   Sprache / Language
