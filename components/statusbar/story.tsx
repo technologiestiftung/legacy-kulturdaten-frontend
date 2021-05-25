@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
-import { StatusBar, StatusBarSize, StatusBarVariant} from '.';
+import { StatusBar } from '.';
 
 export default {
   title: 'Status Bar',
@@ -18,20 +18,10 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
 
 export const SelectDefaultStory: Story = () => (
   <StyledTestWrapper>
-    <StatusBar id="statusbar-1" variant={StatusBarVariant.default} size={StatusBarSize.default} label="Label" info="Info">
+    <StatusBar id="statusbar-1" label="Label" info="Info" defaultValue="draft">
       <option value="draft">Option 1</option>
       <option value="published">Option 2</option>
     </StatusBar>
   </StyledTestWrapper>
 );
-SelectDefaultStory.storyName = 'Status Bar size=default variant=default';
-
-export const SelectBigStory: Story = () => (
-  <StyledTestWrapper>
-    <StatusBar id="statusbar-1" variant={StatusBarVariant.minimal} size={StatusBarSize.big} label="Label" info="Info">
-      <option value="draft">Option 1</option>
-      <option value="published">Option 2</option>
-    </StatusBar>
-  </StyledTestWrapper>
-);
-SelectDefaultStory.storyName = 'Status Bar size=big variant=minimal';
+SelectDefaultStory.storyName = 'Status Bar';
