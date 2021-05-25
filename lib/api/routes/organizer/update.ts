@@ -1,4 +1,5 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { Address } from '../../types/address';
 import { Organizer } from '../../types/organizer';
 
 /**
@@ -13,7 +14,12 @@ export interface OrganizerUpdate extends ApiCall {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: Organizer;
+    body: {
+      name: string;
+      address: Address['attributes'];
+      type?: number;
+      subjects?: number[];
+    };
   };
   response: {
     status: 200;
@@ -28,7 +34,15 @@ export interface OrganizerUpdate extends ApiCall {
 
 export const organizerUpdateFactory = (
   token: OrganizerUpdate['request']['headers']['Authorization'],
-  query: { id: string; organizer: Organizer }
+  query: {
+    id: string;
+    organizer: {
+      name: string;
+      address: Address['attributes'];
+      type?: number;
+      subjects?: number[];
+    };
+  }
 ): OrganizerUpdate => ({
   request: {
     route: apiRoutes.organizerUpdate({ id: query.id }),
@@ -37,7 +51,7 @@ export const organizerUpdateFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.organizer,
+    body: { ...query.organizer, type: 1, subjects: [1] },
   },
   response: {
     status: 200,

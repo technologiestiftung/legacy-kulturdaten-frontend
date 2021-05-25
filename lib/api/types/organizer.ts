@@ -7,6 +7,8 @@ export type Organizer = {
     name: string;
     createdAt: string;
     updatedAt: string;
-    address: Address;
+  };
+  relations: {
+    address?: Address;
   };
 };

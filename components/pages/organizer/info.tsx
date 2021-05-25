@@ -4,6 +4,7 @@ import { mutate as mutateSwr } from 'swr';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
+import { Address } from '../../../lib/api/types/address';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -98,11 +99,21 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   const call = useApiCall();
   const t = useT();
 
-  const [formState, setFormState] = useState<Organizer['attributes']>(entry?.attributes);
+  const [formState, setFormState] = useState<{ name: string; address: Address['attributes'] }>({
+    name: entry?.attributes.name,
+    address: entry?.relations.address.attributes,
+  });
   const [editing, setEditing] = useState<boolean>(false);
 
   useEffect(() => {
-    setFormState(entry?.attributes);
+    setFormState(
+      entry
+        ? {
+            name: entry.attributes.name,
+            address: entry.relations.address.attributes,
+          }
+        : undefined
+    );
   }, [entry]);
 
   const editButtonLabel = editing
@@ -162,7 +173,10 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               <Button
                 onClick={() => {
                   if (editing) {
-                    setFormState(entry?.attributes);
+                    setFormState({
+                      name: entry?.attributes.name,
+                      address: entry?.relations.address.attributes,
+                    });
                   }
                   setEditing(!editing);
                 }}
@@ -199,18 +213,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             });
 
             if (resp.status === 200) {
-              mutate(
-                {
-                  status: 200,
-                  body: {
-                    data: {
-                      ...entry,
-                      attributes: formState,
-                    },
-                  },
-                },
-                false
-              );
+              mutate();
               mutateSwr(getApiUrlString(category.api.list.route));
               setEditing(false);
             }
