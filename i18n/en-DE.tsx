@@ -58,8 +58,8 @@ export const enDE: Localization = {
         city: () => 'City',
         submit: () => 'create',
         save: () => 'save',
-        edit: () => 'edit information',
-        editCancel: () => 'cancel editing',
+        edit: () => 'edit',
+        editCancel: () => 'cancel',
       },
       tabs: {
         overview: () => 'Overview',

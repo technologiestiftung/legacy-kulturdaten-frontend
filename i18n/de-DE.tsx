@@ -58,8 +58,8 @@ export const deDE: Localization = {
         city: () => 'Stadt',
         submit: () => 'anlegen',
         save: () => 'speichern',
-        edit: () => 'Informationen bearbeiten',
-        editCancel: () => 'Bearbeitung abbrechen',
+        edit: () => 'bearbeiten',
+        editCancel: () => 'abbrechen',
       },
       tabs: {
         overview: () => 'Übersicht',

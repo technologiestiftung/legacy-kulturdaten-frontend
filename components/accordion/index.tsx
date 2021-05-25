@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
-import { Button } from '../button';
+import { Button, ButtonVariant } from '../button';
 import { useCollapsable } from '../collapsable';
 import { contentGrid, insetBorder, mq } from '../globals/Constants';
 
@@ -25,7 +25,7 @@ const accordionContentGrid = css`
   }
 
   ${mq(Breakpoint.wide)} {
-    ${contentGrid(10)}
+    ${contentGrid(8)}
   }
 `;
 
@@ -45,7 +45,11 @@ const StyledAccordionItemHeadContainer = styled.div`
   box-shadow: ${insetBorder(false, true)};
 
   ${mq(Breakpoint.mid)} {
-    padding: 0.75rem 1.5rem;
+    box-shadow: ${insetBorder(false, true, false, false)};
+  }
+
+  ${mq(Breakpoint.ultra)} {
+    box-shadow: ${insetBorder(false, true)};
     grid-column: 2 / -2;
   }
 `;
@@ -65,6 +69,11 @@ const StyledAccordionItemContentContainer = styled.div`
   box-shadow: ${insetBorder(false, true)};
 
   ${mq(Breakpoint.mid)} {
+    box-shadow: ${insetBorder(false, true, false, false)};
+  }
+
+  ${mq(Breakpoint.ultra)} {
+    box-shadow: ${insetBorder(false, true)};
     grid-column: 2 / -2;
   }
 `;
@@ -72,10 +81,15 @@ const StyledAccordionItemContentContainer = styled.div`
 interface AccordionItemProps {
   title: string;
   content: React.ReactNode;
+  initiallyCollapsed?: boolean;
 }
 
-const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }: AccordionItemProps) => {
-  const { Collapsable, isCollapsed, setIsCollapsed } = useCollapsable(true);
+const AccordionItem: React.FC<AccordionItemProps> = ({
+  title,
+  content,
+  initiallyCollapsed,
+}: AccordionItemProps) => {
+  const { Collapsable, isCollapsed, setIsCollapsed } = useCollapsable(initiallyCollapsed);
   const t = useT();
 
   const buttonLabel = isCollapsed ? t('accordion.open') : t('accordion.close');
@@ -87,7 +101,11 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }: Accordi
         <StyledAccordionItemHeadContainer>
           <StyledAccordionItemTitle>{title}</StyledAccordionItemTitle>
           <StyledAccordionItemButton>
-            <Button onClick={() => setIsCollapsed(!isCollapsed)} icon={buttonIcon}>
+            <Button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              icon={buttonIcon}
+              variant={ButtonVariant.minimal}
+            >
               {buttonLabel}
             </Button>
           </StyledAccordionItemButton>
@@ -104,12 +122,16 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ title, content }: Accordi
 
 interface AccordionProps {
   items: AccordionItemProps[];
+  initiallyCollapsed?: boolean;
 }
 
-export const Accordion: React.FC<AccordionProps> = ({ items }: AccordionProps) => (
+export const Accordion: React.FC<AccordionProps> = ({
+  items,
+  initiallyCollapsed = true,
+}: AccordionProps) => (
   <StyledAccordion>
     {items.map((item, index) => (
-      <AccordionItem {...item} key={index} />
+      <AccordionItem {...item} key={index} initiallyCollapsed={initiallyCollapsed} />
     ))}
   </StyledAccordion>
 );

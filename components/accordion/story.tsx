@@ -7,6 +7,7 @@ export default {
 
 export const AccordionDefaultStory: Story = () => (
   <Accordion
+    initiallyCollapsed={true}
     items={[
       {
         title: 'Accordion item 1',

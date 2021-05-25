@@ -56,7 +56,7 @@ const EntrySubPage: NextPage = () => {
   if (category) {
     return (
       <AppWrapper
-        titleBar={<TitleBar title={title} action={titleBarLink} />}
+        titleBar={<TitleBar title={title} action={titleBarLink} secondaryPresent={true} />}
         secondaryMenu={secMenu}
       >
         {tabs}

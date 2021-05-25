@@ -8,10 +8,14 @@ const StyledTitleBarContainer = styled.div<{ reversed?: boolean }>`
   justify-content: space-between;
   align-items: center;
   flex-direction: ${({ reversed }) => (reversed ? 'row-reverse' : 'row')};
-  grid-column: 2 / -2;
+  grid-column: 1 / -1;
+
+  ${mq(Breakpoint.ultra)} {
+    grid-column: 2 / -2;
+  }
 `;
 
-const StyledTitleBar = styled.div<{ secondary?: boolean }>`
+const StyledTitleBar = styled.div<{ secondary?: boolean; secondaryPresent?: boolean }>`
   background: ${({ secondary }) => (secondary ? 'var(--grey-200)' : 'var(--white)')};
   box-shadow: ${insetBorder(false, true, true, true)};
   padding: 0 0.75rem;
@@ -28,15 +32,27 @@ const StyledTitleBar = styled.div<{ secondary?: boolean }>`
   }
 
   ${mq(Breakpoint.wide)} {
-    ${({ secondary }) =>
-      !secondary
+    ${({ secondary, secondaryPresent }) =>
+      !secondary && secondaryPresent
         ? css`
-            padding: 0;
+            ${contentGrid(8)}
+          `
+        : !secondary
+        ? css`
             ${contentGrid(10)}
           `
         : css`
             box-shadow: ${insetBorder(true, true, true)};
           `}
+  }
+
+  ${mq(Breakpoint.ultra)} {
+    ${({ secondary }) =>
+      !secondary
+        ? css`
+            padding: 0;
+          `
+        : ''}
   }
 `;
 
@@ -51,9 +67,8 @@ const StyledTitle = styled.h1<{ skeleton?: boolean }>`
     order: 0;
   }
 
-  ${mq(Breakpoint.wide)} {
+  ${mq(Breakpoint.ultra)} {
     order: 0;
-    grid-column: 2 / -2;
   }
 
   ${({ skeleton }) =>
@@ -77,6 +92,7 @@ export interface TitleBarProps {
   title: string;
   action?: React.ReactElement;
   secondary?: boolean;
+  secondaryPresent?: boolean;
   reversed?: boolean;
 }
 
@@ -84,9 +100,10 @@ export const TitleBar: React.FC<TitleBarProps> = ({
   title,
   action,
   secondary,
+  secondaryPresent,
   reversed,
 }: TitleBarProps) => (
-  <StyledTitleBar secondary={secondary}>
+  <StyledTitleBar secondary={secondary} secondaryPresent={secondaryPresent}>
     <StyledTitleBarContainer reversed={reversed}>
       <StyledTitle skeleton={typeof title === 'undefined'}>{title}</StyledTitle>
       {action ? <StyledAction>{action}</StyledAction> : ''}

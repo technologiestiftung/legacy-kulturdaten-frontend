@@ -40,11 +40,7 @@ const EntryContent = styled.div`
 const EntryContainer = styled.div`
   ${contentGrid(4)}
   ${mq(Breakpoint.mid)} {
-    ${contentGrid(11)}
-  }
-
-  ${mq(Breakpoint.wide)} {
-    ${contentGrid(10)}
+    ${contentGrid(8)}
   }
 `;
 
