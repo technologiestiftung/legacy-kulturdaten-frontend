@@ -4,6 +4,10 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  accordion: {
+    open: () => 'ausklappen',
+    close: () => 'einklappen',
+  },
   forms: {
     required: () => 'Pflichtfeld',
     errors: {

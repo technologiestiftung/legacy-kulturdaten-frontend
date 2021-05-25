@@ -4,6 +4,10 @@ export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
   },
+  accordion: {
+    open: () => 'expand',
+    close: () => 'collapse',
+  },
   forms: {
     required: () => 'required',
     errors: {
