@@ -46,6 +46,7 @@ export const CSSVars: React.FC = () => (
         --app-height: 100vh;
 
         --transition-duration: 0.125s;
+        --transition-duration-fast: 0.03125s;
 
         --shadow: 2px 2px 10px -4px var(--black-o70);
         --shadow-hover: 2px 2px 12px -2px var(--black-o70);
