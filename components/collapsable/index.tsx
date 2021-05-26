@@ -39,17 +39,18 @@ export const Collapsable: React.FC<CollapsableProps> = ({
 };
 
 export const useCollapsable = (
+  children: React.ReactNode,
   initiallyCollapsed: boolean
 ): {
-  Collapsable: React.FC<WrappedCollapsableProps>;
+  renderedCollapsable: React.ReactElement;
   isCollapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
 } => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(initiallyCollapsed);
 
-  const WrappedCollapsable: React.FC<WrappedCollapsableProps> = ({
-    children,
-  }: WrappedCollapsableProps) => <Collapsable isCollapsed={isCollapsed}>{children}</Collapsable>;
-
-  return { Collapsable: WrappedCollapsable, isCollapsed, setIsCollapsed };
+  return {
+    renderedCollapsable: <Collapsable isCollapsed={isCollapsed}>{children}</Collapsable>,
+    isCollapsed,
+    setIsCollapsed,
+  };
 };

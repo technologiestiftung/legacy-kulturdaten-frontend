@@ -40,7 +40,7 @@ const StyledAccordionItemHeadContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding: 0.75rem 0.75rem;
   box-shadow: ${insetBorder(false, true)};
 
@@ -90,7 +90,10 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   content,
   initiallyCollapsed,
 }: AccordionItemProps) => {
-  const { Collapsable, isCollapsed, setIsCollapsed } = useCollapsable(initiallyCollapsed);
+  const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
+    content,
+    initiallyCollapsed
+  );
   const t = useT();
 
   const buttonLabel = isCollapsed ? t('accordion.open') : t('accordion.close');
@@ -114,7 +117,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
       </StyledAccordionItemHead>
       <StyledAccordionItemContent>
         <StyledAccordionItemContentContainer>
-          <Collapsable>{content}</Collapsable>
+          {renderedCollapsable}
         </StyledAccordionItemContentContainer>
       </StyledAccordionItemContent>
     </StyledAccordionItem>
