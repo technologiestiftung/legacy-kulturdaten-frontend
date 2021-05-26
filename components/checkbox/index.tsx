@@ -12,10 +12,11 @@ const StyledCheckboxInput = styled.input`
   width: var(--line-height-300);
   height: var(--line-height-300);
   background: var(--white);
-  box-shadow: inset 0px 0px 0px 1px var(--black), 0.0625rem 0.0625rem 0.25rem var(--black-o25);
+  box-shadow: 0.0625rem 0.0625rem 0.25rem var(--black-o25);
+  border: 1px solid var(--black);
   border-radius: 0.375rem;
   padding: 0;
-  transition: box-shadow var(--transition-duration);
+  transition: border var(--transition-duration);
   cursor: inherit;
 `;
 
@@ -25,7 +26,7 @@ const StyledCheckbox = styled.div`
 
   &:hover {
     ${StyledCheckboxInput} {
-      box-shadow: inset 0px 0px 0px 2px var(--black), 0.0625rem 0.0625rem 0.25rem var(--black-o25);
+      border: 2px solid var(--black);
     }
   }
 `;
