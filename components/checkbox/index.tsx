@@ -32,6 +32,8 @@ const StyledCheckbox = styled.div`
 
 const StyledCheckboxInputContainer = styled.div`
   position: relative;
+  width: var(--line-height-300);
+  height: var(--line-height-300);
 `;
 
 const StyledCheckboxInputCheck = styled.div<{ checked?: boolean }>`
