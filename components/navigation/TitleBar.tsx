@@ -92,7 +92,10 @@ const StyledTitle = styled.h1<{ skeleton?: boolean; reversed?: boolean; hasActio
 `;
 
 const StyledAction = styled.div`
-  margin-top: 0.4375rem;
+  height: 2.25rem;
+  margin-top: 0.375rem;
+  display: flex;
+  align-items: center;
 `;
 
 export interface TitleBarProps {
