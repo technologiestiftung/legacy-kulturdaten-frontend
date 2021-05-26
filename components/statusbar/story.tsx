@@ -16,7 +16,7 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
   color: ${({ color }) => (color ? color : '')};
 `;
 
-export const SelectDefaultStory: Story = () => (
+export const StatusBarStory: Story = () => (
   <StyledTestWrapper>
     <StatusBar id="statusbar-1" label="Label" info="Info" defaultValue="draft">
       <option value="draft">Option 1</option>
@@ -24,4 +24,4 @@ export const SelectDefaultStory: Story = () => (
     </StatusBar>
   </StyledTestWrapper>
 );
-SelectDefaultStory.storyName = 'Status Bar';
+StatusBarStory.storyName = 'Status Bar';

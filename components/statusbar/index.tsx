@@ -4,8 +4,6 @@ import { mq } from '../globals/Constants';
 import React, { ChangeEvent, useState } from 'react';
 import * as feather from 'react-feather';
 
-import { Label, StyledLabel } from '../label';
-
 export enum StatusBarState {
   draft = 'draft',
   published = 'published',
@@ -24,6 +22,25 @@ const statusBarStates: {
   }),
 };
 
+const StatusBarLabel = styled.label`
+  width: 100%;
+  border-radius: 0.75rem 0.75rem 0 0;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+  padding: 0.375rem 0.75rem 0.375rem 0.75rem;
+  text-transform: none;
+  border-width: 0;
+  background-color: var(--grey-200);
+
+  ${mq(Breakpoint.mid)} {
+    width: auto;
+    flex-direction: row;
+    border: 1px solid var(--black);
+    border-radius: 0.75rem 0 0 0.75rem;
+  }
+`;
+
 const StyledStatusBarContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,21 +53,6 @@ const StyledStatusBarContainer = styled.div`
     border-width: 0;
     border-radius: 0;
   }
-
-  ${StyledLabel} {
-    font-size: var(--font-size-400);
-    line-height: var(--line-height-400);
-    padding: 0.375rem 0.75rem 0.375rem 0.75rem;
-    text-transform: none;
-    border-width: 0;
-    background-color: var(--grey-200);
-
-    ${mq(Breakpoint.mid)} {
-      flex-direction: row;
-      border: 1px solid var(--black);
-      border-radius: 0.75rem 0 0 0.75rem;
-    }
-  }
 `;
 
 const StyledStatusBarInfo = styled.div`
@@ -58,8 +60,8 @@ const StyledStatusBarInfo = styled.div`
   border-right-width: 0;
   border-left-width: 0;
   background-color: var(--grey-200);
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
   padding: 0.375rem 0.75rem 0.375rem 0.75rem;
   position: relative;
   padding-right: 0.75rem;
@@ -75,16 +77,17 @@ const StyledSelect = styled.select<{
 }>`
   margin: 0;
   appearance: none;
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-  padding: 0.375rem 3.375rem 0.375rem 0.75rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  padding: 0.375rem 3rem 0.375rem 0.75rem;
   position: relative;
   width: 100%;
   cursor: pointer;
   font-weight: 700;
-  text-transform: uppercase;
   border-width: 0;
   border-radius: 0 0 0.75rem 0.75rem;
+  flex-grow: 0;
+  flex-shrink: 0;
 
   ${mq(Breakpoint.mid)} {
     border: 1px solid var(--black);
@@ -97,29 +100,32 @@ const StyledSelect = styled.select<{
 const StyledSelectChevron = styled.div`
   pointer-events: none;
   position: absolute;
-  left: 0.75rem;
+  left: 0.5625rem;
   top: 0;
-  height: 2.25rem;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  right: 0.75rem;
+  right: 0.625rem;
   left: initial;
-  padding-left: 0.75rem;
+  padding-left: 0.5625rem;
   border-left: 1px solid var(--black);
+
+  svg {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 `;
 
 const StyledSelectAndChevron = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  flex-shrink: 0;
 `;
-
-const statusBarStateMap: { [key in StatusBarState]: string } = {
-  draft: 'draft',
-  published: 'published',
-};
 
 interface StatusBarProps {
   children: React.ReactNode;
@@ -137,7 +143,6 @@ export const StatusBar: React.FC<StatusBarProps> = ({
   children,
   id,
   value,
-  statusBarState,
   onChange,
   label,
   info,
@@ -149,7 +154,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
 
   return (
     <StyledStatusBarContainer>
-      {label && <Label htmlFor={id}>{label}</Label>}
+      {label && <StatusBarLabel htmlFor={id}>{label}</StatusBarLabel>}
       <StyledStatusBarInfo>{info}</StyledStatusBarInfo>
       <StyledSelectAndChevron>
         <StyledSelect
@@ -166,7 +171,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           {children}
         </StyledSelect>
         <StyledSelectChevron>
-          {React.createElement(feather.ChevronDown, { size: 18 })}
+          {React.createElement(feather.ChevronDown, { color: 'var(--black)' })}
         </StyledSelectChevron>
       </StyledSelectAndChevron>
     </StyledStatusBarContainer>
