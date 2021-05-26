@@ -12,9 +12,10 @@ import { useT } from '../../../lib/i18n';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Accordion } from '../../accordion';
 import { Button, ButtonColor } from '../../button';
+import { Checkbox } from '../../checkbox';
+import { CheckboxList } from '../../checkbox/CheckboxList';
 import { contentGrid, insetBorder, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
-import { Label } from '../../label';
 import { Select } from '../../select';
 
 const CreateWrapper = styled.div``;
@@ -125,11 +126,12 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const organizerTypes = useOrganizerTypeList();
 
+  const [chosenSubjects, setChosenSubjects] = useState<{ [key: string]: string[] }>();
   const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>({
     name: entry?.attributes.name,
     address: entry?.relations?.address?.attributes,
     type: String(entry?.relations?.type?.id),
-    subjects: entry?.relations?.subjects?.map((subject) => subject.id),
+    subjects: entry?.relations?.subjects?.map((subject) => subject.id) || [],
   });
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -203,7 +205,16 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               label={t('categories.organizer.form.type') as string}
               id="ff1"
               value={formState?.type}
-              onChange={(e) => setFormState({ ...formState, type: String(e.target.value) })}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  type: String(e.target.value),
+                  subjects:
+                    chosenSubjects && chosenSubjects[String(e.target.value)]
+                      ? chosenSubjects[String(e.target.value)]
+                      : [],
+                })
+              }
             >
               {typeof formState?.type === 'undefined' && <option>Please choose</option>}
               {organizerTypes?.map((type, index) => (
@@ -214,15 +225,37 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             </Select>
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Label>{t('categories.organizer.form.subjects')}</Label>
-            {/* <pre>{JSON.stringify(organizerTypes, null, 2)}</pre> */}
-            <ul>
+            <CheckboxList label={t('categories.organizer.form.subjects') as string}>
               {organizerSubjects
                 ? organizerSubjects.map((subject, index) => (
-                    <li key={index}>{subject.attributes.name}</li>
+                    <Checkbox
+                      key={index}
+                      id={`ofs-${index}`}
+                      label={subject.attributes.name}
+                      checked={
+                        chosenSubjects &&
+                        chosenSubjects[formState?.type]?.includes(String(subject.id))
+                      }
+                      onChange={(e) => {
+                        const cleanSubjects =
+                          chosenSubjects && chosenSubjects[formState?.type]
+                            ? chosenSubjects[formState?.type].filter(
+                                (id) => id !== String(subject.id)
+                              )
+                            : [];
+                        if (e.target.checked) {
+                          const newSubjects = cleanSubjects.concat([String(subject.id)]);
+                          setChosenSubjects({ ...chosenSubjects, [formState.type]: newSubjects });
+                          setFormState({ ...formState, subjects: newSubjects });
+                        } else {
+                          setChosenSubjects({ ...chosenSubjects, [formState.type]: cleanSubjects });
+                          setFormState({ ...formState, subjects: cleanSubjects });
+                        }
+                      }}
+                    />
                   ))
-                : ''}
-            </ul>
+                : undefined}
+            </CheckboxList>
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input label={t('categories.organizer.form.tags') as string} type={InputType.text} />
@@ -366,8 +399,21 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             </InfoHeadButton>
             <InfoHeadButton>
               <Button
-                onClick={() => {
-                  console.log('save');
+                onClick={async () => {
+                  try {
+                    const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+                      organizer: formState,
+                      id: entry.id,
+                    });
+
+                    if (resp.status === 200) {
+                      mutate();
+                      mutateSwr(getApiUrlString(category.api.list.route));
+                      setEditing(false);
+                    }
+                  } catch (e) {
+                    console.error(e);
+                  }
                 }}
                 icon="CheckSquare"
                 color={ButtonColor.green}
@@ -384,21 +430,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
         onSubmit={async (e: FormEvent) => {
           e.preventDefault();
           e.stopPropagation();
-
-          try {
-            const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-              organizer: formState,
-              id: entry.id,
-            });
-
-            if (resp.status === 200) {
-              mutate();
-              mutateSwr(getApiUrlString(category.api.list.route));
-              setEditing(false);
-            }
-          } catch (e) {
-            console.error(e);
-          }
         }}
       >
         <Accordion initiallyCollapsed={false} items={items} />
