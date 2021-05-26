@@ -17,8 +17,8 @@ export interface OrganizerUpdate extends ApiCall {
     body: {
       name: string;
       address: Address['attributes'];
-      type?: number;
-      subjects?: number[];
+      type?: string;
+      subjects?: string[];
     };
   };
   response: {
@@ -51,7 +51,7 @@ export const organizerUpdateFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: { ...query.organizer, type: 1, subjects: [1] },
+    body: { ...query.organizer, type: '1', subjects: ['1'] },
   },
   response: {
     status: 200,

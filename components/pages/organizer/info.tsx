@@ -6,15 +6,15 @@ import { mutate as mutateSwr } from 'swr';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
-import { Address } from '../../../lib/api/types/address';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { CategoryEntryPage, useEntry } from '../../../lib/categories';
+import { CategoryEntryPage, useEntry, useOrganizerTypeList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Accordion } from '../../accordion';
 import { Button, ButtonColor } from '../../button';
 import { contentGrid, insetBorder, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
+import { Label } from '../../label';
 import { Select } from '../../select';
 
 const CreateWrapper = styled.div``;
@@ -98,7 +98,11 @@ const formItemWidthMap: { [key in FormItemWidth]: SerializedStyles } = {
     }
   `,
   half: css`
-    grid-column: span 2;
+    grid-column: span 4;
+
+    ${mq(Breakpoint.mid)} {
+      grid-column: span 2;
+    }
   `,
   full: css`
     grid-column: span 4;
@@ -119,9 +123,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   const call = useApiCall();
   const t = useT();
 
-  const [formState, setFormState] = useState<{ name: string; address: Address['attributes'] }>({
+  const organizerTypes = useOrganizerTypeList();
+
+  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>({
     name: entry?.attributes.name,
-    address: entry?.relations.address.attributes,
+    address: entry?.relations?.address?.attributes,
+    type: String(entry?.relations?.type?.id),
+    subjects: entry?.relations?.subjects?.map((subject) => subject.id),
   });
   const [editing, setEditing] = useState<boolean>(false);
 
@@ -142,6 +150,10 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   const editButtonIcon = editing ? 'XOctagon' : 'Edit';
   const editButtonColor = editing ? ButtonColor.yellow : ButtonColor.blue;
 
+  const organizerSubjects = formState?.type
+    ? organizerTypes?.find((type) => String(type.id) === formState.type)?.relations?.subjects
+    : undefined;
+
   const items = [
     {
       title: t('categories.organizer.form.name') as string,
@@ -151,28 +163,32 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <Input
               label={t('categories.organizer.form.nameGerman') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.name || ''}
+              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
             <Input
               label={t('categories.organizer.form.nameEnglish') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.name || ''}
+              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
             <Input
               label={t('categories.organizer.form.nameGermanSimple') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.name || ''}
+              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
             <Input
               label={t('categories.organizer.form.nameEnglishSimple') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.name || ''}
+              onChange={(e) => setFormState({ ...formState, name: e.target.value })}
             />
           </FormItem>
         </FormGrid>
@@ -183,21 +199,33 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
-            <Select label={t('categories.organizer.form.type') as string} id="ff1">
-              <option>Museum</option>
+            <Select
+              label={t('categories.organizer.form.type') as string}
+              id="ff1"
+              value={formState?.type}
+              onChange={(e) => setFormState({ ...formState, type: String(e.target.value) })}
+            >
+              {typeof formState?.type === 'undefined' && <option>Please choose</option>}
+              {organizerTypes?.map((type, index) => (
+                <option key={index} value={String(type.id)}>
+                  {type.attributes.name}
+                </option>
+              ))}
             </Select>
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Select label={t('categories.organizer.form.subject') as string} id="ff2">
-              <option>Geschichte</option>
-            </Select>
+            <Label>{t('categories.organizer.form.subjects')}</Label>
+            {/* <pre>{JSON.stringify(organizerTypes, null, 2)}</pre> */}
+            <ul>
+              {organizerSubjects
+                ? organizerSubjects.map((subject, index) => (
+                    <li key={index}>{subject.attributes.name}</li>
+                  ))
+                : ''}
+            </ul>
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input
-              label={t('categories.organizer.form.tags') as string}
-              type={InputType.text}
-              value=" "
-            />
+            <Input label={t('categories.organizer.form.tags') as string} type={InputType.text} />
           </FormItem>
         </FormGrid>
       ),
@@ -210,28 +238,24 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <Input
               label={t('categories.organizer.form.descriptionGerman') as string}
               type={InputType.text}
-              value=" "
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
               label={t('categories.organizer.form.descriptionEnglish') as string}
               type={InputType.text}
-              value=" "
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
               label={t('categories.organizer.form.descriptionGermanSimple') as string}
               type={InputType.text}
-              value=" "
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
               label={t('categories.organizer.form.descriptionEnglishSimple') as string}
               type={InputType.text}
-              value=" "
             />
           </FormItem>
         </FormGrid>
@@ -245,28 +269,52 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <Input
               label={t('categories.organizer.form.street1') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.address?.street1 || ''}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  address: { ...formState?.address, street1: e.target.value },
+                })
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
             <Input
               label={t('categories.organizer.form.street2') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.address?.street2 || ''}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  address: { ...formState?.address, street2: e.target.value },
+                })
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter}>
             <Input
               label={t('categories.organizer.form.zipCode') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.address?.zipCode || ''}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  address: { ...formState?.address, zipCode: e.target.value },
+                })
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter}>
             <Input
               label={t('categories.organizer.form.city') as string}
               type={InputType.text}
-              value=" "
+              value={formState?.address?.city || ''}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  address: { ...formState?.address, city: e.target.value },
+                })
+              }
             />
           </FormItem>
         </FormGrid>
@@ -277,32 +325,16 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
-            <Input
-              label={t('categories.organizer.form.tel') as string}
-              type={InputType.tel}
-              value=" "
-            />
+            <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Input
-              label={t('categories.organizer.form.email') as string}
-              type={InputType.email}
-              value=" "
-            />
+            <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Input
-              label={t('categories.organizer.form.website') as string}
-              type={InputType.url}
-              value=" "
-            />
+            <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input
-              label={t('categories.organizer.form.social') as string}
-              type={InputType.text}
-              value=" "
-            />
+            <Input label={t('categories.organizer.form.social') as string} type={InputType.text} />
           </FormItem>
         </FormGrid>
       ),

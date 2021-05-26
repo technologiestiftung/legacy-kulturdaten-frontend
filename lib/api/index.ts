@@ -48,6 +48,7 @@ export enum ApiRoutes {
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
   organizerDelete = 'organizerDelete',
+  organizerTypeList = 'organizerTypeList',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -65,6 +66,7 @@ export const apiRoutes: {
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerTypeList: () => `/${apiVersion}/organizerType`,
 };
 
 /**

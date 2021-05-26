@@ -7,6 +7,8 @@ import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { TitleBarProps } from '../components/navigation/TitleBar';
 import { Categories, useCategories } from '../config/categories';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
+import { OrganizerType } from './api/types/organizer';
 import { Route, useLocale } from './routing';
 
 export type categoryApi = {
@@ -139,4 +141,16 @@ export const useCategoryMenu = (
   const categoryMenu = category.menuFactory(category, list);
 
   return categoryMenu;
+};
+
+export const useOrganizerTypeList = (): OrganizerType[] => {
+  const call = useApiCall();
+
+  const { data } = useSWR(
+    getApiUrlString(ApiRoutes.organizerTypeList),
+    () => call<OrganizerTypeList>(organizerTypeListFactory),
+    { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
+  );
+
+  return data?.body?.data;
 };
