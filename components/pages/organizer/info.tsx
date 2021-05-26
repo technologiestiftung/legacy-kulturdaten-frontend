@@ -126,12 +126,16 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const organizerTypes = useOrganizerTypeList();
 
-  const [chosenSubjects, setChosenSubjects] = useState<{ [key: string]: string[] }>();
+  const initialSubjects = entry?.relations?.subjects?.map((subject) => subject.id) || [];
+
+  const [chosenSubjects, setChosenSubjects] = useState<{ [key: string]: string[] }>(
+    entry?.relations?.type ? { [String(entry.relations.type.id)]: initialSubjects } : undefined
+  );
   const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>({
     name: entry?.attributes.name,
     address: entry?.relations?.address?.attributes,
     type: String(entry?.relations?.type?.id),
-    subjects: entry?.relations?.subjects?.map((subject) => subject.id) || [],
+    subjects: initialSubjects,
   });
   const [editing, setEditing] = useState<boolean>(false);
 
