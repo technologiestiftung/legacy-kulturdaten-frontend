@@ -28,7 +28,7 @@ export const CSSVars: React.FC = () => (
 
         --font-weight-normal: 500;
         --font-weight-bold: 700;
-        --font-size-200: 0.75rem;
+        --font-size-200: 0.8125rem;
         --line-height-200: 1.5rem;
         --font-size-300: 0.875rem;
         --line-height-300: 1.5rem;
