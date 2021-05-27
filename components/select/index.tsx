@@ -70,6 +70,7 @@ const selectVariants: {
       color: var(--black);
       cursor: not-allowed;
       border-color: var(--grey-350);
+      opacity: 1;
 
       &:hover {
         box-shadow: none;
@@ -93,6 +94,7 @@ const selectVariants: {
       color: var(--black);
       cursor: not-allowed;
       border-color: var(--grey-350);
+      opacity: 1;
 
       &:hover {
         box-shadow: none;
@@ -158,10 +160,8 @@ interface SelectProps {
   icon?: string;
   ariaLabel?: string;
   disabled?: boolean;
-  placeholder?: {
-    text: string;
-    value: string | number;
-  };
+  placeholder?: string;
+  required?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -177,6 +177,7 @@ export const Select: React.FC<SelectProps> = ({
   ariaLabel,
   disabled,
   placeholder,
+  required,
 }: SelectProps) => {
   const internalState = useState<string>(defaultValue);
   const valueState = value || internalState[0];
@@ -198,8 +199,13 @@ export const Select: React.FC<SelectProps> = ({
           }
           withIcon={typeof icon !== 'undefined'}
           disabled={disabled}
+          required={required}
         >
-          {placeholder && <option value={placeholder.value}>{placeholder.text}</option>}
+          {placeholder && (
+            <option value="" selected={!valueState || valueState.length === 0}>
+              {placeholder}
+            </option>
+          )}
           {children}
         </StyledSelect>
         {icon && feather[icon] && (

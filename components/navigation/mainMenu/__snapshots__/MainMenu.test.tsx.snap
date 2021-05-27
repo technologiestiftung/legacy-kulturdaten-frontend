@@ -482,6 +482,7 @@ exports[`MainMenu renders 1`] = `
               <button
                 class="css-1kl8j2k-StyledButton-minimal e1asxjmr2"
                 color="default"
+                type="button"
               >
                 <span
                   class="css-1ts8fox-StyledButtonSpan e1asxjmr1"
@@ -550,7 +551,7 @@ exports[`MainMenu renders 1`] = `
                 >
                   <select
                     aria-label="Sprache wählen, choose Language"
-                    class="css-1ih812l-StyledSelect-minimal e1vif2fk3"
+                    class="css-1q8awnz-StyledSelect-minimal e1vif2fk3"
                     id="locale"
                   >
                     <option

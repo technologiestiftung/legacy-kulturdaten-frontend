@@ -11,7 +11,7 @@ import { CategoryEntryPage, useEntry, useOrganizerTypeList } from '../../../lib/
 import { useT } from '../../../lib/i18n';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Accordion } from '../../accordion';
-import { Button, ButtonColor } from '../../button';
+import { Button, ButtonColor, ButtonType } from '../../button';
 import { Checkbox } from '../../checkbox';
 import { CheckboxList } from '../../checkbox/CheckboxList';
 import { contentGrid, insetBorder, mq } from '../../globals/Constants';
@@ -139,7 +139,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   const initialFormState = {
     name: entry?.attributes.name,
     address: entry?.relations?.address?.attributes,
-    type: entry?.relations?.type?.id ? String(entry?.relations?.type?.id) : 'placeholder',
+    type: entry?.relations?.type?.id ? String(entry?.relations?.type?.id) : '',
     subjects: initialSubjects,
   };
 
@@ -179,6 +179,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               value={formState?.name || ''}
               onChange={(e) => setFormState({ ...formState, name: e.target.value })}
               disabled={!editing}
+              required
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -219,7 +220,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <Select
               label={t('categories.organizer.form.type') as string}
               id="ff1"
-              value={formState?.type}
+              value={formState?.type || ''}
               onChange={(e) =>
                 setFormState({
                   ...formState,
@@ -231,7 +232,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                 })
               }
               disabled={!editing}
-              placeholder={{ text: t('general.choose') as string, value: 'placeholder' }}
+              placeholder={t('general.choose') as string}
+              required
             >
               {organizerTypes?.map((type, index) => (
                 <option key={index} value={String(type.id)}>
@@ -335,6 +337,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                 })
               }
               disabled={!editing}
+              required
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -363,6 +366,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                 })
               }
               disabled={!editing}
+              required
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter}>
@@ -377,6 +381,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                 })
               }
               disabled={!editing}
+              required
             />
           </FormItem>
         </FormGrid>
@@ -421,60 +426,65 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   return (
     <CreateWrapper>
-      <InfoHead>
-        <InfoHeadContainer>
-          <InfoH2>{t('categories.organizer.tabs.info')}</InfoH2>
-          <InfoHeadButtons>
-            <InfoHeadButton>
-              <Button
-                onClick={() => {
-                  if (editing) {
-                    setFormState(initialFormState);
-                    setChosenSubjects(initialChosenSubjects);
-                  }
-                  setEditing(!editing);
-                }}
-                icon={editButtonIcon}
-                color={editButtonColor}
-              >
-                {editButtonLabel}
-              </Button>
-            </InfoHeadButton>
-            <InfoHeadButton>
-              <Button
-                onClick={async () => {
-                  try {
-                    const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                      organizer: formState,
-                      id: entry.id,
-                    });
-
-                    if (resp.status === 200) {
-                      mutate();
-                      mutateSwr(getApiUrlString(category.api.list.route));
-                      setEditing(false);
-                    }
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }}
-                icon="CheckSquare"
-                color={ButtonColor.green}
-                disabled={!editing}
-              >
-                {t('categories.organizer.form.save')}
-              </Button>
-            </InfoHeadButton>
-          </InfoHeadButtons>
-        </InfoHeadContainer>
-      </InfoHead>
       <CreateForm
         aria-disabled={!editing}
         onSubmit={async (e: FormEvent) => {
           e.preventDefault();
           e.stopPropagation();
+
+          try {
+            const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+              organizer: formState,
+              id: entry.id,
+            });
+
+            if (resp.status === 200) {
+              mutate();
+              mutateSwr(getApiUrlString(category.api.list.route));
+              setEditing(false);
+            }
+          } catch (e) {
+            console.error(e);
+          }
         }}
       >
+        <InfoHead>
+          <InfoHeadContainer>
+            <InfoH2>{t('categories.organizer.tabs.info')}</InfoH2>
+            <InfoHeadButtons>
+              <InfoHeadButton>
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    console.log(e);
+
+                    if (editing) {
+                      setFormState(initialFormState);
+                      setChosenSubjects(initialChosenSubjects);
+                    }
+                    setEditing(!editing);
+                  }}
+                  icon={editButtonIcon}
+                  color={editButtonColor}
+                >
+                  {editButtonLabel}
+                </Button>
+              </InfoHeadButton>
+              <InfoHeadButton>
+                <Button
+                  type={ButtonType.submit}
+                  icon="CheckSquare"
+                  color={ButtonColor.green}
+                  disabled={!editing}
+                >
+                  {t('categories.organizer.form.save')}
+                </Button>
+              </InfoHeadButton>
+            </InfoHeadButtons>
+          </InfoHeadContainer>
+        </InfoHead>
         <Accordion initiallyCollapsed={false} items={items} />
       </CreateForm>
     </CreateWrapper>
