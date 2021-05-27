@@ -158,6 +158,10 @@ interface SelectProps {
   icon?: string;
   ariaLabel?: string;
   disabled?: boolean;
+  placeholder?: {
+    text: string;
+    value: string | number;
+  };
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -172,6 +176,7 @@ export const Select: React.FC<SelectProps> = ({
   variant = SelectVariant.default,
   ariaLabel,
   disabled,
+  placeholder,
 }: SelectProps) => {
   const internalState = useState<string>(defaultValue);
   const valueState = value || internalState[0];
@@ -194,6 +199,7 @@ export const Select: React.FC<SelectProps> = ({
           withIcon={typeof icon !== 'undefined'}
           disabled={disabled}
         >
+          {placeholder && <option value={placeholder.value}>{placeholder.text}</option>}
           {children}
         </StyledSelect>
         {icon && feather[icon] && (

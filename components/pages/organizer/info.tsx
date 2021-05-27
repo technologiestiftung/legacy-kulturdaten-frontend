@@ -128,15 +128,22 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const initialSubjects = entry?.relations?.subjects?.map((subject) => subject.id) || [];
 
+  const initialChosenSubjects = entry?.relations?.type
+    ? { [String(entry.relations.type.id)]: initialSubjects }
+    : undefined;
+
   const [chosenSubjects, setChosenSubjects] = useState<{ [key: string]: string[] }>(
-    entry?.relations?.type ? { [String(entry.relations.type.id)]: initialSubjects } : undefined
+    initialChosenSubjects
   );
-  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>({
+
+  const initialFormState = {
     name: entry?.attributes.name,
     address: entry?.relations?.address?.attributes,
-    type: String(entry?.relations?.type?.id),
+    type: entry?.relations?.type?.id ? String(entry?.relations?.type?.id) : 'placeholder',
     subjects: initialSubjects,
-  });
+  };
+
+  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>(initialFormState);
   const [editing, setEditing] = useState<boolean>(false);
 
   useEffect(() => {
@@ -224,8 +231,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                 })
               }
               disabled={!editing}
+              placeholder={{ text: t('general.choose') as string, value: 'placeholder' }}
             >
-              {typeof formState?.type === 'undefined' && <option>{t('general.choose')}</option>}
               {organizerTypes?.map((type, index) => (
                 <option key={index} value={String(type.id)}>
                   {type.attributes.name}
@@ -269,7 +276,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
-              label={t('categories.organizer.form.tags') as string}
+              label={`${t('categories.organizer.form.tags') as string} (TBD)`}
               type={InputType.text}
               disabled={!editing}
             />
@@ -278,7 +285,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       ),
     },
     {
-      title: t('categories.organizer.form.description') as string,
+      title: `${t('categories.organizer.form.description') as string} (TBD)`,
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
@@ -376,7 +383,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       ),
     },
     {
-      title: t('categories.organizer.form.contact') as string,
+      title: `${t('categories.organizer.form.contact') as string} (TBD)`,
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
@@ -422,10 +429,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               <Button
                 onClick={() => {
                   if (editing) {
-                    setFormState({
-                      name: entry?.attributes.name,
-                      address: entry?.relations.address.attributes,
-                    });
+                    setFormState(initialFormState);
+                    setChosenSubjects(initialChosenSubjects);
                   }
                   setEditing(!editing);
                 }}
