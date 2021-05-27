@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
-import { useState } from 'react';
 import { Checkbox } from '.';
 import { CheckboxList } from './CheckboxList';
 
@@ -34,22 +33,39 @@ export const CheckboxDisabledStory: Story = () => (
 CheckboxDisabledStory.storyName = 'Disabled Checkbox';
 
 export const CheckboxListStory: Story = () => {
-  const [checked, setChecked] = useState<boolean>(true);
-
   return (
     <StyledTestWrapper>
-      <CheckboxList label="A list of checkboxes">
-        <Checkbox id="test1" label="The first checkbox" />
-        <Checkbox id="test2" label="A second checkbox" />
-        <Checkbox id="test3" label="Checkbox number three" />
-        <Checkbox id="test4" label="It is #4" />
-        <Checkbox
-          id="test5"
-          label="The fifth is not a king but checked"
-          checked={checked}
-          onChange={(e) => setChecked(e.target.checked)}
-        />
-      </CheckboxList>
+      <CheckboxList
+        label="A list of checkboxes"
+        checkboxes={[
+          {
+            id: 'test1',
+            label: 'The first checkbox',
+            value: '1',
+          },
+          {
+            id: 'test2',
+            label: 'A second checkbox',
+            value: '2',
+          },
+          {
+            id: 'test3',
+            label: 'Checkbox number three',
+            value: '3',
+          },
+          {
+            id: 'test4',
+            label: 'It is #4',
+            value: '4',
+          },
+          {
+            id: 'test5',
+            label: 'The fifth is not a king but checked',
+            checked: true,
+            value: '5',
+          },
+        ]}
+      />
     </StyledTestWrapper>
   );
 };

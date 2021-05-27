@@ -12,10 +12,10 @@ import { useT } from '../../../lib/i18n';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Accordion } from '../../accordion';
 import { Button, ButtonColor, ButtonType } from '../../button';
-import { Checkbox } from '../../checkbox';
 import { CheckboxList } from '../../checkbox/CheckboxList';
 import { contentGrid, insetBorder, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
+import { PlaceholderField } from '../../placeholderfield';
 import { Select } from '../../select';
 
 const CreateWrapper = styled.div``;
@@ -243,38 +243,30 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             </Select>
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <CheckboxList label={t('categories.organizer.form.subjects') as string}>
-              {organizerSubjects
-                ? organizerSubjects.map((subject, index) => (
-                    <Checkbox
-                      key={index}
-                      id={`ofs-${index}`}
-                      label={subject.attributes.name}
-                      checked={
-                        chosenSubjects &&
-                        chosenSubjects[formState?.type]?.includes(String(subject.id))
-                      }
-                      onChange={(e) => {
-                        const cleanSubjects =
-                          chosenSubjects && chosenSubjects[formState?.type]
-                            ? chosenSubjects[formState?.type].filter(
-                                (id) => id !== String(subject.id)
-                              )
-                            : [];
-                        if (e.target.checked) {
-                          const newSubjects = cleanSubjects.concat([String(subject.id)]);
-                          setChosenSubjects({ ...chosenSubjects, [formState.type]: newSubjects });
-                          setFormState({ ...formState, subjects: newSubjects });
-                        } else {
-                          setChosenSubjects({ ...chosenSubjects, [formState.type]: cleanSubjects });
-                          setFormState({ ...formState, subjects: cleanSubjects });
-                        }
-                      }}
-                      disabled={!editing}
-                    />
-                  ))
-                : undefined}
-            </CheckboxList>
+            {organizerSubjects ? (
+              <CheckboxList
+                label={t('categories.organizer.form.subjects') as string}
+                checkboxes={
+                  organizerSubjects?.map((subject) => ({
+                    id: `ff-subject-select-${subject.id}`,
+                    label: subject.attributes.name,
+                    checked: formState.subjects?.includes(subject.id),
+                    value: subject.id,
+                  })) || []
+                }
+                onChange={(val) => {
+                  setChosenSubjects({ ...chosenSubjects, [formState?.type]: val });
+                  setFormState({ ...formState, subjects: val });
+                }}
+                value={chosenSubjects ? chosenSubjects[formState?.type] : []}
+                required
+              />
+            ) : (
+              <PlaceholderField
+                label={t('categories.organizer.form.subjects') as string}
+                text={t('categories.organizer.form.chooseTypeFirst') as string}
+              />
+            )}
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
@@ -457,8 +449,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-
-                    console.log(e);
 
                     if (editing) {
                       setFormState(initialFormState);

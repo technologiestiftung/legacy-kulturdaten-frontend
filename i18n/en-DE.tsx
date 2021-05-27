@@ -69,6 +69,7 @@ export const enDE: Localization = {
         classification: () => 'Classification',
         type: () => 'Type',
         subjects: () => 'Subject(s)',
+        chooseTypeFirst: () => 'Please choose type first',
         tags: () => 'Tags',
         street1: () => 'Street and house number',
         street2: () => 'Additional address',

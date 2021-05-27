@@ -91,6 +91,7 @@ export interface CheckboxProps {
   name?: string;
   disabled?: boolean;
   required?: boolean;
+  value?: string;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -101,6 +102,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   name,
   disabled,
   required,
+  value,
 }: CheckboxProps) => {
   const internalState = useState<boolean>(false);
   const checkedState = checked || internalState[0];
@@ -122,6 +124,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           }}
           checked={checkedState}
           disabled={disabled}
+          value={value}
         />
         <StyledCheckboxInputCheck checked={checkedState}>
           <Check color="var(--black)" />

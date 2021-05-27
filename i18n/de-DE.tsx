@@ -69,6 +69,7 @@ export const deDE: Localization = {
         classification: () => 'Einordnung',
         type: () => 'Typ',
         subjects: () => 'Sparte(n)',
+        chooseTypeFirst: () => 'Bitte zunächst Typ auswählen',
         tags: () => 'Tags',
         street1: () => 'Straße und Hausnummer',
         street2: () => 'Adresszusatz',

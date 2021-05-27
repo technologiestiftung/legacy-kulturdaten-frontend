@@ -191,7 +191,7 @@ export const Select: React.FC<SelectProps> = ({
           variant={variant}
           selectSize={size}
           id={id}
-          value={valueState}
+          value={valueState || ''}
           onChange={
             onChange
               ? (e) => onChange(e)
@@ -201,11 +201,7 @@ export const Select: React.FC<SelectProps> = ({
           disabled={disabled}
           required={required}
         >
-          {placeholder && (
-            <option value="" selected={!valueState || valueState.length === 0}>
-              {placeholder}
-            </option>
-          )}
+          {placeholder && <option value="">{placeholder}</option>}
           {children}
         </StyledSelect>
         {icon && feather[icon] && (
