@@ -40,6 +40,7 @@ export const deDE: Localization = {
     create: () => 'erstelle',
     close: () => 'schließen',
     back: () => 'zurück',
+    choose: () => 'Bitte auswählen',
   },
   categories: {
     organizer: {

@@ -18,15 +18,25 @@ const StyledCheckboxInput = styled.input`
   padding: 0;
   transition: border var(--transition-duration);
   cursor: inherit;
+
+  &:disabled {
+    border: none;
+    box-shadow: none;
+    background: var(--grey-350);
+  }
 `;
 
-const StyledCheckbox = styled.div`
+const StyledCheckbox = styled.div<{ disabled?: boolean }>`
   display: flex;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
   &:hover {
     ${StyledCheckboxInput} {
       border: 2px solid var(--black);
+
+      &:disabled {
+        border: none;
+      }
     }
   }
 `;
@@ -64,11 +74,11 @@ const StyledCheckboxInputCheck = styled.div<{ checked?: boolean }>`
   }
 `;
 
-const StyledCheckboxLabel = styled.label`
+const StyledCheckboxLabel = styled.label<{ disabled?: boolean }>`
   display: block;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   padding: 0 0 0 0.75rem;
   flex-grow: 1;
 `;
@@ -96,26 +106,30 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   const checkedState = checked || internalState[0];
 
   return (
-    <StyledCheckbox>
+    <StyledCheckbox disabled={disabled}>
       <StyledCheckboxInputContainer>
         <StyledCheckboxInput
           type="checkbox"
           id={id}
           name={name || id}
           required={required}
-          onChange={
-            onChange
-              ? (e) => onChange(e)
-              : (e: ChangeEvent<HTMLInputElement>) => internalState[1](e.target.checked)
-          }
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            if (onChange) {
+              onChange(e);
+            } else {
+              internalState[1](e.target.checked);
+            }
+          }}
           checked={checkedState}
           disabled={disabled}
         />
         <StyledCheckboxInputCheck checked={checkedState}>
-          <Check color="var(--blue)" />
+          <Check color="var(--black)" />
         </StyledCheckboxInputCheck>
       </StyledCheckboxInputContainer>
-      <StyledCheckboxLabel htmlFor={id}>{label}</StyledCheckboxLabel>
+      <StyledCheckboxLabel htmlFor={id} disabled={disabled}>
+        {label}
+      </StyledCheckboxLabel>
     </StyledCheckbox>
   );
 };

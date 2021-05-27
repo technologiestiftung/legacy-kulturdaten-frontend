@@ -25,6 +25,14 @@ export const CheckboxDefaultStory: Story = () => (
 );
 CheckboxDefaultStory.storyName = 'Default Checkbox';
 
+export const CheckboxDisabledStory: Story = () => (
+  <StyledTestWrapper>
+    <Checkbox id="test1" label="Unchecked disabled checkbox" disabled />
+    <Checkbox id="test2" label="Checked disabled checkbox" disabled checked />
+  </StyledTestWrapper>
+);
+CheckboxDisabledStory.storyName = 'Disabled Checkbox';
+
 export const CheckboxListStory: Story = () => {
   const [checked, setChecked] = useState<boolean>(true);
 

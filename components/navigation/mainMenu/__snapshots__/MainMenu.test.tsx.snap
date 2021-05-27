@@ -550,7 +550,7 @@ exports[`MainMenu renders 1`] = `
                 >
                   <select
                     aria-label="Sprache wählen, choose Language"
-                    class="css-1jajov3-StyledSelect-minimal e1vif2fk3"
+                    class="css-1ih812l-StyledSelect-minimal e1vif2fk3"
                     id="locale"
                   >
                     <option
@@ -565,7 +565,7 @@ exports[`MainMenu renders 1`] = `
                     </option>
                   </select>
                   <div
-                    class="css-o4rktt-StyledSelectIcon e1vif2fk2"
+                    class="css-5wb1v7-StyledSelectIcon e1vif2fk2"
                   >
                     <svg
                       fill="none"
@@ -595,7 +595,7 @@ exports[`MainMenu renders 1`] = `
                     </svg>
                   </div>
                   <div
-                    class="css-1hj2sr-StyledSelectIcon-StyledSelectChevron e1vif2fk1"
+                    class="css-u0fzfb-StyledSelectIcon-StyledSelectChevron e1vif2fk1"
                   >
                     <svg
                       fill="none"

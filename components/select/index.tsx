@@ -47,28 +47,56 @@ const selectSizes: {
   }),
 };
 
-const selectVariants: { [key in SelectVariant]: SerializedStyles } = {
+const selectVariants: {
+  [key in SelectVariant]: SerializedStyles;
+} = {
   default: css`
     background: var(--white);
     transition: box-shadow var(--transition-duration);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow), inset 0px 0px 0px 1px var(--black);
+    border: none;
 
     &:hover {
-      box-shadow: var(--shadow-hover), inset 0px 0px 0px 1px var(--black);
+      box-shadow: var(--shadow-hover), inset 0px 0px 0px 2px var(--black);
     }
 
     &:active {
       box-shadow: var(--shadow-active);
     }
+
+    &:disabled {
+      background: var(--grey-350);
+      box-shadow: none;
+      color: var(--black);
+      cursor: not-allowed;
+      border-color: var(--grey-350);
+
+      &:hover {
+        box-shadow: none;
+      }
+    }
   `,
   minimal: css`
     background: inherit;
     color: currentColor;
-    border-color: currentColor;
+    border: none;
+    box-shadow: inset 0px 0px 0px 1px var(--black);
     transition: box-shadow var(--transition-duration);
 
     &:hover {
-      box-shadow: inset 0px 0px 0px 1px currentColor;
+      box-shadow: inset 0px 0px 0px 2px currentColor;
+    }
+
+    &:disabled {
+      background: var(--grey-350);
+      box-shadow: none;
+      color: var(--black);
+      cursor: not-allowed;
+      border-color: var(--grey-350);
+
+      &:hover {
+        box-shadow: none;
+      }
     }
   `,
 };
@@ -80,7 +108,6 @@ const StyledSelect = styled.select<{
 }>`
   margin: 0;
   appearance: none;
-  border: 1px solid var(--black);
   border-radius: 0.75rem;
   font-size: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).fontSize};
   line-height: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).lineHeight};
@@ -97,8 +124,7 @@ const StyledSelectIcon = styled.div<{ size: SelectSize }>`
   position: absolute;
   left: 0.75rem;
   top: 0;
-  height: ${({ size }) =>
-    size === SelectSize.default ? 'calc(2.25rem + 2px)' : 'calc(3rem + 2px)'};
+  height: ${({ size }) => (size === SelectSize.default ? '2.25rem' : '3rem')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -131,6 +157,7 @@ interface SelectProps {
   variant?: SelectVariant;
   icon?: string;
   ariaLabel?: string;
+  disabled?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -144,6 +171,7 @@ export const Select: React.FC<SelectProps> = ({
   size = SelectSize.default,
   variant = SelectVariant.default,
   ariaLabel,
+  disabled,
 }: SelectProps) => {
   const internalState = useState<string>(defaultValue);
   const valueState = value || internalState[0];
@@ -164,6 +192,7 @@ export const Select: React.FC<SelectProps> = ({
               : (e: ChangeEvent<HTMLSelectElement>) => internalState[1](e.target.value)
           }
           withIcon={typeof icon !== 'undefined'}
+          disabled={disabled}
         >
           {children}
         </StyledSelect>

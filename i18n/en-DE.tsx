@@ -40,6 +40,7 @@ export const enDE: Localization = {
     create: () => 'create',
     close: () => 'close',
     back: () => 'back',
+    choose: () => 'Please choose',
   },
   categories: {
     organizer: {

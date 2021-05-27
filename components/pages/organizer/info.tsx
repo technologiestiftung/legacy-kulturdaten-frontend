@@ -171,6 +171,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               type={InputType.text}
               value={formState?.name || ''}
               onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -179,6 +180,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               type={InputType.text}
               value={formState?.name || ''}
               onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -187,6 +189,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               type={InputType.text}
               value={formState?.name || ''}
               onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -195,6 +198,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               type={InputType.text}
               value={formState?.name || ''}
               onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+              disabled={!editing}
             />
           </FormItem>
         </FormGrid>
@@ -219,8 +223,9 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                       : [],
                 })
               }
+              disabled={!editing}
             >
-              {typeof formState?.type === 'undefined' && <option>Please choose</option>}
+              {typeof formState?.type === 'undefined' && <option>{t('general.choose')}</option>}
               {organizerTypes?.map((type, index) => (
                 <option key={index} value={String(type.id)}>
                   {type.attributes.name}
@@ -256,13 +261,18 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                           setFormState({ ...formState, subjects: cleanSubjects });
                         }
                       }}
+                      disabled={!editing}
                     />
                   ))
                 : undefined}
             </CheckboxList>
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input label={t('categories.organizer.form.tags') as string} type={InputType.text} />
+            <Input
+              label={t('categories.organizer.form.tags') as string}
+              type={InputType.text}
+              disabled={!editing}
+            />
           </FormItem>
         </FormGrid>
       ),
@@ -275,24 +285,28 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <Input
               label={t('categories.organizer.form.descriptionGerman') as string}
               type={InputType.text}
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
               label={t('categories.organizer.form.descriptionEnglish') as string}
               type={InputType.text}
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
               label={t('categories.organizer.form.descriptionGermanSimple') as string}
               type={InputType.text}
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
               label={t('categories.organizer.form.descriptionEnglishSimple') as string}
               type={InputType.text}
+              disabled={!editing}
             />
           </FormItem>
         </FormGrid>
@@ -313,6 +327,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                   address: { ...formState?.address, street1: e.target.value },
                 })
               }
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -326,6 +341,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                   address: { ...formState?.address, street2: e.target.value },
                 })
               }
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter}>
@@ -339,6 +355,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                   address: { ...formState?.address, zipCode: e.target.value },
                 })
               }
+              disabled={!editing}
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter}>
@@ -352,6 +369,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
                   address: { ...formState?.address, city: e.target.value },
                 })
               }
+              disabled={!editing}
             />
           </FormItem>
         </FormGrid>
@@ -362,16 +380,32 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
-            <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
+            <Input
+              label={t('categories.organizer.form.tel') as string}
+              type={InputType.tel}
+              disabled={!editing}
+            />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
+            <Input
+              label={t('categories.organizer.form.email') as string}
+              type={InputType.email}
+              disabled={!editing}
+            />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
-            <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
+            <Input
+              label={t('categories.organizer.form.website') as string}
+              type={InputType.url}
+              disabled={!editing}
+            />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input label={t('categories.organizer.form.social') as string} type={InputType.text} />
+            <Input
+              label={t('categories.organizer.form.social') as string}
+              type={InputType.text}
+              disabled={!editing}
+            />
           </FormItem>
         </FormGrid>
       ),

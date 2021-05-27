@@ -42,7 +42,9 @@ const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
   }
 
   &:disabled {
-    opacity: 0.25;
+    border: none;
+    box-shadow: none;
+    background: var(--grey-350);
     cursor: not-allowed;
   }
 
