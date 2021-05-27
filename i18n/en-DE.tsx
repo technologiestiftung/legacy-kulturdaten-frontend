@@ -41,6 +41,10 @@ export const enDE: Localization = {
     close: () => 'close',
     back: () => 'back',
     choose: () => 'Please choose',
+    status: () => 'Status',
+    draft: () => 'Draft',
+    published: () => 'published',
+    lastUpdated: () => 'Last updated',
   },
   categories: {
     organizer: {

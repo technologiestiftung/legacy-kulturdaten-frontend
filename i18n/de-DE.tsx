@@ -41,6 +41,10 @@ export const deDE: Localization = {
     close: () => 'schließen',
     back: () => 'zurück',
     choose: () => 'Bitte auswählen',
+    status: () => 'Status',
+    draft: () => 'Entwurf',
+    published: () => 'veröffentlicht',
+    lastUpdated: () => 'Zuletzt aktualisiert',
   },
   categories: {
     organizer: {

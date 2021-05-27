@@ -113,7 +113,7 @@ const formItemWidthMap: { [key in FormItemWidth]: SerializedStyles } = {
 const FormItem = styled.div<{ width: FormItemWidth }>`
   /* padding: 0 0.75rem; */
 
-  ${({ width }) => formItemWidthMap[width]}/* box-shadow: ${insetBorder(true, true, false)}; */
+  ${({ width }) => formItemWidthMap[width]}
 `;
 
 export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({

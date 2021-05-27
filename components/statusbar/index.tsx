@@ -88,6 +88,7 @@ const StyledSelect = styled.select<{
   border-radius: 0 0 0.75rem 0.75rem;
   flex-grow: 0;
   flex-shrink: 0;
+  height: 100%;
 
   ${mq(Breakpoint.mid)} {
     border: 1px solid var(--black);
