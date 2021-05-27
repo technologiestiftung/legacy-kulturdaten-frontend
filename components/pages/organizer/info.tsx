@@ -23,7 +23,7 @@ const CreateWrapper = styled.div``;
 const InfoHead = styled.div`
   background: var(--white);
   box-shadow: ${insetBorder(false, true, false, true)}, 0px 1px 0px var(--grey-400);
-  padding: 0.375rem 0;
+  padding: 0.1875rem 0;
   position: relative;
   z-index: 1;
 

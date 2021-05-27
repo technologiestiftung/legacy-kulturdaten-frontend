@@ -41,7 +41,7 @@ const StyledAccordionItemHeadContainer = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: nowrap;
-  padding: 0.75rem 0.75rem;
+  padding: 0.5625rem 0.75rem;
   box-shadow: ${insetBorder(false, true)};
 
   ${mq(Breakpoint.mid)} {
