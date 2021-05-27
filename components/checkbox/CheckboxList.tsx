@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Checkbox, CheckboxProps } from '.';
 import { Label } from '../label';
 
@@ -20,6 +20,7 @@ const StyledHiddenMultiSelect = styled.select`
   height: 0px;
   overflow: hidden;
   pointer-events: none;
+  font-size: 1rem;
 `;
 
 interface CheckboxListItemProps extends CheckboxProps {
@@ -44,8 +45,14 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   const [checkedState, setCheckedState] = useState<{
     [id: string]: { checked: boolean; value: string };
   }>(
-    checkboxes.reduce((combined, { id, checked, value: checkboxValue }) => {
-      const newCombined = { ...combined, [id]: { checked, value: checkboxValue } };
+    checkboxes.reduce((combined, { checked, value: checkboxValue }) => {
+      const newCombined = {
+        ...combined,
+        [String(checkboxValue)]: {
+          checked: checked || value?.includes(checkboxValue),
+          value: checkboxValue,
+        },
+      };
       return newCombined;
     }, {})
   );
@@ -60,10 +67,6 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
 
   const selectRef = useRef<HTMLSelectElement>(null);
 
-  useEffect(() => {
-    selectRef.current?.setAttribute('inert', '');
-  }, [selectRef]);
-
   return (
     <StyledCheckboxList>
       <StyedCheckboxListLabel>
@@ -75,17 +78,17 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
             id={id}
             label={label}
             key={index}
-            checked={checkedState[id]?.checked}
+            checked={checkedState[checkboxValue]?.checked}
             onChange={(e) => {
               setCheckedState({
                 ...checkedState,
-                [id]: { checked: e.target.checked, value: checkboxValue },
+                [String(checkboxValue)]: { checked: e.target.checked, value: checkboxValue },
               });
 
               const cleanSelectValue = selectValue.filter((entry) => entry !== checkboxValue);
 
               if (e.target.checked) {
-                const newSelectValue = cleanSelectValue.concat([checkboxValue]);
+                const newSelectValue = cleanSelectValue.concat([String(checkboxValue)]);
 
                 if (onChange) {
                   onChange(newSelectValue);
@@ -112,6 +115,32 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
         onChange={(e) => {
           e.preventDefault();
           e.stopPropagation();
+
+          const selectedOptions = Object.values(selectRef.current.selectedOptions)
+            .filter(({ selected }) => selected === true)
+            .map(({ value }) => value);
+
+          setCheckedState({
+            ...checkboxes.reduce((combined, { value: checkboxValue }) => {
+              const newCombined = {
+                ...combined,
+                [String(checkboxValue)]: { checked: false, value: checkboxValue },
+              };
+              return newCombined;
+            }, {}),
+            ...Object.values(selectRef.current.selectedOptions).reduce(
+              (combined, { selected, value: selectValue }) => {
+                return { ...combined, [selectValue]: { checked: selected, value: selectValue } };
+              },
+              {}
+            ),
+          });
+
+          if (onChange) {
+            onChange(selectedOptions);
+          } else {
+            internalState[1](selectedOptions);
+          }
         }}
       >
         {checkboxes.map(({ id, value, label }, index) => (

@@ -247,11 +247,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               <CheckboxList
                 label={t('categories.organizer.form.subjects') as string}
                 checkboxes={
-                  organizerSubjects?.map((subject) => ({
+                  organizerSubjects.map((subject) => ({
                     id: `ff-subject-select-${subject.id}`,
                     label: subject.attributes.name,
-                    checked: formState.subjects?.includes(subject.id),
-                    value: subject.id,
+                    checked: formState.subjects?.includes(String(subject.id)),
+                    value: String(subject.id),
                   })) || []
                 }
                 onChange={(val) => {
