@@ -545,6 +545,8 @@ exports[`MainMenu renders 1`] = `
                   for="locale"
                 >
                   Sprache / Language
+                   
+                  
                 </label>
                 <div
                   class="css-15csdm1-StyledSelectAndChevron e1vif2fk0"

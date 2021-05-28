@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useRef, useState } from 'react';
 import { Checkbox, CheckboxProps } from '.';
+import { useT } from '../../lib/i18n';
 import { Label } from '../label';
 
 const StyledCheckboxList = styled.div``;
@@ -42,6 +43,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   required,
   onChange,
 }: CheckboxListProps) => {
+  const t = useT();
   const [checkedState, setCheckedState] = useState<{
     [id: string]: { checked: boolean; value: string };
   }>(
@@ -70,7 +72,9 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   return (
     <StyledCheckboxList>
       <StyedCheckboxListLabel>
-        <Label>{label}</Label>
+        <Label>
+          {label} {required ? ` (${t('forms.required')})` : ''}
+        </Label>
       </StyedCheckboxListLabel>
       <StyledCheckboxListItems>
         {checkboxes.map(({ id, label, value: checkboxValue }, index) => (

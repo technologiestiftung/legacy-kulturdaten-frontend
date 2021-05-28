@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { SerializedStyles } from '@emotion/utils';
 import React, { ChangeEvent, useState } from 'react';
 import * as feather from 'react-feather';
+import { useT } from '../../lib/i18n';
 
 import { Label, StyledLabel } from '../label';
 
@@ -180,11 +181,16 @@ export const Select: React.FC<SelectProps> = ({
   required,
 }: SelectProps) => {
   const internalState = useState<string>(defaultValue);
+  const t = useT();
   const valueState = value || internalState[0];
 
   return (
     <StyledSelectContainer>
-      {label && <Label htmlFor={id}>{label}</Label>}
+      {label && (
+        <Label htmlFor={id}>
+          {label} {required ? ` (${t('forms.required')})` : ''}
+        </Label>
+      )}
       <StyledSelectAndChevron>
         <StyledSelect
           aria-label={ariaLabel}

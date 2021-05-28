@@ -264,7 +264,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               />
             ) : (
               <PlaceholderField
-                label={t('categories.organizer.form.subjects') as string}
+                label={`${t('categories.organizer.form.subjects')} (${t('forms.required')})`}
                 text={t('categories.organizer.form.chooseTypeFirst') as string}
               />
             )}
