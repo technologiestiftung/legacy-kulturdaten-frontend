@@ -17,6 +17,7 @@ import { contentGrid, insetBorder, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
 import { PlaceholderField } from '../../placeholderfield';
 import { Select } from '../../select';
+import { Textarea } from '../../textarea';
 
 const CreateWrapper = styled.div``;
 
@@ -269,9 +270,10 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             )}
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input
+            <Textarea
+              id="ff-tags"
               label={`${t('categories.organizer.form.tags') as string} (TBD)`}
-              type={InputType.text}
+              rows={3}
               disabled={!editing}
             />
           </FormItem>
@@ -283,31 +285,35 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       content: (
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
-            <Input
+            <Textarea
+              id="ff-desc-g"
               label={t('categories.organizer.form.descriptionGerman') as string}
-              type={InputType.text}
               disabled={!editing}
+              rows={5}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input
+            <Textarea
+              id="ff-desc-e"
               label={t('categories.organizer.form.descriptionEnglish') as string}
-              type={InputType.text}
               disabled={!editing}
+              rows={5}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input
+            <Textarea
+              id="ff-desc-gs"
               label={t('categories.organizer.form.descriptionGermanSimple') as string}
-              type={InputType.text}
               disabled={!editing}
+              rows={5}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input
+            <Textarea
+              id="ff-desc-es"
               label={t('categories.organizer.form.descriptionEnglishSimple') as string}
-              type={InputType.text}
               disabled={!editing}
+              rows={5}
             />
           </FormItem>
         </FormGrid>
@@ -405,10 +411,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
-            <Input
+            <Textarea
+              id="ff-social"
               label={t('categories.organizer.form.social') as string}
-              type={InputType.text}
               disabled={!editing}
+              rows={3}
             />
           </FormItem>
         </FormGrid>

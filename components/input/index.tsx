@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, SerializedStyles } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ChangeEventHandler, useState } from 'react';
 import { useT } from '../../lib/i18n';
@@ -23,11 +23,18 @@ const errorStyle = css`
   box-shadow: ${errorBorderShadow}, ${errorShadow}, var(--shadow-inset);
 `;
 
-const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
+export const inputStyles = ({
+  pristine,
+  valid,
+}: {
+  pristine?: boolean;
+  valid?: boolean;
+}): SerializedStyles => css`
   appearance: none;
   border: none;
   border-radius: 0.75rem;
   padding: 0.375rem 0.75rem;
+  font-family: var(--font-family);
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   background: var(--white);
@@ -48,16 +55,19 @@ const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
     cursor: not-allowed;
   }
 
-  ${({ pristine, valid }) =>
-    !pristine && valid === false
-      ? errorStyle
-      : !pristine
-      ? css`
-          &:invalid {
-            ${errorStyle}
-          }
-        `
-      : ''}
+  ${!pristine && valid === false
+    ? errorStyle
+    : !pristine
+    ? css`
+        &:invalid {
+          ${errorStyle}
+        }
+      `
+    : ''}
+`;
+
+const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
+  ${(props) => inputStyles(props)}
 `;
 
 const StyledError = styled.div`
