@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { SerializedStyles } from '@emotion/utils';
 import { ParsedUrlQuery } from 'node:querystring';
-import React, { FormEvent, useEffect, useMemo, useState } from 'react';
+import React, { FormEvent, Reducer, useEffect, useMemo, useReducer, useState } from 'react';
 import { mutate as mutateSwr } from 'swr';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -19,69 +19,13 @@ import { Breakpoint } from '../../../lib/WindowService';
 import { Accordion } from '../../accordion';
 import { Button, ButtonColor, ButtonType } from '../../button';
 import { CheckboxList } from '../../checkbox/CheckboxList';
-import { contentGrid, insetBorder, mq } from '../../globals/Constants';
+import { insetBorder, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
 import { PlaceholderField } from '../../placeholderfield';
 import { Select } from '../../select';
 import { Textarea } from '../../textarea';
 
 const CreateWrapper = styled.div``;
-
-const InfoHead = styled.div`
-  background: var(--white);
-  box-shadow: ${insetBorder(false, true, true, true)}, 0px 1px 0px var(--grey-400);
-  padding: 0.1875rem 0;
-  position: relative;
-  z-index: 1;
-
-  ${contentGrid(4)}
-
-  ${mq(Breakpoint.mid)} {
-    box-shadow: ${insetBorder(false, true, true, false)}, 0px 1px 0px var(--grey-400);
-    /* position: sticky;
-    top: 0;
-    left: 0; */
-    ${contentGrid(8)}
-  }
-`;
-
-const InfoHeadContainer = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  grid-column: 1 / -1;
-  flex-wrap: wrap;
-
-  padding: 0 0.75rem;
-
-  ${mq(Breakpoint.ultra)} {
-    padding: 0;
-    grid-column: 2 / -2;
-  }
-`;
-
-const InfoHeadButtons = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const InfoHeadButton = styled.div`
-  margin-right: 0.75rem;
-  padding: 0.375rem 0;
-
-  &:last-of-type {
-    margin-right: 0;
-  }
-`;
-
-const InfoH2 = styled.h2`
-  font-size: var(--font-size-500);
-  line-height: var(--line-height-500);
-  font-weight: 700;
-  padding: 0.375rem 0;
-`;
-
-const CreateForm = styled.form``;
 
 const FormGrid = styled.div`
   display: grid;
@@ -150,8 +94,11 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
     () => ({
       name: entry?.attributes.name,
       address: entry?.relations?.address?.attributes,
-      type: '2',
-      subjects: ['2'],
+      type: entry?.relations?.type?.id || '2',
+      subjects:
+        Array.isArray(entry?.relations?.subjects) && entry?.relations?.subjects.length > 0
+          ? entry?.relations?.subjects?.map((subject) => subject.id)
+          : ['2'],
     }),
     [entry]
   );
@@ -277,8 +224,8 @@ const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
     () => ({
       name: entry?.attributes.name,
       address: entry?.relations?.address?.attributes,
-      type: '2',
-      subjects: ['2'],
+      type: entry?.relations?.type?.id || '2',
+      subjects: entry?.relations?.subjects?.map((subject) => subject.id) || ['2'],
     }),
     [entry]
   );
@@ -380,8 +327,8 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
     () => ({
       name: entry?.attributes.name,
       address: entry?.relations?.address?.attributes,
-      type: '2',
-      subjects: ['2'],
+      type: entry?.relations?.type?.id || '2',
+      subjects: entry?.relations?.subjects?.map((subject) => subject.id) || ['2'],
     }),
     [entry]
   );
@@ -486,8 +433,8 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
     () => ({
       name: entry?.attributes.name,
       address: entry?.relations?.address?.attributes,
-      type: '2',
-      subjects: ['2'],
+      type: entry?.relations?.type?.id || '2',
+      subjects: entry?.relations?.subjects?.map((subject) => subject.id) || ['2'],
     }),
     [entry]
   );
@@ -630,37 +577,54 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
   );
 };
 
+enum SubjectsAction {
+  update = 'update',
+}
+
+const subjectsReducer: Reducer<
+  { [key: string]: string[] },
+  { type: SubjectsAction; payload: { id: string; subjects: string[] } }
+> = (state, action) => {
+  switch (action.type) {
+    case SubjectsAction.update: {
+      return { ...state, [action.payload.id]: action.payload.subjects };
+    }
+
+    default: {
+      break;
+    }
+  }
+};
+
 const ClassificationForm: React.FC<OrganizerFormProps> = ({
   category,
   query,
 }: OrganizerFormProps) => {
   const call = useApiCall();
+  const t = useT();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const [pristine, setPristine] = useState<boolean>(true);
 
   const organizerTypes = useOrganizerTypeList();
 
   const initialSubjects = useMemo(
-    () => entry?.relations?.subjects?.map((subject) => subject.id) || [],
+    () => entry?.relations?.subjects?.map((subject) => String(subject.id)) || undefined,
     [entry]
   );
 
-  const initialChosenSubjects = entry?.relations?.type
-    ? { [String(entry.relations.type.id)]: initialSubjects }
-    : undefined;
-
-  const [chosenSubjects, setChosenSubjects] = useState<{ [key: string]: string[] }>(
-    initialChosenSubjects
+  const initialChosenSubjects = useMemo<{ [key: string]: string[] }>(
+    () =>
+      entry?.relations?.type ? { [String(entry.relations.type.id)]: initialSubjects } : undefined,
+    [entry, initialSubjects]
   );
 
   const initialFormState = useMemo(
     () => ({
       name: entry?.attributes.name,
       address: entry?.relations?.address?.attributes,
-      type: entry?.relations?.type?.id ? String(entry?.relations?.type?.id) : '',
-      subjects: initialSubjects,
+      type: entry?.relations?.type?.id ? String(entry?.relations?.type?.id) : undefined,
     }),
-    [entry, initialSubjects]
+    [entry]
   );
 
   const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>(initialFormState);
@@ -669,20 +633,26 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
     ? organizerTypes?.find((type) => String(type.id) === formState.type)?.relations?.subjects
     : undefined;
 
+  const [userSubjects, dispatchSubjects] = useReducer(subjectsReducer, initialChosenSubjects);
+
   useEffect(() => {
     const updatedState =
       typeof formState.type !== 'undefined'
         ? { ...initialFormState, type: formState.type }
         : initialFormState;
+    setFormState(updatedState);
+  }, [initialFormState, formState.type]);
 
-    const xState =
-      typeof formState.subjects !== 'undefined'
-        ? { ...updatedState, subjects: formState.subjects }
-        : updatedState;
-    setFormState(xState);
-  }, [initialFormState, formState.type, formState.subjects]);
-
-  const t = useT();
+  useEffect(() => {
+    if (formState?.type) {
+      if (!userSubjects) {
+        dispatchSubjects({
+          type: SubjectsAction.update,
+          payload: { id: formState.type, subjects: initialSubjects },
+        });
+      }
+    }
+  }, [formState?.type, initialSubjects, userSubjects]);
 
   return (
     <form
@@ -692,7 +662,7 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
 
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            organizer: formState,
+            organizer: { ...formState, subjects: userSubjects[formState.type] },
             id: entry.id,
           });
 
@@ -703,7 +673,7 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                 relations: {
                   ...entry.relations,
                   type: { ...entry.relations.type, id: formState.type },
-                  subjects: (formState.subjects as unknown) as OrganizerSubject[],
+                  subjects: (userSubjects[formState.type] as unknown) as OrganizerSubject[],
                 },
               },
               false
@@ -751,8 +721,8 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                 ...formState,
                 type: String(e.target.value),
                 subjects:
-                  chosenSubjects && chosenSubjects[String(e.target.value)]
-                    ? chosenSubjects[String(e.target.value)]
+                  userSubjects && userSubjects[String(e.target.value)]
+                    ? userSubjects[String(e.target.value)]
                     : [],
               });
             }}
@@ -775,16 +745,18 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                 organizerSubjects.map((subject) => ({
                   id: `ff-subject-select-${subject.id}`,
                   label: subject.attributes.name,
-                  checked: formState.subjects?.includes(String(subject.id)),
                   value: String(subject.id),
                 })) || []
               }
               onChange={(val) => {
                 setPristine(false);
-                setChosenSubjects({ ...chosenSubjects, [formState?.type]: val });
-                setFormState({ ...formState, subjects: val });
+                dispatchSubjects({
+                  type: SubjectsAction.update,
+                  payload: { id: formState.type, subjects: val },
+                });
+                // setChosenSubjects({ ...chosenSubjects, [formState?.type]: val });
               }}
-              value={chosenSubjects ? chosenSubjects[formState?.type] : []}
+              value={userSubjects && formState?.type ? userSubjects[formState.type] : []}
               required
             />
           ) : (

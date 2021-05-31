@@ -62,7 +62,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   const internalState = useState<string[]>(
     Object.values(checkboxes)
       .filter(({ checked }) => checked === true)
-      .map(({ value }) => value)
+      .map(({ value: checkboxValue }) => checkboxValue)
   );
 
   const selectValue = value || internalState[0];
@@ -82,7 +82,9 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
             id={id}
             label={label}
             key={index}
-            checked={checkedState[checkboxValue]?.checked}
+            checked={
+              checkedState[checkboxValue]?.checked || (value && value.includes(checkboxValue))
+            }
             onChange={(e) => {
               setCheckedState({
                 ...checkedState,
@@ -122,7 +124,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
 
           const selectedOptions = Object.values(selectRef.current.selectedOptions)
             .filter(({ selected }) => selected === true)
-            .map(({ value }) => value);
+            .map(({ value: optionValue }) => optionValue);
 
           setCheckedState({
             ...checkboxes.reduce((combined, { value: checkboxValue }) => {
@@ -147,8 +149,8 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
           }
         }}
       >
-        {checkboxes.map(({ id, value, label }, index) => (
-          <option id={id} value={value} key={index}>
+        {checkboxes.map(({ id, value: checkboxValue, label }, index) => (
+          <option id={id} value={checkboxValue} key={index}>
             {label}
           </option>
         ))}
