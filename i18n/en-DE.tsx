@@ -5,8 +5,8 @@ export const enDE: Localization = {
     content: () => 'Test Content',
   },
   accordion: {
-    open: () => 'expand',
-    close: () => 'collapse',
+    open: () => 'show',
+    close: () => 'hide',
   },
   forms: {
     required: () => 'required',

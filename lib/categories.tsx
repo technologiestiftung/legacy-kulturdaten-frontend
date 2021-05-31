@@ -97,7 +97,7 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   query: ParsedUrlQuery
 ): {
   entry: T;
-  mutate: (data?: C['response'], shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
+  mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
 } => {
   const call = useApiCall();
 
@@ -109,8 +109,14 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
+  const wrappedMutate = (entry?: T, shouldRevalidate?: boolean) =>
+    mutate(
+      entry ? (({ status: 200, body: { data: entry } } as unknown) as C['response']) : undefined,
+      shouldRevalidate
+    );
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { entry: ((data?.body as any)?.data as unknown) as T, mutate };
+  return { entry: ((data?.body as any)?.data as unknown) as T, mutate: wrappedMutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {

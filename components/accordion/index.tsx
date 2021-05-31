@@ -9,8 +9,6 @@ import { contentGrid, insetBorder, mq } from '../globals/Constants';
 const StyledAccordion = styled.div`
   display: flex;
   flex-direction: column;
-
-  border-bottom: 1px solid var(--grey-400);
 `;
 
 const StyledAccordionItem = styled.div`
@@ -31,7 +29,12 @@ const accordionContentGrid = css`
 
 const StyledAccordionItemHead = styled.div`
   ${accordionContentGrid} /* border-top: 2px solid var(--black); */
-  box-shadow: ${insetBorder(true, false, false)};
+  box-shadow: ${insetBorder(false, false, true)};
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background: var(--white);
 `;
 
 const StyledAccordionItemHeadContainer = styled.div`
@@ -63,7 +66,7 @@ const StyledAccordionItemTitle = styled.div`
 const StyledAccordionItemButton = styled.div``;
 const StyledAccordionItemContent = styled.div`
   ${accordionContentGrid}
-  box-shadow: ${insetBorder(true, false, false)};
+  box-shadow: ${insetBorder(false, false, true)};
 `;
 const StyledAccordionItemContentContainer = styled.div`
   grid-column: 1 / -1;

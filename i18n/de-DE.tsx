@@ -5,8 +5,8 @@ export const deDE: Localization = {
     content: () => 'Test Inhalt',
   },
   accordion: {
-    open: () => 'ausklappen',
-    close: () => 'einklappen',
+    open: () => 'anzeigen',
+    close: () => 'ausblenden',
   },
   forms: {
     required: () => 'Pflichtfeld',
