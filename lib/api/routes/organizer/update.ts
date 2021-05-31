@@ -6,7 +6,7 @@ import { Organizer } from '../../types/organizer';
  * /auth/info
  */
 
-export interface OrganizerUpdate extends ApiCall {
+export type OrganizerUpdate = ApiCall & {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'PATCH';
@@ -30,7 +30,7 @@ export interface OrganizerUpdate extends ApiCall {
       };
     };
   };
-}
+};
 
 export const organizerUpdateFactory = (
   token: OrganizerUpdate['request']['headers']['Authorization'],

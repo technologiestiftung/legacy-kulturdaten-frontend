@@ -7,7 +7,7 @@ import { mutate as mutateSwr } from 'swr';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
-import { Organizer, OrganizerSubject } from '../../../lib/api/types/organizer';
+import { Organizer } from '../../../lib/api/types/organizer';
 import {
   Category,
   CategoryEntryPage,
@@ -62,8 +62,6 @@ const formItemWidthMap: { [key in FormItemWidth]: SerializedStyles } = {
 };
 
 const FormItem = styled.div<{ width: FormItemWidth }>`
-  /* padding: 0 0.75rem; */
-
   ${({ width }) => formItemWidthMap[width]}
 `;
 
@@ -85,35 +83,24 @@ interface OrganizerFormProps {
   query: ParsedUrlQuery;
 }
 
-const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+interface EntryFormProps {
+  children?: React.ReactNode;
+  category: Category;
+  entry: Organizer;
+  formState: Partial<OrganizerUpdate['request']['body']>;
+  mutate: any;
+  setPristine: (pristine: boolean) => void;
+}
+
+const EntryForm: React.FC<EntryFormProps> = ({
+  children,
+  category,
+  entry,
+  formState,
+  mutate,
+  setPristine,
+}: EntryFormProps) => {
   const call = useApiCall();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const [pristine, setPristine] = useState<boolean>(true);
-
-  const initialFormState = useMemo(
-    () => ({
-      name: entry?.attributes.name,
-      address: entry?.relations?.address?.attributes,
-      type: entry?.relations?.type?.id || '2',
-      subjects:
-        Array.isArray(entry?.relations?.subjects) && entry?.relations?.subjects.length > 0
-          ? entry?.relations?.subjects?.map((subject) => subject.id)
-          : ['2'],
-    }),
-    [entry]
-  );
-
-  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>(initialFormState);
-
-  useEffect(() => {
-    const updatedState =
-      typeof formState.name !== 'undefined'
-        ? { ...initialFormState, name: formState.name }
-        : initialFormState;
-    setFormState(updatedState);
-  }, [initialFormState, formState.name]);
-
-  const t = useT();
 
   return (
     <form
@@ -123,12 +110,12 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
 
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            organizer: formState,
+            organizer: makeFormState(entry, formState),
             id: entry.id,
           });
 
           if (resp.status === 200) {
-            mutate({ ...entry, attributes: { ...entry.attributes, name: formState.name } }, false);
+            mutate(resp.body.data, false);
             mutateSwr(getApiUrlString(category.api.list.route));
             setPristine(true);
           }
@@ -137,12 +124,76 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
         }
       }}
     >
+      {children}
+    </form>
+  );
+};
+
+const makeFormState = (
+  entry: Organizer,
+  data: Partial<OrganizerUpdate['request']['body']>
+): OrganizerUpdate['request']['body'] => ({
+  ...{
+    name: entry.attributes.name,
+    address: entry.relations.address.attributes,
+    type: entry.relations.type.id,
+    subjects: entry.relations.subjects.map((subject) => subject.id),
+  },
+  ...data,
+});
+
+const useEntryForm = (
+  category: Category,
+  query: ParsedUrlQuery
+): {
+  formState: Partial<OrganizerUpdate['request']['body']>;
+  setFormState: (partialFormState: Partial<OrganizerUpdate['request']['body']>) => void;
+  resetFormState: () => void;
+  pristine: boolean;
+  setPristine: (pristine: boolean) => void;
+  formProps: EntryFormProps;
+  entry: Organizer;
+  formButtons: React.ReactElement;
+} => {
+  const t = useT();
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+
+  const initialFormState = useMemo(
+    () => ({
+      name: entry?.attributes.name,
+      address: entry?.relations?.address?.attributes,
+      type: entry?.relations?.type?.id,
+      subjects: entry?.relations?.subjects?.map((subject) => String(subject.id)),
+    }),
+    [entry]
+  );
+
+  const [pristine, setPristine] = useState<boolean>(true);
+  const [formState, setFormState] = useState<Partial<OrganizerUpdate['request']['body']>>(
+    initialFormState
+  );
+
+  useEffect(() => {
+    setFormState(initialFormState);
+  }, [initialFormState]);
+
+  const resetFormState = () => setFormState(initialFormState);
+
+  return {
+    formState,
+    setFormState,
+    resetFormState,
+    pristine,
+    setPristine,
+    entry,
+    formProps: { category, entry, mutate, setPristine, formState },
+    formButtons: (
       <FormButtons>
         <Button
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
-            setFormState(initialFormState);
+            resetFormState();
             setPristine(true);
           }}
           icon="XOctagon"
@@ -160,6 +211,21 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
           {t('categories.organizer.form.save')}
         </Button>
       </FormButtons>
+    ),
+  };
+};
+
+const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+  const { formState, setFormState, setPristine, formProps, formButtons } = useEntryForm(
+    category,
+    query
+  );
+
+  const t = useT();
+
+  return (
+    <EntryForm {...formProps}>
+      {formButtons}
       <FormGrid>
         <FormItem width={FormItemWidth.half}>
           <Input
@@ -168,9 +234,8 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
             value={formState?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ ...formState, name: e.target.value });
+              setFormState({ name: e.target.value });
             }}
-            // disabled={!editing}
             required
           />
         </FormItem>
@@ -181,9 +246,8 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
             value={formState?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ ...formState, name: e.target.value });
+              setFormState({ name: e.target.value });
             }}
-            // disabled={!editing}
           />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
@@ -193,9 +257,8 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
             value={formState?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ ...formState, name: e.target.value });
+              setFormState({ name: e.target.value });
             }}
-            // disabled={!editing}
           />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
@@ -205,36 +268,17 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
             value={formState?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ ...formState, name: e.target.value });
+              setFormState({ name: e.target.value });
             }}
-            // disabled={!editing}
           />
         </FormItem>
       </FormGrid>
-    </form>
+    </EntryForm>
   );
 };
 
 const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const call = useApiCall();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const [pristine, setPristine] = useState<boolean>(true);
-
-  const initialFormState = useMemo(
-    () => ({
-      name: entry?.attributes.name,
-      address: entry?.relations?.address?.attributes,
-      type: entry?.relations?.type?.id || '2',
-      subjects: entry?.relations?.subjects?.map((subject) => subject.id) || ['2'],
-    }),
-    [entry]
-  );
-
-  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>(initialFormState);
-
-  useEffect(() => {
-    setFormState(initialFormState);
-  }, [initialFormState]);
+  const { formButtons } = useEntryForm(category, query);
 
   const t = useT();
 
@@ -243,73 +287,23 @@ const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
       onSubmit={async (e: FormEvent) => {
         e.preventDefault();
         e.stopPropagation();
-
-        // try {
-        //   const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-        //     organizer: formState,
-        //     id: entry.id,
-        //   });
-
-        //   if (resp.status === 200) {
-        //     mutate();
-        //     mutateSwr(getApiUrlString(category.api.list.route));
-        //     setPristine(true);
-        //   }
-        // } catch (e) {
-        //   console.error(e);
-        // }
       }}
     >
-      <FormButtons>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setFormState(initialFormState);
-            setPristine(true);
-          }}
-          icon="XOctagon"
-          color={ButtonColor.yellow}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.editCancel')}
-        </Button>
-        <Button
-          type={ButtonType.submit}
-          icon="CheckSquare"
-          color={ButtonColor.green}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.save')}
-        </Button>
-      </FormButtons>
+      {formButtons}
       <FormGrid>
         <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.tel') as string}
-            type={InputType.tel}
-            // disabled={!editing}
-          />
+          <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.email') as string}
-            type={InputType.email}
-            // disabled={!editing}
-          />
+          <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.website') as string}
-            type={InputType.url}
-            // disabled={!editing}
-          />
+          <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
         </FormItem>
         <FormItem width={FormItemWidth.full}>
           <Textarea
             id="ff-social"
             label={t('categories.organizer.form.social') as string}
-            // disabled={!editing}
             rows={3}
           />
         </FormItem>
@@ -319,26 +313,7 @@ const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
 };
 
 const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const call = useApiCall();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const [pristine, setPristine] = useState<boolean>(true);
-
-  const initialFormState = useMemo(
-    () => ({
-      name: entry?.attributes.name,
-      address: entry?.relations?.address?.attributes,
-      type: entry?.relations?.type?.id || '2',
-      subjects: entry?.relations?.subjects?.map((subject) => subject.id) || ['2'],
-    }),
-    [entry]
-  );
-
-  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>(initialFormState);
-
-  useEffect(() => {
-    setFormState(initialFormState);
-  }, [initialFormState]);
-
+  const { formButtons } = useEntryForm(category, query);
   const t = useT();
 
   return (
@@ -346,53 +321,15 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
       onSubmit={async (e: FormEvent) => {
         e.preventDefault();
         e.stopPropagation();
-
-        // try {
-        //   const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-        //     organizer: formState,
-        //     id: entry.id,
-        //   });
-
-        //   if (resp.status === 200) {
-        //     mutate();
-        //     mutateSwr(getApiUrlString(category.api.list.route));
-        //     setPristine(true);
-        //   }
-        // } catch (e) {
-        //   console.error(e);
-        // }
       }}
     >
-      <FormButtons>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setFormState(initialFormState);
-            setPristine(true);
-          }}
-          icon="XOctagon"
-          color={ButtonColor.yellow}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.editCancel')}
-        </Button>
-        <Button
-          type={ButtonType.submit}
-          icon="CheckSquare"
-          color={ButtonColor.green}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.save')}
-        </Button>
-      </FormButtons>
+      {formButtons}
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           <Textarea
             id="ff-desc-g"
             label={t('categories.organizer.form.descriptionGerman') as string}
             rows={5}
-            onChange={() => setPristine(false)}
           />
         </FormItem>
         <FormItem width={FormItemWidth.full}>
@@ -400,7 +337,6 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
             id="ff-desc-e"
             label={t('categories.organizer.form.descriptionEnglish') as string}
             rows={5}
-            onChange={() => setPristine(false)}
           />
         </FormItem>
         <FormItem width={FormItemWidth.full}>
@@ -408,7 +344,6 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
             id="ff-desc-gs"
             label={t('categories.organizer.form.descriptionGermanSimple') as string}
             rows={5}
-            onChange={() => setPristine(false)}
           />
         </FormItem>
         <FormItem width={FormItemWidth.full}>
@@ -416,7 +351,6 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
             id="ff-desc-es"
             label={t('categories.organizer.form.descriptionEnglishSimple') as string}
             rows={5}
-            onChange={() => setPristine(false)}
           />
         </FormItem>
       </FormGrid>
@@ -425,89 +359,16 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
 };
 
 const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const call = useApiCall();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const [pristine, setPristine] = useState<boolean>(true);
-
-  const initialFormState = useMemo(
-    () => ({
-      name: entry?.attributes.name,
-      address: entry?.relations?.address?.attributes,
-      type: entry?.relations?.type?.id || '2',
-      subjects: entry?.relations?.subjects?.map((subject) => subject.id) || ['2'],
-    }),
-    [entry]
+  const { formState, setFormState, setPristine, formProps, formButtons } = useEntryForm(
+    category,
+    query
   );
-
-  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>(initialFormState);
-
-  useEffect(() => {
-    const updatedState =
-      typeof formState.address !== 'undefined'
-        ? { ...initialFormState, address: formState.address }
-        : initialFormState;
-    setFormState(updatedState);
-  }, [initialFormState, formState.address]);
 
   const t = useT();
 
   return (
-    <form
-      onSubmit={async (e: FormEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        try {
-          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            organizer: formState,
-            id: entry.id,
-          });
-
-          if (resp.status === 200) {
-            mutate(
-              {
-                ...entry,
-                relations: {
-                  ...entry.relations,
-                  address: {
-                    ...entry.relations.address,
-                    attributes: { ...entry.relations.address.attributes, ...formState.address },
-                  },
-                },
-              },
-              false
-            );
-            mutateSwr(getApiUrlString(category.api.list.route));
-            setPristine(true);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }}
-    >
-      <FormButtons>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setFormState(initialFormState);
-            setPristine(true);
-          }}
-          icon="XOctagon"
-          color={ButtonColor.yellow}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.editCancel')}
-        </Button>
-        <Button
-          type={ButtonType.submit}
-          icon="CheckSquare"
-          color={ButtonColor.green}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.save')}
-        </Button>
-      </FormButtons>
+    <EntryForm {...formProps}>
+      {formButtons}
       <FormGrid>
         <FormItem width={FormItemWidth.half}>
           <Input
@@ -521,7 +382,6 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
                 address: { ...formState?.address, street1: e.target.value },
               });
             }}
-            // disabled={!editing}
             required
           />
         </FormItem>
@@ -537,7 +397,6 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
                 address: { ...formState?.address, street2: e.target.value },
               });
             }}
-            // disabled={!editing}
           />
         </FormItem>
         <FormItem width={FormItemWidth.quarter}>
@@ -552,7 +411,6 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
                 address: { ...formState?.address, zipCode: e.target.value },
               });
             }}
-            // disabled={!editing}
             required
           />
         </FormItem>
@@ -568,12 +426,11 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
                 address: { ...formState?.address, city: e.target.value },
               });
             }}
-            // disabled={!editing}
             required
           />
         </FormItem>
       </FormGrid>
-    </form>
+    </EntryForm>
   );
 };
 
@@ -600,51 +457,37 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
   category,
   query,
 }: OrganizerFormProps) => {
-  const call = useApiCall();
   const t = useT();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const [pristine, setPristine] = useState<boolean>(true);
+
+  const { formState, setFormState, setPristine, formProps, formButtons } = useEntryForm(
+    category,
+    query
+  );
 
   const organizerTypes = useOrganizerTypeList();
 
-  const initialSubjects = useMemo(
-    () => entry?.relations?.subjects?.map((subject) => String(subject.id)) || undefined,
-    [entry]
-  );
+  const initialSubjects = useMemo(() => formState?.subjects?.map((subject) => String(subject)), [
+    formState,
+  ]);
 
-  const initialChosenSubjects = useMemo<{ [key: string]: string[] }>(
+  const organizerSubjects = useMemo(
     () =>
-      entry?.relations?.type ? { [String(entry.relations.type.id)]: initialSubjects } : undefined,
-    [entry, initialSubjects]
+      formState?.type
+        ? organizerTypes?.find((type) => String(type.id) === String(formState.type))?.relations
+            ?.subjects
+        : undefined,
+    [formState, organizerTypes]
   );
 
-  const initialFormState = useMemo(
-    () => ({
-      name: entry?.attributes.name,
-      address: entry?.relations?.address?.attributes,
-      type: entry?.relations?.type?.id ? String(entry?.relations?.type?.id) : undefined,
-    }),
-    [entry]
+  const [userSubjects, dispatchSubjects] = useReducer(
+    subjectsReducer,
+    initialSubjects && initialSubjects[formState?.type]
+      ? { [formState.type]: initialSubjects }
+      : undefined
   );
 
-  const [formState, setFormState] = useState<OrganizerUpdate['request']['body']>(initialFormState);
-
-  const organizerSubjects = formState?.type
-    ? organizerTypes?.find((type) => String(type.id) === formState.type)?.relations?.subjects
-    : undefined;
-
-  const [userSubjects, dispatchSubjects] = useReducer(subjectsReducer, initialChosenSubjects);
-
   useEffect(() => {
-    const updatedState =
-      typeof formState.type !== 'undefined'
-        ? { ...initialFormState, type: formState.type }
-        : initialFormState;
-    setFormState(updatedState);
-  }, [initialFormState, formState.type]);
-
-  useEffect(() => {
-    if (formState?.type) {
+    if (formState?.type && initialSubjects) {
       if (!userSubjects) {
         dispatchSubjects({
           type: SubjectsAction.update,
@@ -655,66 +498,14 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
   }, [formState?.type, initialSubjects, userSubjects]);
 
   return (
-    <form
-      onSubmit={async (e: FormEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        try {
-          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            organizer: { ...formState, subjects: userSubjects[formState.type] },
-            id: entry.id,
-          });
-
-          if (resp.status === 200) {
-            mutate(
-              {
-                ...entry,
-                relations: {
-                  ...entry.relations,
-                  type: { ...entry.relations.type, id: formState.type },
-                  subjects: (userSubjects[formState.type] as unknown) as OrganizerSubject[],
-                },
-              },
-              false
-            );
-            mutateSwr(getApiUrlString(category.api.list.route));
-            setPristine(true);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }}
-    >
-      <FormButtons>
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setFormState(initialFormState);
-            setPristine(true);
-          }}
-          icon="XOctagon"
-          color={ButtonColor.yellow}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.editCancel')}
-        </Button>
-        <Button
-          type={ButtonType.submit}
-          icon="CheckSquare"
-          color={ButtonColor.green}
-          disabled={pristine}
-        >
-          {t('categories.organizer.form.save')}
-        </Button>
-      </FormButtons>
+    <EntryForm {...formProps}>
+      {formButtons}
       <FormGrid>
         <FormItem width={FormItemWidth.half}>
           <Select
             label={t('categories.organizer.form.type') as string}
             id="ff1"
-            value={formState?.type || ''}
+            value={String(formState?.type) || ''}
             onChange={(e) => {
               setPristine(false);
               setFormState({
@@ -726,7 +517,6 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                     : [],
               });
             }}
-            // disabled={!editing}
             placeholder={t('general.choose') as string}
             required
           >
@@ -754,7 +544,7 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                   type: SubjectsAction.update,
                   payload: { id: formState.type, subjects: val },
                 });
-                // setChosenSubjects({ ...chosenSubjects, [formState?.type]: val });
+                setFormState({ ...formState, subjects: val });
               }}
               value={userSubjects && formState?.type ? userSubjects[formState.type] : []}
               required
@@ -772,11 +562,10 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
             label={`${t('categories.organizer.form.tags') as string} (TBD)`}
             rows={3}
             onChange={() => setPristine(false)}
-            // disabled={!editing}
           />
         </FormItem>
       </FormGrid>
-    </form>
+    </EntryForm>
   );
 };
 
