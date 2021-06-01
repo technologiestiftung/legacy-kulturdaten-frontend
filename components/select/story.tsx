@@ -34,6 +34,20 @@ export const SelectDefaultStory: Story = () => (
 );
 SelectDefaultStory.storyName = 'Select size=default variant=default';
 
+export const SelectDisabledStory: Story = () => (
+  <StyledTestWrapper>
+    <Select id="select-2" label="Default Variant" disabled>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+    </Select>
+    <Select id="select-3" label="Minimal Variant" variant={SelectVariant.minimal} disabled>
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+    </Select>
+  </StyledTestWrapper>
+);
+SelectDisabledStory.storyName = 'Select disabled';
+
 export const SelectMinimalStory: Story = () => (
   <>
     <StyledTestWrapper>

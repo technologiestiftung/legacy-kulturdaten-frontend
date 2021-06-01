@@ -7,6 +7,8 @@ import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { TitleBarProps } from '../components/navigation/TitleBar';
 import { Categories, useCategories } from '../config/categories';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
+import { OrganizerType } from './api/types/organizer';
 import { Route, useLocale } from './routing';
 
 export type categoryApi = {
@@ -95,7 +97,7 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   query: ParsedUrlQuery
 ): {
   entry: T;
-  mutate: (data?: C['response'], shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
+  mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
 } => {
   const call = useApiCall();
 
@@ -107,8 +109,14 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
+  const wrappedMutate = (entry?: T, shouldRevalidate?: boolean) =>
+    mutate(
+      entry ? (({ status: 200, body: { data: entry } } as unknown) as C['response']) : undefined,
+      shouldRevalidate
+    );
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { entry: ((data?.body as any)?.data as unknown) as T, mutate };
+  return { entry: ((data?.body as any)?.data as unknown) as T, mutate: wrappedMutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
@@ -139,4 +147,16 @@ export const useCategoryMenu = (
   const categoryMenu = category.menuFactory(category, list);
 
   return categoryMenu;
+};
+
+export const useOrganizerTypeList = (): OrganizerType[] => {
+  const call = useApiCall();
+
+  const { data } = useSWR(
+    getApiUrlString(ApiRoutes.organizerTypeList),
+    () => call<OrganizerTypeList>(organizerTypeListFactory),
+    { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
+  );
+
+  return data?.body?.data;
 };

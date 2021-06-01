@@ -4,7 +4,6 @@ export const StyledLabel = styled.label`
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);
   font-weight: 700;
-  text-transform: uppercase;
   color: inherit;
 `;
 

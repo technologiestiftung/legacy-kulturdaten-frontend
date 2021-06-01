@@ -6,7 +6,7 @@ import { Organizer } from '../../types/organizer';
  * /auth/info
  */
 
-export interface OrganizerUpdate extends ApiCall {
+export type OrganizerUpdate = ApiCall & {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'PATCH';
@@ -17,8 +17,8 @@ export interface OrganizerUpdate extends ApiCall {
     body: {
       name: string;
       address: Address['attributes'];
-      type?: number;
-      subjects?: number[];
+      type?: string;
+      subjects?: string[];
     };
   };
   response: {
@@ -30,7 +30,7 @@ export interface OrganizerUpdate extends ApiCall {
       };
     };
   };
-}
+};
 
 export const organizerUpdateFactory = (
   token: OrganizerUpdate['request']['headers']['Authorization'],
@@ -39,8 +39,8 @@ export const organizerUpdateFactory = (
     organizer: {
       name: string;
       address: Address['attributes'];
-      type?: number;
-      subjects?: number[];
+      type?: string;
+      subjects?: string[];
     };
   }
 ): OrganizerUpdate => ({
@@ -51,7 +51,7 @@ export const organizerUpdateFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: { ...query.organizer, type: 1, subjects: [1] },
+    body: query.organizer,
   },
   response: {
     status: 200,

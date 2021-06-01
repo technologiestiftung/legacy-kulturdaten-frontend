@@ -28,12 +28,14 @@ export const CSSVars: React.FC = () => (
 
         --font-weight-normal: 500;
         --font-weight-bold: 700;
-        --font-size-200: 0.75rem;
+        --font-size-200: 0.8125rem;
         --line-height-200: 1.5rem;
         --font-size-300: 0.875rem;
         --line-height-300: 1.5rem;
         --font-size-400: 1rem;
         --line-height-400: 1.5rem;
+        --font-size-500: 1.1125rem;
+        --line-height-500: 1.5rem;
         --font-size-600: 1.1125rem;
         --line-height-600: 1.5rem;
         --font-size-700: 1.5rem;
@@ -44,6 +46,7 @@ export const CSSVars: React.FC = () => (
         --app-height: 100vh;
 
         --transition-duration: 0.125s;
+        --transition-duration-fast: 0.03125s;
 
         --shadow: 2px 2px 10px -4px var(--black-o70);
         --shadow-hover: 2px 2px 12px -2px var(--black-o70);
@@ -70,19 +73,21 @@ export const contentGrid = (columnCount: number): SerializedStyles => css`
   column-gap: 0;
 `;
 
-const shadowMap4 = {
-  top: 'inset 0px 1px 0px var(--grey-400)',
-  right: 'inset -1px 0px 0px var(--grey-400)',
-  bottom: 'inset 0px -1px 0px var(--grey-400)',
-  left: 'inset 1px 0px 0px var(--grey-400)',
-};
+const defaultShadowColor = 'var(--grey-400)';
 
-const shadowMap2 = {
-  topBottom: `${shadowMap4.top}, ${shadowMap4.bottom}`,
-  rightLeft: `${shadowMap4.right}, ${shadowMap4.left}`,
-};
+const shadowMap4 = (shadowColor = defaultShadowColor) => ({
+  top: `inset 0px 1px 0px ${shadowColor}`,
+  right: `inset -1px 0px 0px ${shadowColor}`,
+  bottom: `inset 0px -1px 0px ${shadowColor}`,
+  left: `inset 1px 0px 0px ${shadowColor}`,
+});
 
-const shadowMap1 = 'inset 0px 0px 0px 1px var(--grey-400)';
+const shadowMap2 = (shadowColor = defaultShadowColor) => ({
+  topBottom: `${shadowMap4(shadowColor).top}, ${shadowMap4(shadowColor).bottom}`,
+  rightLeft: `${shadowMap4(shadowColor).right}, ${shadowMap4(shadowColor).left}`,
+});
+
+const shadowMap1 = (shadowColor = defaultShadowColor) => `inset 0px 0px 0px 1px ${shadowColor}`;
 
 /**
  * Creates border like attributes to be used with css `box-shadow`
@@ -92,7 +97,7 @@ const shadowMap1 = 'inset 0px 0px 0px 1px var(--grey-400)';
 export const insetBorder = (...sides: boolean[]): string => {
   switch (sides.length) {
     case 1: {
-      return sides[0] ? shadowMap1 : '';
+      return sides[0] ? shadowMap1() : '';
     }
 
     case 2:
@@ -103,8 +108,35 @@ export const insetBorder = (...sides: boolean[]): string => {
         .reduce<string>((combined, value, index) => {
           const shadow =
             sides.length === 2
-              ? Object.values(shadowMap2)[index]
-              : Object.values(shadowMap4)[index];
+              ? Object.values(shadowMap2())[index]
+              : Object.values(shadowMap4())[index];
+          if (value && shadow) {
+            return `${shadow}, ${combined}`;
+          } else {
+            return combined;
+          }
+        }, '')
+        .slice(0, -2);
+    }
+  }
+};
+
+export const insetBorderColored = (color: string, ...sides: boolean[]): string => {
+  switch (sides.length) {
+    case 1: {
+      return sides[0] ? shadowMap1(color) : '';
+    }
+
+    case 2:
+    case 3:
+    case 4:
+    default: {
+      return sides
+        .reduce<string>((combined, value, index) => {
+          const shadow =
+            sides.length === 2
+              ? Object.values(shadowMap2(color))[index]
+              : Object.values(shadowMap4(color))[index];
           if (value && shadow) {
             return `${shadow}, ${combined}`;
           } else {

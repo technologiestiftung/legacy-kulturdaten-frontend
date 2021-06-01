@@ -87,6 +87,7 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
 
     &:disabled {
       box-shadow: var(--shadow);
+      transform: none;
     }
   `,
   minimal: css`
@@ -105,6 +106,7 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
 
     &:disabled {
       box-shadow: none;
+      transform: none;
     }
   `,
 };
@@ -113,6 +115,7 @@ const StyledButton = styled.button<{
   color: ButtonColor;
   size: ButtonSize;
   variant: ButtonVariant;
+  disabled?: boolean;
 }>`
   margin: 0;
   appearance: none;
@@ -165,6 +168,11 @@ const buttonSizeIconSizeMap: { [key in ButtonSize]: number } = {
   big: 24,
 };
 
+export enum ButtonType {
+  button = 'button',
+  submit = 'submit',
+}
+
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
@@ -178,6 +186,7 @@ interface ButtonProps {
   asInput?: boolean;
   size?: ButtonSize;
   variant?: ButtonVariant;
+  type?: ButtonType;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -193,6 +202,7 @@ export const Button: React.FC<ButtonProps> = ({
   iconPosition = IconPosition.right,
   id,
   name,
+  type = ButtonType.button,
 }: ButtonProps) =>
   asInput ? (
     <StyledButton
@@ -216,6 +226,8 @@ export const Button: React.FC<ButtonProps> = ({
       variant={variant}
       id={id}
       name={name}
+      disabled={disabled}
+      type={type}
     >
       <StyledButtonSpan>{children}</StyledButtonSpan>
       {icon && feather[icon] ? (
