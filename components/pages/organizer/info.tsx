@@ -136,8 +136,8 @@ const makeFormState = (
   ...{
     name: entry.attributes.name,
     address: entry.relations.address.attributes,
-    type: entry.relations.type.id,
-    subjects: entry.relations.subjects.map((subject) => subject.id),
+    type: entry?.relations?.type?.id,
+    subjects: entry?.relations?.subjects?.map((subject) => subject.id),
   },
   ...data,
 });
