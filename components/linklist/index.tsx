@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Reducer, useReducer, useState } from 'react';
+import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonSize, ButtonType } from '../button';
 import { insetBorder, mq } from '../globals/Constants';
@@ -20,18 +20,28 @@ const StyledList = styled.ul`
 
 const StyledListItem = styled.li`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: stretch;
   padding: 0.375rem 0.75rem;
   box-shadow: ${insetBorder(false, false, true)};
-  flex-wrap: wrap;
+  flex-direction: column;
+
+  ${mq(Breakpoint.mid)} {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
 `;
 
 const StyledLink = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
-  padding: 0.75rem 0 0.375rem;
+  padding: 0.375rem 0 0.375rem;
   word-break: break-all;
+  flex-grow: 1;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.375rem 0.75rem 0.375rem 0;
+  }
 `;
 
 const StyledLinkButton = styled.div`
@@ -46,6 +56,7 @@ const StyledLinkButton = styled.div`
 const StyledLinkButtons = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-self: flex-end;
 `;
 
 const StyledLinkListAddNew = styled.div`
@@ -71,6 +82,7 @@ const StyledLinkListInputButton = styled.div`
   flex-grow: 0;
   flex-shrink: 0;
   padding: 0.375rem 0;
+  align-self: flex-end;
 
   ${mq(Breakpoint.mid)} {
     padding: 0.375rem 0 0.375rem 0.75rem;
@@ -78,34 +90,45 @@ const StyledLinkListInputButton = styled.div`
 `;
 
 enum LinksActions {
+  add = 'add',
   update = 'update',
   delete = 'delete',
+  init = 'init',
 }
 
-type LinksState = {
-  [key: string]: string;
-};
+type LinksState = string[];
 
 type LinksAction = {
   type: LinksActions;
   payload: {
-    id: string;
-    link?: string;
+    link?: {
+      index?: number;
+      value?: string;
+    };
+    links?: string[];
   };
 };
 
 const linksReducer: Reducer<LinksState, LinksAction> = (state, action) => {
   switch (action.type) {
+    case LinksActions.add: {
+      return [...state, action.payload.link.value];
+    }
+
     case LinksActions.update: {
-      return { ...state, [action.payload.id]: action.payload.link };
+      const updatedState = [...state];
+      updatedState[action.payload.link.index] = action.payload.link.value;
+      return updatedState;
     }
 
     case LinksActions.delete: {
-      const updatedState = { ...state };
+      return state
+        .slice(0, action.payload.link.index)
+        .concat(state.slice(action.payload.link.index + 1));
+    }
 
-      delete updatedState[action.payload.id];
-
-      return updatedState;
+    case LinksActions.init: {
+      return action.payload.links;
     }
 
     default: {
@@ -115,21 +138,49 @@ const linksReducer: Reducer<LinksState, LinksAction> = (state, action) => {
 };
 
 interface LinkListProps {
-  links: {
+  links?: {
     value: string;
   }[];
   label: string;
+  onChange?: (
+    updatedLinks: {
+      value: string;
+    }[]
+  ) => void;
 }
 
-export const LinkList: React.FC<LinkListProps> = ({ links, label }: LinkListProps) => {
+export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: LinkListProps) => {
+  const externalValue = useMemo(() => links, [links]);
+  const [externalValueDefined, setExternalValueDefined] = useState<boolean>(false);
+
   const [linksState, dispatch] = useReducer(
     linksReducer,
-    links?.reduce((combined, { value }, index) => {
-      return { ...combined, [index]: value };
-    }, {}) || {}
+    externalValue?.map(({ value }) => {
+      return value;
+    }) || []
   );
 
   const [inputState, setInputState] = useState<string>('');
+
+  useEffect(() => {
+    if (!externalValueDefined && externalValue && externalValue.length > 0) {
+      setExternalValueDefined(true);
+      dispatch({
+        type: LinksActions.init,
+        payload: {
+          links: externalValue?.map((link) => link.value) || [],
+        },
+      });
+    }
+  }, [externalValue, linksState, externalValueDefined]);
+
+  const callbackValue = useMemo(() => linksState.map((link) => ({ value: link })), [linksState]);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(callbackValue);
+    }
+  }, [callbackValue, onChange]);
 
   return (
     <StyledLinkList>
@@ -137,19 +188,28 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label }: LinkListProp
         <Label>{label}</Label>
       </StyledLinkListLabel>
       <StyledList>
-        {Object.entries(linksState).map(([id, link], index) => (
+        {linksState.map((link, index) => (
           <StyledListItem key={index}>
-            <StyledLink>{link}</StyledLink>
+            <StyledLink>
+              <Input
+                type={InputType.url}
+                id={`ll-link-${index}`}
+                value={link}
+                onChange={(e) =>
+                  dispatch({
+                    type: LinksActions.update,
+                    payload: { link: { index, value: e.target.value } },
+                  })
+                }
+              />
+            </StyledLink>
             <StyledLinkButtons>
-              <StyledLinkButton>
-                <Button size={ButtonSize.default} icon="Edit">
-                  bearbeiten
-                </Button>
-              </StyledLinkButton>
               <StyledLinkButton>
                 <Button
                   size={ButtonSize.default}
-                  onClick={() => dispatch({ type: LinksActions.delete, payload: { id } })}
+                  onClick={() =>
+                    dispatch({ type: LinksActions.delete, payload: { link: { index } } })
+                  }
                   icon="Trash2"
                 >
                   löschen
@@ -167,8 +227,8 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label }: LinkListProp
 
           if (inputState.length > 0) {
             dispatch({
-              type: LinksActions.update,
-              payload: { id: `${Object.values(linksState).length}`, link: inputState },
+              type: LinksActions.add,
+              payload: { link: { value: inputState } },
             });
 
             setInputState('');
