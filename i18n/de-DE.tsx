@@ -45,6 +45,11 @@ export const deDE: Localization = {
     draft: () => 'Entwurf',
     published: () => 'veröffentlicht',
     lastUpdated: () => 'Zuletzt aktualisiert',
+    delete: () => 'löschen',
+    add: () => 'hinzufügen',
+  },
+  linkList: {
+    addNew: () => 'Neuen Link hinzufügen',
   },
   categories: {
     organizer: {

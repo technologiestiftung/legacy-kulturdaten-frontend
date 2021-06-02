@@ -45,6 +45,11 @@ export const enDE: Localization = {
     draft: () => 'Draft',
     published: () => 'published',
     lastUpdated: () => 'Last updated',
+    delete: () => 'delete',
+    add: () => 'add',
+  },
+  linkList: {
+    addNew: () => 'Add new link',
   },
   categories: {
     organizer: {

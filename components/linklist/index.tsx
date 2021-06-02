@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
+import { useT } from '../../lib/i18n';
+import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonSize, ButtonType } from '../button';
 import { insetBorder, mq } from '../globals/Constants';
@@ -13,12 +15,12 @@ const StyledLinkListLabel = styled.div`
   box-shadow: ${insetBorder(false, false, true)};
 `;
 
-const StyledList = styled.ul`
+const StyledLinkListList = styled.ul`
   display: grid;
   grid-template-columns: auto;
 `;
 
-const StyledListItem = styled.li`
+const StyledLinkListListItem = styled.li`
   display: flex;
   align-items: stretch;
   padding: 0.375rem 0.75rem;
@@ -32,7 +34,7 @@ const StyledListItem = styled.li`
   }
 `;
 
-const StyledLink = styled.div`
+const StyledLinkListLink = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   padding: 0.375rem 0 0.375rem;
@@ -44,7 +46,7 @@ const StyledLink = styled.div`
   }
 `;
 
-const StyledLinkButton = styled.div`
+const StyledLinkListLinkButton = styled.div`
   padding: 0.375rem 0;
   margin-right: 0.75rem;
 
@@ -53,7 +55,7 @@ const StyledLinkButton = styled.div`
   }
 `;
 
-const StyledLinkButtons = styled.div`
+const StyledLinkListLinkButtons = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-self: flex-end;
@@ -150,8 +152,10 @@ interface LinkListProps {
 }
 
 export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: LinkListProps) => {
+  const t = useT();
   const externalValue = useMemo(() => links, [links]);
   const [externalValueDefined, setExternalValueDefined] = useState<boolean>(false);
+  const uid = usePseudoUID();
 
   const [linksState, dispatch] = useReducer(
     linksReducer,
@@ -187,13 +191,13 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
       <StyledLinkListLabel>
         <Label>{label}</Label>
       </StyledLinkListLabel>
-      <StyledList>
+      <StyledLinkListList>
         {linksState.map((link, index) => (
-          <StyledListItem key={index}>
-            <StyledLink>
+          <StyledLinkListListItem key={index}>
+            <StyledLinkListLink>
               <Input
                 type={InputType.url}
-                id={`ll-link-${index}`}
+                id={`linklist-${uid}-link-${index}`}
                 value={link}
                 onChange={(e) =>
                   dispatch({
@@ -202,9 +206,9 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
                   })
                 }
               />
-            </StyledLink>
-            <StyledLinkButtons>
-              <StyledLinkButton>
+            </StyledLinkListLink>
+            <StyledLinkListLinkButtons>
+              <StyledLinkListLinkButton>
                 <Button
                   size={ButtonSize.default}
                   onClick={() =>
@@ -212,13 +216,13 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
                   }
                   icon="Trash2"
                 >
-                  löschen
+                  {t('general.delete')}
                 </Button>
-              </StyledLinkButton>
-            </StyledLinkButtons>
-          </StyledListItem>
+              </StyledLinkListLinkButton>
+            </StyledLinkListLinkButtons>
+          </StyledLinkListListItem>
         ))}
-      </StyledList>
+      </StyledLinkListList>
 
       <form
         onSubmit={(e) => {
@@ -239,15 +243,15 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
           <StyledLinkListInput>
             <Input
               type={InputType.url}
-              id="ll-1"
+              id={`linklist-${uid}-add`}
               value={inputState}
               onChange={(e) => setInputState(e.target.value)}
-              label="Neu hinzufügen"
+              label={t('linkList.addNew') as string}
             />
           </StyledLinkListInput>
           <StyledLinkListInputButton>
             <Button icon="Plus" type={ButtonType.submit} disabled={inputState.length < 1}>
-              hinzufügen
+              {t('general.add')}
             </Button>
           </StyledLinkListInputButton>
         </StyledLinkListAddNew>
