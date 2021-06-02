@@ -12,13 +12,14 @@ import { Label } from '../label';
 const StyledLinkList = styled.div``;
 
 const StyledLinkListLabel = styled.div`
-  padding: 0.75rem;
-  box-shadow: ${insetBorder(false, false, true)};
+  margin-bottom: 0.75rem;
 `;
 
 const StyledLinkListList = styled.ul`
   display: grid;
   grid-template-columns: auto;
+  box-shadow: ${insetBorder(true)};
+  border-radius: 0.75rem 0.75rem 0 0;
 `;
 
 const StyledLinkListListItem = styled.li`
@@ -67,6 +68,8 @@ const StyledLinkListAddNew = styled.div`
   flex-direction: column;
   align-items: stretch;
   padding: 0.375rem 0.75rem;
+  box-shadow: ${insetBorder(false, true, true, true)};
+  border-radius: 0 0 0.75rem 0.75rem;
 
   ${mq(Breakpoint.mid)} {
     justify-content: space-between;
@@ -94,6 +97,7 @@ const StyledLinkListInputButton = styled.div`
 
 const StyledLinkListInfo = styled.div`
   padding: 0.75rem 0.75rem 0;
+  box-shadow: ${insetBorder(false, true)};
 `;
 
 enum LinksActions {
@@ -145,15 +149,9 @@ const linksReducer: Reducer<LinksState, LinksAction> = (state, action) => {
 };
 
 interface LinkListProps {
-  links?: {
-    value: string;
-  }[];
+  links?: string[];
   label: string;
-  onChange?: (
-    updatedLinks: {
-      value: string;
-    }[]
-  ) => void;
+  onChange?: (updatedLinks: string[]) => void;
   maxLinks?: number;
 }
 
@@ -168,13 +166,7 @@ export const LinkList: React.FC<LinkListProps> = ({
   const [externalValueDefined, setExternalValueDefined] = useState<boolean>(false);
   const uid = usePseudoUID();
 
-  const [linksState, dispatch] = useReducer(
-    linksReducer,
-    externalValue?.map(({ value }) => {
-      return value;
-    }) || []
-  );
-
+  const [linksState, dispatch] = useReducer(linksReducer, externalValue || []);
   const [inputState, setInputState] = useState<string>('');
 
   const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState.length >= maxLinks, [
@@ -188,19 +180,17 @@ export const LinkList: React.FC<LinkListProps> = ({
       dispatch({
         type: LinksActions.init,
         payload: {
-          links: externalValue?.map((link) => link.value) || [],
+          links: externalValue || [],
         },
       });
     }
   }, [externalValue, linksState, externalValueDefined]);
 
-  const callbackValue = useMemo(() => linksState.map((link) => ({ value: link })), [linksState]);
-
   useEffect(() => {
     if (onChange) {
-      onChange(callbackValue);
+      onChange(linksState);
     }
-  }, [callbackValue, onChange]);
+  }, [linksState, onChange]);
 
   return (
     <StyledLinkList>

@@ -7,7 +7,7 @@ export default {
 };
 
 const X: React.FC = () => {
-  const [links, setLinks] = useState<{ value: string }[]>(undefined);
+  const [links, setLinks] = useState<string[]>(undefined);
 
   const onChange = useCallback((newLinks) => {
     console.log(newLinks);
@@ -17,20 +17,14 @@ const X: React.FC = () => {
   useEffect(() => {
     setTimeout(() => {
       setLinks([
-        {
-          value: 'https://www.technologiestiftung-berlin.de/',
-        },
-        {
-          value: 'https://www.kulturdaten.berlin/',
-        },
-        {
-          value: 'https://beta.api.kulturdaten.berlin/docs/',
-        },
+        'https://www.technologiestiftung-berlin.de/',
+        'https://www.kulturdaten.berlin/',
+        'https://beta.api.kulturdaten.berlin/docs/',
       ]);
     }, 10);
   }, []);
 
-  return <LinkList links={links} label="Social Media Links" onChange={onChange} maxLinks={4} />;
+  return <LinkList links={links} label="Social Media Links" onChange={onChange} maxLinks={3} />;
 };
 
 export const LinkListDefaultStory: Story = () => <X />;
