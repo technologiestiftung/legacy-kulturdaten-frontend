@@ -50,6 +50,9 @@ export const deDE: Localization = {
   },
   linkList: {
     addNew: () => 'Neuen Link hinzufügen',
+    maxLinks: ({ amount }) => `maximal ${amount} Links`,
+    maxReached: ({ amount }) =>
+      `Das Maximum von ${amount} Links ist erreicht. Mehr Links können nicht hinzugefügt werden. Aber bestehende Links können verändert oder gelöscht werden.`,
   },
   categories: {
     organizer: {

@@ -15,6 +15,7 @@ export const CSSVars: React.FC = () => (
         --black-o25: rgba(17, 17, 17, 0.25);
         --black-o70: rgba(17, 17, 17, 0.7);
         --yellow: #e6ea81;
+        --yellow-dark: #a7ad00;
         --green-light: #41b496;
         --green-mid: #46948c;
         --red: #e60032;

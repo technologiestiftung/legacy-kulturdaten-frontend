@@ -5,6 +5,7 @@ import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonSize, ButtonType } from '../button';
 import { insetBorder, mq } from '../globals/Constants';
+import { Info } from '../info';
 import { Input, InputType } from '../input';
 import { Label } from '../label';
 
@@ -91,6 +92,10 @@ const StyledLinkListInputButton = styled.div`
   }
 `;
 
+const StyledLinkListInfo = styled.div`
+  padding: 0.75rem 0.75rem 0;
+`;
+
 enum LinksActions {
   add = 'add',
   update = 'update',
@@ -149,9 +154,15 @@ interface LinkListProps {
       value: string;
     }[]
   ) => void;
+  maxLinks?: number;
 }
 
-export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: LinkListProps) => {
+export const LinkList: React.FC<LinkListProps> = ({
+  links,
+  label,
+  onChange,
+  maxLinks,
+}: LinkListProps) => {
   const t = useT();
   const externalValue = useMemo(() => links, [links]);
   const [externalValueDefined, setExternalValueDefined] = useState<boolean>(false);
@@ -165,6 +176,11 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
   );
 
   const [inputState, setInputState] = useState<string>('');
+
+  const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState.length >= maxLinks, [
+    linksState,
+    maxLinks,
+  ]);
 
   useEffect(() => {
     if (!externalValueDefined && externalValue && externalValue.length > 0) {
@@ -189,7 +205,10 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
   return (
     <StyledLinkList>
       <StyledLinkListLabel>
-        <Label>{label}</Label>
+        <Label>
+          {label}
+          {maxLinks ? ` (${t('linkList.maxLinks', { amount: maxLinks })})` : ''}
+        </Label>
       </StyledLinkListLabel>
       <StyledLinkListList>
         {linksState.map((link, index) => (
@@ -223,13 +242,17 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
           </StyledLinkListListItem>
         ))}
       </StyledLinkListList>
-
+      {maxLinksReached && (
+        <StyledLinkListInfo>
+          <Info>{t('linkList.maxReached', { amount: maxLinks })}</Info>
+        </StyledLinkListInfo>
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
 
-          if (inputState.length > 0) {
+          if (!maxLinksReached && inputState.length > 0) {
             dispatch({
               type: LinksActions.add,
               payload: { link: { value: inputState } },
@@ -247,6 +270,7 @@ export const LinkList: React.FC<LinkListProps> = ({ links, label, onChange }: Li
               value={inputState}
               onChange={(e) => setInputState(e.target.value)}
               label={t('linkList.addNew') as string}
+              disabled={maxLinksReached}
             />
           </StyledLinkListInput>
           <StyledLinkListInputButton>

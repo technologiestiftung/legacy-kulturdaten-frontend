@@ -30,7 +30,7 @@ const X: React.FC = () => {
     }, 10);
   }, []);
 
-  return <LinkList links={links} label="Social Media Links" onChange={onChange} />;
+  return <LinkList links={links} label="Social Media Links" onChange={onChange} maxLinks={4} />;
 };
 
 export const LinkListDefaultStory: Story = () => <X />;

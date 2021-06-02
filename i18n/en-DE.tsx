@@ -50,6 +50,9 @@ export const enDE: Localization = {
   },
   linkList: {
     addNew: () => 'Add new link',
+    maxLinks: ({ amount }) => `maximum of ${amount} links`,
+    maxReached: ({ amount }) =>
+      `The maximum of ${amount} links is reached. You can not add more links, but you can edit or delete existing links.`,
   },
   categories: {
     organizer: {
