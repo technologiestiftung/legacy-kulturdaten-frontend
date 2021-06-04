@@ -1,14 +1,63 @@
 import { Story } from '@storybook/react';
-import unified from 'unified';
-import markdown from 'remark-parse';
-import slate, { defaultNodeTypes, serialize } from 'remark-slate';
-
+import { defaultNodeTypes, serialize } from 'remark-slate';
+import { jsx } from 'slate-hyperscript';
 import { CustomDescendant, RichText } from '.';
 import { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
+import marked from 'marked';
 
 export default {
   title: 'RichText',
+};
+
+const ELEMENT_TAGS = {
+  H1: () => ({ type: 'heading_one' }),
+  H2: () => ({ type: 'heading_two' }),
+  H3: () => ({ type: 'heading_three' }),
+  LI: () => ({ type: 'list_item' }),
+  OL: () => ({ type: 'ol_list' }),
+  UL: () => ({ type: 'ul_list' }),
+  P: () => ({ type: 'paragraph' }),
+};
+
+// COMPAT: `B` is omitted here because Google Docs uses `<b>` in weird ways.
+const TEXT_TAGS = {
+  EM: () => ({ italic: true }),
+  STRONG: () => ({ bold: true }),
+  U: () => ({ underline: true }),
+};
+
+const deserialize = (el: ChildNode) => {
+  if (el.nodeType === 3) {
+    return el.textContent !== '\n' ? el.textContent : null;
+  } else if (el.nodeType !== 1) {
+    return null;
+  } else if (el.nodeName === 'BR') {
+    return '\n';
+  }
+
+  const { nodeName } = el;
+  const parent = el;
+
+  const children = Array.from(parent.childNodes)
+    .map((ch) => deserialize(ch))
+    .flat();
+
+  if (el.nodeName === 'BODY') {
+    return jsx('fragment', {}, children);
+  }
+
+  if (ELEMENT_TAGS[nodeName]) {
+    const attrs = ELEMENT_TAGS[nodeName](el);
+    return jsx('element', attrs, children);
+  }
+
+  if (TEXT_TAGS[nodeName]) {
+    const attrs = TEXT_TAGS[nodeName](el);
+    return children.map((child) => jsx('text', attrs, child));
+  }
+
+  return children;
 };
 
 const md = `
@@ -52,11 +101,6 @@ const StyledPre = styled.pre`
 const X: React.FC = () => {
   const [value, setValue] = useState<CustomDescendant[]>();
 
-  const serializeMarkdown = async () => {
-    const ser = await unified().use(markdown).use(slate).process(md);
-    setValue((ser.result as unknown) as CustomDescendant[]);
-  };
-
   const parseSlateToMarkdown = useMemo(
     () =>
       value && Array.isArray(value)
@@ -68,7 +112,11 @@ const X: React.FC = () => {
   );
 
   useEffect(() => {
-    serializeMarkdown();
+    const parsedMarkdown = marked(md);
+    const document = new DOMParser().parseFromString(parsedMarkdown, 'text/html');
+    const slateStructure = deserialize(document.children[0]);
+
+    setValue(slateStructure);
   }, []);
 
   return (
