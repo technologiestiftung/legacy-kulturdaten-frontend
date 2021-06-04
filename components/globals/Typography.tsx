@@ -1,6 +1,7 @@
 import { Global, css } from '@emotion/react';
 
 export const fontFamily = 'IBM Plex Sans';
+export const fontFamilyMono = 'IBM Plex Mono';
 
 export const Typography: React.FC = () => (
   <Global
@@ -33,6 +34,38 @@ export const Typography: React.FC = () => (
         font-family: ${fontFamily};
         src: url('/fonts/IBMPlexSans-SemiBoldItalic-Latin1.woff2') format('woff2'),
           url('/fonts/IBMPlexSans-SemiBoldItalic-Latin1.woff') format('woff');
+        font-weight: 700;
+        font-display: auto;
+        font-style: italic;
+      }
+      @font-face {
+        font-family: ${fontFamilyMono};
+        src: url('/fonts/IBMPlexMono-Text-Latin1.woff2') format('woff2'),
+          url('/fonts/IBMPlexMono-Text-Latin1.woff') format('woff');
+        font-weight: 500;
+        font-display: auto;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: ${fontFamilyMono};
+        src: url('/fonts/IBMPlexMono-TextItalic-Latin1.woff2') format('woff2'),
+          url('/fonts/IBMPlexMono-TextItalic-Latin1.woff') format('woff');
+        font-weight: 500;
+        font-display: auto;
+        font-style: italic;
+      }
+      @font-face {
+        font-family: ${fontFamilyMono};
+        src: url('/fonts/IBMPlexMono-SemiBold-Latin1.woff2') format('woff2'),
+          url('/fonts/IBMPlexMono-SemiBold-Latin1.woff') format('woff');
+        font-weight: 700;
+        font-display: auto;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: ${fontFamilyMono};
+        src: url('/fonts/IBMPlexMono-SemiBoldItalic-Latin1.woff2') format('woff2'),
+          url('/fonts/IBMPlexMono-SemiBoldItalic-Latin1.woff') format('woff');
         font-weight: 700;
         font-display: auto;
         font-style: italic;
