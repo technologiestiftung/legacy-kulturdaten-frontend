@@ -9,10 +9,23 @@ import {
   RenderElementProps,
   RenderLeafProps,
 } from 'slate-react';
-import { Editor, Transforms, createEditor, Element as SlateElement, Text } from 'slate';
+import { Editor, Transforms, createEditor, Element as SlateElement, Text, BaseEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import React, { PropsWithChildren, Ref, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, ButtonColor } from '../button';
+
+import {
+  RichTextP,
+  RichTextH1,
+  RichTextH2,
+  RichTextH3,
+  RichTextStrong,
+  RichTextEm,
+  RichTextU,
+  RichTextUl,
+  RichTextOl,
+  RichTextLi,
+} from './elements';
 
 interface BaseProps {
   className: string;
@@ -20,9 +33,8 @@ interface BaseProps {
 }
 type OrNull<T> = T | null;
 
-const StyledRichText = styled.div``;
+type CustomElement = { type: ElementType; children: CustomDescendant[] } & SlateElement;
 
-type CustomElement = { type: string; children: CustomDescendant[] } & SlateElement;
 interface CustomElementProps extends RenderElementProps {
   element: CustomElement;
 }
@@ -33,43 +45,41 @@ enum MarkButtonFormat {
   underline = 'underline',
 }
 
-enum BlockButtonFormat {
-  'heading_one' = 'heading-one',
-  'heading_two' = 'heading-two',
-  'heading_three' = 'heading-three',
-  'ol-list' = 'ol-list',
-  'ul-list' = 'ul-list',
+enum ElementType {
+  'heading_one' = 'heading_one',
+  'heading_two' = 'heading_two',
+  'heading_three' = 'heading_three',
+  'ol_list' = 'ol_list',
+  'ul_list' = 'ul_list',
+  'list_item' = 'list_item',
 }
 
-const listTypes = [BlockButtonFormat['ol-list'], BlockButtonFormat['ul-list']];
+const listTypes = [ElementType['ol_list'], ElementType['ul_list']];
 
-// eslint-disable-next-line react/prop-types
 const Element = ({
   attributes,
   children,
   element,
 }: {
-  attributes: any;
+  attributes: { [key: string]: string | number | boolean };
   children: React.ReactNode;
   element: CustomElement;
 }) => {
   switch (element.type) {
-    case 'block-quote':
-      return <blockquote {...attributes}>{children}</blockquote>;
-    case 'ul-list':
-      return <ul {...attributes}>{children}</ul>;
-    case 'heading_one':
-      return <h1 {...attributes}>{children}</h1>;
-    case 'heading_two':
-      return <h2 {...attributes}>{children}</h2>;
-    case 'heading_three':
-      return <h3 {...attributes}>{children}</h3>;
-    case 'list-item':
-      return <li {...attributes}>{children}</li>;
-    case 'ol-list':
-      return <ol {...attributes}>{children}</ol>;
+    case ElementType['heading_one']:
+      return <RichTextH1 {...attributes}>{children}</RichTextH1>;
+    case ElementType['heading_two']:
+      return <RichTextH2 {...attributes}>{children}</RichTextH2>;
+    case ElementType['heading_three']:
+      return <RichTextH3 {...attributes}>{children}</RichTextH3>;
+    case ElementType['list_item']:
+      return <RichTextLi {...attributes}>{children}</RichTextLi>;
+    case ElementType['ol_list']:
+      return <RichTextOl {...attributes}>{children}</RichTextOl>;
+    case ElementType['ul_list']:
+      return <RichTextUl {...attributes}>{children}</RichTextUl>;
     default:
-      return <p {...attributes}>{children}</p>;
+      return <RichTextP {...attributes}>{children}</RichTextP>;
   }
 };
 
@@ -86,44 +96,46 @@ interface CustomLeafProps extends RenderLeafProps {
 // eslint-disable-next-line react/prop-types
 const Leaf = ({ attributes, children, leaf }: CustomLeafProps) => {
   if (leaf.bold) {
-    children = <strong>{children}</strong>;
+    children = <RichTextStrong>{children}</RichTextStrong>;
   }
 
   if (leaf.italic) {
-    children = <em>{children}</em>;
+    children = <RichTextEm>{children}</RichTextEm>;
   }
 
   if (leaf.underline) {
-    children = <u>{children}</u>;
+    children = <RichTextU>{children}</RichTextU>;
   }
 
   return <span {...attributes}>{children}</span>;
 };
 
-const isBlockActive = (editor, format: BlockButtonFormat) => {
+const isBlockActive = (editor: BaseEditor, format: ElementType) => {
   const [match] = Editor.nodes(editor, {
-    match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && (n as any).type === format,
+    match: (n: CustomElement) => {
+      return !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format;
+    },
   });
 
   return !!match;
 };
 
-const isMarkActive = (editor, format: MarkButtonFormat) => {
+const isMarkActive = (editor: BaseEditor, format: MarkButtonFormat) => {
   const marks = Editor.marks(editor);
   return marks ? marks[format] === true : false;
 };
 
-const toggleBlock = (editor, format: BlockButtonFormat) => {
+const toggleBlock = (editor: BaseEditor, format: ElementType) => {
   const isActive = isBlockActive(editor, format);
   const isList = listTypes.includes(format);
 
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      listTypes.includes(!Editor.isEditor(n) && SlateElement.isElement(n) && (n as any).type),
+    match: (n: CustomElement) =>
+      listTypes.includes(!Editor.isEditor(n) && SlateElement.isElement(n) && n.type),
     split: true,
   });
   const newProperties = {
-    type: isActive ? 'paragraph' : isList ? 'list-item' : format,
+    type: isActive ? 'paragraph' : isList ? 'list_item' : format,
   };
   Transforms.setNodes(editor, (newProperties as unknown) as SlateElement);
 
@@ -133,7 +145,7 @@ const toggleBlock = (editor, format: BlockButtonFormat) => {
   }
 };
 
-const toggleMark = (editor, format) => {
+const toggleMark = (editor: BaseEditor, format) => {
   const isActive = isMarkActive(editor, format);
 
   if (isActive) {
@@ -155,7 +167,7 @@ const Toolbar = React.forwardRef(
   )
 );
 
-const BlockButton = ({ format, icon }: { format: BlockButtonFormat; icon: string }) => {
+const BlockButton = ({ format, icon }: { format: ElementType; icon: string }) => {
   const editor = useSlate();
   return (
     <Button
@@ -187,8 +199,10 @@ const MarkButton = ({ format, icon }: { format: MarkButtonFormat; icon: string }
 
 interface RichTextProps {
   value?: CustomDescendant[];
-  onChange?: (value: any) => void;
+  onChange?: (value: CustomDescendant[]) => void;
 }
+
+const StyledRichText = styled.div``;
 
 export type CustomDescendant = CustomElement | CustomText;
 
@@ -196,10 +210,16 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
   const [intValue, setIntValue] = useState<CustomDescendant[]>([]);
 
   useEffect(() => {
-    if (Array.isArray(value)) {
+    if ((!intValue || (Array.isArray(intValue) && intValue.length === 0)) && Array.isArray(value)) {
       setIntValue(value);
     }
-  }, [value]);
+  }, [intValue, value]);
+
+  useEffect(() => {
+    if (onChange) {
+      onChange(intValue);
+    }
+  }, [intValue, onChange]);
 
   const renderElement = useCallback((props: CustomElementProps) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
@@ -216,11 +236,11 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
           <MarkButton format={MarkButtonFormat.bold} icon="format_bold" />
           <MarkButton format={MarkButtonFormat.italic} icon="format_italic" />
           <MarkButton format={MarkButtonFormat.underline} icon="format_underlined" />
-          <BlockButton format={BlockButtonFormat['heading_one']} icon="looks_one" />
-          <BlockButton format={BlockButtonFormat['heading_two']} icon="looks_one" />
-          <BlockButton format={BlockButtonFormat['heading_three']} icon="looks_one" />
-          <BlockButton format={BlockButtonFormat['ol-list']} icon="format_list_numbered" />
-          <BlockButton format={BlockButtonFormat['ul-list']} icon="format_list_numbered" />
+          <BlockButton format={ElementType['heading_one']} icon="looks_one" />
+          <BlockButton format={ElementType['heading_two']} icon="looks_one" />
+          <BlockButton format={ElementType['heading_three']} icon="looks_one" />
+          <BlockButton format={ElementType['ol_list']} icon="format_list_numbered" />
+          <BlockButton format={ElementType['ul_list']} icon="format_list_numbered" />
         </Toolbar>
         <Editable
           renderElement={renderElement}
