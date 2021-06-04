@@ -46,6 +46,9 @@ export const deDE: Localization = {
     published: () => 'veröffentlicht',
     lastUpdated: () => 'Zuletzt aktualisiert',
   },
+  overlay: {
+    ariaClose: () => 'Überlagerndes Fenster schließen',
+  },
   categories: {
     organizer: {
       title: {

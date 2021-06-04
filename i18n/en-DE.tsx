@@ -46,6 +46,9 @@ export const enDE: Localization = {
     published: () => 'published',
     lastUpdated: () => 'Last updated',
   },
+  overlay: {
+    ariaClose: () => 'Close overlay window',
+  },
   categories: {
     organizer: {
       title: {
