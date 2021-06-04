@@ -10,6 +10,7 @@ export enum ButtonColor {
   red = 'red',
   blue = 'blue',
   white = 'white',
+  black = 'black',
 }
 
 export enum ButtonSize {
@@ -21,6 +22,7 @@ export enum ButtonSize {
 export enum ButtonVariant {
   default = 'default',
   minimal = 'minimal',
+  borderless = 'borderless',
 }
 
 const buttonColors: {
@@ -35,6 +37,7 @@ const buttonColors: {
   red: { background: 'var(--red-50)', color: 'var(--black)' },
   blue: { background: 'var(--blue)', color: 'var(--white)' },
   white: { background: 'var(--white)', color: 'var(--black)' },
+  black: { background: 'var(--black)', color: 'var(--white)' },
 };
 
 const buttonSizes: {
@@ -65,7 +68,7 @@ const buttonSizes: {
     lineHeight: 'var(--line-height-400)',
     padding: '0.75rem 1rem',
     borderRadius: '0.75rem',
-    iconGap: '0.5rem',
+    iconGap: '0.375rem',
   },
 };
 
@@ -108,6 +111,11 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
       box-shadow: none;
       transform: none;
     }
+  `,
+  borderless: css`
+    padding: 0;
+    border: none;
+    background: none;
   `,
 };
 
@@ -176,7 +184,6 @@ export enum ButtonType {
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
-  description?: string;
   disabled?: boolean;
   color?: ButtonColor;
   icon?: string;
@@ -187,12 +194,12 @@ interface ButtonProps {
   size?: ButtonSize;
   variant?: ButtonVariant;
   type?: ButtonType;
+  ariaLabel?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
-  description,
   disabled,
   color = ButtonColor.default,
   size = ButtonSize.default,
@@ -203,6 +210,7 @@ export const Button: React.FC<ButtonProps> = ({
   id,
   name,
   type = ButtonType.button,
+  ariaLabel,
 }: ButtonProps) =>
   asInput ? (
     <StyledButton
@@ -216,11 +224,11 @@ export const Button: React.FC<ButtonProps> = ({
       type="submit"
       onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
       disabled={disabled}
+      aria-label={ariaLabel}
     />
   ) : (
     <StyledButton
       onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
-      aria-label={description}
       color={color}
       size={size}
       variant={variant}
@@ -228,6 +236,7 @@ export const Button: React.FC<ButtonProps> = ({
       name={name}
       disabled={disabled}
       type={type}
+      aria-label={ariaLabel}
     >
       <StyledButtonSpan>{children}</StyledButtonSpan>
       {icon && feather[icon] ? (
