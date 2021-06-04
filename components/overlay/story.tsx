@@ -4,6 +4,7 @@ import React, { useContext } from 'react';
 import { useOverlay } from '.';
 import { Button } from '../button';
 import { NavigationContext } from '../navigation/NavigationContext';
+import { OverlayTitleBar } from './OverlayTitleBar';
 
 export default {
   title: 'Overlay',
@@ -27,13 +28,29 @@ const StyledTestContentBox = styled.div`
   border-radius: 0.75rem;
 `;
 
-const X: React.FC = () => {
+interface OverlayExampleProps {
+  renderTitlebar?: boolean;
+  stickyTitlebar?: boolean;
+}
+const OverlayExample: React.FC<OverlayExampleProps> = ({
+  renderTitlebar,
+  stickyTitlebar,
+}: OverlayExampleProps) => {
   const { renderedOverlay, setIsOpen } = useOverlay(
-    <StyledTestContent>
-      {[...Array(10)].map((i, index) => (
-        <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
-      ))}
-    </StyledTestContent>,
+    <div>
+      {renderTitlebar && (
+        <OverlayTitleBar
+          title="Test Overlay"
+          actions={[<Button key={1}>Mock button</Button>, <Button key={2}>Mock button</Button>]}
+          sticky={stickyTitlebar}
+        />
+      )}
+      <StyledTestContent>
+        {[...Array(10)].map((i, index) => (
+          <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
+        ))}
+      </StyledTestContent>
+    </div>,
     true
   );
   const { overlayOpen } = useContext(NavigationContext);
@@ -53,4 +70,11 @@ const X: React.FC = () => {
   );
 };
 
-export const OverlayDefaultStory: Story = () => <X />;
+export const OverlayDefaultStory: Story = () => <OverlayExample renderTitlebar stickyTitlebar />;
+OverlayDefaultStory.storyName = 'Overlay with sticky TitleBar';
+
+export const OverlayNonStickyTitlebarStory: Story = () => <OverlayExample renderTitlebar />;
+OverlayNonStickyTitlebarStory.storyName = 'Overlay with non sticky TitleBar';
+
+export const OverlayNoTitlebarStory: Story = () => <OverlayExample />;
+OverlayNoTitlebarStory.storyName = 'Overlay without TitleBar';
