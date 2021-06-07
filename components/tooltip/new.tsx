@@ -229,6 +229,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
 
     parentNode.addEventListener('scroll', computeScrollY);
 
+    // Clean up event listener on unmount. React executes functions returned by useEffect on unmount.
     return () => {
       parentNode.removeEventListener('scroll', computeScrollY);
     };
@@ -244,6 +245,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
 
     window.addEventListener('resize', computeSizes);
 
+    // Clean up event listener on unmount. React executes functions returned by useEffect on unmount.
     return () => {
       window.removeEventListener('resize', computeSizes);
     };
