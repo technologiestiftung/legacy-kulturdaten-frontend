@@ -13,10 +13,12 @@ export const CSSVars: React.FC = () => (
         --grey-600: #474747;
         --black: #111111;
         --black-o25: rgba(17, 17, 17, 0.25);
+        --black-o40: rgba(0, 0, 0, 0.4);
         --black-o70: rgba(17, 17, 17, 0.7);
         --yellow: #e6ea81;
         --green-light: #41b496;
         --green-mid: #46948c;
+        --green-kelly: #91c882;
         --red: #e60032;
         --error: #ae0026;
         --error-o50: rgba(174, 0, 38, 0.5);
@@ -52,6 +54,7 @@ export const CSSVars: React.FC = () => (
         --shadow-hover: 2px 2px 12px -2px var(--black-o70);
         --shadow-active: 2px 2px 8px -4px var(--black-o70);
         --shadow-inset: inset 0px 1px 6px var(--black-o25);
+        --shadow-light: 2px 2px 10px -2px var(--black-o40);
 
         @media screen and (min-width: 768px) {
           --font-size-600: 1.5rem;
