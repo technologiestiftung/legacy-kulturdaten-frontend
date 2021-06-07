@@ -27,7 +27,10 @@ const StyledTooltip = styled.div`
   position: relative;
 `;
 
-const StyledTooltipButton = styled.button``;
+const StyledTooltipButton = styled.button`
+  width: 100%;
+  height: 100%;
+`;
 
 const StyledTooltipOverlay = styled.div<{
   xPosition: XPosition;
@@ -104,7 +107,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
   // The x position from the tooltip relative to its surrounding container or the window.
   const [xToParent, setXToParent] = useState<number>(0);
 
-  // The width of the surround container or the window.
+  // The width of the surrounding container or the window.
   const [parentWidth, setParentWidth] = useState<number>(0);
 
   // The height of the tooltip overlay
