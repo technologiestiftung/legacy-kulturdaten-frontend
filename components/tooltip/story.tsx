@@ -19,12 +19,13 @@ const TestWrapper = styled.div<{ background?: string; color?: string }>`
 `;
 
 const ScrollWrapper = styled.div`
+  max-height: 100%;
   height: 400px;
-  width: calc(100% - 30px);
-  border: 1px solid var(--black);
+  width: calc(100% - 6rem);
+  margin: 0 auto;
   overflow-x: hidden;
-  overflow-y: scroll;
-  margin-left: 30px;
+  overflow-y: auto;
+  border: 1px solid var(--grey-400);
 `;
 
 const StyledTestContent = styled.div`
@@ -65,33 +66,53 @@ const StyledH2 = styled.h2`
 `;
 
 export const NewTooltipStory: Story = () => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
   return (
     <>
-      <br />
-      <br />
-      <br />
-      <ScrollWrapper ref={wrapperRef}>
-        <StyledTestContent>
-          {[...Array(4)].map((i, index) => (
-            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
-          ))}
-        </StyledTestContent>
-        <div>
-          <StyledH2>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy{' '}
-            <NewTooltip parentNodeRef={wrapperRef}>Hello, Tooltip!</NewTooltip>
-          </StyledH2>
-        </div>
-        <StyledTestContent>
-          {[...Array(6)].map((i, index) => (
-            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
-          ))}
-        </StyledTestContent>
-      </ScrollWrapper>
+      <StyledTestContent>
+        {[...Array(4)].map((i, index) => (
+          <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
+        ))}
+      </StyledTestContent>
+      <div>
+        <StyledH2>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy{' '}
+          <NewTooltip>Hello, Tooltip!</NewTooltip>
+        </StyledH2>
+      </div>
+      <StyledTestContent>
+        {[...Array(6)].map((i, index) => (
+          <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
+        ))}
+      </StyledTestContent>
     </>
   );
 };
 
 NewTooltipStory.storyName = 'New Tooltip';
+
+export const NewTooltipWrapperStory: Story = () => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <ScrollWrapper ref={wrapperRef}>
+      <StyledTestContent>
+        {[...Array(4)].map((i, index) => (
+          <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
+        ))}
+      </StyledTestContent>
+      <div>
+        <StyledH2>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy{' '}
+          <NewTooltip parentNodeRef={wrapperRef}>Hello, Tooltip!</NewTooltip>
+        </StyledH2>
+      </div>
+      <StyledTestContent>
+        {[...Array(6)].map((i, index) => (
+          <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
+        ))}
+      </StyledTestContent>
+    </ScrollWrapper>
+  );
+};
+
+NewTooltipStory.storyName = 'New Tooltip inside on overflow scrolling wrapper';
