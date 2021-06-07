@@ -52,6 +52,7 @@ enum ElementType {
   'ol_list' = 'ol_list',
   'ul_list' = 'ul_list',
   'list_item' = 'list_item',
+  'paragraph' = 'paragraph',
 }
 
 const listTypes = [ElementType['ol_list'], ElementType['ul_list']];
@@ -172,7 +173,7 @@ const BlockButton = ({ format, icon }: { format: ElementType; icon: string }) =>
   return (
     <Button
       color={isBlockActive(editor, format) ? ButtonColor.white : ButtonColor.default}
-      onClick={(event) => {
+      onMouseDown={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);
       }}
@@ -187,7 +188,7 @@ const MarkButton = ({ format, icon }: { format: MarkButtonFormat; icon: string }
   return (
     <Button
       color={isMarkActive(editor, format) ? ButtonColor.white : ButtonColor.default}
-      onClick={(event) => {
+      onMouseDown={(event) => {
         event.preventDefault();
         toggleMark(editor, format);
       }}
@@ -210,7 +211,10 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
   const [intValue, setIntValue] = useState<CustomDescendant[]>([]);
 
   useEffect(() => {
-    if ((!intValue || (Array.isArray(intValue) && intValue.length === 0)) && Array.isArray(value)) {
+    if (
+      (typeof intValue === 'undefined' || (Array.isArray(intValue) && intValue.length === 0)) &&
+      Array.isArray(value)
+    ) {
       setIntValue(value);
     }
   }, [intValue, value]);

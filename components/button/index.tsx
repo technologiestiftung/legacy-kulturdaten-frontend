@@ -184,6 +184,7 @@ export enum ButtonType {
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
+  onMouseDown?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   disabled?: boolean;
   color?: ButtonColor;
   icon?: string;
@@ -200,6 +201,7 @@ interface ButtonProps {
 export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
+  onMouseDown,
   disabled,
   color = ButtonColor.default,
   size = ButtonSize.default,
@@ -223,12 +225,14 @@ export const Button: React.FC<ButtonProps> = ({
       name={name}
       type="submit"
       onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
+      onMouseDown={onMouseDown ? (e: MouseEvent<HTMLInputElement>) => onMouseDown(e) : undefined}
       disabled={disabled}
       aria-label={ariaLabel}
     />
   ) : (
     <StyledButton
       onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
+      onMouseDown={onMouseDown ? (e: MouseEvent<HTMLButtonElement>) => onMouseDown(e) : undefined}
       color={color}
       size={size}
       variant={variant}
