@@ -64,7 +64,7 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
       ariaLabel={ariaLabel}
       title={ariaLabel}
       icon={icon}
-      iconHeight={18}
+      iconHeight="1.125rem"
       renderedIcon={renderedIcon}
     >
       {label}

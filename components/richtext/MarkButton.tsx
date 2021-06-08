@@ -52,7 +52,7 @@ export const MarkButton: React.FC<MarkButtonProps> = ({
       title={ariaLabel}
       variant={ButtonVariant.toolbar}
       renderedIcon={renderedIcon}
-      iconHeight={18}
+      iconHeight="1.125rem"
     >
       {label}
     </Button>

@@ -172,8 +172,8 @@ const StyledButtonIcon = styled.div<{
   size: ButtonSize;
   position: IconPosition;
   hasChildren: boolean;
-  iconWidth?: number;
-  iconHeight?: number;
+  iconWidth?: string;
+  iconHeight?: string;
 }>`
   padding: ${({ size, position, hasChildren }) =>
     hasChildren
@@ -187,7 +187,7 @@ const StyledButtonIcon = styled.div<{
   ${({ iconWidth }) =>
     iconWidth
       ? css`
-          width: ${iconWidth}px;
+          width: ${iconWidth};
 
           svg {
             width: 100%;
@@ -198,7 +198,7 @@ const StyledButtonIcon = styled.div<{
   ${({ iconHeight }) =>
     iconHeight
       ? css`
-          height: ${iconHeight}px;
+          height: ${iconHeight};
 
           svg {
             height: 100%;
@@ -235,8 +235,8 @@ interface ButtonProps {
   icon?: string;
   renderedIcon?: React.ReactElement;
   iconPosition?: IconPosition;
-  iconWidth?: number;
-  iconHeight?: number;
+  iconWidth?: string;
+  iconHeight?: string;
   id?: string;
   name?: string;
   asInput?: boolean;
