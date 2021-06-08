@@ -115,4 +115,4 @@ export const NewTooltipWrapperStory: Story = () => {
   );
 };
 
-NewTooltipStory.storyName = 'New Tooltip inside on overflow scrolling wrapper';
+NewTooltipWrapperStory.storyName = 'New Tooltip inside overflow scrolling wrapper';

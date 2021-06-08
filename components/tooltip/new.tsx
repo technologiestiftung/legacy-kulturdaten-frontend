@@ -107,8 +107,9 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
   // The x position from the tooltip relative to its surrounding container or the window.
   const [xToParent, setXToParent] = useState<number>(0);
 
-  // The width of the surrounding container or the window.
+  // The width and height of the surrounding container or the window.
   const [parentWidth, setParentWidth] = useState<number>(0);
+  const [parentHeight, setParentHeight] = useState<number>(0);
 
   // The height of the tooltip overlay
   const [tooltipOverlayHeight, setTooltipOverlayHeight] = useState<number>(0);
@@ -155,8 +156,8 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
   const distanceToTop = useMemo<number>(() => yToParent, [yToParent]);
 
   const distanceToBottom = useMemo<number>(
-    () => getWrapperHeight() - tooltipButtonRef.current?.getBoundingClientRect().height - yToParent,
-    [yToParent, getWrapperHeight]
+    () => parentHeight - tooltipButtonRef.current?.getBoundingClientRect().height - yToParent,
+    [yToParent, parentHeight]
   );
 
   const distanceToLeft = useMemo<number>(() => xToParent, [xToParent]);
@@ -211,6 +212,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
 
   const computeSizes = useCallback(() => {
     setXToParent(tooltipButtonRef.current.getBoundingClientRect().left - getWrapperLeft());
+    setParentHeight(getWrapperHeight());
     setParentWidth(getWrapperWidth());
     setTooltipOverlayHeight(tooltipOverlayRef.current.getBoundingClientRect().height);
 
@@ -219,7 +221,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
       '--margin-left',
       `${getWrapperLeft() - tooltipButtonRef.current.getBoundingClientRect().left}px`
     );
-  }, [tooltipOverlayRef, getWrapperWidth, getWrapperLeft]);
+  }, [tooltipOverlayRef, getWrapperWidth, getWrapperHeight, getWrapperLeft]);
 
   /**
    * Initially compute the scrollY position.
