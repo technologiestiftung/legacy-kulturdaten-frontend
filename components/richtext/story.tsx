@@ -96,6 +96,8 @@ const StyledPre = styled.pre`
   min-height: 100%;
   background: var(--grey-200);
   padding: 1.5rem;
+  word-break: break-all;
+  overflow-x: auto;
 `;
 
 const X: React.FC = () => {
