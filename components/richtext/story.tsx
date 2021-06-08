@@ -2,9 +2,13 @@ import { Story } from '@storybook/react';
 import { defaultNodeTypes, serialize } from 'remark-slate';
 import { jsx } from 'slate-hyperscript';
 import { CustomDescendant, RichText } from '.';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import marked from 'marked';
+import { useOverlay } from '../overlay';
+import { Button } from '../button';
+import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
+import { OverlayContainer } from '../overlay/OverlayContainer';
 
 export default {
   title: 'RichText',
@@ -86,9 +90,12 @@ const StyledRichTextStoryWrapper = styled.div`
   min-height: var(--app-height);
 `;
 
-const StyledRichTextContainer = styled.div`
+const StyledRichTextWrapper = styled.div`
   grid-column: 1 / span 1;
   padding: 1.5rem;
+`;
+const StyledRichTextContainer = styled.div`
+  border: 1px solid var(--black);
 `;
 
 const StyledPre = styled.pre`
@@ -101,6 +108,65 @@ const StyledPre = styled.pre`
 `;
 
 const X: React.FC = () => {
+  const [value, setValue] = useState<CustomDescendant[]>();
+
+  useEffect(() => {
+    const parsedMarkdown = marked(md);
+    const document = new DOMParser().parseFromString(parsedMarkdown, 'text/html');
+    const slateStructure = deserialize(document.children[0]);
+
+    setValue(slateStructure);
+  }, []);
+
+  return (
+    <StyledRichTextWrapper>
+      <StyledRichTextContainer>
+        {Array.isArray(value) && <RichText value={value} onChange={(val) => setValue(val)} />}
+      </StyledRichTextContainer>
+    </StyledRichTextWrapper>
+  );
+};
+
+export const RichTextDefaultStory: Story = () => <X />;
+RichTextDefaultStory.storyName = 'RichText Default';
+
+const RichTextInOverlayComponent: React.FC = () => {
+  const [value, setValue] = useState<CustomDescendant[]>();
+
+  useEffect(() => {
+    const parsedMarkdown = marked(md);
+    const document = new DOMParser().parseFromString(parsedMarkdown, 'text/html');
+    const slateStructure = deserialize(document.children[0]);
+
+    setValue(slateStructure);
+  }, []);
+
+  const { renderedOverlay, setIsOpen } = useOverlay(
+    <OverlayContainer>
+      <OverlayTitleBar title="Example RichText overlay" />
+      {Array.isArray(value) && <RichText value={value} onChange={(val) => setValue(val)} />}
+    </OverlayContainer>,
+    true
+  );
+
+  return (
+    <div>
+      <Button
+        onClick={() => {
+          setIsOpen(true);
+        }}
+      >
+        Overlay öffnen
+      </Button>
+      {renderedOverlay}
+    </div>
+  );
+};
+
+export const RichTextInOverlayStory: Story = () => <RichTextInOverlayComponent />;
+RichTextInOverlayStory.storyName = 'RichText in Overlay';
+
+const Y: React.FC = () => {
   const [value, setValue] = useState<CustomDescendant[]>();
 
   const parseSlateToMarkdown = useMemo(
@@ -123,13 +189,15 @@ const X: React.FC = () => {
 
   return (
     <StyledRichTextStoryWrapper>
-      <StyledRichTextContainer>
-        {Array.isArray(value) && <RichText value={value} onChange={(val) => setValue(val)} />}
-      </StyledRichTextContainer>
+      <StyledRichTextWrapper>
+        <StyledRichTextContainer>
+          {Array.isArray(value) && <RichText value={value} onChange={(val) => setValue(val)} />}
+        </StyledRichTextContainer>
+      </StyledRichTextWrapper>
       <StyledPre>{parseSlateToMarkdown}</StyledPre>
     </StyledRichTextStoryWrapper>
   );
 };
 
-export const RichTextDefaultStory: Story = () => <X />;
-RichTextDefaultStory.storyName = 'RichText Default';
+export const RichTextWithMarkdownPreview: Story = () => <Y />;
+RichTextDefaultStory.storyName = 'RichText with Markdown Preview';

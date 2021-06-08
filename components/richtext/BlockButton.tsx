@@ -1,7 +1,7 @@
 import { BaseEditor, Editor, Element as SlateElement, Transforms } from 'slate';
 import { useSlate } from 'slate-react';
 
-import { Button, ButtonColor } from '../button';
+import { Button, ButtonColor, ButtonVariant } from '../button';
 import { CustomElement, ElementType } from './Element';
 
 const isBlockActive = (editor: BaseEditor, format: ElementType) => {
@@ -38,21 +38,36 @@ export const toggleBlock = (editor: BaseEditor, format: ElementType): void => {
 
 interface BlockButtonProps {
   format: ElementType;
-  icon: string;
+  ariaLabel: string;
+  icon?: string;
+  renderedIcon?: React.ReactElement;
+  label?: string;
 }
 
-export const BlockButton: React.FC<BlockButtonProps> = ({ format, icon }: BlockButtonProps) => {
+export const BlockButton: React.FC<BlockButtonProps> = ({
+  format,
+  icon,
+  renderedIcon,
+  ariaLabel,
+  label,
+}: BlockButtonProps) => {
   const editor = useSlate();
 
   return (
     <Button
-      color={isBlockActive(editor, format) ? ButtonColor.white : ButtonColor.default}
+      color={isBlockActive(editor, format) ? ButtonColor.green : ButtonColor.default}
       onMouseDown={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);
       }}
+      variant={ButtonVariant.toolbar}
+      ariaLabel={ariaLabel}
+      title={ariaLabel}
+      icon={icon}
+      iconHeight={18}
+      renderedIcon={renderedIcon}
     >
-      {icon}
+      {label}
     </Button>
   );
 };

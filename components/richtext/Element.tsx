@@ -28,7 +28,7 @@ export type CustomText = {
 export type CustomDescendant = CustomElement | CustomText;
 export type CustomElement = { type: ElementType; children: CustomDescendant[] } & SlateElement;
 
-interface ElementProps {
+export interface ElementProps {
   attributes: { [key: string]: string | number | boolean };
   children: React.ReactNode;
   element: CustomElement;

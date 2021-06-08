@@ -12,6 +12,7 @@ const StyledOverlayTitleBar = styled.div<{ sticky?: boolean }>`
   background: var(--grey-200);
   border-radius: 0.75rem 0.75rem 0 0;
   flex-wrap: wrap;
+  flex-grow: 0;
 
   ${({ sticky }) =>
     sticky

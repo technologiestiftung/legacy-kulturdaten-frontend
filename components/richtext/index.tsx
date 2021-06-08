@@ -9,22 +9,71 @@ import { Toolbar, ToolbarGroupWidth } from './Toolbar';
 import { MarkButton, MarkButtonFormat } from './MarkButton';
 import { BlockButton } from './BlockButton';
 import { Leaf } from './Leaf';
+import { Button, ButtonVariant, IconPosition } from '../button';
+import { contentGrid, mq } from '../globals/Constants';
+import { Breakpoint } from '../../lib/WindowService';
+import { PSvg } from '../assets/PSvg';
+import { H1Svg } from '../assets/H1Svg';
+import { H2Svg } from '../assets/H2Svg';
+import { H3Svg } from '../assets/H3Svg';
+import { ListOrderedSvg } from '../assets/ListOrderedSvg';
 
-interface CustomElementProps extends RenderElementProps {
+interface CustomRenderElementProps extends RenderElementProps {
   element: CustomElement;
 }
+
+const StyledRichText = styled.div`
+  background: var(--white);
+  min-height: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+const StyledEditableContainer = styled.div`
+  background: var(--white);
+  min-height: 100%;
+  flex-grow: 1;
+
+  box-shadow: inset 0px 2px 10px var(--black-o25);
+
+  ${mq(Breakpoint.mid)} {
+    ${contentGrid(9)}
+  }
+
+  ${mq(Breakpoint.wide)} {
+    ${contentGrid(8)}
+  }
+`;
+
+const StyledEditable = styled.div`
+  caret-color: #0000ff;
+
+  padding: 2rem 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 4rem 0;
+    grid-column: 2 / -2;
+  }
+  /* ${mq(Breakpoint.mid)} {
+    grid-column: 2 / -2;
+  } */
+`;
 
 interface RichTextProps {
   value?: CustomDescendant[];
   onChange?: (value: CustomDescendant[]) => void;
 }
 
-const StyledRichText = styled.div`
-  caret-color: #0000ff;
-`;
-
 export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextProps) => {
   const [intValue, setIntValue] = useState<CustomDescendant[]>([]);
+  const renderElement = useCallback(
+    (props: CustomRenderElementProps) => <Element {...props} />,
+    []
+  );
+  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
+  const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
 
   useEffect(() => {
     if (
@@ -41,10 +90,6 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
     }
   }, [intValue, onChange]);
 
-  const renderElement = useCallback((props: CustomElementProps) => <Element {...props} />, []);
-  const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
-
   return (
     <StyledRichText>
       <Slate
@@ -55,41 +100,110 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
         <Toolbar
           groups={[
             {
-              label: 'Headline',
-              width: ToolbarGroupWidth.full,
+              label: 'Verlauf',
+              width: ToolbarGroupWidth.half,
               items: [
-                <BlockButton format={ElementType['paragraph']} icon="p" key={0} />,
-                <BlockButton format={ElementType['heading_one']} icon="h1" key={1} />,
-                <BlockButton format={ElementType['heading_two']} icon="h2" key={2} />,
-                <BlockButton format={ElementType['heading_three']} icon="h3" key={3} />,
+                <Button
+                  onMouseDown={() => editor.undo()}
+                  disabled={editor.history.undos.length < 1}
+                  icon="CornerUpLeft"
+                  iconPosition={IconPosition.left}
+                  key={0}
+                  ariaLabel="Rückgängig"
+                  title="Rückgängig"
+                  variant={ButtonVariant.toolbar}
+                />,
+                <Button
+                  onMouseDown={() => editor.redo()}
+                  disabled={editor.history.redos.length < 1}
+                  icon="CornerUpRight"
+                  key={1}
+                  ariaLabel="Wiederholen"
+                  title="Wiederholen"
+                  variant={ButtonVariant.toolbar}
+                />,
+              ],
+            },
+            {
+              label: 'Absatz',
+              width: ToolbarGroupWidth.half,
+              items: [
+                <BlockButton
+                  ariaLabel="Paragraph"
+                  format={ElementType['paragraph']}
+                  renderedIcon={<PSvg />}
+                  key={0}
+                />,
+                <BlockButton
+                  ariaLabel="Überschrift 1"
+                  format={ElementType['heading_one']}
+                  renderedIcon={<H1Svg />}
+                  key={1}
+                />,
+                <BlockButton
+                  ariaLabel="Überschrift 2"
+                  format={ElementType['heading_two']}
+                  renderedIcon={<H2Svg />}
+                  key={2}
+                />,
+                <BlockButton
+                  ariaLabel="Überschrift 3"
+                  format={ElementType['heading_three']}
+                  renderedIcon={<H3Svg />}
+                  key={3}
+                />,
+              ],
+            },
+            {
+              label: 'Listen',
+              width: ToolbarGroupWidth.half,
+              items: [
+                <BlockButton
+                  ariaLabel="Strichliste"
+                  format={ElementType['ul_list']}
+                  icon="List"
+                  key={1}
+                />,
+                <BlockButton
+                  ariaLabel="Nummerierte Liste"
+                  format={ElementType['ol_list']}
+                  renderedIcon={<ListOrderedSvg />}
+                  key={0}
+                />,
               ],
             },
             {
               label: 'Format',
               width: ToolbarGroupWidth.half,
               items: [
-                <MarkButton format={MarkButtonFormat.bold} icon="format_bold" key={0} />,
-                <MarkButton format={MarkButtonFormat.italic} icon="format_italic" key={1} />,
-                <MarkButton format={MarkButtonFormat.underline} icon="format_underlined" key={2} />,
-              ],
-            },
-            {
-              label: 'List',
-              width: ToolbarGroupWidth.half,
-              items: [
-                <BlockButton format={ElementType['ol_list']} icon="format_list_numbered" key={0} />,
-                <BlockButton format={ElementType['ul_list']} icon="format_list_bulleted" key={1} />,
+                <MarkButton ariaLabel="Fett" format={MarkButtonFormat.bold} icon="Bold" key={0} />,
+                <MarkButton
+                  ariaLabel="Kursiv"
+                  format={MarkButtonFormat.italic}
+                  icon="Italic"
+                  key={1}
+                />,
+                <MarkButton
+                  ariaLabel="Unterstrichen"
+                  format={MarkButtonFormat.underline}
+                  icon="Underline"
+                  key={2}
+                />,
               ],
             },
           ]}
         />
-        <Editable
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          placeholder="Enter some rich text…"
-          spellCheck
-          autoFocus
-        />
+        <StyledEditableContainer>
+          <StyledEditable>
+            <Editable
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              placeholder="Enter some rich text…"
+              spellCheck
+              autoFocus
+            />
+          </StyledEditable>
+        </StyledEditableContainer>
       </Slate>
     </StyledRichText>
   );
