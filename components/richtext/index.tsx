@@ -17,6 +17,7 @@ import { H1Svg } from '../assets/H1Svg';
 import { H2Svg } from '../assets/H2Svg';
 import { H3Svg } from '../assets/H3Svg';
 import { ListOrderedSvg } from '../assets/ListOrderedSvg';
+import { useT } from '../../lib/i18n';
 
 interface CustomRenderElementProps extends RenderElementProps {
   element: CustomElement;
@@ -49,24 +50,25 @@ const StyledEditableContainer = styled.div`
 
 const StyledEditable = styled.div`
   caret-color: #0000ff;
-
   padding: 2rem 0.75rem;
 
   ${mq(Breakpoint.mid)} {
     padding: 4rem 0;
     grid-column: 2 / -2;
   }
-  /* ${mq(Breakpoint.mid)} {
-    grid-column: 2 / -2;
-  } */
 `;
 
 interface RichTextProps {
   value?: CustomDescendant[];
   onChange?: (value: CustomDescendant[]) => void;
+  placeholder?: string;
 }
 
-export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextProps) => {
+export const RichText: React.FC<RichTextProps> = ({
+  value,
+  onChange,
+  placeholder,
+}: RichTextProps) => {
   const [intValue, setIntValue] = useState<CustomDescendant[]>([]);
   const renderElement = useCallback(
     (props: CustomRenderElementProps) => <Element {...props} />,
@@ -74,6 +76,7 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
   );
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
+  const t = useT();
 
   useEffect(() => {
     if (
@@ -100,7 +103,7 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
         <Toolbar
           groups={[
             {
-              label: 'Verlauf',
+              label: t('richText.history') as string,
               width: ToolbarGroupWidth.half,
               items: [
                 <Button
@@ -109,8 +112,8 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
                   icon="CornerUpLeft"
                   iconPosition={IconPosition.left}
                   key={0}
-                  ariaLabel="Rückgängig"
-                  title="Rückgängig"
+                  ariaLabel={t('richText.undo') as string}
+                  title={t('richText.undo') as string}
                   variant={ButtonVariant.toolbar}
                 />,
                 <Button
@@ -118,36 +121,36 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
                   disabled={editor.history.redos.length < 1}
                   icon="CornerUpRight"
                   key={1}
-                  ariaLabel="Wiederholen"
-                  title="Wiederholen"
+                  ariaLabel={t('richText.redo') as string}
+                  title={t('richText.redo') as string}
                   variant={ButtonVariant.toolbar}
                 />,
               ],
             },
             {
-              label: 'Absatz',
+              label: t('richText.format') as string,
               width: ToolbarGroupWidth.half,
               items: [
                 <BlockButton
-                  ariaLabel="Paragraph"
+                  ariaLabel={t('richText.paragraph') as string}
                   format={ElementType['paragraph']}
                   renderedIcon={<PSvg />}
                   key={0}
                 />,
                 <BlockButton
-                  ariaLabel="Überschrift 1"
+                  ariaLabel={t('richText.headingOne') as string}
                   format={ElementType['heading_one']}
                   renderedIcon={<H1Svg />}
                   key={1}
                 />,
                 <BlockButton
-                  ariaLabel="Überschrift 2"
+                  ariaLabel={t('richText.headingTwo') as string}
                   format={ElementType['heading_two']}
                   renderedIcon={<H2Svg />}
                   key={2}
                 />,
                 <BlockButton
-                  ariaLabel="Überschrift 3"
+                  ariaLabel={t('richText.headingThree') as string}
                   format={ElementType['heading_three']}
                   renderedIcon={<H3Svg />}
                   key={3}
@@ -155,36 +158,43 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
               ],
             },
             {
-              label: 'Listen',
+              label: t('richText.lists') as string,
               width: ToolbarGroupWidth.half,
               items: [
                 <BlockButton
-                  ariaLabel="Strichliste"
+                  ariaLabel={t('richText.listUnordered') as string}
                   format={ElementType['ul_list']}
                   icon="List"
                   key={1}
                 />,
                 <BlockButton
-                  ariaLabel="Nummerierte Liste"
+                  ariaLabel={t('richText.listOrdered') as string}
                   format={ElementType['ol_list']}
                   renderedIcon={<ListOrderedSvg />}
+                  iconWidth="1.125rem"
+                  iconHeight="1.125rem"
                   key={0}
                 />,
               ],
             },
             {
-              label: 'Format',
+              label: t('richText.style') as string,
               width: ToolbarGroupWidth.half,
               items: [
-                <MarkButton ariaLabel="Fett" format={MarkButtonFormat.bold} icon="Bold" key={0} />,
                 <MarkButton
-                  ariaLabel="Kursiv"
+                  ariaLabel={t('richText.bold') as string}
+                  format={MarkButtonFormat.bold}
+                  icon="Bold"
+                  key={0}
+                />,
+                <MarkButton
+                  ariaLabel={t('richText.italic') as string}
                   format={MarkButtonFormat.italic}
                   icon="Italic"
                   key={1}
                 />,
                 <MarkButton
-                  ariaLabel="Unterstrichen"
+                  ariaLabel={t('richText.underline') as string}
                   format={MarkButtonFormat.underline}
                   icon="Underline"
                   key={2}
@@ -198,7 +208,7 @@ export const RichText: React.FC<RichTextProps> = ({ value, onChange }: RichTextP
             <Editable
               renderElement={renderElement}
               renderLeaf={renderLeaf}
-              placeholder="Enter some rich text…"
+              placeholder={placeholder || ''}
               spellCheck
               autoFocus
             />

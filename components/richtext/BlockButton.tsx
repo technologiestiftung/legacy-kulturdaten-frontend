@@ -42,6 +42,8 @@ interface BlockButtonProps {
   icon?: string;
   renderedIcon?: React.ReactElement;
   label?: string;
+  iconWidth?: string;
+  iconHeight?: string;
 }
 
 export const BlockButton: React.FC<BlockButtonProps> = ({
@@ -50,6 +52,8 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
   renderedIcon,
   ariaLabel,
   label,
+  iconWidth,
+  iconHeight,
 }: BlockButtonProps) => {
   const editor = useSlate();
 
@@ -64,7 +68,8 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
       ariaLabel={ariaLabel}
       title={ariaLabel}
       icon={icon}
-      iconHeight="1.125rem"
+      iconHeight={iconHeight || '1.125rem'}
+      iconWidth={iconWidth}
       renderedIcon={renderedIcon}
     >
       {label}
