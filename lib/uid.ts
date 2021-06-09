@@ -5,5 +5,7 @@ import { useMemo } from 'react';
  * @returns a string in form "uid-000000000000"
  */
 export const usePseudoUID = (): string => {
-  return useMemo(() => `${Math.floor(Math.random() * 10000000000000)}`, []);
+  return useMemo(() => `${getPseudoUID()}`, []);
 };
+
+export const getPseudoUID = (): string => `${Math.floor(Math.random() * 10000000000000)}`;

@@ -490,7 +490,7 @@ exports[`MainMenu renders 1`] = `
                   Abmelden
                 </span>
                 <div
-                  class="css-1wucyrk-StyledButtonIcon e1asxjmr0"
+                  class="css-1ruxl7c-StyledButtonIcon e1asxjmr0"
                 >
                   <svg
                     fill="none"

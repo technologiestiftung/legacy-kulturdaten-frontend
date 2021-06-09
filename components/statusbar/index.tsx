@@ -24,20 +24,19 @@ const statusBarStates: {
 
 const StatusBarLabel = styled.label`
   width: 100%;
-  border-radius: 0.75rem 0.75rem 0 0;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
   padding: 0.375rem 0.75rem 0.375rem 0.75rem;
   text-transform: none;
-  border-width: 0;
   background-color: var(--grey-200);
+  border-bottom: 1px solid var(--black);
 
   ${mq(Breakpoint.mid)} {
     width: auto;
     flex-direction: row;
-    border: 1px solid var(--black);
-    border-radius: 0.75rem 0 0 0.75rem;
+    border-bottom: none;
+    border-right: 1px solid var(--black);
   }
 `;
 
@@ -47,18 +46,15 @@ const StyledStatusBarContainer = styled.div`
   position: relative;
   border: 1px solid var(--black);
   border-radius: 0.75rem;
+  overflow: hidden;
 
   ${mq(Breakpoint.mid)} {
     flex-direction: row;
-    border-width: 0;
-    border-radius: 0;
   }
 `;
 
 const StyledStatusBarInfo = styled.div`
-  border: 1px solid var(--black);
-  border-right-width: 0;
-  border-left-width: 0;
+  border-bottom: 1px solid var(--black);
   background-color: var(--grey-200);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -69,6 +65,8 @@ const StyledStatusBarInfo = styled.div`
 
   ${mq(Breakpoint.mid)} {
     text-align: right;
+    border-bottom: none;
+    border-right: 1px solid var(--black);
   }
 `;
 
@@ -84,16 +82,10 @@ const StyledSelect = styled.select<{
   width: 100%;
   cursor: pointer;
   font-weight: 700;
-  border-width: 0;
-  border-radius: 0 0 0.75rem 0.75rem;
   flex-grow: 0;
   flex-shrink: 0;
   height: 100%;
-
-  ${mq(Breakpoint.mid)} {
-    border: 1px solid var(--black);
-    border-radius: 0 0.75rem 0.75rem 0;
-  }
+  border: none;
 
   ${({ statusBarState }) => statusBarStates[statusBarState]}
 `;
