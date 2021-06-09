@@ -1,9 +1,11 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { MutableRefObject, useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { X } from 'react-feather';
 
-import { Breakpoint } from '../../lib/WindowService';
-import { insetBorderColored, mq } from '../globals/Constants';
+import { InfoIconSvg } from '../assets/InfoIconSvg';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
 
 enum YPosition {
   top = 'top',
@@ -13,11 +15,13 @@ enum YPosition {
 enum XPosition {
   left = 'left',
   right = 'right',
+  middle = 'middle',
 }
 
 const tooltipWidth = 300;
-
 const tooltipButtonHeight = 24;
+const tooltipButtonHeightWithoutBorder = 23;
+const arrowOffset = 13;
 
 const StyledTooltip = styled.div`
   width: ${tooltipButtonHeight}px;
@@ -28,8 +32,32 @@ const StyledTooltip = styled.div`
 `;
 
 const StyledTooltipButton = styled.button`
-  width: 100%;
-  height: 100%;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  height: var(--line-height-200);
+  width: var(--line-height-200);
+  box-sizing: border-box;
+  background: var(--green-kelly);
+  border-radius: var(--line-height-600);
+  border: 1px solid var(--black);
+  transition: box-shadow var(--transition-duration), transform var(--transition-duration);
+
+  box-shadow: var(--shadow-light);
+
+  &:hover {
+    box-shadow: var(--shadow-hover), inset 0px 0px 0px 1px var(--black);
+  }
+
+  &:active {
+    box-shadow: var(--shadow-active), inset 0px 0px 0px 1px var(--black);
+    transform: translateY(0.125rem);
+  }
+
+  &:disabled {
+    box-shadow: var(--shadow);
+    transform: none;
+  }
 `;
 
 const StyledTooltipOverlay = styled.div<{
@@ -41,10 +69,13 @@ const StyledTooltipOverlay = styled.div<{
   height: auto;
   position: absolute;
   display: flex;
+
   background: var(--grey-350);
+  border: 1px solid var(--black);
   border-radius: 0.75rem;
-  box-shadow: ${insetBorderColored('var(--black)', true)};
+  box-shadow: var(--shadow-light);
   padding: 0.75rem;
+
   margin-left: calc(var(--margin-left) + 0.75rem);
   justify-content: space-between;
 
@@ -57,21 +88,79 @@ const StyledTooltipOverlay = styled.div<{
         `
       : ''}
 
-  ${({ yPosition }) =>
+  :: after {
+    content: '';
+    position: absolute;
+    width: 48px;
+    height: 24px;
+    background: no-repeat
+      url(/images/${({ xPosition }) =>
+        xPosition === XPosition.middle ? 'arrowMiddle' : 'arrowEdge'}.svg);
+  }
+
+  ${({ yPosition, xPosition }) =>
+    (xPosition === XPosition.left || xPosition === XPosition.middle) && yPosition === YPosition.top
+      ? css`
+          border-bottom-right-radius: 0px;
+          bottom: ${tooltipButtonHeight}px;
+          :: after {
+            bottom: -${tooltipButtonHeightWithoutBorder}px;
+            right: calc(var(--tooltip-right) - var(--button-right) - ${arrowOffset}px);
+            transform: rotate(180deg) scaleX(-1);
+          }
+        `
+      : css``}
+
+  ${({ yPosition, xPosition }) =>
+    (xPosition === XPosition.left || xPosition === XPosition.middle) &&
     yPosition === YPosition.bottom
       ? css`
+          border-top-right-radius: 0px;
           top: ${tooltipButtonHeight}px;
+          :: after {
+            top: -${tooltipButtonHeightWithoutBorder}px;
+            right: calc(var(--tooltip-right) - var(--button-right) - ${arrowOffset}px);
+            transform: rotate(0deg);
+          }
         `
-      : css`
-          bottom: ${tooltipButtonHeight}px;
-        `}
+      : css``}
 
-        
+  ${({ yPosition, xPosition }) =>
+    xPosition === XPosition.right && yPosition === YPosition.bottom
+      ? css`
+          border-top-left-radius: 0px;
+          top: ${tooltipButtonHeight}px;
+          :: after {
+            top: -${tooltipButtonHeightWithoutBorder}px;
+            left: calc(var(--button-left) - var(--tooltip-left) - ${arrowOffset}px);
+            transform: rotate(0deg) scaleX(-1);
+          }
+        `
+      : css``}
+
+  ${({ yPosition, xPosition }) =>
+    xPosition === XPosition.right && yPosition === YPosition.top
+      ? css`
+          border-bottom-left-radius: 0px;
+          bottom: ${tooltipButtonHeight}px;
+          :: after {
+            bottom: -${tooltipButtonHeightWithoutBorder}px;
+            left: calc(var(--button-left) - var(--tooltip-left) - ${arrowOffset}px);
+            transform: rotate(180deg);
+          }
+        `
+      : css``}
+
+  ${({ xPosition }) =>
+    xPosition === XPosition.middle
+      ? css`
+          border-radius: 0.75rem;
+        `
+      : css``}
 
   ${mq(Breakpoint.mid)} {
     width: ${tooltipWidth}px;
     margin-left: 0;
-
     ${({ xPosition }) =>
       xPosition === XPosition.right
         ? css`
@@ -88,8 +177,20 @@ const StyledTooltipOverlayContent = styled.div`
 `;
 
 const StyledTooltipOverlayClose = styled.button`
-  flex-grow: 0;
-  flex-shrink: 0;
+  margin: 0;
+  appearance: none;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  padding: 0;
+  cursor: pointer;
+  border: 0 none;
+  background: none;
+
+  svg {
+    height: 1.125rem;
+    width: 1.125rem;
+  }
 `;
 
 interface TooltipProps {
@@ -111,6 +212,11 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
   const [parentWidth, setParentWidth] = useState<number>(0);
   const [parentHeight, setParentHeight] = useState<number>(0);
 
+  const [tooltipLeft, setTooltipLeft] = useState<number>(0);
+  const [tooltipRight, setTooltipRight] = useState<number>(0);
+  const [buttonLeft, setButtonLeft] = useState<number>(0);
+  const [buttonRight, setButtonRight] = useState<number>(0);
+
   // The height of the tooltip overlay
   const [tooltipOverlayHeight, setTooltipOverlayHeight] = useState<number>(0);
 
@@ -119,6 +225,8 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
 
   // The ref pointing to our tooltip overlay. Used for calculating the overlay position.
   const tooltipOverlayRef = useRef<HTMLDivElement>(null);
+
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
 
   /**
    * Helper functions to get size and position information about parent container or window.
@@ -186,20 +294,21 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
   }, [distanceToTop, distanceToBottom, tooltipOverlayHeight]);
 
   const tooltipXPosition = useMemo<XPosition>(() => {
-    if (distanceToRight >= tooltipWidth) {
-      return XPosition.right;
-    }
-
-    if (distanceToLeft >= tooltipWidth) {
+    const switchArrowThreshold = 20;
+    if (isWideOrWider) {
+      if (distanceToRight >= tooltipWidth || distanceToRight > distanceToLeft) {
+        return XPosition.right;
+      }
       return XPosition.left;
     }
-
-    if (distanceToRight > distanceToLeft) {
+    if (tooltipRight <= buttonRight + switchArrowThreshold) {
+      return XPosition.left;
+    }
+    if (tooltipLeft >= buttonLeft - switchArrowThreshold) {
       return XPosition.right;
     }
-
-    return XPosition.left;
-  }, [distanceToRight, distanceToLeft]);
+    return XPosition.middle;
+  }, [distanceToRight, distanceToLeft, tooltipLeft, tooltipRight, buttonLeft, buttonRight]);
 
   /**
    * Functions to compute our state values containing information about scroll positions and viewport dependant sizes.
@@ -220,6 +329,28 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
     tooltipOverlayRef.current.style.setProperty(
       '--margin-left',
       `${getWrapperLeft() - tooltipButtonRef.current.getBoundingClientRect().left}px`
+    );
+
+    setTooltipLeft(tooltipOverlayRef.current?.getBoundingClientRect().left);
+    setTooltipRight(tooltipOverlayRef.current?.getBoundingClientRect().right);
+    setButtonLeft(tooltipButtonRef.current?.getBoundingClientRect().left);
+    setButtonRight(tooltipButtonRef.current?.getBoundingClientRect().right);
+
+    tooltipOverlayRef.current?.style.setProperty(
+      '--tooltip-left',
+      `${tooltipOverlayRef.current.getBoundingClientRect().left}px`
+    );
+    tooltipOverlayRef.current?.style.setProperty(
+      '--button-left',
+      `${tooltipButtonRef.current.getBoundingClientRect().left}px`
+    );
+    tooltipOverlayRef.current.style.setProperty(
+      '--tooltip-right',
+      `${tooltipOverlayRef.current.getBoundingClientRect().right}px`
+    );
+    tooltipOverlayRef.current.style.setProperty(
+      '--button-right',
+      `${tooltipButtonRef.current.getBoundingClientRect().right}px`
     );
   }, [tooltipOverlayRef, getWrapperWidth, getWrapperHeight, getWrapperLeft]);
 
@@ -259,7 +390,7 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
   return (
     <StyledTooltip>
       <StyledTooltipButton ref={tooltipButtonRef} onClick={() => setIsOpen(!isOpen)}>
-        i
+        <InfoIconSvg />
       </StyledTooltipButton>
       <StyledTooltipOverlay
         ref={tooltipOverlayRef}
@@ -268,7 +399,9 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
         isOpen={isOpen}
       >
         <StyledTooltipOverlayContent>{children}</StyledTooltipOverlayContent>
-        <StyledTooltipOverlayClose onClick={() => setIsOpen(false)}>X</StyledTooltipOverlayClose>
+        <StyledTooltipOverlayClose onClick={() => setIsOpen(false)}>
+          <X color="var(--black)" />
+        </StyledTooltipOverlayClose>
       </StyledTooltipOverlay>
     </StyledTooltip>
   );
