@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import React, { useRef } from 'react';
-import { Tooltip } from './new';
+import { Tooltip } from '.';
 
 export default {
   title: 'Tooltip',
