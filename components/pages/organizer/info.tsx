@@ -21,6 +21,7 @@ import { Button, ButtonColor, ButtonType } from '../../button';
 import { CheckboxList } from '../../checkbox/CheckboxList';
 import { insetBorder, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
+import { LinkList } from '../../linklist';
 import { PlaceholderField } from '../../placeholderfield';
 import { Select } from '../../select';
 import { Textarea } from '../../textarea';
@@ -277,38 +278,48 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
   );
 };
 
+const testSocialLinks = [
+  'https://www.technologiestiftung-berlin.de/',
+  'https://www.kulturdaten.berlin/',
+  'https://beta.api.kulturdaten.berlin/docs/',
+];
+
 const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
   const { formButtons } = useEntryForm(category, query);
 
   const t = useT();
 
   return (
-    <form
-      onSubmit={async (e: FormEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
-      {formButtons}
+    <>
+      <form
+        onSubmit={async (e: FormEvent) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        {formButtons}
+        <FormGrid>
+          <FormItem width={FormItemWidth.half}>
+            <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
+          </FormItem>
+          <FormItem width={FormItemWidth.half}>
+            <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
+          </FormItem>
+          <FormItem width={FormItemWidth.half}>
+            <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
+          </FormItem>
+        </FormGrid>
+      </form>
       <FormGrid>
-        <FormItem width={FormItemWidth.half}>
-          <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
-        </FormItem>
         <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-social"
+          <LinkList
             label={t('categories.organizer.form.social') as string}
-            rows={3}
+            links={testSocialLinks}
+            maxLinks={3}
           />
         </FormItem>
       </FormGrid>
-    </form>
+    </>
   );
 };
 

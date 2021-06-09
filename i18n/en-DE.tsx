@@ -45,6 +45,14 @@ export const enDE: Localization = {
     draft: () => 'Draft',
     published: () => 'published',
     lastUpdated: () => 'Last updated',
+    delete: () => 'delete',
+    add: () => 'add',
+  },
+  linkList: {
+    addNew: () => 'Add new link',
+    maxLinks: ({ amount }) => `maximum of ${amount} links`,
+    maxReached: ({ amount }) =>
+      `The maximum of ${amount} links is reached. You can not add more links, but you can edit or delete existing links.`,
   },
   richText: {
     history: () => 'History',
