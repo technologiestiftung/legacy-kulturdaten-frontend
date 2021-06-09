@@ -7,13 +7,14 @@ import { contentGrid, mq } from '../globals/Constants';
 import { NavigationContext } from '../navigation/NavigationContext';
 
 const StyledOverlay = styled.div`
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: var(--app-height);
   overflow: hidden;
   top: 0;
   left: 0;
   display: flex;
+  z-index: 1000;
 
   ${mq(Breakpoint.mid)} {
     ${contentGrid(11)}
