@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import React, { useRef } from 'react';
-import { Tooltip } from '.';
-import { Tooltip as NewTooltip } from './new';
+import { Tooltip } from './new';
 
 export default {
   title: 'Tooltip',
@@ -46,16 +45,6 @@ const StyledTestContentBox = styled.div`
   border-radius: 0.75rem;
 `;
 
-export const TooltipStory: Story = () => (
-  <TestWrapper>
-    <Tooltip label="Open tooltip" position="topLeft">
-      Hello, Tooltip!
-    </Tooltip>
-  </TestWrapper>
-);
-
-TooltipStory.storyName = 'Tooltip';
-
 const StyledH2 = styled.h2`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
@@ -65,7 +54,7 @@ const StyledH2 = styled.h2`
   display: flex;
 `;
 
-export const NewTooltipStory: Story = () => {
+export const TooltipStory: Story = () => {
   return (
     <>
       <StyledTestContent>
@@ -76,7 +65,7 @@ export const NewTooltipStory: Story = () => {
       <div>
         <StyledH2>
           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy{' '}
-          <NewTooltip>Hello, Tooltip!</NewTooltip>
+          <Tooltip>Hello, Tooltip!</Tooltip>
         </StyledH2>
       </div>
       <StyledTestContent>
@@ -88,9 +77,9 @@ export const NewTooltipStory: Story = () => {
   );
 };
 
-NewTooltipStory.storyName = 'New Tooltip';
+TooltipStory.storyName = 'Tooltip';
 
-export const NewTooltipWrapperStory: Story = () => {
+export const TooltipWrapperStory: Story = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -103,7 +92,7 @@ export const NewTooltipWrapperStory: Story = () => {
       <div>
         <StyledH2>
           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy{' '}
-          <NewTooltip parentNodeRef={wrapperRef}>Hello, Tooltip!</NewTooltip>
+          <Tooltip parentNodeRef={wrapperRef}>Hello, Tooltip!</Tooltip>
         </StyledH2>
       </div>
       <StyledTestContent>
@@ -115,4 +104,4 @@ export const NewTooltipWrapperStory: Story = () => {
   );
 };
 
-NewTooltipWrapperStory.storyName = 'New Tooltip inside overflow scrolling wrapper';
+TooltipWrapperStory.storyName = 'Tooltip inside overflow scrolling wrapper';
