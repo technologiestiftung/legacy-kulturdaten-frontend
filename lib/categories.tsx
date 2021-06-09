@@ -81,12 +81,14 @@ export const useList = <C extends ApiCall, T extends CategoryEntry[]>(
   load = true
 ): T => {
   const call = useApiCall();
+  const locale = useLocale();
 
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
 
-  const { data } = useSWR(load && apiCallRoute ? getApiUrlString(apiCallRoute) : undefined, () =>
-    load && category ? call<C>(apiCallFactory, query) : undefined
+  const { data } = useSWR(
+    load && apiCallRoute ? getApiUrlString(apiCallRoute, undefined, locale) : undefined,
+    () => (load && category ? call<C>(apiCallFactory, query, locale) : undefined)
   );
 
   return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
@@ -100,13 +102,14 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
 } => {
   const call = useApiCall();
+  const locale = useLocale();
 
   const apiCallFactory = category?.api.show.factory;
   const apiCallRoute = category?.api.show.route;
 
   const { data, mutate } = useSWR<C['response']>(
-    apiCallRoute && query ? getApiUrlString(apiCallRoute, query) : undefined,
-    () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
+    apiCallRoute && query ? getApiUrlString(apiCallRoute, query, locale) : undefined,
+    () => (apiCallRoute && query ? call(apiCallFactory, query, locale) : undefined)
   );
 
   const wrappedMutate = (entry?: T, shouldRevalidate?: boolean) =>
@@ -151,10 +154,11 @@ export const useCategoryMenu = (
 
 export const useOrganizerTypeList = (): OrganizerType[] => {
   const call = useApiCall();
+  const locale = useLocale();
 
   const { data } = useSWR(
-    getApiUrlString(ApiRoutes.organizerTypeList),
-    () => call<OrganizerTypeList>(organizerTypeListFactory),
+    getApiUrlString(ApiRoutes.organizerTypeList, undefined, locale),
+    () => call<OrganizerTypeList>(organizerTypeListFactory, undefined, locale),
     { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
   );
 

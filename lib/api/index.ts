@@ -3,6 +3,7 @@ import { ParsedUrlQuery } from 'node:querystring';
 import { useCallback } from 'react';
 import { useAuthToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
+import { Locale } from '../../config/locales';
 
 const {
   publicRuntimeConfig: { api },
@@ -69,14 +70,24 @@ export const apiRoutes: {
   organizerTypeList: () => `/${apiVersion}/organizerType`,
 };
 
+const addUrlParam = (url: string, param: string): string =>
+  url.includes('?') ? `${url}&${param}` : `${url}?${param}`;
+
 /**
  * Makes a call to kulturdaten.berlin API
  * @param request
  * @returns
  */
-export const call = async <T extends ApiCall>({ request, response }: T): Promise<T['response']> => {
+export const call = async <T extends ApiCall>(
+  { request, response }: T,
+  locale?: Locale
+): Promise<T['response']> => {
+  const requestUrlWithLocale = locale
+    ? addUrlParam(request.route, `locale=${locale}`)
+    : request.route;
+
   try {
-    const resp = await fetch(new URL(request.route, api).toString(), {
+    const resp = await fetch(new URL(requestUrlWithLocale, api).toString(), {
       method: request.method,
       headers: request.headers,
       body: JSON.stringify(request.body, null, 2),
@@ -110,12 +121,20 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
 
 export const useApiCall = (
   overrideAuthToken?: string
-): (<T extends ApiCall>(factory: ApiCallFactory, query?: unknown) => Promise<T['response']>) => {
+): (<T extends ApiCall>(
+  factory: ApiCallFactory,
+  query?: unknown,
+  locale?: Locale
+) => Promise<T['response']>) => {
   const authToken = useAuthToken();
 
   const cb = useCallback(
-    <T extends ApiCall>(factory: ApiCallFactory, query?: unknown): Promise<T['response']> => {
-      return call<T>(factory(overrideAuthToken || authToken, query) as T);
+    <T extends ApiCall>(
+      factory: ApiCallFactory,
+      query?: unknown,
+      locale?: Locale
+    ): Promise<T['response']> => {
+      return call<T>(factory(overrideAuthToken || authToken, query) as T, locale);
     },
     [overrideAuthToken, authToken]
   );
@@ -127,10 +146,16 @@ export const useApiCall = (
  * Helpers
  */
 
-export const getApiUrl = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): URL =>
-  new URL(apiRoutes[apiRoute](query), api);
-export const getApiUrlString = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): string =>
-  getApiUrl(apiRoute, query).toString();
+export const getApiUrl = (apiRoute: ApiRoutes, query?: ParsedUrlQuery, locale?: Locale): URL => {
+  const route = apiRoutes[apiRoute](query);
+  const routeWithLocale = locale ? addUrlParam(route, `locale=${locale}`) : route;
+  return new URL(routeWithLocale, api);
+};
+export const getApiUrlString = (
+  apiRoute: ApiRoutes,
+  query?: ParsedUrlQuery,
+  locale?: Locale
+): string => getApiUrl(apiRoute, query, locale).toString();
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 
 /**
