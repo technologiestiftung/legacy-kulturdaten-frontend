@@ -3,7 +3,7 @@ import { DefaultAttributes } from './general';
 
 export type OrganizerSubject = {
   type: 'organizersubject';
-  id: string;
+  id: number;
   attributes: {
     name: string;
   };
@@ -11,7 +11,7 @@ export type OrganizerSubject = {
 
 export type OrganizerType = {
   type: 'organizertype';
-  id: string;
+  id: number;
   attributes: DefaultAttributes;
   relations?: {
     subjects?: OrganizerSubject[];
@@ -26,5 +26,17 @@ export type Organizer = {
     address?: Address;
     type?: OrganizerType;
     subjects?: OrganizerSubject[];
+  };
+};
+
+export type CreateOrganizer = {
+  attributes?: {
+    name?: string;
+    description?: string;
+  };
+  relations?: {
+    address?: Address;
+    type?: number;
+    subjects?: number[];
   };
 };

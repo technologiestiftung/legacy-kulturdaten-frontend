@@ -56,7 +56,6 @@ const StyledH2 = styled.h2`
   font-size: var(--font-size-600);
   line-height: var(--line-height-600);
   font-weight: 700;
-  /* padding-bottom: var(--line-height-600); */
 `;
 const StyledH3 = styled.h3`
   font-size: var(--font-size-400);
@@ -72,10 +71,6 @@ export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: Catego
 
   const [formState, setFormState] = useState<{
     name: string;
-    street1: string;
-    street2: string;
-    zipCode: string;
-    city: string;
   }>();
 
   return (
@@ -97,13 +92,7 @@ export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: Catego
             try {
               const resp = await call<OrganizerCreate>(category.api.create.factory, {
                 organizer: {
-                  name: formState.name,
-                  address: {
-                    street1: formState.street1,
-                    street2: formState.street2 || ' ',
-                    zipCode: formState.zipCode,
-                    city: formState.city,
-                  },
+                  attributes: { name: formState.name },
                 },
               });
 
@@ -125,36 +114,6 @@ export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: Catego
               label={t('categories.organizer.form.name') as string}
               id="create-name"
               onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-              required
-            />
-          </CreateFormCluster>
-          <StyledH3>{t('categories.organizer.form.address')}</StyledH3>
-          <CreateFormCluster>
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.street1') as string}
-              id="create-street"
-              onChange={(e) => setFormState({ ...formState, street1: e.target.value })}
-              required
-            />
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.street2') as string}
-              id="create-street2"
-              onChange={(e) => setFormState({ ...formState, street2: e.target.value })}
-            />
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.zipCode') as string}
-              id="create-zip"
-              onChange={(e) => setFormState({ ...formState, zipCode: e.target.value })}
-              required
-            />
-            <Input
-              type={InputType.text}
-              label={t('categories.organizer.form.city') as string}
-              id="create-city"
-              onChange={(e) => setFormState({ ...formState, city: e.target.value })}
               required
             />
           </CreateFormCluster>

@@ -1,5 +1,5 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
-import { Organizer } from '../../types/organizer';
+import { Organizer, CreateOrganizer } from '../../types/organizer';
 
 /**
  * /auth/info
@@ -13,7 +13,7 @@ export interface OrganizerCreate extends ApiCall {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: Organizer;
+    body: CreateOrganizer;
   };
   response: {
     status: 200;
@@ -28,7 +28,7 @@ export interface OrganizerCreate extends ApiCall {
 
 export const organizerCreateFactory: ApiCallFactory = (
   token: OrganizerCreate['request']['headers']['Authorization'],
-  query: { organizer: Organizer }
+  query: { organizer: CreateOrganizer }
 ): OrganizerCreate => ({
   request: {
     route: apiRoutes.organizerCreate(),

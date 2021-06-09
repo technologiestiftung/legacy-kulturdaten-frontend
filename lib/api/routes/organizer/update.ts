@@ -15,8 +15,10 @@ export type OrganizerUpdate = ApiCall & {
       'Content-Type': 'application/json';
     };
     body: {
-      name: string;
-      address: Address['attributes'];
+      attributes: {
+        name: string;
+        address: Address['attributes'];
+      };
       type?: string;
       subjects?: string[];
     };
@@ -37,8 +39,10 @@ export const organizerUpdateFactory = (
   query: {
     id: string;
     organizer: {
-      name: string;
-      address: Address['attributes'];
+      attributes: {
+        name: string;
+        address: Address['attributes'];
+      };
       type?: string;
       subjects?: string[];
     };

@@ -7,7 +7,7 @@ import { mutate as mutateSwr } from 'swr';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
-import { Organizer } from '../../../lib/api/types/organizer';
+import { CreateOrganizer, Organizer } from '../../../lib/api/types/organizer';
 import {
   Category,
   CategoryEntryPage,
@@ -88,7 +88,7 @@ interface EntryFormProps {
   children?: React.ReactNode;
   category: Category;
   entry: Organizer;
-  formState: Partial<OrganizerUpdate['request']['body']>;
+  formState: CreateOrganizer;
   mutate: any;
   setPristine: (pristine: boolean) => void;
 }
@@ -130,15 +130,16 @@ const EntryForm: React.FC<EntryFormProps> = ({
   );
 };
 
-const makeFormState = (
-  entry: Organizer,
-  data: Partial<OrganizerUpdate['request']['body']>
-): OrganizerUpdate['request']['body'] => ({
+const makeFormState = (entry: Organizer, data: CreateOrganizer): CreateOrganizer => ({
   ...{
-    name: entry.attributes.name,
-    address: entry.relations.address.attributes,
-    type: entry?.relations?.type?.id,
-    subjects: entry?.relations?.subjects?.map((subject) => subject.id),
+    attributes: {
+      name: entry.attributes.name,
+    },
+    relations: {
+      address: entry.relations?.address,
+      type: entry?.relations?.type?.id,
+      subjects: entry?.relations?.subjects?.map((subject) => subject.id),
+    },
   },
   ...data,
 });
@@ -147,8 +148,8 @@ const useEntryForm = (
   category: Category,
   query: ParsedUrlQuery
 ): {
-  formState: Partial<OrganizerUpdate['request']['body']>;
-  setFormState: (partialFormState: Partial<OrganizerUpdate['request']['body']>) => void;
+  formState: CreateOrganizer;
+  setFormState: (partialFormState: CreateOrganizer) => void;
   resetFormState: () => void;
   pristine: boolean;
   setPristine: (pristine: boolean) => void;
@@ -159,20 +160,20 @@ const useEntryForm = (
   const t = useT();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
 
-  const initialFormState = useMemo(
+  const initialFormState = useMemo<CreateOrganizer>(
     () => ({
-      name: entry?.attributes.name,
-      address: entry?.relations?.address?.attributes,
-      type: entry?.relations?.type?.id,
-      subjects: entry?.relations?.subjects?.map((subject) => String(subject.id)),
+      attributes: { name: entry?.attributes.name },
+      relations: {
+        address: entry?.relations?.address,
+        type: entry?.relations?.type?.id,
+        subjects: entry?.relations?.subjects?.map((subject) => subject.id),
+      },
     }),
     [entry]
   );
 
   const [pristine, setPristine] = useState<boolean>(true);
-  const [formState, setFormState] = useState<Partial<OrganizerUpdate['request']['body']>>(
-    initialFormState
-  );
+  const [formState, setFormState] = useState<CreateOrganizer>(initialFormState);
 
   useEffect(() => {
     setFormState(initialFormState);
@@ -232,10 +233,10 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
           <Input
             label={t('categories.organizer.form.nameGerman') as string}
             type={InputType.text}
-            value={formState?.name || ''}
+            value={formState?.attributes?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ name: e.target.value });
+              setFormState({ attributes: { name: e.target.value } });
             }}
             required
           />
@@ -244,10 +245,10 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
           <Input
             label={t('categories.organizer.form.nameEnglish') as string}
             type={InputType.text}
-            value={formState?.name || ''}
+            value={formState?.attributes?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ name: e.target.value });
+              setFormState({ attributes: { name: e.target.value } });
             }}
           />
         </FormItem>
@@ -255,10 +256,10 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
           <Input
             label={t('categories.organizer.form.nameGermanSimple') as string}
             type={InputType.text}
-            value={formState?.name || ''}
+            value={formState?.attributes?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ name: e.target.value });
+              setFormState({ attributes: { name: e.target.value } });
             }}
           />
         </FormItem>
@@ -266,10 +267,10 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
           <Input
             label={t('categories.organizer.form.nameEnglishSimple') as string}
             type={InputType.text}
-            value={formState?.name || ''}
+            value={formState?.attributes?.name || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ name: e.target.value });
+              setFormState({ attributes: { name: e.target.value } });
             }}
           />
         </FormItem>
@@ -385,12 +386,21 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
           <Input
             label={t('categories.organizer.form.street1') as string}
             type={InputType.text}
-            value={formState?.address?.street1 || ''}
+            value={formState?.relations?.address?.attributes?.street1 || ''}
             onChange={(e) => {
               setPristine(false);
               setFormState({
                 ...formState,
-                address: { ...formState?.address, street1: e.target.value },
+                relations: {
+                  ...formState.relations,
+                  address: {
+                    ...formState?.relations?.address,
+                    attributes: {
+                      ...formState?.relations?.address?.attributes,
+                      street1: e.target.value,
+                    },
+                  },
+                },
               });
             }}
             required
@@ -400,12 +410,21 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
           <Input
             label={t('categories.organizer.form.street2') as string}
             type={InputType.text}
-            value={formState?.address?.street2 || ''}
+            value={formState?.relations?.address?.attributes?.street2 || ''}
             onChange={(e) => {
               setPristine(false);
               setFormState({
                 ...formState,
-                address: { ...formState?.address, street2: e.target.value },
+                relations: {
+                  ...formState.relations,
+                  address: {
+                    ...formState?.relations?.address,
+                    attributes: {
+                      ...formState?.relations?.address?.attributes,
+                      street2: e.target.value,
+                    },
+                  },
+                },
               });
             }}
           />
@@ -414,12 +433,21 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
           <Input
             label={t('categories.organizer.form.zipCode') as string}
             type={InputType.text}
-            value={formState?.address?.zipCode || ''}
+            value={formState?.relations?.address?.attributes?.zipCode || ''}
             onChange={(e) => {
               setPristine(false);
               setFormState({
                 ...formState,
-                address: { ...formState?.address, zipCode: e.target.value },
+                relations: {
+                  ...formState.relations,
+                  address: {
+                    ...formState?.relations?.address,
+                    attributes: {
+                      ...formState?.relations?.address?.attributes,
+                      zipCode: e.target.value,
+                    },
+                  },
+                },
               });
             }}
             required
@@ -429,12 +457,21 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
           <Input
             label={t('categories.organizer.form.city') as string}
             type={InputType.text}
-            value={formState?.address?.city || ''}
+            value={formState?.relations?.address?.attributes?.city || ''}
             onChange={(e) => {
               setPristine(false);
               setFormState({
                 ...formState,
-                address: { ...formState?.address, city: e.target.value },
+                relations: {
+                  ...formState.relations,
+                  address: {
+                    ...formState?.relations?.address,
+                    attributes: {
+                      ...formState?.relations?.address?.attributes,
+                      city: e.target.value,
+                    },
+                  },
+                },
               });
             }}
             required
@@ -450,12 +487,12 @@ enum SubjectsAction {
 }
 
 const subjectsReducer: Reducer<
-  { [key: string]: string[] },
-  { type: SubjectsAction; payload: { id: string; subjects: string[] } }
+  { [key: string]: number[] },
+  { type: SubjectsAction; payload: { id: number; subjects: number[] } }
 > = (state, action) => {
   switch (action.type) {
     case SubjectsAction.update: {
-      return { ...state, [action.payload.id]: action.payload.subjects };
+      return { ...state, [String(action.payload.id)]: action.payload.subjects };
     }
 
     default: {
@@ -477,14 +514,14 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
 
   const organizerTypes = useOrganizerTypeList();
 
-  const initialSubjects = useMemo(() => formState?.subjects?.map((subject) => String(subject)), [
+  const initialSubjects = useMemo(() => formState?.relations?.subjects?.map((subject) => subject), [
     formState,
   ]);
 
   const organizerSubjects = useMemo(
     () =>
-      formState?.type
-        ? organizerTypes?.find((type) => String(type.id) === String(formState.type))?.relations
+      formState?.relations?.type
+        ? organizerTypes?.find((type) => type.id === formState?.relations?.type)?.relations
             ?.subjects
         : undefined,
     [formState, organizerTypes]
@@ -492,21 +529,21 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
 
   const [userSubjects, dispatchSubjects] = useReducer(
     subjectsReducer,
-    initialSubjects && initialSubjects[formState?.type]
-      ? { [formState.type]: initialSubjects }
+    initialSubjects && initialSubjects[String(formState?.relations?.type)]
+      ? { [String(formState?.relations?.type)]: initialSubjects }
       : undefined
   );
 
   useEffect(() => {
-    if (formState?.type && initialSubjects) {
+    if (formState?.relations?.type && initialSubjects) {
       if (!userSubjects) {
         dispatchSubjects({
           type: SubjectsAction.update,
-          payload: { id: formState.type, subjects: initialSubjects },
+          payload: { id: formState.relations.type, subjects: initialSubjects },
         });
       }
     }
-  }, [formState?.type, initialSubjects, userSubjects]);
+  }, [formState?.relations?.type, initialSubjects, userSubjects]);
 
   return (
     <EntryForm {...formProps}>
@@ -516,16 +553,19 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
           <Select
             label={t('categories.organizer.form.type') as string}
             id="ff1"
-            value={String(formState?.type) || ''}
+            value={String(formState?.relations?.type) || ''}
             onChange={(e) => {
               setPristine(false);
               setFormState({
                 ...formState,
-                type: String(e.target.value),
-                subjects:
-                  userSubjects && userSubjects[String(e.target.value)]
-                    ? userSubjects[String(e.target.value)]
-                    : [],
+                relations: {
+                  ...formState?.relations,
+                  type: parseInt(e.target.value, 10),
+                  subjects:
+                    userSubjects && userSubjects[String(e.target.value)]
+                      ? userSubjects[String(e.target.value)]
+                      : [],
+                },
               });
             }}
             placeholder={t('general.choose') as string}
@@ -549,15 +589,33 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                   value: String(subject.id),
                 })) || []
               }
-              onChange={(val) => {
+              onChange={(updatedValues) => {
+                const updatedValuesInt = updatedValues.map((updatedValue) =>
+                  parseInt(updatedValue, 10)
+                );
                 setPristine(false);
                 dispatchSubjects({
                   type: SubjectsAction.update,
-                  payload: { id: formState.type, subjects: val },
+                  payload: {
+                    id: formState?.relations?.type,
+                    subjects: updatedValuesInt,
+                  },
                 });
-                setFormState({ ...formState, subjects: val });
+                setFormState({
+                  ...formState,
+                  relations: {
+                    ...formState?.relations,
+                    subjects: updatedValuesInt,
+                  },
+                });
               }}
-              value={userSubjects && formState?.type ? userSubjects[formState.type] : []}
+              value={
+                userSubjects && formState?.relations?.type
+                  ? userSubjects[String(formState.relations.type)]?.map((userSubject) =>
+                      String(userSubject)
+                    )
+                  : []
+              }
               required
             />
           ) : (
