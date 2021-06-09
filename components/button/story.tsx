@@ -67,8 +67,32 @@ export const ButtonMinimalStory: Story = () => (
     </TestWrapper>
   </>
 );
-
 ButtonMinimalStory.storyName = 'Button size=default variant=minimal';
+
+export const ButtonBorderlessStory: Story = () => (
+  <>
+    <TestWrapper>
+      <Button variant={ButtonVariant.borderless} onClick={() => console.log('ejo')} icon="LogOut">
+        Button
+      </Button>
+    </TestWrapper>
+    <TestWrapper background="var(--grey-200)">
+      <Button variant={ButtonVariant.borderless} onClick={() => console.log('ejo')}>
+        Button
+      </Button>
+    </TestWrapper>
+    <TestWrapper background="var(--black)" color="var(--white)">
+      <Button
+        variant={ButtonVariant.borderless}
+        onClick={() => console.log('ejo')}
+        color={ButtonColor.black}
+      >
+        Button
+      </Button>
+    </TestWrapper>
+  </>
+);
+ButtonBorderlessStory.storyName = 'Button size=default variant=borderless';
 
 export const ButtonSmallStory: Story = () => (
   <TestWrapper>

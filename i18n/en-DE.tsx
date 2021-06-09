@@ -45,6 +45,34 @@ export const enDE: Localization = {
     draft: () => 'Draft',
     published: () => 'published',
     lastUpdated: () => 'Last updated',
+    delete: () => 'delete',
+    add: () => 'add',
+  },
+  linkList: {
+    addNew: () => 'Add new link',
+    maxLinks: ({ amount }) => `maximum of ${amount} links`,
+    maxReached: ({ amount }) =>
+      `The maximum of ${amount} links is reached. You can not add more links, but you can edit or delete existing links.`,
+  },
+  richText: {
+    history: () => 'History',
+    format: () => 'Paragraph format',
+    lists: () => 'Lists',
+    style: () => 'Text style',
+    undo: () => 'Undo change',
+    redo: () => 'Redo change',
+    paragraph: () => 'Paragraph',
+    headingOne: () => 'Headline 1',
+    headingTwo: () => 'Headline 2',
+    headingThree: () => 'Headline 3',
+    listOrdered: () => 'Numbered list',
+    listUnordered: () => 'Unordered list',
+    bold: () => 'Bold',
+    italic: () => 'Italic',
+    underline: () => 'Underline',
+  },
+  overlay: {
+    ariaClose: () => 'Close overlay window',
   },
   categories: {
     organizer: {

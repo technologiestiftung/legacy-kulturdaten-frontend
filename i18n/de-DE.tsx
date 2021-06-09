@@ -45,6 +45,34 @@ export const deDE: Localization = {
     draft: () => 'Entwurf',
     published: () => 'veröffentlicht',
     lastUpdated: () => 'Zuletzt aktualisiert',
+    delete: () => 'löschen',
+    add: () => 'hinzufügen',
+  },
+  linkList: {
+    addNew: () => 'Neuen Link hinzufügen',
+    maxLinks: ({ amount }) => `maximal ${amount} Links`,
+    maxReached: ({ amount }) =>
+      `Das Maximum von ${amount} Links ist erreicht. Mehr Links können nicht hinzugefügt werden. Aber bestehende Links können verändert oder gelöscht werden.`,
+  },
+  richText: {
+    history: () => 'Verlauf',
+    format: () => 'Absatzformat',
+    lists: () => 'Listen',
+    style: () => 'Textstil',
+    undo: () => 'Änderung rückgängig machen',
+    redo: () => 'Änderung wiederherstellen',
+    paragraph: () => 'Text',
+    headingOne: () => 'Überschrift 1',
+    headingTwo: () => 'Überschrift 2',
+    headingThree: () => 'Überschrift 3',
+    listOrdered: () => 'Nummerierte Liste',
+    listUnordered: () => 'Normale Liste',
+    bold: () => 'Fett',
+    italic: () => 'Kursiv',
+    underline: () => 'Unterstrichen',
+  },
+  overlay: {
+    ariaClose: () => 'Überlagerndes Fenster schließen',
   },
   categories: {
     organizer: {

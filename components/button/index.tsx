@@ -2,6 +2,7 @@ import React, { MouseEvent } from 'react';
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/react';
 import * as feather from 'react-feather';
+import { insetBorderColored } from '../globals/Constants';
 
 export enum ButtonColor {
   default = 'default',
@@ -10,6 +11,7 @@ export enum ButtonColor {
   red = 'red',
   blue = 'blue',
   white = 'white',
+  black = 'black',
 }
 
 export enum ButtonSize {
@@ -21,6 +23,8 @@ export enum ButtonSize {
 export enum ButtonVariant {
   default = 'default',
   minimal = 'minimal',
+  borderless = 'borderless',
+  toolbar = 'toolbar',
 }
 
 const buttonColors: {
@@ -35,6 +39,7 @@ const buttonColors: {
   red: { background: 'var(--red-50)', color: 'var(--black)' },
   blue: { background: 'var(--blue)', color: 'var(--white)' },
   white: { background: 'var(--white)', color: 'var(--black)' },
+  black: { background: 'var(--black)', color: 'var(--white)' },
 };
 
 const buttonSizes: {
@@ -49,23 +54,23 @@ const buttonSizes: {
   default: {
     fontSize: 'var(--font-size-300)',
     lineHeight: 'var(--line-height-300)',
-    padding: '0.375rem 0.75rem',
+    padding: 'calc(0.375rem - 1px) calc(0.75rem - 1px)',
     borderRadius: '0.75rem',
     iconGap: '0.375rem',
   },
   small: {
     fontSize: 'var(--font-size-200)',
     lineHeight: 'var(--line-height-200)',
-    padding: '0.1875rem 0.75rem',
+    padding: 'calc(0.1875rem - 1px) calc(0.75rem - 1px)',
     borderRadius: '0.75rem',
     iconGap: '0.25rem',
   },
   big: {
     fontSize: 'var(--font-size-400)',
     lineHeight: 'var(--line-height-400)',
-    padding: '0.75rem 1rem',
+    padding: 'calc(0.75rem - 1px) calc(1rem - 1px)',
     borderRadius: '0.75rem',
-    iconGap: '0.5rem',
+    iconGap: '0.375rem',
   },
 };
 
@@ -109,6 +114,22 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
       transform: none;
     }
   `,
+  borderless: css`
+    padding: 0;
+    border: none;
+    background: none;
+  `,
+  toolbar: css`
+    padding: 0.5625rem 0.75rem;
+    box-shadow: ${insetBorderColored('var(--black)', true)};
+    border-radius: 0.375rem;
+    border: none;
+
+    &:hover {
+      background: var(--white);
+      color: var(--black);
+    }
+  `,
 };
 
 const StyledButton = styled.button<{
@@ -147,13 +168,45 @@ export enum IconPosition {
   right = 'right',
 }
 
-const StyledButtonIcon = styled.div<{ size: ButtonSize; position: IconPosition }>`
-  padding: ${({ size, position }) =>
-    position === IconPosition.right
-      ? `0 0 0 ${buttonSizes[size].iconGap}`
-      : `0 ${buttonSizes[size].iconGap} 0 0`};
+const StyledButtonIcon = styled.div<{
+  size: ButtonSize;
+  position: IconPosition;
+  hasChildren: boolean;
+  iconWidth?: string;
+  iconHeight?: string;
+}>`
+  padding: ${({ size, position, hasChildren }) =>
+    hasChildren
+      ? position === IconPosition.right
+        ? `0 0 0 ${buttonSizes[size].iconGap}`
+        : `0 ${buttonSizes[size].iconGap} 0 0`
+      : '0'};
   display: flex;
   align-content: center;
+
+  ${({ iconWidth }) =>
+    iconWidth
+      ? css`
+          width: ${iconWidth};
+
+          svg {
+            width: 100%;
+          }
+        `
+      : ''}
+
+  ${({ iconHeight }) =>
+    iconHeight
+      ? css`
+          height: ${iconHeight};
+
+          svg {
+            height: 100%;
+          }
+        `
+      : ''}
+
+
 
   ${({ position }) => (position === IconPosition.left ? 'order: -1;' : '')}
 
@@ -174,35 +227,45 @@ export enum ButtonType {
 }
 
 interface ButtonProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
-  description?: string;
+  onMouseDown?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   disabled?: boolean;
   color?: ButtonColor;
   icon?: string;
+  renderedIcon?: React.ReactElement;
   iconPosition?: IconPosition;
+  iconWidth?: string;
+  iconHeight?: string;
   id?: string;
   name?: string;
   asInput?: boolean;
   size?: ButtonSize;
   variant?: ButtonVariant;
   type?: ButtonType;
+  ariaLabel?: string;
+  title?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
-  description,
+  onMouseDown,
   disabled,
   color = ButtonColor.default,
   size = ButtonSize.default,
   variant = ButtonVariant.default,
   asInput,
   icon,
+  renderedIcon,
   iconPosition = IconPosition.right,
+  iconWidth,
+  iconHeight,
   id,
   name,
   type = ButtonType.button,
+  ariaLabel,
+  title,
 }: ButtonProps) =>
   asInput ? (
     <StyledButton
@@ -215,12 +278,15 @@ export const Button: React.FC<ButtonProps> = ({
       name={name}
       type="submit"
       onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
+      onMouseDown={onMouseDown ? (e: MouseEvent<HTMLInputElement>) => onMouseDown(e) : undefined}
       disabled={disabled}
+      aria-label={ariaLabel}
+      title={title}
     />
   ) : (
     <StyledButton
       onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
-      aria-label={description}
+      onMouseDown={onMouseDown ? (e: MouseEvent<HTMLButtonElement>) => onMouseDown(e) : undefined}
       color={color}
       size={size}
       variant={variant}
@@ -228,11 +294,21 @@ export const Button: React.FC<ButtonProps> = ({
       name={name}
       disabled={disabled}
       type={type}
+      aria-label={ariaLabel}
+      title={title}
     >
-      <StyledButtonSpan>{children}</StyledButtonSpan>
-      {icon && feather[icon] ? (
-        <StyledButtonIcon size={size} position={iconPosition}>
-          {React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
+      {children && <StyledButtonSpan>{children}</StyledButtonSpan>}
+      {renderedIcon || (icon && feather[icon]) ? (
+        <StyledButtonIcon
+          size={size}
+          iconWidth={iconWidth}
+          iconHeight={iconHeight}
+          position={iconPosition}
+          hasChildren={typeof children !== 'undefined'}
+        >
+          {renderedIcon
+            ? renderedIcon
+            : React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
         </StyledButtonIcon>
       ) : (
         ''

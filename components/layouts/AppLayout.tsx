@@ -199,7 +199,7 @@ const MainMenuOverlay = styled.div`
   width: 100%;
   height: 100%;
   background: var(--black);
-  opacity: 0.7;
+  opacity: 0.8;
   z-index: 999;
   cursor: pointer;
 `;
