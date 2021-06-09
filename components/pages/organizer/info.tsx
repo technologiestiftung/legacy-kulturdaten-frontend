@@ -22,7 +22,12 @@ import { CheckboxList } from '../../checkbox/CheckboxList';
 import { insetBorder, mq } from '../../globals/Constants';
 import { Input, InputType } from '../../input';
 import { LinkList } from '../../linklist';
+import { useOverlay } from '../../overlay';
+import { OverlayContainer } from '../../overlay/OverlayContainer';
+import { OverlayTitleBar } from '../../overlay/OverlayTitleBar';
 import { PlaceholderField } from '../../placeholderfield';
+import { CustomDescendant, RichText } from '../../richtext';
+import { markdownToSlate } from '../../richtext/parser';
 import { Select } from '../../select';
 import { Textarea } from '../../textarea';
 
@@ -134,11 +139,12 @@ const makeFormState = (entry: Organizer, data: CreateOrganizer): CreateOrganizer
   ...{
     attributes: {
       name: entry.attributes.name,
+      description: entry.attributes?.description,
     },
     relations: {
       address: entry.relations?.address,
-      type: entry?.relations?.type?.id,
-      subjects: entry?.relations?.subjects?.map((subject) => subject.id),
+      type: entry.relations?.type?.id,
+      subjects: entry.relations?.subjects?.map((subject) => subject.id),
     },
   },
   ...data,
@@ -162,7 +168,10 @@ const useEntryForm = (
 
   const initialFormState = useMemo<CreateOrganizer>(
     () => ({
-      attributes: { name: entry?.attributes.name },
+      attributes: {
+        name: entry?.attributes.name,
+        description: entry?.attributes.description,
+      },
       relations: {
         address: entry?.relations?.address,
         type: entry?.relations?.type?.id,
@@ -325,48 +334,74 @@ const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
 };
 
 const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const { formButtons } = useEntryForm(category, query);
+  const { formButtons, formState } = useEntryForm(category, query);
   const t = useT();
 
+  const [richTextState, setRichTextState] = useState<CustomDescendant[]>();
+
+  useEffect(() => {
+    const int = formState?.attributes?.description
+      ? markdownToSlate(formState.attributes.description)
+      : undefined;
+    if (int) {
+      setRichTextState(int);
+    }
+  }, [formState?.attributes?.description]);
+
+  const { renderedOverlay, setIsOpen } = useOverlay(
+    <OverlayContainer>
+      <OverlayTitleBar title="Beschreibung deutsch" />
+      {Array.isArray(richTextState) && (
+        <RichText value={richTextState} onChange={(val) => setRichTextState(val)} />
+      )}
+    </OverlayContainer>
+  );
+
   return (
-    <form
-      onSubmit={async (e: FormEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
-      {formButtons}
-      <FormGrid>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-g"
-            label={t('categories.organizer.form.descriptionGerman') as string}
-            rows={5}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-e"
-            label={t('categories.organizer.form.descriptionEnglish') as string}
-            rows={5}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-gs"
-            label={t('categories.organizer.form.descriptionGermanSimple') as string}
-            rows={5}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-es"
-            label={t('categories.organizer.form.descriptionEnglishSimple') as string}
-            rows={5}
-          />
-        </FormItem>
-      </FormGrid>
-    </form>
+    // <form
+    //   onSubmit={async (e: FormEvent) => {
+    //     e.preventDefault();
+    //     e.stopPropagation();
+    //   }}
+    // >
+    //   {formButtons}
+    //   <FormGrid>
+    //     <FormItem width={FormItemWidth.full}>
+    //       <Textarea
+    //         id="ff-desc-g"
+    //         label={t('categories.organizer.form.descriptionGerman') as string}
+    //         rows={5}
+    //       />
+    //     </FormItem>
+    //     <FormItem width={FormItemWidth.full}>
+    //       <Textarea
+    //         id="ff-desc-e"
+    //         label={t('categories.organizer.form.descriptionEnglish') as string}
+    //         rows={5}
+    //       />
+    //     </FormItem>
+    //     <FormItem width={FormItemWidth.full}>
+    //       <Textarea
+    //         id="ff-desc-gs"
+    //         label={t('categories.organizer.form.descriptionGermanSimple') as string}
+    //         rows={5}
+    //       />
+    //     </FormItem>
+    //     <FormItem width={FormItemWidth.full}>
+    //       <Textarea
+    //         id="ff-desc-es"
+    //         label={t('categories.organizer.form.descriptionEnglishSimple') as string}
+    //         rows={5}
+    //       />
+    //     </FormItem>
+    //   </FormGrid>
+    // </form>
+    <div>
+      <div>
+        <Button onClick={() => setIsOpen(true)}>Show Editor</Button>
+      </div>
+      <div>{renderedOverlay}</div>
+    </div>
   );
 };
 
@@ -646,16 +681,16 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const items = [
     {
+      title: `${t('categories.organizer.form.description') as string} (TBD)`,
+      content: <DescriptionForm category={category} query={query} />,
+    },
+    {
       title: t('categories.organizer.form.name') as string,
       content: <NameForm category={category} query={query} />,
     },
     {
       title: t('categories.organizer.form.classification') as string,
       content: <ClassificationForm category={category} query={query} />,
-    },
-    {
-      title: `${t('categories.organizer.form.description') as string} (TBD)`,
-      content: <DescriptionForm category={category} query={query} />,
     },
     {
       title: t('categories.organizer.form.address') as string,
@@ -669,7 +704,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   return (
     <CreateWrapper>
-      <Accordion initiallyCollapsed={true} items={items} />
+      <Accordion initiallyCollapsed={false} items={items} />
     </CreateWrapper>
   );
 };

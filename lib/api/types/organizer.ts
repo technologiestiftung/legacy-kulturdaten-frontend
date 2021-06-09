@@ -21,7 +21,7 @@ export type OrganizerType = {
 export type Organizer = {
   type: 'organizer';
   id: string;
-  attributes: DefaultAttributes;
+  attributes: { description?: string } & DefaultAttributes;
   relations: {
     address?: Address;
     type?: OrganizerType;
