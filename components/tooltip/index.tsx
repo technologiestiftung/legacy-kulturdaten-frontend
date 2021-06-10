@@ -94,6 +94,7 @@ const StyledTooltipOverlay = styled.div<{
   isOpen: boolean;
 }>`
   width: calc(var(--parent-width) - 1.5rem);
+  min-height: 2.625rem;
   height: auto;
   position: absolute;
   display: flex;
