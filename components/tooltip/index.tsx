@@ -27,6 +27,7 @@ const StyledTooltip = styled.div<{
   display: inline;
   overflow: visible;
   position: relative;
+  height: ${tooltipButtonHeight}px;
 
   &::before {
     content: '';
@@ -65,6 +66,7 @@ const StyledTooltipButton = styled.button`
   z-index: 2;
   height: ${tooltipButtonHeight}px;
   width: ${tooltipButtonHeight}px;
+  padding: 0;
   box-sizing: border-box;
   background: var(--green-kelly);
   border-radius: ${tooltipButtonHeight}px;
@@ -143,14 +145,15 @@ const StyledTooltipOverlay = styled.div<{
 
 const StyledTooltipOverlayContent = styled.div`
   flex-grow: 1;
+  padding-right: 1.375rem;
 `;
 
 const StyledTooltipOverlayClose = styled.button`
   margin: 0;
   appearance: none;
   position: absolute;
-  right: 12px;
-  top: 12px;
+  right: 0.75rem;
+  top: 0.75rem;
   padding: 0;
   cursor: pointer;
   border: 0 none;
