@@ -48,6 +48,10 @@ export const deDE: Localization = {
     delete: () => 'löschen',
     add: () => 'hinzufügen',
   },
+  tooltip: {
+    open: () => 'Tooltip anzeigen',
+    close: () => 'Tooltip schließen',
+  },
   linkList: {
     addNew: () => 'Neuen Link hinzufügen',
     maxLinks: ({ amount }) => `maximal ${amount} Links`,
