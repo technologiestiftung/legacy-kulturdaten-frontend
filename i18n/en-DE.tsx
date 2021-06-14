@@ -48,6 +48,10 @@ export const enDE: Localization = {
     delete: () => 'delete',
     add: () => 'add',
   },
+  tooltip: {
+    open: () => 'open tooltip',
+    close: () => 'close tooltip',
+  },
   linkList: {
     addNew: () => 'Add new link',
     maxLinks: ({ amount }) => `maximum of ${amount} links`,

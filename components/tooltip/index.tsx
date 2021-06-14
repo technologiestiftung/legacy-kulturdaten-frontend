@@ -6,6 +6,7 @@ import { X } from 'react-feather';
 import { InfoIconSvg } from '../assets/InfoIconSvg';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
+import { useT } from '../../lib/i18n';
 
 enum YPosition {
   top = 'top',
@@ -66,7 +67,7 @@ const StyledTooltipButton = styled.button`
   z-index: 2;
   height: ${tooltipButtonHeight}px;
   width: ${tooltipButtonHeight}px;
-  padding: 0;
+  padding: 1px;
   box-sizing: border-box;
   background: var(--green-kelly);
   border-radius: ${tooltipButtonHeight}px;
@@ -168,9 +169,18 @@ const StyledTooltipOverlayClose = styled.button`
 interface TooltipProps {
   children: React.ReactNode;
   parentNodeRef?: MutableRefObject<HTMLDivElement>;
+  buttonAriaLabel?: string;
+  buttonTitle?: string;
 }
 
-export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: TooltipProps) => {
+export const Tooltip: React.FC<TooltipProps> = ({
+  parentNodeRef,
+  children,
+  buttonAriaLabel,
+  buttonTitle,
+}: TooltipProps) => {
+  const t = useT();
+
   // Holds our user state to show and hide the tooltip overlay
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -331,7 +341,12 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
 
   return (
     <StyledTooltip yPosition={tooltipYPosition} isOpen={isOpen}>
-      <StyledTooltipButton ref={tooltipButtonRef} onClick={() => setIsOpen(!isOpen)}>
+      <StyledTooltipButton
+        ref={tooltipButtonRef}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label={buttonAriaLabel || buttonTitle || (t('tooltip.open') as string)}
+        title={buttonTitle || buttonAriaLabel || (t('tooltip.open') as string)}
+      >
         <InfoIconSvg />
       </StyledTooltipButton>
       <StyledTooltipOverlay
@@ -341,7 +356,11 @@ export const Tooltip: React.FC<TooltipProps> = ({ parentNodeRef, children }: Too
         isOpen={isOpen}
       >
         <StyledTooltipOverlayContent>{children}</StyledTooltipOverlayContent>
-        <StyledTooltipOverlayClose onClick={() => setIsOpen(false)}>
+        <StyledTooltipOverlayClose
+          onClick={() => setIsOpen(false)}
+          aria-label={t('tooltip.close') as string}
+          title={t('tooltip.close') as string}
+        >
           <X color="var(--black)" />
         </StyledTooltipOverlayClose>
       </StyledTooltipOverlay>
