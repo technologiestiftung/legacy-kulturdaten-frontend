@@ -1,5 +1,4 @@
 import React, { ReactNode, useContext, useEffect, useMemo, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 type WindowContext = {
   innerWidth: number;
@@ -110,9 +109,4 @@ export const useBreakpointOrWider = (breakpoint: Breakpoint): boolean => {
   }, [innerWidth, breakpoint]);
 
   return isBreakpointOrWider;
-};
-
-export const AddToBody = ({ children }: { children: React.ReactElement }) => {
-  if (typeof window == 'undefined') return null;
-  return createPortal(children, document.body);
 };

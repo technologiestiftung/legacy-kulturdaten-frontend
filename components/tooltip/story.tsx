@@ -7,16 +7,6 @@ export default {
   title: 'Tooltip',
 };
 
-const TestWrapper = styled.div<{ background?: string; color?: string }>`
-  display: grid;
-  row-gap: 1.5rem;
-  grid-template-columns: auto;
-  justify-items: flex-start;
-
-  background: ${({ background }) => (background ? background : '')};
-  color: ${({ color }) => (color ? color : '')};
-`;
-
 const ScrollWrapper = styled.div`
   max-height: 100%;
   height: 400px;
