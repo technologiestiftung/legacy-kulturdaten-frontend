@@ -28,10 +28,10 @@ export const dateFormatPatternMap: { [key in DateFormat]: { [key in Locale]: str
   },
   time: {
     'de-DE': 'hh:mm',
-    'en-DE': 'hh:mm bbb',
+    'en-DE': 'hh:mm aaa',
   },
   dateTime: {
     'de-DE': 'dd.MM.yyyy HH:mm',
-    'en-DE': 'MM-dd-yyyy hh:mm bbb',
+    'en-DE': 'MM-dd-yyyy hh:mm aaa',
   },
 };

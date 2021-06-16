@@ -32,6 +32,13 @@ export const enDE: Localization = {
     confirmPassword: () => 'Confirm password',
     submit: () => 'Register',
   },
+  statusBar: {
+    status: () => 'State',
+    draft: () => 'Draft',
+    published: () => 'published',
+    saved: () => 'Saved',
+    savedShort: () => 'Saved',
+  },
   general: {
     name: () => 'name',
     city: () => 'city',
@@ -41,10 +48,6 @@ export const enDE: Localization = {
     close: () => 'close',
     back: () => 'back',
     choose: () => 'Please choose',
-    status: () => 'Status',
-    draft: () => 'Draft',
-    published: () => 'published',
-    lastUpdated: () => 'Last updated',
     delete: () => 'delete',
     add: () => 'add',
   },
@@ -118,8 +121,12 @@ export const enDE: Localization = {
         social: () => 'Social media links',
       },
       tabs: {
-        overview: () => 'Overview',
         info: () => 'Information',
+        categorization: () => 'Categorization',
+        media: () => 'Images',
+        preview: () => 'Preview',
+      },
+      metaLinks: {
         rights: () => 'Access rights',
         export: () => 'Export',
       },

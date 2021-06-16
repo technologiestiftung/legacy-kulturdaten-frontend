@@ -4,10 +4,6 @@ import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { useState } from 'react';
-import { StatusBar, StatusBarState } from '../../statusbar';
-import { useT } from '../../../lib/i18n';
-import { DateFormat, useDate } from '../../../lib/date';
 
 const EntryTitle = styled.h2`
   font-size: var(--font-size-700);
@@ -48,45 +44,15 @@ const EntryContainer = styled.div`
   }
 `;
 
-const OverviewStatusBarContainer = styled.div`
-  padding: 1.5rem 0.75rem;
-  grid-column: 1 / -1;
-
-  ${mq(Breakpoint.mid)} {
-    padding: 1.5rem 0;
-    grid-column: 2 / -2;
-  }
-`;
-
-export const OrganizerOverviewPage: React.FC<CategoryEntryPage> = ({
+export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
-  const t = useT();
-  const date = useDate();
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
-  const [entryState, setEntryState] = useState<StatusBarState>(StatusBarState.published);
-
   const title = entry?.attributes?.name;
-
-  const formattedDate = entry?.attributes.updatedAt
-    ? date(new Date(entry?.attributes.updatedAt), DateFormat.dateTime)
-    : undefined;
 
   return (
     <EntryContainer>
-      <OverviewStatusBarContainer>
-        <StatusBar
-          id="ff-s"
-          label={t('general.status') as string}
-          value={entryState}
-          onChange={(e) => setEntryState(e.target.value as StatusBarState)}
-          info={formattedDate ? `${t('general.lastUpdated')}: ${formattedDate}` : undefined}
-        >
-          <option value={StatusBarState.draft}>{t('general.draft')}</option>
-          <option value={StatusBarState.published}>{t('general.published')}</option>
-        </StatusBar>
-      </OverviewStatusBarContainer>
       <EntryHead>
         <EntryTitle>{title}</EntryTitle>
         <EntryDescription>
