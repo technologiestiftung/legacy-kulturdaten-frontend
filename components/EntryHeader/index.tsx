@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, insetBorder, mq } from '../globals/Constants';
@@ -12,11 +13,14 @@ const StyledEntryHeader = styled.div`
   ${contentGrid(1)}
 
   ${mq(Breakpoint.mid)} {
-    padding: 0;
     grid-row-gap: 2.25rem;
     box-shadow: ${insetBorder(false, true, true, false)};
 
     ${contentGrid(8)}
+  }
+
+  ${mq(Breakpoint.widish)} {
+    padding: 0;
   }
 `;
 
@@ -25,6 +29,10 @@ const StyledEntryHeaderHead = styled.div`
   justify-content: space-between;
 
   ${mq(Breakpoint.mid)} {
+    grid-column: 1 / -1;
+  }
+
+  ${mq(Breakpoint.widish)} {
     margin-top: 0.75rem;
     grid-column: 2 / -2;
   }
@@ -44,18 +52,40 @@ const StyledEntryHeaderBackButton = styled.div`
   margin: 0.75rem 0 0;
 `;
 
-const StyledEntryHeaderTitle = styled.h1`
+const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
   font-size: var(--font-size-700);
   line-height: var(--line-height-700);
   font-weight: 700;
 
   ${mq(Breakpoint.mid)} {
+    grid-column: 1 / -1;
+  }
+
+  ${mq(Breakpoint.widish)} {
     grid-column: 2 / -2;
   }
+
+  ${({ skeleton }) =>
+    skeleton
+      ? css`
+          &:after {
+            content: '';
+            display: block;
+            position: relative;
+            height: var(--line-height-700);
+            width: 20rem;
+            background: var(--grey-350);
+          }
+        `
+      : ''}
 `;
 
 const StyledEntryHeaderStatusSlot = styled.div`
   ${mq(Breakpoint.mid)} {
+    grid-column: 1 / -1;
+  }
+
+  ${mq(Breakpoint.widish)} {
     grid-column: 2 / -2;
   }
 `;
@@ -64,6 +94,10 @@ const StyledEntryHeaderPublishSlot = styled.div``;
 
 const StyledEntryHeaderTabsSlot = styled.div`
   ${mq(Breakpoint.mid)} {
+    grid-column: 1 / -1;
+  }
+
+  ${mq(Breakpoint.widish)} {
     grid-column: 2 / -2;
   }
 `;
@@ -99,7 +133,9 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
           )}
         </StyledEntryHeaderHead>
       )}
-      <StyledEntryHeaderTitle>{title}</StyledEntryHeaderTitle>
+      <StyledEntryHeaderTitle skeleton={typeof title === 'undefined'}>
+        {title}
+      </StyledEntryHeaderTitle>
       {statusBar && <StyledEntryHeaderStatusSlot>{statusBar}</StyledEntryHeaderStatusSlot>}
       {publish && <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>}
       {tabs && <StyledEntryHeaderTabsSlot>{tabs}</StyledEntryHeaderTabsSlot>}
