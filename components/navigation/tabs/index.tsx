@@ -2,23 +2,10 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
 import { Breakpoint } from '../../../lib/WindowService';
-import { contentGrid, insetBorder, mq } from '../../globals/Constants';
+import { insetBorder, mq } from '../../globals/Constants';
 import { css } from '@emotion/react';
 
-const StyledTabs = styled.nav`
-  padding: 0 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    padding: 0;
-    ${contentGrid(7)}
-  }
-
-  ${mq(Breakpoint.wide)} {
-    ${contentGrid(8)}
-  }
-`;
-
-const StyledTabsContainer = styled.div<{ itemCount: number }>`
+const StyledTabs = styled.nav<{ itemCount: number }>`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   box-shadow: ${insetBorder(false, false, true)};
@@ -106,16 +93,14 @@ export interface TabsProps {
 }
 
 export const Tabs: React.FC<TabsProps> = ({ links }: TabsProps) => (
-  <StyledTabs>
-    <StyledTabsContainer itemCount={links.length}>
-      {links.map(({ title, href, isActive }, index) => (
-        <Link key={index} href={href} passHref shallow>
-          <StyledTabLink isActive={isActive} itemCount={links.length}>
-            {isActive ? <ArrowRightSvg /> : ''}
-            {title}
-          </StyledTabLink>
-        </Link>
-      ))}
-    </StyledTabsContainer>
+  <StyledTabs itemCount={links.length}>
+    {links.map(({ title, href, isActive }, index) => (
+      <Link key={index} href={href} passHref shallow>
+        <StyledTabLink isActive={isActive} itemCount={links.length}>
+          {isActive ? <ArrowRightSvg /> : ''}
+          {title}
+        </StyledTabLink>
+      </Link>
+    ))}
   </StyledTabs>
 );

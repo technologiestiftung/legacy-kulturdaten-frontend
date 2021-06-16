@@ -94,7 +94,11 @@ const TitleBarSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean
       : ''}
 `;
 
-const ContentSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean }>`
+const ContentSlot = styled.div<{
+  disabled?: boolean;
+  hasSecondaryMenu?: boolean;
+  hasTitleBar?: boolean;
+}>`
   position: relative;
   grid-column: 1 / span 4;
   overflow-y: auto;
@@ -103,7 +107,28 @@ const ContentSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean 
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
-    grid-row: 2 / -1;
+    grid-row: ${({ hasTitleBar }) => (hasTitleBar ? '2 / -1' : '1 / -1')};
+
+    ${({ hasTitleBar }) =>
+      !hasTitleBar
+        ? css`
+            box-shadow: ${insetBorder(true, true, true, true)};
+
+            &::before {
+              content: '';
+              position: sticky;
+              display: block;
+              top: 0;
+              left: 0;
+              width: 100%;
+              background: var(--grey-400);
+              height: 1px;
+              margin: 0 0 -1px 0;
+              z-index: 1;
+              pointer-events: none;
+            }
+          `
+        : ''}
   }
 
   ${mq(Breakpoint.wide)} {
@@ -113,16 +138,19 @@ const ContentSlot = styled.div<{ disabled?: boolean; hasSecondaryMenu?: boolean 
     grid-row: auto;
   }
 
-  ${({ hasSecondaryMenu }) =>
+  ${({ hasSecondaryMenu, hasTitleBar }) =>
     hasSecondaryMenu
       ? css`
           ${mq(Breakpoint.mid)} {
             grid-column: 4 / -1;
-            box-shadow: ${insetBorder(false, true, true)};
+            box-shadow: ${hasTitleBar
+              ? insetBorder(false, true, true)
+              : insetBorder(true, true, true)};
           }
 
           ${mq(Breakpoint.wide)} {
             grid-column: 6 / -1;
+            ${!hasTitleBar ? `box-shadow: ${insetBorder(true, true, true)};` : ''};
           }
         `
       : ''}
@@ -207,7 +235,7 @@ const MainMenuOverlay = styled.div`
 interface AppLayoutProps {
   mainMenu: React.ReactElement<MainMenuProps>;
   content: React.ReactNode;
-  titleBar: React.ReactElement<TitleBarProps>;
+  titleBar?: React.ReactElement<TitleBarProps>;
   secondaryMenu?: {
     titleBar: React.ReactElement<TitleBarProps>;
     content: React.ReactNode;
@@ -253,7 +281,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   );
 
   const renderedContentSlot = (
-    <ContentSlot hasSecondaryMenu={hasSecondaryMenu} ref={contentSlotRef}>
+    <ContentSlot
+      hasSecondaryMenu={hasSecondaryMenu}
+      ref={contentSlotRef}
+      hasTitleBar={typeof titleBar !== 'undefined'}
+    >
       {content}
     </ContentSlot>
   );

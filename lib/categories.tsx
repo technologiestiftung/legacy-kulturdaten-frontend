@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 import React from 'react';
 import useSWR from 'swr';
+import { Button, ButtonVariant } from '../components/button';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { TitleBarProps } from '../components/navigation/TitleBar';
@@ -48,14 +49,20 @@ export type Category = {
   pages: {
     list: React.FC<CategoryPage>;
     create: React.FC<CategoryPage>;
-    overview: React.FC<CategoryEntryPage>;
+    preview: React.FC<CategoryEntryPage>;
     info: React.FC<CategoryEntryPage>;
+    media: React.FC<CategoryEntryPage>;
+    categorization: React.FC<CategoryEntryPage>;
     rights: React.FC<CategoryEntryPage>;
     export: React.FC<CategoryEntryPage>;
   };
   tabs: {
     title: string;
     sub?: string;
+  }[];
+  metaLinks: {
+    title: string;
+    icon: string;
   }[];
   api: {
     list: categoryApi;
@@ -138,6 +145,18 @@ export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
   }
 
   return null;
+};
+
+export const useMetaLinks = (category: Category): React.ReactElement[] => {
+  const metaLinks = category?.metaLinks?.map(({ title, icon }, index) => {
+    return (
+      <Button key={index} icon={icon} variant={ButtonVariant.minimal}>
+        {title}
+      </Button>
+    );
+  });
+
+  return metaLinks;
 };
 
 export const useCategoryMenu = (

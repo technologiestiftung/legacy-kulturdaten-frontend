@@ -58,7 +58,7 @@ export const useOrganizerTable = (
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
-                <TableLink href={href('overview')} isActive={router.asPath.includes(href())}>
+                <TableLink href={href('info')} isActive={router.asPath.includes(href())}>
                   {children}
                 </TableLink>
               );
