@@ -26,9 +26,12 @@ export interface CategoryEntryPage extends CategoryPage {
 }
 
 export interface CategoryEntry {
-  attributes: {
-    name: string;
+  data: {
+    attributes: {
+      name: string;
+    };
   };
+  meta: any;
 }
 
 export type Category = {
@@ -40,7 +43,7 @@ export type Category = {
   icon: MenuIconName;
   menuFactory: (
     category: Category,
-    list: any
+    list: CategoryEntry['data'][]
   ) => { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement };
   routes: {
     list: Route;
@@ -82,11 +85,11 @@ export const useCategory = (): Category => {
   return category;
 };
 
-export const useList = <C extends ApiCall, T extends CategoryEntry[]>(
+export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
   query?: ParsedUrlQuery,
   load = true
-): T => {
+): T['data'][] => {
   const call = useApiCall();
   const locale = useLocale();
 
@@ -98,7 +101,7 @@ export const useList = <C extends ApiCall, T extends CategoryEntry[]>(
     () => (load && category ? call<C>(apiCallFactory, query, locale) : undefined)
   );
 
-  return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
+  return (((data as unknown) as C['response'])?.body?.data as unknown) as T['data'][];
 };
 
 export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
@@ -126,7 +129,7 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { entry: ((data?.body as any)?.data as unknown) as T, mutate: wrappedMutate };
+  return { entry: ((data?.body as any) as unknown) as T, mutate: wrappedMutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
@@ -164,7 +167,7 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
 
 export const useCategoryMenu = (
   category: Category,
-  list: any
+  list: CategoryEntry['data'][]
 ): { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement } => {
   const categoryMenu = category.menuFactory(category, list);
 

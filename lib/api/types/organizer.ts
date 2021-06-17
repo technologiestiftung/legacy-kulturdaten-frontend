@@ -19,14 +19,17 @@ export type OrganizerType = {
 };
 
 export type Organizer = {
-  type: 'organizer';
-  id: string;
-  attributes: { description?: string } & DefaultAttributes;
-  relations: {
-    address?: Address;
-    type?: OrganizerType;
-    subjects?: OrganizerSubject[];
+  data: {
+    type: 'organizer';
+    id: string;
+    attributes: { description?: string } & DefaultAttributes;
+    relations: {
+      address?: Address;
+      type?: OrganizerType;
+      subjects?: OrganizerSubject[];
+    };
   };
+  meta: any;
 };
 
 export type CreateOrganizer = {

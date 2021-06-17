@@ -49,7 +49,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
   query,
 }: CategoryEntryPage) => {
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
-  const title = entry?.attributes?.name;
+  const title = entry?.data?.attributes?.name;
 
   return (
     <EntryContainer>

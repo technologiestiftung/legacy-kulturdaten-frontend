@@ -90,8 +90,8 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            organizer: makeFormState(entry, formState),
-            id: entry.id,
+            organizer: makeFormState(entry?.data, formState),
+            id: entry?.data?.id,
           });
 
           if (resp.status === 200) {
@@ -109,16 +109,16 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   );
 };
 
-const makeFormState = (entry: Organizer, data: CreateOrganizer): CreateOrganizer => ({
+const makeFormState = (entryData: Organizer['data'], data: CreateOrganizer): CreateOrganizer => ({
   ...{
     attributes: {
-      name: entry.attributes.name,
-      description: entry.attributes?.description,
+      name: entryData.attributes.name,
+      description: entryData.attributes?.description,
     },
     relations: {
-      address: entry.relations?.address,
-      type: entry.relations?.type?.id,
-      subjects: entry.relations?.subjects?.map((subject) => subject.id),
+      address: entryData.relations?.address,
+      type: entryData.relations?.type?.id,
+      subjects: entryData.relations?.subjects?.map((subject) => subject.id),
     },
   },
   ...data,
@@ -143,13 +143,13 @@ export const useEntryForm = (
   const initialFormState = useMemo<CreateOrganizer>(
     () => ({
       attributes: {
-        name: entry?.attributes.name,
-        description: entry?.attributes.description,
+        name: entry?.data?.attributes.name,
+        description: entry?.data?.attributes.description,
       },
       relations: {
-        address: entry?.relations?.address,
-        type: entry?.relations?.type?.id,
-        subjects: entry?.relations?.subjects?.map((subject) => subject.id),
+        address: entry?.data?.relations?.address,
+        type: entry?.data?.relations?.type?.id,
+        subjects: entry?.data?.relations?.subjects?.map((subject) => subject.id),
       },
     }),
     [entry]

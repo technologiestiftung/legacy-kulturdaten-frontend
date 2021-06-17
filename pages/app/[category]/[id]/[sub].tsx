@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { useLocale } from '../../../../lib/routing';
 import styled from '@emotion/styled';
 import { EntryHeader } from '../../../../components/EntryHeader';
-import { StatusBar, StatusBarState } from '../../../../components/statusbar';
+import { StatusBar } from '../../../../components/statusbar';
 import { DateFormat, useDate } from '../../../../lib/date';
 
 const StyledA = styled.a`
@@ -28,21 +28,23 @@ const EntrySubPage: NextPage = () => {
   const date = useDate();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const tabs = useTabs(category);
-  const list = useList<OrganizerList, Organizer[]>(category, null, isMidOrWider);
+  const list = useList<OrganizerList, Organizer>(category, null, isMidOrWider);
   const secMenu = useOrganizerMenu(category, list);
   const { entry } = useEntry<Organizer, OrganizerShow>(category, router?.query);
-  const title = entry?.attributes?.name;
+  const title = entry?.data?.attributes?.name;
   const t = useT();
   const locale = useLocale();
   const metaLinks = useMetaLinks(category);
 
   const subPath = router?.query.sub as string;
 
-  const formattedDate = entry?.attributes.updatedAt
-    ? date(new Date(entry?.attributes.updatedAt), DateFormat.dateTime)
+  const formattedDate = entry?.data?.attributes.updatedAt
+    ? date(new Date(entry?.data?.attributes.updatedAt), DateFormat.dateTime)
     : undefined;
 
-  const renderedStatusBar = <StatusBar state={StatusBarState.published} date={formattedDate} />;
+  const renderedStatusBar = (
+    <StatusBar status={entry?.data?.attributes?.status} date={formattedDate} />
+  );
 
   const titleBarLink = (
     <Link href={category?.routes.list({ locale })}>

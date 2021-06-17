@@ -14,7 +14,7 @@ import { TableLink, StyledTableLinkText } from '../../table/TableLink';
 
 export const useOrganizerMenu = (
   category: Category,
-  list: Organizer[]
+  list: Organizer['data'][]
 ): {
   titleBar: React.ReactElement<TitleBarProps>;
   content: React.ReactElement<TableProps>;
@@ -38,7 +38,7 @@ interface ListLinkProps {
 }
 
 export const useOrganizerTable = (
-  list: Organizer[],
+  list: Organizer['data'][],
   narrow?: boolean
 ): React.ReactElement<TableProps> => {
   const router = useRouter();
@@ -58,7 +58,11 @@ export const useOrganizerTable = (
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
-                <TableLink href={href('info')} isActive={router.asPath.includes(href())}>
+                <TableLink
+                  href={href('info')}
+                  isActive={router.asPath.includes(href())}
+                  status={attributes?.status}
+                >
                   {children}
                 </TableLink>
               );
@@ -90,7 +94,7 @@ export const useOrganizerTable = (
 };
 
 export const OrganizerListPage: React.FC<CategoryPage> = ({ category }: CategoryPage) => {
-  const list = useList<OrganizerList, Organizer[]>(category);
+  const list = useList<OrganizerList, Organizer>(category);
   const table = useOrganizerTable(list);
 
   const { title } = category;

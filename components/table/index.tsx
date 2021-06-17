@@ -115,49 +115,79 @@ export interface TableProps {
   narrow?: boolean;
 }
 
+type TableContext = {
+  narrow: boolean;
+};
+
+export const TableContext = React.createContext<TableContext>({
+  narrow: false,
+});
+
+type TableContextProviderProps = {
+  children: React.ReactNode;
+  narrow: boolean;
+};
+
+export const TableContextProvider: React.FC<TableContextProviderProps> = ({
+  children,
+  narrow,
+}: TableContextProviderProps) => {
+  return (
+    <TableContext.Provider
+      value={{
+        narrow,
+      }}
+    >
+      {children}
+    </TableContext.Provider>
+  );
+};
+
 export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }: TableProps) => {
   const columnCount = columns.length;
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   return (
     <StyledTable role="table">
-      {!narrow && isMidOrWider && (
-        <StyledRowWrapper narrow={narrow} isHeader>
-          <StyledRowContainer narrow={narrow}>
-            <StyledRow columnCount={columnCount} isTitleRow role="row" narrow={narrow}>
-              {columns.map((cell, index) => (
-                <StyledCell key={index} isTitleRow role="columnheader" narrow={narrow}>
-                  {cell.title}
-                </StyledCell>
-              ))}
-            </StyledRow>
-          </StyledRowContainer>
-        </StyledRowWrapper>
-      )}
-      {content.map(({ contents, Wrapper }, rowIndex) => {
-        const renderedRow = (
-          <StyledRowContainer narrow={narrow}>
-            <StyledRow columnCount={columnCount} role="row" narrow={narrow}>
-              {contents.map((cell, cellIndex) => (
-                <StyledCell
-                  bold={columns[cellIndex].bold}
-                  key={cellIndex}
-                  role="cell"
-                  narrow={narrow}
-                >
-                  {cell}
-                </StyledCell>
-              ))}
-            </StyledRow>
-          </StyledRowContainer>
-        );
-
-        return (
-          <StyledRowWrapper key={rowIndex} narrow={narrow}>
-            {Wrapper ? <Wrapper>{renderedRow}</Wrapper> : renderedRow}
+      <TableContextProvider narrow={narrow}>
+        {!narrow && isMidOrWider && (
+          <StyledRowWrapper narrow={narrow} isHeader>
+            <StyledRowContainer narrow={narrow}>
+              <StyledRow columnCount={columnCount} isTitleRow role="row" narrow={narrow}>
+                {columns.map((cell, index) => (
+                  <StyledCell key={index} isTitleRow role="columnheader" narrow={narrow}>
+                    {cell.title}
+                  </StyledCell>
+                ))}
+              </StyledRow>
+            </StyledRowContainer>
           </StyledRowWrapper>
-        );
-      })}
+        )}
+        {content.map(({ contents, Wrapper }, rowIndex) => {
+          const renderedRow = (
+            <StyledRowContainer narrow={narrow}>
+              <StyledRow columnCount={columnCount} role="row" narrow={narrow}>
+                {contents.map((cell, cellIndex) => (
+                  <StyledCell
+                    bold={columns[cellIndex].bold}
+                    key={cellIndex}
+                    role="cell"
+                    narrow={narrow}
+                  >
+                    {cell}
+                  </StyledCell>
+                ))}
+              </StyledRow>
+            </StyledRowContainer>
+          );
+
+          return (
+            <StyledRowWrapper key={rowIndex} narrow={narrow}>
+              {Wrapper ? <Wrapper>{renderedRow}</Wrapper> : renderedRow}
+            </StyledRowWrapper>
+          );
+        })}
+      </TableContextProvider>
     </StyledTable>
   );
 };

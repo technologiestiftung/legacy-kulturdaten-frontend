@@ -2,11 +2,7 @@ import styled from '@emotion/styled';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { useT } from '../../lib/i18n';
 import { mq } from '../globals/Constants';
-
-export enum StatusBarState {
-  draft = 'draft',
-  published = 'published',
-}
+import { PublishedStatus } from '../../lib/api/types/general';
 
 const StyledStatusBar = styled.div`
   display: flex;
@@ -59,8 +55,8 @@ const StyledStatusBarInfoBold = styled.span`
 
 const StyledStatusBarInfoDate = styled.span``;
 
-const statusBarStates: {
-  [key in StatusBarState]: { backgroundColor: string; textKey: string };
+const statusBarStatuses: {
+  [key in PublishedStatus]: { backgroundColor: string; textKey: string };
 } = {
   draft: {
     backgroundColor: 'var(--mustard)',
@@ -72,23 +68,23 @@ const statusBarStates: {
   },
 };
 
-const useStatusBarFlag = (state: StatusBarState): React.ReactElement => {
+const useStatusBarFlag = (status = PublishedStatus.draft): React.ReactElement => {
   const t = useT();
 
   return (
-    <StyledStatusBarFlag backgroundColor={statusBarStates[state].backgroundColor}>
-      {t(statusBarStates[state].textKey)}
+    <StyledStatusBarFlag backgroundColor={statusBarStatuses[status].backgroundColor}>
+      {t(statusBarStatuses[status].textKey)}
     </StyledStatusBarFlag>
   );
 };
 
 interface StatusBarProps {
-  state: StatusBarState;
+  status: PublishedStatus;
   date?: string;
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({ date, state }: StatusBarProps) => {
-  const flag = useStatusBarFlag(state);
+export const StatusBar: React.FC<StatusBarProps> = ({ date, status }: StatusBarProps) => {
+  const flag = useStatusBarFlag(status);
   const t = useT();
   const midOrWider = useBreakpointOrWider(Breakpoint.mid);
 
