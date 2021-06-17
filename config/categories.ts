@@ -9,7 +9,9 @@ import { Category } from '../lib/categories';
 import { OrganizerListPage, useOrganizerMenu } from '../components/pages/organizer/list';
 import { OrganizerCreatePage } from '../components/pages/organizer/create';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
-import { OrganizerOverviewPage } from '../components/pages/organizer/overview';
+import { OrganizerMediaPage } from '../components/pages/organizer/media';
+import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
+import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
@@ -40,17 +42,23 @@ export const useCategories: () => {
       pages: {
         list: OrganizerListPage,
         create: OrganizerCreatePage,
-        overview: OrganizerOverviewPage,
+        preview: OrganizerPreviewPage,
         info: OrganizerInfoPage,
+        categorization: OrganizerCategorizationPage,
+        media: OrganizerMediaPage,
         rights: OrganizerRightsPage,
         export: OrganizerExportPage,
       },
       menuFactory: useOrganizerMenu,
       tabs: [
-        { title: t('categories.organizer.tabs.overview') as string, sub: 'overview' },
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
-        { title: t('categories.organizer.tabs.rights') as string, sub: 'rights' },
-        { title: t('categories.organizer.tabs.export') as string, sub: 'export' },
+        { title: t('categories.organizer.tabs.categorization') as string, sub: 'categorization' },
+        { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
+        { title: t('categories.organizer.tabs.preview') as string, sub: 'preview' },
+      ],
+      metaLinks: [
+        { title: t('categories.organizer.metaLinks.rights') as string, icon: 'Users' },
+        { title: t('categories.organizer.metaLinks.export') as string, icon: 'Archive' },
       ],
       api: {
         list: {

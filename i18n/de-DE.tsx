@@ -32,6 +32,13 @@ export const deDE: Localization = {
     confirmPassword: () => 'Passwort bestätigen',
     submit: () => 'Registrieren',
   },
+  statusBar: {
+    status: () => 'Status',
+    draft: () => 'Entwurf',
+    published: () => 'öffentlich',
+    saved: () => 'Gespeichert',
+    savedShort: () => 'Gesp.',
+  },
   general: {
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
@@ -41,12 +48,12 @@ export const deDE: Localization = {
     close: () => 'schließen',
     back: () => 'zurück',
     choose: () => 'Bitte auswählen',
-    status: () => 'Status',
-    draft: () => 'Entwurf',
-    published: () => 'veröffentlicht',
-    lastUpdated: () => 'Zuletzt aktualisiert',
     delete: () => 'löschen',
     add: () => 'hinzufügen',
+  },
+  tooltip: {
+    open: () => 'Tooltip anzeigen',
+    close: () => 'Tooltip schließen',
   },
   linkList: {
     addNew: () => 'Neuen Link hinzufügen',
@@ -114,8 +121,12 @@ export const deDE: Localization = {
         social: () => 'Social Media Links',
       },
       tabs: {
-        overview: () => 'Übersicht',
         info: () => 'Informationen',
+        categorization: () => 'Kategorisierung',
+        media: () => 'Bilder',
+        preview: () => 'Vorschau',
+      },
+      metaLinks: {
         rights: () => 'Zugriffsrechte',
         export: () => 'Export',
       },

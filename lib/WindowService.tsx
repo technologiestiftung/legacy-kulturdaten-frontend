@@ -69,6 +69,7 @@ export const WindowContextProvider: React.FC<WindowContextProviderProps> = ({
 export enum Breakpoint {
   default = 'default',
   mid = 'mid',
+  widish = 'widish',
   wide = 'wide',
   ultra = 'ultra',
 }
@@ -76,6 +77,7 @@ export enum Breakpoint {
 export const breakpoints: { [key in Breakpoint]: number } = {
   default: 0,
   mid: 768,
+  widish: 1024,
   wide: 1200,
   ultra: 1600,
 };

@@ -1,172 +1,111 @@
 import styled from '@emotion/styled';
-import { Breakpoint } from '../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { useT } from '../../lib/i18n';
 import { mq } from '../globals/Constants';
-import React, { ChangeEvent, useState } from 'react';
-import * as feather from 'react-feather';
 
 export enum StatusBarState {
   draft = 'draft',
   published = 'published',
 }
 
-const statusBarStates: {
-  [key in StatusBarState]: () => {
-    backgroundColor: string;
-  };
-} = {
-  draft: () => ({
-    backgroundColor: 'var(--yellow)',
-  }),
-  published: () => ({
-    backgroundColor: 'var(--green-light)',
-  }),
-};
+const StyledStatusBar = styled.div`
+  display: flex;
+  position: relative;
+  border-bottom: 1px solid var(--grey-400);
+`;
 
-const StatusBarLabel = styled.label`
-  width: 100%;
+const StyledStatusBarFlag = styled.div<{ backgroundColor: string }>`
+  background: ${({ backgroundColor }) => backgroundColor};
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
-  padding: 0.375rem 0.75rem 0.375rem 0.75rem;
-  text-transform: none;
-  background-color: var(--grey-200);
-  border-bottom: 1px solid var(--black);
+  margin-left: 0.75rem;
+  padding: 0 0.375rem;
+  border-radius: 0.375rem 0.375rem 0 0;
 
   ${mq(Breakpoint.mid)} {
-    width: auto;
-    flex-direction: row;
-    border-bottom: none;
-    border-right: 1px solid var(--black);
+    padding: 0.375rem 0.75rem;
   }
 `;
 
-const StyledStatusBarContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  border: 1px solid var(--black);
-  border-radius: 0.75rem;
-  overflow: hidden;
+const StatusBarLabel = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+  padding: 0;
+  margin-right: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
-    flex-direction: row;
+    padding: 0.375rem 0;
   }
 `;
 
 const StyledStatusBarInfo = styled.div`
-  border-bottom: 1px solid var(--black);
-  background-color: var(--grey-200);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
-  padding: 0.375rem 0.75rem 0.375rem 0.75rem;
   position: relative;
-  padding-right: 0.75rem;
   flex-grow: 1;
+  text-align: right;
+  padding: 0;
 
   ${mq(Breakpoint.mid)} {
-    text-align: right;
-    border-bottom: none;
-    border-right: 1px solid var(--black);
+    padding: 0.375rem 0;
   }
 `;
 
-const StyledSelect = styled.select<{
-  statusBarState: StatusBarState;
-}>`
-  margin: 0;
-  appearance: none;
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  padding: 0.375rem 3rem 0.375rem 0.75rem;
-  position: relative;
-  width: 100%;
-  cursor: pointer;
+const StyledStatusBarInfoBold = styled.span`
   font-weight: 700;
-  flex-grow: 0;
-  flex-shrink: 0;
-  height: 100%;
-  border: none;
-
-  ${({ statusBarState }) => statusBarStates[statusBarState]}
 `;
 
-const StyledSelectChevron = styled.div`
-  pointer-events: none;
-  position: absolute;
-  left: 0.5625rem;
-  top: 0;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  right: 0.625rem;
-  left: initial;
-  padding-left: 0.5625rem;
-  border-left: 1px solid var(--black);
+const StyledStatusBarInfoDate = styled.span``;
 
-  svg {
-    flex-shrink: 0;
-    flex-grow: 0;
-    width: 1.125rem;
-    height: 1.125rem;
-  }
-`;
+const statusBarStates: {
+  [key in StatusBarState]: { backgroundColor: string; textKey: string };
+} = {
+  draft: {
+    backgroundColor: 'var(--mustard)',
+    textKey: 'statusBar.draft',
+  },
+  published: {
+    backgroundColor: 'var(--green-light)',
+    textKey: 'statusBar.published',
+  },
+};
 
-const StyledSelectAndChevron = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  flex-shrink: 0;
-`;
-
-interface StatusBarProps {
-  children: React.ReactNode;
-  id: string;
-  value?: string;
-  statusBarState?: StatusBarState;
-  onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
-  label?: string;
-  info?: string;
-  defaultValue?: string;
-  ariaLabel?: string;
-}
-
-export const StatusBar: React.FC<StatusBarProps> = ({
-  children,
-  id,
-  value,
-  onChange,
-  label,
-  info,
-  defaultValue,
-  ariaLabel,
-}: StatusBarProps) => {
-  const internalState = useState<string>(defaultValue);
-  const valueState = value || internalState[0];
+const useStatusBarFlag = (state: StatusBarState): React.ReactElement => {
+  const t = useT();
 
   return (
-    <StyledStatusBarContainer>
-      {label && <StatusBarLabel htmlFor={id}>{label}</StatusBarLabel>}
-      <StyledStatusBarInfo>{info}</StyledStatusBarInfo>
-      <StyledSelectAndChevron>
-        <StyledSelect
-          aria-label={ariaLabel}
-          id={id}
-          value={valueState}
-          statusBarState={valueState as StatusBarState}
-          onChange={
-            onChange
-              ? (e) => onChange(e)
-              : (e: ChangeEvent<HTMLSelectElement>) => internalState[1](e.target.value)
-          }
-        >
-          {children}
-        </StyledSelect>
-        <StyledSelectChevron>
-          {React.createElement(feather.ChevronDown, { color: 'var(--black)' })}
-        </StyledSelectChevron>
-      </StyledSelectAndChevron>
-    </StyledStatusBarContainer>
+    <StyledStatusBarFlag backgroundColor={statusBarStates[state].backgroundColor}>
+      {t(statusBarStates[state].textKey)}
+    </StyledStatusBarFlag>
+  );
+};
+
+interface StatusBarProps {
+  state: StatusBarState;
+  date?: string;
+}
+
+export const StatusBar: React.FC<StatusBarProps> = ({ date, state }: StatusBarProps) => {
+  const flag = useStatusBarFlag(state);
+  const t = useT();
+  const midOrWider = useBreakpointOrWider(Breakpoint.mid);
+
+  return (
+    <StyledStatusBar>
+      <StatusBarLabel>{t('statusBar.status')}</StatusBarLabel>
+      <StyledStatusBarInfo>
+        {date && (
+          <>
+            <StyledStatusBarInfoBold>
+              {midOrWider ? t('statusBar.saved') : t('statusBar.savedShort')}
+            </StyledStatusBarInfoBold>{' '}
+            <StyledStatusBarInfoDate>{date}</StyledStatusBarInfoDate>
+          </>
+        )}
+      </StyledStatusBarInfo>
+      {flag}
+    </StyledStatusBar>
   );
 };
