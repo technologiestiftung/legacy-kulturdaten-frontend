@@ -48,6 +48,13 @@ export const enDE: Localization = {
     delete: () => 'delete',
     add: () => 'add',
   },
+  tags: {
+    boxLabel: () => 'Already added topics',
+    delete: () => 'delete topic',
+    add: () => 'add topic',
+    placeholder: () => 'No topic has been added yet',
+    autocompleteLabel: () => 'add new topic',
+  },
   tooltip: {
     open: () => 'open tooltip',
     close: () => 'close tooltip',

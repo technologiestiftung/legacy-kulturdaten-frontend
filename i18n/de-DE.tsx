@@ -32,6 +32,13 @@ export const deDE: Localization = {
     confirmPassword: () => 'Passwort bestätigen',
     submit: () => 'Registrieren',
   },
+  tags: {
+    boxLabel: () => 'Bereits hinzugefügte Themen',
+    delete: () => 'Thema löschen',
+    add: () => 'Thema hinzufügen',
+    placeholder: () => 'Noch kein Thema hinzugefügt',
+    autocompleteLabel: () => 'Neues Thema hinzufügen',
+  },
   general: {
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
