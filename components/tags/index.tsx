@@ -63,7 +63,9 @@ const StyledTagsTag = styled.div`
   padding: 0 0.75rem;
   margin-right: 0.75rem;
   margin-bottom: 0.75rem;
+  align-items: flex-start;
 `;
+
 const StyledTagsTagText = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -77,7 +79,7 @@ const StyledTagsTagX = styled.button`
   background: none;
   padding: 0.375rem 0;
   cursor: pointer;
-  margin-left: 0.75rem;
+  margin: 0 0 0 0.75rem;
 
   svg {
     width: 1.125rem;
