@@ -60,6 +60,8 @@ export const CSSVars: React.FC = () => (
         --shadow-inset: inset 0px 1px 6px var(--black-o25);
         --shadow-light: 2px 2px 10px -2px var(--black-o40);
 
+        --overlay-opacity: 0.85;
+
         @media screen and (min-width: 768px) {
           --font-size-600: 1.5rem;
           --line-height-600: 2.25rem;
@@ -154,3 +156,8 @@ export const insetBorderColored = (color: string, ...sides: boolean[]): string =
     }
   }
 };
+
+export const overlayStyles = css`
+  background: #000;
+  opacity: var(--overlay-opacity);
+`;

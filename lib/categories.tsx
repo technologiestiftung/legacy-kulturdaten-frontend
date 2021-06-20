@@ -7,8 +7,10 @@ import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { TitleBarProps } from '../components/navigation/TitleBar';
 import { Categories, useCategories } from '../config/categories';
+import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
+import { Translation } from './api/types/general';
 import { OrganizerType } from './api/types/organizer';
 import { Route, useLocale } from './routing';
 
@@ -27,11 +29,14 @@ export interface CategoryEntryPage extends CategoryPage {
 
 export interface CategoryEntry {
   data: {
-    attributes: {
-      name: string;
+    relations?: {
+      translations?: Translation[];
     };
   };
-  meta: any;
+  meta?: {
+    publishable: boolean | { [key: string]: string[] };
+    language?: Language;
+  };
 }
 
 export type Category = {
@@ -72,6 +77,7 @@ export type Category = {
     show: categoryApi;
     create: categoryApi;
     update: categoryApi;
+    translationUpdate: categoryApi;
     delete: categoryApi;
   };
 };
@@ -97,8 +103,8 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const apiCallRoute = category?.api.list.route;
 
   const { data } = useSWR(
-    load && apiCallRoute ? getApiUrlString(apiCallRoute, undefined, locale) : undefined,
-    () => (load && category ? call<C>(apiCallFactory, query, locale) : undefined)
+    load && apiCallRoute ? getApiUrlString(apiCallRoute, undefined) : undefined,
+    () => (load && category ? call<C>(apiCallFactory, query) : undefined)
   );
 
   return (((data as unknown) as C['response'])?.body?.data as unknown) as T['data'][];
@@ -112,14 +118,13 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
 } => {
   const call = useApiCall();
-  const locale = useLocale();
 
   const apiCallFactory = category?.api.show.factory;
   const apiCallRoute = category?.api.show.route;
 
   const { data, mutate } = useSWR<C['response']>(
-    apiCallRoute && query ? getApiUrlString(apiCallRoute, query, locale) : undefined,
-    () => (apiCallRoute && query ? call(apiCallFactory, query, locale) : undefined)
+    apiCallRoute && query ? getApiUrlString(apiCallRoute, query) : undefined,
+    () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
   const wrappedMutate = (entry?: T, shouldRevalidate?: boolean) =>
@@ -176,11 +181,10 @@ export const useCategoryMenu = (
 
 export const useOrganizerTypeList = (): OrganizerType[] => {
   const call = useApiCall();
-  const locale = useLocale();
 
   const { data } = useSWR(
-    getApiUrlString(ApiRoutes.organizerTypeList, undefined, locale),
-    () => call<OrganizerTypeList>(organizerTypeListFactory, undefined, locale),
+    getApiUrlString(ApiRoutes.organizerTypeList, undefined),
+    () => call<OrganizerTypeList>(organizerTypeListFactory, undefined),
     { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
   );
 

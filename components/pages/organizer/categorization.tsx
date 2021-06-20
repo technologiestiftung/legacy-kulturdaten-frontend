@@ -1,14 +1,23 @@
 import { ParsedUrlQuery } from 'node:querystring';
-import React, { Reducer, useEffect, useMemo, useReducer } from 'react';
-import { Category, CategoryEntryPage, useOrganizerTypeList } from '../../../lib/categories';
+import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
+import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { Organizer } from '../../../lib/api/types/organizer';
+import {
+  Category,
+  CategoryEntryPage,
+  useEntry,
+  useOrganizerTypeList,
+} from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
+import { useLanguage } from '../../../lib/routing';
+import { getTranslation } from '../../../lib/translations';
 import { CheckboxList } from '../../checkbox/CheckboxList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { PlaceholderField } from '../../placeholderfield';
 import { Select } from '../../select';
 import { Textarea } from '../../textarea';
-import { EntryForm, FormGrid, FormItem, FormItemWidth, useEntryForm } from './helpers';
+import { FormGrid, FormItem, FormItemWidth } from './helpers';
 
 interface OrganizerFormProps {
   category: Category;
@@ -38,139 +47,101 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
   category,
   query,
 }: OrganizerFormProps) => {
-  const t = useT();
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const [types, setTypes] = useState<number[]>([]);
+  const [subjects, setSubjects] = useState<number[]>([]);
+  const [pristine, setPristine] = useState(true);
 
-  const { formState, setFormState, setPristine, formProps, formButtons } = useEntryForm(
-    category,
-    query
+  const typeOptions = useOrganizerTypeList();
+
+  const t = useT();
+  const language = useLanguage();
+
+  const initialSubjects = useMemo(
+    () => entry?.data?.relations?.subjects?.map((subject) => subject.id),
+    [entry?.data?.relations?.subjects]
   );
 
-  const organizerTypes = useOrganizerTypeList();
-
-  const initialSubjects = useMemo(() => formState?.relations?.subjects?.map((subject) => subject), [
-    formState,
+  const initialTypes = useMemo(() => entry?.data?.relations?.types?.map((type) => type.id), [
+    entry?.data?.relations?.types,
   ]);
 
-  const organizerSubjects = useMemo(
-    () =>
-      formState?.relations?.type
-        ? organizerTypes?.find((type) => type.id === formState?.relations?.type)?.relations
-            ?.subjects
-        : undefined,
-    [formState, organizerTypes]
-  );
-
-  const [userSubjects, dispatchSubjects] = useReducer(
-    subjectsReducer,
-    initialSubjects && initialSubjects[String(formState?.relations?.type)]
-      ? { [String(formState?.relations?.type)]: initialSubjects }
-      : undefined
-  );
+  useEffect(() => {
+    if (pristine) {
+      setTypes(initialTypes);
+    }
+  }, [pristine, initialTypes]);
 
   useEffect(() => {
-    if (formState?.relations?.type && initialSubjects) {
-      if (!userSubjects) {
-        dispatchSubjects({
-          type: SubjectsAction.update,
-          payload: { id: formState.relations.type, subjects: initialSubjects },
-        });
-      }
+    if (pristine) {
+      setSubjects(initialSubjects);
     }
-  }, [formState?.relations?.type, initialSubjects, userSubjects]);
+  }, [pristine, initialSubjects]);
+
+  // const organizerSubjects = useMemo(
+  //   () =>
+  //     formState?.relations?.types
+  //       ? organizerTypes?.find((type) => type.id === formState?.relations?.types[0])?.relations
+  //           ?.subjects
+  //       : undefined,
+  //   [formState, organizerTypes]
+  // );
+
+  // const [userSubjects, dispatchSubjects] = useReducer(
+  //   subjectsReducer,
+  //   formState?.relations?.types &&
+  //     initialSubjects &&
+  //     initialSubjects[String(formState?.relations?.types[0])]
+  //     ? { [String(formState?.relations?.types[0])]: initialSubjects }
+  //     : undefined
+  // );
+
+  // useEffect(() => {
+  //   if (formState?.relations?.types && formState?.relations?.types[0] && initialSubjects) {
+  //     if (!userSubjects) {
+  //       dispatchSubjects({
+  //         type: SubjectsAction.update,
+  //         payload: { id: formState.relations.types[0], subjects: initialSubjects },
+  //       });
+  //     }
+  //   }
+  // }, [formState?.relations?.types, initialSubjects, userSubjects]);
 
   return (
-    <EntryForm {...formProps}>
-      <EntryFormHead
-        title={t('categories.organizer.form.classification') as string}
-        actions={formButtons}
-      />
-      <FormGrid>
-        <FormItem width={FormItemWidth.half}>
-          <Select
-            label={t('categories.organizer.form.type') as string}
-            id="ff1"
-            value={String(formState?.relations?.type) || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setFormState({
-                ...formState,
-                relations: {
-                  ...formState?.relations,
-                  type: parseInt(e.target.value, 10),
-                  subjects:
-                    userSubjects && userSubjects[String(e.target.value)]
-                      ? userSubjects[String(e.target.value)]
-                      : [],
-                },
-              });
-            }}
-            placeholder={t('general.choose') as string}
-            required
-          >
-            {organizerTypes?.map((type, index) => (
-              <option key={index} value={String(type.id)}>
-                {type.attributes.name}
-              </option>
-            ))}
-          </Select>
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          {organizerSubjects ? (
-            <CheckboxList
-              label={t('categories.organizer.form.subjects') as string}
-              checkboxes={
-                organizerSubjects.map((subject) => ({
-                  id: `ff-subject-select-${subject.id}`,
-                  label: subject.attributes.name,
-                  value: String(subject.id),
-                })) || []
-              }
-              onChange={(updatedValues) => {
-                const updatedValuesInt = updatedValues.map((updatedValue) =>
-                  parseInt(updatedValue, 10)
-                );
-                setPristine(false);
-                dispatchSubjects({
-                  type: SubjectsAction.update,
-                  payload: {
-                    id: formState?.relations?.type,
-                    subjects: updatedValuesInt,
-                  },
-                });
-                setFormState({
-                  ...formState,
-                  relations: {
-                    ...formState?.relations,
-                    subjects: updatedValuesInt,
-                  },
-                });
-              }}
-              value={
-                userSubjects && formState?.relations?.type
-                  ? userSubjects[String(formState.relations.type)]?.map((userSubject) =>
-                      String(userSubject)
-                    )
-                  : []
-              }
-              required
-            />
-          ) : (
-            <PlaceholderField
-              label={`${t('categories.organizer.form.subjects')} (${t('forms.required')})`}
-              text={t('categories.organizer.form.chooseTypeFirst') as string}
-            />
-          )}
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-tags"
-            label={`${t('categories.organizer.form.tags') as string} (TBD)`}
-            rows={3}
-            onChange={() => setPristine(false)}
-          />
-        </FormItem>
-      </FormGrid>
-    </EntryForm>
+    <div>
+      <EntryFormHead title={t('categories.organizer.form.classification') as string} />
+      <div>
+        {typeOptions?.map((type, typeIndex) => {
+          // const typeTranslation = getTranslation(language, type.relations?.translations);
+          const typeTranslation = type.relations?.translations
+            ? type.relations?.translations[0]
+            : undefined;
+          return (
+            <div key={typeIndex}>
+              <div>
+                [{types.includes(type.id) ? 'X' : ' '}] {typeTranslation?.attributes?.name}
+              </div>
+              <div>
+                {type.relations?.subjects?.map((subject, subjectIndex) => {
+                  // const subjectTranslation = getTranslation(language, subject.relations?.translations);
+                  const subjectTranslation = subject.relations?.translations
+                    ? subject.relations?.translations[0]
+                    : undefined;
+                  return (
+                    <div key={subjectIndex}>
+                      <div>
+                        — [{subjects.includes(subject.id) ? 'X' : ' '}]{' '}
+                        {subjectTranslation?.attributes?.name}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

@@ -1,7 +1,17 @@
 import { ParsedUrlQuery } from 'node:querystring';
-import React, { FormEvent, useEffect, useState } from 'react';
-import { Category, CategoryEntryPage } from '../../../lib/categories';
+import React, { FormEvent, useEffect, useMemo, useState } from 'react';
+import { mutate as mutateSwr } from 'swr';
+import { Language } from '../../../config/locale';
+import { getApiUrlString, useApiCall } from '../../../lib/api';
+import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { OrganizerTranslationUpdate } from '../../../lib/api/routes/organizer/translation/update';
+import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
+import { Address } from '../../../lib/api/types/address';
+import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
+import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
+import { getTranslation } from '../../../lib/translations';
+import { Button, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
@@ -12,72 +22,107 @@ import { OverlayTitleBar } from '../../overlay/OverlayTitleBar';
 import { CustomDescendant, RichText } from '../../richtext';
 import { markdownToSlate } from '../../richtext/parser';
 import { Textarea } from '../../textarea';
-import { EntryForm, FormGrid, FormItem, FormItemWidth, useEntryForm } from './helpers';
+import {
+  // EntryForm,
+  // EntryTranslationForm,
+  FormGrid,
+  FormItem,
+  FormItemWidth,
+  // useEntryForm,
+  // useEntryTranslationForm,
+} from './helpers';
 
 interface OrganizerFormProps {
   category: Category;
   query: ParsedUrlQuery;
 }
 
-const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const { formState, setFormState, setPristine, formProps, formButtons } = useEntryForm(
-    category,
-    query
+interface SetNameProps extends OrganizerFormProps {
+  language: Language;
+}
+
+const SetName: React.FC<SetNameProps> = ({ category, query, language }: SetNameProps) => {
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const call = useApiCall();
+
+  const entryTranslation = getTranslation<OrganizerTranslation>(
+    language,
+    entry?.data?.relations?.translations
   );
+
+  const name = useMemo(() => entryTranslation?.attributes?.name, [
+    entryTranslation?.attributes?.name,
+  ]);
+
+  const [value, setValue] = useState(name || '');
+  const [pristine, setPristine] = useState(true);
+
+  // set initial value
+  useEffect(() => {
+    if (pristine) {
+      setValue(name);
+    }
+  }, [pristine, name]);
 
   const t = useT();
 
   return (
-    <EntryForm {...formProps}>
-      <EntryFormHead title={t('categories.organizer.form.name') as string} actions={formButtons} />
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+
+        try {
+          const resp = await call<OrganizerTranslationUpdate>(
+            category.api.translationUpdate.factory,
+            {
+              organizerTranslation: {
+                ...entryTranslation,
+                attributes: {
+                  name: value,
+                },
+              },
+              translationId: entryTranslation?.id,
+              organizerId: entry?.data?.id,
+            }
+          );
+
+          if (resp.status === 200) {
+            mutate();
+            mutateSwr(getApiUrlString(category.api.list.route));
+            setPristine(true);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }}
+    >
       <FormGrid>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.nameGerman') as string}
-            type={InputType.text}
-            value={formState?.attributes?.name || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setFormState({ attributes: { name: e.target.value } });
-            }}
-            required
-          />
-        </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
             label={t('categories.organizer.form.nameEnglish') as string}
             type={InputType.text}
-            value={formState?.attributes?.name || ''}
+            value={value || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({ attributes: { name: e.target.value } });
+              setValue(e.target.value);
             }}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.nameGermanSimple') as string}
-            type={InputType.text}
-            value={formState?.attributes?.name || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setFormState({ attributes: { name: e.target.value } });
-            }}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.nameEnglishSimple') as string}
-            type={InputType.text}
-            value={formState?.attributes?.name || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setFormState({ attributes: { name: e.target.value } });
-            }}
+            required
           />
         </FormItem>
       </FormGrid>
-    </EntryForm>
+    </form>
+  );
+};
+
+const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+  const t = useT();
+
+  return (
+    <div>
+      <EntryFormHead title={t('categories.organizer.form.name') as string} />
+      <SetName category={category} query={query} language={Language.de} />
+      <SetName category={category} query={query} language={Language.en} />
+    </div>
   );
 };
 
@@ -87,174 +132,165 @@ const testSocialLinks = [
   'https://beta.api.kulturdaten.berlin/docs/',
 ];
 
-const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const { formButtons } = useEntryForm(category, query);
+// const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+//   const { formButtons } = useEntryForm(category, query);
 
-  const t = useT();
+//   const t = useT();
 
-  return (
-    <>
-      <form
-        onSubmit={async (e: FormEvent) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
-        <EntryFormHead
-          title={t('categories.organizer.form.contact') as string}
-          actions={formButtons}
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.half}>
-            <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
-          </FormItem>
-          <FormItem width={FormItemWidth.half}>
-            <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
-          </FormItem>
-          <FormItem width={FormItemWidth.half}>
-            <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
-          </FormItem>
-        </FormGrid>
-      </form>
-      <FormGrid>
-        <FormItem width={FormItemWidth.full}>
-          <LinkList
-            label={t('categories.organizer.form.social') as string}
-            links={testSocialLinks}
-            maxLinks={3}
-          />
-        </FormItem>
-      </FormGrid>
-    </>
-  );
-};
+//   return (
+//     <>
+//       <form
+//         onSubmit={async (e: FormEvent) => {
+//           e.preventDefault();
+//           e.stopPropagation();
+//         }}
+//       >
+//         <EntryFormHead
+//           title={t('categories.organizer.form.contact') as string}
+//           actions={formButtons}
+//         />
+//         <FormGrid>
+//           <FormItem width={FormItemWidth.half}>
+//             <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
+//           </FormItem>
+//           <FormItem width={FormItemWidth.half}>
+//             <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
+//           </FormItem>
+//           <FormItem width={FormItemWidth.half}>
+//             <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
+//           </FormItem>
+//         </FormGrid>
+//       </form>
+//       <FormGrid>
+//         <FormItem width={FormItemWidth.full}>
+//           <LinkList
+//             label={t('categories.organizer.form.social') as string}
+//             links={testSocialLinks}
+//             maxLinks={3}
+//           />
+//         </FormItem>
+//       </FormGrid>
+//     </>
+//   );
+// };
 
-const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const { formButtons, formState } = useEntryForm(category, query);
-  const t = useT();
+// const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+//   const { formButtons, formState, entry } = useEntryTranslationForm(category, query, Language.de);
+//   const t = useT();
 
-  const [richTextState, setRichTextState] = useState<CustomDescendant[]>();
+//   const [richTextState, setRichTextState] = useState<CustomDescendant[]>();
+
+//   useEffect(() => {
+//     const int = formState?.attributes?.description
+//       ? markdownToSlate(formState.attributes.description)
+//       : undefined;
+//     if (int) {
+//       setRichTextState(int);
+//     }
+//   }, [formState?.attributes?.description]);
+
+//   const { renderedOverlay, setIsOpen } = useOverlay(
+//     <OverlayContainer>
+//       <OverlayTitleBar title="Beschreibung deutsch" />
+//       {Array.isArray(richTextState) && (
+//         <RichText value={richTextState} onChange={(val) => setRichTextState(val)} />
+//       )}
+//     </OverlayContainer>
+//   );
+
+//   return (
+//     <div>
+//       <EntryFormHead title={t('categories.organizer.form.description') as string} />
+//       <Button onClick={() => setIsOpen(true)}>open RT</Button>
+//       <div>{renderedOverlay}</div>
+//     </div>
+//   );
+// };
+
+const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const call = useApiCall();
+
+  const initialAddress = useMemo(() => entry?.data?.relations?.address, [
+    entry?.data?.relations?.address,
+  ]);
+
+  const [address, setAddress] = useState<Address>(initialAddress);
+  const [pristine, setPristine] = useState(true);
 
   useEffect(() => {
-    const int = formState?.attributes?.description
-      ? markdownToSlate(formState.attributes.description)
-      : undefined;
-    if (int) {
-      setRichTextState(int);
+    if (pristine) {
+      setAddress(initialAddress);
     }
-  }, [formState?.attributes?.description]);
+  }, [pristine, initialAddress]);
 
-  const { renderedOverlay, setIsOpen } = useOverlay(
-    <OverlayContainer>
-      <OverlayTitleBar title="Beschreibung deutsch" />
-      {Array.isArray(richTextState) && (
-        <RichText value={richTextState} onChange={(val) => setRichTextState(val)} />
-      )}
-    </OverlayContainer>
-  );
+  const t = useT();
 
   return (
     <form
-      onSubmit={async (e: FormEvent) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        e.stopPropagation();
+
+        console.log(address);
+
+        try {
+          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            organizer: {
+              relations: {
+                address,
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+            mutateSwr(getApiUrlString(category.api.list.route));
+            setTimeout(() => setPristine(true), 500);
+          }
+        } catch (e) {
+          console.error(e);
+        }
       }}
     >
       <EntryFormHead
-        title={t('categories.organizer.form.description') as string}
-        actions={formButtons}
-      />
-      <FormGrid>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-g"
-            label={t('categories.organizer.form.descriptionGerman') as string}
-            rows={5}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-e"
-            label={t('categories.organizer.form.descriptionEnglish') as string}
-            rows={5}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-gs"
-            label={t('categories.organizer.form.descriptionGermanSimple') as string}
-            rows={5}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-desc-es"
-            label={t('categories.organizer.form.descriptionEnglishSimple') as string}
-            rows={5}
-          />
-        </FormItem>
-      </FormGrid>
-    </form>
-  );
-};
-
-const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const { formState, setFormState, setPristine, formProps, formButtons } = useEntryForm(
-    category,
-    query
-  );
-
-  const t = useT();
-
-  return (
-    <EntryForm {...formProps}>
-      <EntryFormHead
         title={t('categories.organizer.form.address') as string}
-        actions={formButtons}
+        actions={[
+          <Button key={1} type={ButtonType.submit}>
+            submit
+          </Button>,
+        ]}
       />
       <FormGrid>
         <FormItem width={FormItemWidth.half}>
           <Input
             label={t('categories.organizer.form.street1') as string}
             type={InputType.text}
-            value={formState?.relations?.address?.attributes?.street1 || ''}
+            value={address?.attributes?.street1 || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({
-                ...formState,
-                relations: {
-                  ...formState.relations,
-                  address: {
-                    ...formState?.relations?.address,
-                    attributes: {
-                      ...formState?.relations?.address?.attributes,
-                      street1: e.target.value,
-                    },
-                  },
+              setAddress({
+                ...address,
+                attributes: {
+                  ...address.attributes,
+                  street1: e.target.value,
                 },
               });
             }}
-            required
           />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
             label={t('categories.organizer.form.street2') as string}
             type={InputType.text}
-            value={formState?.relations?.address?.attributes?.street2 || ''}
+            value={address?.attributes?.street2 || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({
-                ...formState,
-                relations: {
-                  ...formState.relations,
-                  address: {
-                    ...formState?.relations?.address,
-                    attributes: {
-                      ...formState?.relations?.address?.attributes,
-                      street2: e.target.value,
-                    },
-                  },
+              setAddress({
+                ...address,
+                attributes: {
+                  ...address.attributes,
+                  street2: e.target.value,
                 },
               });
             }}
@@ -264,52 +300,38 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
           <Input
             label={t('categories.organizer.form.zipCode') as string}
             type={InputType.text}
-            value={formState?.relations?.address?.attributes?.zipCode || ''}
+            value={address?.attributes?.zipCode || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({
-                ...formState,
-                relations: {
-                  ...formState.relations,
-                  address: {
-                    ...formState?.relations?.address,
-                    attributes: {
-                      ...formState?.relations?.address?.attributes,
-                      zipCode: e.target.value,
-                    },
-                  },
+              setAddress({
+                ...address,
+                attributes: {
+                  ...address.attributes,
+                  zipCode: e.target.value,
                 },
               });
             }}
-            required
           />
         </FormItem>
-        <FormItem width={FormItemWidth.quarter}>
+        <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
           <Input
             label={t('categories.organizer.form.city') as string}
             type={InputType.text}
-            value={formState?.relations?.address?.attributes?.city || ''}
+            value={address?.attributes?.city || ''}
             onChange={(e) => {
               setPristine(false);
-              setFormState({
-                ...formState,
-                relations: {
-                  ...formState.relations,
-                  address: {
-                    ...formState?.relations?.address,
-                    attributes: {
-                      ...formState?.relations?.address?.attributes,
-                      city: e.target.value,
-                    },
-                  },
+              setAddress({
+                ...address,
+                attributes: {
+                  ...address.attributes,
+                  city: e.target.value,
                 },
               });
             }}
-            required
           />
         </FormItem>
       </FormGrid>
-    </EntryForm>
+    </form>
   );
 };
 
@@ -323,13 +345,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
         <NameForm category={category} query={query} />
       </EntryFormContainer>
       <EntryFormContainer>
-        <DescriptionForm category={category} query={query} />
-      </EntryFormContainer>
-      <EntryFormContainer>
         <AddressForm category={category} query={query} />
-      </EntryFormContainer>
-      <EntryFormContainer>
-        <ContactForm category={category} query={query} />
       </EntryFormContainer>
     </EntryFormWrapper>
   );

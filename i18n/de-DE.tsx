@@ -50,6 +50,7 @@ export const deDE: Localization = {
     choose: () => 'Bitte auswählen',
     delete: () => 'löschen',
     add: () => 'hinzufügen',
+    type: () => 'Typ',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',

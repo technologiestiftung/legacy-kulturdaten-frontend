@@ -50,6 +50,7 @@ export const enDE: Localization = {
     choose: () => 'Please choose',
     delete: () => 'delete',
     add: () => 'add',
+    type: () => 'Type',
   },
   tooltip: {
     open: () => 'open tooltip',

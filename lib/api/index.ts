@@ -48,6 +48,7 @@ export enum ApiRoutes {
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
+  organizerTranslationUpdate = 'organizerTranslationUpdate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
 }
@@ -62,10 +63,12 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
-  organizerList: () => `/${apiVersion}/organizer`,
-  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerList: () => `/${apiVersion}/organizer?include=types`,
+  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
   organizerCreate: () => `/${apiVersion}/organizer`,
-  organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
+  organizerTranslationUpdate: ({ organizerId, translationId }) =>
+    `/${apiVersion}/organizer/${organizerId}/translations/${translationId}`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
   organizerTypeList: () => `/${apiVersion}/organizerType`,
 };
@@ -80,14 +83,14 @@ const addUrlParam = (url: string, param: string): string =>
  */
 export const call = async <T extends ApiCall>(
   { request, response }: T,
-  locale?: Locale
+  includes?: string[]
 ): Promise<T['response']> => {
-  const requestUrlWithLocale = locale
-    ? addUrlParam(request.route, `locale=${locale}`)
+  const routeWithIncludes = Array.isArray(includes)
+    ? addUrlParam(request.route, `include=${includes.join(',')}`)
     : request.route;
 
   try {
-    const resp = await fetch(new URL(requestUrlWithLocale, api).toString(), {
+    const resp = await fetch(new URL(routeWithIncludes, api).toString(), {
       method: request.method,
       headers: request.headers,
       body: JSON.stringify(request.body, null, 2),
@@ -124,7 +127,7 @@ export const useApiCall = (
 ): (<T extends ApiCall>(
   factory: ApiCallFactory,
   query?: unknown,
-  locale?: Locale
+  includes?: string[]
 ) => Promise<T['response']>) => {
   const authToken = useAuthToken();
 
@@ -132,9 +135,9 @@ export const useApiCall = (
     <T extends ApiCall>(
       factory: ApiCallFactory,
       query?: unknown,
-      locale?: Locale
+      includes?: string[]
     ): Promise<T['response']> => {
-      return call<T>(factory(overrideAuthToken || authToken, query) as T, locale);
+      return call<T>(factory(overrideAuthToken || authToken, query) as T, includes);
     },
     [overrideAuthToken, authToken]
   );
@@ -146,16 +149,22 @@ export const useApiCall = (
  * Helpers
  */
 
-export const getApiUrl = (apiRoute: ApiRoutes, query?: ParsedUrlQuery, locale?: Locale): URL => {
+export const getApiUrl = (
+  apiRoute: ApiRoutes,
+  query?: ParsedUrlQuery,
+  includes?: string[]
+): URL => {
   const route = apiRoutes[apiRoute](query);
-  const routeWithLocale = locale ? addUrlParam(route, `locale=${locale}`) : route;
-  return new URL(routeWithLocale, api);
+  const routeWithIncludes = Array.isArray(includes)
+    ? addUrlParam(route, `include=${includes.join(',')}`)
+    : route;
+  return new URL(routeWithIncludes, api);
 };
 export const getApiUrlString = (
   apiRoute: ApiRoutes,
   query?: ParsedUrlQuery,
-  locale?: Locale
-): string => getApiUrl(apiRoute, query, locale).toString();
+  includes?: string[]
+): string => getApiUrl(apiRoute, query, includes).toString();
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 
 /**

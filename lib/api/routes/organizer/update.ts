@@ -14,14 +14,7 @@ export type OrganizerUpdate = ApiCall & {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: {
-      attributes: {
-        name: string;
-        address: Address['attributes'];
-      };
-      type?: string;
-      subjects?: string[];
-    };
+    body: Organizer;
   };
   response: {
     status: 200;
@@ -38,14 +31,7 @@ export const organizerUpdateFactory = (
   token: OrganizerUpdate['request']['headers']['Authorization'],
   query: {
     id: string;
-    organizer: {
-      attributes: {
-        name: string;
-        address: Address['attributes'];
-      };
-      type?: string;
-      subjects?: string[];
-    };
+    organizer: Organizer;
   }
 ): OrganizerUpdate => ({
   request: {

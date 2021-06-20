@@ -55,6 +55,7 @@ const StyledRowWrapper = styled.div<{ narrow?: boolean; isHeader?: boolean }>`
           left: 0;
           background: var(--white);
           box-shadow: ${insetBorder(false, true, true, true)};
+          z-index: 1;
 
           ${mq(Breakpoint.wide)} {
             box-shadow: ${insetBorder(false, true, true)};

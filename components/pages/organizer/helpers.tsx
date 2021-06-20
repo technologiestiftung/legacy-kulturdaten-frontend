@@ -4,7 +4,7 @@ import { ParsedUrlQuery } from 'node:querystring';
 
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
-import { CreateOrganizer, Organizer } from '../../../lib/api/types/organizer';
+import { CreateOrganizer, Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { Category, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -13,6 +13,8 @@ import { insetBorder, mq } from '../../globals/Constants';
 import { Breakpoint } from '../../../lib/WindowService';
 import styled from '@emotion/styled';
 import { Button, ButtonColor, ButtonType } from '../../button';
+import { OrganizerTranslationUpdate } from '../../../lib/api/routes/organizer/translation/update';
+import { Language } from '../../../config/locales';
 
 export const FormGrid = styled.div`
   display: grid;
@@ -48,8 +50,9 @@ export const formItemWidthMap: { [key in FormItemWidth]: SerializedStyles } = {
   `,
 };
 
-export const FormItem = styled.div<{ width: FormItemWidth }>`
+export const FormItem = styled.div<{ width: FormItemWidth; alignSelf?: string }>`
   ${({ width }) => formItemWidthMap[width]}
+  ${({ alignSelf }) => (alignSelf ? `align-self: ${alignSelf};` : '')}
 `;
 
 export const FormButtons = styled.div`
@@ -62,6 +65,130 @@ export const FormButtons = styled.div`
     margin-left: 0.75rem;
   }
 `;
+
+interface EntryTranslationFormProps {
+  children?: React.ReactNode;
+  category: Category;
+  entry: Organizer;
+  formState: OrganizerTranslation;
+  mutate: any;
+  setPristine: (pristine: boolean) => void;
+}
+
+export const EntryTranslationForm: React.FC<EntryTranslationFormProps> = ({
+  children,
+  category,
+  entry,
+  formState,
+  mutate,
+  setPristine,
+}: EntryTranslationFormProps) => {
+  const call = useApiCall();
+
+  return (
+    <form
+      onSubmit={async (e: FormEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        try {
+          const resp = await call<OrganizerTranslationUpdate>(
+            category.api.translationUpdate.factory,
+            {
+              organizerTranslation: formState,
+              translationId: formState?.id,
+              organizerId: entry?.data?.id,
+            }
+          );
+
+          if (resp.status === 200) {
+            mutate();
+            mutateSwr(getApiUrlString(category.api.list.route));
+            setPristine(true);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }}
+    >
+      {children}
+    </form>
+  );
+};
+
+export const useEntryTranslationForm = (
+  category: Category,
+  query: ParsedUrlQuery,
+  language: Language
+): {
+  formState: OrganizerTranslation;
+  setFormState: (formState: OrganizerTranslation) => void;
+  resetFormState: () => void;
+  pristine: boolean;
+  setPristine: (pristine: boolean) => void;
+  formProps: EntryTranslationFormProps;
+  entry: Organizer;
+  formButtons: React.ReactElement[];
+} => {
+  const t = useT();
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+
+  const [initFormState, setInitFormState] = useState<OrganizerTranslation>();
+
+  const [pristine, setPristine] = useState<boolean>(true);
+  const [formState, setFormState] = useState<OrganizerTranslation>(initFormState);
+
+  useEffect(() => {
+    if (!initFormState && Array.isArray(entry?.data?.relations?.translations)) {
+      setInitFormState(
+        entry.data.relations.translations.find(
+          (translation) => translation.attributes.language === language
+        )
+      );
+    }
+  }, [entry?.data?.relations?.translations, language, initFormState]);
+
+  useEffect(() => {
+    setFormState(initFormState);
+  }, [initFormState]);
+
+  const resetFormState = () => setFormState(initFormState);
+
+  return {
+    formState,
+    setFormState,
+    resetFormState,
+    pristine,
+    setPristine,
+    entry,
+    formProps: { category, entry, mutate, setPristine, formState },
+    formButtons: [
+      <Button
+        key={0}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          resetFormState();
+          setPristine(true);
+        }}
+        icon="XOctagon"
+        color={ButtonColor.yellow}
+        disabled={pristine}
+      >
+        {t('categories.organizer.form.editCancel')}
+      </Button>,
+      <Button
+        key={1}
+        type={ButtonType.submit}
+        icon="CheckSquare"
+        color={ButtonColor.green}
+        disabled={pristine}
+      >
+        {t('categories.organizer.form.save')}
+      </Button>,
+    ],
+  };
+};
 
 interface EntryFormProps {
   children?: React.ReactNode;
@@ -90,7 +217,7 @@ export const EntryForm: React.FC<EntryFormProps> = ({
 
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            organizer: makeFormState(entry?.data, formState),
+            organizer: formState,
             id: entry?.data?.id,
           });
 
@@ -109,20 +236,17 @@ export const EntryForm: React.FC<EntryFormProps> = ({
   );
 };
 
-const makeFormState = (entryData: Organizer['data'], data: CreateOrganizer): CreateOrganizer => ({
-  ...{
-    attributes: {
-      name: entryData.attributes.name,
-      description: entryData.attributes?.description,
-    },
-    relations: {
-      address: entryData.relations?.address,
-      type: entryData.relations?.type?.id,
-      subjects: entryData.relations?.subjects?.map((subject) => subject.id),
-    },
-  },
-  ...data,
-});
+// const makeFormState = (entryData: Organizer['data'], data: CreateOrganizer): CreateOrganizer => ({
+//   ...{
+//     relations: {
+//       translations: entryData.relations?.translations,
+//       address: entryData.relations?.address,
+//       type: entryData.relations?.type?.id,
+//       subjects: entryData.relations?.subjects?.map((subject) => subject.id),
+//     },
+//   },
+//   ...data,
+// });
 
 export const useEntryForm = (
   category: Category,
@@ -140,29 +264,27 @@ export const useEntryForm = (
   const t = useT();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
 
-  const initialFormState = useMemo<CreateOrganizer>(
-    () => ({
-      attributes: {
-        name: entry?.data?.attributes.name,
-        description: entry?.data?.attributes.description,
-      },
-      relations: {
-        address: entry?.data?.relations?.address,
-        type: entry?.data?.relations?.type?.id,
-        subjects: entry?.data?.relations?.subjects?.map((subject) => subject.id),
-      },
-    }),
-    [entry]
-  );
-
+  const [initFormState, setInitFormState] = useState<CreateOrganizer>();
   const [pristine, setPristine] = useState<boolean>(true);
-  const [formState, setFormState] = useState<CreateOrganizer>(initialFormState);
+  const [formState, setFormState] = useState<CreateOrganizer>(initFormState);
 
   useEffect(() => {
-    setFormState(initialFormState);
-  }, [initialFormState]);
+    if (!initFormState && entry?.data?.relations) {
+      setInitFormState({
+        relations: {
+          address: entry?.data?.relations?.address,
+          type: entry?.data?.relations?.type?.id,
+          subjects: entry?.data?.relations?.subjects?.map((subject) => subject.id),
+        },
+      });
+    }
+  }, [entry?.data?.relations, initFormState]);
 
-  const resetFormState = () => setFormState(initialFormState);
+  useEffect(() => {
+    setFormState(initFormState);
+  }, [initFormState]);
+
+  const resetFormState = () => setFormState(initFormState);
 
   return {
     formState,

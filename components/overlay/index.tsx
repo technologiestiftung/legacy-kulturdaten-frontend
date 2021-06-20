@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
-import { contentGrid, mq } from '../globals/Constants';
+import { contentGrid, mq, overlayStyles } from '../globals/Constants';
 import { NavigationContext } from '../navigation/NavigationContext';
 
 const StyledOverlay = styled.div`
@@ -65,9 +65,9 @@ const StyledOverlayBackground = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: var(--black);
-  opacity: 0.8;
   cursor: pointer;
+
+  ${overlayStyles}
 `;
 
 const StyledOverlayCloseButton = styled.div`
