@@ -2,18 +2,33 @@ import styled from '@emotion/styled';
 import { useRef, useState } from 'react';
 import { Checkbox, CheckboxProps } from '.';
 import { useT } from '../../lib/i18n';
+import { Breakpoint } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
 import { Label } from '../label';
 
-const StyledCheckboxList = styled.div``;
+const StyledCheckboxList = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const StyedCheckboxListLabel = styled.div`
   margin-bottom: 0.75rem;
 `;
 
-const StyledCheckboxListItems = styled.div`
+const StyledCheckboxListItems = styled.div<{ columns?: number }>`
   display: grid;
   grid-template-columns: auto;
   grid-row-gap: 0.75rem;
+  grid-column-gap: 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    grid-template-columns: ${({ columns }) => `repeat(${columns && columns > 2 ? 2 : 1}, 1fr)`};
+  }
+
+  ${mq(Breakpoint.wide)} {
+    grid-template-columns: ${({ columns }) =>
+      `repeat(${columns ? (columns > 3 ? 3 : columns) : 1}, 1fr)`};
+  }
 `;
 
 const StyledHiddenMultiSelect = styled.select`
@@ -22,6 +37,10 @@ const StyledHiddenMultiSelect = styled.select`
   overflow: hidden;
   pointer-events: none;
   font-size: 1rem;
+  padding: 0;
+  border: none;
+  margin: 0;
+  appearance: none;
 `;
 
 interface CheckboxListItemProps extends CheckboxProps {
@@ -30,10 +49,11 @@ interface CheckboxListItemProps extends CheckboxProps {
 
 interface CheckboxListProps {
   checkboxes: CheckboxListItemProps[];
-  label: string;
+  label?: string;
   required?: boolean;
   value?: string[];
   onChange?: (value: string[]) => void;
+  columns?: number;
 }
 
 export const CheckboxList: React.FC<CheckboxListProps> = ({
@@ -42,6 +62,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   value,
   required,
   onChange,
+  columns,
 }: CheckboxListProps) => {
   const t = useT();
   const [checkedState, setCheckedState] = useState<{
@@ -72,11 +93,13 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   return (
     <StyledCheckboxList>
       <StyedCheckboxListLabel>
-        <Label>
-          {label} {required ? ` (${t('forms.required')})` : ''}
-        </Label>
+        {label && (
+          <Label>
+            {label} {required ? ` (${t('forms.required')})` : ''}
+          </Label>
+        )}
       </StyedCheckboxListLabel>
-      <StyledCheckboxListItems>
+      <StyledCheckboxListItems columns={columns}>
         {checkboxes.map(({ id, label, value: checkboxValue }, index) => (
           <Checkbox
             id={id}
