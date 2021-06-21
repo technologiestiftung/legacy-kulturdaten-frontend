@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Checkbox, CheckboxProps } from '.';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
@@ -43,6 +43,21 @@ const StyledHiddenMultiSelect = styled.select`
   appearance: none;
 `;
 
+const checkboxesToState = (
+  checkboxes: CheckboxListItemProps[],
+  value: string[]
+): { [id: string]: { checked: boolean; value: string } } =>
+  checkboxes.reduce((combined, { checked, value: checkboxValue }) => {
+    const newCombined = {
+      ...combined,
+      [String(checkboxValue)]: {
+        checked: checked || value?.includes(checkboxValue),
+        value: checkboxValue,
+      },
+    };
+    return newCombined;
+  }, {});
+
 interface CheckboxListItemProps extends CheckboxProps {
   value: string;
 }
@@ -67,18 +82,11 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   const t = useT();
   const [checkedState, setCheckedState] = useState<{
     [id: string]: { checked: boolean; value: string };
-  }>(
-    checkboxes.reduce((combined, { checked, value: checkboxValue }) => {
-      const newCombined = {
-        ...combined,
-        [String(checkboxValue)]: {
-          checked: checked || value?.includes(checkboxValue),
-          value: checkboxValue,
-        },
-      };
-      return newCombined;
-    }, {})
-  );
+  }>(checkboxesToState(checkboxes, value));
+
+  useEffect(() => {
+    setCheckedState(checkboxesToState(checkboxes, value));
+  }, [checkboxes, value]);
 
   const internalState = useState<string[]>(
     Object.values(checkboxes)

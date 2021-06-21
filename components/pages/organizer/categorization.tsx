@@ -28,14 +28,41 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
   query,
 }: OrganizerFormProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const t = useT();
+  const call = useApiCall();
   const [types, setTypes] = useState<string[]>([]);
   const [subjects, setSubjects] = useState<string[]>([]);
-  const [pristine, setPristine] = useState(true);
   const [typesSubjectsPristine, setTypesSubjectsPristine] = useState(true);
 
   const typeOptions = useOrganizerTypeList();
 
-  const t = useT();
+  const validTypeOptions = useMemo(
+    () => typeOptions?.filter((type) => types.includes(String(type.id))),
+    [typeOptions, types]
+  );
+
+  const validSubjectOptions = useMemo(
+    () =>
+      validTypeOptions?.reduce((combinedSubjects, typeOption) => {
+        return combinedSubjects.concat(
+          typeOption.relations.subjects.map((subjectOption) => subjectOption.id)
+        );
+      }, []),
+    [validTypeOptions]
+  );
+
+  const filteredSubjects = useMemo(
+    () =>
+      subjects?.filter((subject) => {
+        return validSubjectOptions?.includes(parseInt(subject, 10));
+      }),
+    [validSubjectOptions, subjects]
+  );
+
+  // Valid if types and subjects are defined
+  const valid = useMemo(() => {
+    return types && types.length > 0 && subjects && filteredSubjects.length > 0;
+  }, [types, subjects, filteredSubjects]);
 
   const initialSubjects = useMemo(
     () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),
@@ -47,48 +74,48 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
     [entry?.data?.relations?.types]
   );
 
+  const pristine = useMemo(() => {
+    const sortedInitialSubjects = initialSubjects ? [...initialSubjects].sort() : undefined;
+    const sortedCurrentSubjects = filteredSubjects ? [...filteredSubjects].sort() : undefined;
+
+    const subjectsEqual =
+      sortedInitialSubjects?.length === sortedCurrentSubjects?.length &&
+      sortedInitialSubjects?.reduce((equal, subject, index) => {
+        if (subject !== sortedCurrentSubjects[index]) {
+          return false;
+        }
+
+        return equal;
+      }, true);
+
+    const sortedInitialTypes = initialTypes ? [...initialTypes].sort() : undefined;
+    const sortedCurrentTypes = types ? [...types].sort() : undefined;
+
+    const typesEqual =
+      sortedInitialTypes?.length === sortedCurrentTypes?.length &&
+      sortedInitialTypes?.reduce((equal, subject, index) => {
+        if (subject !== sortedCurrentTypes[index]) {
+          return false;
+        }
+
+        return equal;
+      }, true);
+
+    return subjectsEqual && typesEqual;
+  }, [initialSubjects, initialTypes, filteredSubjects, types]);
+
   useEffect(() => {
-    if (pristine) {
+    if (typesSubjectsPristine) {
       setTypes(initialTypes);
     }
-  }, [pristine, initialTypes]);
+  }, [typesSubjectsPristine, initialTypes]);
 
   useEffect(() => {
-    if (pristine) {
+    if (typesSubjectsPristine) {
       setSubjects(initialSubjects);
     }
-  }, [pristine, initialSubjects]);
+  }, [typesSubjectsPristine, initialSubjects]);
 
-  // const organizerSubjects = useMemo(
-  //   () =>
-  //     formState?.relations?.types
-  //       ? organizerTypes?.find((type) => type.id === formState?.relations?.types[0])?.relations
-  //           ?.subjects
-  //       : undefined,
-  //   [formState, organizerTypes]
-  // );
-
-  // const [userSubjects, dispatchSubjects] = useReducer(
-  //   subjectsReducer,
-  //   formState?.relations?.types &&
-  //     initialSubjects &&
-  //     initialSubjects[String(formState?.relations?.types[0])]
-  //     ? { [String(formState?.relations?.types[0])]: initialSubjects }
-  //     : undefined
-  // );
-
-  // useEffect(() => {
-  //   if (formState?.relations?.types && formState?.relations?.types[0] && initialSubjects) {
-  //     if (!userSubjects) {
-  //       dispatchSubjects({
-  //         type: SubjectsAction.update,
-  //         payload: { id: formState.relations.types[0], subjects: initialSubjects },
-  //       });
-  //     }
-  //   }
-  // }, [formState?.relations?.types, initialSubjects, userSubjects]);
-
-  const call = useApiCall();
   return (
     <div>
       <EntryFormHead
@@ -101,7 +128,6 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
               e.preventDefault();
               setTypes(initialTypes);
               setSubjects(initialSubjects);
-              setPristine(true);
               setTypesSubjectsPristine(true);
             }}
             icon="XOctagon"
@@ -119,7 +145,6 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                 const validTypeOptions = typeOptions.filter((type) =>
                   types.includes(String(type.id))
                 );
-                console.log(validTypeOptions);
 
                 const subs = subjects.filter((subject) => {
                   for (let i = 0; i < validTypeOptions.length; i += 1) {
@@ -133,8 +158,6 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
 
                   return false;
                 });
-
-                console.log({ subs });
 
                 const resp = await call<OrganizerUpdate>(category.api.update.factory, {
                   id: entry.data.id,
@@ -150,7 +173,6 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                 if (resp.status === 200) {
                   mutate();
                   mutateSwr(getApiUrlString(category.api.list.route));
-                  setTimeout(() => setPristine(true), 500);
                 }
               } catch (e) {
                 console.error(e);
@@ -158,43 +180,12 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
             }}
             icon="CheckSquare"
             color={ButtonColor.green}
-            disabled={pristine}
+            disabled={!valid || pristine}
           >
             {t('categories.organizer.form.save')}
           </Button>,
         ]}
       />
-      {/* <div>
-        {typeOptions?.map((type, typeIndex) => {
-          // const typeTranslation = getTranslation(language, type.relations?.translations);
-          const typeTranslation = type.relations?.translations
-            ? type.relations?.translations[0]
-            : undefined;
-          return (
-            <div key={typeIndex}>
-              <div>
-                [{types.includes(type.id) ? 'X' : ' '}] {typeTranslation?.attributes?.name}
-              </div>
-              <div>
-                {type.relations?.subjects?.map((subject, subjectIndex) => {
-                  // const subjectTranslation = getTranslation(language, subject.relations?.translations);
-                  const subjectTranslation = subject.relations?.translations
-                    ? subject.relations?.translations[0]
-                    : undefined;
-                  return (
-                    <div key={subjectIndex}>
-                      <div>
-                        — [{subjects.includes(subject.id) ? 'X' : ' '}]{' '}
-                        {subjectTranslation?.attributes?.name}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </div> */}
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           <TypesSubjects
@@ -203,10 +194,9 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
             onChange={({ types, subjects }) => {
               setTypes(types);
               setSubjects(subjects);
-              // setPristine(false);
             }}
-            pristine={pristine}
-            setPristine={setPristine}
+            pristine={typesSubjectsPristine}
+            setPristine={setTypesSubjectsPristine}
           />
         </FormItem>
       </FormGrid>
