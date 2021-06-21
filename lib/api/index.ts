@@ -3,7 +3,6 @@ import { ParsedUrlQuery } from 'node:querystring';
 import { useCallback } from 'react';
 import { useAuthToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
-import { Locale } from '../../config/locales';
 
 const {
   publicRuntimeConfig: { api },
@@ -48,7 +47,7 @@ export enum ApiRoutes {
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
-  organizerTranslationUpdate = 'organizerTranslationUpdate',
+  OrganizerTranslationCreate = 'OrganizerTranslationCreate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
 }
@@ -67,8 +66,8 @@ export const apiRoutes: {
   organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
-  organizerTranslationUpdate: ({ organizerId, translationId }) =>
-    `/${apiVersion}/organizer/${organizerId}/translations/${translationId}`,
+  OrganizerTranslationCreate: ({ organizerId }) =>
+    `/${apiVersion}/organizer/${organizerId}/translate`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
   organizerTypeList: () => `/${apiVersion}/organizerType`,
 };

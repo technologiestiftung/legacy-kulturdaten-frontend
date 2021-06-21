@@ -77,7 +77,7 @@ export type Category = {
     show: categoryApi;
     create: categoryApi;
     update: categoryApi;
-    translationUpdate: categoryApi;
+    translationCreate: categoryApi;
     delete: categoryApi;
   };
 };

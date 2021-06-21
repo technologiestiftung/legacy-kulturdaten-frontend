@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { Reducer, useEffect, useReducer, useState } from 'react';
+import { Plus } from 'react-feather';
 import { OrganizerType } from '../../lib/api/types/organizer';
 import { useT } from '../../lib/i18n';
-import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Checkbox } from '../checkbox';
 import { CheckboxList } from '../checkbox/CheckboxList';
@@ -11,9 +11,11 @@ const StyledTypesSubjects = styled.div`
   display: grid;
   grid-template-columns: auto;
   grid-row-gap: 0.75rem;
+  position: relative;
 `;
 
 const StyledTypesSubjectsType = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
 
@@ -22,9 +24,19 @@ const StyledTypesSubjectsType = styled.div`
   border-radius: 0.75rem;
   overflow: hidden;
 `;
+
 const StyledTypesSubjectsTypeHead = styled.div`
   padding: 0.75rem;
+  position: relative;
 `;
+
+const StyledTypesSubjectsPlus = styled.div`
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  pointer-events: none;
+`;
+
 const StyledTypesSubjectsSubjects = styled.div`
   padding: 0.75rem 0.75rem 1.125rem;
   background: var(--grey-200);
@@ -151,6 +163,9 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                 }}
               />
             </StyledTypesSubjectsTypeHead>
+            <StyledTypesSubjectsPlus>
+              <Plus color="var(--grey-400)" />
+            </StyledTypesSubjectsPlus>
             {typeIsChecked && (
               <StyledTypesSubjectsSubjects>
                 <CheckboxList

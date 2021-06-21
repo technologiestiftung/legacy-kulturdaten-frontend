@@ -6,10 +6,10 @@ import { OrganizerTranslation } from '../../../types/organizer';
  * /auth/info
  */
 
-export type OrganizerTranslationUpdate = ApiCall & {
+export type OrganizerTranslationCreate = ApiCall & {
   request: {
     route: ReturnType<ApiRoute>;
-    method: 'PATCH';
+    method: 'POST';
     headers: {
       'Authorization': string;
       'Content-Type': 'application/json';
@@ -27,20 +27,18 @@ export type OrganizerTranslationUpdate = ApiCall & {
   };
 };
 
-export const organizerTranslationUpdateFactory = (
-  token: OrganizerTranslationUpdate['request']['headers']['Authorization'],
+export const OrganizerTranslationCreateFactory = (
+  token: OrganizerTranslationCreate['request']['headers']['Authorization'],
   query: {
     organizerId: string;
-    translationId: number;
     organizerTranslation: OrganizerTranslation;
   }
-): OrganizerTranslationUpdate => ({
+): OrganizerTranslationCreate => ({
   request: {
-    route: apiRoutes.organizerTranslationUpdate({
+    route: apiRoutes.OrganizerTranslationCreate({
       organizerId: query.organizerId,
-      translationId: String(query.translationId),
     }),
-    method: 'PATCH',
+    method: 'POST',
     headers: {
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',

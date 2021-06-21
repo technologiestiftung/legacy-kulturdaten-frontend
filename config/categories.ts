@@ -15,7 +15,7 @@ import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
-import { organizerTranslationUpdateFactory } from '../lib/api/routes/organizer/translation/update';
+import { OrganizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
 
 export enum Categories {
   organizer = 'organizer',
@@ -78,9 +78,9 @@ export const useCategories: () => {
           route: ApiRoutes.organizerUpdate,
           factory: organizerUpdateFactory,
         },
-        translationUpdate: {
-          route: ApiRoutes.organizerTranslationUpdate,
-          factory: organizerTranslationUpdateFactory,
+        translationCreate: {
+          route: ApiRoutes.OrganizerTranslationCreate,
+          factory: OrganizerTranslationCreateFactory,
         },
         delete: {
           route: ApiRoutes.organizerDelete,

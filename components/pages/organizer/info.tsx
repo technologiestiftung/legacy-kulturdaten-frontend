@@ -4,7 +4,7 @@ import { mutate as mutateSwr } from 'swr';
 import { Language } from '../../../config/locale';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { OrganizerTranslationUpdate } from '../../../lib/api/routes/organizer/translation/update';
+import { OrganizerTranslationCreate } from '../../../lib/api/routes/organizer/translation/create';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
 import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
@@ -95,7 +95,8 @@ const useSetName = (props: {
   const call = useApiCall();
   const entryTranslation = getTranslation<OrganizerTranslation>(
     language,
-    entry?.data?.relations?.translations
+    entry?.data?.relations?.translations,
+    false
   );
   const name = useMemo(() => entryTranslation?.attributes?.name, [
     entryTranslation?.attributes?.name,
@@ -108,13 +109,14 @@ const useSetName = (props: {
 
     if (!pristine) {
       try {
-        const resp = await call<OrganizerTranslationUpdate>(
-          category.api.translationUpdate.factory,
+        const resp = await call<OrganizerTranslationCreate>(
+          category.api.translationCreate.factory,
           {
             organizerTranslation: {
               ...entryTranslation,
               attributes: {
                 name: value,
+                language,
               },
             },
             translationId: entryTranslation?.id,
@@ -376,7 +378,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
               setAddress({
                 ...address,
                 attributes: {
-                  ...address.attributes,
+                  ...address?.attributes,
                   street1: e.target.value,
                 },
               });
@@ -393,7 +395,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
               setAddress({
                 ...address,
                 attributes: {
-                  ...address.attributes,
+                  ...address?.attributes,
                   street2: e.target.value,
                 },
               });
@@ -410,7 +412,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
               setAddress({
                 ...address,
                 attributes: {
-                  ...address.attributes,
+                  ...address?.attributes,
                   zipCode: e.target.value,
                 },
               });
@@ -427,7 +429,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
               setAddress({
                 ...address,
                 attributes: {
-                  ...address.attributes,
+                  ...address?.attributes,
                   city: e.target.value,
                 },
               });
