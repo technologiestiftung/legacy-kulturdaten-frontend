@@ -1,5 +1,5 @@
 import { ParsedUrlQuery } from 'node:querystring';
-import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { mutate as mutateSwr } from 'swr';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -12,15 +12,9 @@ import {
   useOrganizerTypeList,
 } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { useLanguage } from '../../../lib/routing';
-import { getTranslation } from '../../../lib/translations';
-import { Button, ButtonColor, ButtonType } from '../../button';
-import { CheckboxList } from '../../checkbox/CheckboxList';
+import { Button, ButtonColor } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
-import { PlaceholderField } from '../../placeholderfield';
-import { Select } from '../../select';
-import { Textarea } from '../../textarea';
 import { TypesSubjects } from '../../TypesSubjects';
 import { FormGrid, FormItem, FormItemWidth } from './helpers';
 
@@ -28,25 +22,6 @@ interface OrganizerFormProps {
   category: Category;
   query: ParsedUrlQuery;
 }
-
-enum SubjectsAction {
-  update = 'update',
-}
-
-const subjectsReducer: Reducer<
-  { [key: string]: number[] },
-  { type: SubjectsAction; payload: { id: number; subjects: number[] } }
-> = (state, action) => {
-  switch (action.type) {
-    case SubjectsAction.update: {
-      return { ...state, [String(action.payload.id)]: action.payload.subjects };
-    }
-
-    default: {
-      break;
-    }
-  }
-};
 
 const ClassificationForm: React.FC<OrganizerFormProps> = ({
   category,
@@ -61,7 +36,6 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
   const typeOptions = useOrganizerTypeList();
 
   const t = useT();
-  const language = useLanguage();
 
   const initialSubjects = useMemo(
     () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),
@@ -166,8 +140,9 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
                   id: entry.data.id,
                   organizer: {
                     relations: {
-                      types: types,
-                      subjects: subs,
+                      types: types.map((type) => parseInt(type, 10)),
+                      subjects: subs.map((subject) => parseInt(subject, 10)),
+                      address: entry.data.relations.address,
                     },
                   },
                 });

@@ -6,7 +6,7 @@ import { Button, ButtonVariant } from '../components/button';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { TitleBarProps } from '../components/navigation/TitleBar';
-import { Categories, useCategories } from '../config/categories';
+import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
@@ -80,6 +80,7 @@ export type Category = {
     translationCreate: categoryApi;
     delete: categoryApi;
   };
+  requirements: Requirement[];
 };
 
 export const useCategory = (): Category => {

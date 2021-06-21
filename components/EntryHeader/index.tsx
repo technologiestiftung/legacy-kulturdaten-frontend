@@ -90,7 +90,15 @@ const StyledEntryHeaderStatusSlot = styled.div`
   }
 `;
 
-const StyledEntryHeaderPublishSlot = styled.div``;
+const StyledEntryHeaderPublishSlot = styled.div`
+  ${mq(Breakpoint.mid)} {
+    grid-column: 1 / -1;
+  }
+
+  ${mq(Breakpoint.widish)} {
+    grid-column: 2 / -2;
+  }
+`;
 
 const StyledEntryHeaderTabsSlot = styled.div`
   ${mq(Breakpoint.mid)} {

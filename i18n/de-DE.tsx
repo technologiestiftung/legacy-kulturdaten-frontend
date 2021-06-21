@@ -51,6 +51,7 @@ export const deDE: Localization = {
     delete: () => 'löschen',
     add: () => 'hinzufügen',
     type: () => 'Typ',
+    publish: () => 'veröffentlichen',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -84,6 +85,13 @@ export const deDE: Localization = {
   },
   categories: {
     organizer: {
+      requirements: {
+        label: () => 'Für Veröffentlichung notwendig',
+        name: () => 'Bezeichnung ausgefüllt',
+        description: () => 'Beschreibung ausgefüllt',
+        categorization: () => 'Kategorisierung ausgefüllt',
+        address: () => 'Adresse ausgefüllt',
+      },
       title: {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',

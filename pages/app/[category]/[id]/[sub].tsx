@@ -18,6 +18,8 @@ import { EntryHeader } from '../../../../components/EntryHeader';
 import { StatusBar } from '../../../../components/statusbar';
 import { DateFormat, useDate } from '../../../../lib/date';
 import { getTranslation } from '../../../../lib/translations';
+import { Publish } from '../../../../components/Publish';
+import { PublishedStatus } from '../../../../lib/api/types/general';
 
 const StyledA = styled.a`
   text-decoration: none;
@@ -72,7 +74,17 @@ const EntrySubPage: NextPage = () => {
           tabs={tabs}
           statusBar={renderedStatusBar}
           actions={metaLinks}
+          publish={
+            entry?.data?.attributes?.status !== PublishedStatus.published ? (
+              <Publish
+                category={category}
+                query={router?.query}
+                requirements={category.requirements}
+              />
+            ) : undefined
+          }
         />
+
         {React.createElement(category?.pages[subPath], { category, query: router?.query })}
       </AppWrapper>
     );

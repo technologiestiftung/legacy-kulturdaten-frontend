@@ -51,6 +51,7 @@ export const enDE: Localization = {
     delete: () => 'delete',
     add: () => 'add',
     type: () => 'Type',
+    publish: () => 'publish',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -84,6 +85,13 @@ export const enDE: Localization = {
   },
   categories: {
     organizer: {
+      requirements: {
+        label: () => 'Required for publishing',
+        name: () => 'Name added',
+        description: () => 'Description added',
+        categorization: () => 'Type(s) and subject(s) chosen',
+        address: () => 'Address added',
+      },
       title: {
         plural: () => 'Organizers',
         singular: () => 'Organizer',

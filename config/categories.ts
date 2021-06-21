@@ -17,6 +17,11 @@ import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { OrganizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
 
+export type Requirement = {
+  translationKey: string;
+  publishableKeys: string[];
+};
+
 export enum Categories {
   organizer = 'organizer',
   offer = 'offer',
@@ -87,6 +92,30 @@ export const useCategories: () => {
           factory: organizerDeleteFactory,
         },
       },
+      requirements: [
+        {
+          translationKey: 'categories.organizer.requirements.name',
+          publishableKeys: ['attributes.name'],
+        },
+        {
+          translationKey: 'categories.organizer.requirements.address',
+          publishableKeys: [
+            'relations.address',
+            'relations.address.attributes.city',
+            'relations.address.attributes.street1',
+            'relations.address.attributes.street2',
+            'relations.address.attributes.zipCode',
+          ],
+        },
+        {
+          translationKey: 'categories.organizer.requirements.description',
+          publishableKeys: ['attributes.description'],
+        },
+        {
+          translationKey: 'categories.organizer.requirements.categorization',
+          publishableKeys: ['relations.types', 'relations.subjects'],
+        },
+      ],
     },
     offer: undefined,
     location: undefined,
