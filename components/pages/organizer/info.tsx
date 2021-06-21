@@ -11,7 +11,7 @@ import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organize
 import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { getTranslation } from '../../../lib/translations';
-import { Button, ButtonType } from '../../button';
+import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
@@ -37,91 +37,175 @@ interface OrganizerFormProps {
   query: ParsedUrlQuery;
 }
 
-interface SetNameProps extends OrganizerFormProps {
-  language: Language;
+interface SetNameProps {
+  label: string;
+  onSubmit: (e?: FormEvent) => Promise<void>;
+  pristine: boolean;
+  setPristine: (pristine: boolean) => void;
+  value: string;
+  setValue: (value: string) => void;
+  name: string;
 }
 
-const SetName: React.FC<SetNameProps> = ({ category, query, language }: SetNameProps) => {
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const call = useApiCall();
-
-  const entryTranslation = getTranslation<OrganizerTranslation>(
-    language,
-    entry?.data?.relations?.translations
-  );
-
-  const name = useMemo(() => entryTranslation?.attributes?.name, [
-    entryTranslation?.attributes?.name,
-  ]);
-
-  const [value, setValue] = useState(name || '');
-  const [pristine, setPristine] = useState(true);
-
+const SetName: React.FC<SetNameProps> = ({
+  label,
+  onSubmit,
+  pristine,
+  setPristine,
+  setValue,
+  name,
+  value,
+}: SetNameProps) => {
   // set initial value
   useEffect(() => {
     if (pristine) {
       setValue(name);
     }
-  }, [pristine, name]);
-
-  const t = useT();
+  }, [pristine, name, setValue]);
 
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-
-        try {
-          const resp = await call<OrganizerTranslationUpdate>(
-            category.api.translationUpdate.factory,
-            {
-              organizerTranslation: {
-                ...entryTranslation,
-                attributes: {
-                  name: value,
-                },
-              },
-              translationId: entryTranslation?.id,
-              organizerId: entry?.data?.id,
-            }
-          );
-
-          if (resp.status === 200) {
-            mutate();
-            mutateSwr(getApiUrlString(category.api.list.route));
-            setPristine(true);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }}
-    >
-      <FormGrid>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.nameEnglish') as string}
-            type={InputType.text}
-            value={value || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setValue(e.target.value);
-            }}
-            required
-          />
-        </FormItem>
-      </FormGrid>
+    <form onSubmit={onSubmit}>
+      <Input
+        label={label}
+        type={InputType.text}
+        value={value || ''}
+        onChange={(e) => {
+          setPristine(false);
+          setValue(e.target.value);
+        }}
+      />
     </form>
   );
+};
+
+const useSetName = (props: {
+  category: Category;
+  query: ParsedUrlQuery;
+  language: Language;
+  label: string;
+}): {
+  form: React.ReactElement;
+  onSubmit: (e?: FormEvent) => Promise<void>;
+  pristine: boolean;
+  reset: () => void;
+} => {
+  const { category, query, language, label } = props;
+
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const call = useApiCall();
+  const entryTranslation = getTranslation<OrganizerTranslation>(
+    language,
+    entry?.data?.relations?.translations
+  );
+  const name = useMemo(() => entryTranslation?.attributes?.name, [
+    entryTranslation?.attributes?.name,
+  ]);
+  const [value, setValue] = useState(name || '');
+  const [pristine, setPristine] = useState(true);
+
+  const onSubmit = async (e?: FormEvent) => {
+    e?.preventDefault();
+
+    if (!pristine) {
+      try {
+        const resp = await call<OrganizerTranslationUpdate>(
+          category.api.translationUpdate.factory,
+          {
+            organizerTranslation: {
+              ...entryTranslation,
+              attributes: {
+                name: value,
+              },
+            },
+            translationId: entryTranslation?.id,
+            organizerId: entry?.data?.id,
+          }
+        );
+
+        if (resp.status === 200) {
+          mutate();
+          mutateSwr(getApiUrlString(category.api.list.route));
+          setTimeout(() => setPristine(true), 500);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
+
+  return {
+    form: <SetName {...{ pristine, setPristine, value, setValue, label, onSubmit, name }} />,
+    onSubmit,
+    pristine,
+    reset: () => {
+      setValue(name);
+      setPristine(true);
+    },
+  };
 };
 
 const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
   const t = useT();
 
+  const {
+    form: setNameGerman,
+    onSubmit: onSubmitGerman,
+    pristine: pristineGerman,
+    reset: resetGerman,
+  } = useSetName({
+    category,
+    query,
+    language: Language.de,
+    label: t('categories.organizer.form.nameGerman') as string,
+  });
+
+  const {
+    form: setNameEnglish,
+    onSubmit: onSubmitEnglish,
+    pristine: pristineEnglish,
+    reset: resetEnglish,
+  } = useSetName({
+    category,
+    query,
+    language: Language.en,
+    label: t('categories.organizer.form.nameEnglish') as string,
+  });
+
   return (
     <div>
-      <EntryFormHead title={t('categories.organizer.form.name') as string} />
-      <SetName category={category} query={query} language={Language.de} />
-      <SetName category={category} query={query} language={Language.en} />
+      <EntryFormHead
+        title={t('categories.organizer.form.name') as string}
+        actions={[
+          <Button
+            key={0}
+            onClick={() => {
+              resetGerman();
+              resetEnglish();
+            }}
+            disabled={pristineEnglish && pristineGerman}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            onClick={() => {
+              onSubmitEnglish();
+              onSubmitGerman();
+            }}
+            disabled={pristineEnglish && pristineGerman}
+          >
+            {t('categories.organizer.form.save')}
+          </Button>,
+        ]}
+      />
+      <FormGrid>
+        <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
+        <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
+      </FormGrid>
     </div>
   );
 };
@@ -256,8 +340,28 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
       <EntryFormHead
         title={t('categories.organizer.form.address') as string}
         actions={[
-          <Button key={1} type={ButtonType.submit}>
-            submit
+          <Button
+            key={0}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setAddress(initialAddress);
+              setPristine(true);
+            }}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            type={ButtonType.submit}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.save')}
           </Button>,
         ]}
       />
