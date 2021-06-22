@@ -1,10 +1,11 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { mutate as mutateSwr } from 'swr';
-import { Language } from '../../../../config/locale';
+import { defaultLanguage, Language } from '../../../../config/locale';
 import { getApiUrlString, useApiCall } from '../../../../lib/api';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { OrganizerTranslationCreate } from '../../../../lib/api/routes/organizer/translation/create';
+import { PublishedStatus } from '../../../../lib/api/types/general';
 import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
 import { Category, useEntry } from '../../../../lib/categories';
 import { getTranslation } from '../../../../lib/translations';
@@ -18,6 +19,7 @@ interface SetNameProps {
   value: string;
   setValue: (value: string) => void;
   name: string;
+  required?: boolean;
 }
 
 const Name: React.FC<SetNameProps> = ({
@@ -28,6 +30,7 @@ const Name: React.FC<SetNameProps> = ({
   setValue,
   name,
   value,
+  required,
 }: SetNameProps) => {
   // set initial value
   useEffect(() => {
@@ -46,6 +49,7 @@ const Name: React.FC<SetNameProps> = ({
           setPristine(false);
           setValue(e.target.value);
         }}
+        required={required}
       />
     </form>
   );
@@ -76,6 +80,12 @@ export const useName = (props: {
   ]);
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
+
+  const required = useMemo(
+    () =>
+      entry?.data?.attributes?.status === PublishedStatus.published && language === defaultLanguage,
+    [entry?.data?.attributes?.status, language]
+  );
 
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
@@ -109,7 +119,20 @@ export const useName = (props: {
   };
 
   return {
-    form: <Name {...{ pristine, setPristine, value, setValue, label, onSubmit, name }} />,
+    form: (
+      <Name
+        {...{
+          pristine,
+          setPristine,
+          value,
+          setValue,
+          label,
+          onSubmit,
+          name,
+          required,
+        }}
+      />
+    ),
     onSubmit,
     pristine,
     reset: () => {

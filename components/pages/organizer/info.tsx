@@ -5,6 +5,7 @@ import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
+import { PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -164,6 +165,10 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
   const [address, setAddress] = useState<Address>(initialAddress);
   const [pristine, setPristine] = useState(true);
 
+  const required = useMemo(() => entry?.data?.attributes?.status === PublishedStatus.published, [
+    entry?.data?.attributes?.status,
+  ]);
+
   useEffect(() => {
     if (pristine) {
       setAddress(initialAddress);
@@ -243,6 +248,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
                 },
               });
             }}
+            required={required}
           />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
@@ -277,6 +283,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
                 },
               });
             }}
+            required={required}
           />
         </FormItem>
         <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
@@ -294,6 +301,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
                 },
               });
             }}
+            required={required}
           />
         </FormItem>
       </FormGrid>
