@@ -1,12 +1,12 @@
 import { Story } from '@storybook/react';
-import { CustomDescendant, RichText } from '.';
-import React, { useEffect, useMemo, useState } from 'react';
+import { CustomDescendant, useRichText } from '.';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useOverlay } from '../overlay';
 import { Button } from '../button';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
 import { OverlayContainer } from '../overlay/OverlayContainer';
-import { markdownToSlate, slateToMarkdown } from './parser';
+import { htmlToMarkdown, markdownToSlate } from './parser';
 
 export default {
   title: 'RichText',
@@ -64,11 +64,11 @@ const X: React.FC = () => {
     setValue(slateStructure);
   }, []);
 
+  const { renderedRichText } = useRichText({ value, onChange: (val) => setValue(val) });
+
   return (
     <StyledRichTextWrapper>
-      <StyledRichTextContainer>
-        {Array.isArray(value) && <RichText value={value} onChange={(val) => setValue(val)} />}
-      </StyledRichTextContainer>
+      <StyledRichTextContainer>{Array.isArray(value) && renderedRichText}</StyledRichTextContainer>
     </StyledRichTextWrapper>
   );
 };
@@ -85,10 +85,12 @@ const RichTextInOverlayComponent: React.FC = () => {
     setValue(slateStructure);
   }, []);
 
+  const { renderedRichText } = useRichText({ value, onChange: (val) => setValue(val) });
+
   const { renderedOverlay, setIsOpen } = useOverlay(
     <OverlayContainer>
       <OverlayTitleBar title="Example RichText overlay" />
-      {Array.isArray(value) && <RichText value={value} onChange={(val) => setValue(val)} />}
+      {Array.isArray(value) && renderedRichText}
     </OverlayContainer>,
     true
   );
@@ -112,8 +114,9 @@ RichTextInOverlayStory.storyName = 'RichText in Overlay';
 
 const Y: React.FC = () => {
   const [value, setValue] = useState<CustomDescendant[]>();
+  const [serializedMarkdown, setSerializedMarkdown] = useState('');
 
-  const parsedMarkdown = useMemo(() => slateToMarkdown(value || []), [value]);
+  const richTextRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const slateStructure = markdownToSlate(md);
@@ -121,14 +124,23 @@ const Y: React.FC = () => {
     setValue(slateStructure);
   }, []);
 
+  const { renderedRichText } = useRichText({
+    value,
+    onChange: (val) => {
+      setValue(val);
+      setSerializedMarkdown(richTextRef.current ? htmlToMarkdown(richTextRef.current) : '');
+    },
+    contentRef: richTextRef,
+  });
+
   return (
     <StyledRichTextStoryWrapper>
       <StyledRichTextWrapper>
         <StyledRichTextContainer>
-          {Array.isArray(value) && <RichText value={value} onChange={(val) => setValue(val)} />}
+          {Array.isArray(value) && renderedRichText}
         </StyledRichTextContainer>
       </StyledRichTextWrapper>
-      <StyledPre>{parsedMarkdown}</StyledPre>
+      <StyledPre>{serializedMarkdown}</StyledPre>
     </StyledRichTextStoryWrapper>
   );
 };

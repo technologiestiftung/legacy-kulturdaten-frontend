@@ -1,5 +1,5 @@
 import { ParsedUrlQuery } from 'node:querystring';
-import React, { FormEvent, useEffect, useMemo, useState } from 'react';
+import React, { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { mutate as mutateSwr } from 'swr';
 import { Language } from '../../../config/locale';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
@@ -15,13 +15,11 @@ import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
-import { LinkList } from '../../linklist';
 import { useOverlay } from '../../overlay';
 import { OverlayContainer } from '../../overlay/OverlayContainer';
 import { OverlayTitleBar } from '../../overlay/OverlayTitleBar';
-import { CustomDescendant, RichText } from '../../richtext';
-import { markdownToSlate } from '../../richtext/parser';
-import { Textarea } from '../../textarea';
+import { CustomDescendant, useRichText } from '../../richtext';
+import { markdownToSlate, htmlToMarkdown } from '../../richtext/parser';
 import {
   // EntryForm,
   // EntryTranslationForm,
@@ -212,11 +210,11 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
   );
 };
 
-const testSocialLinks = [
-  'https://www.technologiestiftung-berlin.de/',
-  'https://www.kulturdaten.berlin/',
-  'https://beta.api.kulturdaten.berlin/docs/',
-];
+// const testSocialLinks = [
+//   'https://www.technologiestiftung-berlin.de/',
+//   'https://www.kulturdaten.berlin/',
+//   'https://beta.api.kulturdaten.berlin/docs/',
+// ];
 
 // const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
 //   const { formButtons } = useEntryForm(category, query);
@@ -260,38 +258,115 @@ const testSocialLinks = [
 //   );
 // };
 
-// const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-//   const { formButtons, formState, entry } = useEntryTranslationForm(category, query, Language.de);
-//   const t = useT();
+const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const call = useApiCall();
 
-//   const [richTextState, setRichTextState] = useState<CustomDescendant[]>();
+  const [richTextState, setRichTextState] = useState<CustomDescendant[]>();
 
-//   useEffect(() => {
-//     const int = formState?.attributes?.description
-//       ? markdownToSlate(formState.attributes.description)
-//       : undefined;
-//     if (int) {
-//       setRichTextState(int);
-//     }
-//   }, [formState?.attributes?.description]);
+  const entryTranslation = getTranslation<OrganizerTranslation>(
+    Language.de,
+    entry?.data?.relations?.translations,
+    false
+  );
 
-//   const { renderedOverlay, setIsOpen } = useOverlay(
-//     <OverlayContainer>
-//       <OverlayTitleBar title="Beschreibung deutsch" />
-//       {Array.isArray(richTextState) && (
-//         <RichText value={richTextState} onChange={(val) => setRichTextState(val)} />
-//       )}
-//     </OverlayContainer>
-//   );
+  const initialText = useMemo(() => {
+    return entryTranslation?.attributes?.description;
+  }, [entryTranslation]);
 
-//   return (
-//     <div>
-//       <EntryFormHead title={t('categories.organizer.form.description') as string} />
-//       <Button onClick={() => setIsOpen(true)}>open RT</Button>
-//       <div>{renderedOverlay}</div>
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    if (initialText) {
+      setRichTextState(markdownToSlate(initialText));
+    }
+  }, [initialText]);
+
+  const t = useT();
+
+  const richTextRef = useRef<HTMLDivElement>(null);
+
+  const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
+
+  const { renderedRichText, reset } = useRichText({
+    value: richTextState,
+    onChange: (val) => {
+      setRichTextState(val);
+      if (richTextRef.current) {
+        setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
+      }
+    },
+    contentRef: richTextRef,
+  });
+
+  const pristine = useMemo(() => {
+    return serializedMarkdown && initialText && serializedMarkdown === initialText;
+  }, [initialText, serializedMarkdown]);
+
+  const { renderedOverlay, setIsOpen } = useOverlay(
+    <OverlayContainer>
+      <OverlayTitleBar
+        title="Beschreibung deutsch"
+        actions={[
+          <Button
+            key={0}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              console.log(markdownToSlate(initialText));
+              reset(markdownToSlate(initialText));
+            }}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            disabled={pristine}
+            onClick={async () => {
+              try {
+                const resp = await call<OrganizerTranslationCreate>(
+                  category.api.translationCreate.factory,
+                  {
+                    organizerTranslation: {
+                      ...entryTranslation,
+                      attributes: {
+                        description: serializedMarkdown,
+                        language: Language.de,
+                      },
+                    },
+                    translationId: entryTranslation?.id,
+                    organizerId: entry?.data?.id,
+                  }
+                );
+
+                if (resp.status === 200) {
+                  mutate();
+                  mutateSwr(getApiUrlString(category.api.list.route));
+                }
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+          >
+            {t('categories.organizer.form.save')}
+          </Button>,
+        ]}
+      />
+      {Array.isArray(richTextState) && renderedRichText}
+    </OverlayContainer>
+  );
+
+  return (
+    <div>
+      <EntryFormHead title={t('categories.organizer.form.description') as string} />
+      <Button onClick={() => setIsOpen(true)}>open RT</Button>
+      <div>{renderedOverlay}</div>
+    </div>
+  );
+};
 
 const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -449,6 +524,9 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     <EntryFormWrapper>
       <EntryFormContainer>
         <NameForm category={category} query={query} />
+      </EntryFormContainer>
+      <EntryFormContainer>
+        <DescriptionForm category={category} query={query} />
       </EntryFormContainer>
       <EntryFormContainer>
         <AddressForm category={category} query={query} />

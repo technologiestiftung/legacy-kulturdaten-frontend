@@ -124,7 +124,7 @@ const ContentSlot = styled.div<{
               background: var(--grey-400);
               height: 1px;
               margin: 0 0 -1px 0;
-              z-index: 1;
+              z-index: 2;
               pointer-events: none;
             }
           `

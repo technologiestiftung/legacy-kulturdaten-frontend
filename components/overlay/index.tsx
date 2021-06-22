@@ -40,11 +40,14 @@ const StyledOverlayContentWrapper = styled.div`
   ${mq(Breakpoint.wide)} {
     grid-column: 3 / -3;
   }
+
+  max-width: 62.5rem;
+  justify-self: center;
 `;
 
 const StyledOverlayContent = styled.div`
   position: relative;
-  background: var(--grey-200);
+  background: var(--white);
   border-radius: 0.75rem 0.75rem 0 0;
   mask-image: -webkit-radial-gradient(white, black);
   border: 1px solid var(--grey-400);

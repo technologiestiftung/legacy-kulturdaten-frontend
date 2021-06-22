@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Editable, withReact, Slate, ReactEditor, RenderElementProps } from 'slate-react';
 import { createEditor } from 'slate';
 import { withHistory } from 'slate-history';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Ref, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CustomDescendant, CustomElement, ElementType, Element } from './Element';
 import { Toolbar, ToolbarGroupWidth } from './Toolbar';
@@ -37,8 +37,6 @@ const StyledEditableContainer = styled.div`
   min-height: 100%;
   flex-grow: 1;
 
-  box-shadow: inset 0px 2px 10px var(--black-o25);
-
   ${mq(Breakpoint.mid)} {
     ${contentGrid(9)}
   }
@@ -58,18 +56,23 @@ const StyledEditable = styled.div`
   }
 `;
 
-interface RichTextProps {
+type RichTextProps = {
   value?: CustomDescendant[];
   onChange?: (value: CustomDescendant[]) => void;
   placeholder?: string;
-}
+  contentRef?: Ref<HTMLDivElement>;
+  intValue: CustomDescendant[];
+  setIntValue: (value: CustomDescendant[]) => void;
+};
 
-export const RichText: React.FC<RichTextProps> = ({
+const RichText: React.FC<RichTextProps> = ({
   value,
   onChange,
   placeholder,
+  contentRef,
+  intValue,
+  setIntValue,
 }: RichTextProps) => {
-  const [intValue, setIntValue] = useState<CustomDescendant[]>([]);
   const renderElement = useCallback(
     (props: CustomRenderElementProps) => <Element {...props} />,
     []
@@ -85,7 +88,7 @@ export const RichText: React.FC<RichTextProps> = ({
     ) {
       setIntValue(value);
     }
-  }, [intValue, value]);
+  }, [intValue, value, setIntValue]);
 
   useEffect(() => {
     if (onChange) {
@@ -97,7 +100,7 @@ export const RichText: React.FC<RichTextProps> = ({
     <StyledRichText>
       <Slate
         editor={editor}
-        value={intValue}
+        value={intValue || []}
         onChange={(updatedValue) => setIntValue(updatedValue as CustomDescendant[])}
       >
         <Toolbar
@@ -193,18 +196,12 @@ export const RichText: React.FC<RichTextProps> = ({
                   icon="Italic"
                   key={1}
                 />,
-                <MarkButton
-                  ariaLabel={t('richText.underline') as string}
-                  format={MarkButtonFormat.underline}
-                  icon="Underline"
-                  key={2}
-                />,
               ],
             },
           ]}
         />
         <StyledEditableContainer>
-          <StyledEditable>
+          <StyledEditable ref={contentRef}>
             <Editable
               renderElement={renderElement}
               renderLeaf={renderLeaf}
@@ -217,6 +214,24 @@ export const RichText: React.FC<RichTextProps> = ({
       </Slate>
     </StyledRichText>
   );
+};
+
+export const useRichText = (
+  props: Pick<RichTextProps, 'value' | 'placeholder' | 'onChange' | 'contentRef'>
+): {
+  renderedRichText: React.ReactElement<RichTextProps>;
+  reset: (value: RichTextProps['value']) => void;
+} => {
+  const [intValue, setIntValue] = useState<CustomDescendant[]>([]);
+
+  return {
+    renderedRichText: Array.isArray(intValue) ? (
+      <RichText {...props} intValue={intValue} setIntValue={setIntValue} />
+    ) : null,
+    reset: (value) => {
+      setIntValue(value);
+    },
+  };
 };
 
 export type { CustomDescendant };

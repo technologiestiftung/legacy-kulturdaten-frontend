@@ -1,6 +1,6 @@
-import { defaultNodeTypes, serialize } from 'remark-slate';
 import { jsx } from 'slate-hyperscript';
 import marked from 'marked';
+import TurndownService from 'turndown';
 
 import { CustomDescendant } from '.';
 import { ElementType } from './Element';
@@ -43,26 +43,56 @@ const deserialize = (el: ChildNode) => {
 
   if (ELEMENT_TAGS[nodeName]) {
     const attrs = ELEMENT_TAGS[nodeName](el);
-    return jsx('element', attrs, children);
+
+    // Make sure no empty children Arrays occure. Those break slate.
+    const neverEmptyChildren =
+      children && Array.isArray(children) && children.length === 0 ? [{ text: '' }] : children;
+
+    return jsx('element', attrs, neverEmptyChildren);
   }
 
   if (TEXT_TAGS[nodeName]) {
     const attrs = TEXT_TAGS[nodeName](el);
-    return children.map((child) => jsx('text', attrs, child));
+    return children?.map((child: ChildNode) => jsx('text', attrs, child));
   }
 
   return children;
 };
 
-export const slateToMarkdown = (slateStructure: CustomDescendant[]): string =>
-  slateStructure
-    .map((v) => serialize(v, { nodeTypes: { ...defaultNodeTypes, listItem: 'list_item' } }))
-    .join('');
-
-export const markdownToSlate = (markdown: string): CustomDescendant[] => {
-  const parsedMarkdown = marked(markdown);
+export const markdownToSlate = (markdownV: string): CustomDescendant[] => {
+  const parsedMarkdown = marked(markdownV);
   const document = new DOMParser().parseFromString(parsedMarkdown, 'text/html');
   const slateStructure = deserialize(document.children[0]);
 
+  console.log(slateStructure);
+
   return slateStructure;
+};
+
+export const htmlToMarkdown = (htmlElement: HTMLElement): string => {
+  const turndownService = new TurndownService({ headingStyle: 'atx' });
+
+  // from https://github.com/domchristie/turndown/issues/291#issuecomment-606575368
+  turndownService.addRule('listItem', {
+    filter: 'li',
+    replacement: (content, node, options) => {
+      content = content
+        .replace(/^\n+/, '') // remove leading newlines
+        .replace(/\n+$/, '\n') // replace trailing newlines with just a single one
+        .replace(/\n/gm, '\n    '); // indent
+      let prefix = options.bulletListMarker + ' ';
+      const parent = node.parentNode;
+      if (parent.nodeName === 'OL') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const start = ((parent as unknown) as any).getAttribute('start');
+        const index = Array.prototype.indexOf.call(parent.children, node);
+        prefix = (start ? Number(start) + index : index + 1) + '. ';
+      }
+      return prefix + content + (node.nextSibling && !/\n$/.test(content) ? '\n' : '');
+    },
+  });
+
+  const serializedMarkdown = turndownService.turndown(htmlElement);
+
+  return serializedMarkdown;
 };
