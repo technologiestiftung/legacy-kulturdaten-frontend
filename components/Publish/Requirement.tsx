@@ -26,8 +26,8 @@ const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${({ fulfilled }) => (fulfilled ? 'var(--green-light)' : 'var(--red-light)')};
-  border-left: 1px solid ${({ fulfilled }) => (fulfilled ? 'var(--green-mid)' : 'var(--red)')};
+  background: ${({ fulfilled }) => (fulfilled ? 'var(--green-light)' : 'var(--error-light)')};
+  border-left: 1px solid ${({ fulfilled }) => (fulfilled ? 'var(--green-mid)' : 'var(--error)')};
 
   svg {
     padding: 0.25rem;

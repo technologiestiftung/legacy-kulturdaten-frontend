@@ -1,148 +1,21 @@
-import { ParsedUrlQuery } from 'node:querystring';
-import React, { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { mutate as mutateSwr } from 'swr';
 import { Language } from '../../../config/locale';
 import { getApiUrlString, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { OrganizerTranslationCreate } from '../../../lib/api/routes/organizer/translation/create';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
-import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
-import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
+import { Organizer } from '../../../lib/api/types/organizer';
+import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { getTranslation } from '../../../lib/translations';
 import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
-import { useOverlay } from '../../overlay';
-import { OverlayContainer } from '../../overlay/OverlayContainer';
-import { OverlayTitleBar } from '../../overlay/OverlayTitleBar';
-import { CustomDescendant, useRichText } from '../../richtext';
-import { markdownToSlate, htmlToMarkdown } from '../../richtext/parser';
-import {
-  // EntryForm,
-  // EntryTranslationForm,
-  FormGrid,
-  FormItem,
-  FormItemWidth,
-  // useEntryForm,
-  // useEntryTranslationForm,
-} from './helpers';
-
-interface OrganizerFormProps {
-  category: Category;
-  query: ParsedUrlQuery;
-}
-
-interface SetNameProps {
-  label: string;
-  onSubmit: (e?: FormEvent) => Promise<void>;
-  pristine: boolean;
-  setPristine: (pristine: boolean) => void;
-  value: string;
-  setValue: (value: string) => void;
-  name: string;
-}
-
-const SetName: React.FC<SetNameProps> = ({
-  label,
-  onSubmit,
-  pristine,
-  setPristine,
-  setValue,
-  name,
-  value,
-}: SetNameProps) => {
-  // set initial value
-  useEffect(() => {
-    if (pristine) {
-      setValue(name);
-    }
-  }, [pristine, name, setValue]);
-
-  return (
-    <form onSubmit={onSubmit}>
-      <Input
-        label={label}
-        type={InputType.text}
-        value={value || ''}
-        onChange={(e) => {
-          setPristine(false);
-          setValue(e.target.value);
-        }}
-      />
-    </form>
-  );
-};
-
-const useSetName = (props: {
-  category: Category;
-  query: ParsedUrlQuery;
-  language: Language;
-  label: string;
-}): {
-  form: React.ReactElement;
-  onSubmit: (e?: FormEvent) => Promise<void>;
-  pristine: boolean;
-  reset: () => void;
-} => {
-  const { category, query, language, label } = props;
-
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const call = useApiCall();
-  const entryTranslation = getTranslation<OrganizerTranslation>(
-    language,
-    entry?.data?.relations?.translations,
-    false
-  );
-  const name = useMemo(() => entryTranslation?.attributes?.name, [
-    entryTranslation?.attributes?.name,
-  ]);
-  const [value, setValue] = useState(name || '');
-  const [pristine, setPristine] = useState(true);
-
-  const onSubmit = async (e?: FormEvent) => {
-    e?.preventDefault();
-
-    if (!pristine) {
-      try {
-        const resp = await call<OrganizerTranslationCreate>(
-          category.api.translationCreate.factory,
-          {
-            organizerTranslation: {
-              ...entryTranslation,
-              attributes: {
-                name: value,
-                language,
-              },
-            },
-            translationId: entryTranslation?.id,
-            organizerId: entry?.data?.id,
-          }
-        );
-
-        if (resp.status === 200) {
-          mutate();
-          mutateSwr(getApiUrlString(category.api.list.route));
-          setTimeout(() => setPristine(true), 500);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  };
-
-  return {
-    form: <SetName {...{ pristine, setPristine, value, setValue, label, onSubmit, name }} />,
-    onSubmit,
-    pristine,
-    reset: () => {
-      setValue(name);
-      setPristine(true);
-    },
-  };
-};
+import { OrganizerFormProps } from './form';
+import { Description } from './form/Description';
+import { useName } from './form/Name';
+import { FormGrid, FormItem, FormItemWidth } from './helpers';
 
 const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
   const t = useT();
@@ -152,7 +25,7 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
     onSubmit: onSubmitGerman,
     pristine: pristineGerman,
     reset: resetGerman,
-  } = useSetName({
+  } = useName({
     category,
     query,
     language: Language.de,
@@ -164,7 +37,7 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
     onSubmit: onSubmitEnglish,
     pristine: pristineEnglish,
     reset: resetEnglish,
-  } = useSetName({
+  } = useName({
     category,
     query,
     language: Language.en,
@@ -259,111 +132,23 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
 // };
 
 const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const call = useApiCall();
-
-  const [richTextState, setRichTextState] = useState<CustomDescendant[]>();
-
-  const entryTranslation = getTranslation<OrganizerTranslation>(
-    Language.de,
-    entry?.data?.relations?.translations,
-    false
-  );
-
-  const initialText = useMemo(() => {
-    return entryTranslation?.attributes?.description;
-  }, [entryTranslation]);
-
-  useEffect(() => {
-    if (initialText) {
-      setRichTextState(markdownToSlate(initialText));
-    }
-  }, [initialText]);
-
   const t = useT();
-
-  const richTextRef = useRef<HTMLDivElement>(null);
-
-  const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
-
-  const { renderedRichText, reset } = useRichText({
-    value: richTextState,
-    onChange: (val) => {
-      setRichTextState(val);
-      if (richTextRef.current) {
-        setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
-      }
-    },
-    contentRef: richTextRef,
-  });
-
-  const pristine = useMemo(() => {
-    return serializedMarkdown && initialText && serializedMarkdown === initialText;
-  }, [initialText, serializedMarkdown]);
-
-  const { renderedOverlay, setIsOpen } = useOverlay(
-    <OverlayContainer>
-      <OverlayTitleBar
-        title="Beschreibung deutsch"
-        actions={[
-          <Button
-            key={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              console.log(markdownToSlate(initialText));
-              reset(markdownToSlate(initialText));
-            }}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            disabled={pristine}
-            onClick={async () => {
-              try {
-                const resp = await call<OrganizerTranslationCreate>(
-                  category.api.translationCreate.factory,
-                  {
-                    organizerTranslation: {
-                      ...entryTranslation,
-                      attributes: {
-                        description: serializedMarkdown,
-                        language: Language.de,
-                      },
-                    },
-                    translationId: entryTranslation?.id,
-                    organizerId: entry?.data?.id,
-                  }
-                );
-
-                if (resp.status === 200) {
-                  mutate();
-                  mutateSwr(getApiUrlString(category.api.list.route));
-                }
-              } catch (e) {
-                console.error(e);
-              }
-            }}
-          >
-            {t('categories.organizer.form.save')}
-          </Button>,
-        ]}
-      />
-      {Array.isArray(richTextState) && renderedRichText}
-    </OverlayContainer>
-  );
 
   return (
     <div>
       <EntryFormHead title={t('categories.organizer.form.description') as string} />
-      <Button onClick={() => setIsOpen(true)}>open RT</Button>
-      <div>{renderedOverlay}</div>
+      <Description
+        category={category}
+        query={query}
+        language={Language.de}
+        title={t('categories.organizer.form.descriptionGerman') as string}
+      />
+      <Description
+        category={category}
+        query={query}
+        language={Language.en}
+        title={t('categories.organizer.form.descriptionEnglish') as string}
+      />
     </div>
   );
 };

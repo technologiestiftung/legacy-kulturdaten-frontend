@@ -75,6 +75,7 @@ const EntrySubPage: NextPage = () => {
           statusBar={renderedStatusBar}
           actions={metaLinks}
           publish={
+            entry?.data?.attributes?.status &&
             entry?.data?.attributes?.status !== PublishedStatus.published ? (
               <Publish
                 category={category}

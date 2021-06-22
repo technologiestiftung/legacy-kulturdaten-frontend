@@ -64,8 +64,6 @@ export const markdownToSlate = (markdownV: string): CustomDescendant[] => {
   const document = new DOMParser().parseFromString(parsedMarkdown, 'text/html');
   const slateStructure = deserialize(document.children[0]);
 
-  console.log(slateStructure);
-
   return slateStructure;
 };
 

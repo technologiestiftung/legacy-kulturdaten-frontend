@@ -21,8 +21,8 @@ export const CSSVars: React.FC = () => (
         --green-mid: #46948c;
         --green-kelly: #91c882;
         --red: #e60032;
-        --red-light: #ee4d70;
         --error: #ae0026;
+        --error-light: #ff6c8c;
         --error-o50: rgba(174, 0, 38, 0.5);
         --red-50: #f28098;
         --blue: #1e3791;

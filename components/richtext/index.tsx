@@ -65,8 +65,9 @@ type RichTextProps = {
   setIntValue: (value: CustomDescendant[]) => void;
 };
 
+export const emptyRichTextValue = [{ type: ElementType.paragraph, children: [{ text: '' }] }];
+
 const RichText: React.FC<RichTextProps> = ({
-  value,
   onChange,
   placeholder,
   contentRef,
@@ -80,15 +81,6 @@ const RichText: React.FC<RichTextProps> = ({
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
   const t = useT();
-
-  useEffect(() => {
-    if (
-      (typeof intValue === 'undefined' || (Array.isArray(intValue) && intValue.length === 0)) &&
-      Array.isArray(value)
-    ) {
-      setIntValue(value);
-    }
-  }, [intValue, value, setIntValue]);
 
   useEffect(() => {
     if (onChange) {
@@ -220,15 +212,18 @@ export const useRichText = (
   props: Pick<RichTextProps, 'value' | 'placeholder' | 'onChange' | 'contentRef'>
 ): {
   renderedRichText: React.ReactElement<RichTextProps>;
-  reset: (value: RichTextProps['value']) => void;
+  init: (value: RichTextProps['value']) => void;
 } => {
-  const [intValue, setIntValue] = useState<CustomDescendant[]>([]);
+  const [intValue, setIntValue] = useState<CustomDescendant[]>(emptyRichTextValue);
+
+  // const renderedRichText = useMemo(
+  //   () => ,
+  //   [props, intValue, setIntValue]
+  // );
 
   return {
-    renderedRichText: Array.isArray(intValue) ? (
-      <RichText {...props} intValue={intValue} setIntValue={setIntValue} />
-    ) : null,
-    reset: (value) => {
+    renderedRichText: <RichText {...props} intValue={intValue} setIntValue={setIntValue} />,
+    init: (value) => {
       setIntValue(value);
     },
   };
