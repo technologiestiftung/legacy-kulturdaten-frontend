@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 
 import { routes, Routes } from '../config/routes';
-import { Locale } from '../config/locales';
+import { Language, Locale } from '../config/locale';
+import { localeLanguageMap } from '../config/locales';
 import { setCookie } from './cookies';
 
 export type Route = (props: { locale: Locale; query?: ParsedUrlQuery }) => string;
@@ -85,6 +86,14 @@ export const useLocale = (): Locale => {
   const locale = useMemo<Locale>(() => router?.locale as Locale, [router?.locale]);
 
   return locale;
+};
+
+export const useLanguage = (): Language => {
+  const locale = useLocale();
+
+  return locale && localeLanguageMap
+    ? localeLanguageMap[locale]
+    : localeLanguageMap[Locale['de-DE']];
 };
 
 const setUserLocalePreference = (locale: Locale): void => {

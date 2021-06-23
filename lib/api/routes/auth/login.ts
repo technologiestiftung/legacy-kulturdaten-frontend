@@ -21,9 +21,9 @@ export interface AuthLogin extends ApiCall {
     body: {
       data: null;
       meta: {
-        type: 'bearer';
-        token: string;
+        token: { type: 'bearer'; token: string };
         message: string;
+        language: string;
       };
     };
   };

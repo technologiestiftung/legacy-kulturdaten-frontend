@@ -50,6 +50,8 @@ export const deDE: Localization = {
     choose: () => 'Bitte auswählen',
     delete: () => 'löschen',
     add: () => 'hinzufügen',
+    type: () => 'Typ',
+    publish: () => 'veröffentlichen',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -83,6 +85,13 @@ export const deDE: Localization = {
   },
   categories: {
     organizer: {
+      requirements: {
+        label: () => 'Für Veröffentlichung notwendig',
+        name: () => 'Bezeichnung ausgefüllt',
+        description: () => 'Beschreibung ausgefüllt',
+        categorization: () => 'Kategorisierung ausgefüllt',
+        address: () => 'Adresse ausgefüllt',
+      },
       title: {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',
@@ -97,10 +106,12 @@ export const deDE: Localization = {
         nameEnglish: () => 'Bezeichnung englisch',
         nameEnglishSimple: () => 'Bezeichnung englisch: einfache Sprache',
         description: () => 'Beschreibung',
-        descriptionGerman: () => 'Beschreibung deutsch',
-        descriptionGermanSimple: () => 'Beschreibung deutsch: einfache Sprache',
-        descriptionEnglish: () => 'Beschreibung englisch',
-        descriptionEnglishSimple: () => 'Beschreibung englisch: einfache Sprache',
+        descriptionExists: () => 'ausgefüllt',
+        descriptionExistsNot: () => 'nicht ausgefüllt',
+        descriptionGerman: () => 'Deutsch',
+        descriptionGermanSimple: () => 'Deutsch: einfache Sprache',
+        descriptionEnglish: () => 'Englisch',
+        descriptionEnglishSimple: () => 'Englisch: einfache Sprache',
         classification: () => 'Einordnung',
         type: () => 'Typ',
         subjects: () => 'Sparte(n)',

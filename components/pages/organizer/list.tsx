@@ -6,15 +6,16 @@ import { OrganizerList } from '../../../lib/api';
 import { useT } from '../../../lib/i18n';
 import React, { useMemo } from 'react';
 import { Routes, routes } from '../../../config/routes';
-import { useLocale } from '../../../lib/routing';
+import { useLanguage, useLocale } from '../../../lib/routing';
 import { Category, CategoryPage, useList } from '../../../lib/categories';
-import { Organizer } from '../../../lib/api/types/organizer';
+import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { MenuIcon } from '../../navigation/mainMenu/MenuIcon';
 import { TableLink, StyledTableLinkText } from '../../table/TableLink';
+import { getTranslation } from '../../../lib/translations';
 
 export const useOrganizerMenu = (
   category: Category,
-  list: Organizer[]
+  list: Organizer['data'][]
 ): {
   titleBar: React.ReactElement<TitleBarProps>;
   content: React.ReactElement<TableProps>;
@@ -38,11 +39,12 @@ interface ListLinkProps {
 }
 
 export const useOrganizerTable = (
-  list: Organizer[],
+  list: Organizer['data'][],
   narrow?: boolean
 ): React.ReactElement<TableProps> => {
   const router = useRouter();
   const locale = useLocale();
+  const language = useLanguage();
   const t = useT();
 
   const tableContent = useMemo(
@@ -51,6 +53,12 @@ export const useOrganizerTable = (
         ? Object.values(list)
             .reverse()
             .map(({ attributes, relations, id }, index) => {
+              const { translations } = relations;
+              const currentTranslation = getTranslation<OrganizerTranslation>(
+                language,
+                translations
+              );
+
               const href = (sub?: string) =>
                 routes[(router?.query?.category as string) as Routes]({
                   locale,
@@ -58,7 +66,11 @@ export const useOrganizerTable = (
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
-                <TableLink href={href('info')} isActive={router.asPath.includes(href())}>
+                <TableLink
+                  href={href('info')}
+                  isActive={router.asPath.includes(href())}
+                  status={attributes?.status}
+                >
                   {children}
                 </TableLink>
               );
@@ -66,22 +78,26 @@ export const useOrganizerTable = (
               return {
                 contents: [
                   <StyledTableLinkText key={`${index}-1`} isActive={router.asPath.includes(href())}>
-                    {attributes.name}
+                    {currentTranslation?.attributes.name}
                   </StyledTableLinkText>,
-                  relations?.address?.attributes?.city,
+                  relations?.types
+                    ? relations?.types
+                        .map((type) => type?.relations?.translations[0]?.attributes?.name)
+                        .join(', ')
+                    : '',
                 ],
                 Wrapper: ListLink,
               };
             })
         : [],
-    [list, locale, router]
+    [list, locale, language, router]
   );
 
   return (
     <Table
       columns={[
         { title: t('general.name') as string, bold: true },
-        { title: t('general.city') as string },
+        { title: t('general.name') as string },
       ]}
       content={tableContent}
       narrow={narrow}
@@ -90,7 +106,7 @@ export const useOrganizerTable = (
 };
 
 export const OrganizerListPage: React.FC<CategoryPage> = ({ category }: CategoryPage) => {
-  const list = useList<OrganizerList, Organizer[]>(category);
+  const list = useList<OrganizerList, Organizer>(category);
   const table = useOrganizerTable(list);
 
   const { title } = category;

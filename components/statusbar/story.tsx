@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
-import { StatusBar, StatusBarState } from '.';
+import { StatusBar } from '.';
+import { PublishedStatus } from '../../lib/api/types/general';
 
 export default {
   title: 'Status Bar',
@@ -18,8 +19,8 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
 
 export const StatusBarStory: Story = () => (
   <StyledTestWrapper>
-    <StatusBar date="01.01.1970 00:00" state={StatusBarState.published} />
-    <StatusBar date="01.01.1970 00:00" state={StatusBarState.draft} />
+    <StatusBar date="01.01.1970 00:00" status={PublishedStatus.published} />
+    <StatusBar date="01.01.1970 00:00" status={PublishedStatus.draft} />
   </StyledTestWrapper>
 );
 StatusBarStory.storyName = 'Status Bar';

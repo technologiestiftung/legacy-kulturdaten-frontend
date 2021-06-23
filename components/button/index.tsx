@@ -218,7 +218,7 @@ const StyledButtonIcon = styled.div<{
 const buttonSizeIconSizeMap: { [key in ButtonSize]: number } = {
   default: 18,
   small: 16,
-  big: 24,
+  big: 18,
 };
 
 export enum ButtonType {

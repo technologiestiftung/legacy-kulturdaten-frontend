@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { BaseEditor, Editor, Element as SlateElement, Transforms } from 'slate';
 import { useSlate } from 'slate-react';
 
@@ -5,13 +6,17 @@ import { Button, ButtonColor, ButtonVariant } from '../button';
 import { CustomElement, ElementType } from './Element';
 
 const isBlockActive = (editor: BaseEditor, format: ElementType) => {
-  const [match] = Editor.nodes(editor, {
-    match: (n: CustomElement) => {
-      return !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format;
-    },
-  });
+  try {
+    const [match] = Editor.nodes(editor, {
+      match: (n: CustomElement) => {
+        return !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === format;
+      },
+    });
 
-  return !!match;
+    return !!match;
+  } catch (e) {
+    return false;
+  }
 };
 
 const listTypes = [ElementType['ol_list'], ElementType['ul_list']];
@@ -57,9 +62,14 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
 }: BlockButtonProps) => {
   const editor = useSlate();
 
+  const blockActive = useCallback(
+    (editor: BaseEditor, format: ElementType) => isBlockActive(editor, format),
+    []
+  );
+
   return (
     <Button
-      color={isBlockActive(editor, format) ? ButtonColor.green : ButtonColor.default}
+      color={blockActive(editor, format) ? ButtonColor.green : ButtonColor.default}
       onMouseDown={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);

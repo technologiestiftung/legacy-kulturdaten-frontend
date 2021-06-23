@@ -10,20 +10,31 @@ export enum ToolbarGroupWidth {
 }
 
 const StyledToolbar = styled.div`
-  background: var(--grey-200);
-  padding: 0.25rem 0.75rem 0.75rem;
-  box-shadow: ${insetBorder(false, false, true)};
   position: sticky;
   top: 0;
   left: 0;
   z-index: 1;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 25%;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    box-shadow: 0px 2px 10px var(--black-o25);
+    pointer-events: none;
+  }
 `;
 
 const StyledToolbarContainer = styled.div`
+  background: var(--grey-200);
+  padding: 0.25rem 0.75rem 0.75rem;
+  box-shadow: ${insetBorder(false, false, true)};
   display: flex;
   flex-wrap: wrap;
-  /* grid-template-columns: repeat(4, auto);
-  column-gap: 0.75rem; */
+  position: relative;
 `;
 
 const StyledToolbarGroupItems = styled.div`
@@ -31,7 +42,6 @@ const StyledToolbarGroupItems = styled.div`
 `;
 
 const StyledToolbarGroup = styled.div<{ width: ToolbarGroupWidth }>`
-  /* grid-column: ${({ width }) => (width === ToolbarGroupWidth.full ? 'span 2' : 'span 1')}; */
   margin-right: 0.75rem;
   position: relative;
 

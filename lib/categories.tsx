@@ -6,9 +6,11 @@ import { Button, ButtonVariant } from '../components/button';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { TitleBarProps } from '../components/navigation/TitleBar';
-import { Categories, useCategories } from '../config/categories';
+import { Categories, Requirement, useCategories } from '../config/categories';
+import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
+import { Translation } from './api/types/general';
 import { OrganizerType } from './api/types/organizer';
 import { Route, useLocale } from './routing';
 
@@ -26,8 +28,14 @@ export interface CategoryEntryPage extends CategoryPage {
 }
 
 export interface CategoryEntry {
-  attributes: {
-    name: string;
+  data: {
+    relations?: {
+      translations?: Translation[];
+    };
+  };
+  meta?: {
+    publishable: boolean | { [key: string]: string[] };
+    language?: Language;
   };
 }
 
@@ -40,7 +48,7 @@ export type Category = {
   icon: MenuIconName;
   menuFactory: (
     category: Category,
-    list: any
+    list: CategoryEntry['data'][]
   ) => { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement };
   routes: {
     list: Route;
@@ -69,8 +77,10 @@ export type Category = {
     show: categoryApi;
     create: categoryApi;
     update: categoryApi;
+    translationCreate: categoryApi;
     delete: categoryApi;
   };
+  requirements: Requirement[];
 };
 
 export const useCategory = (): Category => {
@@ -82,21 +92,21 @@ export const useCategory = (): Category => {
   return category;
 };
 
-export const useList = <C extends ApiCall, T extends CategoryEntry[]>(
+export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
   query?: ParsedUrlQuery,
   load = true
-): T => {
+): T['data'][] => {
   const call = useApiCall();
-
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
 
-  const { data } = useSWR(load && apiCallRoute ? getApiUrlString(apiCallRoute) : undefined, () =>
-    load && category ? call<C>(apiCallFactory, query) : undefined
+  const { data } = useSWR(
+    load && apiCallRoute ? getApiUrlString(apiCallRoute, undefined) : undefined,
+    () => (load && category ? call<C>(apiCallFactory, query) : undefined)
   );
 
-  return (((data as unknown) as C['response'])?.body?.data as unknown) as T;
+  return (((data as unknown) as C['response'])?.body?.data as unknown) as T['data'][];
 };
 
 export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
@@ -123,7 +133,7 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { entry: ((data?.body as any)?.data as unknown) as T, mutate: wrappedMutate };
+  return { entry: ((data?.body as any) as unknown) as T, mutate: wrappedMutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
@@ -161,7 +171,7 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
 
 export const useCategoryMenu = (
   category: Category,
-  list: any
+  list: CategoryEntry['data'][]
 ): { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement } => {
   const categoryMenu = category.menuFactory(category, list);
 
@@ -172,8 +182,8 @@ export const useOrganizerTypeList = (): OrganizerType[] => {
   const call = useApiCall();
 
   const { data } = useSWR(
-    getApiUrlString(ApiRoutes.organizerTypeList),
-    () => call<OrganizerTypeList>(organizerTypeListFactory),
+    getApiUrlString(ApiRoutes.organizerTypeList, undefined),
+    () => call<OrganizerTypeList>(organizerTypeListFactory, undefined),
     { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
   );
 

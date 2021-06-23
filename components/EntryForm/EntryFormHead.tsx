@@ -10,6 +10,7 @@ const StyledEntryFormHead = styled.div`
   left: 0;
   align-items: flex-end;
   flex-wrap: wrap;
+  z-index: 1;
 `;
 
 const StyledEntryFormHeadTitle = styled.h2`

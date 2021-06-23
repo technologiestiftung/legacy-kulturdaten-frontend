@@ -47,6 +47,7 @@ export enum ApiRoutes {
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
+  OrganizerTranslationCreate = 'OrganizerTranslationCreate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
 }
@@ -61,22 +62,34 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
-  organizerList: () => `/${apiVersion}/organizer`,
-  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerList: () => `/${apiVersion}/organizer?include=types`,
+  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
   organizerCreate: () => `/${apiVersion}/organizer`,
-  organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
+  OrganizerTranslationCreate: ({ organizerId }) =>
+    `/${apiVersion}/organizer/${organizerId}/translate`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
   organizerTypeList: () => `/${apiVersion}/organizerType`,
 };
+
+const addUrlParam = (url: string, param: string): string =>
+  url.includes('?') ? `${url}&${param}` : `${url}?${param}`;
 
 /**
  * Makes a call to kulturdaten.berlin API
  * @param request
  * @returns
  */
-export const call = async <T extends ApiCall>({ request, response }: T): Promise<T['response']> => {
+export const call = async <T extends ApiCall>(
+  { request, response }: T,
+  includes?: string[]
+): Promise<T['response']> => {
+  const routeWithIncludes = Array.isArray(includes)
+    ? addUrlParam(request.route, `include=${includes.join(',')}`)
+    : request.route;
+
   try {
-    const resp = await fetch(new URL(request.route, api).toString(), {
+    const resp = await fetch(new URL(routeWithIncludes, api).toString(), {
       method: request.method,
       headers: request.headers,
       body: JSON.stringify(request.body, null, 2),
@@ -110,12 +123,20 @@ export const call = async <T extends ApiCall>({ request, response }: T): Promise
 
 export const useApiCall = (
   overrideAuthToken?: string
-): (<T extends ApiCall>(factory: ApiCallFactory, query?: unknown) => Promise<T['response']>) => {
+): (<T extends ApiCall>(
+  factory: ApiCallFactory,
+  query?: unknown,
+  includes?: string[]
+) => Promise<T['response']>) => {
   const authToken = useAuthToken();
 
   const cb = useCallback(
-    <T extends ApiCall>(factory: ApiCallFactory, query?: unknown): Promise<T['response']> => {
-      return call<T>(factory(overrideAuthToken || authToken, query) as T);
+    <T extends ApiCall>(
+      factory: ApiCallFactory,
+      query?: unknown,
+      includes?: string[]
+    ): Promise<T['response']> => {
+      return call<T>(factory(overrideAuthToken || authToken, query) as T, includes);
     },
     [overrideAuthToken, authToken]
   );
@@ -127,10 +148,22 @@ export const useApiCall = (
  * Helpers
  */
 
-export const getApiUrl = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): URL =>
-  new URL(apiRoutes[apiRoute](query), api);
-export const getApiUrlString = (apiRoute: ApiRoutes, query?: ParsedUrlQuery): string =>
-  getApiUrl(apiRoute, query).toString();
+export const getApiUrl = (
+  apiRoute: ApiRoutes,
+  query?: ParsedUrlQuery,
+  includes?: string[]
+): URL => {
+  const route = apiRoutes[apiRoute](query);
+  const routeWithIncludes = Array.isArray(includes)
+    ? addUrlParam(route, `include=${includes.join(',')}`)
+    : route;
+  return new URL(routeWithIncludes, api);
+};
+export const getApiUrlString = (
+  apiRoute: ApiRoutes,
+  query?: ParsedUrlQuery,
+  includes?: string[]
+): string => getApiUrl(apiRoute, query, includes).toString();
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 
 /**

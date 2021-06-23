@@ -57,7 +57,7 @@ export const LoginForm: React.FC = () => {
       const resp = await call<AuthLogin>(authLoginFactory, { body: { email, password } });
 
       if (resp.status === 200) {
-        const token = resp.body.meta.token;
+        const token = resp.body.meta.token.token;
 
         login(authCookie(token, remember, locale), routes.dashboard({ locale }));
       }

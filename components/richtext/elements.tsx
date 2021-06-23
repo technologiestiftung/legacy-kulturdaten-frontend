@@ -9,7 +9,7 @@ export const RichTextP = styled.p`
   padding-bottom: var(--line-height-300);
 `;
 
-export const RichTextH1 = styled.p`
+export const RichTextH1 = styled.h1`
   font-family: var(--font-family-mono);
   font-size: var(--font-size-600);
   line-height: var(--line-height-600);
@@ -18,7 +18,7 @@ export const RichTextH1 = styled.p`
   padding-bottom: var(--line-height-600);
 `;
 
-export const RichTextH2 = styled.p`
+export const RichTextH2 = styled.h2`
   font-family: var(--font-family-mono);
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
@@ -27,7 +27,7 @@ export const RichTextH2 = styled.p`
   padding-bottom: var(--line-height-400);
 `;
 
-export const RichTextH3 = styled.p`
+export const RichTextH3 = styled.h3`
   font-family: var(--font-family-mono);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
