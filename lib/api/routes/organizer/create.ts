@@ -17,12 +17,7 @@ export interface OrganizerCreate extends ApiCall {
   };
   response: {
     status: 200;
-    body: {
-      data: Organizer;
-      meta: {
-        message: 'Organizer created successfully';
-      };
-    };
+    body: Organizer;
   };
 }
 
