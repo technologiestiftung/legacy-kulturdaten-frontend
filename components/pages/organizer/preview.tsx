@@ -4,6 +4,7 @@ import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { Formatter } from '.././../../components/formatter';
 
 const EntryTitle = styled.h2`
   font-size: var(--font-size-700);
@@ -62,7 +63,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
       </EntryHead>
       <EntryContent>
         <div>Data:</div>
-        <pre>{JSON.stringify(entry, null, 2)}</pre>
+        <Formatter>{JSON.stringify(entry, null, 2)}</Formatter>
       </EntryContent>
     </EntryContainer>
   );
