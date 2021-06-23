@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, X } from 'react-feather';
 import { mutate as mutateSwr } from 'swr';
 import { OrganizerFormProps } from '.';
-import { Language } from '../../../../config/locale';
+import { defaultLanguage, Language } from '../../../../config/locale';
 import { getApiUrlString, useApiCall } from '../../../../lib/api';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { OrganizerTranslationCreate } from '../../../../lib/api/routes/organizer/translation/create';
@@ -88,6 +88,12 @@ export const Description: React.FC<DescriptionProps> = ({
     false
   );
 
+  const defaultTranslation = getTranslation<OrganizerTranslation>(
+    defaultLanguage,
+    entry?.data?.relations?.translations,
+    false
+  );
+
   const textFromApi = useMemo(() => {
     return entryTranslation?.attributes?.description || '';
   }, [entryTranslation]);
@@ -157,6 +163,11 @@ export const Description: React.FC<DescriptionProps> = ({
                       ...entryTranslation,
                       attributes: {
                         description: serializedMarkdown,
+                        // set translation name in case it is not present. Necessary for API validation
+                        name:
+                          typeof entryTranslation?.attributes?.name === 'undefined'
+                            ? defaultTranslation?.attributes?.name
+                            : undefined,
                         language,
                       },
                     },
