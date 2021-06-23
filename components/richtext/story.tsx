@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react';
 import { CustomDescendant, useRichText } from '.';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { useOverlay } from '../overlay';
 import { Button } from '../button';

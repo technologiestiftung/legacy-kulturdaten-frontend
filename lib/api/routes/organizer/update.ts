@@ -1,5 +1,4 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
-import { Address } from '../../types/address';
 import { Organizer } from '../../types/organizer';
 
 /**

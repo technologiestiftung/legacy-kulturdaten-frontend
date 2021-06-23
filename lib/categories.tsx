@@ -98,8 +98,6 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   load = true
 ): T['data'][] => {
   const call = useApiCall();
-  const locale = useLocale();
-
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
 
