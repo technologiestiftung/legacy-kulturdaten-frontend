@@ -20,8 +20,10 @@ import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
 
 const StyledDescription = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   column-gap: 0.75rem;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--grey-400);
+  padding: 0.375rem 0;
 `;
 
 const StyledDescriptionTitle = styled.div`
@@ -31,8 +33,13 @@ const StyledDescriptionTitle = styled.div`
   padding: 0.75rem 0;
 `;
 
+const StyledDescriptionTitleStatus = styled.div`
+  display: flex;
+`;
+
 const StyledDescriptionStatus = styled.div<{ descriptionExists: boolean }>`
   padding: 0.5625rem 0;
+  margin-left: 0.375rem;
 `;
 
 const StyledDescriptionStatusFlag = styled.div<{ descriptionExists: boolean }>`
@@ -177,21 +184,23 @@ export const Description: React.FC<DescriptionProps> = ({
 
   return (
     <StyledDescription>
-      <StyledDescriptionTitle>{title}</StyledDescriptionTitle>
-      <StyledDescriptionStatus descriptionExists={descriptionExists}>
-        {typeof descriptionExists !== 'undefined' && (
-          <StyledDescriptionStatusFlag descriptionExists={descriptionExists}>
-            <span>
-              {t(
-                descriptionExists
-                  ? 'categories.organizer.form.descriptionExists'
-                  : 'categories.organizer.form.descriptionExistsNot'
-              )}
-            </span>
-            {descriptionExists ? <Check color="var(--black)" /> : <X color="var(--black)" />}
-          </StyledDescriptionStatusFlag>
-        )}
-      </StyledDescriptionStatus>
+      <StyledDescriptionTitleStatus>
+        <StyledDescriptionTitle>{title}: </StyledDescriptionTitle>
+        <StyledDescriptionStatus descriptionExists={descriptionExists}>
+          {typeof descriptionExists !== 'undefined' && (
+            <StyledDescriptionStatusFlag descriptionExists={descriptionExists}>
+              <span>
+                {t(
+                  descriptionExists
+                    ? 'categories.organizer.form.descriptionExists'
+                    : 'categories.organizer.form.descriptionExistsNot'
+                )}
+              </span>
+              {descriptionExists ? <Check color="var(--black)" /> : <X color="var(--black)" />}
+            </StyledDescriptionStatusFlag>
+          )}
+        </StyledDescriptionStatus>
+      </StyledDescriptionTitleStatus>
       <StyledDescriptionEditButton>
         <Button onClick={() => setIsOpen(true)} icon="ArrowUpRight">
           {t('categories.organizer.form.edit')}
