@@ -63,9 +63,10 @@ export const apiRoutes: {
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
   organizerList: () => `/${apiVersion}/organizer?include=types`,
-  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
+  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
   organizerCreate: () => `/${apiVersion}/organizer`,
-  organizerUpdate: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects`,
+  organizerUpdate: ({ id }) =>
+    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
   OrganizerTranslationCreate: ({ organizerId }) =>
     `/${apiVersion}/organizer/${organizerId}/translate`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,

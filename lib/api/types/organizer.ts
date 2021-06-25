@@ -25,6 +25,7 @@ export type OrganizerType = {
   attributes: DefaultAttributes;
   relations?: {
     translations: OrganizerTypeTranslation[];
+
     subjects?: OrganizerSubject[];
   };
 };
@@ -41,12 +42,17 @@ export type Organizer = {
   data: {
     type?: 'organizer';
     id?: string;
-    attributes?: DefaultAttributes;
+    attributes?: {
+      homepage?: string;
+      email?: string;
+      phone?: string;
+    } & DefaultAttributes;
     relations?: {
-      translations?: OrganizerTranslation[];
       address?: Address;
-      types?: OrganizerType[];
+      links?: string[];
       subjects?: OrganizerSubject[];
+      translations?: OrganizerTranslation[];
+      types?: OrganizerType[];
     };
   };
   meta?: {
