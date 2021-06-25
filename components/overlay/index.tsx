@@ -3,17 +3,18 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
-import { contentGrid, mq } from '../globals/Constants';
+import { contentGrid, mq, overlayStyles } from '../globals/Constants';
 import { NavigationContext } from '../navigation/NavigationContext';
 
 const StyledOverlay = styled.div`
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: var(--app-height);
   overflow: hidden;
   top: 0;
   left: 0;
   display: flex;
+  z-index: 1000;
 
   ${mq(Breakpoint.mid)} {
     ${contentGrid(11)}
@@ -39,11 +40,14 @@ const StyledOverlayContentWrapper = styled.div`
   ${mq(Breakpoint.wide)} {
     grid-column: 3 / -3;
   }
+
+  max-width: 62.5rem;
+  justify-self: center;
 `;
 
 const StyledOverlayContent = styled.div`
   position: relative;
-  background: var(--grey-200);
+  background: var(--white);
   border-radius: 0.75rem 0.75rem 0 0;
   mask-image: -webkit-radial-gradient(white, black);
   border: 1px solid var(--grey-400);
@@ -64,9 +68,9 @@ const StyledOverlayBackground = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: var(--black);
-  opacity: 0.8;
   cursor: pointer;
+
+  ${overlayStyles}
 `;
 
 const StyledOverlayCloseButton = styled.div`

@@ -1,10 +1,12 @@
 import styled from '@emotion/styled';
 import { contentGrid, mq } from '../../globals/Constants';
+import { Formatter } from '../../../components/formatter';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { Formatter } from '.././../../components/formatter';
+import { useLanguage } from '../../../lib/routing';
+import { getTranslation } from '../../../lib/translations';
 
 const EntryTitle = styled.h2`
   font-size: var(--font-size-700);
@@ -50,20 +52,19 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
   query,
 }: CategoryEntryPage) => {
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
-  const title = entry?.attributes?.name;
+  const language = useLanguage();
+  const currentTranslation = getTranslation(language, entry?.data?.relations?.translations);
+  const title = currentTranslation?.attributes?.name;
 
   return (
     <EntryContainer>
       <EntryHead>
         <EntryTitle>{title}</EntryTitle>
-        <EntryDescription>
-          Placeholder: Erat elit mauris rhoncus purus ac in risus. Felis, orci leo viverra enim,
-          nunc, dolor amet, risus orci. Consectetur lacus libero.
-        </EntryDescription>
+        <EntryDescription>{currentTranslation?.attributes?.description}</EntryDescription>
       </EntryHead>
       <EntryContent>
-        <div>Data:</div>
-        <Formatter>{JSON.stringify(entry, null, 2)}</Formatter>
+        <div>Debug Data:</div>
+        <Formatter content={entry}></Formatter>
       </EntryContent>
     </EntryContainer>
   );

@@ -1,30 +1,68 @@
+import { Language } from '../../../config/locale';
 import { Address } from './address';
-import { DefaultAttributes } from './general';
+import { DefaultAttributes, Translation } from './general';
+
+type OrganizerTypeTranslation = {
+  attributes: {
+    language: Language;
+    name: string;
+  };
+} & Translation;
+
+type OrganizerSubjectTranslation = OrganizerTypeTranslation;
 
 export type OrganizerSubject = {
   type: 'organizersubject';
-  id: string;
-  attributes: {
-    name: string;
+  id: number;
+  relations?: {
+    translations: OrganizerSubjectTranslation[];
   };
 };
 
 export type OrganizerType = {
   type: 'organizertype';
-  id: string;
+  id: number;
   attributes: DefaultAttributes;
   relations?: {
+    translations: OrganizerTypeTranslation[];
     subjects?: OrganizerSubject[];
   };
 };
 
+export type OrganizerTranslation = {
+  attributes: {
+    language?: Language;
+    name: string;
+    description?: string;
+  };
+} & Translation;
+
 export type Organizer = {
-  type: 'organizer';
-  id: string;
-  attributes: DefaultAttributes;
-  relations: {
+  data: {
+    type?: 'organizer';
+    id?: string;
+    attributes?: DefaultAttributes;
+    relations?: {
+      translations?: OrganizerTranslation[];
+      address?: Address;
+      types?: OrganizerType[];
+      subjects?: OrganizerSubject[];
+    };
+  };
+  meta?: {
+    publishable:
+      | boolean
+      | {
+          [key: string]: string[];
+        };
+  };
+};
+
+export type CreateOrganizer = {
+  relations?: {
+    translations?: OrganizerTranslation[];
     address?: Address;
-    type?: OrganizerType;
-    subjects?: OrganizerSubject[];
+    types?: number[];
+    subjects?: number[];
   };
 };

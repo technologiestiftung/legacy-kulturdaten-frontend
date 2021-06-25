@@ -1,155 +1,206 @@
 import { ParsedUrlQuery } from 'node:querystring';
-import React, { Reducer, useEffect, useMemo, useReducer } from 'react';
-import { Category, CategoryEntryPage, useOrganizerTypeList } from '../../../lib/categories';
+import React, { useEffect, useMemo, useState } from 'react';
+import { mutate as mutateSwr } from 'swr';
+import { getApiUrlString, useApiCall } from '../../../lib/api';
+import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
+import { Organizer } from '../../../lib/api/types/organizer';
+import {
+  Category,
+  CategoryEntryPage,
+  useEntry,
+  useOrganizerTypeList,
+} from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { CheckboxList } from '../../checkbox/CheckboxList';
+import { Button, ButtonColor } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
-import { PlaceholderField } from '../../placeholderfield';
-import { Select } from '../../select';
-import { Textarea } from '../../textarea';
-import { EntryForm, FormGrid, FormItem, FormItemWidth, useEntryForm } from './helpers';
+import { TypesSubjects } from '../../TypesSubjects';
+import { FormGrid, FormItem, FormItemWidth } from './helpers';
 
 interface OrganizerFormProps {
   category: Category;
   query: ParsedUrlQuery;
 }
 
-enum SubjectsAction {
-  update = 'update',
-}
-
-const subjectsReducer: Reducer<
-  { [key: string]: string[] },
-  { type: SubjectsAction; payload: { id: string; subjects: string[] } }
-> = (state, action) => {
-  switch (action.type) {
-    case SubjectsAction.update: {
-      return { ...state, [action.payload.id]: action.payload.subjects };
-    }
-
-    default: {
-      break;
-    }
-  }
-};
-
 const ClassificationForm: React.FC<OrganizerFormProps> = ({
   category,
   query,
 }: OrganizerFormProps) => {
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const t = useT();
+  const call = useApiCall();
+  const [types, setTypes] = useState<string[]>([]);
+  const [subjects, setSubjects] = useState<string[]>([]);
+  const [typesSubjectsPristine, setTypesSubjectsPristine] = useState(true);
 
-  const { formState, setFormState, setPristine, formProps, formButtons } = useEntryForm(
-    category,
-    query
+  const typeOptions = useOrganizerTypeList();
+
+  const validTypeOptions = useMemo(
+    () => typeOptions?.filter((type) => types.includes(String(type.id))),
+    [typeOptions, types]
   );
 
-  const organizerTypes = useOrganizerTypeList();
-
-  const initialSubjects = useMemo(() => formState?.subjects?.map((subject) => String(subject)), [
-    formState,
-  ]);
-
-  const organizerSubjects = useMemo(
+  const validSubjectOptions = useMemo(
     () =>
-      formState?.type
-        ? organizerTypes?.find((type) => String(type.id) === String(formState.type))?.relations
-            ?.subjects
-        : undefined,
-    [formState, organizerTypes]
+      validTypeOptions?.reduce((combinedSubjects, typeOption) => {
+        return combinedSubjects.concat(
+          typeOption.relations.subjects.map((subjectOption) => subjectOption.id)
+        );
+      }, []),
+    [validTypeOptions]
   );
 
-  const [userSubjects, dispatchSubjects] = useReducer(
-    subjectsReducer,
-    initialSubjects && initialSubjects[formState?.type]
-      ? { [formState.type]: initialSubjects }
-      : undefined
+  const filteredSubjects = useMemo(
+    () =>
+      subjects?.filter((subject) => {
+        return validSubjectOptions?.includes(parseInt(subject, 10));
+      }),
+    [validSubjectOptions, subjects]
   );
+
+  // Valid if types and subjects are defined
+  const valid = useMemo(() => {
+    return types && types.length > 0 && subjects && filteredSubjects.length > 0;
+  }, [types, subjects, filteredSubjects]);
+
+  const initialSubjects = useMemo(
+    () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),
+    [entry?.data?.relations?.subjects]
+  );
+
+  const initialTypes = useMemo(
+    () => entry?.data?.relations?.types?.map((type) => String(type.id)),
+    [entry?.data?.relations?.types]
+  );
+
+  const pristine = useMemo(() => {
+    const sortedInitialSubjects = initialSubjects ? [...initialSubjects].sort() : undefined;
+    const sortedCurrentSubjects = filteredSubjects ? [...filteredSubjects].sort() : undefined;
+
+    const subjectsEqual =
+      sortedInitialSubjects?.length === sortedCurrentSubjects?.length &&
+      sortedInitialSubjects?.reduce((equal, subject, index) => {
+        if (subject !== sortedCurrentSubjects[index]) {
+          return false;
+        }
+
+        return equal;
+      }, true);
+
+    const sortedInitialTypes = initialTypes ? [...initialTypes].sort() : undefined;
+    const sortedCurrentTypes = types ? [...types].sort() : undefined;
+
+    const typesEqual =
+      sortedInitialTypes?.length === sortedCurrentTypes?.length &&
+      sortedInitialTypes?.reduce((equal, subject, index) => {
+        if (subject !== sortedCurrentTypes[index]) {
+          return false;
+        }
+
+        return equal;
+      }, true);
+
+    return subjectsEqual && typesEqual;
+  }, [initialSubjects, initialTypes, filteredSubjects, types]);
 
   useEffect(() => {
-    if (formState?.type && initialSubjects) {
-      if (!userSubjects) {
-        dispatchSubjects({
-          type: SubjectsAction.update,
-          payload: { id: formState.type, subjects: initialSubjects },
-        });
-      }
+    if (typesSubjectsPristine) {
+      setTypes(initialTypes);
     }
-  }, [formState?.type, initialSubjects, userSubjects]);
+  }, [typesSubjectsPristine, initialTypes]);
+
+  useEffect(() => {
+    if (typesSubjectsPristine) {
+      setSubjects(initialSubjects);
+    }
+  }, [typesSubjectsPristine, initialSubjects]);
 
   return (
-    <EntryForm {...formProps}>
+    <div>
       <EntryFormHead
         title={t('categories.organizer.form.classification') as string}
-        actions={formButtons}
+        actions={[
+          <Button
+            key={0}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setTypes(initialTypes);
+              setSubjects(initialSubjects);
+              setTypesSubjectsPristine(true);
+            }}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            onClick={async (e) => {
+              e.preventDefault();
+
+              try {
+                const validTypeOptions = typeOptions.filter((type) =>
+                  types.includes(String(type.id))
+                );
+
+                const subs = subjects.filter((subject) => {
+                  for (let i = 0; i < validTypeOptions.length; i += 1) {
+                    const validSubjects = validTypeOptions[i].relations.subjects.map(
+                      (subject) => subject.id
+                    );
+                    if (validSubjects.includes(parseInt(subject, 10))) {
+                      return true;
+                    }
+                  }
+
+                  return false;
+                });
+
+                const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+                  id: entry.data.id,
+                  organizer: {
+                    relations: {
+                      types: types.map((type) => parseInt(type, 10)),
+                      subjects: subs.map((subject) => parseInt(subject, 10)),
+                      address: entry.data.relations.address,
+                    },
+                  },
+                });
+
+                if (resp.status === 200) {
+                  mutate();
+                  mutateSwr(getApiUrlString(category.api.list.route));
+                }
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            disabled={!valid || pristine}
+          >
+            {t('categories.organizer.form.save')}
+          </Button>,
+        ]}
       />
       <FormGrid>
-        <FormItem width={FormItemWidth.half}>
-          <Select
-            label={t('categories.organizer.form.type') as string}
-            id="ff1"
-            value={String(formState?.type) || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setFormState({
-                ...formState,
-                type: String(e.target.value),
-                subjects:
-                  userSubjects && userSubjects[String(e.target.value)]
-                    ? userSubjects[String(e.target.value)]
-                    : [],
-              });
-            }}
-            placeholder={t('general.choose') as string}
-            required
-          >
-            {organizerTypes?.map((type, index) => (
-              <option key={index} value={String(type.id)}>
-                {type.attributes.name}
-              </option>
-            ))}
-          </Select>
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          {organizerSubjects ? (
-            <CheckboxList
-              label={t('categories.organizer.form.subjects') as string}
-              checkboxes={
-                organizerSubjects.map((subject) => ({
-                  id: `ff-subject-select-${subject.id}`,
-                  label: subject.attributes.name,
-                  value: String(subject.id),
-                })) || []
-              }
-              onChange={(val) => {
-                setPristine(false);
-                dispatchSubjects({
-                  type: SubjectsAction.update,
-                  payload: { id: formState.type, subjects: val },
-                });
-                setFormState({ ...formState, subjects: val });
-              }}
-              value={userSubjects && formState?.type ? userSubjects[formState.type] : []}
-              required
-            />
-          ) : (
-            <PlaceholderField
-              label={`${t('categories.organizer.form.subjects')} (${t('forms.required')})`}
-              text={t('categories.organizer.form.chooseTypeFirst') as string}
-            />
-          )}
-        </FormItem>
         <FormItem width={FormItemWidth.full}>
-          <Textarea
-            id="ff-tags"
-            label={`${t('categories.organizer.form.tags') as string} (TBD)`}
-            rows={3}
-            onChange={() => setPristine(false)}
+          <TypesSubjects
+            options={typeOptions}
+            value={{ types, subjects }}
+            onChange={({ types, subjects }) => {
+              setTypes(types);
+              setSubjects(subjects);
+            }}
+            pristine={typesSubjectsPristine}
+            setPristine={setTypesSubjectsPristine}
           />
         </FormItem>
       </FormGrid>
-    </EntryForm>
+    </div>
   );
 };
 

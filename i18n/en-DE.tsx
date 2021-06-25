@@ -50,6 +50,8 @@ export const enDE: Localization = {
     choose: () => 'Please choose',
     delete: () => 'delete',
     add: () => 'add',
+    type: () => 'Type',
+    publish: () => 'publish',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -83,6 +85,13 @@ export const enDE: Localization = {
   },
   categories: {
     organizer: {
+      requirements: {
+        label: () => 'Required for publishing',
+        name: () => 'Name added',
+        description: () => 'Description added',
+        categorization: () => 'Type(s) and subject(s) chosen',
+        address: () => 'Address added',
+      },
       title: {
         plural: () => 'Organizers',
         singular: () => 'Organizer',
@@ -97,10 +106,12 @@ export const enDE: Localization = {
         nameEnglish: () => 'Name English',
         nameEnglishSimple: () => 'Name English: simple Language',
         description: () => 'Description',
-        descriptionGerman: () => 'Description German',
-        descriptionGermanSimple: () => 'Description German: simple Language',
-        descriptionEnglish: () => 'Description English',
-        descriptionEnglishSimple: () => 'Description English: simple Language',
+        descriptionExists: () => 'filled out',
+        descriptionExistsNot: () => 'not filled out',
+        descriptionGerman: () => 'German',
+        descriptionGermanSimple: () => 'German: simple Language',
+        descriptionEnglish: () => 'English',
+        descriptionEnglishSimple: () => 'English: simple Language',
         classification: () => 'Classification',
         type: () => 'Type',
         subjects: () => 'Subject(s)',

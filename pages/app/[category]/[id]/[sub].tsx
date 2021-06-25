@@ -6,17 +6,20 @@ import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
 import { TitleBar } from '../../../../components/navigation/TitleBar';
 import { useOrganizerMenu } from '../../../../components/pages/organizer/list';
 import { OrganizerList } from '../../../../lib/api';
-import { Organizer } from '../../../../lib/api/types/organizer';
+import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../../lib/WindowService';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { Button, ButtonVariant, IconPosition } from '../../../../components/button';
 import { useT } from '../../../../lib/i18n';
 import Link from 'next/link';
-import { useLocale } from '../../../../lib/routing';
+import { useLanguage, useLocale } from '../../../../lib/routing';
 import styled from '@emotion/styled';
 import { EntryHeader } from '../../../../components/EntryHeader';
-import { StatusBar, StatusBarState } from '../../../../components/statusbar';
+import { StatusBar } from '../../../../components/statusbar';
 import { DateFormat, useDate } from '../../../../lib/date';
+import { getTranslation } from '../../../../lib/translations';
+import { Publish } from '../../../../components/Publish';
+import { PublishedStatus } from '../../../../lib/api/types/general';
 
 const StyledA = styled.a`
   text-decoration: none;
@@ -25,24 +28,32 @@ const StyledA = styled.a`
 const EntrySubPage: NextPage = () => {
   const router = useRouter();
   const category = useCategory();
+  const language = useLanguage();
   const date = useDate();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const tabs = useTabs(category);
-  const list = useList<OrganizerList, Organizer[]>(category, null, isMidOrWider);
+  const list = useList<OrganizerList, Organizer>(category, null, isMidOrWider);
   const secMenu = useOrganizerMenu(category, list);
   const { entry } = useEntry<Organizer, OrganizerShow>(category, router?.query);
-  const title = entry?.attributes?.name;
+
+  const currentTranslation = entry?.data?.relations?.translations
+    ? getTranslation<OrganizerTranslation>(language, entry.data.relations.translations)
+    : undefined;
+
+  const title = currentTranslation?.attributes.name;
   const t = useT();
   const locale = useLocale();
   const metaLinks = useMetaLinks(category);
 
   const subPath = router?.query.sub as string;
 
-  const formattedDate = entry?.attributes.updatedAt
-    ? date(new Date(entry?.attributes.updatedAt), DateFormat.dateTime)
+  const formattedDate = entry?.data?.attributes?.updatedAt
+    ? date(new Date(entry?.data?.attributes.updatedAt), DateFormat.dateTime)
     : undefined;
 
-  const renderedStatusBar = <StatusBar state={StatusBarState.published} date={formattedDate} />;
+  const renderedStatusBar = (
+    <StatusBar status={entry?.data?.attributes?.status} date={formattedDate} />
+  );
 
   const titleBarLink = (
     <Link href={category?.routes.list({ locale })}>
@@ -63,7 +74,18 @@ const EntrySubPage: NextPage = () => {
           tabs={tabs}
           statusBar={renderedStatusBar}
           actions={metaLinks}
+          publish={
+            entry?.data?.attributes?.status &&
+            entry?.data?.attributes?.status !== PublishedStatus.published ? (
+              <Publish
+                category={category}
+                query={router?.query}
+                requirements={category.requirements}
+              />
+            ) : undefined
+          }
         />
+
         {React.createElement(category?.pages[subPath], { category, query: router?.query })}
       </AppWrapper>
     );

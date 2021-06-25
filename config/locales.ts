@@ -1,12 +1,5 @@
 import { DateFormat } from '../lib/date';
-
-/**
- * All locales used in the app
- */
-export enum Locale {
-  'de-DE' = 'de-DE',
-  'en-DE' = 'en-DE',
-}
+import { Language, Locale } from './locale';
 
 export const locales: {
   [key in Locale]: {
@@ -19,6 +12,24 @@ export const locales: {
   'en-DE': {
     name: 'English',
   },
+};
+
+export const languages: {
+  [key in Language]: {
+    name: string;
+  };
+} = {
+  de: {
+    name: 'Deutsch',
+  },
+  en: {
+    name: 'English',
+  },
+};
+
+export const localeLanguageMap: { [key in Locale]: Language } = {
+  'de-DE': Language.de,
+  'en-DE': Language.en,
 };
 
 export const dateFormatPatternMap: { [key in DateFormat]: { [key in Locale]: string } } = {
@@ -35,3 +46,5 @@ export const dateFormatPatternMap: { [key in DateFormat]: { [key in Locale]: str
     'en-DE': 'MM-dd-yyyy hh:mm aaa',
   },
 };
+
+export { Language, Locale };

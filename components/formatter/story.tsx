@@ -4,7 +4,7 @@ import React from 'react';
 import { Formatter } from '.';
 
 export default {
-  title: 'Status Bar',
+  title: 'JSON Format',
 };
 
 const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
@@ -17,9 +17,9 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
   color: ${({ color }) => (color ? color : '')};
 `;
 
-export const StatusBarStory: Story = () => (
+export const CodeFormatStory: Story = () => (
   <StyledTestWrapper>
-    <Formatter>{JSON.stringify({ a: 1, b: 2, c: 3 }, null, 2)}</Formatter>
+    <Formatter content={{ a: 1, b: 2, c: { x: 'hello', y: null, z: true } }}></Formatter>
   </StyledTestWrapper>
 );
-StatusBarStory.storyName = 'Status Bar';
+CodeFormatStory.storyName = 'JSON Format';

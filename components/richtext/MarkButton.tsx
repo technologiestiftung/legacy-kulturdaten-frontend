@@ -20,8 +20,12 @@ const toggleMark = (editor: BaseEditor, format: MarkButtonFormat): void => {
 };
 
 const isMarkActive = (editor: BaseEditor, format: MarkButtonFormat): boolean => {
-  const marks = Editor.marks(editor);
-  return marks ? marks[format] === true : false;
+  try {
+    const marks = Editor.marks(editor);
+    return marks ? marks[format] === true : false;
+  } catch (e) {
+    return false;
+  }
 };
 
 interface MarkButtonProps {

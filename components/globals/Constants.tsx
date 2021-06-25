@@ -22,6 +22,7 @@ export const CSSVars: React.FC = () => (
         --green-kelly: #91c882;
         --red: #e60032;
         --error: #ae0026;
+        --error-light: #ff6c8c;
         --error-o50: rgba(174, 0, 38, 0.5);
         --red-50: #f28098;
         --blue: #1e3791;
@@ -31,6 +32,8 @@ export const CSSVars: React.FC = () => (
 
         --font-weight-normal: 500;
         --font-weight-bold: 700;
+        --font-size-100: 0.6875rem;
+        --line-height-100: 0.75rem;
         --font-size-200: 0.8125rem;
         --line-height-200: 1.5rem;
         --font-size-300: 0.875rem;
@@ -57,6 +60,8 @@ export const CSSVars: React.FC = () => (
         --shadow-active: 2px 2px 8px -4px var(--black-o70);
         --shadow-inset: inset 0px 1px 6px var(--black-o25);
         --shadow-light: 2px 2px 10px -2px var(--black-o40);
+
+        --overlay-opacity: 0.85;
 
         @media screen and (min-width: 768px) {
           --font-size-600: 1.5rem;
@@ -152,3 +157,8 @@ export const insetBorderColored = (color: string, ...sides: boolean[]): string =
     }
   }
 };
+
+export const overlayStyles = css`
+  background: #000;
+  opacity: var(--overlay-opacity);
+`;

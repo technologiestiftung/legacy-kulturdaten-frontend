@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef } from 'react';
 import 'wicg-inert';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
-import { insetBorder, mq } from '../globals/Constants';
+import { insetBorder, mq, overlayStyles } from '../globals/Constants';
 import { MainMenuProps, useMainMenuOverlayVisible } from '../navigation/mainMenu/MainMenu';
 import { NavigationContext } from '../navigation/NavigationContext';
 import { TitleBarProps } from '../navigation/TitleBar';
@@ -124,7 +124,7 @@ const ContentSlot = styled.div<{
               background: var(--grey-400);
               height: 1px;
               margin: 0 0 -1px 0;
-              z-index: 1;
+              z-index: 2;
               pointer-events: none;
             }
           `
@@ -226,10 +226,10 @@ const MainMenuOverlay = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  background: var(--black);
-  opacity: 0.8;
   z-index: 999;
   cursor: pointer;
+
+  ${overlayStyles}
 `;
 
 interface AppLayoutProps {
