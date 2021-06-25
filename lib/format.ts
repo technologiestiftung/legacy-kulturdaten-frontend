@@ -26,7 +26,7 @@ export const createHtmlNodes = (value: string): string => {
   return generateSpan(type, value);
 };
 
-export const formatJSON = (content: any) => {
+export const formatJSON = (content: unknown): string => {
   const regex = /^( *)("[^"]+": )?("[^"]*"|[\w.+-]*)?([{}[\],]*)?$/gm;
   const stringified = JSON.stringify(content, null, 2) || 'undefined';
 

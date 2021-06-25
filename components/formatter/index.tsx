@@ -34,7 +34,7 @@ const CodeFormatter = styled.div`
 `;
 
 interface FormatterProps {
-  content: Object;
+  content: unknown;
 }
 
 export const Formatter: React.FC<FormatterProps> = ({ content }: FormatterProps) => {
