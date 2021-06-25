@@ -14,6 +14,7 @@ import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
+import { useLinkList } from '../../linklist';
 import { OrganizerFormProps } from './form';
 import { Description } from './form/Description';
 import { useName } from './form/Name';
@@ -107,6 +108,107 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
         language={Language.en}
         title={t('categories.organizer.form.descriptionEnglish') as string}
       />
+    </StyledDescriptionForm>
+  );
+};
+
+const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+  const t = useT();
+  const call = useApiCall();
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+
+  const initialLinks = useMemo(
+    () => entry?.data?.relations?.links?.map((link) => link.attributes?.url),
+    [entry?.data?.relations?.links]
+  );
+
+  const [links, setLinks] = useState<string[]>(initialLinks);
+
+  const [linksFromApi, setLinksFromApi] = useState<string[]>();
+
+  const pristine = useMemo(
+    () =>
+      links === initialLinks ||
+      (Array.isArray(links) &&
+        Array.isArray(initialLinks) &&
+        links.length === initialLinks.length &&
+        links.reduce((allLinksEqual, link, index) => {
+          if (link !== initialLinks[index]) {
+            return false;
+          }
+          return allLinksEqual;
+        }, true)),
+    [links, initialLinks]
+  );
+
+  const { renderedLinkList, init } = useLinkList({
+    links: links || [],
+    onChange: (updatedLinks) => {
+      setLinks(updatedLinks);
+    },
+    maxLinks: 20,
+  });
+
+  useEffect(() => {
+    if (initialLinks !== linksFromApi) {
+      setLinksFromApi(initialLinks);
+      setLinks(initialLinks);
+      init(initialLinks);
+    }
+  }, [init, linksFromApi, initialLinks]);
+
+  return (
+    <StyledDescriptionForm>
+      <EntryFormHead
+        title={t('categories.organizer.form.links') as string}
+        actions={[
+          <Button
+            key={0}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              init(linksFromApi);
+            }}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            disabled={pristine}
+            onClick={async (e) => {
+              e.preventDefault();
+
+              try {
+                const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+                  id: entry.data.id,
+                  organizer: {
+                    relations: {
+                      links,
+                    },
+                  },
+                });
+
+                if (resp.status === 200) {
+                  mutate();
+                  mutateSwr(getApiUrlString(category.api.list.route));
+                }
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+          >
+            {t('categories.organizer.form.save')}
+          </Button>,
+        ]}
+      />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
+      </FormGrid>
     </StyledDescriptionForm>
   );
 };
@@ -398,6 +500,9 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       </EntryFormContainer>
       <EntryFormContainer>
         <ContactForm category={category} query={query} />
+      </EntryFormContainer>
+      <EntryFormContainer>
+        <LinksForm category={category} query={query} />
       </EntryFormContainer>
       <EntryFormContainer>
         <AddressForm category={category} query={query} />

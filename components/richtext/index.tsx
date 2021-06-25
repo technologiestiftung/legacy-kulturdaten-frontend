@@ -216,11 +216,6 @@ export const useRichText = (
 } => {
   const [intValue, setIntValue] = useState<CustomDescendant[]>(emptyRichTextValue);
 
-  // const renderedRichText = useMemo(
-  //   () => ,
-  //   [props, intValue, setIntValue]
-  // );
-
   return {
     renderedRichText: <RichText {...props} intValue={intValue} setIntValue={setIntValue} />,
     init: (value) => {
