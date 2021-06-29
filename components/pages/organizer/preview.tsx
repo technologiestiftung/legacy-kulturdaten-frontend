@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { contentGrid, mq } from '../../globals/Constants';
+import { Formatter } from '../../../components/formatter';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Organizer } from '../../../lib/api/types/organizer';
@@ -63,7 +64,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
       </EntryHead>
       <EntryContent>
         <div>Debug Data:</div>
-        <pre>{JSON.stringify(entry, null, 2)}</pre>
+        <Formatter content={entry}></Formatter>
       </EntryContent>
     </EntryContainer>
   );
