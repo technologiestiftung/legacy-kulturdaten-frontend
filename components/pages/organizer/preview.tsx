@@ -271,13 +271,13 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
           <EntryContact>
             <EntryMetadataKey>{t('categories.organizer.form.website')}</EntryMetadataKey>
             <EntryMetadataValue>
-              <a target="_blank" href={entry?.data?.attributes?.homepage}>
+              <a target="_blank" rel="noreferrer" href={entry?.data?.attributes?.homepage}>
                 {entry?.data?.attributes?.homepage}
               </a>
             </EntryMetadataValue>
             <EntryMetadataKey>{t('categories.organizer.form.email')}</EntryMetadataKey>
             <EntryMetadataValue>
-              <a target="_blank" href={'mailto:' + entry?.data?.attributes?.email}>
+              <a target="_blank" rel="noreferrer" href={'mailto:' + entry?.data?.attributes?.email}>
                 {entry?.data?.attributes?.email}
               </a>
             </EntryMetadataValue>
