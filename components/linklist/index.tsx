@@ -186,7 +186,7 @@ const LinkList: React.FC<LinkListProps> = ({
 
   const [inputState, setInputState] = useState<string>('');
 
-  const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState.length >= maxLinks, [
+  const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState?.length >= maxLinks, [
     linksState,
     maxLinks,
   ]);
