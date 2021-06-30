@@ -1,30 +1,28 @@
 import { Story } from '@storybook/react';
-import { useCallback, useEffect, useState } from 'react';
-import { LinkList } from '.';
+import { useCallback } from 'react';
+import { useLinkList } from '.';
 
 export default {
   title: 'Link List',
 };
 
 const X: React.FC = () => {
-  const [links, setLinks] = useState<string[]>(undefined);
-
   const onChange = useCallback((newLinks) => {
     console.log(newLinks);
-    setLinks(newLinks);
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setLinks([
-        'https://www.technologiestiftung-berlin.de/',
-        'https://www.kulturdaten.berlin/',
-        'https://beta.api.kulturdaten.berlin/docs/',
-      ]);
-    }, 10);
-  }, []);
+  const { renderedLinkList } = useLinkList({
+    links: [
+      'https://www.technologiestiftung-berlin.de/',
+      'https://www.kulturdaten.berlin/',
+      'https://beta.api.kulturdaten.berlin/docs/',
+    ],
+    label: 'Social Media Links',
+    onChange,
+    maxLinks: 3,
+  });
 
-  return <LinkList links={links} label="Social Media Links" onChange={onChange} maxLinks={3} />;
+  return <>{renderedLinkList}</>;
 };
 
 export const LinkListDefaultStory: Story = () => <X />;

@@ -1,5 +1,13 @@
 import styled from '@emotion/styled';
-import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
+import React, {
+  Dispatch,
+  Reducer,
+  ReducerState,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
@@ -20,6 +28,12 @@ const StyledLinkListList = styled.ul`
   grid-template-columns: auto;
   box-shadow: ${insetBorder(true)};
   border-radius: 0.75rem 0.75rem 0 0;
+`;
+
+const StyledLinkListListPlaceholder = styled.div`
+  padding: 0.75rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
 `;
 
 const StyledLinkListListItem = styled.li`
@@ -148,28 +162,31 @@ const linksReducer: Reducer<LinksState, LinksAction> = (state, action) => {
   }
 };
 
-interface LinkListProps {
+type LinkListProps = {
+  linksState: ReducerState<Reducer<LinksState, LinksAction>>;
+  dispatch: Dispatch<LinksAction>;
   links?: string[];
-  label: string;
+  label?: string;
   onChange?: (updatedLinks: string[]) => void;
   maxLinks?: number;
-}
+};
 
-export const LinkList: React.FC<LinkListProps> = ({
+const LinkList: React.FC<LinkListProps> = ({
   links,
   label,
   onChange,
   maxLinks,
+  linksState,
+  dispatch,
 }: LinkListProps) => {
   const t = useT();
   const externalValue = useMemo(() => links, [links]);
   const [externalValueDefined, setExternalValueDefined] = useState<boolean>(false);
   const uid = usePseudoUID();
 
-  const [linksState, dispatch] = useReducer(linksReducer, externalValue || []);
   const [inputState, setInputState] = useState<string>('');
 
-  const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState.length >= maxLinks, [
+  const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState?.length >= maxLinks, [
     linksState,
     maxLinks,
   ]);
@@ -184,7 +201,7 @@ export const LinkList: React.FC<LinkListProps> = ({
         },
       });
     }
-  }, [externalValue, linksState, externalValueDefined]);
+  }, [dispatch, externalValue, linksState, externalValueDefined]);
 
   useEffect(() => {
     if (onChange) {
@@ -195,42 +212,48 @@ export const LinkList: React.FC<LinkListProps> = ({
   return (
     <StyledLinkList>
       <StyledLinkListLabel>
-        <Label>
-          {label}
-          {maxLinks ? ` (${t('linkList.maxLinks', { amount: maxLinks })})` : ''}
-        </Label>
+        {label && (
+          <Label>
+            {label}
+            {maxLinks ? ` (${t('linkList.maxLinks', { amount: maxLinks })})` : ''}
+          </Label>
+        )}
       </StyledLinkListLabel>
       <StyledLinkListList>
-        {linksState.map((link, index) => (
-          <StyledLinkListListItem key={index}>
-            <StyledLinkListLink>
-              <Input
-                type={InputType.url}
-                id={`linklist-${uid}-link-${index}`}
-                value={link}
-                onChange={(e) =>
-                  dispatch({
-                    type: LinksActions.update,
-                    payload: { link: { index, value: e.target.value } },
-                  })
-                }
-              />
-            </StyledLinkListLink>
-            <StyledLinkListLinkButtons>
-              <StyledLinkListLinkButton>
-                <Button
-                  size={ButtonSize.default}
-                  onClick={() =>
-                    dispatch({ type: LinksActions.delete, payload: { link: { index } } })
+        {linksState && linksState.length > 0 ? (
+          linksState.map((link, index) => (
+            <StyledLinkListListItem key={index}>
+              <StyledLinkListLink>
+                <Input
+                  type={InputType.url}
+                  id={`linklist-${uid}-link-${index}`}
+                  value={link}
+                  onChange={(e) =>
+                    dispatch({
+                      type: LinksActions.update,
+                      payload: { link: { index, value: e.target.value } },
+                    })
                   }
-                  icon="Trash2"
-                >
-                  {t('general.delete')}
-                </Button>
-              </StyledLinkListLinkButton>
-            </StyledLinkListLinkButtons>
-          </StyledLinkListListItem>
-        ))}
+                />
+              </StyledLinkListLink>
+              <StyledLinkListLinkButtons>
+                <StyledLinkListLinkButton>
+                  <Button
+                    size={ButtonSize.default}
+                    onClick={() =>
+                      dispatch({ type: LinksActions.delete, payload: { link: { index } } })
+                    }
+                    icon="Trash2"
+                  >
+                    {t('general.delete')}
+                  </Button>
+                </StyledLinkListLinkButton>
+              </StyledLinkListLinkButtons>
+            </StyledLinkListListItem>
+          ))
+        ) : (
+          <StyledLinkListListPlaceholder>{t('linkList.placeholder')}</StyledLinkListListPlaceholder>
+        )}
       </StyledLinkListList>
       {maxLinksReached && (
         <StyledLinkListInfo>
@@ -272,4 +295,18 @@ export const LinkList: React.FC<LinkListProps> = ({
       </form>
     </StyledLinkList>
   );
+};
+
+export const useLinkList = (
+  props: Omit<LinkListProps, 'linksState' | 'dispatch'>
+): {
+  renderedLinkList: React.ReactElement<LinkListProps>;
+  init: (links: string[]) => void;
+} => {
+  const [linksState, dispatch] = useReducer(linksReducer, props?.links || []);
+
+  return {
+    renderedLinkList: <LinkList {...props} linksState={linksState} dispatch={dispatch} />,
+    init: (links: string[]) => dispatch({ type: LinksActions.init, payload: { links } }),
+  };
 };
