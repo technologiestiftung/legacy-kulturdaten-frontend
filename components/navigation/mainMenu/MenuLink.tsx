@@ -5,6 +5,7 @@ import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { useContext } from 'react';
 import { NavigationContext } from '../NavigationContext';
+import { insetBorder } from '../../globals/Constants';
 
 const StyledA = styled.a<{ active?: boolean }>`
   color: inherit;
@@ -12,6 +13,9 @@ const StyledA = styled.a<{ active?: boolean }>`
   display: flex;
   align-items: center;
   width: 100%;
+  padding: 0.75rem;
+  box-shadow: ${insetBorder(true, false, false)};
+  background: var(--white);
 
   &:hover {
     text-decoration: underline;
@@ -19,9 +23,11 @@ const StyledA = styled.a<{ active?: boolean }>`
 
   svg {
     display: inline-block;
-    margin: 0 0.375rem 0 0;
+    margin: 0 0.75rem 0 0;
     padding: 0;
     flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 `;
 

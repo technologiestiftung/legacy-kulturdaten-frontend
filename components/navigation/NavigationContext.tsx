@@ -8,23 +8,19 @@ type NavigationContext = {
   removeOverlay: (id: string) => void;
   setOverlayOpen: (id: string, open: boolean) => void;
   overlayOpen: boolean;
+  activeMenuKey: string;
+  setActiveMenuKey: (menuKey: string) => void;
 };
 
 export const NavigationContext = React.createContext<NavigationContext>({
   mainMenuOpen: false,
-  setMainMenuOpen: () => {
-    //
-  },
-  registerOverlay: () => {
-    return undefined;
-  },
-  removeOverlay: () => {
-    //
-  },
-  setOverlayOpen: () => {
-    //
-  },
+  setMainMenuOpen: () => undefined,
+  registerOverlay: () => undefined,
+  removeOverlay: () => undefined,
+  setOverlayOpen: () => undefined,
   overlayOpen: false,
+  activeMenuKey: 'main',
+  setActiveMenuKey: () => undefined,
 });
 
 enum OverlayActions {
@@ -79,6 +75,7 @@ export const NavigationContextProvider: React.FC<NavigationContextProviderProps>
   children,
 }: NavigationContextProviderProps) => {
   const [mainMenuOpenState, setMainMenuOpenState] = useState<boolean>(false);
+  const [activeMenuKey, setActiveMenuKeyS] = useState<string>();
 
   const [overlays, dispatchOverlayAction] = useReducer(linksReducer, {});
 
@@ -117,6 +114,11 @@ export const NavigationContextProvider: React.FC<NavigationContextProviderProps>
         removeOverlay,
         setOverlayOpen,
         overlayOpen,
+        activeMenuKey,
+        setActiveMenuKey: (menuKey: string) => {
+          console.log('ejo', menuKey);
+          setActiveMenuKeyS(menuKey);
+        },
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
@@ -13,9 +13,8 @@ import { useKeyboard } from '../../../lib/useKeyboard';
 import { LocaleSwitch } from '../LocaleSwitch';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { SubDivider } from './SubDivider';
-import { insetBorder } from '../../globals/Constants';
 
-const StyledMainMenu = styled.nav<{ fullscreen?: boolean }>`
+const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   background: var(--grey-200);
   display: flex;
   flex-direction: column;
@@ -35,11 +34,9 @@ const StyledMainMenuContent = styled.div<{ show: boolean }>`
   visibility: hidden;
   overflow-y: auto;
   overflow-x: hidden;
-  border-bottom: 1px solid var(--grey-400);
   flex-grow: 1;
   width: 100%;
   padding-bottom: env(safe-area-inset-bottom);
-  box-shadow: ${insetBorder(false, true)};
 
   ${({ show }) =>
     show
@@ -50,7 +47,12 @@ const StyledMainMenuContent = styled.div<{ show: boolean }>`
       : ''}
 `;
 
-const StyledMainMenuSubs = styled.div``;
+const StyledMainMenuSubs = styled.div`
+  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-row-gap: 0.75rem;
+`;
 
 const StyledMainMenuHeader = styled.div`
   position: sticky;
@@ -58,15 +60,30 @@ const StyledMainMenuHeader = styled.div`
   left: 0;
 `;
 
+const StyledMainMenuFolder = styled.div`
+  position: absolute;
+  background: orange;
+  height: 10px;
+  width: 100%;
+`;
+
 export interface MainMenuProps {
-  subs: React.ReactElement<SubProps>[];
+  menus: { key: string; subMenus: React.ReactElement<SubProps>[] }[];
+  defaultMenuKey: string;
   title: string;
   Link: React.FC<HeaderLinkProps>;
 }
 
-export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMenuProps) => {
-  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
-  const { mainMenuOpen, setMainMenuOpen } = useContext(NavigationContext);
+export const MainMenu: React.FC<MainMenuProps> = ({
+  menus,
+  defaultMenuKey,
+  title,
+  Link,
+}: MainMenuProps) => {
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const { mainMenuOpen, setMainMenuOpen, activeMenuKey, setActiveMenuKey } = useContext(
+    NavigationContext
+  );
 
   const { rendered } = useContext(WindowContext);
 
@@ -74,25 +91,43 @@ export const MainMenu: React.FC<MainMenuProps> = ({ subs, title, Link }: MainMen
     setMainMenuOpen(false);
   }, ['Esc', 'Escape']);
 
-  const showMenuContent = rendered && (isWideOrWider || mainMenuOpen);
+  const showMenuContent = rendered && (isMidOrWider || mainMenuOpen);
 
-  return (
-    <StyledMainMenu fullscreen={showMenuContent}>
-      <StyledMainMenuHeader>
-        <Header title={title} Link={Link} />
-      </StyledMainMenuHeader>
-      <StyledMainMenuContent show={showMenuContent}>
-        <StyledMainMenuSubs>
-          {subs.map((sub, index) => React.cloneElement(sub, { key: index }))}
-          <Sub items={[<LocaleSwitch key={1} />]} />
-        </StyledMainMenuSubs>
-      </StyledMainMenuContent>
-    </StyledMainMenu>
-  );
+  const renderedMenu = useMemo(() => {
+    const menuKey = activeMenuKey || defaultMenuKey;
+    const isDefaultMenu = typeof activeMenuKey === 'undefined' || activeMenuKey === defaultMenuKey;
+
+    return (
+      <>
+        <StyledMainMenuHeader>
+          <Header
+            title={title}
+            Link={Link}
+            button={
+              !isDefaultMenu ? (
+                <Button onClick={() => setActiveMenuKey(defaultMenuKey)}>back</Button>
+              ) : undefined
+            }
+          />
+        </StyledMainMenuHeader>
+        <StyledMainMenuContent show={showMenuContent}>
+          <StyledMainMenuSubs>
+            {menus
+              ?.filter(({ key }) => key === menuKey)[0]
+              ?.subMenus?.map((sub, index) => React.cloneElement(sub, { key: index }))}
+            <Sub items={[<LocaleSwitch key={1} />]} />
+          </StyledMainMenuSubs>
+        </StyledMainMenuContent>
+      </>
+    );
+  }, [title, Link, showMenuContent, activeMenuKey, defaultMenuKey, menus, setActiveMenuKey]);
+
+  return <StyledMainMenu fullscreen={showMenuContent}>{renderedMenu}</StyledMainMenu>;
 };
 
 export enum MenuItem {
   link = 'link',
+  folder = 'folder',
   button = 'button',
   divider = 'divider',
 }
@@ -110,76 +145,108 @@ type MenuItemButton = {
   iconPosition?: IconPosition;
 };
 
+type MenuItemFolder = {
+  label: string;
+  menuKey: string;
+};
+
 export type MenuStructure = {
-  title?: string;
-  icon?: MenuIconName;
-  isActive?: boolean;
-  items: {
-    type: MenuItem;
-    action?: MenuItemLink | MenuItemButton;
+  defaultMenuKey: string;
+  menus: {
+    key: string;
+    expandable: boolean;
+    subMenus: {
+      title?: string;
+      icon?: MenuIconName;
+      headBackground?: string;
+      items: {
+        type: MenuItem;
+        action?: MenuItemLink | MenuItemButton | MenuItemFolder;
+      }[];
+    }[];
   }[];
-}[];
+};
 
 export const useMainMenu = (
   structure: MenuStructure,
   title: string,
   Link: React.FC<HeaderLinkProps>
 ): React.ReactElement => {
-  const { setMainMenuOpen } = useContext(NavigationContext);
-  const subs = structure.map(({ title, icon, items, isActive }, index) => {
-    const renderedItems = items?.map(({ type, action }, actionIndex) => {
-      switch (type) {
-        case MenuItem.link: {
-          return <MenuLink key={actionIndex} {...(action as MenuLinkProps)} subMenuKey={index} />;
-        }
+  const { setMainMenuOpen, setActiveMenuKey } = useContext(NavigationContext);
 
-        case MenuItem.button: {
-          const { label, onClick, icon, iconPosition } = action as MenuItemButton;
-          return (
-            <Button
-              onClick={() => {
-                onClick();
-                setMainMenuOpen(false);
-              }}
-              variant={ButtonVariant.minimal}
-              size={ButtonSize.small}
-              icon={icon}
-              iconPosition={iconPosition}
-            >
-              {label}
-            </Button>
-          );
-        }
+  const menus = structure.menus.map(({ key, subMenus }, index) => {
+    const subs = subMenus.map(({ title, icon, items, headBackground }, index) => {
+      const renderedItems = items?.map(({ type, action }, actionIndex) => {
+        switch (type) {
+          case MenuItem.link: {
+            return <MenuLink key={actionIndex} {...(action as MenuLinkProps)} subMenuKey={index} />;
+          }
 
-        case MenuItem.divider: {
-          return <SubDivider />;
-        }
+          case MenuItem.button: {
+            const { label, onClick, icon, iconPosition } = action as MenuItemButton;
+            return (
+              <Button
+                onClick={() => {
+                  onClick();
+                  setMainMenuOpen(false);
+                }}
+                variant={ButtonVariant.minimal}
+                size={ButtonSize.small}
+                icon={icon}
+                iconPosition={iconPosition}
+              >
+                {label}
+              </Button>
+            );
+          }
 
-        default: {
-          break;
+          case MenuItem.folder: {
+            const { label, menuKey } = action as MenuItemFolder;
+            return (
+              <div
+                onClick={() => {
+                  setActiveMenuKey(menuKey);
+                }}
+              >
+                {label}: {menuKey}
+              </div>
+            );
+          }
+
+          case MenuItem.divider: {
+            return <SubDivider />;
+          }
+
+          default: {
+            break;
+          }
         }
-      }
+      });
+
+      return (
+        <Sub
+          title={title}
+          icon={<MenuIcon type={icon} />}
+          items={renderedItems}
+          key={index}
+          headBackground={headBackground}
+        />
+      );
     });
 
-    return (
-      <Sub
-        title={title}
-        icon={<MenuIcon type={icon} />}
-        items={renderedItems}
-        key={index}
-        isActive={isActive}
-      />
-    );
+    return { key, subMenus: subs };
   });
 
-  const renderedMainMenu = <MainMenu subs={subs} title={title} Link={Link} />;
+  const renderedMainMenu = (
+    <MainMenu defaultMenuKey={structure.defaultMenuKey} menus={menus} title={title} Link={Link} />
+  );
 
   return renderedMainMenu;
 };
 
 export const useMainMenuOverlayVisible = (): boolean => {
   const { mainMenuOpen } = useContext(NavigationContext);
-  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
-  return mainMenuOpen && !isWideOrWider;
+  return mainMenuOpen && !isMidOrWider;
 };

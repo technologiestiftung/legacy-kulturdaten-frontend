@@ -14,18 +14,9 @@ const UseUser: React.FC = () => {
 
 interface AppWrapperProps {
   children: ReactNode;
-  titleBar?: React.ReactElement<TitleBarProps>;
-  secondaryMenu?: {
-    titleBar: React.ReactElement<TitleBarProps>;
-    content: React.ReactNode;
-  };
 }
 
-export const AppWrapper: React.FC<AppWrapperProps> = ({
-  children,
-  titleBar,
-  secondaryMenu,
-}: AppWrapperProps) => {
+export const AppWrapper: React.FC<AppWrapperProps> = ({ children }: AppWrapperProps) => {
   const menuStructure = useMenuStructure();
   const appTitle = useAppTitle();
 
@@ -34,12 +25,7 @@ export const AppWrapper: React.FC<AppWrapperProps> = ({
   return (
     <>
       <UseUser />
-      <AppLayout
-        mainMenu={mainMenu}
-        content={children}
-        titleBar={titleBar}
-        secondaryMenu={secondaryMenu}
-      />
+      <AppLayout mainMenu={mainMenu} content={children} />
     </>
   );
 };

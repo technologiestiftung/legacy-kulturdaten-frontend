@@ -14,11 +14,7 @@ const ProfilePage: NextPage = () => {
     setLoaded(true);
   }, [setLoaded]);
 
-  return (
-    <AppWrapper titleBar={<TitleBar title={t('menu.user.items.profile') as string} />}>
-      {loaded ? <Profile /> : <div>...loading</div>}
-    </AppWrapper>
-  );
+  return <AppWrapper>{loaded ? <Profile /> : <div>...loading</div>}</AppWrapper>;
 };
 
 export default ProfilePage;

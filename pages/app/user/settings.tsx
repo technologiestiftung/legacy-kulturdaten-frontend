@@ -8,7 +8,7 @@ const SettingsPage: NextPage = () => {
   const t = useT();
 
   return (
-    <AppWrapper titleBar={<TitleBar title={t('menu.user.items.settings') as string} />}>
+    <AppWrapper>
       <div>
         <ul>
           <li>ScrollTest</li>

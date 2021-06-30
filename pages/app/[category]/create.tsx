@@ -13,7 +13,7 @@ const EntryIndexPage: NextPage = () => {
     return React.createElement(category.pages.create, { category });
   }
 
-  return <AppWrapper titleBar={<TitleBar title={`${t('general.create')}: TBD`} />}>TBD</AppWrapper>;
+  return <AppWrapper>TBD</AppWrapper>;
 };
 
 export default EntryIndexPage;

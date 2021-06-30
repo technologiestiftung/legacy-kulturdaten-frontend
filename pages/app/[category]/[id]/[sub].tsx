@@ -67,7 +67,7 @@ const EntrySubPage: NextPage = () => {
 
   if (category) {
     return (
-      <AppWrapper secondaryMenu={secMenu}>
+      <AppWrapper>
         <EntryHeader
           backButton={titleBarLink}
           title={title}
@@ -91,7 +91,7 @@ const EntrySubPage: NextPage = () => {
     );
   }
 
-  return <AppWrapper titleBar={<TitleBar title="TBD" />}>TBD</AppWrapper>;
+  return <AppWrapper>TBD</AppWrapper>;
 };
 
 export default EntrySubPage;

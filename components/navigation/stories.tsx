@@ -3,7 +3,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Header } from './header/Header';
-import { MenuItem, useMainMenu } from './mainMenu/MainMenu';
+import { MenuItem, MenuStructure, useMainMenu } from './mainMenu/MainMenu';
 import { MenuIconName } from './mainMenu/MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
@@ -36,126 +36,161 @@ const StyledTestContentBox = styled.div`
   border-radius: 0.75rem;
 `;
 
-const testMenuStructure = [
-  {
-    title: 'Start',
-    icon: MenuIconName.start,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Dashboard',
-          href: '#',
-          active: true,
+const testMenuStructure: MenuStructure = {
+  defaultMenuKey: 'main',
+  menus: [
+    {
+      key: 'main',
+      expandable: false,
+      subMenus: [
+        {
+          title: 'Start',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: true,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
         },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Benachrichtigungen',
-          href: '#',
+        {
+          title: 'Angebote',
+          icon: MenuIconName.offer,
+          items: [
+            {
+              type: MenuItem.folder,
+              action: {
+                label: 'Alle Angebote',
+                menuKey: 'offer',
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Meine Angebote',
+                href: '#',
+              },
+            },
+          ],
         },
-      },
-    ],
-  },
-  {
-    title: 'Anbieter:innen',
-    icon: MenuIconName.organizer,
-    isActive: true,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Alle Anbieter:innen',
-          href: '#',
+        {
+          title: 'Anbieter:innen',
+          icon: MenuIconName.organizer,
+          items: [
+            {
+              type: MenuItem.folder,
+              action: {
+                label: 'Alle Anbieter:innen',
+                menuKey: 'organizer',
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Meine Anbieter:innen',
+                href: '#',
+              },
+            },
+          ],
         },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Anbieter:innen',
-          href: '#',
+        {
+          title: 'Orte',
+          icon: MenuIconName.location,
+          items: [
+            {
+              type: MenuItem.folder,
+              action: {
+                label: 'Alle Orte',
+                menuKey: 'location',
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Meine Orte',
+                href: '#',
+              },
+            },
+          ],
         },
-      },
-    ],
-  },
-  {
-    title: 'Angebote',
-    icon: MenuIconName.offer,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Alle Angebote',
-          href: '#',
+        {
+          title: 'Nutzer:in',
+          icon: MenuIconName.user,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Mein Profil',
+                href: '#',
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Meine Einstellungen',
+                href: '#',
+              },
+            },
+          ],
         },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Angebote',
-          href: '#',
+        {
+          items: [
+            {
+              type: MenuItem.button,
+              action: {
+                label: 'Abmelden',
+                onClick: () => {
+                  //
+                },
+                icon: 'LogOut',
+              },
+            },
+          ],
         },
-      },
-    ],
-  },
-  {
-    title: 'Orte',
-    icon: MenuIconName.location,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Alle Orte',
-          href: '#',
+      ],
+    },
+    {
+      key: 'offer',
+      expandable: true,
+      subMenus: [
+        {
+          title: 'Test',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: true,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
         },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Orte',
-          href: '#',
-        },
-      },
-    ],
-  },
-  {
-    title: 'Nutzer:in',
-    icon: MenuIconName.user,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Mein Profil',
-          href: '#',
-        },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Einstellungen',
-          href: '#',
-        },
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        type: MenuItem.button,
-        action: {
-          label: 'Abmelden',
-          onClick: () => {
-            //
-          },
-          icon: 'LogOut',
-        },
-      },
-    ],
-  },
-];
+      ],
+    },
+  ],
+};
 
-export const NavigationStory: Story = () => {
+const X: React.FC = () => {
   const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
 
   return (
@@ -168,10 +203,11 @@ export const NavigationStory: Story = () => {
           ))}
         </StyledTestContent>
       }
-      titleBar={<TitleBar title="Page Title" />}
     />
   );
 };
+
+export const NavigationStory: Story = () => <X />;
 NavigationStory.storyName = 'Navigation complete';
 
 export const HeaderStory: Story = () => <Header title="Kulturdaten.Berlin" Link={TestLink} />;
@@ -186,40 +222,3 @@ MainMenuStory.storyName = 'Main Menu';
 
 export const TitleBarStory: Story = () => <TitleBar title="Page Title" />;
 TitleBarStory.storyName = 'Title Bar';
-
-export const SecondaryMenuStory: Story = () => {
-  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
-
-  const secondaryMenu = (
-    <Table
-      columns={[{ title: 'Column 1' }, { title: 'Column 2' }, { title: 'Column 3' }]}
-      content={[
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-      ]}
-      narrow
-    />
-  );
-
-  return (
-    <AppLayout
-      mainMenu={mainMenu}
-      content={
-        <StyledTestContent>
-          {[...Array(10)].map((i, index) => (
-            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
-          ))}
-        </StyledTestContent>
-      }
-      titleBar={<TitleBar title="Page Title" />}
-      secondaryMenu={{
-        titleBar: <TitleBar title="Category Title" secondary />,
-        content: secondaryMenu,
-      }}
-    />
-  );
-};
-SecondaryMenuStory.storyName = 'Navigation with Secondary Menu';

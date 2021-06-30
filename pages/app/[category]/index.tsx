@@ -13,7 +13,7 @@ const CategoryListPage: NextPage = () => {
 
   const title = 'TBD';
 
-  return <AppWrapper titleBar={<TitleBar title={title} />}>TBD</AppWrapper>;
+  return <AppWrapper>TBD</AppWrapper>;
 };
 
 export default CategoryListPage;

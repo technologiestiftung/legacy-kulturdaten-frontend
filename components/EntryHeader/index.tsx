@@ -6,7 +6,7 @@ import { TabsProps } from '../navigation/tabs';
 
 const StyledEntryHeader = styled.div`
   background: var(--grey-200);
-  box-shadow: ${insetBorder(false, true, true, true)};
+  box-shadow: ${insetBorder(false, false, true)};
   grid-row-gap: 1.5rem;
 
   padding: 0 0.75rem;
@@ -14,7 +14,6 @@ const StyledEntryHeader = styled.div`
 
   ${mq(Breakpoint.mid)} {
     grid-row-gap: 2.25rem;
-    box-shadow: ${insetBorder(false, true, true, false)};
 
     ${contentGrid(8)}
   }

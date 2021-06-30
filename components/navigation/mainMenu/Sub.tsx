@@ -1,47 +1,49 @@
 import styled from '@emotion/styled';
-import { insetBorder } from '../../globals/Constants';
 
-export const StyledSub = styled.div<{ active?: boolean }>`
+export const StyledSub = styled.div`
   width: 100%;
-  background: ${({ active }) => (active ? 'var(--white)' : 'var(--grey-200)')};
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
+  background: var(--grey-200);
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
   font-weight: 700;
-  box-shadow: 0px -1px 0px var(--grey-400), ${insetBorder(false, true)};
+  border-radius: 0.75rem;
+  border: 1px solid var(--grey-400);
+  overflow: hidden;
 `;
 
-const StyledSubHead = styled.div`
+const StyledSubHead = styled.div<{ background?: string }>`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  padding: 0.375rem 0.75rem;
+  padding: 0.75rem;
   box-shadow: 0px 1px 0px var(--grey-400);
+
+  ${({ background }) => (background ? `background: ${background};` : '')}
 `;
 
 const StyledSubTitle = styled.div``;
-const StyledSubIcon = styled.div``;
+const StyledSubIcon = styled.div`
+  margin-right: 0.75rem;
+`;
 
 const StyledSubContent = styled.div`
-  padding: 1.125rem 0.75rem;
-  display: grid;
-  grid-row-gap: 0.75rem;
-  box-shadow: 0px 1px 0px var(--grey-400);
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
 `;
 
 const StyledSubItem = styled.div``;
 
 export interface SubProps {
+  items: React.ReactElement[];
   title?: string;
   icon?: React.ReactElement;
-  items: React.ReactElement[];
-  isActive?: boolean;
+  headBackground?: string;
 }
 
-export const Sub: React.FC<SubProps> = ({ title, icon, items, isActive }: SubProps) => {
+export const Sub: React.FC<SubProps> = ({ title, icon, items, headBackground }: SubProps) => {
   return (
-    <StyledSub active={isActive}>
+    <StyledSub>
       {title && (
-        <StyledSubHead>
+        <StyledSubHead background={headBackground}>
           {icon && <StyledSubIcon>{icon}</StyledSubIcon>}
           <StyledSubTitle>{title}</StyledSubTitle>
         </StyledSubHead>

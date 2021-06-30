@@ -18,134 +18,170 @@ export const useMenuStructure = (): MenuStructure => {
   const { logout } = useUser();
   const router = useRouter();
 
-  return [
-    {
-      title: t('menu.start.title') as string,
-      icon: MenuIconName.start,
-      isActive:
-        router.asPath === routes.dashboard({ locale }) ||
-        router.asPath === routes.userNotifications({ locale }),
-      items: [
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.start.items.dashboard') as string,
-            href: routes.dashboard({ locale }),
+  return {
+    defaultMenuKey: 'main',
+    menus: [
+      {
+        key: 'main',
+        expandable: false,
+        subMenus: [
+          {
+            title: t('menu.start.title') as string,
+            icon: MenuIconName.start,
+            items: [
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.start.items.dashboard') as string,
+                  href: routes.dashboard({ locale }),
+                },
+              },
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.start.items.notifications') as string,
+                  href: routes.userNotifications({ locale }),
+                },
+              },
+            ],
           },
-        },
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.start.items.notifications') as string,
-            href: routes.userNotifications({ locale }),
+          {
+            title: t('menu.offer.title') as string,
+            icon: MenuIconName.offer,
+            headBackground: '#CFD1DB',
+            items: [
+              {
+                type: MenuItem.folder,
+                action: {
+                  label: t('menu.offer.items.overview') as string,
+                  menuKey: 'offer',
+                },
+              },
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.offer.items.overview') as string,
+                  href: routes.offer({ locale }),
+                },
+              },
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.offer.items.create') as string,
+                  href: routes.createOffer({
+                    locale,
+                  }),
+                },
+              },
+            ],
           },
-        },
-      ],
-    },
-    {
-      title: t('menu.offer.title') as string,
-      icon: MenuIconName.offer,
-      isActive: router.query?.category === Categories.offer,
-      items: [
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.offer.items.overview') as string,
-            href: routes.offer({ locale }),
+          {
+            title: t('menu.organizer.title') as string,
+            icon: MenuIconName.organizer,
+            headBackground: '#E6CFD4',
+            items: [
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.organizer.items.overview') as string,
+                  href: routes.organizer({ locale }),
+                },
+              },
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.organizer.items.create') as string,
+                  href: routes.createOrganizer({
+                    locale,
+                  }),
+                },
+              },
+            ],
           },
-        },
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.offer.items.create') as string,
-            href: routes.createOffer({
-              locale,
-            }),
+          {
+            title: t('menu.location.title') as string,
+            icon: MenuIconName.location,
+            headBackground: '#CEDAD8',
+            items: [
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.location.items.overview') as string,
+                  href: routes.location({ locale }),
+                },
+              },
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.location.items.create') as string,
+                  href: routes.createLocation({
+                    locale,
+                  }),
+                },
+              },
+            ],
           },
-        },
-      ],
-    },
-    {
-      title: t('menu.organizer.title') as string,
-      icon: MenuIconName.organizer,
-      isActive: router.query?.category === Categories.organizer,
-      items: [
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.organizer.items.overview') as string,
-            href: routes.organizer({ locale }),
+          {
+            title: t('menu.user.title') as string,
+            icon: MenuIconName.user,
+            items: [
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.user.items.profile') as string,
+                  href: routes.userProfile({ locale }),
+                },
+              },
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.user.items.settings') as string,
+                  href: routes.userSettings({ locale }),
+                },
+              },
+              {
+                type: MenuItem.divider,
+              },
+              {
+                type: MenuItem.button,
+                action: {
+                  label: t('menu.user.items.logout') as string,
+                  icon: 'LogOut',
+                  onClick: () => {
+                    logout();
+                  },
+                },
+              },
+            ],
           },
-        },
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.organizer.items.create') as string,
-            href: routes.createOrganizer({
-              locale,
-            }),
+        ],
+      },
+      {
+        key: 'offer',
+        expandable: false,
+        subMenus: [
+          {
+            title: 'Test',
+            icon: MenuIconName.start,
+            items: [
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.start.items.dashboard') as string,
+                  href: routes.dashboard({ locale }),
+                },
+              },
+              {
+                type: MenuItem.link,
+                action: {
+                  title: t('menu.start.items.notifications') as string,
+                  href: routes.userNotifications({ locale }),
+                },
+              },
+            ],
           },
-        },
-      ],
-    },
-    {
-      title: t('menu.location.title') as string,
-      icon: MenuIconName.location,
-      isActive: router.query?.category === Categories.location,
-      items: [
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.location.items.overview') as string,
-            href: routes.location({ locale }),
-          },
-        },
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.location.items.create') as string,
-            href: routes.createLocation({
-              locale,
-            }),
-          },
-        },
-      ],
-    },
-    {
-      title: t('menu.user.title') as string,
-      icon: MenuIconName.user,
-      isActive:
-        router.asPath === routes.userProfile({ locale }) ||
-        router.asPath === routes.userSettings({ locale }),
-      items: [
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.user.items.profile') as string,
-            href: routes.userProfile({ locale }),
-          },
-        },
-        {
-          type: MenuItem.link,
-          action: {
-            title: t('menu.user.items.settings') as string,
-            href: routes.userSettings({ locale }),
-          },
-        },
-        {
-          type: MenuItem.divider,
-        },
-        {
-          type: MenuItem.button,
-          action: {
-            label: t('menu.user.items.logout') as string,
-            icon: 'LogOut',
-            onClick: () => {
-              logout();
-            },
-          },
-        },
-      ],
-    },
-  ];
+        ],
+      },
+    ],
+  };
 };

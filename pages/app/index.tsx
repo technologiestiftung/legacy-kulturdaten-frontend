@@ -43,7 +43,7 @@ const DashboardPage: NextPage = () => {
   const titleBar = <TitleBar title={t('menu.start.items.dashboard') as string} />;
 
   return (
-    <AppWrapper titleBar={titleBar}>
+    <AppWrapper>
       <StyledUl>
         <StyledLi>
           <Link href={routes.userProfile({ locale })}>

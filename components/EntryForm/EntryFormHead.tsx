@@ -8,11 +8,15 @@ const StyledEntryFormHead = styled.div`
   border-bottom: 1px solid var(--white);
   background: var(--white);
   position: sticky;
-  top: 0;
+  top: var(--header-height);
   left: 0;
   align-items: flex-end;
   flex-wrap: wrap;
   z-index: 1;
+
+  ${mq(Breakpoint.mid)} {
+    top: 0;
+  }
 `;
 
 const StyledEntryFormHeadTitle = styled.h2`
@@ -32,8 +36,6 @@ const StyledEntryFormHeadBackground = styled.div`
   left: -0.75rem;
   top: 0;
   background: var(--white);
-  border-right: 1px solid var(--grey-400);
-  border-left: 1px solid var(--grey-400);
 
   ${mq(Breakpoint.mid)} {
     border-left: none;

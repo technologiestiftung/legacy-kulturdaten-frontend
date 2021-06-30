@@ -74,15 +74,7 @@ export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: Catego
   }>();
 
   return (
-    <AppWrapper
-      titleBar={
-        <TitleBar
-          title={`${t('categories.organizer.form.create') as string}${
-            formState?.name && formState.name.length > 0 ? ` – ${formState.name}` : ''
-          }`}
-        />
-      }
-    >
+    <AppWrapper>
       <CreateWrapper>
         <CreateForm
           onSubmit={async (e: FormEvent) => {
