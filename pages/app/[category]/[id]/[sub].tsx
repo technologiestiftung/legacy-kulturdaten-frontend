@@ -67,7 +67,7 @@ const EntrySubPage: NextPage = () => {
 
   if (category) {
     return (
-      <AppWrapper>
+      <AppWrapper subMenuKey={category.subMenuKey}>
         <EntryHeader
           backButton={titleBarLink}
           title={title}

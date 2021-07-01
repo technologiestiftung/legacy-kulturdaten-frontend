@@ -6,6 +6,7 @@ import { useIsRouteStringActive } from '../../../lib/routing';
 import { useContext } from 'react';
 import { NavigationContext } from '../NavigationContext';
 import { insetBorder } from '../../globals/Constants';
+import { File } from 'react-feather';
 
 const StyledA = styled.a<{ active?: boolean }>`
   color: inherit;
@@ -19,6 +20,7 @@ const StyledA = styled.a<{ active?: boolean }>`
 
   &:hover {
     text-decoration: underline;
+    background: var(--grey-350);
   }
 
   svg {
@@ -28,6 +30,7 @@ const StyledA = styled.a<{ active?: boolean }>`
     flex-shrink: 0;
     width: 1.5rem;
     height: 1.5rem;
+    color: var(--black);
   }
 `;
 
@@ -59,8 +62,8 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   return (
     <Link href={href} passHref>
       <StyledA title={title} onClick={() => setMainMenuOpen(false)} active={linkIsActive}>
-        {linkIsActive ? <ArrowRightSvg /> : ''}
-        {title}
+        <File />
+        <span>{title}</span>
       </StyledA>
     </Link>
   );

@@ -14,13 +14,17 @@ const UseUser: React.FC = () => {
 
 interface AppWrapperProps {
   children: ReactNode;
+  subMenuKey?: string;
 }
 
-export const AppWrapper: React.FC<AppWrapperProps> = ({ children }: AppWrapperProps) => {
+export const AppWrapper: React.FC<AppWrapperProps> = ({
+  children,
+  subMenuKey,
+}: AppWrapperProps) => {
   const menuStructure = useMenuStructure();
   const appTitle = useAppTitle();
 
-  const mainMenu = useMainMenu(menuStructure, appTitle, HeaderLink);
+  const mainMenu = useMainMenu(menuStructure, appTitle, HeaderLink, subMenuKey);
 
   return (
     <>

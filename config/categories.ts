@@ -45,6 +45,7 @@ export const useCategories: () => {
         list: routes[Routes.organizer],
         create: routes[Routes.createOrganizer],
       },
+      subMenuKey: 'organizer',
       pages: {
         list: OrganizerListPage,
         create: OrganizerCreatePage,

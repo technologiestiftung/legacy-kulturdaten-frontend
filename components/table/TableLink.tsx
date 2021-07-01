@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { MouseEventHandler, useContext } from 'react';
 import { TableContext } from '.';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { useT } from '../../lib/i18n';
@@ -87,6 +87,7 @@ interface TableLinkProps {
   href: string;
   isActive?: boolean;
   status?: PublishedStatus;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
 export const TableLink: React.FC<TableLinkProps> = ({
@@ -94,6 +95,7 @@ export const TableLink: React.FC<TableLinkProps> = ({
   href,
   isActive,
   status,
+  onClick,
 }: TableLinkProps) => {
   const t = useT();
 
@@ -103,7 +105,7 @@ export const TableLink: React.FC<TableLinkProps> = ({
 
   return (
     <Link href={href} passHref>
-      <StyledTableLink isActive={isActive}>
+      <StyledTableLink isActive={isActive} onClick={onClick}>
         {isActive ? <ArrowRightSvg /> : ''}
         <div>{children}</div>
         {(isDefaultBreakpoint || isNarrowTable) && status === PublishedStatus.draft && (

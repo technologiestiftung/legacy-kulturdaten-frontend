@@ -7,6 +7,7 @@ export const Global: React.FC = () => (
       body {
         color: var(--black);
         background: var(--white);
+        width: 100%;
       }
     `}
   />

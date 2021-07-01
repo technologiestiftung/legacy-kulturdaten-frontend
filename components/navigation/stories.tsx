@@ -9,6 +9,7 @@ import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Table } from '../table';
+import { SubVariant } from './mainMenu/Sub';
 
 export default {
   title: 'Navigation',
@@ -66,7 +67,11 @@ const testMenuStructure: MenuStructure = {
         },
         {
           title: 'Angebote',
-          icon: MenuIconName.offer,
+          headOptions: {
+            background: 'var(--blue)',
+            color: 'var(--white)',
+            uppercase: true,
+          },
           items: [
             {
               type: MenuItem.folder,
@@ -86,7 +91,11 @@ const testMenuStructure: MenuStructure = {
         },
         {
           title: 'Anbieter:innen',
-          icon: MenuIconName.organizer,
+          headOptions: {
+            background: '#B01E1E',
+            color: 'var(--white)',
+            uppercase: true,
+          },
           items: [
             {
               type: MenuItem.folder,
@@ -106,7 +115,11 @@ const testMenuStructure: MenuStructure = {
         },
         {
           title: 'Orte',
-          icon: MenuIconName.location,
+          headOptions: {
+            background: 'var(--green-mid)',
+            color: 'var(--white)',
+            uppercase: true,
+          },
           items: [
             {
               type: MenuItem.folder,
@@ -145,6 +158,7 @@ const testMenuStructure: MenuStructure = {
           ],
         },
         {
+          variant: SubVariant.minimal,
           items: [
             {
               type: MenuItem.button,
@@ -162,6 +176,60 @@ const testMenuStructure: MenuStructure = {
     },
     {
       key: 'offer',
+      expandable: true,
+      subMenus: [
+        {
+          title: 'Test',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: true,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      key: 'organizer',
+      expandable: true,
+      subMenus: [
+        {
+          title: 'Test',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: true,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      key: 'location',
       expandable: true,
       subMenus: [
         {

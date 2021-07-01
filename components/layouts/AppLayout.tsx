@@ -28,30 +28,66 @@ const Container = styled.div`
   }
 `;
 
-const MenuSlot = styled.div`
-  position: sticky;
+const MenuSlot = styled.div<{ expanded?: boolean }>`
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
   overflow: hidden;
-  grid-column: 1 / -1;
   box-shadow: 0 0.125rem 0.625rem -0.25rem rgba(0, 0, 0, 0.4);
+
+  /* grid-column: 1 / -1; */
+  width: 100%;
 
   ${mq(Breakpoint.mid)} {
     border-right: 1px solid var(--grey-400);
     box-shadow: 0.125rem 0 0.625rem -0.25rem rgba(0, 0, 0, 0.4);
-    grid-column: 1 / span 3;
-
+    grid-row: 1;
     height: var(--app-height);
+
+    /* grid-column: 1 / span 3; */
+    width: 16.6875rem;
+
+    @media screen and (min-width: 61.1875rem) {
+      width: calc(100% / 11 * 3);
+    }
+
+    ${mq(Breakpoint.ultra)} {
+      width: 27.375rem;
+    }
   }
+
+  ${({ expanded }) =>
+    expanded
+      ? css`
+          ${mq(Breakpoint.mid)} {
+            /* grid-column: 1 / span 10; */
+            width: calc(16.6875rem + ((100% - 16.6875rem) / 11 * 7));
+          }
+
+          @media screen and (min-width: 61.1875rem) {
+            width: calc(100% / 11 * 10);
+          }
+
+          ${mq(Breakpoint.widish)} {
+            /* grid-column: 1 / span 9; */
+            width: calc(100% / 11 * 9);
+          }
+        `
+      : ''}
 `;
 
 const ContentSlot = styled.div`
   position: relative;
   grid-column: 1 / -1;
+  margin-top: var(--header-height);
+  min-height: calc(var(--app-height) - var(--header-height));
 
   ${mq(Breakpoint.mid)} {
+    min-height: var(--app-height);
+    margin-top: 0;
     grid-column: 4 / -1;
+    grid-row: 1;
   }
 `;
 
@@ -72,7 +108,7 @@ interface AppLayoutProps {
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ mainMenu, content }: AppLayoutProps) => {
   const isMainMenuOverlayVisible = useMainMenuOverlayVisible();
-  const { setMainMenuOpen } = useContext(NavigationContext);
+  const { setMainMenuOpen, menuExpanded, setMenuExpanded } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const contentSlotRef = useRef<HTMLDivElement>();
 
@@ -94,9 +130,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ mainMenu, content }: AppLa
 
   return (
     <Container>
-      <MenuSlot>{mainMenu}</MenuSlot>
+      <MenuSlot expanded={menuExpanded}>{mainMenu}</MenuSlot>
       {rendered && renderedContentSlot}
-      {isMainMenuOverlayVisible && <MainMenuOverlay onClick={() => setMainMenuOpen(false)} />}
+      {isMainMenuOverlayVisible && (
+        <MainMenuOverlay
+          onClick={() => {
+            setMainMenuOpen(false);
+            setMenuExpanded(false);
+          }}
+        />
+      )}
     </Container>
   );
 };

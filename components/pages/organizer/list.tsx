@@ -4,7 +4,7 @@ import { TitleBar, TitleBarProps } from '../../../components/navigation/TitleBar
 import { AppWrapper } from '../../../components/wrappers/AppWrapper';
 import { OrganizerList } from '../../../lib/api';
 import { useT } from '../../../lib/i18n';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Routes, routes } from '../../../config/routes';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { Category, CategoryPage, useList } from '../../../lib/categories';
@@ -12,6 +12,8 @@ import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organize
 import { MenuIcon } from '../../navigation/mainMenu/MenuIcon';
 import { TableLink, StyledTableLinkText } from '../../table/TableLink';
 import { getTranslation } from '../../../lib/translations';
+import { useCategories } from '../../../config/categories';
+import { NavigationContext } from '../../navigation/NavigationContext';
 
 export const useOrganizerMenu = (
   category: Category,
@@ -46,6 +48,7 @@ export const useOrganizerTable = (
   const locale = useLocale();
   const language = useLanguage();
   const t = useT();
+  const { setMainMenuOpen } = useContext(NavigationContext);
 
   const tableContent = useMemo(
     () =>
@@ -60,13 +63,14 @@ export const useOrganizerTable = (
               );
 
               const href = (sub?: string) =>
-                routes[(router?.query?.category as string) as Routes]({
+                routes[Routes.organizer]({
                   locale,
                   query: { id, sub },
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
                 <TableLink
+                  onClick={() => setMainMenuOpen(false)}
                   href={href('info')}
                   isActive={router.asPath.includes(href())}
                   status={attributes?.status}
@@ -90,7 +94,7 @@ export const useOrganizerTable = (
               };
             })
         : [],
-    [list, locale, language, router]
+    [list, locale, language, router, setMainMenuOpen]
   );
 
   return (
@@ -113,4 +117,12 @@ export const OrganizerListPage: React.FC<CategoryPage> = ({ category }: Category
   const action = category.icon ? <MenuIcon type={category.icon} /> : undefined;
 
   return <AppWrapper>{table}</AppWrapper>;
+};
+
+export const OrganizerTable: React.FC<{ narrow?: boolean }> = ({ narrow }: { narrow: boolean }) => {
+  const categories = useCategories();
+  const list = useList<OrganizerList, Organizer>(categories.organizer);
+  const table = useOrganizerTable(list, narrow);
+
+  return list && table ? table : null;
 };

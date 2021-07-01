@@ -1,10 +1,10 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 
 import { Header } from '../header/Header';
 import { HeaderLinkProps } from '../header/HeaderLink';
-import { Sub, SubProps } from './Sub';
+import { Sub, SubProps, SubVariant } from './Sub';
 import { MenuIcon, MenuIconName } from './MenuIcon';
 import { MenuLink, MenuLinkProps } from './MenuLink';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
@@ -13,6 +13,10 @@ import { useKeyboard } from '../../../lib/useKeyboard';
 import { LocaleSwitch } from '../LocaleSwitch';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { SubDivider } from './SubDivider';
+import { Categories } from '../../../config/categories';
+import { Category, CategoryEntry, useList } from '../../../lib/categories';
+import { ApiCall } from '../../../lib/api';
+import { MenuFolder } from './MenuFolder';
 
 const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
   background: var(--grey-200);
@@ -48,10 +52,10 @@ const StyledMainMenuContent = styled.div<{ show: boolean }>`
 `;
 
 const StyledMainMenuSubs = styled.div`
-  padding: 0.75rem;
+  padding: 1.5rem 0.75rem;
   display: grid;
   grid-template-columns: 100%;
-  grid-row-gap: 0.75rem;
+  grid-row-gap: 1.5rem;
 `;
 
 const StyledMainMenuHeader = styled.div`
@@ -60,18 +64,16 @@ const StyledMainMenuHeader = styled.div`
   left: 0;
 `;
 
-const StyledMainMenuFolder = styled.div`
-  position: absolute;
-  background: orange;
-  height: 10px;
-  width: 100%;
-`;
-
 export interface MainMenuProps {
-  menus: { key: string; subMenus: React.ReactElement<SubProps>[] }[];
+  menus: {
+    key: string;
+    content: React.ReactElement;
+    expandable?: boolean;
+  }[];
   defaultMenuKey: string;
   title: string;
   Link: React.FC<HeaderLinkProps>;
+  subMenuKey?: string;
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({
@@ -79,11 +81,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({
   defaultMenuKey,
   title,
   Link,
+  subMenuKey,
 }: MainMenuProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
-  const { mainMenuOpen, setMainMenuOpen, activeMenuKey, setActiveMenuKey } = useContext(
-    NavigationContext
-  );
+  const {
+    mainMenuOpen,
+    setMainMenuOpen,
+    activeMenuKey,
+    setActiveMenuKey,
+    setMenuExpanded,
+  } = useContext(NavigationContext);
 
   const { rendered } = useContext(WindowContext);
 
@@ -93,8 +100,18 @@ export const MainMenu: React.FC<MainMenuProps> = ({
 
   const showMenuContent = rendered && (isMidOrWider || mainMenuOpen);
 
-  const renderedMenu = useMemo(() => {
+  const currentMenu = useMemo(() => {
     const menuKey = activeMenuKey || defaultMenuKey;
+    return menus?.filter(({ key }) => key === menuKey)[0];
+  }, [activeMenuKey, menus, defaultMenuKey]);
+
+  useEffect(() => {
+    if (typeof activeMenuKey === 'undefined') {
+      setActiveMenuKey(subMenuKey);
+    }
+  }, [subMenuKey, setActiveMenuKey, activeMenuKey]);
+
+  const renderedMenu = useMemo(() => {
     const isDefaultMenu = typeof activeMenuKey === 'undefined' || activeMenuKey === defaultMenuKey;
 
     return (
@@ -105,22 +122,39 @@ export const MainMenu: React.FC<MainMenuProps> = ({
             Link={Link}
             button={
               !isDefaultMenu ? (
-                <Button onClick={() => setActiveMenuKey(defaultMenuKey)}>back</Button>
+                <Button
+                  variant={ButtonVariant.minimal}
+                  onClick={() => setActiveMenuKey(defaultMenuKey)}
+                  icon="ChevronLeft"
+                  iconPosition={IconPosition.left}
+                >
+                  home
+                </Button>
               ) : undefined
             }
+            expandable={currentMenu.expandable}
+            subMenuKey={subMenuKey}
+            defaultMenuKey={defaultMenuKey}
           />
         </StyledMainMenuHeader>
         <StyledMainMenuContent show={showMenuContent}>
           <StyledMainMenuSubs>
-            {menus
-              ?.filter(({ key }) => key === menuKey)[0]
-              ?.subMenus?.map((sub, index) => React.cloneElement(sub, { key: index }))}
-            <Sub items={[<LocaleSwitch key={1} />]} />
+            {currentMenu?.content}
+
+            {isDefaultMenu && (
+              <Sub items={[<LocaleSwitch key={1} />]} variant={SubVariant.minimal} />
+            )}
           </StyledMainMenuSubs>
         </StyledMainMenuContent>
       </>
     );
-  }, [title, Link, showMenuContent, activeMenuKey, defaultMenuKey, menus, setActiveMenuKey]);
+  }, [title, Link, showMenuContent, activeMenuKey, defaultMenuKey, setActiveMenuKey, currentMenu]);
+
+  useEffect(() => {
+    if (currentMenu.expandable !== true) {
+      setMenuExpanded(false);
+    }
+  }, [currentMenu, setMenuExpanded]);
 
   return <StyledMainMenu fullscreen={showMenuContent}>{renderedMenu}</StyledMainMenu>;
 };
@@ -155,10 +189,16 @@ export type MenuStructure = {
   menus: {
     key: string;
     expandable: boolean;
-    subMenus: {
+    List?: React.FC<{ narrow?: boolean }>;
+    subMenus?: {
       title?: string;
       icon?: MenuIconName;
-      headBackground?: string;
+      headOptions?: {
+        background?: string;
+        color?: string;
+        uppercase?: boolean;
+      };
+      variant?: SubVariant;
       items: {
         type: MenuItem;
         action?: MenuItemLink | MenuItemButton | MenuItemFolder;
@@ -170,12 +210,13 @@ export type MenuStructure = {
 export const useMainMenu = (
   structure: MenuStructure,
   title: string,
-  Link: React.FC<HeaderLinkProps>
+  Link: React.FC<HeaderLinkProps>,
+  subMenuKey?: string
 ): React.ReactElement => {
   const { setMainMenuOpen, setActiveMenuKey } = useContext(NavigationContext);
 
-  const menus = structure.menus.map(({ key, subMenus }, index) => {
-    const subs = subMenus.map(({ title, icon, items, headBackground }, index) => {
+  const menus = structure.menus.map(({ key, subMenus, List, expandable }, index) => {
+    const subs = subMenus?.map(({ title, icon, items, headOptions, variant }, index) => {
       const renderedItems = items?.map(({ type, action }, actionIndex) => {
         switch (type) {
           case MenuItem.link: {
@@ -202,15 +243,7 @@ export const useMainMenu = (
 
           case MenuItem.folder: {
             const { label, menuKey } = action as MenuItemFolder;
-            return (
-              <div
-                onClick={() => {
-                  setActiveMenuKey(menuKey);
-                }}
-              >
-                {label}: {menuKey}
-              </div>
-            );
+            return <MenuFolder label={label} menuKey={menuKey} />;
           }
 
           case MenuItem.divider: {
@@ -226,27 +259,43 @@ export const useMainMenu = (
       return (
         <Sub
           title={title}
-          icon={<MenuIcon type={icon} />}
+          icon={icon ? <MenuIcon type={icon} /> : undefined}
           items={renderedItems}
           key={index}
-          headBackground={headBackground}
+          headOptions={headOptions}
+          variant={variant}
         />
       );
     });
 
-    return { key, subMenus: subs };
+    return {
+      key,
+      expandable,
+      content: (
+        <>
+          {List && React.createElement(List, { narrow: true })}
+          {subs}
+        </>
+      ),
+    };
   });
 
   const renderedMainMenu = (
-    <MainMenu defaultMenuKey={structure.defaultMenuKey} menus={menus} title={title} Link={Link} />
+    <MainMenu
+      defaultMenuKey={structure.defaultMenuKey}
+      menus={menus}
+      title={title}
+      Link={Link}
+      subMenuKey={subMenuKey}
+    />
   );
 
   return renderedMainMenu;
 };
 
 export const useMainMenuOverlayVisible = (): boolean => {
-  const { mainMenuOpen } = useContext(NavigationContext);
+  const { mainMenuOpen, menuExpanded } = useContext(NavigationContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
-  return mainMenuOpen && !isMidOrWider;
+  return (menuExpanded && isMidOrWider) || (mainMenuOpen && !isMidOrWider);
 };

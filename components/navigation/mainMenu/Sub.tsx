@@ -1,23 +1,32 @@
 import styled from '@emotion/styled';
 
-export const StyledSub = styled.div`
+export const StyledSub = styled.div<{ variant: SubVariant }>`
   width: 100%;
   background: var(--grey-200);
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: 700;
   border-radius: 0.75rem;
-  border: 1px solid var(--grey-400);
+  /* border: 1px solid var(--grey-400); */
   overflow: hidden;
+
+  ${({ variant }) =>
+    variant === SubVariant.default ? 'box-shadow: 0 0 0.75rem -0.125rem rgba(0, 0, 0, 0.25);' : ''}
 `;
 
-const StyledSubHead = styled.div<{ background?: string }>`
+const StyledSubHead = styled.div<{
+  background?: string;
+  color?: string;
+  uppercase?: boolean;
+}>`
   display: flex;
   flex-direction: row;
   padding: 0.75rem;
   box-shadow: 0px 1px 0px var(--grey-400);
 
   ${({ background }) => (background ? `background: ${background};` : '')}
+  ${({ color }) => (color ? `color: ${color};` : '')}
+  ${({ uppercase }) => (uppercase ? `text-transform: uppercase;` : '')}
 `;
 
 const StyledSubTitle = styled.div``;
@@ -32,18 +41,34 @@ const StyledSubContent = styled.div`
 
 const StyledSubItem = styled.div``;
 
+export enum SubVariant {
+  default = 'default',
+  minimal = 'minimal',
+}
+
 export interface SubProps {
   items: React.ReactElement[];
   title?: string;
   icon?: React.ReactElement;
-  headBackground?: string;
+  headOptions?: {
+    background?: string;
+    color?: string;
+    uppercase?: boolean;
+  };
+  variant?: SubVariant;
 }
 
-export const Sub: React.FC<SubProps> = ({ title, icon, items, headBackground }: SubProps) => {
+export const Sub: React.FC<SubProps> = ({
+  title,
+  icon,
+  items,
+  headOptions,
+  variant = SubVariant.default,
+}: SubProps) => {
   return (
-    <StyledSub>
+    <StyledSub variant={variant}>
       {title && (
-        <StyledSubHead background={headBackground}>
+        <StyledSubHead {...headOptions}>
           {icon && <StyledSubIcon>{icon}</StyledSubIcon>}
           <StyledSubTitle>{title}</StyledSubTitle>
         </StyledSubHead>

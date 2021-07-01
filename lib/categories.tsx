@@ -46,6 +46,7 @@ export type Category = {
     plural: string;
   };
   icon: MenuIconName;
+  subMenuKey?: string;
   menuFactory: (
     category: Category,
     list: CategoryEntry['data'][]

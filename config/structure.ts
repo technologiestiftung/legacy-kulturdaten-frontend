@@ -4,7 +4,7 @@ import { MenuItem, MenuStructure } from '../components/navigation/mainMenu/MainM
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { useUser } from '../components/user/useUser';
 import { useRouter } from 'next/router';
-import { Categories } from './categories';
+import { OrganizerTable } from '../components/pages/organizer/list';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -16,7 +16,6 @@ export const useMenuStructure = (): MenuStructure => {
   const t = useT();
   const locale = useLocale();
   const { logout } = useUser();
-  const router = useRouter();
 
   return {
     defaultMenuKey: 'main',
@@ -47,16 +46,12 @@ export const useMenuStructure = (): MenuStructure => {
           },
           {
             title: t('menu.offer.title') as string,
-            icon: MenuIconName.offer,
-            headBackground: '#CFD1DB',
+            headOptions: {
+              background: 'var(--blue)',
+              color: 'var(--white)',
+              uppercase: true,
+            },
             items: [
-              {
-                type: MenuItem.folder,
-                action: {
-                  label: t('menu.offer.items.overview') as string,
-                  menuKey: 'offer',
-                },
-              },
               {
                 type: MenuItem.link,
                 action: {
@@ -77,9 +72,19 @@ export const useMenuStructure = (): MenuStructure => {
           },
           {
             title: t('menu.organizer.title') as string,
-            icon: MenuIconName.organizer,
-            headBackground: '#E6CFD4',
+            headOptions: {
+              background: '#B01E1E',
+              color: 'var(--white)',
+              uppercase: true,
+            },
             items: [
+              {
+                type: MenuItem.folder,
+                action: {
+                  label: t('menu.organizer.items.overview') as string,
+                  menuKey: 'organizer',
+                },
+              },
               {
                 type: MenuItem.link,
                 action: {
@@ -100,8 +105,11 @@ export const useMenuStructure = (): MenuStructure => {
           },
           {
             title: t('menu.location.title') as string,
-            icon: MenuIconName.location,
-            headBackground: '#CEDAD8',
+            headOptions: {
+              background: 'var(--green-mid)',
+              color: 'var(--white)',
+              uppercase: true,
+            },
             items: [
               {
                 type: MenuItem.link,
@@ -157,30 +165,9 @@ export const useMenuStructure = (): MenuStructure => {
         ],
       },
       {
-        key: 'offer',
-        expandable: false,
-        subMenus: [
-          {
-            title: 'Test',
-            icon: MenuIconName.start,
-            items: [
-              {
-                type: MenuItem.link,
-                action: {
-                  title: t('menu.start.items.dashboard') as string,
-                  href: routes.dashboard({ locale }),
-                },
-              },
-              {
-                type: MenuItem.link,
-                action: {
-                  title: t('menu.start.items.notifications') as string,
-                  href: routes.userNotifications({ locale }),
-                },
-              },
-            ],
-          },
-        ],
+        key: 'organizer',
+        expandable: true,
+        List: OrganizerTable,
       },
     ],
   };
