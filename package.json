@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "next dev",
     "start": "next start",
-    "storybook": "start-storybook -p 6006 -s ./public",
+    "storybook": "BROWSER=none start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s ./public",
     "lint": "eslint .",
     "format": "prettier --write ."
