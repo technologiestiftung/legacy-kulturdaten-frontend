@@ -7,7 +7,7 @@ import { mq } from '../../globals/Constants';
 import { NavigationContext } from '../NavigationContext';
 import { MenuButton, MenuButtonState } from './MenuButton';
 
-const HeaderContainer = styled.header`
+const StyledHeader = styled.header`
   width: 100%;
   background: var(--grey-200);
   display: flex;
@@ -101,21 +101,22 @@ export const Header: React.FC<HeaderProps> = ({
     </Link>
   );
 
-  const renderedButton = !isDefaultMenu ? (
-    <StyledHeaderButton>
-      <Button
-        variant={ButtonVariant.minimal}
-        onClick={() => {
-          setActiveMenuKey(defaultMenuKey);
-          setMainMenuOpen(true);
-        }}
-        icon="ChevronLeft"
-        iconPosition={IconPosition.left}
-      >
-        main
-      </Button>
-    </StyledHeaderButton>
-  ) : undefined;
+  const renderedButton =
+    !isDefaultMenu || (!isMidOrWider && !mainMenuOpen) ? (
+      <StyledHeaderButton>
+        <Button
+          variant={ButtonVariant.minimal}
+          onClick={() => {
+            setActiveMenuKey(defaultMenuKey);
+            setMainMenuOpen(true);
+          }}
+          icon="ChevronLeft"
+          iconPosition={IconPosition.left}
+        >
+          main
+        </Button>
+      </StyledHeaderButton>
+    ) : undefined;
 
   const renderedSubMenuButton = (
     <StyledHeaderButton>
@@ -134,31 +135,23 @@ export const Header: React.FC<HeaderProps> = ({
   );
 
   return (
-    <HeaderContainer>
-      {/* {rendered && !isMidOrWider ? (
-        <MenuButton
-          onClick={() => {
-            setMainMenuOpen(!mainMenuOpen);
-          }}
-          state={mainMenuOpen ? MenuButtonState.close : MenuButtonState.open}
-        />
-      ) : (
-        ''
-      )} */}
-
-      {!isMidOrWider
+    <StyledHeader>
+      {rendered && !isMidOrWider
         ? mainMenuOpen || typeof subMenuKey === 'undefined'
           ? renderedButton
           : renderedSubMenuButton
         : renderedButton}
 
-      {(isMidOrWider || !expandable) && (!isMidOrWider || !renderedButton) && renderedLink}
+      {rendered &&
+        (isMidOrWider || !expandable) &&
+        (!isMidOrWider || !renderedButton) &&
+        renderedLink}
 
-      {isMidOrWider && expandable && (
+      {rendered && isMidOrWider && expandable && (
         <StyledExpandableButton onClick={() => setMenuExpanded(!menuExpanded)}>
           {menuExpanded ? <Minimize2 /> : <Maximize2 />}
         </StyledExpandableButton>
       )}
-    </HeaderContainer>
+    </StyledHeader>
   );
 };

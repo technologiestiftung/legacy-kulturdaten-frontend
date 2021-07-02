@@ -173,21 +173,21 @@ export const enDE: Localization = {
       title: () => 'Organizers',
       items: {
         overview: () => 'Overview',
-        create: () => 'Create Organizer',
+        create: () => 'create new',
       },
     },
     offer: {
       title: () => 'Offers',
       items: {
         overview: () => 'Overview',
-        create: () => 'Create Offer',
+        create: () => 'create new',
       },
     },
     location: {
       title: () => 'Locations',
       items: {
         overview: () => 'Overview',
-        create: () => 'Create Location',
+        create: () => 'create new',
       },
     },
     user: {

@@ -10,6 +10,7 @@ import { TitleBar } from './TitleBar';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Table } from '../table';
 import { SubVariant } from './mainMenu/Sub';
+import { Button, ButtonColor, ButtonVariant } from '../button';
 
 export default {
   title: 'Navigation',
@@ -53,7 +54,7 @@ const testMenuStructure: MenuStructure = {
               action: {
                 title: 'Dashboard',
                 href: '#',
-                active: true,
+                active: false,
               },
             },
             {
@@ -72,19 +73,17 @@ const testMenuStructure: MenuStructure = {
             color: 'var(--white)',
             uppercase: true,
           },
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black}>
+              erstellen
+            </Button>
+          ),
           items: [
             {
               type: MenuItem.folder,
               action: {
                 label: 'Alle Angebote',
                 menuKey: 'offer',
-              },
-            },
-            {
-              type: MenuItem.link,
-              action: {
-                title: 'Meine Angebote',
-                href: '#',
               },
             },
           ],
@@ -96,19 +95,17 @@ const testMenuStructure: MenuStructure = {
             color: 'var(--white)',
             uppercase: true,
           },
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black}>
+              erstellen
+            </Button>
+          ),
           items: [
             {
               type: MenuItem.folder,
               action: {
                 label: 'Alle Anbieter:innen',
                 menuKey: 'organizer',
-              },
-            },
-            {
-              type: MenuItem.link,
-              action: {
-                title: 'Meine Anbieter:innen',
-                href: '#',
               },
             },
           ],
@@ -120,6 +117,11 @@ const testMenuStructure: MenuStructure = {
             color: 'var(--white)',
             uppercase: true,
           },
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black}>
+              erstellen
+            </Button>
+          ),
           items: [
             {
               type: MenuItem.folder,
@@ -128,18 +130,16 @@ const testMenuStructure: MenuStructure = {
                 menuKey: 'location',
               },
             },
-            {
-              type: MenuItem.link,
-              action: {
-                title: 'Meine Orte',
-                href: '#',
-              },
-            },
           ],
         },
         {
           title: 'Nutzer:in',
           icon: MenuIconName.user,
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black} icon="LogOut">
+              abmelden
+            </Button>
+          ),
           items: [
             {
               type: MenuItem.link,
@@ -153,21 +153,6 @@ const testMenuStructure: MenuStructure = {
               action: {
                 title: 'Meine Einstellungen',
                 href: '#',
-              },
-            },
-          ],
-        },
-        {
-          variant: SubVariant.minimal,
-          items: [
-            {
-              type: MenuItem.button,
-              action: {
-                label: 'Abmelden',
-                onClick: () => {
-                  //
-                },
-                icon: 'LogOut',
               },
             },
           ],
@@ -278,7 +263,9 @@ const X: React.FC = () => {
 export const NavigationStory: Story = () => <X />;
 NavigationStory.storyName = 'Navigation complete';
 
-export const HeaderStory: Story = () => <Header title="Kulturdaten.Berlin" Link={TestLink} />;
+export const HeaderStory: Story = () => (
+  <Header defaultMenuKey="main" title="Kulturdaten.Berlin" Link={TestLink} />
+);
 HeaderStory.storyName = 'Header';
 
 export const MainMenuStory: Story = () => {

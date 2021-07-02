@@ -173,21 +173,21 @@ export const deDE: Localization = {
       title: () => 'Anbieter:innen',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Anbieter:in anlegen',
+        create: () => 'anlegen',
       },
     },
     offer: {
       title: () => 'Angebote',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Angebot anlegen',
+        create: () => 'anlegen',
       },
     },
     location: {
       title: () => 'Orte',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Ort anlegen',
+        create: () => 'anlegen',
       },
     },
     user: {

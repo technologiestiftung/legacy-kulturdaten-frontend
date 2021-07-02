@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import React, { useContext } from 'react';
+import { NavigationContext } from '../NavigationContext';
 
 export const StyledSub = styled.div<{ variant: SubVariant }>`
   width: 100%;
@@ -21,7 +23,7 @@ const StyledSubHead = styled.div<{
 }>`
   display: flex;
   flex-direction: row;
-  padding: 0.75rem;
+  padding: 0 0 0 0.75rem;
   box-shadow: 0px 1px 0px var(--grey-400);
 
   ${({ background }) => (background ? `background: ${background};` : '')}
@@ -29,8 +31,17 @@ const StyledSubHead = styled.div<{
   ${({ uppercase }) => (uppercase ? `text-transform: uppercase;` : '')}
 `;
 
-const StyledSubTitle = styled.div``;
+const StyledSubHeadButton = styled.div`
+  padding: 0.375rem;
+`;
+
+const StyledSubTitle = styled.div`
+  padding: 0.75rem 0.375rem 0.75rem 0;
+  flex-grow: 1;
+`;
+
 const StyledSubIcon = styled.div`
+  padding: 0.75rem 0;
   margin-right: 0.75rem;
 `;
 
@@ -56,6 +67,7 @@ export interface SubProps {
     uppercase?: boolean;
   };
   variant?: SubVariant;
+  button?: React.ReactElement;
 }
 
 export const Sub: React.FC<SubProps> = ({
@@ -64,6 +76,7 @@ export const Sub: React.FC<SubProps> = ({
   items,
   headOptions,
   variant = SubVariant.default,
+  button,
 }: SubProps) => {
   return (
     <StyledSub variant={variant}>
@@ -71,6 +84,7 @@ export const Sub: React.FC<SubProps> = ({
         <StyledSubHead {...headOptions}>
           {icon && <StyledSubIcon>{icon}</StyledSubIcon>}
           <StyledSubTitle>{title}</StyledSubTitle>
+          {button && <StyledSubHeadButton>{button}</StyledSubHeadButton>}
         </StyledSubHead>
       )}
       <StyledSubContent>

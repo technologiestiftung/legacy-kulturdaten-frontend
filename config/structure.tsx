@@ -5,6 +5,11 @@ import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { useUser } from '../components/user/useUser';
 import { useRouter } from 'next/router';
 import { OrganizerTable } from '../components/pages/organizer/list';
+import { Button, ButtonColor, ButtonVariant } from '../components/button';
+import Link from 'next/link';
+import { useContext } from 'react';
+import { NavigationContext } from '../components/navigation/NavigationContext';
+import { ButtonLink } from '../components/button/ButtonLink';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -16,6 +21,7 @@ export const useMenuStructure = (): MenuStructure => {
   const t = useT();
   const locale = useLocale();
   const { logout } = useUser();
+  const { setMainMenuOpen } = useContext(NavigationContext);
 
   return {
     defaultMenuKey: 'main',
@@ -51,21 +57,19 @@ export const useMenuStructure = (): MenuStructure => {
               color: 'var(--white)',
               uppercase: true,
             },
+            button: (
+              <Link href={routes.createOffer({ locale })}>
+                <ButtonLink variant={ButtonVariant.minimal} onClick={() => setMainMenuOpen(false)}>
+                  {t('menu.offer.items.create')}
+                </ButtonLink>
+              </Link>
+            ),
             items: [
               {
-                type: MenuItem.link,
+                type: MenuItem.folder,
                 action: {
-                  title: t('menu.offer.items.overview') as string,
-                  href: routes.offer({ locale }),
-                },
-              },
-              {
-                type: MenuItem.link,
-                action: {
-                  title: t('menu.offer.items.create') as string,
-                  href: routes.createOffer({
-                    locale,
-                  }),
+                  label: t('menu.offer.items.overview') as string,
+                  menuKey: 'offer',
                 },
               },
             ],
@@ -77,28 +81,19 @@ export const useMenuStructure = (): MenuStructure => {
               color: 'var(--white)',
               uppercase: true,
             },
+            button: (
+              <Link href={routes.createOrganizer({ locale })}>
+                <ButtonLink variant={ButtonVariant.minimal} onClick={() => setMainMenuOpen(false)}>
+                  {t('menu.organizer.items.create')}
+                </ButtonLink>
+              </Link>
+            ),
             items: [
               {
                 type: MenuItem.folder,
                 action: {
                   label: t('menu.organizer.items.overview') as string,
                   menuKey: 'organizer',
-                },
-              },
-              {
-                type: MenuItem.link,
-                action: {
-                  title: t('menu.organizer.items.overview') as string,
-                  href: routes.organizer({ locale }),
-                },
-              },
-              {
-                type: MenuItem.link,
-                action: {
-                  title: t('menu.organizer.items.create') as string,
-                  href: routes.createOrganizer({
-                    locale,
-                  }),
                 },
               },
             ],
@@ -110,21 +105,19 @@ export const useMenuStructure = (): MenuStructure => {
               color: 'var(--white)',
               uppercase: true,
             },
+            button: (
+              <Link href={routes.createLocation({ locale })}>
+                <ButtonLink variant={ButtonVariant.minimal} onClick={() => setMainMenuOpen(false)}>
+                  {t('menu.location.items.create')}
+                </ButtonLink>
+              </Link>
+            ),
             items: [
               {
-                type: MenuItem.link,
+                type: MenuItem.folder,
                 action: {
-                  title: t('menu.location.items.overview') as string,
-                  href: routes.location({ locale }),
-                },
-              },
-              {
-                type: MenuItem.link,
-                action: {
-                  title: t('menu.location.items.create') as string,
-                  href: routes.createLocation({
-                    locale,
-                  }),
+                  label: t('menu.location.items.overview') as string,
+                  menuKey: 'location',
                 },
               },
             ],
@@ -147,28 +140,32 @@ export const useMenuStructure = (): MenuStructure => {
                   href: routes.userSettings({ locale }),
                 },
               },
-              {
-                type: MenuItem.divider,
-              },
-              {
-                type: MenuItem.button,
-                action: {
-                  label: t('menu.user.items.logout') as string,
-                  icon: 'LogOut',
-                  onClick: () => {
-                    logout();
-                  },
-                },
-              },
             ],
+            button: (
+              <Button onClick={() => logout()} variant={ButtonVariant.minimal} icon="LogOut">
+                {t('menu.user.items.logout')}
+              </Button>
+            ),
           },
         ],
+      },
+      {
+        key: 'offer',
+        expandable: true,
+        List: ListPlaceholder,
       },
       {
         key: 'organizer',
         expandable: true,
         List: OrganizerTable,
       },
+      {
+        key: 'location',
+        expandable: true,
+        List: ListPlaceholder,
+      },
     ],
   };
 };
+
+const ListPlaceholder: React.FC = () => <div>TBD</div>;

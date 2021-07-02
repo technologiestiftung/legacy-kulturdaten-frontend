@@ -226,7 +226,7 @@ export enum ButtonType {
   submit = 'submit',
 }
 
-interface ButtonProps {
+export interface ButtonProps {
   children?: React.ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   onMouseDown?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;

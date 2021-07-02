@@ -148,7 +148,16 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         </StyledMainMenuContent>
       </>
     );
-  }, [title, Link, showMenuContent, activeMenuKey, defaultMenuKey, setActiveMenuKey, currentMenu]);
+  }, [
+    title,
+    Link,
+    showMenuContent,
+    activeMenuKey,
+    defaultMenuKey,
+    setActiveMenuKey,
+    currentMenu,
+    subMenuKey,
+  ]);
 
   useEffect(() => {
     if (currentMenu.expandable !== true) {
@@ -156,7 +165,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
     }
   }, [currentMenu, setMenuExpanded]);
 
-  return <StyledMainMenu fullscreen={showMenuContent}>{renderedMenu}</StyledMainMenu>;
+  return <StyledMainMenu fullscreen={showMenuContent}>{rendered && renderedMenu}</StyledMainMenu>;
 };
 
 export enum MenuItem {
@@ -191,6 +200,7 @@ export type MenuStructure = {
     expandable: boolean;
     List?: React.FC<{ narrow?: boolean }>;
     subMenus?: {
+      button?: React.ReactElement;
       title?: string;
       icon?: MenuIconName;
       headOptions?: {
@@ -213,10 +223,10 @@ export const useMainMenu = (
   Link: React.FC<HeaderLinkProps>,
   subMenuKey?: string
 ): React.ReactElement => {
-  const { setMainMenuOpen, setActiveMenuKey } = useContext(NavigationContext);
+  const { setMainMenuOpen } = useContext(NavigationContext);
 
   const menus = structure.menus.map(({ key, subMenus, List, expandable }, index) => {
-    const subs = subMenus?.map(({ title, icon, items, headOptions, variant }, index) => {
+    const subs = subMenus?.map(({ title, icon, items, headOptions, variant, button }, index) => {
       const renderedItems = items?.map(({ type, action }, actionIndex) => {
         switch (type) {
           case MenuItem.link: {
@@ -264,6 +274,7 @@ export const useMainMenu = (
           key={index}
           headOptions={headOptions}
           variant={variant}
+          button={button}
         />
       );
     });
