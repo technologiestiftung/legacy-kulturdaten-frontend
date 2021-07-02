@@ -4,7 +4,7 @@ import { css } from '@emotion/react';
 
 import { Header } from '../header/Header';
 import { HeaderLinkProps } from '../header/HeaderLink';
-import { Sub, SubProps, SubVariant } from './Sub';
+import { Sub, SubVariant } from './Sub';
 import { MenuIcon, MenuIconName } from './MenuIcon';
 import { MenuLink, MenuLinkProps } from './MenuLink';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
@@ -13,9 +13,6 @@ import { useKeyboard } from '../../../lib/useKeyboard';
 import { LocaleSwitch } from '../LocaleSwitch';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { SubDivider } from './SubDivider';
-import { Categories } from '../../../config/categories';
-import { Category, CategoryEntry, useList } from '../../../lib/categories';
-import { ApiCall } from '../../../lib/api';
 import { MenuFolder } from './MenuFolder';
 
 const StyledMainMenu = styled.div<{ fullscreen?: boolean }>`
@@ -68,6 +65,7 @@ export interface MainMenuProps {
   menus: {
     key: string;
     content: React.ReactElement;
+    title: string;
     expandable?: boolean;
   }[];
   defaultMenuKey: string;
@@ -120,21 +118,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({
           <Header
             title={title}
             Link={Link}
-            button={
-              !isDefaultMenu ? (
-                <Button
-                  variant={ButtonVariant.minimal}
-                  onClick={() => setActiveMenuKey(defaultMenuKey)}
-                  icon="ChevronLeft"
-                  iconPosition={IconPosition.left}
-                >
-                  home
-                </Button>
-              ) : undefined
-            }
             expandable={currentMenu.expandable}
             subMenuKey={subMenuKey}
             defaultMenuKey={defaultMenuKey}
+            activeMenuTitle={currentMenu.title}
           />
         </StyledMainMenuHeader>
         <StyledMainMenuContent show={showMenuContent}>
@@ -148,16 +135,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({
         </StyledMainMenuContent>
       </>
     );
-  }, [
-    title,
-    Link,
-    showMenuContent,
-    activeMenuKey,
-    defaultMenuKey,
-    setActiveMenuKey,
-    currentMenu,
-    subMenuKey,
-  ]);
+  }, [title, Link, showMenuContent, activeMenuKey, defaultMenuKey, currentMenu, subMenuKey]);
 
   useEffect(() => {
     if (currentMenu.expandable !== true) {
@@ -198,6 +176,7 @@ export type MenuStructure = {
   menus: {
     key: string;
     expandable: boolean;
+    title: string;
     List?: React.FC<{ narrow?: boolean }>;
     subMenus?: {
       button?: React.ReactElement;
@@ -225,71 +204,76 @@ export const useMainMenu = (
 ): React.ReactElement => {
   const { setMainMenuOpen } = useContext(NavigationContext);
 
-  const menus = structure.menus.map(({ key, subMenus, List, expandable }, index) => {
-    const subs = subMenus?.map(({ title, icon, items, headOptions, variant, button }, index) => {
-      const renderedItems = items?.map(({ type, action }, actionIndex) => {
-        switch (type) {
-          case MenuItem.link: {
-            return <MenuLink key={actionIndex} {...(action as MenuLinkProps)} subMenuKey={index} />;
-          }
+  const menus = structure.menus.map(
+    ({ key, subMenus, List, expandable, title: menuTitle }, index) => {
+      const subs = subMenus?.map(({ title, icon, items, headOptions, variant, button }, index) => {
+        const renderedItems = items?.map(({ type, action }, actionIndex) => {
+          switch (type) {
+            case MenuItem.link: {
+              return (
+                <MenuLink key={actionIndex} {...(action as MenuLinkProps)} subMenuKey={index} />
+              );
+            }
 
-          case MenuItem.button: {
-            const { label, onClick, icon, iconPosition } = action as MenuItemButton;
-            return (
-              <Button
-                onClick={() => {
-                  onClick();
-                  setMainMenuOpen(false);
-                }}
-                variant={ButtonVariant.minimal}
-                size={ButtonSize.small}
-                icon={icon}
-                iconPosition={iconPosition}
-              >
-                {label}
-              </Button>
-            );
-          }
+            case MenuItem.button: {
+              const { label, onClick, icon, iconPosition } = action as MenuItemButton;
+              return (
+                <Button
+                  onClick={() => {
+                    onClick();
+                    setMainMenuOpen(false);
+                  }}
+                  variant={ButtonVariant.minimal}
+                  size={ButtonSize.small}
+                  icon={icon}
+                  iconPosition={iconPosition}
+                >
+                  {label}
+                </Button>
+              );
+            }
 
-          case MenuItem.folder: {
-            const { label, menuKey } = action as MenuItemFolder;
-            return <MenuFolder label={label} menuKey={menuKey} />;
-          }
+            case MenuItem.folder: {
+              const { label, menuKey } = action as MenuItemFolder;
+              return <MenuFolder label={label} menuKey={menuKey} />;
+            }
 
-          case MenuItem.divider: {
-            return <SubDivider />;
-          }
+            case MenuItem.divider: {
+              return <SubDivider />;
+            }
 
-          default: {
-            break;
+            default: {
+              break;
+            }
           }
-        }
+        });
+
+        return (
+          <Sub
+            title={title}
+            icon={icon ? <MenuIcon type={icon} /> : undefined}
+            items={renderedItems}
+            key={index}
+            headOptions={headOptions}
+            variant={variant}
+            button={button}
+          />
+        );
       });
 
-      return (
-        <Sub
-          title={title}
-          icon={icon ? <MenuIcon type={icon} /> : undefined}
-          items={renderedItems}
-          key={index}
-          headOptions={headOptions}
-          variant={variant}
-          button={button}
-        />
-      );
-    });
-
-    return {
-      key,
-      expandable,
-      content: (
-        <>
-          {List && React.createElement(List, { narrow: true })}
-          {subs}
-        </>
-      ),
-    };
-  });
+      return {
+        key,
+        expandable,
+        title: menuTitle,
+        content: (
+          <>
+            {List && React.createElement(List, { narrow: true })}
+            {subs}
+          </>
+        ),
+      };
+    }
+  );
 
   const renderedMainMenu = (
     <MainMenu

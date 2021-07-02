@@ -158,6 +158,7 @@ export const enDE: Localization = {
   },
   menu: {
     title: () => 'Kulturdaten.Berlin',
+    main: () => 'Main Menu',
     button: {
       open: () => 'open menu',
       close: () => 'close menu',

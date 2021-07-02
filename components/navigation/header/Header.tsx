@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { useContext } from 'react';
 import { Maximize2, Minimize2 } from 'react-feather';
+import { useT } from '../../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { Button, ButtonVariant, IconPosition } from '../../button';
 import { mq } from '../../globals/Constants';
 import { NavigationContext } from '../NavigationContext';
-import { MenuButton, MenuButtonState } from './MenuButton';
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -68,19 +68,19 @@ const StyledExpandableButton = styled.button`
 interface HeaderProps {
   title: string;
   Link: React.FC<{ children: React.ReactElement<HTMLAnchorElement> }>;
-  button?: React.ReactElement;
   expandable?: boolean;
   subMenuKey?: string;
   defaultMenuKey: string;
+  activeMenuTitle: string;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   title,
   Link,
-  button,
   expandable,
   subMenuKey,
   defaultMenuKey,
+  activeMenuTitle,
 }: HeaderProps) => {
   const {
     mainMenuOpen,
@@ -92,6 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
   } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const t = useT();
 
   const isDefaultMenu = typeof activeMenuKey === 'undefined' || activeMenuKey === defaultMenuKey;
 
@@ -113,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
           icon="ChevronLeft"
           iconPosition={IconPosition.left}
         >
-          main
+          {t('menu.main')}
         </Button>
       </StyledHeaderButton>
     ) : undefined;
@@ -129,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({
         icon="ChevronLeft"
         iconPosition={IconPosition.left}
       >
-        up
+        {activeMenuTitle}
       </Button>
     </StyledHeaderButton>
   );

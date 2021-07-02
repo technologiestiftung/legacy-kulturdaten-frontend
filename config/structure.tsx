@@ -3,9 +3,8 @@ import { routes, useLocale } from '../lib/routing';
 import { MenuItem, MenuStructure } from '../components/navigation/mainMenu/MainMenu';
 import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
 import { useUser } from '../components/user/useUser';
-import { useRouter } from 'next/router';
 import { OrganizerTable } from '../components/pages/organizer/list';
-import { Button, ButtonColor, ButtonVariant } from '../components/button';
+import { Button, ButtonVariant } from '../components/button';
 import Link from 'next/link';
 import { useContext } from 'react';
 import { NavigationContext } from '../components/navigation/NavigationContext';
@@ -28,6 +27,7 @@ export const useMenuStructure = (): MenuStructure => {
     menus: [
       {
         key: 'main',
+        title: t('menu.main') as string,
         expandable: false,
         subMenus: [
           {
@@ -151,16 +151,19 @@ export const useMenuStructure = (): MenuStructure => {
       },
       {
         key: 'offer',
+        title: t('menu.offer.title') as string,
         expandable: true,
         List: ListPlaceholder,
       },
       {
         key: 'organizer',
+        title: t('menu.organizer.title') as string,
         expandable: true,
         List: OrganizerTable,
       },
       {
         key: 'location',
+        title: t('menu.location.title') as string,
         expandable: true,
         List: ListPlaceholder,
       },
