@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
+import { Breakpoint } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
 
 const StyledEntryFormHead = styled.div`
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid var(--grey-400);
+  border-bottom: 1px solid var(--white);
   background: var(--white);
   position: sticky;
   top: 0;
@@ -20,12 +22,41 @@ const StyledEntryFormHeadTitle = styled.h2`
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
   flex-shrink: 0;
+  position: relative;
+`;
+
+const StyledEntryFormHeadBackground = styled.div`
+  position: absolute;
+  width: calc(100% + 1.5rem);
+  height: calc(100% + 1px);
+  left: -0.75rem;
+  top: 0;
+  background: var(--white);
+  border-right: 1px solid var(--grey-400);
+  border-left: 1px solid var(--grey-400);
+
+  ${mq(Breakpoint.mid)} {
+    border-left: none;
+  }
+
+  ${mq(Breakpoint.widish)} {
+    border-right: none;
+  }
+`;
+
+const StyledEntryFormHeadBorder = styled.div`
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: -1px;
+  border-bottom: 1px solid var(--grey-400);
 `;
 
 const StyledEntryFormHeadActions = styled.div`
   display: flex;
   justify-content: flex-end;
   flex-grow: 1;
+  position: relative;
 `;
 const StyledEntryFormHeadAction = styled.div`
   margin: 0.375rem 0 0.375rem 0.75rem;
@@ -41,6 +72,8 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   actions,
 }: EntryFormHeadProps) => (
   <StyledEntryFormHead>
+    <StyledEntryFormHeadBackground />
+    <StyledEntryFormHeadBorder />
     <StyledEntryFormHeadTitle>{title}</StyledEntryFormHeadTitle>
     {actions && (
       <StyledEntryFormHeadActions>

@@ -1,6 +1,7 @@
 import { Language } from '../../../config/locale';
 import { Address } from './address';
 import { DefaultAttributes, Translation } from './general';
+import { WebLink } from './webLink';
 
 type OrganizerTypeTranslation = {
   attributes: {
@@ -25,6 +26,7 @@ export type OrganizerType = {
   attributes: DefaultAttributes;
   relations?: {
     translations: OrganizerTypeTranslation[];
+
     subjects?: OrganizerSubject[];
   };
 };
@@ -41,12 +43,17 @@ export type Organizer = {
   data: {
     type?: 'organizer';
     id?: string;
-    attributes?: DefaultAttributes;
+    attributes?: {
+      homepage?: string;
+      email?: string;
+      phone?: string;
+    } & DefaultAttributes;
     relations?: {
-      translations?: OrganizerTranslation[];
+      links: WebLink[];
       address?: Address;
-      types?: OrganizerType[];
       subjects?: OrganizerSubject[];
+      translations?: OrganizerTranslation[];
+      types?: OrganizerType[];
     };
   };
   meta?: {
@@ -60,6 +67,7 @@ export type Organizer = {
 
 export type CreateOrganizer = {
   relations?: {
+    links?: string[];
     translations?: OrganizerTranslation[];
     address?: Address;
     types?: number[];

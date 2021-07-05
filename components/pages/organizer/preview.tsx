@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { contentGrid, mq } from '../../globals/Constants';
+import { Formatter } from '../../../components/formatter';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Organizer } from '../../../lib/api/types/organizer';

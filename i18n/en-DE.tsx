@@ -58,6 +58,7 @@ export const enDE: Localization = {
     close: () => 'close tooltip',
   },
   linkList: {
+    placeholder: () => 'No links added yet',
     addNew: () => 'Add new link',
     maxLinks: ({ amount }) => `maximum of ${amount} links`,
     maxReached: ({ amount }) =>
@@ -129,7 +130,7 @@ export const enDE: Localization = {
         tel: () => 'Phone',
         email: () => 'Email',
         website: () => 'Website',
-        social: () => 'Social media links',
+        links: () => 'Relevant links',
       },
       tabs: {
         info: () => 'Information',

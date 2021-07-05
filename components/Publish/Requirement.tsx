@@ -3,7 +3,7 @@ import { Check, X } from 'react-feather';
 
 const StyledRequirement = styled.div<{ fulfilled: boolean }>`
   background: var(--grey-200);
-  border: 1px solid ${({ fulfilled }) => (fulfilled ? 'var(--green-mid)' : 'var(--red)')};
+  border: 1px solid ${({ fulfilled }) => (fulfilled ? 'var(--green-mid)' : 'var(--error)')};
   border-radius: 0.375rem;
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);

@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import React, { useEffect, useMemo, useState } from 'react';
 import { mutate as mutateSwr } from 'swr';
 import { Language } from '../../../config/locale';
@@ -13,6 +14,7 @@ import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
+import { useLinkList } from '../../linklist';
 import { OrganizerFormProps } from './form';
 import { Description } from './form/Description';
 import { useName } from './form/Name';
@@ -84,59 +86,15 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
   );
 };
 
-// const testSocialLinks = [
-//   'https://www.technologiestiftung-berlin.de/',
-//   'https://www.kulturdaten.berlin/',
-//   'https://beta.api.kulturdaten.berlin/docs/',
-// ];
-
-// const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-//   const { formButtons } = useEntryForm(category, query);
-
-//   const t = useT();
-
-//   return (
-//     <>
-//       <form
-//         onSubmit={async (e: FormEvent) => {
-//           e.preventDefault();
-//           e.stopPropagation();
-//         }}
-//       >
-//         <EntryFormHead
-//           title={t('categories.organizer.form.contact') as string}
-//           actions={formButtons}
-//         />
-//         <FormGrid>
-//           <FormItem width={FormItemWidth.half}>
-//             <Input label={t('categories.organizer.form.tel') as string} type={InputType.tel} />
-//           </FormItem>
-//           <FormItem width={FormItemWidth.half}>
-//             <Input label={t('categories.organizer.form.email') as string} type={InputType.email} />
-//           </FormItem>
-//           <FormItem width={FormItemWidth.half}>
-//             <Input label={t('categories.organizer.form.website') as string} type={InputType.url} />
-//           </FormItem>
-//         </FormGrid>
-//       </form>
-//       <FormGrid>
-//         <FormItem width={FormItemWidth.full}>
-//           <LinkList
-//             label={t('categories.organizer.form.social') as string}
-//             links={testSocialLinks}
-//             maxLinks={3}
-//           />
-//         </FormItem>
-//       </FormGrid>
-//     </>
-//   );
-// };
+const StyledDescriptionForm = styled.div`
+  padding: 0 0 1.5rem;
+`;
 
 const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
   const t = useT();
 
   return (
-    <div>
+    <StyledDescriptionForm>
       <EntryFormHead title={t('categories.organizer.form.description') as string} />
       <Description
         category={category}
@@ -150,7 +108,108 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
         language={Language.en}
         title={t('categories.organizer.form.descriptionEnglish') as string}
       />
-    </div>
+    </StyledDescriptionForm>
+  );
+};
+
+const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+  const t = useT();
+  const call = useApiCall();
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+
+  const initialLinks = useMemo(
+    () => entry?.data?.relations?.links?.map((link) => link.attributes?.url),
+    [entry?.data?.relations?.links]
+  );
+
+  const [links, setLinks] = useState<string[]>(initialLinks);
+
+  const [linksFromApi, setLinksFromApi] = useState<string[]>();
+
+  const pristine = useMemo(
+    () =>
+      links === initialLinks ||
+      (Array.isArray(links) &&
+        Array.isArray(initialLinks) &&
+        links.length === initialLinks.length &&
+        links.reduce((allLinksEqual, link, index) => {
+          if (link !== initialLinks[index]) {
+            return false;
+          }
+          return allLinksEqual;
+        }, true)),
+    [links, initialLinks]
+  );
+
+  const { renderedLinkList, init } = useLinkList({
+    links: links || [],
+    onChange: (updatedLinks) => {
+      setLinks(updatedLinks);
+    },
+    maxLinks: 20,
+  });
+
+  useEffect(() => {
+    if (initialLinks !== linksFromApi) {
+      setLinksFromApi(initialLinks);
+      setLinks(initialLinks);
+      init(initialLinks);
+    }
+  }, [init, linksFromApi, initialLinks]);
+
+  return (
+    <StyledDescriptionForm>
+      <EntryFormHead
+        title={t('categories.organizer.form.links') as string}
+        actions={[
+          <Button
+            key={0}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              init(linksFromApi);
+            }}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            disabled={pristine}
+            onClick={async (e) => {
+              e.preventDefault();
+
+              try {
+                const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+                  id: entry.data.id,
+                  organizer: {
+                    relations: {
+                      links,
+                    },
+                  },
+                });
+
+                if (resp.status === 200) {
+                  mutate();
+                  mutateSwr(getApiUrlString(category.api.list.route));
+                }
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+          >
+            {t('categories.organizer.form.save')}
+          </Button>,
+        ]}
+      />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
+      </FormGrid>
+    </StyledDescriptionForm>
   );
 };
 
@@ -181,8 +240,6 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-
-        console.log(address);
 
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
@@ -309,6 +366,126 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
   );
 };
 
+const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const call = useApiCall();
+
+  const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
+
+  const [attributes, setAttributes] = useState<Organizer['data']['attributes']>(initialAttributes);
+  const [pristine, setPristine] = useState(true);
+
+  useEffect(() => {
+    if (pristine) {
+      setAttributes(initialAttributes);
+    }
+  }, [pristine, initialAttributes]);
+
+  const t = useT();
+
+  return (
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+
+        try {
+          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            organizer: {
+              attributes: {
+                email: attributes?.email,
+                homepage: attributes?.homepage,
+                phone: attributes?.phone,
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+            mutateSwr(getApiUrlString(category.api.list.route));
+            setTimeout(() => setPristine(true), 500);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }}
+    >
+      <EntryFormHead
+        title={t('categories.organizer.form.contact') as string}
+        actions={[
+          <Button
+            key={0}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setAttributes(initialAttributes);
+              setPristine(true);
+            }}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            type={ButtonType.submit}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            disabled={pristine}
+          >
+            {t('categories.organizer.form.save')}
+          </Button>,
+        ]}
+      />
+      <FormGrid>
+        <FormItem width={FormItemWidth.half}>
+          <Input
+            label={t('categories.organizer.form.email') as string}
+            type={InputType.email}
+            value={attributes?.email || ''}
+            onChange={(e) => {
+              setPristine(false);
+              setAttributes({
+                ...attributes,
+                email: e.target.value,
+              });
+            }}
+          />
+        </FormItem>
+        <FormItem width={FormItemWidth.half}>
+          <Input
+            label={t('categories.organizer.form.tel') as string}
+            type={InputType.tel}
+            value={attributes?.phone || ''}
+            onChange={(e) => {
+              setPristine(false);
+              setAttributes({
+                ...attributes,
+                phone: e.target.value,
+              });
+            }}
+          />
+        </FormItem>
+        <FormItem width={FormItemWidth.full}>
+          <Input
+            label={t('categories.organizer.form.website') as string}
+            type={InputType.url}
+            value={attributes?.homepage || ''}
+            onChange={(e) => {
+              setPristine(false);
+              setAttributes({
+                ...attributes,
+                homepage: e.target.value,
+              });
+            }}
+          />
+        </FormItem>
+      </FormGrid>
+    </form>
+  );
+};
+
 export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
@@ -320,6 +497,12 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       </EntryFormContainer>
       <EntryFormContainer>
         <DescriptionForm category={category} query={query} />
+      </EntryFormContainer>
+      <EntryFormContainer>
+        <ContactForm category={category} query={query} />
+      </EntryFormContainer>
+      <EntryFormContainer>
+        <LinksForm category={category} query={query} />
       </EntryFormContainer>
       <EntryFormContainer>
         <AddressForm category={category} query={query} />
