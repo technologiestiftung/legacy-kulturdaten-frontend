@@ -33,15 +33,15 @@ export type MenuItemFolder = {
   menuKey: string;
 };
 
-export type Menu = {
+export type MenuData = {
   key: string;
   expandable: boolean;
   title: string;
-  List?: React.FC<{ narrow?: boolean }>;
-  sections?: MenuSection[];
+  List?: React.FC<{ expanded?: boolean }>;
+  sections?: MenuSectionData[];
 };
 
-export type MenuSection = {
+export type MenuSectionData = {
   title: string;
   items: {
     type: MenuItem;
@@ -64,13 +64,15 @@ const StyledMenuSections = styled.div`
   grid-row-gap: 1.5rem;
 `;
 
+const StyledMenu = styled.div``;
+
 interface MenuProps {
-  menuData: Menu;
+  menuData: MenuData;
   expanded: boolean;
 }
 
 export const Menu: React.FC<MenuProps> = ({ menuData, expanded }: MenuProps) => {
-  const { setNavigationOpen } = useContext(NavigationContext);
+  const { setNavigationOpen, menuExpanded } = useContext(NavigationContext);
 
   const { sections, List } = menuData;
 
@@ -130,9 +132,9 @@ export const Menu: React.FC<MenuProps> = ({ menuData, expanded }: MenuProps) => 
   );
 
   return (
-    <div>
-      {List && React.createElement(List, { narrow: true })}
-      <StyledMenuSections>{renderedSections}</StyledMenuSections>
-    </div>
+    <StyledMenu>
+      {List && React.createElement(List, { expanded: menuExpanded })}
+      {renderedSections && <StyledMenuSections>{renderedSections}</StyledMenuSections>}
+    </StyledMenu>
   );
 };

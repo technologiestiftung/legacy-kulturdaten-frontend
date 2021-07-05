@@ -1,13 +1,9 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useCategory, useEntry, useList, useMetaLinks, useTabs } from '../../../../lib/categories';
+import { useCategory, useEntry, useMetaLinks, useTabs } from '../../../../lib/categories';
 import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
-import { TitleBar } from '../../../../components/navigation/TitleBar';
-import { useOrganizerMenu } from '../../../../components/pages/organizer/list';
-import { OrganizerList } from '../../../../lib/api';
 import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
-import { Breakpoint, useBreakpointOrWider } from '../../../../lib/WindowService';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { Button, ButtonVariant, IconPosition } from '../../../../components/button';
 import { useT } from '../../../../lib/i18n';

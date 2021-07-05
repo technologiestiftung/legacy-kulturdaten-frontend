@@ -48,7 +48,7 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
     /* grid-column: 1 / span 3; */
     width: 16.6875rem;
 
-    transition: width 0.125s;
+    transition: width 0.083333s;
 
     @media screen and (min-width: 61.1875rem) {
       width: calc(100% / 11 * 3);

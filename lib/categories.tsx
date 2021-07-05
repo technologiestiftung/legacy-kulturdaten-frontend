@@ -5,7 +5,6 @@ import useSWR from 'swr';
 import { Button, ButtonVariant } from '../components/button';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
-import { TitleBarProps } from '../components/navigation/TitleBar';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
@@ -47,16 +46,11 @@ export type Category = {
   };
   icon: MenuIconName;
   subMenuKey?: string;
-  menuFactory: (
-    category: Category,
-    list: CategoryEntry['data'][]
-  ) => { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement };
   routes: {
     list: Route;
     create: Route;
   };
   pages: {
-    list: React.FC<CategoryPage>;
     create: React.FC<CategoryPage>;
     preview: React.FC<CategoryEntryPage>;
     info: React.FC<CategoryEntryPage>;
@@ -190,15 +184,6 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
   });
 
   return metaLinks;
-};
-
-export const useCategoryMenu = (
-  category: Category,
-  list: CategoryEntry['data'][]
-): { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement } => {
-  const categoryMenu = category.menuFactory(category, list);
-
-  return categoryMenu;
 };
 
 export const useOrganizerTypeList = (): OrganizerType[] => {

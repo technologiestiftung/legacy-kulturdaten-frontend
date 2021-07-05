@@ -36,13 +36,13 @@ const StyledRow = styled.div<{ columnCount: number; isTitleRow?: boolean; narrow
 `;
 
 const StyledRowWrapper = styled.div<{ narrow?: boolean; isHeader?: boolean }>`
-  box-shadow: ${insetBorder(false, true, true)};
+  box-shadow: ${insetBorder(false, false, true)};
 
   ${({ narrow }) =>
     narrow
       ? css`
           &:last-of-type {
-            box-shadow: ${insetBorder(false, true, false)};
+            box-shadow: ${insetBorder(false)};
           }
         `
       : ''}
@@ -54,11 +54,11 @@ const StyledRowWrapper = styled.div<{ narrow?: boolean; isHeader?: boolean }>`
           top: 0;
           left: 0;
           background: var(--white);
-          box-shadow: ${insetBorder(false, true, true, true)};
+          box-shadow: ${insetBorder(false, false, true, false)};
           z-index: 1;
 
           ${mq(Breakpoint.wide)} {
-            box-shadow: ${insetBorder(false, true, true)};
+            box-shadow: ${insetBorder(false, false, true)};
           }
         `
       : ''}

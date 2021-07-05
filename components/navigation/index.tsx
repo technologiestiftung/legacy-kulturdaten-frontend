@@ -6,7 +6,7 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/Windo
 import { Header } from './header/Header';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { LocaleSwitch } from './LocaleSwitch';
-import { Menu } from './Menu';
+import { Menu, MenuData } from './Menu';
 import { MenuSection, MenuSectionVariant } from './Menu/MenuSection';
 import { NavigationContext } from './NavigationContext';
 
@@ -49,6 +49,10 @@ const StyledNavigationHeader = styled.div`
   left: 0;
 `;
 
+const StyledNavigationLocaleSwitchContainer = styled.div`
+  padding: 0 0.75rem 1.5rem;
+`;
+
 export interface NavigationProps {
   menus: {
     key: string;
@@ -84,7 +88,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     setNavigationOpen(false);
   }, ['Esc', 'Escape']);
 
-  const showMenuContent = rendered && (isMidOrWider || navigationOpen);
+  const showNavigationContent = rendered && (isMidOrWider || navigationOpen);
 
   const currentMenu = useMemo(() => {
     const menuKey = activeMenuKey || defaultMenuKey;
@@ -112,15 +116,20 @@ export const Navigation: React.FC<NavigationProps> = ({
             activeMenuTitle={currentMenu.title}
           />
         </StyledNavigationHeader>
-        <StyledNavigationContent show={showMenuContent}>
+        <StyledNavigationContent show={showNavigationContent}>
           {currentMenu.menu}
           {isDefaultMenu && (
-            <MenuSection items={[<LocaleSwitch key={1} />]} variant={MenuSectionVariant.minimal} />
+            <StyledNavigationLocaleSwitchContainer>
+              <MenuSection
+                items={[<LocaleSwitch key={1} />]}
+                variant={MenuSectionVariant.minimal}
+              />
+            </StyledNavigationLocaleSwitchContainer>
           )}
         </StyledNavigationContent>
       </>
     );
-  }, [title, Link, showMenuContent, activeMenuKey, defaultMenuKey, currentMenu, subMenuKey]);
+  }, [title, Link, showNavigationContent, activeMenuKey, defaultMenuKey, currentMenu, subMenuKey]);
 
   useEffect(() => {
     if (currentMenu.expandable !== true) {
@@ -129,13 +138,15 @@ export const Navigation: React.FC<NavigationProps> = ({
   }, [currentMenu, setMenuExpanded]);
 
   return (
-    <StyledNavigation fullscreen={showMenuContent}>{rendered && renderedMenu}</StyledNavigation>
+    <StyledNavigation fullscreen={showNavigationContent}>
+      {rendered && renderedMenu}
+    </StyledNavigation>
   );
 };
 
 export type NavigationStructure = {
   defaultMenuKey: string;
-  menus: Menu[];
+  menus: MenuData[];
 };
 
 export const useNavigation = (

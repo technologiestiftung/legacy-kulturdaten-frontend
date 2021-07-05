@@ -1,6 +1,6 @@
 import { Language } from '../../../config/locale';
 import { Address } from './address';
-import { DefaultAttributes, Translation } from './general';
+import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { WebLink } from './webLink';
 
 type OrganizerTypeTranslation = {
@@ -63,7 +63,7 @@ export type Organizer = {
           [key: string]: string[];
         };
   };
-};
+} & CategoryEntry;
 
 export type CreateOrganizer = {
   relations?: {

@@ -1,15 +1,16 @@
+import { useContext } from 'react';
+import Link from 'next/link';
+
 import { useT } from '../lib/i18n';
 import { routes, useLocale } from '../lib/routing';
 import { NavigationStructure } from '../components/navigation';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { useUser } from '../components/user/useUser';
-import { OrganizerTable } from '../components/pages/organizer/list';
 import { Button, ButtonVariant } from '../components/button';
-import Link from 'next/link';
-import { useContext } from 'react';
 import { NavigationContext } from '../components/navigation/NavigationContext';
 import { ButtonLink } from '../components/button/ButtonLink';
 import { MenuItem } from '../components/navigation/Menu';
+import { OrganizerList } from '../components/EntryList/OrganizerList';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -81,7 +82,7 @@ export const useMenuStructure = (): NavigationStructure => {
           {
             title: t('menu.organizer.title') as string,
             headOptions: {
-              background: '#B01E1E',
+              background: 'var(--red)',
               color: 'var(--white)',
               uppercase: true,
             },
@@ -169,7 +170,7 @@ export const useMenuStructure = (): NavigationStructure => {
         key: 'organizer',
         title: t('menu.organizer.title') as string,
         expandable: true,
-        List: OrganizerTable,
+        List: OrganizerList,
       },
       {
         key: 'location',

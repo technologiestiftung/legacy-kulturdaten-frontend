@@ -7,7 +7,7 @@ import { PublishedStatus } from '../../lib/api/types/general';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { ArrowRightSvg } from '../assets/ArrowRightSvg';
-import { insetBorder, mq } from '../globals/Constants';
+import { insetBorder } from '../globals/Constants';
 
 export const StyledTableLinkText = styled.div<{ isActive?: boolean }>`
   ${({ isActive }) =>
@@ -28,11 +28,7 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
   text-decoration: none;
   width: 100%;
 
-  box-shadow: ${insetBorder(false, true, true, true)};
-
-  ${mq(Breakpoint.wide)} {
-    box-shadow: ${insetBorder(false, true, true)};
-  }
+  box-shadow: ${insetBorder(false, false, true, false)};
 
   > div {
     width: 100%;

@@ -84,6 +84,11 @@ export const deDE: Localization = {
   overlay: {
     ariaClose: () => 'Überlagerndes Fenster schließen',
   },
+  pagination: {
+    next: () => 'weiter',
+    previous: () => 'zurück',
+    currentPage: ({ currentPage, lastPage }) => `Seite ${currentPage} von ${lastPage}`,
+  },
   categories: {
     organizer: {
       requirements: {

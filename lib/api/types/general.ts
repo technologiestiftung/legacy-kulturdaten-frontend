@@ -18,3 +18,14 @@ export type DefaultAttributes = {
   updatedAt: string;
   status: PublishedStatus;
 };
+
+export type CategoryEntry = {
+  data: {
+    type?: string;
+    id?: string;
+    attributes?: DefaultAttributes;
+    relations?: {
+      translations?: Translation[];
+    };
+  };
+};

@@ -6,7 +6,6 @@ import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
 import { Routes, routes } from '../lib/routing';
 import { Category } from '../lib/categories';
-import { OrganizerListPage, useOrganizerMenu } from '../components/pages/organizer/list';
 import { OrganizerCreatePage } from '../components/pages/organizer/create';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
 import { OrganizerMediaPage } from '../components/pages/organizer/media';
@@ -47,7 +46,6 @@ export const useCategories: () => {
       },
       subMenuKey: 'organizer',
       pages: {
-        list: OrganizerListPage,
         create: OrganizerCreatePage,
         preview: OrganizerPreviewPage,
         info: OrganizerInfoPage,
@@ -56,7 +54,6 @@ export const useCategories: () => {
         rights: OrganizerRightsPage,
         export: OrganizerExportPage,
       },
-      menuFactory: useOrganizerMenu,
       tabs: [
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
         { title: t('categories.organizer.tabs.categorization') as string, sub: 'categorization' },
