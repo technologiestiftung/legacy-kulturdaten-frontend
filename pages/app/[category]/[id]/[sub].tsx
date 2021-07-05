@@ -30,10 +30,7 @@ const EntrySubPage: NextPage = () => {
   const category = useCategory();
   const language = useLanguage();
   const date = useDate();
-  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const tabs = useTabs(category);
-  const list = useList<OrganizerList, Organizer>(category, null, isMidOrWider);
-  const secMenu = useOrganizerMenu(category, list);
   const { entry } = useEntry<Organizer, OrganizerShow>(category, router?.query);
 
   const currentTranslation = entry?.data?.relations?.translations

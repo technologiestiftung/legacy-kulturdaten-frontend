@@ -5,7 +5,7 @@ import 'wicg-inert';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
 import { insetBorder, mq, overlayStyles } from '../globals/Constants';
-import { MainMenuProps, useMainMenuOverlayVisible } from '../navigation/mainMenu/MainMenu';
+import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
 import { TitleBarProps } from '../navigation/TitleBar';
 
@@ -104,13 +104,13 @@ const MainMenuOverlay = styled.div`
 `;
 
 interface AppLayoutProps {
-  mainMenu: React.ReactElement<MainMenuProps>;
+  navigation: React.ReactElement<NavigationProps>;
   content: React.ReactNode;
 }
 
-export const AppLayout: React.FC<AppLayoutProps> = ({ mainMenu, content }: AppLayoutProps) => {
-  const isMainMenuOverlayVisible = useMainMenuOverlayVisible();
-  const { setMainMenuOpen, menuExpanded, setMenuExpanded } = useContext(NavigationContext);
+export const AppLayout: React.FC<AppLayoutProps> = ({ navigation, content }: AppLayoutProps) => {
+  const isMainMenuOverlayVisible = useNavigationOverlayVisible();
+  const { setNavigationOpen, menuExpanded, setMenuExpanded } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const contentSlotRef = useRef<HTMLDivElement>();
 
@@ -132,12 +132,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ mainMenu, content }: AppLa
 
   return (
     <Container>
-      <MenuSlot expanded={menuExpanded}>{mainMenu}</MenuSlot>
+      <MenuSlot expanded={menuExpanded}>{navigation}</MenuSlot>
       {rendered && renderedContentSlot}
       {isMainMenuOverlayVisible && (
         <MainMenuOverlay
           onClick={() => {
-            setMainMenuOpen(false);
+            setNavigationOpen(false);
             setMenuExpanded(false);
           }}
         />

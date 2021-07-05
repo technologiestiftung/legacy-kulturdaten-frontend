@@ -3,46 +3,10 @@
 exports[`Header renders 1`] = `
 <div>
   <header
-    class="css-uhk237-HeaderContainer e1sn27871"
+    class="css-1jw4me1-StyledHeader e1sn27873"
   >
-    <button
-      aria-label="Menü öffnen"
-      class="css-1290inr-StyledMenuButton e91bmyz0"
-      title="Menü öffnen"
-    >
-      <svg
-        aria-labelledby="menu-button-icon"
-        fill="none"
-        height="24"
-        viewBox="0 0 24 24"
-        width="24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <title
-          id="menu-button-icon"
-        >
-          Menü öffnen
-        </title>
-        <g>
-          <path
-            d="M5 8H19"
-            stroke="#111111"
-            stroke-linecap="round"
-            stroke-width="2"
-          />
-        </g>
-        <g>
-          <path
-            d="M19 16H5"
-            stroke="#111111"
-            stroke-linecap="round"
-            stroke-width="2"
-          />
-        </g>
-      </svg>
-    </button>
     <a
-      class="css-1kagrgy-StyledLink e1sn27870"
+      class="css-1uqn783-StyledLink e1sn27872"
       href="/undefined"
     >
       Test title

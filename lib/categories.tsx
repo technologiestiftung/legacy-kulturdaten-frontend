@@ -3,7 +3,7 @@ import { ParsedUrlQuery } from 'node:querystring';
 import React from 'react';
 import useSWR from 'swr';
 import { Button, ButtonVariant } from '../components/button';
-import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
+import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { TitleBarProps } from '../components/navigation/TitleBar';
 import { Categories, Requirement, useCategories } from '../config/categories';
@@ -97,17 +97,39 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
   query?: ParsedUrlQuery,
   load = true
-): T['data'][] => {
+): {
+  data: T['data'][];
+  meta: {
+    language: Language;
+    pages: {
+      total: number;
+      perPage: number;
+      currentPage: number;
+      lastPage: number;
+    };
+  };
+} => {
   const call = useApiCall();
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
 
   const { data } = useSWR(
-    load && apiCallRoute ? getApiUrlString(apiCallRoute, undefined) : undefined,
+    load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,
     () => (load && category ? call<C>(apiCallFactory, query) : undefined)
   );
 
-  return (((data as unknown) as C['response'])?.body?.data as unknown) as T['data'][];
+  return {
+    data: (((data as unknown) as C['response'])?.body?.data as unknown) as T['data'][],
+    meta: ((data as unknown) as C['response'])?.body?.meta as {
+      language: Language;
+      pages: {
+        total: number;
+        perPage: number;
+        currentPage: number;
+        lastPage: number;
+      };
+    },
+  };
 };
 
 export const useEntry = <T extends CategoryEntry, C extends ApiCall>(

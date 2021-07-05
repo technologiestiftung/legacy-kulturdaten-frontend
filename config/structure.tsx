@@ -1,7 +1,7 @@
 import { useT } from '../lib/i18n';
 import { routes, useLocale } from '../lib/routing';
-import { MenuItem, MenuStructure } from '../components/navigation/mainMenu/MainMenu';
-import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
+import { NavigationStructure } from '../components/navigation';
+import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { useUser } from '../components/user/useUser';
 import { OrganizerTable } from '../components/pages/organizer/list';
 import { Button, ButtonVariant } from '../components/button';
@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useContext } from 'react';
 import { NavigationContext } from '../components/navigation/NavigationContext';
 import { ButtonLink } from '../components/button/ButtonLink';
+import { MenuItem } from '../components/navigation/Menu';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -16,11 +17,11 @@ export const useAppTitle = (): string => {
   return t('menu.title') as string;
 };
 
-export const useMenuStructure = (): MenuStructure => {
+export const useMenuStructure = (): NavigationStructure => {
   const t = useT();
   const locale = useLocale();
   const { logout } = useUser();
-  const { setMainMenuOpen } = useContext(NavigationContext);
+  const { setNavigationOpen } = useContext(NavigationContext);
 
   return {
     defaultMenuKey: 'main',
@@ -29,7 +30,7 @@ export const useMenuStructure = (): MenuStructure => {
         key: 'main',
         title: t('menu.main') as string,
         expandable: false,
-        subMenus: [
+        sections: [
           {
             title: t('menu.start.title') as string,
             icon: MenuIconName.start,
@@ -59,7 +60,10 @@ export const useMenuStructure = (): MenuStructure => {
             },
             button: (
               <Link href={routes.createOffer({ locale })}>
-                <ButtonLink variant={ButtonVariant.minimal} onClick={() => setMainMenuOpen(false)}>
+                <ButtonLink
+                  variant={ButtonVariant.minimal}
+                  onClick={() => setNavigationOpen(false)}
+                >
                   {t('menu.offer.items.create')}
                 </ButtonLink>
               </Link>
@@ -83,7 +87,10 @@ export const useMenuStructure = (): MenuStructure => {
             },
             button: (
               <Link href={routes.createOrganizer({ locale })}>
-                <ButtonLink variant={ButtonVariant.minimal} onClick={() => setMainMenuOpen(false)}>
+                <ButtonLink
+                  variant={ButtonVariant.minimal}
+                  onClick={() => setNavigationOpen(false)}
+                >
                   {t('menu.organizer.items.create')}
                 </ButtonLink>
               </Link>
@@ -107,7 +114,10 @@ export const useMenuStructure = (): MenuStructure => {
             },
             button: (
               <Link href={routes.createLocation({ locale })}>
-                <ButtonLink variant={ButtonVariant.minimal} onClick={() => setMainMenuOpen(false)}>
+                <ButtonLink
+                  variant={ButtonVariant.minimal}
+                  onClick={() => setNavigationOpen(false)}
+                >
                   {t('menu.location.items.create')}
                 </ButtonLink>
               </Link>

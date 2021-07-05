@@ -22,10 +22,14 @@ export interface OrganizerList extends ApiCall {
 }
 
 export const organizerListFactory: ApiCallFactory = (
-  token: OrganizerList['request']['headers']['Authorization']
+  token: OrganizerList['request']['headers']['Authorization'],
+  query: {
+    page: string;
+    size: string;
+  }
 ): OrganizerList => ({
   request: {
-    route: apiRoutes.organizerList(),
+    route: apiRoutes.organizerList(query),
     method: 'GET',
     headers: {
       Authorization: makeBearer(token),

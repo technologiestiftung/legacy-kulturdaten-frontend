@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useContext } from 'react';
 import { Maximize2, Minimize2 } from 'react-feather';
@@ -83,8 +84,8 @@ export const Header: React.FC<HeaderProps> = ({
   activeMenuTitle,
 }: HeaderProps) => {
   const {
-    mainMenuOpen,
-    setMainMenuOpen,
+    navigationOpen,
+    setNavigationOpen,
     menuExpanded,
     setMenuExpanded,
     setActiveMenuKey,
@@ -103,16 +104,19 @@ export const Header: React.FC<HeaderProps> = ({
   );
 
   const renderedButton =
-    !isDefaultMenu || (!isMidOrWider && !mainMenuOpen) ? (
+    !isDefaultMenu || (!isMidOrWider && !navigationOpen) ? (
       <StyledHeaderButton>
         <Button
           variant={ButtonVariant.minimal}
           onClick={() => {
             setActiveMenuKey(defaultMenuKey);
-            setMainMenuOpen(true);
+            setNavigationOpen(true);
           }}
           icon="ChevronLeft"
           iconPosition={IconPosition.left}
+          css={css`
+            background: var(--white);
+          `}
         >
           {t('menu.main')}
         </Button>
@@ -125,10 +129,13 @@ export const Header: React.FC<HeaderProps> = ({
         variant={ButtonVariant.minimal}
         onClick={() => {
           setActiveMenuKey(subMenuKey);
-          setMainMenuOpen(true);
+          setNavigationOpen(true);
         }}
         icon="ChevronLeft"
         iconPosition={IconPosition.left}
+        css={css`
+          background: var(--white);
+        `}
       >
         {activeMenuTitle}
       </Button>
@@ -138,7 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <StyledHeader>
       {rendered && !isMidOrWider
-        ? mainMenuOpen || typeof subMenuKey === 'undefined'
+        ? navigationOpen || typeof subMenuKey === 'undefined'
           ? renderedButton
           : renderedSubMenuButton
         : renderedButton}

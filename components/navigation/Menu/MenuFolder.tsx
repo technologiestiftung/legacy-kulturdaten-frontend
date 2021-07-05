@@ -1,8 +1,5 @@
-import Link from 'next/link';
 import styled from '@emotion/styled';
 
-import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
-import { useIsRouteStringActive } from '../../../lib/routing';
 import { useContext } from 'react';
 import { NavigationContext } from '../NavigationContext';
 import { insetBorder } from '../../globals/Constants';

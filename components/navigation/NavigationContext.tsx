@@ -2,8 +2,8 @@ import React, { ReactNode, Reducer, useCallback, useMemo, useReducer, useState }
 import { getPseudoUID } from '../../lib/uid';
 
 type NavigationContext = {
-  mainMenuOpen: boolean;
-  setMainMenuOpen: (open: boolean) => void;
+  navigationOpen: boolean;
+  setNavigationOpen: (open: boolean) => void;
   registerOverlay: (open?: boolean) => { id: string };
   removeOverlay: (id: string) => void;
   setOverlayOpen: (id: string, open: boolean) => void;
@@ -15,8 +15,8 @@ type NavigationContext = {
 };
 
 export const NavigationContext = React.createContext<NavigationContext>({
-  mainMenuOpen: false,
-  setMainMenuOpen: () => undefined,
+  navigationOpen: false,
+  setNavigationOpen: () => undefined,
   registerOverlay: () => undefined,
   removeOverlay: () => undefined,
   setOverlayOpen: () => undefined,
@@ -78,7 +78,7 @@ interface NavigationContextProviderProps {
 export const NavigationContextProvider: React.FC<NavigationContextProviderProps> = ({
   children,
 }: NavigationContextProviderProps) => {
-  const [mainMenuOpenState, setMainMenuOpenState] = useState<boolean>(false);
+  const [navigationOpenState, setNavigationOpenState] = useState<boolean>(false);
   const [activeMenuKey, setActiveMenuKey] = useState<string>();
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
 
@@ -113,8 +113,8 @@ export const NavigationContextProvider: React.FC<NavigationContextProviderProps>
   return (
     <NavigationContext.Provider
       value={{
-        mainMenuOpen: mainMenuOpenState,
-        setMainMenuOpen: (open) => setMainMenuOpenState(open),
+        navigationOpen: navigationOpenState,
+        setNavigationOpen: (open) => setNavigationOpenState(open),
         registerOverlay,
         removeOverlay,
         setOverlayOpen,

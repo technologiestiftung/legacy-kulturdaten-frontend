@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
 
-import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { useContext } from 'react';
 import { NavigationContext } from '../NavigationContext';
@@ -42,7 +41,6 @@ export enum MenuLinkType {
 interface InternalMenuLinkProps {
   title: string;
   href: string;
-  subMenuKey: number;
   active?: boolean;
 }
 
@@ -57,11 +55,11 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
 }: InternalMenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active || isRouteActive;
-  const { setMainMenuOpen } = useContext(NavigationContext);
+  const { setNavigationOpen } = useContext(NavigationContext);
 
   return (
     <Link href={href} passHref>
-      <StyledA title={title} onClick={() => setMainMenuOpen(false)} active={linkIsActive}>
+      <StyledA title={title} onClick={() => setNavigationOpen(false)} active={linkIsActive}>
         <File />
         <span>{title}</span>
       </StyledA>

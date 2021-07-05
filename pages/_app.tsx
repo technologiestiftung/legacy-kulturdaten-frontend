@@ -14,10 +14,13 @@ import { BodyLock } from '../lib/BodyLock';
 import { useContext, useMemo } from 'react';
 
 const EmbeddedBodyLock: React.FC = () => {
-  const { menuExpanded, mainMenuOpen, overlayOpen } = useContext(NavigationContext);
+  const { menuExpanded, navigationOpen, overlayOpen } = useContext(NavigationContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
-  const mobileMenuOpen = useMemo(() => !isMidOrWider && mainMenuOpen, [mainMenuOpen, isMidOrWider]);
+  const mobileMenuOpen = useMemo(() => !isMidOrWider && navigationOpen, [
+    navigationOpen,
+    isMidOrWider,
+  ]);
 
   return <BodyLock conditions={[menuExpanded, overlayOpen, mobileMenuOpen]} />;
 };

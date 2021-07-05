@@ -196,7 +196,7 @@ export const enDE: Localization = {
       items: {
         profile: () => 'My Profile',
         settings: () => 'My Settings',
-        logout: () => 'Logout',
+        logout: () => 'logout',
       },
     },
     localeSwitch: {

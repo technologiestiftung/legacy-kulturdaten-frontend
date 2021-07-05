@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { useMenuStructure, useAppTitle } from '../../config/structure';
 import { AppLayout } from '../layouts/AppLayout';
 import { HeaderLink } from '../navigation/header/HeaderLink';
-import { useMainMenu } from '../navigation/mainMenu/MainMenu';
+import { useNavigation } from '../navigation';
 import { TitleBarProps } from '../navigation/TitleBar';
 
 import { useUser } from '../user/useUser';
@@ -21,15 +21,15 @@ export const AppWrapper: React.FC<AppWrapperProps> = ({
   children,
   subMenuKey,
 }: AppWrapperProps) => {
-  const menuStructure = useMenuStructure();
+  const NavigationStructure = useMenuStructure();
   const appTitle = useAppTitle();
 
-  const mainMenu = useMainMenu(menuStructure, appTitle, HeaderLink, subMenuKey);
+  const navigation = useNavigation(NavigationStructure, appTitle, HeaderLink, subMenuKey);
 
   return (
     <>
       <UseUser />
-      <AppLayout mainMenu={mainMenu} content={children} />
+      <AppLayout navigation={navigation} content={children} />
     </>
   );
 };

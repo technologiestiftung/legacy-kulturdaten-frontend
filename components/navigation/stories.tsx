@@ -3,14 +3,13 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Header } from './header/Header';
-import { MenuItem, MenuStructure, useMainMenu } from './mainMenu/MainMenu';
-import { MenuIconName } from './mainMenu/MenuIcon';
+import { NavigationStructure, useNavigation } from '.';
+import { MenuIconName } from './Menu/MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
 import { HeaderLinkProps } from './header/HeaderLink';
-import { Table } from '../table';
-import { SubVariant } from './mainMenu/Sub';
 import { Button, ButtonColor, ButtonVariant } from '../button';
+import { MenuItem } from './Menu';
 
 export default {
   title: 'Navigation',
@@ -38,13 +37,14 @@ const StyledTestContentBox = styled.div`
   border-radius: 0.75rem;
 `;
 
-const testMenuStructure: MenuStructure = {
+const testMenuStructure: NavigationStructure = {
   defaultMenuKey: 'main',
   menus: [
     {
       key: 'main',
+      title: 'Hauptmenü',
       expandable: false,
-      subMenus: [
+      sections: [
         {
           title: 'Start',
           icon: MenuIconName.start,
@@ -161,8 +161,9 @@ const testMenuStructure: MenuStructure = {
     },
     {
       key: 'offer',
+      title: 'Angebote',
       expandable: true,
-      subMenus: [
+      sections: [
         {
           title: 'Test',
           icon: MenuIconName.start,
@@ -188,8 +189,9 @@ const testMenuStructure: MenuStructure = {
     },
     {
       key: 'organizer',
+      title: 'Anbieter:innen',
       expandable: true,
-      subMenus: [
+      sections: [
         {
           title: 'Test',
           icon: MenuIconName.start,
@@ -215,8 +217,9 @@ const testMenuStructure: MenuStructure = {
     },
     {
       key: 'location',
+      title: 'Orte',
       expandable: true,
-      subMenus: [
+      sections: [
         {
           title: 'Test',
           icon: MenuIconName.start,
@@ -244,11 +247,11 @@ const testMenuStructure: MenuStructure = {
 };
 
 const X: React.FC = () => {
-  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+  const navigation = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
 
   return (
     <AppLayout
-      mainMenu={mainMenu}
+      navigation={navigation}
       content={
         <StyledTestContent>
           {[...Array(10)].map((i, index) => (
@@ -264,14 +267,14 @@ export const NavigationStory: Story = () => <X />;
 NavigationStory.storyName = 'Navigation complete';
 
 export const HeaderStory: Story = () => (
-  <Header defaultMenuKey="main" title="Kulturdaten.Berlin" Link={TestLink} />
+  <Header activeMenuTitle="main" defaultMenuKey="main" title="Kulturdaten.Berlin" Link={TestLink} />
 );
 HeaderStory.storyName = 'Header';
 
 export const MainMenuStory: Story = () => {
-  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+  const navigation = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
 
-  return mainMenu;
+  return navigation;
 };
 MainMenuStory.storyName = 'Main Menu';
 

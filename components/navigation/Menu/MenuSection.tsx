@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
-import React, { useContext } from 'react';
-import { NavigationContext } from '../NavigationContext';
 
-export const StyledSub = styled.div<{ variant: SubVariant }>`
+export const StyledSection = styled.div<{ variant: MenuSectionVariant }>`
   width: 100%;
   background: var(--grey-200);
   font-size: var(--font-size-400);
@@ -13,10 +11,12 @@ export const StyledSub = styled.div<{ variant: SubVariant }>`
   overflow: hidden;
 
   ${({ variant }) =>
-    variant === SubVariant.default ? 'box-shadow: 0 0 0.75rem -0.125rem rgba(0, 0, 0, 0.25);' : ''}
+    variant === MenuSectionVariant.default
+      ? 'box-shadow: 0 0 0.75rem -0.125rem rgba(0, 0, 0, 0.25);'
+      : ''}
 `;
 
-const StyledSubHead = styled.div<{
+const StyledSectionHead = styled.div<{
   background?: string;
   color?: string;
   uppercase?: boolean;
@@ -31,33 +31,33 @@ const StyledSubHead = styled.div<{
   ${({ uppercase }) => (uppercase ? `text-transform: uppercase;` : '')}
 `;
 
-const StyledSubHeadButton = styled.div`
+const StyledSectionHeadButton = styled.div`
   padding: 0.375rem;
 `;
 
-const StyledSubTitle = styled.div`
+const StyledSectionTitle = styled.div`
   padding: 0.75rem 0.375rem 0.75rem 0;
   flex-grow: 1;
 `;
 
-const StyledSubIcon = styled.div`
+const StyledSectionIcon = styled.div`
   padding: 0.75rem 0;
   margin-right: 0.75rem;
 `;
 
-const StyledSubContent = styled.div`
+const StyledSectionContent = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
 `;
 
-const StyledSubItem = styled.div``;
+const StyledSectionItem = styled.div``;
 
-export enum SubVariant {
+export enum MenuSectionVariant {
   default = 'default',
   minimal = 'minimal',
 }
 
-export interface SubProps {
+export interface SectionProps {
   items: React.ReactElement[];
   title?: string;
   icon?: React.ReactElement;
@@ -66,32 +66,32 @@ export interface SubProps {
     color?: string;
     uppercase?: boolean;
   };
-  variant?: SubVariant;
+  variant?: MenuSectionVariant;
   button?: React.ReactElement;
 }
 
-export const Sub: React.FC<SubProps> = ({
+export const MenuSection: React.FC<SectionProps> = ({
   title,
   icon,
   items,
   headOptions,
-  variant = SubVariant.default,
+  variant = MenuSectionVariant.default,
   button,
-}: SubProps) => {
+}: SectionProps) => {
   return (
-    <StyledSub variant={variant}>
+    <StyledSection variant={variant}>
       {title && (
-        <StyledSubHead {...headOptions}>
-          {icon && <StyledSubIcon>{icon}</StyledSubIcon>}
-          <StyledSubTitle>{title}</StyledSubTitle>
-          {button && <StyledSubHeadButton>{button}</StyledSubHeadButton>}
-        </StyledSubHead>
+        <StyledSectionHead {...headOptions}>
+          {icon && <StyledSectionIcon>{icon}</StyledSectionIcon>}
+          <StyledSectionTitle>{title}</StyledSectionTitle>
+          {button && <StyledSectionHeadButton>{button}</StyledSectionHeadButton>}
+        </StyledSectionHead>
       )}
-      <StyledSubContent>
+      <StyledSectionContent>
         {items.map((item, index) => (
-          <StyledSubItem key={index}>{item}</StyledSubItem>
+          <StyledSectionItem key={index}>{item}</StyledSectionItem>
         ))}
-      </StyledSubContent>
-    </StyledSub>
+      </StyledSectionContent>
+    </StyledSection>
   );
 };

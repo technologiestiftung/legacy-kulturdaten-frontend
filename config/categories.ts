@@ -14,7 +14,7 @@ import { OrganizerCategorizationPage } from '../components/pages/organizer/categ
 import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
-import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
+import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { OrganizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
 
 export type Requirement = {

@@ -62,7 +62,10 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
-  organizerList: () => `/${apiVersion}/organizer?include=types`,
+  organizerList: (query) =>
+    `/${apiVersion}/organizer?include=types${query?.page && `&page=${query.page}`}${
+      query?.size && `&size=${query.size}`
+    }`,
   organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) =>

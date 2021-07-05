@@ -137,6 +137,7 @@ const StyledButton = styled.button<{
   size: ButtonSize;
   variant: ButtonVariant;
   disabled?: boolean;
+  customCss?: SerializedStyles;
 }>`
   margin: 0;
   appearance: none;
@@ -154,6 +155,8 @@ const StyledButton = styled.button<{
   cursor: pointer;
 
   ${({ variant }) => buttonVariants[variant]}
+
+  ${({ customCss }) => customCss}
 
   &:disabled {
     cursor: not-allowed;
@@ -245,6 +248,7 @@ export interface ButtonProps {
   type?: ButtonType;
   ariaLabel?: string;
   title?: string;
+  css?: SerializedStyles;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -266,6 +270,7 @@ export const Button: React.FC<ButtonProps> = ({
   type = ButtonType.button,
   ariaLabel,
   title,
+  css,
 }: ButtonProps) =>
   asInput ? (
     <StyledButton
@@ -282,6 +287,7 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
       aria-label={ariaLabel}
       title={title}
+      customCss={css}
     />
   ) : (
     <StyledButton
@@ -296,6 +302,7 @@ export const Button: React.FC<ButtonProps> = ({
       type={type}
       aria-label={ariaLabel}
       title={title}
+      customCss={css}
     >
       {children && <StyledButtonSpan>{children}</StyledButtonSpan>}
       {renderedIcon || (icon && feather[icon]) ? (
