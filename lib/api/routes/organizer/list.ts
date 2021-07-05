@@ -1,3 +1,4 @@
+import { ParsedUrlQuery } from 'node:querystring';
 import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
 import { Organizer } from '../../types/organizer';
 
@@ -23,10 +24,7 @@ export interface OrganizerList extends ApiCall {
 
 export const organizerListFactory: ApiCallFactory = (
   token: OrganizerList['request']['headers']['Authorization'],
-  query: {
-    page: string;
-    size: string;
-  }
+  query: ParsedUrlQuery
 ): OrganizerList => ({
   request: {
     route: apiRoutes.organizerList(query),

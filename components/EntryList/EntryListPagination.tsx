@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { useT } from '../../lib/i18n';
+import { usePseudoUID } from '../../lib/uid';
 import { Button, ButtonVariant, IconPosition } from '../button';
 import { Select, SelectVariant } from '../select';
 
@@ -50,9 +51,11 @@ export const EntryListPagination: React.FC<EntryListPaginationProps> = ({
 }: EntryListPaginationProps) => {
   const t = useT();
 
+  const pseudoUID = usePseudoUID();
+
   const renderedPageSelect = totalEntries && entriesPerPage && (
     <Select
-      id="fun"
+      id={`entry-pagination-${pseudoUID}`}
       value={String(currentPage)}
       onChange={(e) => goToPage(parseInt(e.target.value, 10))}
       variant={SelectVariant.minimal}

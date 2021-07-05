@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 
 const StyledEntryListHead = styled.div<{ accentColor?: string }>`
-  border-top: 0.75rem solid ${({ accentColor }) => (accentColor ? accentColor : 'transparent')};
-  padding: 0 0 0.75rem;
+  border-top: 0.375rem solid ${({ accentColor }) => (accentColor ? accentColor : 'transparent')};
+  padding: 0.375rem 0 0.75rem;
   border-bottom: 1px solid var(--grey-400);
   box-shadow: 0 0.125rem 0.625rem -0.25rem rgba(0, 0, 0, 0.4);
   position: relative;

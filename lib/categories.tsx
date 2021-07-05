@@ -89,7 +89,9 @@ export const useCategory = (): Category => {
 
 export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
-  query?: ParsedUrlQuery,
+  page?: number,
+  size?: number,
+  filter?: [string, string][],
   load = true
 ): {
   data: T['data'][];
@@ -106,6 +108,12 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const call = useApiCall();
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
+
+  const query = {
+    page: page ? String(page) : undefined,
+    size: size ? String(size) : undefined,
+    filter: filter ? filter.map(([key, value]) => `${key}=${value}`).join(',') : undefined,
+  };
 
   const { data } = useSWR(
     load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,

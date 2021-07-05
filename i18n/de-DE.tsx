@@ -52,6 +52,7 @@ export const deDE: Localization = {
     add: () => 'hinzufügen',
     type: () => 'Typ',
     publish: () => 'veröffentlichen',
+    filter: () => 'Filter',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -91,6 +92,14 @@ export const deDE: Localization = {
   },
   categories: {
     organizer: {
+      filters: {
+        status: {
+          label: () => 'Status',
+          all: () => 'alle',
+          published: () => 'öffentlich',
+          draft: () => 'Entwurf',
+        },
+      },
       requirements: {
         label: () => 'Für Veröffentlichung notwendig',
         name: () => 'Bezeichnung ausgefüllt',

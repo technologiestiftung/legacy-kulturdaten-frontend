@@ -52,6 +52,7 @@ export const enDE: Localization = {
     add: () => 'add',
     type: () => 'Type',
     publish: () => 'publish',
+    filter: () => 'Filters',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -91,6 +92,14 @@ export const enDE: Localization = {
   },
   categories: {
     organizer: {
+      filters: {
+        status: {
+          label: () => 'Status',
+          all: () => 'all',
+          published: () => 'public',
+          draft: () => 'draft',
+        },
+      },
       requirements: {
         label: () => 'Required for publishing',
         name: () => 'Name added',
