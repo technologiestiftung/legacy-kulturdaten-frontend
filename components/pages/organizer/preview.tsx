@@ -7,6 +7,7 @@ import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { useLanguage } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { useT } from '../../../lib/i18n';
+import MD from 'markdown-to-jsx';
 
 const EntryContainer = styled.div`
   ${contentGrid(4)}
@@ -26,7 +27,7 @@ const EntryMainCard = styled.div`
   padding-bottom: 0.75rem;
 
   background-color: var(--white);
-  border: 1px solid var(--black);
+  border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
 
   ${contentGrid(3)}
@@ -39,30 +40,85 @@ const EntryMainCard = styled.div`
   }
 `;
 
-const EntryTitle = styled.h2`
-  grid-row: 1;
+const EntryHead = styled.div`
+  grid-row: 1 / 2;
   grid-column: 1 / 3;
   padding: 1rem 1.5rem;
+  margin-bottom: 0.75rem;
 
+  ${mq(Breakpoint.mid)} {
+    padding-bottom: 0.75rem;
+  }
+`;
+
+const EntryTitle = styled.h2`
   font-size: var(--font-size-400);
   line-height: var(--line-height-600);
   font-weight: var(--font-weight-bold);
 
   ${mq(Breakpoint.mid)} {
-    padding-bottom: 0.75rem;
-
     font-size: var(--font-size-600);
     line-height: var(--line-height-600);
   }
 `;
-const EntryDescription = styled.div`
-  margin-bottom: 0.75rem;
-  padding: 0 1.5rem;
-  grid-row: 2;
-  grid-column: 1 / 3;
 
+const EntryDescription = styled.div`
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);
+
+  h1 {
+    font-size: var(--font-size-600);
+    line-height: var(--line-height-600);
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: var(--font-size-400);
+    line-height: var(--line-height-400);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: var(--font-size-300);
+    line-height: var(--line-height-300);
+    font-weight: 700;
+  }
+
+  strong {
+    font-weight: 700;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  ul,
+  ol {
+    list-style-position: inside;
+    padding-bottom: var(--line-height-300);
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    padding-left: 1.5rem;
+    font-size: var(--font-size-300);
+    line-height: var(--line-height-300);
+
+    p {
+      display: inline;
+    }
+  }
 
   ${mq(Breakpoint.mid)} {
     font-size: var(--font-size-300);
@@ -71,7 +127,6 @@ const EntryDescription = styled.div`
 `;
 
 const EntryLogo = styled.div`
-  display: block;
   overflow: hidden;
   margin-bottom: 1.75rem;
   grid-row: 1 / 3;
@@ -83,8 +138,8 @@ const EntryLogo = styled.div`
     min-width: 100%;
     border-top-right-radius: 0.75rem;
     border-bottom-left-radius: 0.75rem;
-    border-left: 1px solid var(--black);
-    border-bottom: 1px solid var(--black);
+    border-left: 1px solid var(--grey-400);
+    border-bottom: 1px solid var(--grey-400);
   }
 `;
 
@@ -94,10 +149,12 @@ const EntryMetadata = styled.div`
   grid-column: 1 / 4;
 
   border-top: 1px solid var(--grey-400);
+  border-bottom: 1px solid var(--grey-400);
 
   ${mq(Breakpoint.mid)} {
     ${contentGrid(3)}
     column-gap: 0.75rem;
+    margin-bottom: 1.75rem;
   }
 `;
 
@@ -105,10 +162,11 @@ const EntryCategorization = styled.ul`
   padding: 0 1.5rem;
   margin-bottom: 0.75rem;
   grid-row: 4;
-  grid-column: 1 / 3;
+  grid-column: 1 / 4;
 
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);
+  font-weight: var(--font-weight-bold);
 
   ${mq(Breakpoint.mid)} {
     font-size: var(--font-size-300);
@@ -137,7 +195,7 @@ const EntrySubject = styled.li`
 const EntryTags = styled.ul`
   padding: 0 1.5rem;
   grid-row: 5;
-  grid-column: 1 / 3;
+  grid-column: 1 / 4;
 
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);
@@ -152,18 +210,14 @@ const Tag = styled.li`
   display: inline-block;
   padding: 0.25rem 0.75rem;
   margin: 0 0.75rem 0.75rem 0;
-  border: 1px solid var(--grey-400);
+  border: 1px solid var(--grey-200);
   border-radius: 6px;
 `;
 
 const EntryContact = styled.div`
-  grid-row: 4 / 6;
-  grid-column: 3;
-  padding: 0 1.5rem;
-
-  ${mq(Breakpoint.mid)} {
-    padding: 0 1.5rem 0 0;
-  }
+  grid-row: 6;
+  grid-column: 1 / 4;
+  padding: 0.75rem 1.5rem 0 1.5rem;
 `;
 
 const EntryMetadataKey = styled.dd`
@@ -230,7 +284,7 @@ const EntryPhotos = styled.div`
   }
 
   ${mq(Breakpoint.mid)} {
-    column-count: 4;
+    column-count: 2;
     column-gap: 10px;
   }
 `;
@@ -243,13 +297,22 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
   const language = useLanguage();
   const currentTranslation = getTranslation(language, entry?.data?.relations?.translations);
   const title = currentTranslation?.attributes?.name;
+  const descriptionMarkdown = currentTranslation?.attributes?.description;
+  const homepage = entry?.data?.attributes?.homepage;
+  const email = entry?.data?.attributes?.email;
+  const phone = entry?.data?.attributes?.phone;
+  const hasContactInfo = homepage || email || phone;
   const t = useT();
 
   return (
     <EntryContainer>
       <EntryMainCard>
-        <EntryTitle>{title}</EntryTitle>
-        <EntryDescription>{currentTranslation?.attributes?.description}</EntryDescription>
+        <EntryHead>
+          <EntryTitle>{title}</EntryTitle>
+          <EntryDescription>
+            {descriptionMarkdown ? <MD>{descriptionMarkdown}</MD> : ''}
+          </EntryDescription>
+        </EntryHead>
         <EntryLogo>
           <img src="http://via.placeholder.com/800x800" alt="" />
         </EntryLogo>
@@ -268,24 +331,34 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
             <Tag>Jugendchor</Tag>
             <Tag>Kinderchor</Tag>
           </EntryTags>
-          <EntryContact>
-            <EntryMetadataKey>{t('categories.organizer.form.website')}</EntryMetadataKey>
-            <EntryMetadataValue>
-              <a target="_blank" rel="noreferrer" href={entry?.data?.attributes?.homepage}>
-                {entry?.data?.attributes?.homepage}
-              </a>
-            </EntryMetadataValue>
-            <EntryMetadataKey>{t('categories.organizer.form.email')}</EntryMetadataKey>
-            <EntryMetadataValue>
-              <a target="_blank" rel="noreferrer" href={'mailto:' + entry?.data?.attributes?.email}>
-                {entry?.data?.attributes?.email}
-              </a>
-            </EntryMetadataValue>
-            <EntryMetadataKey>{t('categories.organizer.form.tel')}</EntryMetadataKey>
-            <EntryMetadataValue>
-              <a href={'tel:' + entry?.data?.attributes?.phone}>{entry?.data?.attributes?.phone}</a>
-            </EntryMetadataValue>
-          </EntryContact>
+          {hasContactInfo && (
+            <EntryContact>
+              {homepage && (
+                <EntryMetadataKey>{t('categories.organizer.form.website')}</EntryMetadataKey>
+              )}
+              {homepage && (
+                <EntryMetadataValue>
+                  <a target="_blank" rel="noreferrer" href={homepage}>
+                    {homepage}
+                  </a>
+                </EntryMetadataValue>
+              )}
+              {email && <EntryMetadataKey>{t('categories.organizer.form.email')}</EntryMetadataKey>}
+              {email && (
+                <EntryMetadataValue>
+                  <a target="_blank" rel="noreferrer" href={'mailto:' + email}>
+                    {email}
+                  </a>
+                </EntryMetadataValue>
+              )}
+              {phone && <EntryMetadataKey>{t('categories.organizer.form.tel')}</EntryMetadataKey>}
+              {phone && (
+                <EntryMetadataValue>
+                  <a href={'tel:' + phone}>{phone}</a>
+                </EntryMetadataValue>
+              )}
+            </EntryContact>
+          )}
         </EntryMetadata>
         <EntryPhotos>
           <figure>
