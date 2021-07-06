@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../../components/user/useUser';
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
-import { TitleBar } from '../../components/navigation/TitleBar';
 import { useT } from '../../lib/i18n';
 
 const StyledUl = styled.ul`
@@ -40,10 +39,8 @@ const DashboardPage: NextPage = () => {
   const locale = useLocale();
   const t = useT();
 
-  const titleBar = <TitleBar title={t('menu.start.items.dashboard') as string} />;
-
   return (
-    <AppWrapper titleBar={titleBar}>
+    <AppWrapper>
       <StyledUl>
         <StyledLi>
           <Link href={routes.userProfile({ locale })}>

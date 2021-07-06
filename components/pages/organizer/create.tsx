@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useContext, useState } from 'react';
 import { ButtonColor } from '../../../components/button';
 import { contentGrid, mq } from '../../../components/globals/Constants';
 import { Input, InputType } from '../../../components/input';
@@ -11,8 +11,8 @@ import { OrganizerCreate } from '../../../lib/api/routes/organizer/create';
 import { useT } from '../../../lib/i18n';
 import { useLocale } from '../../../lib/routing';
 import { Breakpoint } from '../../../lib/WindowService';
-import { TitleBar } from '../../navigation/TitleBar';
 import { AppWrapper } from '../../wrappers/AppWrapper';
+import { NavigationContext } from '../../navigation/NavigationContext';
 
 const CreateWrapper = styled.div`
   padding: 0 0.75rem;
@@ -68,21 +68,14 @@ export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: Catego
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
+  const { setActiveMenuKey } = useContext(NavigationContext);
 
   const [formState, setFormState] = useState<{
     name: string;
   }>();
 
   return (
-    <AppWrapper
-      titleBar={
-        <TitleBar
-          title={`${t('categories.organizer.form.create') as string}${
-            formState?.name && formState.name.length > 0 ? ` – ${formState.name}` : ''
-          }`}
-        />
-      }
-    >
+    <AppWrapper>
       <CreateWrapper>
         <CreateForm
           onSubmit={async (e: FormEvent) => {
@@ -99,6 +92,7 @@ export const OrganizerCreatePage: React.FC<CategoryPage> = ({ category }: Catego
               if (resp.status === 200) {
                 const id = resp.body.data.id;
 
+                setActiveMenuKey(category.subMenuKey);
                 router.push(routes[Routes.organizer]({ locale, query: { id, sub: 'info' } }));
               }
             } catch (e) {

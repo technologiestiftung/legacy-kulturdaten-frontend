@@ -3,9 +3,8 @@ import { ParsedUrlQuery } from 'node:querystring';
 import React from 'react';
 import useSWR from 'swr';
 import { Button, ButtonVariant } from '../components/button';
-import { MenuIconName } from '../components/navigation/mainMenu/MenuIcon';
+import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
-import { TitleBarProps } from '../components/navigation/TitleBar';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
@@ -46,16 +45,12 @@ export type Category = {
     plural: string;
   };
   icon: MenuIconName;
-  menuFactory: (
-    category: Category,
-    list: CategoryEntry['data'][]
-  ) => { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement };
+  subMenuKey?: string;
   routes: {
     list: Route;
     create: Route;
   };
   pages: {
-    list: React.FC<CategoryPage>;
     create: React.FC<CategoryPage>;
     preview: React.FC<CategoryEntryPage>;
     info: React.FC<CategoryEntryPage>;
@@ -92,21 +87,58 @@ export const useCategory = (): Category => {
   return category;
 };
 
+export enum Order {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
 export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
-  query?: ParsedUrlQuery,
+  page?: number,
+  size?: number,
+  filter?: [string, string][],
+  sort?: { key: string; order: Order },
   load = true
-): T['data'][] => {
+): {
+  data: T['data'][];
+  meta: {
+    language: Language;
+    pages: {
+      total: number;
+      perPage: number;
+      currentPage: number;
+      lastPage: number;
+    };
+  };
+} => {
   const call = useApiCall();
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
 
+  const query = {
+    page: page ? String(page) : undefined,
+    size: size ? String(size) : undefined,
+    filter: filter ? filter.map(([key, value]) => `${key}=${value}`).join(',') : undefined,
+    sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
+  };
+
   const { data } = useSWR(
-    load && apiCallRoute ? getApiUrlString(apiCallRoute, undefined) : undefined,
+    load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,
     () => (load && category ? call<C>(apiCallFactory, query) : undefined)
   );
 
-  return (((data as unknown) as C['response'])?.body?.data as unknown) as T['data'][];
+  return {
+    data: (((data as unknown) as C['response'])?.body?.data as unknown) as T['data'][],
+    meta: ((data as unknown) as C['response'])?.body?.meta as {
+      language: Language;
+      pages: {
+        total: number;
+        perPage: number;
+        currentPage: number;
+        lastPage: number;
+      };
+    },
+  };
 };
 
 export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
@@ -167,15 +199,6 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
   });
 
   return metaLinks;
-};
-
-export const useCategoryMenu = (
-  category: Category,
-  list: CategoryEntry['data'][]
-): { titleBar: React.ReactElement<TitleBarProps>; content: React.ReactElement } => {
-  const categoryMenu = category.menuFactory(category, list);
-
-  return categoryMenu;
 };
 
 export const useOrganizerTypeList = (): OrganizerType[] => {

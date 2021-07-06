@@ -52,6 +52,12 @@ export const enDE: Localization = {
     add: () => 'add',
     type: () => 'Type',
     publish: () => 'publish',
+    filter: () => 'Filters',
+    sort: () => 'Sort',
+    ascending: () => 'ascending',
+    descending: () => 'descending',
+    ascendingAriaLabel: () => 'Sort list ascending',
+    descendingAriaLabel: () => 'Sort list descending',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -84,8 +90,21 @@ export const enDE: Localization = {
   overlay: {
     ariaClose: () => 'Close overlay window',
   },
+  pagination: {
+    next: () => 'next',
+    previous: () => 'previous',
+    currentPage: ({ currentPage, lastPage }) => `Page ${currentPage} of ${lastPage}`,
+  },
   categories: {
     organizer: {
+      filters: {
+        status: {
+          label: () => 'Status',
+          all: () => 'all',
+          published: () => 'public',
+          draft: () => 'draft',
+        },
+      },
       requirements: {
         label: () => 'Required for publishing',
         name: () => 'Name added',
@@ -142,6 +161,11 @@ export const enDE: Localization = {
         rights: () => 'Access rights',
         export: () => 'Export',
       },
+      sort: {
+        name: () => 'Name',
+        created: () => 'Creation date',
+        updated: () => 'Last updated',
+      },
     },
     offer: {
       title: {
@@ -158,6 +182,7 @@ export const enDE: Localization = {
   },
   menu: {
     title: () => 'Kulturdaten.Berlin',
+    main: () => 'Main Menu',
     button: {
       open: () => 'open menu',
       close: () => 'close menu',
@@ -173,21 +198,21 @@ export const enDE: Localization = {
       title: () => 'Organizers',
       items: {
         overview: () => 'Overview',
-        create: () => 'Create Organizer',
+        create: () => 'create new',
       },
     },
     offer: {
       title: () => 'Offers',
       items: {
         overview: () => 'Overview',
-        create: () => 'Create Offer',
+        create: () => 'create new',
       },
     },
     location: {
       title: () => 'Locations',
       items: {
         overview: () => 'Overview',
-        create: () => 'Create Location',
+        create: () => 'create new',
       },
     },
     user: {
@@ -195,7 +220,7 @@ export const enDE: Localization = {
       items: {
         profile: () => 'My Profile',
         settings: () => 'My Settings',
-        logout: () => 'Logout',
+        logout: () => 'logout',
       },
     },
     localeSwitch: {

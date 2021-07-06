@@ -78,6 +78,7 @@ export const useUser = (): {
 
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
+        console.log('useTokenIsValid = false, log out!');
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
         if (userData) {
@@ -87,6 +88,7 @@ export const useUser = (): {
         }
       }
     } else if (isAuthenticated) {
+      console.log('no token present, log out!');
       logoutUser();
     } else {
       if (locale && router.asPath !== routes.login({ locale })) {

@@ -62,15 +62,21 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
-  organizerList: () => `/${apiVersion}/organizer?include=types`,
-  organizerShow: ({ id }) => `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
+  organizerList: (query) =>
+    `/${apiVersion}/organizer?include=types,subjects,translations${
+      query?.page && `&page=${query.page}`
+    }${query?.size && `&size=${query.size}`}${query?.filter && `&filter=${query.filter}`}${
+      query?.sort && `&sort=${query.sort}`
+    }`,
+  organizerShow: ({ id }) =>
+    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) =>
     `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
   OrganizerTranslationCreate: ({ organizerId }) =>
     `/${apiVersion}/organizer/${organizerId}/translate`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
-  organizerTypeList: () => `/${apiVersion}/organizerType`,
+  organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
 };
 
 const addUrlParam = (url: string, param: string): string =>

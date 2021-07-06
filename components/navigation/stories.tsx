@@ -3,12 +3,13 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Header } from './header/Header';
-import { MenuItem, useMainMenu } from './mainMenu/MainMenu';
-import { MenuIconName } from './mainMenu/MenuIcon';
+import { NavigationStructure, useNavigation } from '.';
+import { MenuIconName } from './Menu/MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
 import { HeaderLinkProps } from './header/HeaderLink';
-import { Table } from '../table';
+import { Button, ButtonColor, ButtonVariant } from '../button';
+import { MenuItem } from './Menu';
 
 export default {
   title: 'Navigation',
@@ -36,131 +37,221 @@ const StyledTestContentBox = styled.div`
   border-radius: 0.75rem;
 `;
 
-const testMenuStructure = [
-  {
-    title: 'Start',
-    icon: MenuIconName.start,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Dashboard',
-          href: '#',
-          active: true,
+const testMenuStructure: NavigationStructure = {
+  defaultMenuKey: 'main',
+  menus: [
+    {
+      key: 'main',
+      title: 'Hauptmenü',
+      expandable: false,
+      sections: [
+        {
+          title: 'Start',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: false,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
         },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Benachrichtigungen',
-          href: '#',
-        },
-      },
-    ],
-  },
-  {
-    title: 'Anbieter:innen',
-    icon: MenuIconName.organizer,
-    isActive: true,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Alle Anbieter:innen',
-          href: '#',
-        },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Anbieter:innen',
-          href: '#',
-        },
-      },
-    ],
-  },
-  {
-    title: 'Angebote',
-    icon: MenuIconName.offer,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Alle Angebote',
-          href: '#',
-        },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Angebote',
-          href: '#',
-        },
-      },
-    ],
-  },
-  {
-    title: 'Orte',
-    icon: MenuIconName.location,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Alle Orte',
-          href: '#',
-        },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Orte',
-          href: '#',
-        },
-      },
-    ],
-  },
-  {
-    title: 'Nutzer:in',
-    icon: MenuIconName.user,
-    items: [
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Mein Profil',
-          href: '#',
-        },
-      },
-      {
-        type: MenuItem.link,
-        action: {
-          title: 'Meine Einstellungen',
-          href: '#',
-        },
-      },
-    ],
-  },
-  {
-    items: [
-      {
-        type: MenuItem.button,
-        action: {
-          label: 'Abmelden',
-          onClick: () => {
-            //
+        {
+          title: 'Angebote',
+          headOptions: {
+            background: 'var(--blue)',
+            color: 'var(--white)',
+            uppercase: true,
           },
-          icon: 'LogOut',
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black}>
+              erstellen
+            </Button>
+          ),
+          items: [
+            {
+              type: MenuItem.folder,
+              action: {
+                label: 'Alle Angebote',
+                menuKey: 'offer',
+              },
+            },
+          ],
         },
-      },
-    ],
-  },
-];
+        {
+          title: 'Anbieter:innen',
+          headOptions: {
+            background: '#B01E1E',
+            color: 'var(--white)',
+            uppercase: true,
+          },
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black}>
+              erstellen
+            </Button>
+          ),
+          items: [
+            {
+              type: MenuItem.folder,
+              action: {
+                label: 'Alle Anbieter:innen',
+                menuKey: 'organizer',
+              },
+            },
+          ],
+        },
+        {
+          title: 'Orte',
+          headOptions: {
+            background: 'var(--green-mid)',
+            color: 'var(--white)',
+            uppercase: true,
+          },
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black}>
+              erstellen
+            </Button>
+          ),
+          items: [
+            {
+              type: MenuItem.folder,
+              action: {
+                label: 'Alle Orte',
+                menuKey: 'location',
+              },
+            },
+          ],
+        },
+        {
+          title: 'Nutzer:in',
+          icon: MenuIconName.user,
+          button: (
+            <Button variant={ButtonVariant.minimal} color={ButtonColor.black} icon="LogOut">
+              abmelden
+            </Button>
+          ),
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Mein Profil',
+                href: '#',
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Meine Einstellungen',
+                href: '#',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      key: 'offer',
+      title: 'Angebote',
+      expandable: true,
+      sections: [
+        {
+          title: 'Test',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: true,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      key: 'organizer',
+      title: 'Anbieter:innen',
+      expandable: true,
+      sections: [
+        {
+          title: 'Test',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: true,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      key: 'location',
+      title: 'Orte',
+      expandable: true,
+      sections: [
+        {
+          title: 'Test',
+          icon: MenuIconName.start,
+          items: [
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Dashboard',
+                href: '#',
+                active: true,
+              },
+            },
+            {
+              type: MenuItem.link,
+              action: {
+                title: 'Benachrichtigungen',
+                href: '#',
+              },
+            },
+          ],
+        },
+      ],
+    },
+  ],
+};
 
-export const NavigationStory: Story = () => {
-  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+const X: React.FC = () => {
+  const navigation = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
 
   return (
     <AppLayout
-      mainMenu={mainMenu}
+      navigation={navigation}
       content={
         <StyledTestContent>
           {[...Array(10)].map((i, index) => (
@@ -168,58 +259,24 @@ export const NavigationStory: Story = () => {
           ))}
         </StyledTestContent>
       }
-      titleBar={<TitleBar title="Page Title" />}
     />
   );
 };
+
+export const NavigationStory: Story = () => <X />;
 NavigationStory.storyName = 'Navigation complete';
 
-export const HeaderStory: Story = () => <Header title="Kulturdaten.Berlin" Link={TestLink} />;
+export const HeaderStory: Story = () => (
+  <Header activeMenuTitle="main" defaultMenuKey="main" title="Kulturdaten.Berlin" Link={TestLink} />
+);
 HeaderStory.storyName = 'Header';
 
 export const MainMenuStory: Story = () => {
-  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+  const navigation = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
 
-  return mainMenu;
+  return navigation;
 };
 MainMenuStory.storyName = 'Main Menu';
 
 export const TitleBarStory: Story = () => <TitleBar title="Page Title" />;
 TitleBarStory.storyName = 'Title Bar';
-
-export const SecondaryMenuStory: Story = () => {
-  const mainMenu = useMainMenu(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
-
-  const secondaryMenu = (
-    <Table
-      columns={[{ title: 'Column 1' }, { title: 'Column 2' }, { title: 'Column 3' }]}
-      content={[
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-        { contents: ['Lorem', 'Ipsum', 'Dolor'] },
-      ]}
-      narrow
-    />
-  );
-
-  return (
-    <AppLayout
-      mainMenu={mainMenu}
-      content={
-        <StyledTestContent>
-          {[...Array(10)].map((i, index) => (
-            <StyledTestContentBox key={index}>Test Content</StyledTestContentBox>
-          ))}
-        </StyledTestContent>
-      }
-      titleBar={<TitleBar title="Page Title" />}
-      secondaryMenu={{
-        titleBar: <TitleBar title="Category Title" secondary />,
-        content: secondaryMenu,
-      }}
-    />
-  );
-};
-SecondaryMenuStory.storyName = 'Navigation with Secondary Menu';

@@ -1,13 +1,9 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useCategory, useEntry, useList, useMetaLinks, useTabs } from '../../../../lib/categories';
+import { useCategory, useEntry, useMetaLinks, useTabs } from '../../../../lib/categories';
 import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
-import { TitleBar } from '../../../../components/navigation/TitleBar';
-import { useOrganizerMenu } from '../../../../components/pages/organizer/list';
-import { OrganizerList } from '../../../../lib/api';
 import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
-import { Breakpoint, useBreakpointOrWider } from '../../../../lib/WindowService';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { Button, ButtonVariant, IconPosition } from '../../../../components/button';
 import { useT } from '../../../../lib/i18n';
@@ -30,10 +26,7 @@ const EntrySubPage: NextPage = () => {
   const category = useCategory();
   const language = useLanguage();
   const date = useDate();
-  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const tabs = useTabs(category);
-  const list = useList<OrganizerList, Organizer>(category, null, isMidOrWider);
-  const secMenu = useOrganizerMenu(category, list);
   const { entry } = useEntry<Organizer, OrganizerShow>(category, router?.query);
 
   const currentTranslation = entry?.data?.relations?.translations
@@ -67,7 +60,7 @@ const EntrySubPage: NextPage = () => {
 
   if (category) {
     return (
-      <AppWrapper secondaryMenu={secMenu}>
+      <AppWrapper subMenuKey={category.subMenuKey}>
         <EntryHeader
           backButton={titleBarLink}
           title={title}
@@ -91,7 +84,7 @@ const EntrySubPage: NextPage = () => {
     );
   }
 
-  return <AppWrapper titleBar={<TitleBar title="TBD" />}>TBD</AppWrapper>;
+  return <AppWrapper>TBD</AppWrapper>;
 };
 
 export default EntrySubPage;

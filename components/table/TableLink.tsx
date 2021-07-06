@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import { useContext } from 'react';
+import { MouseEventHandler, useContext } from 'react';
 import { TableContext } from '.';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { ArrowRightSvg } from '../assets/ArrowRightSvg';
-import { insetBorder, mq } from '../globals/Constants';
+import { insetBorder } from '../globals/Constants';
 
 export const StyledTableLinkText = styled.div<{ isActive?: boolean }>`
   ${({ isActive }) =>
@@ -28,11 +28,7 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
   text-decoration: none;
   width: 100%;
 
-  box-shadow: ${insetBorder(false, true, true, true)};
-
-  ${mq(Breakpoint.wide)} {
-    box-shadow: ${insetBorder(false, true, true)};
-  }
+  box-shadow: ${insetBorder(false, false, true, false)};
 
   > div {
     width: 100%;
@@ -87,6 +83,7 @@ interface TableLinkProps {
   href: string;
   isActive?: boolean;
   status?: PublishedStatus;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
 export const TableLink: React.FC<TableLinkProps> = ({
@@ -94,6 +91,7 @@ export const TableLink: React.FC<TableLinkProps> = ({
   href,
   isActive,
   status,
+  onClick,
 }: TableLinkProps) => {
   const t = useT();
 
@@ -103,7 +101,7 @@ export const TableLink: React.FC<TableLinkProps> = ({
 
   return (
     <Link href={href} passHref>
-      <StyledTableLink isActive={isActive}>
+      <StyledTableLink isActive={isActive} onClick={onClick}>
         {isActive ? <ArrowRightSvg /> : ''}
         <div>{children}</div>
         {(isDefaultBreakpoint || isNarrowTable) && status === PublishedStatus.draft && (

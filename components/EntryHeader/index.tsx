@@ -6,7 +6,7 @@ import { TabsProps } from '../navigation/tabs';
 
 const StyledEntryHeader = styled.div`
   background: var(--grey-200);
-  box-shadow: ${insetBorder(false, true, true, true)};
+  box-shadow: ${insetBorder(false, false, true)};
   grid-row-gap: 1.5rem;
 
   padding: 0 0.75rem;
@@ -14,7 +14,6 @@ const StyledEntryHeader = styled.div`
 
   ${mq(Breakpoint.mid)} {
     grid-row-gap: 2.25rem;
-    box-shadow: ${insetBorder(false, true, true, false)};
 
     ${contentGrid(8)}
   }
@@ -26,30 +25,38 @@ const StyledEntryHeader = styled.div`
 
 const StyledEntryHeaderHead = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  margin-top: 1.5rem;
 
   ${mq(Breakpoint.mid)} {
+    margin-top: 0.75rem;
+    flex-direction: row;
+    justify-content: space-between;
     grid-column: 1 / -1;
   }
 
   ${mq(Breakpoint.widish)} {
-    margin-top: 0.75rem;
+    margin-top: 1.5rem;
     grid-column: 2 / -2;
   }
 `;
 
 const StyledEntryHeaderActions = styled.div`
   display: flex;
-  flex-wrap: wrap;
   justify-content: flex-end;
+  order: -1;
+
+  ${mq(Breakpoint.mid)} {
+    order: 1;
+  }
+
+  ${mq(Breakpoint.widish)} {
+    margin-top: 0.375rem;
+  }
 `;
 
 const StyledEntryHeaderAction = styled.div`
-  margin: 0.75rem 0 0 0.75rem;
-`;
-
-const StyledEntryHeaderBackButton = styled.div`
-  margin: 0.75rem 0 0;
+  margin: 0 0 0.75rem 0.75rem;
 `;
 
 const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
@@ -58,10 +65,15 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
   font-weight: 700;
 
   ${mq(Breakpoint.mid)} {
+    font-size: var(--font-size-600);
+    line-height: var(--line-height-600);
+    font-weight: 700;
     grid-column: 1 / -1;
   }
 
   ${mq(Breakpoint.widish)} {
+    font-size: var(--font-size-700);
+    line-height: var(--line-height-700);
     grid-column: 2 / -2;
   }
 
@@ -121,7 +133,6 @@ interface EntryHeaderProps {
 
 export const EntryHeader: React.FC<EntryHeaderProps> = ({
   title,
-  backButton,
   actions,
   statusBar,
   publish,
@@ -129,21 +140,18 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
 }: EntryHeaderProps) => {
   return (
     <StyledEntryHeader>
-      {(backButton || actions) && (
-        <StyledEntryHeaderHead>
-          <StyledEntryHeaderBackButton>{backButton}</StyledEntryHeaderBackButton>
-          {actions && (
-            <StyledEntryHeaderActions>
-              {actions.map((action, index) => (
-                <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
-              ))}
-            </StyledEntryHeaderActions>
-          )}
-        </StyledEntryHeaderHead>
-      )}
-      <StyledEntryHeaderTitle skeleton={typeof title === 'undefined'}>
-        {title}
-      </StyledEntryHeaderTitle>
+      <StyledEntryHeaderHead>
+        <StyledEntryHeaderTitle skeleton={typeof title === 'undefined'}>
+          {title}
+        </StyledEntryHeaderTitle>
+        {actions && (
+          <StyledEntryHeaderActions>
+            {actions.map((action, index) => (
+              <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
+            ))}
+          </StyledEntryHeaderActions>
+        )}
+      </StyledEntryHeaderHead>
       {statusBar && <StyledEntryHeaderStatusSlot>{statusBar}</StyledEntryHeaderStatusSlot>}
       {publish && <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>}
       {tabs && <StyledEntryHeaderTabsSlot>{tabs}</StyledEntryHeaderTabsSlot>}

@@ -52,6 +52,12 @@ export const deDE: Localization = {
     add: () => 'hinzufügen',
     type: () => 'Typ',
     publish: () => 'veröffentlichen',
+    filter: () => 'Filter',
+    sort: () => 'Sortierung',
+    ascending: () => 'aufsteigend',
+    descending: () => 'absteigend',
+    ascendingAriaLabel: () => 'Liste aufsteigend sortieren',
+    descendingAriaLabel: () => 'Liste absteigend sortieren',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -84,8 +90,21 @@ export const deDE: Localization = {
   overlay: {
     ariaClose: () => 'Überlagerndes Fenster schließen',
   },
+  pagination: {
+    next: () => 'weiter',
+    previous: () => 'zurück',
+    currentPage: ({ currentPage, lastPage }) => `Seite ${currentPage} von ${lastPage}`,
+  },
   categories: {
     organizer: {
+      filters: {
+        status: {
+          label: () => 'Status',
+          all: () => 'alle',
+          published: () => 'öffentlich',
+          draft: () => 'Entwurf',
+        },
+      },
       requirements: {
         label: () => 'Für Veröffentlichung notwendig',
         name: () => 'Bezeichnung ausgefüllt',
@@ -142,6 +161,11 @@ export const deDE: Localization = {
         rights: () => 'Zugriffsrechte',
         export: () => 'Export',
       },
+      sort: {
+        name: () => 'Bezeichnung',
+        created: () => 'Erstellungsdatum',
+        updated: () => 'Zuletzt aktualisiert',
+      },
     },
     offer: {
       title: {
@@ -158,6 +182,7 @@ export const deDE: Localization = {
   },
   menu: {
     title: () => 'Kulturdaten.Berlin',
+    main: () => 'Hauptmenü',
     button: {
       open: () => 'Menü öffnen',
       close: () => 'Menü schließen',
@@ -173,21 +198,21 @@ export const deDE: Localization = {
       title: () => 'Anbieter:innen',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Anbieter:in anlegen',
+        create: () => 'anlegen',
       },
     },
     offer: {
       title: () => 'Angebote',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Angebot anlegen',
+        create: () => 'anlegen',
       },
     },
     location: {
       title: () => 'Orte',
       items: {
         overview: () => 'Übersicht',
-        create: () => 'Ort anlegen',
+        create: () => 'anlegen',
       },
     },
     user: {

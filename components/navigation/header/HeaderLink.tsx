@@ -14,11 +14,11 @@ export const HeaderLink: React.FC<HeaderLinkProps> = ({
   children: React.ReactElement;
 }) => {
   const locale = useLocale();
-  const { setMainMenuOpen } = useContext(NavigationContext);
+  const { setNavigationOpen } = useContext(NavigationContext);
 
   return (
     <Link href={routes.dashboard({ locale })} passHref>
-      {React.cloneElement(children, { onClick: () => setMainMenuOpen(false) })}
+      {React.cloneElement(children, { onClick: () => setNavigationOpen(false) })}
     </Link>
   );
 };

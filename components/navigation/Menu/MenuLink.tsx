@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
 
-import { ArrowRightSvg } from '../../assets/ArrowRightSvg';
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { useContext } from 'react';
 import { NavigationContext } from '../NavigationContext';
+import { insetBorder } from '../../globals/Constants';
+import { File } from 'react-feather';
 
 const StyledA = styled.a<{ active?: boolean }>`
   color: inherit;
@@ -12,16 +13,23 @@ const StyledA = styled.a<{ active?: boolean }>`
   display: flex;
   align-items: center;
   width: 100%;
+  padding: 0.75rem;
+  box-shadow: ${insetBorder(true, false, false)};
+  background: var(--white);
 
   &:hover {
     text-decoration: underline;
+    background: var(--grey-350);
   }
 
   svg {
     display: inline-block;
-    margin: 0 0.375rem 0 0;
+    margin: 0 0.75rem 0 0;
     padding: 0;
     flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--black);
   }
 `;
 
@@ -33,7 +41,6 @@ export enum MenuLinkType {
 interface InternalMenuLinkProps {
   title: string;
   href: string;
-  subMenuKey: number;
   active?: boolean;
 }
 
@@ -48,13 +55,13 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
 }: InternalMenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active || isRouteActive;
-  const { setMainMenuOpen } = useContext(NavigationContext);
+  const { setNavigationOpen } = useContext(NavigationContext);
 
   return (
     <Link href={href} passHref>
-      <StyledA title={title} onClick={() => setMainMenuOpen(false)} active={linkIsActive}>
-        {linkIsActive ? <ArrowRightSvg /> : ''}
-        {title}
+      <StyledA title={title} onClick={() => setNavigationOpen(false)} active={linkIsActive}>
+        <File />
+        <span>{title}</span>
       </StyledA>
     </Link>
   );
