@@ -17,6 +17,9 @@ export type DefaultAttributes = {
   createdAt: string;
   updatedAt: string;
   status: PublishedStatus;
+  homepage: string;
+  email: string;
+  phone: string;
 };
 
 export type CategoryEntry = {
