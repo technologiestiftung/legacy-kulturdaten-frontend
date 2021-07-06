@@ -126,6 +126,8 @@ const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
   ${({ menuExpanded }) =>
     menuExpanded
       ? css`
+          font-size: var(--font-size-300);
+          line-height: var(--line-height-300);
           padding: 1.5rem;
           flex-direction: row;
 
