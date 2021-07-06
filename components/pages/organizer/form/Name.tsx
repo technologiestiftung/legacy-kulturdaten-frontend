@@ -1,13 +1,12 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { mutate as mutateSwr } from 'swr';
 import { defaultLanguage, Language } from '../../../../config/locale';
-import { getApiUrlString, useApiCall } from '../../../../lib/api';
+import { useApiCall } from '../../../../lib/api';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { OrganizerTranslationCreate } from '../../../../lib/api/routes/organizer/translation/create';
 import { PublishedStatus } from '../../../../lib/api/types/general';
 import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
-import { Category, useEntry } from '../../../../lib/categories';
+import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { getTranslation } from '../../../../lib/translations';
 import { Input, InputType } from '../../../input';
 
@@ -69,6 +68,7 @@ export const useName = (props: {
   const { category, query, language, label } = props;
 
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const mutateList = useMutateList(category);
   const call = useApiCall();
   const entryTranslation = getTranslation<OrganizerTranslation>(
     language,
@@ -109,7 +109,7 @@ export const useName = (props: {
 
         if (resp.status === 200) {
           mutate();
-          mutateSwr(getApiUrlString(category.api.list.route));
+          mutateList();
           setTimeout(() => setPristine(true), 500);
         }
       } catch (e) {

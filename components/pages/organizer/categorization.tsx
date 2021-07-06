@@ -1,13 +1,13 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import React, { useEffect, useMemo, useState } from 'react';
-import { mutate as mutateSwr } from 'swr';
-import { getApiUrlString, useApiCall } from '../../../lib/api';
+import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
 import {
   Category,
   CategoryEntryPage,
+  useMutateList,
   useEntry,
   useOrganizerTypeList,
 } from '../../../lib/categories';
@@ -33,6 +33,7 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
   const [types, setTypes] = useState<string[]>([]);
   const [subjects, setSubjects] = useState<string[]>([]);
   const [typesSubjectsPristine, setTypesSubjectsPristine] = useState(true);
+  const mutateList = useMutateList(category);
 
   const typeOptions = useOrganizerTypeList();
 
@@ -172,7 +173,7 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
 
                 if (resp.status === 200) {
                   mutate();
-                  mutateSwr(getApiUrlString(category.api.list.route));
+                  mutateList();
                 }
               } catch (e) {
                 console.error(e);

@@ -1,14 +1,13 @@
 import styled from '@emotion/styled';
 import { ParsedUrlQuery } from 'node:querystring';
 import { useMemo } from 'react';
-import { mutate as mutateSwr } from 'swr';
-import { getApiUrlString, useApiCall } from '../../lib/api';
+import { useApiCall } from '../../lib/api';
 import { Requirement } from './Requirement';
 import { OrganizerShow } from '../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../lib/api/routes/organizer/update';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { Organizer } from '../../lib/api/types/organizer';
-import { Category, useEntry } from '../../lib/categories';
+import { Category, useEntry, useMutateList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
@@ -70,6 +69,7 @@ export const Publish: React.FC<PublishProps> = ({
 }: PublishProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
+  const mutateList = useMutateList(category);
 
   const t = useT();
 
@@ -134,7 +134,7 @@ export const Publish: React.FC<PublishProps> = ({
 
               if (resp.status === 200) {
                 mutate();
-                mutateSwr(getApiUrlString(category.api.list.route));
+                mutateList();
               }
             } catch (e) {
               console.error(e);

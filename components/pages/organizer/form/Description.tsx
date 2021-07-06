@@ -1,14 +1,13 @@
 import styled from '@emotion/styled';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, X } from 'react-feather';
-import { mutate as mutateSwr } from 'swr';
 import { OrganizerFormProps } from '.';
 import { defaultLanguage, Language } from '../../../../config/locale';
-import { getApiUrlString, useApiCall } from '../../../../lib/api';
+import { useApiCall } from '../../../../lib/api';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { OrganizerTranslationCreate } from '../../../../lib/api/routes/organizer/translation/create';
 import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
-import { useEntry } from '../../../../lib/categories';
+import { useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { Button, ButtonColor } from '../../../button';
@@ -79,6 +78,7 @@ export const Description: React.FC<DescriptionProps> = ({
 }: DescriptionProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
+  const mutateList = useMutateList(category);
   const t = useT();
   const [cachedApiText, setCachedApiText] = useState<string>();
 
@@ -178,7 +178,7 @@ export const Description: React.FC<DescriptionProps> = ({
 
                 if (resp.status === 200) {
                   mutate();
-                  mutateSwr(getApiUrlString(category.api.list.route));
+                  mutateList();
                 }
               } catch (e) {
                 console.error(e);
