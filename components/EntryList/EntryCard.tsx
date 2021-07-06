@@ -142,6 +142,7 @@ const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
 
 const StyledEntryCardDate = styled.div`
   text-align: right;
+  text-transform: capitalize;
 `;
 
 interface EntryCardProps {
@@ -190,10 +191,10 @@ export const EntryCard: React.FC<EntryCardProps> = ({
             </StyledEntryCardStatus>
             <StyledEntryCardDates menuExpanded={menuExpanded}>
               <StyledEntryCardDate>
-                Gespeichert: {date(updatedDate, DateFormat.date)}
+                {t('general.updated')}: {updatedDate ? date(updatedDate, DateFormat.date) : ''}
               </StyledEntryCardDate>
               <StyledEntryCardDate>
-                Erstellt: {date(createdDate, DateFormat.date)}
+                {t('general.created')}: {createdDate ? date(createdDate, DateFormat.date) : ''}
               </StyledEntryCardDate>
             </StyledEntryCardDates>
           </StyledEntryCardBottom>

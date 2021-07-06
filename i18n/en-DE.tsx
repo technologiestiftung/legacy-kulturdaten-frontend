@@ -53,6 +53,11 @@ export const enDE: Localization = {
     type: () => 'Type',
     publish: () => 'publish',
     filter: () => 'Filters',
+    sort: () => 'Sort',
+    ascending: () => 'ascending',
+    descending: () => 'descending',
+    ascendingAriaLabel: () => 'Sort list ascending',
+    descendingAriaLabel: () => 'Sort list descending',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -155,6 +160,11 @@ export const enDE: Localization = {
       metaLinks: {
         rights: () => 'Access rights',
         export: () => 'Export',
+      },
+      sort: {
+        name: () => 'Name',
+        created: () => 'Creation date',
+        updated: () => 'Last updated',
       },
     },
     offer: {

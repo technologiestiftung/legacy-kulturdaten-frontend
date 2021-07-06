@@ -26,6 +26,8 @@ import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
 import { EntryCard, EntryCardTypesSubjects } from './EntryCard';
+import { PublishedStatus } from '../../lib/api/types/general';
+import { RadioSwitch } from '../RadioSwitch';
 
 enum FiltersActions {
   init = 'init',
@@ -162,6 +164,8 @@ const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
 
 const EntryListSort = styled.div`
   padding: 0 0.75rem;
+  display: grid;
+  row-gap: 0.75rem;
 `;
 
 const EntryCardGrid = styled.div<{ expanded: boolean }>`
@@ -230,51 +234,55 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
   const cards = useMemo(
     () =>
       list?.data
-        ? Object.values(list.data).map(({ attributes, relations, id }, index) => {
-            const href = (sub?: string) =>
-              routes[Routes.organizer]({
-                locale,
-                query: { id, sub },
+        ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
+            ({ attributes, relations, id }, index) => {
+              const href = (sub?: string) =>
+                routes[Routes.organizer]({
+                  locale,
+                  query: { id, sub },
+                });
+
+              const translations = relations?.translations;
+              const currentTranslation = translations
+                ? getTranslation<OrganizerTranslation>(language, translations)
+                : undefined;
+              const typeNames = relations?.types?.map((type) => {
+                // const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                //   language,
+                //   type.relations.translations
+                // );
+                const typeTranslation = type.relations.translations[0];
+                return typeTranslation?.attributes.name;
               });
 
-            const { translations } = relations;
-            const currentTranslation = getTranslation<OrganizerTranslation>(language, translations);
-            const typeNames = relations?.types?.map((type) => {
-              // const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-              //   language,
-              //   type.relations.translations
-              // );
-              const typeTranslation = type.relations.translations[0];
-              return typeTranslation?.attributes.name;
-            });
+              const subjectNames = relations?.subjects?.map((subject) => {
+                // const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                //   language,
+                //   subject.relations.translations
+                // );
+                const subjectTranslation = subject.relations.translations[0];
+                return subjectTranslation?.attributes.name;
+              });
 
-            const subjectNames = relations?.subjects?.map((subject) => {
-              // const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-              //   language,
-              //   subject.relations.translations
-              // );
-              const subjectTranslation = subject.relations.translations[0];
-              return subjectTranslation?.attributes.name;
-            });
-
-            return (
-              <EntryCard
-                onClick={() => {
-                  setMenuExpanded(false);
-                  setNavigationOpen(false);
-                }}
-                href={href('info')}
-                menuExpanded={expanded}
-                key={index}
-                title={currentTranslation?.attributes?.name}
-                status={attributes?.status}
-                active={router.asPath.includes(href())}
-                meta={<EntryCardTypesSubjects types={typeNames} subjects={subjectNames} />}
-                createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
-                updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
-              />
-            );
-          })
+              return (
+                <EntryCard
+                  onClick={() => {
+                    setMenuExpanded(false);
+                    setNavigationOpen(false);
+                  }}
+                  href={href('info')}
+                  menuExpanded={expanded}
+                  key={index}
+                  title={currentTranslation?.attributes?.name}
+                  status={attributes?.status || PublishedStatus.draft}
+                  active={router.asPath.includes(href())}
+                  meta={<EntryCardTypesSubjects types={typeNames} subjects={subjectNames} />}
+                  createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
+                  updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                />
+              );
+            }
+          )
         : undefined,
     [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setNavigationOpen]
   );
@@ -308,23 +316,33 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         <EntryListSort>
           <Select
             id={`entry-sort-${pseudoUID}`}
-            label="Sort by"
+            label={t('general.sort') as string}
             onChange={(e) => setSortKey(e.target.value)}
             value={sortKey}
           >
-            <option value="updatedAt">Updated</option>
-            <option value="createdAt">Created</option>
-            <option value="name">Name</option>
+            <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
+            <option value="createdAt">{t('categories.organizer.sort.created')}</option>
+            <option value="name">{t('categories.organizer.sort.name')}</option>
           </Select>
-          <Select
-            id={`entry-order-${pseudoUID}`}
-            label="Order"
-            onChange={(e) => setSortOrder(e.target.value as Order)}
+          <RadioSwitch
             value={sortOrder}
-          >
-            <option value={Order.DESC}>DESC</option>
-            <option value={Order.ASC}>ASC</option>
-          </Select>
+            name={`entry-order-${pseudoUID}`}
+            onChange={(value) => setSortOrder(value as Order)}
+            options={[
+              {
+                value: Order.ASC,
+                label: t('general.ascending') as string,
+                ariaLabel: t('general.ascendingAriaLabel') as string,
+                icon: 'ArrowUp',
+              },
+              {
+                value: Order.DESC,
+                label: t('general.descending') as string,
+                ariaLabel: t('general.descendingAriaLabel') as string,
+                icon: 'ArrowDown',
+              },
+            ]}
+          />
         </EntryListSort>
         <EntryCardGrid expanded={expanded}>{cards}</EntryCardGrid>
         {/* <Table

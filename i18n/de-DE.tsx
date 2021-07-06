@@ -53,6 +53,11 @@ export const deDE: Localization = {
     type: () => 'Typ',
     publish: () => 'veröffentlichen',
     filter: () => 'Filter',
+    sort: () => 'Sortierung',
+    ascending: () => 'aufsteigend',
+    descending: () => 'absteigend',
+    ascendingAriaLabel: () => 'Liste aufsteigend sortieren',
+    descendingAriaLabel: () => 'Liste absteigend sortieren',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -155,6 +160,11 @@ export const deDE: Localization = {
       metaLinks: {
         rights: () => 'Zugriffsrechte',
         export: () => 'Export',
+      },
+      sort: {
+        name: () => 'Bezeichnung',
+        created: () => 'Erstellungsdatum',
+        updated: () => 'Zuletzt aktualisiert',
       },
     },
     offer: {
