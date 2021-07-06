@@ -12,6 +12,7 @@ import {
 } from '../components/navigation/NavigationContext';
 import { BodyLock } from '../lib/BodyLock';
 import { useContext, useMemo } from 'react';
+import { EntryListContextProvider } from '../components/EntryList/EntryListContext';
 
 const EmbeddedBodyLock: React.FC = () => {
   const { menuExpanded, navigationOpen, overlayOpen } = useContext(NavigationContext);
@@ -29,14 +30,16 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
   return (
     <WindowContextProvider>
       <NavigationContextProvider>
-        <UserContextProvider>
-          {typeof window !== 'undefined' && <EmbeddedBodyLock />}
-          <Reset />
-          <CSSVars />
-          <Global />
-          <Typography />
-          <Component {...pageProps} />
-        </UserContextProvider>
+        <EntryListContextProvider>
+          <UserContextProvider>
+            {typeof window !== 'undefined' && <EmbeddedBodyLock />}
+            <Reset />
+            <CSSVars />
+            <Global />
+            <Typography />
+            <Component {...pageProps} />
+          </UserContextProvider>
+        </EntryListContextProvider>
       </NavigationContextProvider>
     </WindowContextProvider>
   );

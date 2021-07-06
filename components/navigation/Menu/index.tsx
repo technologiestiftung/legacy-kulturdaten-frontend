@@ -68,10 +68,9 @@ const StyledMenu = styled.div``;
 
 interface MenuProps {
   menuData: MenuData;
-  expanded: boolean;
 }
 
-export const Menu: React.FC<MenuProps> = ({ menuData, expanded }: MenuProps) => {
+export const Menu: React.FC<MenuProps> = ({ menuData }: MenuProps) => {
   const { setNavigationOpen, menuExpanded } = useContext(NavigationContext);
 
   const { sections, List } = menuData;

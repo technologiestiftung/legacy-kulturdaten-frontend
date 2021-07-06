@@ -1,15 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import {
-  PropsWithChildren,
-  Reducer,
-  useContext,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from 'react';
+import { PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 import { Plus } from 'react-feather';
 import { StyledEntryListBody } from '.';
 import { useCategories } from '../../config/categories';
@@ -28,38 +20,7 @@ import { EntryListPagination } from './EntryListPagination';
 import { EntryCard, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch } from '../RadioSwitch';
-
-enum FiltersActions {
-  init = 'init',
-  set = 'set',
-}
-
-type FiltersState = { [key: string]: string };
-
-type FiltersAction = {
-  type: FiltersActions;
-  payload?: {
-    state?: FiltersState;
-    key?: string;
-    value?: string;
-  };
-};
-
-const filtersReducer: Reducer<FiltersState, FiltersAction> = (state, action) => {
-  switch (action.type) {
-    case FiltersActions.init: {
-      return action.payload.state;
-    }
-
-    case FiltersActions.set: {
-      return { ...state, [action.payload.key]: action.payload.value };
-    }
-
-    default: {
-      break;
-    }
-  }
-};
+import { EntryListContext, FiltersActions } from './EntryListContext';
 
 interface OrganizerListProps {
   expanded: boolean;
@@ -199,19 +160,25 @@ const EntryCardGrid = styled.div<{ expanded: boolean }>`
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: OrganizerListProps) => {
   const categories = useCategories();
-  const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
-  const [entriesPerPage, setEntriesPerPage] = useState(8);
   const router = useRouter();
   const locale = useLocale();
   const language = useLanguage();
   const t = useT();
   const { setNavigationOpen, setMenuExpanded } = useContext(NavigationContext);
-  const [sortKey, setSortKey] = useState('updatedAt');
-  const [sortOrder, setSortOrder] = useState(Order.DESC);
-
-  const [filters, dispatchFilters] = useReducer(filtersReducer, {});
+  const {
+    currentPage,
+    setCurrentPage,
+    entriesPerPage,
+    // setEntriesPerPage,
+    sortKey,
+    setSortKey,
+    order,
+    setOrder,
+    filters,
+    dispatchFilters,
+  } = useContext(EntryListContext);
 
   const pseudoUID = usePseudoUID();
 
@@ -220,13 +187,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     currentPage,
     entriesPerPage,
     Object.entries(filters),
-    { key: sortKey, order: sortOrder }
+    { key: sortKey, order }
   );
-
-  useEffect(() => {
-    // Go to first page if filters, sorting or display type are changed
-    setCurrentPage(1);
-  }, [filters, sortKey, sortOrder, entriesPerPage]);
 
   useEffect(() => {
     const lastPageFromApi = list?.meta?.pages?.lastPage;
@@ -312,12 +274,13 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             label={t('categories.organizer.filters.status.label') as string}
             id={`entry-filter-${pseudoUID}`}
             value={filters?.status}
-            onChange={(e) =>
+            onChange={(e) => {
+              setCurrentPage(1);
               dispatchFilters({
                 type: FiltersActions.set,
                 payload: { key: 'status', value: e.target.value },
-              })
-            }
+              });
+            }}
           >
             <option value={undefined}>{t('categories.organizer.filters.status.all')}</option>
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
@@ -330,7 +293,10 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
           <Select
             id={`entry-sort-${pseudoUID}`}
             label={t('general.sort') as string}
-            onChange={(e) => setSortKey(e.target.value)}
+            onChange={(e) => {
+              setCurrentPage(1);
+              setSortKey(e.target.value);
+            }}
             value={sortKey}
             labelPosition={expanded ? SelectLabelPosition.left : SelectLabelPosition.top}
           >
@@ -339,9 +305,12 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             <option value="name">{t('categories.organizer.sort.name')}</option>
           </Select>
           <RadioSwitch
-            value={sortOrder}
+            value={order}
             name={`entry-order-${pseudoUID}`}
-            onChange={(value) => setSortOrder(value as Order)}
+            onChange={(value) => {
+              setCurrentPage(1);
+              setOrder(value as Order);
+            }}
             options={[
               {
                 value: Order.ASC,

@@ -155,8 +155,6 @@ export const useNavigation = (
   Link: React.FC<HeaderLinkProps>,
   subMenuKey?: string
 ): React.ReactElement => {
-  const { menuExpanded } = useContext(NavigationContext);
-
   const menus = structure.menus.map((menuData) => {
     const { key, expandable, title } = menuData;
 
@@ -164,7 +162,7 @@ export const useNavigation = (
       key,
       expandable,
       title,
-      menu: <Menu menuData={menuData} expanded={menuExpanded} />,
+      menu: <Menu menuData={menuData} />,
     };
   });
 
