@@ -87,11 +87,17 @@ export const useCategory = (): Category => {
   return category;
 };
 
+export enum Order {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
 export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
   page?: number,
   size?: number,
   filter?: [string, string][],
+  sort?: { key: string; order: Order },
   load = true
 ): {
   data: T['data'][];
@@ -113,6 +119,7 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
     page: page ? String(page) : undefined,
     size: size ? String(size) : undefined,
     filter: filter ? filter.map(([key, value]) => `${key}=${value}`).join(',') : undefined,
+    sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
   };
 
   const { data } = useSWR(

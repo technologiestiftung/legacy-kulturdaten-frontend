@@ -3,14 +3,14 @@ import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { WebLink } from './webLink';
 
-type OrganizerTypeTranslation = {
+export type OrganizerTypeTranslation = {
   attributes: {
     language: Language;
     name: string;
   };
 } & Translation;
 
-type OrganizerSubjectTranslation = OrganizerTypeTranslation;
+export type OrganizerSubjectTranslation = OrganizerTypeTranslation;
 
 export type OrganizerSubject = {
   type: 'organizersubject';
@@ -26,7 +26,6 @@ export type OrganizerType = {
   attributes: DefaultAttributes;
   relations?: {
     translations: OrganizerTypeTranslation[];
-
     subjects?: OrganizerSubject[];
   };
 };

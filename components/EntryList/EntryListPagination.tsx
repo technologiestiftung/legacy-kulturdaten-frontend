@@ -7,7 +7,7 @@ import { Select, SelectVariant } from '../select';
 const StyledEntryListPagination = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 0.75rem;
+  padding: 0.75rem;
 `;
 
 const StyledEntryListPaginationInteractive = styled.div`

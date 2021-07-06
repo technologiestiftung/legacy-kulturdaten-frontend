@@ -63,9 +63,11 @@ export const apiRoutes: {
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
   organizerList: (query) =>
-    `/${apiVersion}/organizer?include=types,translations${query?.page && `&page=${query.page}`}${
-      query?.size && `&size=${query.size}`
-    }${query?.filter && `&filter=${query.filter}`}`,
+    `/${apiVersion}/organizer?include=types,subjects,translations${
+      query?.page && `&page=${query.page}`
+    }${query?.size && `&size=${query.size}`}${query?.filter && `&filter=${query.filter}`}${
+      query?.sort && `&sort=${query.sort}`
+    }`,
   organizerShow: ({ id }) =>
     `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations`,
   organizerCreate: () => `/${apiVersion}/organizer`,

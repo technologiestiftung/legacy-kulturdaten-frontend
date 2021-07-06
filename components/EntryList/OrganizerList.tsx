@@ -15,7 +15,7 @@ import { StyledEntryListBody } from '.';
 import { useCategories } from '../../config/categories';
 import { OrganizerList as OrganizerListCall } from '../../lib/api';
 import { Organizer, OrganizerTranslation } from '../../lib/api/types/organizer';
-import { useList } from '../../lib/categories';
+import { Order, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -23,10 +23,9 @@ import { usePseudoUID } from '../../lib/uid';
 import { useCollapsable } from '../collapsable';
 import { NavigationContext } from '../navigation/NavigationContext';
 import { Select } from '../select';
-import { Table } from '../table';
-import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
+import { EntryCard, EntryCardTypesSubjects } from './EntryCard';
 
 enum FiltersActions {
   init = 'init',
@@ -63,12 +62,6 @@ const filtersReducer: Reducer<FiltersState, FiltersAction> = (state, action) => 
 interface OrganizerListProps {
   expanded: boolean;
 }
-
-interface ListLinkProps {
-  children: React.ReactNode;
-}
-
-const entriesPerPage = 10;
 
 const StyledFiltersBox = styled.div<{ expanded: boolean }>`
   ${({ expanded }) =>
@@ -167,35 +160,56 @@ const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
   );
 };
 
+const EntryListSort = styled.div`
+  padding: 0 0.75rem;
+`;
+
+const EntryCardGrid = styled.div<{ expanded: boolean }>`
+  display: grid;
+  grid-template-columns: auto;
+  grid-column-gap: 1.5rem;
+  grid-row-gap: 0.75rem;
+  padding: 1.5rem 0.75rem;
+
+  ${({ expanded }) =>
+    expanded
+      ? css`
+          grid-row-gap: 1.5rem;
+          grid-template-columns: 1fr 1fr;
+        `
+      : ''}
+`;
+
 export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: OrganizerListProps) => {
   const categories = useCategories();
   const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
+  const [entriesPerPage, setEntriesPerPage] = useState(8);
   const router = useRouter();
   const locale = useLocale();
   const language = useLanguage();
   const t = useT();
-  const { setNavigationOpen } = useContext(NavigationContext);
+  const { setNavigationOpen, setMenuExpanded } = useContext(NavigationContext);
+  const [sortKey, setSortKey] = useState('updatedAt');
+  const [sortOrder, setSortOrder] = useState(Order.DESC);
 
   const [filters, dispatchFilters] = useReducer(filtersReducer, {});
 
-  const statusFilterPseudoUID = usePseudoUID();
+  const pseudoUID = usePseudoUID();
 
   const list = useList<OrganizerListCall, Organizer>(
     categories.organizer,
     currentPage,
     entriesPerPage,
-    Object.entries(filters)
+    Object.entries(filters),
+    { key: sortKey, order: sortOrder }
   );
 
   useEffect(() => {
-    // Go to first page if filters are changed
+    // Go to first page if filters, sorting or display type are changed
     setCurrentPage(1);
-  }, [filters]);
-
-  // const lastPage = useMemo(() => list?.meta?.pages?.lastPage, [list?.meta?.pages?.lastPage]);
-  // const totalEntries = useMemo(() => list?.meta?.pages?.total, [list?.meta?.pages?.total]);
+  }, [filters, sortKey, sortOrder, entriesPerPage]);
 
   useEffect(() => {
     const lastPageFromApi = list?.meta?.pages?.lastPage;
@@ -213,51 +227,56 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     }
   }, [list?.meta?.pages?.total]);
 
-  const listContent = useMemo(
+  const cards = useMemo(
     () =>
       list?.data
-        ? Object.values(list.data)
-            .reverse()
-            .map(({ attributes, relations, id }, index) => {
-              const { translations } = relations;
-              const currentTranslation = getTranslation<OrganizerTranslation>(
-                language,
-                translations
-              );
+        ? Object.values(list.data).map(({ attributes, relations, id }, index) => {
+            const href = (sub?: string) =>
+              routes[Routes.organizer]({
+                locale,
+                query: { id, sub },
+              });
 
-              const href = (sub?: string) =>
-                routes[Routes.organizer]({
-                  locale,
-                  query: { id, sub },
-                });
+            const { translations } = relations;
+            const currentTranslation = getTranslation<OrganizerTranslation>(language, translations);
+            const typeNames = relations?.types?.map((type) => {
+              // const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+              //   language,
+              //   type.relations.translations
+              // );
+              const typeTranslation = type.relations.translations[0];
+              return typeTranslation?.attributes.name;
+            });
 
-              const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
-                <TableLink
-                  onClick={() => setNavigationOpen(false)}
-                  href={href('info')}
-                  isActive={router.asPath.includes(href())}
-                  status={attributes?.status}
-                >
-                  {children}
-                </TableLink>
-              );
+            const subjectNames = relations?.subjects?.map((subject) => {
+              // const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+              //   language,
+              //   subject.relations.translations
+              // );
+              const subjectTranslation = subject.relations.translations[0];
+              return subjectTranslation?.attributes.name;
+            });
 
-              return {
-                contents: [
-                  <StyledTableLinkText key={`${index}-1`} isActive={router.asPath.includes(href())}>
-                    {currentTranslation?.attributes.name}
-                  </StyledTableLinkText>,
-                  relations?.types
-                    ? relations?.types
-                        .map((type) => type?.relations?.translations[0]?.attributes?.name)
-                        .join(', ')
-                    : '',
-                ],
-                Wrapper: ListLink,
-              };
-            })
-        : [],
-    [list, locale, language, router, setNavigationOpen]
+            return (
+              <EntryCard
+                onClick={() => {
+                  setMenuExpanded(false);
+                  setNavigationOpen(false);
+                }}
+                href={href('info')}
+                menuExpanded={expanded}
+                key={index}
+                title={currentTranslation?.attributes?.name}
+                status={attributes?.status}
+                active={router.asPath.includes(href())}
+                meta={<EntryCardTypesSubjects types={typeNames} subjects={subjectNames} />}
+                createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
+                updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+              />
+            );
+          })
+        : undefined,
+    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setNavigationOpen]
   );
 
   return (
@@ -270,7 +289,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         <FiltersBox expanded={expanded}>
           <Select
             label={t('categories.organizer.filters.status.label') as string}
-            id={`entry-filter-${statusFilterPseudoUID}`}
+            id={`entry-filter-${pseudoUID}`}
             value={filters?.status}
             onChange={(e) =>
               dispatchFilters({
@@ -286,14 +305,36 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         </FiltersBox>
       </EntryListHead>
       <StyledEntryListBody>
-        <Table
+        <EntryListSort>
+          <Select
+            id={`entry-sort-${pseudoUID}`}
+            label="Sort by"
+            onChange={(e) => setSortKey(e.target.value)}
+            value={sortKey}
+          >
+            <option value="updatedAt">Updated</option>
+            <option value="createdAt">Created</option>
+            <option value="name">Name</option>
+          </Select>
+          <Select
+            id={`entry-order-${pseudoUID}`}
+            label="Order"
+            onChange={(e) => setSortOrder(e.target.value as Order)}
+            value={sortOrder}
+          >
+            <option value={Order.DESC}>DESC</option>
+            <option value={Order.ASC}>ASC</option>
+          </Select>
+        </EntryListSort>
+        <EntryCardGrid expanded={expanded}>{cards}</EntryCardGrid>
+        {/* <Table
           columns={[
             { title: t('general.name') as string, bold: true },
             { title: t('general.name') as string },
           ]}
           content={listContent}
           narrow={!expanded}
-        />
+        /> */}
         {lastPage > 1 && (
           <EntryListPagination
             currentPage={currentPage}
