@@ -3,7 +3,6 @@ import { useMenuStructure, useAppTitle } from '../../config/structure';
 import { AppLayout } from '../layouts/AppLayout';
 import { HeaderLink } from '../navigation/header/HeaderLink';
 import { useNavigation } from '../navigation';
-import { TitleBarProps } from '../navigation/TitleBar';
 
 import { useUser } from '../user/useUser';
 

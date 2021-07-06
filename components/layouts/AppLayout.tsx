@@ -3,11 +3,10 @@ import styled from '@emotion/styled';
 import { useContext, useEffect, useRef } from 'react';
 import 'wicg-inert';
 
-import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
-import { insetBorder, mq, overlayStyles } from '../globals/Constants';
+import { Breakpoint, WindowContext } from '../../lib/WindowService';
+import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
-import { TitleBarProps } from '../navigation/TitleBar';
 
 const Container = styled.div`
   display: grid;
@@ -35,8 +34,6 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
   z-index: 1000;
   overflow: hidden;
   box-shadow: 0 0.125rem 0.625rem -0.25rem rgba(0, 0, 0, 0.4);
-
-  /* grid-column: 1 / -1; */
   width: 100%;
 
   ${mq(Breakpoint.mid)} {
@@ -45,7 +42,6 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
     grid-row: 1;
     height: var(--app-height);
 
-    /* grid-column: 1 / span 3; */
     width: 16.6875rem;
 
     transition: width 0.083333s;
@@ -63,7 +59,6 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
     expanded
       ? css`
           ${mq(Breakpoint.mid)} {
-            /* grid-column: 1 / span 10; */
             width: calc(16.6875rem + ((100% - 16.6875rem) / 11 * 7));
           }
 
@@ -72,7 +67,6 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
           }
 
           ${mq(Breakpoint.widish)} {
-            /* grid-column: 1 / span 9; */
             width: calc(100% / 11 * 9);
           }
         `
@@ -120,10 +114,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ navigation, content }: App
   // Used for preventing not/partially visible elements from being focusable via tabbing.
   useEffect(() => {
     if (isMainMenuOverlayVisible) {
-      // titleBarRef.current?.setAttribute('inert', '');
       contentSlotRef.current?.setAttribute('inert', '');
     } else {
-      // titleBarRef.current?.removeAttribute('inert');
       contentSlotRef.current?.removeAttribute('inert');
     }
   }, [isMainMenuOverlayVisible]);

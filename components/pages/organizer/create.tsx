@@ -11,7 +11,6 @@ import { OrganizerCreate } from '../../../lib/api/routes/organizer/create';
 import { useT } from '../../../lib/i18n';
 import { useLocale } from '../../../lib/routing';
 import { Breakpoint } from '../../../lib/WindowService';
-import { TitleBar } from '../../navigation/TitleBar';
 import { AppWrapper } from '../../wrappers/AppWrapper';
 import { NavigationContext } from '../../navigation/NavigationContext';
 
