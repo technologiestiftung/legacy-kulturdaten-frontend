@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { contentGrid, mq } from '../../globals/Constants';
-import { Formatter } from '../../../components/formatter';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
 import { Organizer } from '../../../lib/api/types/organizer';
@@ -23,7 +22,7 @@ const EntryContainer = styled.div`
 const EntryMainCard = styled.div`
   position: relative;
   overflow: hidden;
-  grid-column: 1/-1;
+  grid-column: 1 / -1;
   margin: 0 0.75rem;
   padding-bottom: 0.75rem;
 
@@ -42,18 +41,20 @@ const EntryMainCard = styled.div`
 `;
 
 const EntryHead = styled.div`
-  grid-row: 1 / 2;
-  grid-column: 1 / 3;
-  padding: 1rem 1.5rem;
-  margin-bottom: 0.75rem;
+  grid-column: 1 / -1;
+  padding: 0.75rem;
+  grid-row: 2;
 
   ${mq(Breakpoint.mid)} {
+    padding: 1.5rem;
+    grid-row: 1 / 2;
+    grid-column: 1 / 3;
     padding-bottom: 0.75rem;
   }
 `;
 
 const EntryTitle = styled.h2`
-  font-size: var(--font-size-400);
+  font-size: var(--font-size-600);
   line-height: var(--line-height-600);
   font-weight: var(--font-weight-bold);
 
@@ -66,22 +67,26 @@ const EntryTitle = styled.h2`
 const EntryDescription = styled.div`
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);
+  padding: 1.5rem 0 0;
 
   h1 {
-    font-size: var(--font-size-600);
-    line-height: var(--line-height-600);
+    font-size: var(--font-size-500);
+    line-height: var(--line-height-500);
+    margin-bottom: var(--line-height-500);
     font-weight: 700;
   }
 
   h2 {
     font-size: var(--font-size-400);
     line-height: var(--line-height-400);
+    margin-bottom: var(--line-height-400);
     font-weight: 700;
   }
 
   h3 {
     font-size: var(--font-size-300);
     line-height: var(--line-height-300);
+    margin-bottom: var(--line-height-300);
     font-weight: 700;
   }
 
@@ -95,6 +100,10 @@ const EntryDescription = styled.div`
 
   u {
     text-decoration: underline;
+  }
+
+  p {
+    margin-bottom: var(--line-height-300);
   }
 
   ul,
@@ -130,22 +139,36 @@ const EntryDescription = styled.div`
 const EntryLogo = styled.div`
   overflow: hidden;
   margin-bottom: 1.75rem;
-  grid-row: 1 / 3;
-  grid-column: 3;
+  grid-column: 2 / span 1;
+  grid-row: 1;
+  padding-top: 0.75rem;
 
   img {
     display: block;
     width: 100%;
     min-width: 100%;
-    border-top-right-radius: 0.75rem;
-    border-bottom-left-radius: 0.75rem;
-    border-left: 1px solid var(--grey-400);
-    border-bottom: 1px solid var(--grey-400);
+    border-radius: 0.75rem;
+    border: 1px solid var(--grey-400);
+  }
+
+  ${mq(Breakpoint.mid)} {
+    padding-top: 0;
+    grid-row: 1 / 3;
+    grid-column: 3;
+    font-size: var(--font-size-300);
+    line-height: var(--line-height-300);
+
+    img {
+      border-right: none;
+      border-top: none;
+      border-top-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
   }
 `;
 
 const EntryMetadata = styled.div`
-  padding: 0.75rem 0;
+  padding: 1.5rem 0 0.75rem;
   grid-row: 3;
   grid-column: 1 / 4;
 
@@ -160,7 +183,7 @@ const EntryMetadata = styled.div`
 `;
 
 const EntryCategorization = styled.ul`
-  padding: 0 1.5rem;
+  padding: 0 0.75rem;
   margin-bottom: 0.75rem;
   grid-row: 4;
   grid-column: 1 / 4;
@@ -170,6 +193,7 @@ const EntryCategorization = styled.ul`
   font-weight: var(--font-weight-bold);
 
   ${mq(Breakpoint.mid)} {
+    padding: 0 1.5rem;
     font-size: var(--font-size-300);
     line-height: var(--line-height-300);
   }
@@ -180,6 +204,7 @@ const EntryType = styled.li`
   padding-right: 0.75rem;
   margin-right: 0.75rem;
   position: relative;
+
   &::after {
     content: '|';
     display: block;
@@ -194,7 +219,7 @@ const EntrySubject = styled.li`
 `;
 
 const EntryTags = styled.ul`
-  padding: 0 1.5rem;
+  padding: 0 0.75rem;
   grid-row: 5;
   grid-column: 1 / 4;
 
@@ -202,6 +227,7 @@ const EntryTags = styled.ul`
   line-height: var(--line-height-200);
 
   ${mq(Breakpoint.mid)} {
+    padding: 0 1.5rem;
     font-size: var(--font-size-300);
     line-height: var(--line-height-300);
   }
@@ -218,7 +244,11 @@ const Tag = styled.li`
 const EntryContact = styled.div`
   grid-row: 6;
   grid-column: 1 / 4;
-  padding: 0.75rem 1.5rem 0 1.5rem;
+  padding: 0.75rem 0.75rem 0 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 1.5rem 1.5rem 0 1.5rem;
+  }
 `;
 
 const EntryMetadataKey = styled.dd`
@@ -235,7 +265,7 @@ const EntryMetadataKey = styled.dd`
 `;
 
 const EntryMetadataValue = styled.dt`
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);
@@ -371,23 +401,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
             <figcaption>License info</figcaption>
           </figure>
           <figure>
-            <img src="http://via.placeholder.com/264x500" alt="" />
-            <figcaption>License info</figcaption>
-          </figure>
-          <figure>
             <img src="http://via.placeholder.com/600x400" alt="" />
-            <figcaption>License info</figcaption>
-          </figure>
-          <figure>
-            <img src="http://via.placeholder.com/400x250" alt="" />
-            <figcaption>License info</figcaption>
-          </figure>
-          <figure>
-            <img src="http://via.placeholder.com/650x800" alt="" />
-            <figcaption>License info</figcaption>
-          </figure>
-          <figure>
-            <img src="http://via.placeholder.com/690x500" alt="" />
             <figcaption>License info</figcaption>
           </figure>
           <figure>
@@ -400,10 +414,6 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
           </figure>
           <figure>
             <img src="http://via.placeholder.com/600x400" alt="" />
-            <figcaption>License info</figcaption>
-          </figure>
-          <figure>
-            <img src="http://via.placeholder.com/1400x1800" alt="" />
             <figcaption>License info</figcaption>
           </figure>
         </EntryPhotos>
