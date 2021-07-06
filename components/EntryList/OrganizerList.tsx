@@ -22,7 +22,7 @@ import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { useCollapsable } from '../collapsable';
 import { NavigationContext } from '../navigation/NavigationContext';
-import { Select } from '../select';
+import { Select, SelectLabelPosition } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
 import { EntryCard, EntryCardTypesSubjects } from './EntryCard';
@@ -162,10 +162,23 @@ const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
   );
 };
 
-const EntryListSort = styled.div`
-  padding: 0 0.75rem;
-  display: grid;
-  row-gap: 0.75rem;
+const EntryListSort = styled.div<{ expanded: boolean }>`
+  ${({ expanded }) =>
+    expanded
+      ? css`
+          padding: 0.75rem;
+          display: flex;
+          justify-content: flex-end;
+
+          > * {
+            padding: 0 0 0 0.75rem;
+          }
+        `
+      : css`
+          padding: 0 0.75rem;
+          display: grid;
+          row-gap: 0.75rem;
+        `}
 `;
 
 const EntryCardGrid = styled.div<{ expanded: boolean }>`
@@ -313,12 +326,13 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         </FiltersBox>
       </EntryListHead>
       <StyledEntryListBody>
-        <EntryListSort>
+        <EntryListSort expanded={expanded}>
           <Select
             id={`entry-sort-${pseudoUID}`}
             label={t('general.sort') as string}
             onChange={(e) => setSortKey(e.target.value)}
             value={sortKey}
+            labelPosition={expanded ? SelectLabelPosition.left : SelectLabelPosition.top}
           >
             <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
             <option value="createdAt">{t('categories.organizer.sort.created')}</option>
@@ -344,15 +358,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             ]}
           />
         </EntryListSort>
-        <EntryCardGrid expanded={expanded}>{cards}</EntryCardGrid>
-        {/* <Table
-          columns={[
-            { title: t('general.name') as string, bold: true },
-            { title: t('general.name') as string },
-          ]}
-          content={listContent}
-          narrow={!expanded}
-        /> */}
+        <EntryCardGrid expanded={expanded}>
+          {cards && cards.length > 0 ? cards : <div>Loading...</div>}
+        </EntryCardGrid>
         {lastPage > 1 && (
           <EntryListPagination
             currentPage={currentPage}

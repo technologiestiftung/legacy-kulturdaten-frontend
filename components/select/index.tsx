@@ -17,14 +17,28 @@ export enum SelectVariant {
   minimal = 'minimal',
 }
 
-const StyledSelectContainer = styled.div`
+const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>`
   display: flex;
   flex-direction: column;
   position: relative;
 
-  ${StyledLabel} {
-    padding-bottom: 0.75rem;
-  }
+  ${({ labelPosition }) =>
+    labelPosition === SelectLabelPosition.left
+      ? css`
+          flex-direction: row;
+          align-items: center;
+
+          ${StyledLabel} {
+            padding-right: 0.75rem;
+          }
+        `
+      : css`
+          flex-direction: column;
+
+          ${StyledLabel} {
+            padding-bottom: 0.75rem;
+          }
+        `}
 `;
 
 const selectSizes: {
@@ -149,12 +163,18 @@ const selectSizeIconSizeMap: { [key in SelectSize]: number } = {
   big: 24,
 };
 
+export enum SelectLabelPosition {
+  left = 'left',
+  top = 'top',
+}
+
 interface SelectProps {
   children: React.ReactNode;
   id: string;
   value?: string;
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => void;
   label?: string;
+  labelPosition?: SelectLabelPosition;
   defaultValue?: string;
   size?: SelectSize;
   variant?: SelectVariant;
@@ -171,6 +191,7 @@ export const Select: React.FC<SelectProps> = ({
   value,
   onChange,
   label,
+  labelPosition = SelectLabelPosition.top,
   defaultValue,
   icon,
   size = SelectSize.default,
@@ -185,7 +206,7 @@ export const Select: React.FC<SelectProps> = ({
   const valueState = value || internalState[0];
 
   return (
-    <StyledSelectContainer>
+    <StyledSelectContainer labelPosition={labelPosition}>
       {label && (
         <Label htmlFor={id}>
           {label} {required ? ` (${t('forms.required')})` : ''}

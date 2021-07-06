@@ -8,12 +8,15 @@ const StyledRadioSwitch = styled.div``;
 
 const StyledRadioSwitchLabel = styled.div``;
 
+const borderWidth = '1px';
+
 const StyledRadioSwitchOptions = styled.div`
   display: flex;
-  border: 1px solid var(--black);
+  border: ${borderWidth} solid var(--black);
   border-radius: 0.75rem;
   overflow: hidden;
   background: var(--black);
+  mask-image: -webkit-radial-gradient(white, black);
 `;
 
 const StyledRadioSwitchOption = styled.div<{ active: boolean }>`
@@ -46,7 +49,7 @@ const StyledRadioSwitchOptionLabel = styled.label<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.375rem 0.75rem;
+  padding: calc(0.375rem - ${borderWidth}) calc(0.75rem - ${borderWidth});
   background: var(--white);
   color: var(--grey-600);
   cursor: pointer;
