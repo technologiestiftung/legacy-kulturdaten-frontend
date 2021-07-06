@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
-import React from 'react';
-import useSWR from 'swr';
+import React, { useContext } from 'react';
+import useSWR, { mutate as mutateSwr } from 'swr';
 import { Button, ButtonVariant } from '../components/button';
+import { EntryListContext } from '../components/EntryList/EntryListContext';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { Categories, Requirement, useCategories } from '../config/categories';
@@ -92,6 +93,20 @@ export enum Order {
   DESC = 'DESC',
 }
 
+const makeListQuery = (
+  page?: number,
+  size?: number,
+  filter?: [string, string][],
+  sort?: { key: string; order: Order }
+) => {
+  return {
+    page: page ? String(page) : undefined,
+    size: size ? String(size) : undefined,
+    filter: filter ? filter.map(([key, value]) => `${key}=${value}`).join(',') : undefined,
+    sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
+  };
+};
+
 export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
   page?: number,
@@ -115,12 +130,7 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
 
-  const query = {
-    page: page ? String(page) : undefined,
-    size: size ? String(size) : undefined,
-    filter: filter ? filter.map(([key, value]) => `${key}=${value}`).join(',') : undefined,
-    sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
-  };
+  const query = makeListQuery(page, size, filter, sort);
 
   const { data } = useSWR(
     load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,
@@ -139,6 +149,16 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
       };
     },
   };
+};
+
+export const useMutateList = (category: Category): (() => void) => {
+  const { currentPage: page, entriesPerPage: size, filters, sortKey, order } = useContext(
+    EntryListContext
+  );
+  const apiCallRoute = category?.api.list.route;
+  const query = makeListQuery(page, size, Object.entries(filters), { key: sortKey, order });
+
+  return () => mutateSwr(getApiUrlString(apiCallRoute, query));
 };
 
 export const useEntry = <T extends CategoryEntry, C extends ApiCall>(

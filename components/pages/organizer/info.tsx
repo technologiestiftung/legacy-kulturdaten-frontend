@@ -1,14 +1,13 @@
 import styled from '@emotion/styled';
 import React, { useEffect, useMemo, useState } from 'react';
-import { mutate as mutateSwr } from 'swr';
 import { Language } from '../../../config/locale';
-import { getApiUrlString, useApiCall } from '../../../lib/api';
+import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
 import { PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { CategoryEntryPage, useEntry } from '../../../lib/categories';
+import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -116,6 +115,7 @@ const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerF
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const mutateList = useMutateList(category);
 
   const initialLinks = useMemo(
     () => entry?.data?.relations?.links?.map((link) => link.attributes?.url),
@@ -195,7 +195,7 @@ const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerF
 
                 if (resp.status === 200) {
                   mutate();
-                  mutateSwr(getApiUrlString(category.api.list.route));
+                  mutateList();
                 }
               } catch (e) {
                 console.error(e);
@@ -216,6 +216,7 @@ const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerF
 const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
+  const mutateList = useMutateList(category);
 
   const initialAddress = useMemo(() => entry?.data?.relations?.address, [
     entry?.data?.relations?.address,
@@ -253,7 +254,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
 
           if (resp.status === 200) {
             mutate();
-            mutateSwr(getApiUrlString(category.api.list.route));
+            mutateList();
             setTimeout(() => setPristine(true), 500);
           }
         } catch (e) {
@@ -369,6 +370,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
 const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
+  const mutateList = useMutateList(category);
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
@@ -402,7 +404,7 @@ const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
 
           if (resp.status === 200) {
             mutate();
-            mutateSwr(getApiUrlString(category.api.list.route));
+            mutateList();
             setTimeout(() => setPristine(true), 500);
           }
         } catch (e) {
