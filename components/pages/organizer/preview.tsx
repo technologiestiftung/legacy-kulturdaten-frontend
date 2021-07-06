@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { contentGrid, mq } from '../../globals/Constants';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
-import { Organizer } from '../../../lib/api/types/organizer';
+import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { useLanguage } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
@@ -326,7 +326,10 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
 }: CategoryEntryPage) => {
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const language = useLanguage();
-  const currentTranslation = getTranslation(language, entry?.data?.relations?.translations);
+  const currentTranslation = getTranslation<OrganizerTranslation>(
+    language,
+    entry?.data?.relations?.translations
+  );
   const title = currentTranslation?.attributes?.name;
   const descriptionMarkdown = currentTranslation?.attributes?.description;
   const homepage = entry?.data?.attributes?.homepage;
