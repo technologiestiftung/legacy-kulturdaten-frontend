@@ -166,6 +166,11 @@ export const enDE: Localization = {
         created: () => 'Creation date',
         updated: () => 'Last updated',
       },
+      view: {
+        label: () => 'View',
+        cards: () => 'Cards',
+        table: () => 'Table',
+      },
     },
     offer: {
       title: {

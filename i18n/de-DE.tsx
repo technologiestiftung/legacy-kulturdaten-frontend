@@ -166,6 +166,11 @@ export const deDE: Localization = {
         created: () => 'Erstellungsdatum',
         updated: () => 'Zuletzt aktualisiert',
       },
+      view: {
+        label: () => 'Darstellung',
+        cards: () => 'Karten',
+        table: () => 'Tabelle',
+      },
     },
     offer: {
       title: {

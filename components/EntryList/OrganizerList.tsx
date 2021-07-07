@@ -22,10 +22,10 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select, SelectLabelPosition } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardTypesSubjects } from './EntryCard';
+import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
-import { RadioSwitch } from '../RadioSwitch';
-import { EntryListContext, FiltersActions } from './EntryListContext';
+import { RadioSwitch, RadioSwitchLabelPosition } from '../RadioSwitch';
+import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
 
 interface OrganizerListProps {
   expanded: boolean;
@@ -138,29 +138,21 @@ const EntryListSort = styled.div<{ expanded: boolean }>`
 
           > * {
             padding: 0 0 0 0.75rem;
+
+            &:last-of-type {
+              padding: 0 0 0 1.5rem;
+            }
           }
         `
       : css`
           padding: 0 0.75rem;
           display: grid;
           row-gap: 0.75rem;
+
+          > *:last-of-type {
+            padding: 0.75rem 0 0;
+          }
         `}
-`;
-
-const EntryCardGrid = styled.div<{ expanded: boolean }>`
-  display: grid;
-  grid-template-columns: auto;
-  grid-column-gap: 1.5rem;
-  grid-row-gap: 0.75rem;
-  padding: 1.5rem 0.75rem;
-
-  ${({ expanded }) =>
-    expanded
-      ? css`
-          grid-row-gap: 1.5rem;
-          grid-template-columns: 1fr 1fr;
-        `
-      : ''}
 `;
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: OrganizerListProps) => {
@@ -183,6 +175,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     setOrder,
     filters,
     dispatchFilters,
+    view,
+    setView,
   } = useContext(EntryListContext);
 
   const pseudoUID = usePseudoUID();
@@ -326,6 +320,27 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                 label: t('general.descending') as string,
                 ariaLabel: t('general.descendingAriaLabel') as string,
                 icon: 'ArrowDown',
+              },
+            ]}
+          />
+          <RadioSwitch
+            value={view}
+            name={`entry-view-${pseudoUID}`}
+            onChange={(value) => {
+              setView(value as EntryListView);
+            }}
+            label={t('categories.organizer.view.label') as string}
+            labelPosition={expanded ? RadioSwitchLabelPosition.left : RadioSwitchLabelPosition.top}
+            options={[
+              {
+                value: EntryListView.cards,
+                label: t('categories.organizer.view.cards') as string,
+                icon: 'Grid',
+              },
+              {
+                value: EntryListView.table,
+                label: t('categories.organizer.view.table') as string,
+                icon: 'AlignJustify',
               },
             ]}
           />

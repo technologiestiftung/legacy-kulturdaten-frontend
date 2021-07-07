@@ -33,6 +33,11 @@ const filtersReducer: Reducer<FiltersState, FiltersAction> = (state, action) => 
   }
 };
 
+export enum EntryListView {
+  table = 'table',
+  cards = 'cards',
+}
+
 type EntryListContext = {
   currentPage: number;
   setCurrentPage: (currentPage: number) => void;
@@ -44,6 +49,8 @@ type EntryListContext = {
   setSortKey: (sortKey: string) => void;
   filters: FiltersState;
   dispatchFilters: Dispatch<FiltersAction>;
+  view: EntryListView;
+  setView: (view: EntryListView) => void;
 };
 
 export const EntryListContext = React.createContext<EntryListContext>({
@@ -57,6 +64,8 @@ export const EntryListContext = React.createContext<EntryListContext>({
   setSortKey: () => undefined,
   filters: undefined,
   dispatchFilters: () => undefined,
+  view: undefined,
+  setView: () => undefined,
 });
 
 interface EntryListContextProviderProps {
@@ -71,6 +80,7 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
   const [entriesPerPage, setEntriesPerPage] = useState(8);
   const [sortKey, setSortKey] = useState('updatedAt');
   const [order, setOrder] = useState(Order.DESC);
+  const [view, setView] = useState(EntryListView.cards);
 
   return (
     <EntryListContext.Provider
@@ -85,6 +95,8 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
         setSortKey,
         filters,
         dispatchFilters,
+        view,
+        setView,
       }}
     >
       {children}
