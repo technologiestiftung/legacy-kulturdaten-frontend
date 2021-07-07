@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useContext, useEffect, useRef } from 'react';
 import 'wicg-inert';
 
-import { Breakpoint, WindowContext } from '../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
 import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
@@ -107,6 +107,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ navigation, content }: App
   const { setNavigationOpen, menuExpanded, setMenuExpanded } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const contentSlotRef = useRef<HTMLDivElement>();
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   // Add "inert" attribute to elements behind MainMenuOverlay.
   // Inert is a new web standard which marks elements as not interactive while keeping them visible.
@@ -119,6 +120,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ navigation, content }: App
       contentSlotRef.current?.removeAttribute('inert');
     }
   }, [isMainMenuOverlayVisible]);
+
+  useEffect(() => {
+    if (!isMidOrWider) {
+      setMenuExpanded(false);
+    }
+  }, [isMidOrWider, setMenuExpanded]);
 
   const renderedContentSlot = <ContentSlot ref={contentSlotRef}>{content}</ContentSlot>;
 
