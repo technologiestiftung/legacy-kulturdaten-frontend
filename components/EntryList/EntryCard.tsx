@@ -7,6 +7,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
+import { StatusFlag } from '../Status/StatusFlag';
 
 const StyledEntryCardLink = styled.a`
   text-decoration: none;
@@ -110,16 +111,6 @@ const StyledEntryCardBottom = styled.div`
 
 const StyledEntryCardStatus = styled.div<{ status: PublishedStatus; menuExpanded: boolean }>`
   padding: 0.75rem;
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-
-  span {
-    padding: 0 0.375rem;
-    border: 1px solid rgba(0, 0, 0, 0.25);
-    border-radius: 0.375rem;
-    background: ${({ status }) =>
-      status === PublishedStatus.draft ? 'var(--mustard)' : 'var(--green-light)'};
-  }
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
@@ -233,7 +224,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
               </StyledEntryCardDate>
             </StyledEntryCardDates>
             <StyledEntryCardStatus status={status} menuExpanded={menuExpanded}>
-              <span>{t(`statusBar.${status}`)}</span>
+              <StatusFlag status={status} />
             </StyledEntryCardStatus>
           </StyledEntryCardBottom>
         </StyledEntryCard>

@@ -59,14 +59,14 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
     expanded
       ? css`
           ${mq(Breakpoint.mid)} {
-            width: calc(16.6875rem + ((100% - 16.6875rem) / 11 * 7));
-          }
-
-          @media screen and (min-width: 61.1875rem) {
-            width: calc(100% / 11 * 10);
+            width: 100%;
           }
 
           ${mq(Breakpoint.widish)} {
+            width: calc(100% / 11 * 10);
+          }
+
+          ${mq(Breakpoint.ultra)} {
             width: calc(100% / 11 * 9);
           }
         `

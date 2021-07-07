@@ -1,12 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import { MouseEventHandler, useContext } from 'react';
-import { TableContext } from '.';
-import { PublishedStatus } from '../../lib/api/types/general';
-import { useT } from '../../lib/i18n';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { ArrowRightSvg } from '../assets/ArrowRightSvg';
+import { MouseEventHandler } from 'react';
 import { insetBorder } from '../globals/Constants';
 
 export const StyledTableLinkText = styled.div<{ isActive?: boolean }>`
@@ -42,47 +37,25 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
   }
 
   &:hover {
-    background: var(--white);
-
-    ${StyledTableLinkText} {
-      text-decoration: underline;
-    }
+    background: var(--grey-350);
   }
 
   ${({ isActive }) =>
     isActive
       ? css`
-          background: var(--white);
+          background: var(--grey-350);
+
+          ${StyledTableLinkText} {
+            text-decoration: underline;
+          }
         `
       : ''}
-`;
-
-const StyledTableLinkWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  display: block;
-  width: auto;
-  pointer-events: none;
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const StyledTableLinkStatus = styled.div`
-  font-size: var(--font-size-100);
-  line-height: var(--line-height-100);
-  font-weight: 700;
-  padding: 0.0625rem 0.1875rem;
-  background: var(--mustard);
-  margin-right: 1px;
-  border-radius: 0 0 0 0.1875rem;
 `;
 
 interface TableLinkProps {
   children: React.ReactNode;
   href: string;
   isActive?: boolean;
-  status?: PublishedStatus;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
@@ -90,25 +63,12 @@ export const TableLink: React.FC<TableLinkProps> = ({
   children,
   href,
   isActive,
-  status,
   onClick,
 }: TableLinkProps) => {
-  const t = useT();
-
-  const isDefaultBreakpoint = !useBreakpointOrWider(Breakpoint.mid);
-
-  const { narrow: isNarrowTable } = useContext(TableContext);
-
   return (
     <Link href={href} passHref>
       <StyledTableLink isActive={isActive} onClick={onClick}>
-        {isActive ? <ArrowRightSvg /> : ''}
         <div>{children}</div>
-        {(isDefaultBreakpoint || isNarrowTable) && status === PublishedStatus.draft && (
-          <StyledTableLinkWrapper>
-            <StyledTableLinkStatus>{t('statusBar.draft')}</StyledTableLinkStatus>
-          </StyledTableLinkWrapper>
-        )}
       </StyledTableLink>
     </Link>
   );
