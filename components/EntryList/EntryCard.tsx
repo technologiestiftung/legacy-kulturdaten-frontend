@@ -6,7 +6,10 @@ import { PublishedStatus } from '../../lib/api/types/general';
 import { DateFormat, useDate } from '../../lib/date';
 import { useT } from '../../lib/i18n';
 
-const StyledEntryCardLink = styled.a``;
+const StyledEntryCardLink = styled.a`
+  text-decoration: none;
+  color: inherit;
+`;
 
 const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean }>`
   border: 1px solid var(--black);
@@ -147,6 +150,22 @@ const StyledEntryCardDate = styled.div`
   text-transform: capitalize;
 `;
 
+export const EntryCardGrid = styled.div<{ expanded: boolean }>`
+  display: grid;
+  grid-template-columns: auto;
+  grid-column-gap: 1.5rem;
+  grid-row-gap: 0.75rem;
+  padding: 1.5rem 0.75rem;
+
+  ${({ expanded }) =>
+    expanded
+      ? css`
+          grid-row-gap: 1.5rem;
+          grid-template-columns: 1fr 1fr;
+        `
+      : ''}
+`;
+
 interface EntryCardProps {
   title: string;
   status: PublishedStatus;
@@ -175,7 +194,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   const t = useT();
 
   return (
-    <Link href={href}>
+    <Link href={href} passHref>
       <StyledEntryCardLink onClick={onClick}>
         <StyledEntryCard menuExpanded={menuExpanded} active={active}>
           <StyledEntryCardTop>
