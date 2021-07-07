@@ -6,7 +6,12 @@ import { Plus } from 'react-feather';
 import { StyledEntryListBody } from '.';
 import { useCategories } from '../../config/categories';
 import { OrganizerList as OrganizerListCall } from '../../lib/api';
-import { Organizer, OrganizerTranslation } from '../../lib/api/types/organizer';
+import {
+  Organizer,
+  OrganizerSubjectTranslation,
+  OrganizerTranslation,
+  OrganizerTypeTranslation,
+} from '../../lib/api/types/organizer';
 import { Order, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
@@ -222,20 +227,18 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                 ? getTranslation<OrganizerTranslation>(language, translations)
                 : undefined;
               const typeNames = relations?.types?.map((type) => {
-                // const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                //   language,
-                //   type.relations.translations
-                // );
-                const typeTranslation = type.relations.translations[0];
+                const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
                 return typeTranslation?.attributes.name;
               });
 
               const subjectNames = relations?.subjects?.map((subject) => {
-                // const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                //   language,
-                //   subject.relations.translations
-                // );
-                const subjectTranslation = subject.relations.translations[0];
+                const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                  language,
+                  subject.relations.translations
+                );
                 return subjectTranslation?.attributes.name;
               });
 

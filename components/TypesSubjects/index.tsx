@@ -1,8 +1,14 @@
 import styled from '@emotion/styled';
 import { Reducer, useEffect, useReducer, useState } from 'react';
 import { Plus } from 'react-feather';
-import { OrganizerType } from '../../lib/api/types/organizer';
+import {
+  OrganizerSubjectTranslation,
+  OrganizerType,
+  OrganizerTypeTranslation,
+} from '../../lib/api/types/organizer';
 import { useT } from '../../lib/i18n';
+import { useLanguage } from '../../lib/routing';
+import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Checkbox } from '../checkbox';
 import { CheckboxList } from '../checkbox/CheckboxList';
@@ -107,6 +113,7 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
   const pristineState = typeof pristine !== 'undefined' ? pristine : intPristine;
   const setPristineState = setPristine || intSetPristine;
   const t = useT();
+  const language = useLanguage();
 
   const [state, dispatch] = useReducer(typesSubjectsReducer, {
     types: value?.types?.map((type) => type),
@@ -137,10 +144,10 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
   return (
     <StyledTypesSubjects>
       {options?.map((type, index) => {
-        // const typeTranslation = getTranslation(language, type.relations?.translations);
-        const typeTranslation = type.relations?.translations
-          ? type.relations?.translations[0]
-          : undefined;
+        const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+          language,
+          type.relations?.translations
+        );
 
         const typeIsChecked = state.types?.includes(String(type?.id));
 
@@ -180,10 +187,10 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                     });
                   }}
                   checkboxes={type?.relations?.subjects?.map((subject) => {
-                    // const subjectTranslation = getTranslation(language, subject.relations?.translations);
-                    const subjectTranslation = subject.relations?.translations
-                      ? subject.relations?.translations[0]
-                      : undefined;
+                    const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                      language,
+                      subject.relations?.translations
+                    );
 
                     return {
                       id: `${pseudoUid}-type-${type.id}-subject-${subject.id}`,
