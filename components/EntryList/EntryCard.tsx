@@ -5,6 +5,8 @@ import { MouseEventHandler } from 'react';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { DateFormat, useDate } from '../../lib/date';
 import { useT } from '../../lib/i18n';
+import { Breakpoint } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
 
 const StyledEntryCardLink = styled.a`
   text-decoration: none;
@@ -41,6 +43,7 @@ const StyledEntryCardTop = styled.div`
 const StyledEntryCardTopLeft = styled.div`
   display: flex;
   flex-direction: column;
+  width: 75%;
 `;
 
 const StyledEntryCardTitle = styled.div<{ menuExpanded: boolean; active: boolean }>`
@@ -48,15 +51,18 @@ const StyledEntryCardTitle = styled.div<{ menuExpanded: boolean; active: boolean
   line-height: var(--line-height-500);
   font-weight: var(--font-weight-bold);
   padding: 0.75rem;
+  word-wrap: break-word;
 
-  ${({ menuExpanded }) =>
-    menuExpanded
-      ? css`
-          padding: 1.5rem 1.5rem 0.75rem;
-          font-size: var(--font-size-600);
-          line-height: var(--line-height-600);
-        `
-      : ''}
+  ${mq(Breakpoint.widish)} {
+    ${({ menuExpanded }) =>
+      menuExpanded
+        ? css`
+            padding: 1.5rem 1.5rem 0.75rem;
+            font-size: var(--font-size-600);
+            line-height: var(--line-height-600);
+          `
+        : ''}
+  }
 
   ${({ active }) =>
     active
@@ -69,26 +75,31 @@ const StyledEntryCardTitle = styled.div<{ menuExpanded: boolean; active: boolean
 const StyledEntryCardMeta = styled.div<{ menuExpanded: boolean }>`
   padding: 0 0.75rem;
 
-  ${({ menuExpanded }) =>
-    menuExpanded
-      ? css`
-          padding: 0 1.5rem;
-        `
-      : ''}
+  ${mq(Breakpoint.widish)} {
+    ${({ menuExpanded }) =>
+      menuExpanded
+        ? css`
+            padding: 0 1.5rem;
+          `
+        : ''}
+  }
 `;
 const StyledEntryCardImage = styled.div<{ menuExpanded: boolean }>`
-  width: 6rem;
+  width: 25%;
+  max-width: 6rem;
   height: 6rem;
   flex-grow: 0;
   flex-shrink: 0;
 
-  ${({ menuExpanded }) =>
-    menuExpanded
-      ? css`
-          width: 9.75rem;
-          height: 9.75rem;
-        `
-      : ''}
+  ${mq(Breakpoint.widish)} {
+    ${({ menuExpanded }) =>
+      menuExpanded
+        ? css`
+            max-width: 9.75rem;
+            height: 9.75rem;
+          `
+        : ''}
+  }
 `;
 
 const StyledEntryCardBottom = styled.div`
@@ -110,12 +121,14 @@ const StyledEntryCardStatus = styled.div<{ status: PublishedStatus; menuExpanded
       status === PublishedStatus.draft ? 'var(--mustard)' : 'var(--green-light)'};
   }
 
-  ${({ menuExpanded }) =>
-    menuExpanded
-      ? css`
-          padding: 1.5rem;
-        `
-      : ''}
+  ${mq(Breakpoint.widish)} {
+    ${({ menuExpanded }) =>
+      menuExpanded
+        ? css`
+            padding: 1.5rem;
+          `
+        : ''}
+  }
 `;
 
 const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
@@ -123,45 +136,49 @@ const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
   line-height: 1.125rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   padding: 0.75rem;
 
-  ${({ menuExpanded }) =>
-    menuExpanded
-      ? css`
-          font-size: var(--font-size-300);
-          line-height: var(--line-height-300);
-          padding: 1.5rem;
-          flex-direction: row;
+  ${mq(Breakpoint.widish)} {
+    ${({ menuExpanded }) =>
+      menuExpanded
+        ? css`
+            font-size: var(--font-size-300);
+            line-height: var(--line-height-300);
+            padding: 1.5rem;
+            flex-direction: row;
 
-          div:first-of-type {
-            &::after {
-              content: '|';
-              padding: 0 0.375rem;
-              color: var(--grey-400);
+            div:first-of-type {
+              &::after {
+                content: '|';
+                padding: 0 0.375rem;
+                color: var(--grey-400);
+              }
             }
-          }
-        `
-      : ''}
+          `
+        : ''}
+  }
 `;
 
 const StyledEntryCardDate = styled.div`
-  text-align: right;
   text-transform: capitalize;
 `;
 
 export const EntryCardGrid = styled.div<{ expanded: boolean }>`
   display: grid;
   grid-template-columns: auto;
-  grid-column-gap: 1.5rem;
+  grid-column-gap: 0.75rem;
   grid-row-gap: 0.75rem;
   padding: 1.5rem 0.75rem;
 
   ${({ expanded }) =>
     expanded
       ? css`
-          grid-row-gap: 1.5rem;
           grid-template-columns: 1fr 1fr;
+
+          ${mq(Breakpoint.widish)} {
+            grid-column-gap: 1.5rem;
+            grid-row-gap: 1.5rem;
+          }
         `
       : ''}
 `;
@@ -207,9 +224,6 @@ export const EntryCard: React.FC<EntryCardProps> = ({
             <StyledEntryCardImage menuExpanded={menuExpanded}></StyledEntryCardImage>
           </StyledEntryCardTop>
           <StyledEntryCardBottom>
-            <StyledEntryCardStatus status={status} menuExpanded={menuExpanded}>
-              <span>{t(`statusBar.${status}`)}</span>
-            </StyledEntryCardStatus>
             <StyledEntryCardDates menuExpanded={menuExpanded}>
               <StyledEntryCardDate>
                 {t('general.updated')}: {updatedDate ? date(updatedDate, DateFormat.date) : ''}
@@ -218,6 +232,9 @@ export const EntryCard: React.FC<EntryCardProps> = ({
                 {t('general.created')}: {createdDate ? date(createdDate, DateFormat.date) : ''}
               </StyledEntryCardDate>
             </StyledEntryCardDates>
+            <StyledEntryCardStatus status={status} menuExpanded={menuExpanded}>
+              <span>{t(`statusBar.${status}`)}</span>
+            </StyledEntryCardStatus>
           </StyledEntryCardBottom>
         </StyledEntryCard>
       </StyledEntryCardLink>

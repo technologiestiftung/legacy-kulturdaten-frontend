@@ -26,6 +26,8 @@ import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch, RadioSwitchLabelPosition } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
+import { mq } from '../globals/Constants';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 
 interface OrganizerListProps {
   expanded: boolean;
@@ -129,30 +131,32 @@ const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
 };
 
 const EntryListSort = styled.div<{ expanded: boolean }>`
-  ${({ expanded }) =>
-    expanded
-      ? css`
-          padding: 0.75rem;
-          display: flex;
-          justify-content: flex-end;
+  padding: 0 0.75rem;
+  display: grid;
+  row-gap: 0.75rem;
 
-          > * {
-            padding: 0 0 0 0.75rem;
+  > *:last-of-type {
+    padding: 0.75rem 0 0;
+  }
 
-            &:last-of-type {
-              padding: 0 0 0 1.5rem;
+  ${mq(Breakpoint.widish)} {
+    ${({ expanded }) =>
+      expanded
+        ? css`
+            padding: 0.75rem;
+            display: flex;
+            justify-content: flex-end;
+
+            > * {
+              padding: 0 0 0 0.75rem;
+
+              &:last-of-type {
+                padding: 0 0 0 1.5rem;
+              }
             }
-          }
-        `
-      : css`
-          padding: 0 0.75rem;
-          display: grid;
-          row-gap: 0.75rem;
-
-          > *:last-of-type {
-            padding: 0.75rem 0 0;
-          }
-        `}
+          `
+        : ''}
+  }
 `;
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: OrganizerListProps) => {
@@ -178,6 +182,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     view,
     setView,
   } = useContext(EntryListContext);
+  const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
 
   const pseudoUID = usePseudoUID();
 
@@ -295,7 +300,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               setSortKey(e.target.value);
             }}
             value={sortKey}
-            labelPosition={expanded ? SelectLabelPosition.left : SelectLabelPosition.top}
+            labelPosition={
+              expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
+            }
           >
             <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
             <option value="createdAt">{t('categories.organizer.sort.created')}</option>
@@ -330,7 +337,11 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               setView(value as EntryListView);
             }}
             label={t('categories.organizer.view.label') as string}
-            labelPosition={expanded ? RadioSwitchLabelPosition.left : RadioSwitchLabelPosition.top}
+            labelPosition={
+              expanded && isWidishOrWider
+                ? RadioSwitchLabelPosition.left
+                : RadioSwitchLabelPosition.top
+            }
             options={[
               {
                 value: EntryListView.cards,
