@@ -2,11 +2,31 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import * as feather from 'react-feather';
-import { Label } from '../label';
+import { Label, StyledLabel } from '../label';
 
-const StyledRadioSwitch = styled.div``;
+const StyledRadioSwitch = styled.div<{ labelPosition: RadioSwitchLabelPosition }>`
+  display: flex;
+  flex-direction: column;
+  position: relative;
 
-const StyledRadioSwitchLabel = styled.div``;
+  ${({ labelPosition }) =>
+    labelPosition === RadioSwitchLabelPosition.left
+      ? css`
+          flex-direction: row;
+          align-items: center;
+
+          ${StyledLabel} {
+            padding-right: 0.75rem;
+          }
+        `
+      : css`
+          flex-direction: column;
+
+          ${StyledLabel} {
+            padding-bottom: 0.75rem;
+          }
+        `}
+`;
 
 const borderWidth = '1px';
 
@@ -77,6 +97,9 @@ const StyledRadioSwitchOptionLabelText = styled.div`
 
 const StyledRadioSwitchOptionLabelIcon = styled.div`
   padding-right: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   svg {
     color: inherit;
@@ -84,6 +107,11 @@ const StyledRadioSwitchOptionLabelIcon = styled.div`
     height: 1.125rem;
   }
 `;
+
+export enum RadioSwitchLabelPosition {
+  left = 'left',
+  top = 'top',
+}
 
 interface RadioSwitchProps {
   name: string;
@@ -96,7 +124,8 @@ interface RadioSwitchProps {
     id?: string;
     ariaLabel?: string;
   }[];
-  label?: StringConstructor;
+  label?: string;
+  labelPosition?: RadioSwitchLabelPosition;
 }
 
 export const RadioSwitch: React.FC<RadioSwitchProps> = ({
@@ -105,18 +134,15 @@ export const RadioSwitch: React.FC<RadioSwitchProps> = ({
   onChange,
   options,
   label,
+  labelPosition = RadioSwitchLabelPosition.top,
 }: RadioSwitchProps) => {
   const [internalState, setInternalState] = useState<string>();
 
   const state = value || internalState;
 
   return (
-    <StyledRadioSwitch>
-      {label && (
-        <StyledRadioSwitchLabel>
-          <Label>{label}</Label>
-        </StyledRadioSwitchLabel>
-      )}
+    <StyledRadioSwitch labelPosition={labelPosition}>
+      {label && <Label>{label}</Label>}
       <StyledRadioSwitchOptions>
         {options.map(({ value, label, icon, id, ariaLabel }, index) => {
           const optionId = id || `${name}-${index}`;

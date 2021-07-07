@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { useContext, useEffect, useRef } from 'react';
 import 'wicg-inert';
 
-import { Breakpoint, WindowContext } from '../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
 import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
@@ -59,14 +59,14 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
     expanded
       ? css`
           ${mq(Breakpoint.mid)} {
-            width: calc(16.6875rem + ((100% - 16.6875rem) / 11 * 7));
-          }
-
-          @media screen and (min-width: 61.1875rem) {
-            width: calc(100% / 11 * 10);
+            width: 100%;
           }
 
           ${mq(Breakpoint.widish)} {
+            width: calc(100% / 11 * 10);
+          }
+
+          ${mq(Breakpoint.ultra)} {
             width: calc(100% / 11 * 9);
           }
         `
@@ -107,6 +107,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ navigation, content }: App
   const { setNavigationOpen, menuExpanded, setMenuExpanded } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const contentSlotRef = useRef<HTMLDivElement>();
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   // Add "inert" attribute to elements behind MainMenuOverlay.
   // Inert is a new web standard which marks elements as not interactive while keeping them visible.
@@ -119,6 +120,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ navigation, content }: App
       contentSlotRef.current?.removeAttribute('inert');
     }
   }, [isMainMenuOverlayVisible]);
+
+  useEffect(() => {
+    if (!isMidOrWider) {
+      setMenuExpanded(false);
+    }
+  }, [isMidOrWider, setMenuExpanded]);
 
   const renderedContentSlot = <ContentSlot ref={contentSlotRef}>{content}</ContentSlot>;
 

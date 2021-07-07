@@ -133,7 +133,7 @@ export const deDE: Localization = {
         descriptionEnglish: () => 'Englisch',
         descriptionEnglishSimple: () => 'Englisch: einfache Sprache',
         classification: () => 'Einordnung',
-        type: () => 'Typ',
+        type: () => 'Typ(en)',
         subjects: () => 'Sparte(n)',
         chooseTypeFirst: () => 'Bitte zunächst Typ auswählen',
         tags: () => 'Tags',
@@ -164,7 +164,16 @@ export const deDE: Localization = {
       sort: {
         name: () => 'Bezeichnung',
         created: () => 'Erstellungsdatum',
-        updated: () => 'Zuletzt aktualisiert',
+        updated: () => 'Zuletzt geändert',
+      },
+      view: {
+        label: () => 'Darstellung',
+        cards: () => 'Karten',
+        table: () => 'Tabelle',
+      },
+      table: {
+        created: () => 'erstellt',
+        updated: () => 'geändert',
       },
     },
     offer: {

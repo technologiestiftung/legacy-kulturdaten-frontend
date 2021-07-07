@@ -2,12 +2,13 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { insetBorder, contentGrid, mq } from '../globals/Constants';
+import { insetBorder, mq, insetBorderColored } from '../globals/Constants';
 
 const StyledTable = styled.div`
   display: grid;
   grid-template-columns: auto;
   row-gap: 0;
+  border-top: 1px solid var(--grey-400);
 `;
 
 const StyledRow = styled.div<{ columnCount: number; isTitleRow?: boolean; narrow?: boolean }>`
@@ -22,20 +23,20 @@ const StyledRow = styled.div<{ columnCount: number; isTitleRow?: boolean; narrow
             padding: 0;
             grid-template-columns: repeat(
               ${columnCount},
-              calc((100% - (1.5rem * (${columnCount} - 1))) / ${columnCount})
+              calc((100% - (0.75rem * (${columnCount} - 1))) / ${columnCount})
             );
-            column-gap: 1.5rem;
+            column-gap: 0.75rem;
             grid-template-rows: auto;
           }
 
           ${mq(Breakpoint.wide)} {
-            grid-column: 2 / -2;
+            grid-column: 1 / -1;
           }
         `
       : ''}
 `;
 
-const StyledRowWrapper = styled.div<{ narrow?: boolean; isHeader?: boolean }>`
+const StyledRowWrapper = styled.div<{ narrow?: boolean; isTitleRow?: boolean }>`
   box-shadow: ${insetBorder(false, false, true)};
 
   ${({ narrow }) =>
@@ -47,43 +48,35 @@ const StyledRowWrapper = styled.div<{ narrow?: boolean; isHeader?: boolean }>`
         `
       : ''}
 
-  ${({ isHeader }) =>
-    isHeader
+  ${({ isTitleRow }) =>
+    isTitleRow
       ? css`
           position: sticky;
           top: 0;
           left: 0;
           background: var(--white);
-          box-shadow: ${insetBorder(false, false, true, false)};
+          box-shadow: ${insetBorderColored('var(--black)', false, false, true)};
           z-index: 1;
-
-          ${mq(Breakpoint.wide)} {
-            box-shadow: ${insetBorder(false, false, true)};
-          }
         `
       : ''}
 `;
 
 const StyledRowContainer = styled.div<{ narrow?: boolean }>`
   padding: 0 0.75rem;
-
-  ${({ narrow }) =>
-    narrow !== true
-      ? css`
-          ${mq(Breakpoint.wide)} {
-            padding: 0;
-            ${contentGrid(10)}
-          }
-        `
-      : null}
 `;
 
-const StyledCell = styled.div<{ isTitleRow?: boolean; bold?: boolean; narrow?: boolean }>`
+const StyledCell = styled.div<{
+  isTitleRow?: boolean;
+  bold?: boolean;
+  narrow?: boolean;
+  width?: number;
+}>`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: ${({ isTitleRow, bold }) => (isTitleRow || bold ? '700' : '400')};
   padding: 0;
   word-wrap: break-word;
+  grid-column: span ${({ width }) => width || 1};
 
   ${({ narrow }) =>
     narrow !== true
@@ -93,21 +86,13 @@ const StyledCell = styled.div<{ isTitleRow?: boolean; bold?: boolean; narrow?: b
           }
         `
       : ''}
-
-  ${({ isTitleRow }) =>
-    isTitleRow
-      ? css`
-          text-transform: uppercase;
-          font-size: var(--font-size-200);
-          line-height: var(--line-height-200);
-        `
-      : ''}
 `;
 
 export interface TableProps {
   columns: {
     title: string;
     bold?: boolean;
+    width?: number;
   }[];
   content: {
     contents: (string | React.ReactElement)[];
@@ -145,18 +130,25 @@ export const TableContextProvider: React.FC<TableContextProviderProps> = ({
 };
 
 export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }: TableProps) => {
-  const columnCount = columns.length;
+  const columnCount = columns.reduce((count, { width = 1 }) => count + width, 0);
+  // const columnCount = columns.length;
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   return (
     <StyledTable role="table">
       <TableContextProvider narrow={narrow}>
         {!narrow && isMidOrWider && (
-          <StyledRowWrapper narrow={narrow} isHeader>
+          <StyledRowWrapper narrow={narrow} isTitleRow>
             <StyledRowContainer narrow={narrow}>
               <StyledRow columnCount={columnCount} isTitleRow role="row" narrow={narrow}>
                 {columns.map((cell, index) => (
-                  <StyledCell key={index} isTitleRow role="columnheader" narrow={narrow}>
+                  <StyledCell
+                    width={columns[index].width}
+                    key={index}
+                    isTitleRow
+                    role="columnheader"
+                    narrow={narrow}
+                  >
                     {cell.title}
                   </StyledCell>
                 ))}
@@ -170,6 +162,7 @@ export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }
               <StyledRow columnCount={columnCount} role="row" narrow={narrow}>
                 {contents.map((cell, cellIndex) => (
                   <StyledCell
+                    width={columns[cellIndex].width}
                     bold={columns[cellIndex].bold}
                     key={cellIndex}
                     role="cell"

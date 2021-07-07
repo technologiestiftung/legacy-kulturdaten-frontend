@@ -6,7 +6,12 @@ import { Plus } from 'react-feather';
 import { StyledEntryListBody } from '.';
 import { useCategories } from '../../config/categories';
 import { OrganizerList as OrganizerListCall } from '../../lib/api';
-import { Organizer, OrganizerTranslation } from '../../lib/api/types/organizer';
+import {
+  Organizer,
+  OrganizerSubjectTranslation,
+  OrganizerTranslation,
+  OrganizerTypeTranslation,
+} from '../../lib/api/types/organizer';
 import { Order, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
@@ -17,10 +22,21 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select, SelectLabelPosition } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardTypesSubjects } from './EntryCard';
+import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
-import { RadioSwitch } from '../RadioSwitch';
-import { EntryListContext, FiltersActions } from './EntryListContext';
+import { RadioSwitch, RadioSwitchLabelPosition } from '../RadioSwitch';
+import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
+import { mq } from '../globals/Constants';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Table, TableProps } from '../table';
+import { StatusFlag } from '../Status/StatusFlag';
+import { DateFormat, useDate } from '../../lib/date';
+import { StyledTableLinkText, TableLink } from '../table/TableLink';
+
+const viewEntriesPerPageMap = {
+  cards: 8,
+  table: 16,
+};
 
 interface OrganizerListProps {
   expanded: boolean;
@@ -123,40 +139,42 @@ const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
   );
 };
 
+const StyledEntryListTable = styled.div`
+  padding: 1.5rem 0;
+`;
+
 const EntryListSort = styled.div<{ expanded: boolean }>`
-  ${({ expanded }) =>
-    expanded
-      ? css`
-          padding: 0.75rem;
-          display: flex;
-          justify-content: flex-end;
-
-          > * {
-            padding: 0 0 0 0.75rem;
-          }
-        `
-      : css`
-          padding: 0 0.75rem;
-          display: grid;
-          row-gap: 0.75rem;
-        `}
-`;
-
-const EntryCardGrid = styled.div<{ expanded: boolean }>`
+  padding: 0 0.75rem;
   display: grid;
-  grid-template-columns: auto;
-  grid-column-gap: 1.5rem;
-  grid-row-gap: 0.75rem;
-  padding: 1.5rem 0.75rem;
+  row-gap: 0.75rem;
 
-  ${({ expanded }) =>
-    expanded
-      ? css`
-          grid-row-gap: 1.5rem;
-          grid-template-columns: 1fr 1fr;
-        `
-      : ''}
+  > *:last-of-type {
+    padding: 0.75rem 0 0;
+  }
+
+  ${mq(Breakpoint.widish)} {
+    ${({ expanded }) =>
+      expanded
+        ? css`
+            padding: 0.75rem;
+            display: flex;
+            justify-content: flex-end;
+
+            > * {
+              padding: 0 0 0 0.75rem;
+
+              &:last-of-type {
+                padding: 0 0 0 1.5rem;
+              }
+            }
+          `
+        : ''}
+  }
 `;
+
+interface ListLinkProps {
+  children: React.ReactNode;
+}
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: OrganizerListProps) => {
   const categories = useCategories();
@@ -171,14 +189,17 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     currentPage,
     setCurrentPage,
     entriesPerPage,
-    // setEntriesPerPage,
+    setEntriesPerPage,
     sortKey,
     setSortKey,
     order,
     setOrder,
     filters,
     dispatchFilters,
+    view,
+    setView,
   } = useContext(EntryListContext);
+  const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
 
   const pseudoUID = usePseudoUID();
 
@@ -206,6 +227,15 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     }
   }, [list?.meta?.pages?.total]);
 
+  useEffect(() => {
+    if (viewEntriesPerPageMap[view] !== entriesPerPage) {
+      setEntriesPerPage(viewEntriesPerPageMap[view]);
+      setCurrentPage(1);
+    }
+  }, [view, setEntriesPerPage, entriesPerPage, setCurrentPage]);
+
+  const date = useDate();
+
   const cards = useMemo(
     () =>
       list?.data
@@ -222,20 +252,18 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                 ? getTranslation<OrganizerTranslation>(language, translations)
                 : undefined;
               const typeNames = relations?.types?.map((type) => {
-                // const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                //   language,
-                //   type.relations.translations
-                // );
-                const typeTranslation = type.relations.translations[0];
+                const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
                 return typeTranslation?.attributes.name;
               });
 
               const subjectNames = relations?.subjects?.map((subject) => {
-                // const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                //   language,
-                //   subject.relations.translations
-                // );
-                const subjectTranslation = subject.relations.translations[0];
+                const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                  language,
+                  subject.relations.translations
+                );
                 return subjectTranslation?.attributes.name;
               });
 
@@ -260,6 +288,75 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
           )
         : undefined,
     [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setNavigationOpen]
+  );
+
+  const rows: TableProps['content'] = useMemo(
+    () =>
+      list?.data
+        ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
+            ({ attributes, relations, id }, index) => {
+              const translations = relations?.translations;
+
+              const currentTranslation = translations
+                ? getTranslation<OrganizerTranslation>(language, translations)
+                : undefined;
+
+              const typeNames = relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              });
+
+              const subjectNames = relations?.subjects?.map((subject) => {
+                const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                  language,
+                  subject.relations.translations
+                );
+                return subjectTranslation?.attributes.name;
+              });
+
+              const href = (sub?: string) =>
+                routes[Routes.organizer]({
+                  locale,
+                  query: { id, sub },
+                });
+
+              const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
+                <TableLink
+                  onClick={() => {
+                    setNavigationOpen(false);
+                    setMenuExpanded(false);
+                  }}
+                  href={href('info')}
+                  isActive={router.asPath.includes(href())}
+                >
+                  {children}
+                </TableLink>
+              );
+
+              return {
+                contents: [
+                  <StyledTableLinkText key={0}>
+                    {currentTranslation?.attributes?.name}
+                  </StyledTableLinkText>,
+                  typeNames.join(', '),
+                  subjectNames.join(', '),
+                  <StatusFlag status={attributes?.status} key={1} />,
+                  attributes?.updatedAt
+                    ? date(new Date(attributes?.updatedAt), DateFormat.date)
+                    : undefined,
+                  attributes?.createdAt
+                    ? date(new Date(attributes?.createdAt), DateFormat.date)
+                    : undefined,
+                ].slice(0, !expanded ? 2 : undefined),
+                Wrapper: ListLink,
+              };
+            }
+          )
+        : undefined,
+    [list.data, language, date, expanded, locale, router.asPath, setNavigationOpen, setMenuExpanded]
   );
 
   return (
@@ -298,7 +395,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               setSortKey(e.target.value);
             }}
             value={sortKey}
-            labelPosition={expanded ? SelectLabelPosition.left : SelectLabelPosition.top}
+            labelPosition={
+              expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
+            }
           >
             <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
             <option value="createdAt">{t('categories.organizer.sort.created')}</option>
@@ -326,10 +425,54 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               },
             ]}
           />
+          <RadioSwitch
+            value={view}
+            name={`entry-view-${pseudoUID}`}
+            onChange={(value) => {
+              setView(value as EntryListView);
+            }}
+            label={t('categories.organizer.view.label') as string}
+            labelPosition={
+              expanded && isWidishOrWider
+                ? RadioSwitchLabelPosition.left
+                : RadioSwitchLabelPosition.top
+            }
+            options={[
+              {
+                value: EntryListView.cards,
+                label: t('categories.organizer.view.cards') as string,
+                icon: 'Grid',
+              },
+              {
+                value: EntryListView.table,
+                label: t('categories.organizer.view.table') as string,
+                icon: 'AlignJustify',
+              },
+            ]}
+          />
         </EntryListSort>
-        <EntryCardGrid expanded={expanded}>
-          {cards && cards.length > 0 ? cards : <div>Loading...</div>}
-        </EntryCardGrid>
+        {view === EntryListView.cards ? (
+          <EntryCardGrid expanded={expanded}>
+            {cards && cards.length > 0 ? cards : <div>Loading...</div>}
+          </EntryCardGrid>
+        ) : (
+          <StyledEntryListTable>
+            {rows && (
+              <Table
+                columns={[
+                  { title: t('categories.organizer.form.name') as string, bold: true, width: 5 },
+                  { title: t('categories.organizer.form.type') as string, width: 4 },
+                  { title: t('categories.organizer.form.subjects') as string, width: 4 },
+                  { title: t('statusBar.status') as string, width: 3 },
+                  { title: t('categories.organizer.table.updated') as string, width: 2 },
+                  { title: t('categories.organizer.table.created') as string, width: 2 },
+                ].slice(0, !expanded ? 2 : undefined)}
+                content={rows}
+                narrow={!expanded}
+              />
+            )}
+          </StyledEntryListTable>
+        )}
         {lastPage > 1 && (
           <EntryListPagination
             currentPage={currentPage}

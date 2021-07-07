@@ -33,7 +33,7 @@ export const enDE: Localization = {
     submit: () => 'Register',
   },
   statusBar: {
-    status: () => 'State',
+    status: () => 'Status',
     draft: () => 'Draft',
     published: () => 'published',
     saved: () => 'Saved',
@@ -133,7 +133,7 @@ export const enDE: Localization = {
         descriptionEnglish: () => 'English',
         descriptionEnglishSimple: () => 'English: simple Language',
         classification: () => 'Classification',
-        type: () => 'Type',
+        type: () => 'Type(s)',
         subjects: () => 'Subject(s)',
         chooseTypeFirst: () => 'Please choose type first',
         tags: () => 'Tags',
@@ -165,6 +165,15 @@ export const enDE: Localization = {
         name: () => 'Name',
         created: () => 'Creation date',
         updated: () => 'Last updated',
+      },
+      view: {
+        label: () => 'View',
+        cards: () => 'Cards',
+        table: () => 'Table',
+      },
+      table: {
+        created: () => 'created',
+        updated: () => 'updated',
       },
     },
     offer: {
