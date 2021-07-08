@@ -7,6 +7,7 @@ const StyledEntryListHead = styled.div<{ accentColor?: string }>`
   box-shadow: 0 0.125rem 0.625rem -0.25rem rgba(0, 0, 0, 0.4);
   position: relative;
   z-index: 1;
+  background: var(--grey-200);
 `;
 
 const StyledEntryListHeadTop = styled.div``;

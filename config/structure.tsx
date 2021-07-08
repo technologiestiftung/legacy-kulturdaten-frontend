@@ -11,6 +11,7 @@ import { NavigationContext } from '../components/navigation/NavigationContext';
 import { ButtonLink } from '../components/button/ButtonLink';
 import { MenuItem } from '../components/navigation/Menu';
 import { OrganizerList } from '../components/EntryList/OrganizerList';
+import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -159,6 +160,7 @@ export const useMenuStructure = (): NavigationStructure => {
             ),
           },
         ],
+        AdditionalContent: LocaleSwitch,
       },
       {
         key: 'offer',

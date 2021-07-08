@@ -38,6 +38,7 @@ export type MenuData = {
   expandable: boolean;
   title: string;
   List?: React.FC<{ expanded?: boolean }>;
+  AdditionalContent?: React.FC;
   sections?: MenuSectionData[];
 };
 
@@ -62,9 +63,14 @@ const StyledMenuSections = styled.div`
   display: grid;
   grid-template-columns: 100%;
   grid-row-gap: 1.5rem;
+  width: 100%;
 `;
 
-const StyledMenu = styled.div``;
+const StyledMenu = styled.div`
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
 
 interface MenuProps {
   menuData: MenuData;
@@ -73,7 +79,7 @@ interface MenuProps {
 export const Menu: React.FC<MenuProps> = ({ menuData }: MenuProps) => {
   const { setNavigationOpen, menuExpanded } = useContext(NavigationContext);
 
-  const { sections, List } = menuData;
+  const { sections, List, AdditionalContent } = menuData;
 
   const renderedSections = sections?.map(
     ({ title, icon, items, headOptions, variant, button }, index) => {
@@ -134,6 +140,7 @@ export const Menu: React.FC<MenuProps> = ({ menuData }: MenuProps) => {
     <StyledMenu>
       {List && React.createElement(List, { expanded: menuExpanded })}
       {renderedSections && <StyledMenuSections>{renderedSections}</StyledMenuSections>}
+      {AdditionalContent && React.createElement(AdditionalContent)}
     </StyledMenu>
   );
 };
