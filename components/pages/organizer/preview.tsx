@@ -344,6 +344,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
     );
     return typeTranslation?.attributes.name;
   });
+  const hasTypes = Array.isArray(typeNames) && typeNames.length > 0;
   const subjectNames = relations?.subjects?.map((subject) => {
     const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
       language,
@@ -351,6 +352,8 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
     );
     return subjectTranslation?.attributes.name;
   });
+  const hasSubjects = Array.isArray(subjectNames) && subjectNames.length > 0;
+  const hasCategorization = hasTypes || hasSubjects;
   const title = currentTranslation?.attributes?.name;
   const descriptionMarkdown = currentTranslation?.attributes?.description;
   const homepage = entry?.data?.attributes?.homepage;
@@ -372,10 +375,12 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
           <img src="http://via.placeholder.com/800x800" alt="" />
         </EntryLogo>
         <EntryMetadata>
-          <EntryCategorization>
-            <EntryType>{typeNames.join(', ')}</EntryType>
-            <EntrySubject>{subjectNames.join(', ')}</EntrySubject>
-          </EntryCategorization>
+          {hasCategorization && (
+            <EntryCategorization>
+              {hasTypes && <EntryType>{typeNames.join(', ')}</EntryType>}
+              {hasSubjects && <EntrySubject>{subjectNames.join(', ')}</EntrySubject>}
+            </EntryCategorization>
+          )}
           <EntryTags>
             <Tag>Ensembles für Zeitgenössische Musik</Tag>
             <Tag>Ensembles für Alte Musik</Tag>
