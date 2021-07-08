@@ -6,7 +6,7 @@ import { useLocale, useSwitchLocale } from '../../lib/routing';
 import { Select, SelectVariant } from '../select';
 
 const StyledLocaleSwitch = styled.div`
-  padding: 0 0.75rem;
+  padding: 0 0.75rem 2.25rem;
 `;
 
 export const LocaleSwitch: React.FC = () => {
