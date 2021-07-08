@@ -50,6 +50,10 @@ const StyledEditable = styled.div`
   caret-color: #0000ff;
   padding: 2rem 0.75rem;
 
+  > div {
+    min-height: 100%;
+  }
+
   ${mq(Breakpoint.mid)} {
     padding: 4rem 0;
     grid-column: 2 / -2;
