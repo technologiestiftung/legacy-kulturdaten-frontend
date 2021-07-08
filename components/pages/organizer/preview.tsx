@@ -2,7 +2,12 @@ import styled from '@emotion/styled';
 import { contentGrid, mq } from '../../globals/Constants';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Breakpoint } from '../../../lib/WindowService';
-import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
+import {
+  Organizer,
+  OrganizerSubjectTranslation,
+  OrganizerTranslation,
+  OrganizerTypeTranslation,
+} from '../../../lib/api/types/organizer';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { useLanguage } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
@@ -206,7 +211,8 @@ const EntryType = styled.li`
   position: relative;
 
   &::after {
-    content: '|';
+    content: ' | ';
+    color: var(--grey-400);
     display: block;
     position: absolute;
     right: -2px;
@@ -330,6 +336,21 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
     language,
     entry?.data?.relations?.translations
   );
+  const relations = entry?.data?.relations;
+  const typeNames = relations?.types?.map((type) => {
+    const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+      language,
+      type.relations.translations
+    );
+    return typeTranslation?.attributes.name;
+  });
+  const subjectNames = relations?.subjects?.map((subject) => {
+    const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+      language,
+      subject.relations.translations
+    );
+    return subjectTranslation?.attributes.name;
+  });
   const title = currentTranslation?.attributes?.name;
   const descriptionMarkdown = currentTranslation?.attributes?.description;
   const homepage = entry?.data?.attributes?.homepage;
@@ -352,8 +373,8 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
         </EntryLogo>
         <EntryMetadata>
           <EntryCategorization>
-            <EntryType>Museum</EntryType>
-            <EntrySubject>Kunstmuseum, Designmuseum</EntrySubject>
+            <EntryType>{typeNames.join(', ')}</EntryType>
+            <EntrySubject>{subjectNames.join(', ')}</EntrySubject>
           </EntryCategorization>
           <EntryTags>
             <Tag>Ensembles für Zeitgenössische Musik</Tag>
