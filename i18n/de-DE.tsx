@@ -115,7 +115,7 @@ export const deDE: Localization = {
         subject: {
           label: () => 'Sparte',
           all: () => 'alle',
-          typeFirst: () => 'Erst Typ auswählen',
+          typeFirst: () => 'erst Typ auswählen',
         },
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} ausgewählt`,
       },

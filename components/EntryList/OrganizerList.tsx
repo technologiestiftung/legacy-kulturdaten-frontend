@@ -129,15 +129,17 @@ const StyledFiltersBoxTitleButton = styled.button<{ isCollapsed: boolean }>`
 
 interface FiltersBoxProps {
   expanded: boolean;
-  initiallyCollapsed?: boolean;
   activeFiltersCount?: number;
+  isCollapsed: boolean;
+  setIsCollapsed: (isCollapsed: boolean) => void;
 }
 
 const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
   expanded,
-  initiallyCollapsed = true,
   children,
   activeFiltersCount,
+  isCollapsed,
+  setIsCollapsed,
 }: PropsWithChildren<FiltersBoxProps>) => {
   const t = useT();
 
@@ -149,10 +151,7 @@ const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
     </StyledFiltersBoxChildren>
   );
 
-  const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
-    wrappedChildren,
-    initiallyCollapsed
-  );
+  const { renderedCollapsable } = useCollapsable(wrappedChildren, isCollapsed, setIsCollapsed);
 
   return (
     <StyledFiltersBox expanded={expanded}>
@@ -239,6 +238,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     dispatchFilters,
     view,
     setView,
+    filtersBoxExpanded,
+    setFiltersBoxExpanded,
   } = useContext(EntryListContext);
   const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
   const pseudoUID = usePseudoUID();
@@ -416,7 +417,12 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         expanded={expanded}
         accentColor="var(--red)"
       >
-        <FiltersBox expanded={expanded} activeFiltersCount={activeFiltersCount}>
+        <FiltersBox
+          isCollapsed={filtersBoxExpanded}
+          setIsCollapsed={setFiltersBoxExpanded}
+          expanded={expanded}
+          activeFiltersCount={activeFiltersCount}
+        >
           <Select
             label={t('categories.organizer.filters.type.label') as string}
             id={`entry-filter-type-${pseudoUID}`}

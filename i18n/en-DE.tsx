@@ -115,7 +115,7 @@ export const enDE: Localization = {
         subject: {
           label: () => 'Subject',
           all: () => 'all',
-          typeFirst: () => 'Choose type first',
+          typeFirst: () => 'choose type first',
         },
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} active`,
       },
