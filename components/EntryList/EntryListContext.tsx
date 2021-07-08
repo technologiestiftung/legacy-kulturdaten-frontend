@@ -51,6 +51,8 @@ type EntryListContext = {
   dispatchFilters: Dispatch<FiltersAction>;
   view: EntryListView;
   setView: (view: EntryListView) => void;
+  filtersBoxExpanded: boolean;
+  setFiltersBoxExpanded: (filtersBoxExpanded: boolean) => void;
 };
 
 export const EntryListContext = React.createContext<EntryListContext>({
@@ -66,6 +68,8 @@ export const EntryListContext = React.createContext<EntryListContext>({
   dispatchFilters: () => undefined,
   view: undefined,
   setView: () => undefined,
+  filtersBoxExpanded: undefined,
+  setFiltersBoxExpanded: () => undefined,
 });
 
 interface EntryListContextProviderProps {
@@ -81,6 +85,7 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
   const [sortKey, setSortKey] = useState('updatedAt');
   const [order, setOrder] = useState(Order.DESC);
   const [view, setView] = useState(EntryListView.cards);
+  const [filtersBoxExpanded, setFiltersBoxExpanded] = useState(true);
 
   return (
     <EntryListContext.Provider
@@ -97,6 +102,8 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
         dispatchFilters,
         view,
         setView,
+        filtersBoxExpanded,
+        setFiltersBoxExpanded,
       }}
     >
       {children}

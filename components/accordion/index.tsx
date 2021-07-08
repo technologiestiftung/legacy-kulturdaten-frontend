@@ -95,6 +95,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
 }: AccordionItemProps) => {
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     content,
+    undefined,
+    undefined,
     initiallyCollapsed
   );
   const t = useT();
