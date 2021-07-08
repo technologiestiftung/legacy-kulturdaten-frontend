@@ -37,38 +37,52 @@ const StyledRadioSwitchOptions = styled.div`
   overflow: hidden;
   background: var(--black);
   mask-image: -webkit-radial-gradient(white, black);
+  flex-wrap: wrap;
 `;
 
 const StyledRadioSwitchOption = styled.div<{ active: boolean }>`
   flex-basis: 0;
   flex-grow: 1;
-  margin-right: 1px;
   position: relative;
-
-  &:last-of-type {
-    margin-right: 0;
-  }
 `;
 
 const StyledRadioSwitchOptionInput = styled.input`
-  position: absolute;
   appearance: none;
-  background: transparent;
-  padding: 3px;
-  margin: 0;
-  top: 3px;
-  left: 3px;
-  border: none;
-  width: calc(100% - 6px);
-  height: calc(100% - 6px);
-  border-radius: 0.75rem;
+  margin: 0 0 0 0.75rem;
+  position: relative;
+  background: var(--white);
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--grey-600);
+  border-radius: 1rem;
   pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    height: calc(100% - 0.125rem);
+    width: calc(100% - 0.125rem);
+    top: 0.0625rem;
+    left: 0.0625rem;
+    box-sizing: content-box;
+    background: var(--black);
+    border-radius: 1rem;
+    opacity: 0;
+  }
+
+  &:checked {
+    border-color: var(--white);
+
+    &::after {
+      opacity: 1;
+    }
+  }
 `;
 
 const StyledRadioSwitchOptionLabel = styled.label<{ active: boolean }>`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: calc(0.375rem - ${borderWidth}) calc(0.75rem - ${borderWidth});
   background: var(--white);
   color: var(--grey-600);
@@ -150,20 +164,20 @@ export const RadioSwitch: React.FC<RadioSwitchProps> = ({
 
           return (
             <StyledRadioSwitchOption key={index} active={optionActive}>
-              <StyledRadioSwitchOptionInput
-                type="radio"
-                id={optionId}
-                value={value}
-                name={name}
-                checked={optionActive}
-                onChange={() => (onChange ? onChange(value) : setInternalState(value))}
-                aria-label={ariaLabel}
-              />
               <StyledRadioSwitchOptionLabel htmlFor={optionId} active={optionActive}>
                 <StyledRadioSwitchOptionLabelIcon>
                   {icon && React.createElement(feather[icon])}
                 </StyledRadioSwitchOptionLabelIcon>
                 <StyledRadioSwitchOptionLabelText>{label}</StyledRadioSwitchOptionLabelText>
+                <StyledRadioSwitchOptionInput
+                  type="radio"
+                  id={optionId}
+                  value={value}
+                  name={name}
+                  checked={optionActive}
+                  onChange={() => (onChange ? onChange(value) : setInternalState(value))}
+                  aria-label={ariaLabel}
+                />
               </StyledRadioSwitchOptionLabel>
             </StyledRadioSwitchOption>
           );
