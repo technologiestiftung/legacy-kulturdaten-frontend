@@ -102,7 +102,12 @@ const makeListQuery = (
   return {
     page: page ? String(page) : undefined,
     size: size ? String(size) : undefined,
-    filter: filter ? filter.map(([key, value]) => `${key}=${value}`).join(',') : undefined,
+    filter: filter
+      ? filter
+          .filter((currentFilter) => currentFilter[1] !== undefined && currentFilter.length > 0)
+          .map(([key, value]) => `${key}=${value}`)
+          .join(',')
+      : undefined,
     sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
   };
 };
