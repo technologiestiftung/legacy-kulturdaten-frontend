@@ -21,7 +21,7 @@ const StyledTypesSubjects = styled.div`
   position: relative;
 `;
 
-const StyledTypesSubjectsType = styled.div<{ hasSubjects: boolean }>`
+const StyledTypesSubjectsType = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -29,18 +29,18 @@ const StyledTypesSubjectsType = styled.div<{ hasSubjects: boolean }>`
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
   overflow: hidden;
+`;
+
+const StyledTypesSubjectsTypeHead = styled.div<{ hasSubjects: boolean }>`
+  padding: 0.75rem;
+  position: relative;
 
   ${({ hasSubjects }) =>
     hasSubjects
       ? css`
-          padding-right: 2.25rem;
+          padding-right: 3rem;
         `
       : ''}
-`;
-
-const StyledTypesSubjectsTypeHead = styled.div`
-  padding: 0.75rem;
-  position: relative;
 `;
 
 const StyledTypesSubjectsPlus = styled.div`
@@ -162,8 +162,8 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
           Array.isArray(type?.relations?.subjects) && type?.relations?.subjects.length > 0;
 
         return (
-          <StyledTypesSubjectsType key={index} hasSubjects={hasSubjects}>
-            <StyledTypesSubjectsTypeHead>
+          <StyledTypesSubjectsType key={index}>
+            <StyledTypesSubjectsTypeHead hasSubjects={hasSubjects}>
               <Checkbox
                 id={`${pseudoUid}-type-${type?.id}`}
                 value={String(type?.id)}
