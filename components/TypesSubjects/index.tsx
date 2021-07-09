@@ -151,6 +151,9 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
 
         const typeIsChecked = state.types?.includes(String(type?.id));
 
+        const hasSubjects =
+          Array.isArray(type?.relations?.subjects) && type?.relations?.subjects.length > 0;
+
         return (
           <StyledTypesSubjectsType key={index}>
             <StyledTypesSubjectsTypeHead>
@@ -170,10 +173,12 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                 }}
               />
             </StyledTypesSubjectsTypeHead>
-            <StyledTypesSubjectsPlus>
-              <Plus color="var(--grey-400)" />
-            </StyledTypesSubjectsPlus>
-            {typeIsChecked && (
+            {hasSubjects && (
+              <StyledTypesSubjectsPlus>
+                <Plus color="var(--grey-400)" />
+              </StyledTypesSubjectsPlus>
+            )}
+            {hasSubjects && typeIsChecked && (
               <StyledTypesSubjectsSubjects>
                 <CheckboxList
                   columns={3}
