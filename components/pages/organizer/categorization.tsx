@@ -62,8 +62,8 @@ const ClassificationForm: React.FC<OrganizerFormProps> = ({
 
   // Valid if types and subjects are defined
   const valid = useMemo(() => {
-    return types && types.length > 0 && subjects && filteredSubjects.length > 0;
-  }, [types, subjects, filteredSubjects]);
+    return types && types.length > 0;
+  }, [types]);
 
   const initialSubjects = useMemo(
     () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),

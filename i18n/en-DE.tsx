@@ -97,6 +97,10 @@ export const enDE: Localization = {
   },
   categories: {
     organizer: {
+      list: {
+        loading: () => 'Loading Organizers',
+        nothing: () => 'No Organizers found with current filters',
+      },
       filters: {
         status: {
           label: () => 'Status',
@@ -104,6 +108,16 @@ export const enDE: Localization = {
           published: () => 'public',
           draft: () => 'draft',
         },
+        type: {
+          label: () => 'Type',
+          all: () => 'all',
+        },
+        subject: {
+          label: () => 'Subject',
+          all: () => 'all',
+          typeFirst: () => 'choose type first',
+        },
+        activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} active`,
       },
       requirements: {
         label: () => 'Required for publishing',

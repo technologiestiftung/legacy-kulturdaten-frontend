@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Reducer, useEffect, useReducer, useState } from 'react';
 import { Plus } from 'react-feather';
@@ -24,16 +25,22 @@ const StyledTypesSubjectsType = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-
   background: var(--white);
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
   overflow: hidden;
 `;
 
-const StyledTypesSubjectsTypeHead = styled.div`
+const StyledTypesSubjectsTypeHead = styled.div<{ hasSubjects: boolean }>`
   padding: 0.75rem;
   position: relative;
+
+  ${({ hasSubjects }) =>
+    hasSubjects
+      ? css`
+          padding-right: 3rem;
+        `
+      : ''}
 `;
 
 const StyledTypesSubjectsPlus = styled.div`
@@ -151,9 +158,12 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
 
         const typeIsChecked = state.types?.includes(String(type?.id));
 
+        const hasSubjects =
+          Array.isArray(type?.relations?.subjects) && type?.relations?.subjects.length > 0;
+
         return (
           <StyledTypesSubjectsType key={index}>
-            <StyledTypesSubjectsTypeHead>
+            <StyledTypesSubjectsTypeHead hasSubjects={hasSubjects}>
               <Checkbox
                 id={`${pseudoUid}-type-${type?.id}`}
                 value={String(type?.id)}
@@ -170,10 +180,12 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                 }}
               />
             </StyledTypesSubjectsTypeHead>
-            <StyledTypesSubjectsPlus>
-              <Plus color="var(--grey-400)" />
-            </StyledTypesSubjectsPlus>
-            {typeIsChecked && (
+            {hasSubjects && (
+              <StyledTypesSubjectsPlus>
+                <Plus color="var(--grey-600)" />
+              </StyledTypesSubjectsPlus>
+            )}
+            {hasSubjects && typeIsChecked && (
               <StyledTypesSubjectsSubjects>
                 <CheckboxList
                   columns={3}

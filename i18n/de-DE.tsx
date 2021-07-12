@@ -97,6 +97,10 @@ export const deDE: Localization = {
   },
   categories: {
     organizer: {
+      list: {
+        loading: () => 'Lade Anbieter:innen',
+        nothing: () => 'Keine Anbieter:innen für die aktive Filterung gefunden',
+      },
       filters: {
         status: {
           label: () => 'Status',
@@ -104,6 +108,16 @@ export const deDE: Localization = {
           published: () => 'öffentlich',
           draft: () => 'Entwurf',
         },
+        type: {
+          label: () => 'Typ',
+          all: () => 'alle',
+        },
+        subject: {
+          label: () => 'Sparte',
+          all: () => 'alle',
+          typeFirst: () => 'erst Typ auswählen',
+        },
+        activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} ausgewählt`,
       },
       requirements: {
         label: () => 'Für Veröffentlichung notwendig',

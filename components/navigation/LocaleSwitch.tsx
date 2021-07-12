@@ -1,8 +1,13 @@
+import styled from '@emotion/styled';
 import { ChangeEvent } from 'react';
 import { Locale, locales } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { useLocale, useSwitchLocale } from '../../lib/routing';
 import { Select, SelectVariant } from '../select';
+
+const StyledLocaleSwitch = styled.div`
+  padding: 0 0.75rem 2.25rem;
+`;
 
 export const LocaleSwitch: React.FC = () => {
   const activeLocale = useLocale();
@@ -29,5 +34,5 @@ export const LocaleSwitch: React.FC = () => {
     </Select>
   );
 
-  return select;
+  return <StyledLocaleSwitch>{select}</StyledLocaleSwitch>;
 };

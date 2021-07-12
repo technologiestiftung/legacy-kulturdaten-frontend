@@ -5,9 +5,7 @@ import { useKeyboard } from '../../lib/useKeyboard';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
 import { Header } from './header/Header';
 import { HeaderLinkProps } from './header/HeaderLink';
-import { LocaleSwitch } from './LocaleSwitch';
 import { Menu, MenuData } from './Menu';
-import { MenuSection, MenuSectionVariant } from './Menu/MenuSection';
 import { NavigationContext } from './NavigationContext';
 
 const StyledNavigation = styled.div<{ fullscreen?: boolean }>`
@@ -47,10 +45,6 @@ const StyledNavigationHeader = styled.div`
   position: sticky;
   top: 0;
   left: 0;
-`;
-
-const StyledNavigationLocaleSwitchContainer = styled.div`
-  padding: 0 0.75rem 1.5rem;
 `;
 
 export interface NavigationProps {
@@ -102,8 +96,6 @@ export const Navigation: React.FC<NavigationProps> = ({
   }, [subMenuKey, setActiveMenuKey, activeMenuKey]);
 
   const renderedMenu = useMemo(() => {
-    const isDefaultMenu = typeof activeMenuKey === 'undefined' || activeMenuKey === defaultMenuKey;
-
     return (
       <>
         <StyledNavigationHeader>
@@ -118,18 +110,10 @@ export const Navigation: React.FC<NavigationProps> = ({
         </StyledNavigationHeader>
         <StyledNavigationContent show={showNavigationContent}>
           {currentMenu.menu}
-          {isDefaultMenu && (
-            <StyledNavigationLocaleSwitchContainer>
-              <MenuSection
-                items={[<LocaleSwitch key={1} />]}
-                variant={MenuSectionVariant.minimal}
-              />
-            </StyledNavigationLocaleSwitchContainer>
-          )}
         </StyledNavigationContent>
       </>
     );
-  }, [title, Link, showNavigationContent, activeMenuKey, defaultMenuKey, currentMenu, subMenuKey]);
+  }, [title, Link, showNavigationContent, defaultMenuKey, currentMenu, subMenuKey]);
 
   useEffect(() => {
     if (currentMenu.expandable !== true) {
