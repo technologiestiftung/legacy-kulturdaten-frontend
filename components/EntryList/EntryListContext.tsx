@@ -10,6 +10,7 @@ type FiltersState = { [key: string]: string };
 
 type FiltersAction = {
   type: FiltersActions;
+  listName?: string;
   payload?: {
     state?: FiltersState;
     key?: string;
@@ -17,14 +18,20 @@ type FiltersAction = {
   };
 };
 
-const filtersReducer: Reducer<FiltersState, FiltersAction> = (state, action) => {
+const filtersReducer: Reducer<{ [key: string]: FiltersState }, FiltersAction> = (state, action) => {
   switch (action.type) {
     case FiltersActions.init: {
-      return action.payload.state;
+      return { ...state, [action.listName]: action.payload.state };
     }
 
     case FiltersActions.set: {
-      return { ...state, [action.payload.key]: action.payload.value };
+      return {
+        ...state,
+        [action.listName]: {
+          ...state[action.listName],
+          [action.payload.key]: action.payload.value,
+        },
+      };
     }
 
     default: {
@@ -39,71 +46,97 @@ export enum EntryListView {
 }
 
 type EntryListContext = {
-  currentPage: number;
-  setCurrentPage: (currentPage: number) => void;
-  entriesPerPage: number;
-  setEntriesPerPage: (entriesPerPage: number) => void;
-  order: Order;
-  setOrder: (order: Order) => void;
-  sortKey: string;
-  setSortKey: (sortKey: string) => void;
-  filters: FiltersState;
-  dispatchFilters: Dispatch<FiltersAction>;
-  view: EntryListView;
-  setView: (view: EntryListView) => void;
-  filtersBoxExpanded: boolean;
-  setFiltersBoxExpanded: (filtersBoxExpanded: boolean) => void;
+  getCurrentPage: (listName: string) => number;
+  setCurrentPage: (listName: string, currentPage: number) => void;
+  getEntriesPerPage: (listName: string) => number;
+  setEntriesPerPage: (listName: string, entriesPerPage: number) => void;
+  getOrder: (listName: string) => Order;
+  setOrder: (listName: string, order: Order) => void;
+  getSortKey: (listName: string) => string;
+  setSortKey: (listName: string, sortKey: string) => void;
+  getFilters: (listName: string) => FiltersState;
+  getDispatchFilters: (listName: string) => Dispatch<FiltersAction>;
+  getView: (listName: string) => EntryListView;
+  setView: (listName: string, view: EntryListView) => void;
+  getFiltersBoxExpanded: (listName: string) => boolean;
+  setFiltersBoxExpanded: (listName: string, filtersBoxExpanded: boolean) => void;
 };
 
 export const EntryListContext = React.createContext<EntryListContext>({
-  currentPage: undefined,
+  getCurrentPage: undefined,
   setCurrentPage: () => undefined,
-  entriesPerPage: undefined,
+  getEntriesPerPage: undefined,
   setEntriesPerPage: () => undefined,
-  order: undefined,
+  getOrder: undefined,
   setOrder: () => undefined,
-  sortKey: undefined,
+  getSortKey: undefined,
   setSortKey: () => undefined,
-  filters: undefined,
-  dispatchFilters: () => undefined,
-  view: undefined,
+  getFilters: undefined,
+  getDispatchFilters: () => undefined,
+  getView: undefined,
   setView: () => undefined,
-  filtersBoxExpanded: undefined,
+  getFiltersBoxExpanded: undefined,
   setFiltersBoxExpanded: () => undefined,
 });
 
 interface EntryListContextProviderProps {
   children: ReactNode;
+  listNames: string[];
 }
 
 export const EntryListContextProvider: React.FC<EntryListContextProviderProps> = ({
   children,
+  listNames,
 }: EntryListContextProviderProps) => {
-  const [filters, dispatchFilters] = useReducer(filtersReducer, {});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [entriesPerPage, setEntriesPerPage] = useState(8);
-  const [sortKey, setSortKey] = useState('updatedAt');
-  const [order, setOrder] = useState(Order.DESC);
-  const [view, setView] = useState(EntryListView.cards);
-  const [filtersBoxExpanded, setFiltersBoxExpanded] = useState(true);
+  const [filters, dispatchFilters] = useReducer(
+    filtersReducer,
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: {} }), {})
+  );
+
+  const [currentPages, setCurrentPages] = useState(
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: 1 }), {})
+  );
+
+  const [entriesPerPages, setEntriesPerPages] = useState(
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: 8 }), {})
+  );
+
+  const [sortKeys, setSortKeys] = useState(
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: 'updatedAt' }), {})
+  );
+
+  const [orders, setOrders] = useState(
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: Order.DESC }), {})
+  );
+
+  const [views, setViews] = useState(
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: EntryListView.cards }), {})
+  );
+
+  const [filtersBoxExpandeds, setFiltersBoxExpandeds] = useState(
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: true }), {})
+  );
 
   return (
     <EntryListContext.Provider
       value={{
-        currentPage,
-        setCurrentPage,
-        entriesPerPage,
-        setEntriesPerPage,
-        order,
-        setOrder,
-        sortKey,
-        setSortKey,
-        filters,
-        dispatchFilters,
-        view,
-        setView,
-        filtersBoxExpanded,
-        setFiltersBoxExpanded,
+        getCurrentPage: (listName) => currentPages[listName],
+        setCurrentPage: (listName, currentPage) =>
+          setCurrentPages({ ...currentPages, [listName]: currentPage }),
+        getEntriesPerPage: (listName) => entriesPerPages[listName],
+        setEntriesPerPage: (listName, entriesPerPage) =>
+          setEntriesPerPages({ ...entriesPerPages, [listName]: entriesPerPage }),
+        getOrder: (listName) => orders[listName],
+        setOrder: (listName, order) => setOrders({ ...orders, [listName]: order }),
+        getSortKey: (listName) => sortKeys[listName],
+        setSortKey: (listName, sortKey) => setSortKeys({ ...sortKeys, [listName]: sortKey }),
+        getFilters: (listName) => filters[listName],
+        getDispatchFilters: (listName) => (action) => dispatchFilters({ ...action, listName }),
+        getView: (listName) => views[listName],
+        setView: (listName, view) => setViews({ ...views, [listName]: view }),
+        getFiltersBoxExpanded: (listName) => filtersBoxExpandeds[listName],
+        setFiltersBoxExpanded: (listName, filtersBoxExpanded) =>
+          setFiltersBoxExpandeds({ ...filtersBoxExpandeds, [listName]: filtersBoxExpanded }),
       }}
     >
       {children}

@@ -11,6 +11,7 @@ import { NavigationContext } from '../components/navigation/NavigationContext';
 import { ButtonLink } from '../components/button/ButtonLink';
 import { MenuItem } from '../components/navigation/Menu';
 import { OrganizerList } from '../components/EntryList/OrganizerList';
+import { LocationList } from '../components/EntryList/LocationList';
 import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 
 export const useAppTitle = (): string => {
@@ -178,7 +179,7 @@ export const useMenuStructure = (): NavigationStructure => {
         key: 'location',
         title: t('menu.location.title') as string,
         expandable: true,
-        List: ListPlaceholder,
+        List: LocationList,
       },
     ],
   };

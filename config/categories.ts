@@ -1,4 +1,9 @@
-import { ApiRoutes, organizerListFactory } from '../lib/api';
+import {
+  ApiRoutes,
+  locationListFactory,
+  locationShowFactory,
+  organizerListFactory,
+} from '../lib/api';
 import { organizerShowFactory } from '../lib/api/routes/organizer/show';
 import { organizerCreateFactory } from '../lib/api/routes/organizer/create';
 import { useT } from '../lib/i18n';
@@ -15,6 +20,7 @@ import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { OrganizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
+import { LocationInfoPage } from '../components/pages/location/info';
 
 export type Requirement = {
   translationKey: string;
@@ -116,6 +122,63 @@ export const useCategories: () => {
       ],
     },
     offer: undefined,
-    location: undefined,
+    location: {
+      name: Categories.location,
+      title: {
+        singular: t('categories.organizer.title.singular') as string,
+        plural: t('categories.organizer.title.plural') as string,
+      },
+      icon: MenuIconName.organizer,
+      routes: {
+        list: routes[Routes.location],
+        create: routes[Routes.createLocation],
+      },
+      subMenuKey: 'location',
+      pages: {
+        create: OrganizerCreatePage,
+        preview: OrganizerPreviewPage,
+        info: LocationInfoPage,
+        categorization: OrganizerCategorizationPage,
+        media: OrganizerMediaPage,
+        rights: OrganizerRightsPage,
+        export: OrganizerExportPage,
+      },
+      tabs: [
+        { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
+        { title: t('categories.organizer.tabs.categorization') as string, sub: 'categorization' },
+        { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
+        { title: t('categories.organizer.tabs.preview') as string, sub: 'preview' },
+      ],
+      metaLinks: [
+        { title: t('categories.organizer.metaLinks.rights') as string, icon: 'Users' },
+        { title: t('categories.organizer.metaLinks.export') as string, icon: 'Archive' },
+      ],
+      api: {
+        list: {
+          route: ApiRoutes.locationList,
+          factory: locationListFactory,
+        },
+        show: {
+          route: ApiRoutes.locationShow,
+          factory: locationShowFactory,
+        },
+        create: {
+          route: ApiRoutes.organizerCreate,
+          factory: organizerCreateFactory,
+        },
+        update: {
+          route: ApiRoutes.organizerUpdate,
+          factory: organizerUpdateFactory,
+        },
+        translationCreate: {
+          route: ApiRoutes.OrganizerTranslationCreate,
+          factory: OrganizerTranslationCreateFactory,
+        },
+        delete: {
+          route: ApiRoutes.organizerDelete,
+          factory: organizerDeleteFactory,
+        },
+      },
+    },
   };
 };

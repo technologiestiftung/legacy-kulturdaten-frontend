@@ -58,7 +58,7 @@ export const routes: { [key in Routes]: Route } = {
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.createOffer][locale]}/`,
   location: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.location][locale]}/${
-      query?.id ? `${query?.id}/` : ''
+      query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
   createLocation: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${

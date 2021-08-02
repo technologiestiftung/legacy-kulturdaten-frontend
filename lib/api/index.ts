@@ -50,6 +50,8 @@ export enum ApiRoutes {
   OrganizerTranslationCreate = 'OrganizerTranslationCreate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
+  locationList = 'locationList',
+  locationShow = 'locationShow',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -77,6 +79,11 @@ export const apiRoutes: {
     `/${apiVersion}/organizer/${organizerId}/translate`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
+  locationList: (query) =>
+    `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${
+      query?.size && `&size=${query.size}`
+    }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
+  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
 };
 
 const addUrlParam = (url: string, param: string): string =>
@@ -189,3 +196,7 @@ export type { AuthValidate } from './routes/auth/validate';
 export { authValidateFactory } from './routes/auth/validate';
 export type { OrganizerList } from './routes/organizer/list';
 export { organizerListFactory } from './routes/organizer/list';
+export type { LocationList } from './routes/location/list';
+export { locationListFactory } from './routes/location/list';
+export type { LocationShow } from './routes/location/show';
+export { locationShowFactory } from './routes/location/show';

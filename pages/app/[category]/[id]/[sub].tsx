@@ -3,8 +3,6 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useCategory, useEntry, useMetaLinks, useTabs } from '../../../../lib/categories';
 import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
-import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
-import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { Button, ButtonVariant, IconPosition } from '../../../../components/button';
 import { useT } from '../../../../lib/i18n';
 import Link from 'next/link';
@@ -15,7 +13,8 @@ import { StatusBar } from '../../../../components/statusbar';
 import { DateFormat, useDate } from '../../../../lib/date';
 import { getTranslation } from '../../../../lib/translations';
 import { Publish } from '../../../../components/Publish';
-import { PublishedStatus } from '../../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
+import { ApiCall } from '../../../../lib/api';
 
 const StyledA = styled.a`
   text-decoration: none;
@@ -27,10 +26,10 @@ const EntrySubPage: NextPage = () => {
   const language = useLanguage();
   const date = useDate();
   const tabs = useTabs(category);
-  const { entry } = useEntry<Organizer, OrganizerShow>(category, router?.query);
+  const { entry } = useEntry<CategoryEntry, ApiCall>(category, router?.query);
 
   const currentTranslation = entry?.data?.relations?.translations
-    ? getTranslation<OrganizerTranslation>(language, entry.data.relations.translations)
+    ? getTranslation<Translation>(language, entry?.data?.relations?.translations)
     : undefined;
 
   const title = currentTranslation?.attributes.name;
@@ -68,12 +67,13 @@ const EntrySubPage: NextPage = () => {
           statusBar={renderedStatusBar}
           actions={metaLinks}
           publish={
+            category?.requirements &&
             entry?.data?.attributes?.status &&
             entry?.data?.attributes?.status !== PublishedStatus.published ? (
               <Publish
                 category={category}
                 query={router?.query}
-                requirements={category.requirements}
+                requirements={category?.requirements}
               />
             ) : undefined
           }

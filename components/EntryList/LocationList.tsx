@@ -5,14 +5,9 @@ import React, { PropsWithChildren, useContext, useEffect, useMemo, useState } fr
 import { Plus } from 'react-feather';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { OrganizerList as OrganizerListCall } from '../../lib/api';
-import {
-  Organizer,
-  OrganizerSubjectTranslation,
-  OrganizerTranslation,
-  OrganizerTypeTranslation,
-} from '../../lib/api/types/organizer';
-import { Order, useList, useOrganizerTypeList } from '../../lib/categories';
+import { LocationList as LocationListCall } from '../../lib/api';
+import { Location, LocationTranslation } from '../../lib/api/types/location';
+import { Order, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -22,7 +17,7 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select, SelectLabelPosition } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
+import { EntryCard, EntryCardGrid } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch, RadioSwitchLabelPosition } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
@@ -44,7 +39,7 @@ const viewEntriesPerPageMap = {
   table: 16,
 };
 
-interface OrganizerListProps {
+interface LocationListProps {
   expanded: boolean;
 }
 
@@ -216,7 +211,7 @@ interface ListLinkProps {
   children: React.ReactNode;
 }
 
-export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: OrganizerListProps) => {
+export const LocationList: React.FC<LocationListProps> = ({ expanded }: LocationListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
@@ -244,9 +239,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
   const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
   const pseudoUID = usePseudoUID();
 
-  const typeOptions = useOrganizerTypeList();
-
-  const listName = Categories.organizer;
+  const listName = Categories.location;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
   const entriesPerPage = useMemo(() => getEntriesPerPage(listName), [getEntriesPerPage, listName]);
@@ -262,8 +255,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     listName,
   ]);
 
-  const list = useList<OrganizerListCall, Organizer>(
-    categories.organizer,
+  const list = useList<LocationListCall, Location>(
+    categories.location,
     currentPage,
     entriesPerPage,
     Object.entries(filters),
@@ -309,30 +302,15 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
             ({ attributes, relations, id }, index) => {
               const href = (sub?: string) =>
-                routes[Routes.organizer]({
+                routes[Routes.location]({
                   locale,
                   query: { id, sub },
                 });
 
               const translations = relations?.translations;
               const currentTranslation = translations
-                ? getTranslation<OrganizerTranslation>(language, translations)
+                ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
-              const typeNames = relations?.types?.map((type) => {
-                const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return typeTranslation?.attributes.name;
-              });
-
-              const subjectNames = relations?.subjects?.map((subject) => {
-                const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                  language,
-                  subject.relations.translations
-                );
-                return subjectTranslation?.attributes.name;
-              });
 
               return (
                 <EntryCard
@@ -346,7 +324,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                   title={currentTranslation?.attributes?.name}
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href())}
-                  meta={<EntryCardTypesSubjects types={typeNames} subjects={subjectNames} />}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
                 />
@@ -365,27 +342,11 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               const translations = relations?.translations;
 
               const currentTranslation = translations
-                ? getTranslation<OrganizerTranslation>(language, translations)
+                ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
 
-              const typeNames = relations?.types?.map((type) => {
-                const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return typeTranslation?.attributes.name;
-              });
-
-              const subjectNames = relations?.subjects?.map((subject) => {
-                const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                  language,
-                  subject.relations.translations
-                );
-                return subjectTranslation?.attributes.name;
-              });
-
               const href = (sub?: string) =>
-                routes[Routes.organizer]({
+                routes[Routes.location]({
                   locale,
                   query: { id, sub },
                 });
@@ -408,8 +369,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                   <StyledTableLinkText key={0}>
                     {currentTranslation?.attributes?.name}
                   </StyledTableLinkText>,
-                  typeNames.join(', '),
-                  subjectNames.join(', '),
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
                     ? date(new Date(attributes?.updatedAt), DateFormat.date)
@@ -439,78 +398,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
           expanded={expanded}
           activeFiltersCount={activeFiltersCount}
         >
-          <Select
-            label={t('categories.organizer.filters.type.label') as string}
-            id={`entry-filter-type-${pseudoUID}`}
-            value={filters?.type}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
-              });
-
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: { key: 'subject', value: undefined },
-              });
-            }}
-          >
-            <option value="">{t('categories.organizer.filters.type.all')}</option>
-            {typeOptions?.map(({ id, relations }, index) => {
-              const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                language,
-                relations.translations
-              );
-
-              return (
-                <option key={index} value={String(id)}>
-                  {typeTranslation?.attributes?.name}
-                </option>
-              );
-            })}
-          </Select>
-          <Select
-            label={t('categories.organizer.filters.subject.label') as string}
-            id={`entry-filter-subject-${pseudoUID}`}
-            value={filters?.subject}
-            disabled={!filters?.type}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: {
-                  key: 'subject',
-                  value: e.target.value !== '' ? e.target.value : undefined,
-                },
-              });
-            }}
-          >
-            <option value="">
-              {!filters?.type
-                ? t('categories.organizer.filters.subject.typeFirst')
-                : t('categories.organizer.filters.subject.all')}
-            </option>
-            {typeOptions
-              ?.filter((typeOption) => typeOption.id === parseInt(filters?.type, 10))
-              .map(({ relations }) => {
-                const subjects = relations?.subjects?.map(
-                  ({ relations: subjectRelations, id: subjectId }, index) => {
-                    const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                      language,
-                      subjectRelations?.translations
-                    );
-                    return (
-                      <option key={index} value={String(subjectId)}>
-                        {subjectTranslation?.attributes?.name}
-                      </option>
-                    );
-                  }
-                );
-
-                return subjects;
-              })}
-          </Select>
           <Select
             label={t('categories.organizer.filters.status.label') as string}
             id={`entry-filter-status-${pseudoUID}`}
