@@ -25,7 +25,7 @@ export interface ApiCall {
     };
     body?: { [key: string]: StructuredData };
   };
-  response: { status: number; body: { [key: string]: StructuredData } };
+  response: { status: number; body: { [key: string]: StructuredData & { id?: string } } };
 }
 
 export type ApiCallFactory = (
@@ -47,15 +47,21 @@ export enum ApiRoutes {
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
-  OrganizerTranslationCreate = 'OrganizerTranslationCreate',
+  organizerTranslationCreate = 'organizerTranslationCreate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
   locationList = 'locationList',
   locationShow = 'locationShow',
   locationCreate = 'locationCreate',
   locationUpdate = 'locationUpdate',
-  LocationTranslationCreate = 'LocationTranslationCreate',
+  locationTranslationCreate = 'locationTranslationCreate',
   locationDelete = 'locationDelete',
+  offerList = 'offerList',
+  offerShow = 'offerShow',
+  offerCreate = 'offerCreate',
+  offerUpdate = 'offerUpdate',
+  offerTranslationCreate = 'offerTranslationCreate',
+  offerDelete = 'offerDelete',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -79,7 +85,7 @@ export const apiRoutes: {
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) =>
     `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
-  OrganizerTranslationCreate: ({ id }) => `/${apiVersion}/organizer/${id}/translate`,
+  organizerTranslationCreate: ({ id }) => `/${apiVersion}/organizer/${id}/translate`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   locationList: (query) =>
@@ -89,8 +95,17 @@ export const apiRoutes: {
   locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
-  LocationTranslationCreate: ({ id }) => `/${apiVersion}/location/${id}/translate`,
+  locationTranslationCreate: ({ id }) => `/${apiVersion}/location/${id}/translate`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
+  offerList: (query) =>
+    `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
+      query?.size && `&size=${query.size}`
+    }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
+  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
+  offerCreate: () => `/${apiVersion}/offer`,
+  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
+  offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
+  offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
 };
 
 const addUrlParam = (url: string, param: string): string =>
@@ -205,3 +220,5 @@ export type { OrganizerList } from './routes/organizer/list';
 export { organizerListFactory } from './routes/organizer/list';
 export type { LocationList } from './routes/location/list';
 export { locationListFactory } from './routes/location/list';
+export type { OfferList } from './routes/offer/list';
+export { offerListFactory } from './routes/offer/list';

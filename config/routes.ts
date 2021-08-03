@@ -52,7 +52,7 @@ export const routes: { [key in Routes]: Route } = {
     }/`,
   offer: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offer][locale]}/${
-      query?.id ? `${query?.id}/` : ''
+      query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
   createOffer: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.createOffer][locale]}/`,

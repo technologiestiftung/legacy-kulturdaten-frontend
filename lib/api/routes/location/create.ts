@@ -23,7 +23,7 @@ export interface LocationCreate extends ApiCall {
 
 export const locationCreateFactory: ApiCallFactory = (
   token: LocationCreate['request']['headers']['Authorization'],
-  query: { location: CreateLocation }
+  query: { entry: CreateLocation }
 ): LocationCreate => ({
   request: {
     route: apiRoutes.locationCreate(),
@@ -32,7 +32,7 @@ export const locationCreateFactory: ApiCallFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.location,
+    body: query.entry,
   },
   response: {
     status: 200,

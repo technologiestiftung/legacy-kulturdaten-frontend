@@ -1,10 +1,8 @@
 import { Language } from '../../../config/locale';
-import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
-import { Organizer } from './organizer';
 
-export type LocationTranslation = {
-  type: 'locationtranslation';
+export type OfferTranslation = {
+  type: 'offertranslation';
   attributes: {
     language: Language;
     name?: string;
@@ -12,15 +10,13 @@ export type LocationTranslation = {
   };
 } & Translation;
 
-export type Location = {
+export type Offer = {
   data: {
     id?: string;
-    type?: 'location';
+    type?: 'offer';
     attributes?: DefaultAttributes;
     relations?: {
-      translations: LocationTranslation[];
-      organizer?: Organizer;
-      address?: Address;
+      translations: OfferTranslation[];
     };
   };
   meta?: {
@@ -32,10 +28,8 @@ export type Location = {
   };
 } & CategoryEntry;
 
-export type CreateLocation = {
+export type CreateOffer = {
   relations?: {
-    links?: string[];
-    translations?: LocationTranslation[];
-    address?: Address;
+    translations?: OfferTranslation[];
   };
 };

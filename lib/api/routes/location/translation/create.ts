@@ -35,7 +35,7 @@ export const locationTranslationCreateFactory = (
   }
 ): LocationTranslationCreate => ({
   request: {
-    route: apiRoutes.LocationTranslationCreate({
+    route: apiRoutes.locationTranslationCreate({
       id: query.id,
     }),
     method: 'POST',

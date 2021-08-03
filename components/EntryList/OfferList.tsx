@@ -5,8 +5,8 @@ import React, { PropsWithChildren, useContext, useEffect, useMemo, useState } fr
 import { Plus } from 'react-feather';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { LocationList as LocationListCall } from '../../lib/api';
-import { Location, LocationTranslation } from '../../lib/api/types/location';
+import { OfferList as OfferListCall } from '../../lib/api';
+import { Offer, OfferTranslation } from '../../lib/api/types/offer';
 import { Order, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
@@ -39,7 +39,7 @@ const viewEntriesPerPageMap = {
   table: 16,
 };
 
-interface LocationListProps {
+interface OfferListProps {
   expanded: boolean;
 }
 
@@ -211,7 +211,7 @@ interface ListLinkProps {
   children: React.ReactNode;
 }
 
-export const LocationList: React.FC<LocationListProps> = ({ expanded }: LocationListProps) => {
+export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
@@ -239,7 +239,7 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
   const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
   const pseudoUID = usePseudoUID();
 
-  const listName = Categories.location;
+  const listName = Categories.offer;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
   const entriesPerPage = useMemo(() => getEntriesPerPage(listName), [getEntriesPerPage, listName]);
@@ -255,8 +255,8 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
     listName,
   ]);
 
-  const list = useList<LocationListCall, Location>(
-    categories.location,
+  const list = useList<OfferListCall, Offer>(
+    categories.offer,
     currentPage,
     entriesPerPage,
     Object.entries(filters),
@@ -302,14 +302,14 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
             ({ attributes, relations, id }, index) => {
               const href = (sub?: string) =>
-                routes[Routes.location]({
+                routes[Routes.offer]({
                   locale,
                   query: { id, sub },
                 });
 
               const translations = relations?.translations;
               const currentTranslation = translations
-                ? getTranslation<LocationTranslation>(language, translations)
+                ? getTranslation<OfferTranslation>(language, translations)
                 : undefined;
 
               return (
@@ -342,11 +342,11 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
               const translations = relations?.translations;
 
               const currentTranslation = translations
-                ? getTranslation<LocationTranslation>(language, translations)
+                ? getTranslation<OfferTranslation>(language, translations)
                 : undefined;
 
               const href = (sub?: string) =>
-                routes[Routes.location]({
+                routes[Routes.offer]({
                   locale,
                   query: { id, sub },
                 });
@@ -388,7 +388,7 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
   return (
     <StyledOrganizerList>
       <EntryListHead
-        title={t('categories.location.title.plural') as string}
+        title={t('categories.offer.title.plural') as string}
         expanded={expanded}
         accentColor="var(--red)"
       >

@@ -53,13 +53,9 @@ export type Category = {
   };
   pages: {
     create: React.FC<CategoryPage>;
-    preview?: React.FC<CategoryEntryPage>;
     info: React.FC<CategoryEntryPage>;
-    media?: React.FC<CategoryEntryPage>;
-    categorization?: React.FC<CategoryEntryPage>;
-    rights: React.FC<CategoryEntryPage>;
-    export: React.FC<CategoryEntryPage>;
-  };
+    media: React.FC<CategoryEntryPage>;
+  } & { [key: string]: React.FC<CategoryEntryPage> };
   tabs: {
     title: string;
     sub?: string;

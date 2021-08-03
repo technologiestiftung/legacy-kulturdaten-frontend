@@ -1,12 +1,12 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../../..';
 import { Language } from '../../../../../config/locale';
-import { OrganizerTranslation } from '../../../types/organizer';
+import { OfferTranslation } from '../../../types/offer';
 
 /**
  * /auth/info
  */
 
-export type OrganizerTranslationCreate = ApiCall & {
+export type OfferTranslationCreate = ApiCall & {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'POST';
@@ -14,12 +14,12 @@ export type OrganizerTranslationCreate = ApiCall & {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: OrganizerTranslation;
+    body: OfferTranslation;
   };
   response: {
     status: 200;
     body: {
-      data: OrganizerTranslation;
+      data: OfferTranslation;
       meta: {
         language: Language;
       };
@@ -27,15 +27,15 @@ export type OrganizerTranslationCreate = ApiCall & {
   };
 };
 
-export const organizerTranslationCreateFactory = (
-  token: OrganizerTranslationCreate['request']['headers']['Authorization'],
+export const offerTranslationCreateFactory = (
+  token: OfferTranslationCreate['request']['headers']['Authorization'],
   query: {
     id: string;
-    translation: OrganizerTranslation;
+    translation: OfferTranslation;
   }
-): OrganizerTranslationCreate => ({
+): OfferTranslationCreate => ({
   request: {
-    route: apiRoutes.organizerTranslationCreate({
+    route: apiRoutes.offerTranslationCreate({
       id: query.id,
     }),
     method: 'POST',

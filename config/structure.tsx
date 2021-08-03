@@ -13,6 +13,7 @@ import { MenuItem } from '../components/navigation/Menu';
 import { OrganizerList } from '../components/EntryList/OrganizerList';
 import { LocationList } from '../components/EntryList/LocationList';
 import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
+import { OfferList } from '../components/EntryList/OfferList';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -167,7 +168,7 @@ export const useMenuStructure = (): NavigationStructure => {
         key: 'offer',
         title: t('menu.offer.title') as string,
         expandable: true,
-        List: ListPlaceholder,
+        List: OfferList,
       },
       {
         key: 'organizer',
@@ -184,5 +185,3 @@ export const useMenuStructure = (): NavigationStructure => {
     ],
   };
 };
-
-const ListPlaceholder: React.FC = () => <div>TBD</div>;

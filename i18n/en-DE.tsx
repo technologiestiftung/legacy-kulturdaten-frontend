@@ -131,7 +131,7 @@ export const enDE: Localization = {
         singular: () => 'Organizer',
       },
       form: {
-        create: () => 'Create new organizer',
+        create: () => 'Create new Organizer',
         baseInfo: () => 'Basic information',
         address: () => 'Address data (not public)',
         name: () => 'Name',
@@ -195,6 +195,25 @@ export const enDE: Localization = {
         plural: () => 'Offers',
         singular: () => 'Offer',
       },
+      form: {
+        create: () => 'Create new Offer',
+        name: () => 'Name',
+        nameGerman: () => 'Name German',
+        nameGermanSimple: () => 'Name German: simple Language',
+        nameEnglish: () => 'Name English',
+        nameEnglishSimple: () => 'Name English: simple Language',
+        description: () => 'Description',
+        descriptionExists: () => 'filled out',
+        descriptionExistsNot: () => 'not filled out',
+        descriptionGerman: () => 'German',
+        descriptionGermanSimple: () => 'German: simple Language',
+        descriptionEnglish: () => 'English',
+        descriptionEnglishSimple: () => 'English: simple Language',
+        submit: () => 'create',
+        save: () => 'save',
+        edit: () => 'edit',
+        editCancel: () => 'cancel',
+      },
     },
     location: {
       title: {
@@ -202,7 +221,7 @@ export const enDE: Localization = {
         singular: () => 'Location',
       },
       form: {
-        create: () => 'Create new location',
+        create: () => 'Create new Location',
         address: () => 'Address data',
         name: () => 'Name',
         nameGerman: () => 'Name German',

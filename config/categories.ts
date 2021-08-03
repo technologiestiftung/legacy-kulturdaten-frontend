@@ -22,6 +22,16 @@ import { locationTranslationCreateFactory } from '../lib/api/routes/location/tra
 import { locationDeleteFactory } from '../lib/api/routes/location/delete';
 import { locationShowFactory } from '../lib/api/routes/location/show';
 import { LocationMediaPage } from '../components/pages/location/media';
+import { offerListFactory } from '../lib/api/routes/offer/list';
+import { offerShowFactory } from '../lib/api/routes/offer/show';
+import { offerCreateFactory } from '../lib/api/routes/offer/create';
+import { offerUpdateFactory } from '../lib/api/routes/offer/update';
+import { offerTranslationCreateFactory } from '../lib/api/routes/offer/translation/create';
+import { offerDeleteFactory } from '../lib/api/routes/offer/delete';
+import { OfferInfoPage } from '../components/pages/offer/info';
+import { OfferMediaPage } from '../components/pages/offer/media';
+import { LocationCreatePage } from '../components/pages/location/create';
+import { OfferCreatePage } from '../components/pages/offer/create';
 
 export type Requirement = {
   translationKey: string;
@@ -89,7 +99,7 @@ export const useCategories: () => {
           factory: organizerUpdateFactory,
         },
         translationCreate: {
-          route: ApiRoutes.OrganizerTranslationCreate,
+          route: ApiRoutes.organizerTranslationCreate,
           factory: organizerTranslationCreateFactory,
         },
         delete: {
@@ -122,27 +132,74 @@ export const useCategories: () => {
         },
       ],
     },
-    offer: undefined,
+    offer: {
+      name: Categories.offer,
+      title: {
+        singular: t('categories.offer.title.singular') as string,
+        plural: t('categories.offer.title.plural') as string,
+      },
+      icon: MenuIconName.offer,
+      routes: {
+        list: routes[Routes.offer],
+        create: routes[Routes.createOffer],
+      },
+      subMenuKey: 'offer',
+      pages: {
+        create: OfferCreatePage,
+        info: OfferInfoPage,
+        media: OfferMediaPage,
+      },
+      tabs: [
+        { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
+        { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
+      ],
+      metaLinks: [
+        { title: t('categories.organizer.metaLinks.rights') as string, icon: 'Users' },
+        { title: t('categories.organizer.metaLinks.export') as string, icon: 'Archive' },
+      ],
+      api: {
+        list: {
+          route: ApiRoutes.offerList,
+          factory: offerListFactory,
+        },
+        show: {
+          route: ApiRoutes.offerShow,
+          factory: offerShowFactory,
+        },
+        create: {
+          route: ApiRoutes.offerCreate,
+          factory: offerCreateFactory,
+        },
+        update: {
+          route: ApiRoutes.offerUpdate,
+          factory: offerUpdateFactory,
+        },
+        translationCreate: {
+          route: ApiRoutes.offerTranslationCreate,
+          factory: offerTranslationCreateFactory,
+        },
+        delete: {
+          route: ApiRoutes.offerDelete,
+          factory: offerDeleteFactory,
+        },
+      },
+    },
     location: {
       name: Categories.location,
       title: {
-        singular: t('categories.organizer.title.singular') as string,
-        plural: t('categories.organizer.title.plural') as string,
+        singular: t('categories.location.title.singular') as string,
+        plural: t('categories.location.title.plural') as string,
       },
-      icon: MenuIconName.organizer,
+      icon: MenuIconName.location,
       routes: {
         list: routes[Routes.location],
         create: routes[Routes.createLocation],
       },
       subMenuKey: 'location',
       pages: {
-        create: OrganizerCreatePage,
-        preview: OrganizerPreviewPage,
+        create: LocationCreatePage,
         info: LocationInfoPage,
-        categorization: OrganizerCategorizationPage,
         media: LocationMediaPage,
-        rights: OrganizerRightsPage,
-        export: OrganizerExportPage,
       },
       tabs: [
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
@@ -170,7 +227,7 @@ export const useCategories: () => {
           factory: locationUpdateFactory,
         },
         translationCreate: {
-          route: ApiRoutes.LocationTranslationCreate,
+          route: ApiRoutes.locationTranslationCreate,
           factory: locationTranslationCreateFactory,
         },
         delete: {

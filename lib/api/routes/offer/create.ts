@@ -1,11 +1,11 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
-import { Organizer, CreateOrganizer } from '../../types/organizer';
+import { Offer, CreateOffer } from '../../types/offer';
 
 /**
  * /auth/info
  */
 
-export interface OrganizerCreate extends ApiCall {
+export interface OfferCreate extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'POST';
@@ -13,20 +13,20 @@ export interface OrganizerCreate extends ApiCall {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: CreateOrganizer;
+    body: CreateOffer;
   };
   response: {
     status: 200;
-    body: Organizer;
+    body: Offer;
   };
 }
 
-export const organizerCreateFactory: ApiCallFactory = (
-  token: OrganizerCreate['request']['headers']['Authorization'],
-  query: { entry: CreateOrganizer }
-): OrganizerCreate => ({
+export const offerCreateFactory: ApiCallFactory = (
+  token: OfferCreate['request']['headers']['Authorization'],
+  query: { entry: CreateOffer }
+): OfferCreate => ({
   request: {
-    route: apiRoutes.organizerCreate(),
+    route: apiRoutes.offerCreate(),
     method: 'POST',
     headers: {
       'Authorization': makeBearer(token),
