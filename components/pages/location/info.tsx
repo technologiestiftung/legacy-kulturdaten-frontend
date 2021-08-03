@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
-import { LocationShow, useApiCall } from '../../../lib/api';
+import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
 import { PublishedStatus } from '../../../lib/api/types/general';
-import { Location } from '../../../lib/api/types/location';
+import { Location, LocationTranslation } from '../../../lib/api/types/location';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -15,82 +15,84 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { useLinkList } from '../../linklist';
-// import { OrganizerFormProps } from './form';
 // import { Description } from './form/Description';
-// import { useName } from './form/Name';
-// import { FormGrid, FormItem, FormItemWidth } from './helpers';
+import { useName } from '../helpers/form/Name';
+import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { LocationShow } from '../../../lib/api/routes/location/show';
+import { EntryFormProps } from '../helpers/form';
+import { LocationTranslationCreate } from '../../../lib/api/routes/location/translation/create';
 
-// const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
-//   const t = useT();
+const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
+  const t = useT();
 
-//   const {
-//     form: setNameGerman,
-//     onSubmit: onSubmitGerman,
-//     pristine: pristineGerman,
-//     reset: resetGerman,
-//   } = useName({
-//     category,
-//     query,
-//     language: Language.de,
-//     label: t('categories.organizer.form.nameGerman') as string,
-//   });
+  const {
+    form: setNameGerman,
+    onSubmit: onSubmitGerman,
+    pristine: pristineGerman,
+    reset: resetGerman,
+  } = useName<Location, LocationShow, LocationTranslation, LocationTranslationCreate>({
+    category,
+    query,
+    language: Language.de,
+    label: t('categories.organizer.form.nameGerman') as string,
+  });
 
-//   const {
-//     form: setNameEnglish,
-//     onSubmit: onSubmitEnglish,
-//     pristine: pristineEnglish,
-//     reset: resetEnglish,
-//   } = useName({
-//     category,
-//     query,
-//     language: Language.en,
-//     label: t('categories.organizer.form.nameEnglish') as string,
-//   });
+  const {
+    form: setNameEnglish,
+    onSubmit: onSubmitEnglish,
+    pristine: pristineEnglish,
+    reset: resetEnglish,
+  } = useName<Location, LocationShow, LocationTranslation, LocationTranslationCreate>({
+    category,
+    query,
+    language: Language.en,
+    label: t('categories.organizer.form.nameEnglish') as string,
+  });
 
-//   return (
-//     <div>
-//       <EntryFormHead
-//         title={t('categories.organizer.form.name') as string}
-//         actions={[
-//           <Button
-//             key={0}
-//             onClick={() => {
-//               resetGerman();
-//               resetEnglish();
-//             }}
-//             disabled={pristineEnglish && pristineGerman}
-//             icon="XOctagon"
-//             color={ButtonColor.yellow}
-//           >
-//             {t('categories.organizer.form.editCancel')}
-//           </Button>,
-//           <Button
-//             key={1}
-//             icon="CheckSquare"
-//             color={ButtonColor.green}
-//             onClick={() => {
-//               onSubmitEnglish();
-//               onSubmitGerman();
-//             }}
-//             disabled={pristineEnglish && pristineGerman}
-//           >
-//             {t('categories.organizer.form.save')}
-//           </Button>,
-//         ]}
-//       />
-//       <FormGrid>
-//         <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
-//         <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
-//       </FormGrid>
-//     </div>
-//   );
-// };
+  return (
+    <div>
+      <EntryFormHead
+        title={t('categories.organizer.form.name') as string}
+        actions={[
+          <Button
+            key={0}
+            onClick={() => {
+              resetGerman();
+              resetEnglish();
+            }}
+            disabled={pristineEnglish && pristineGerman}
+            icon="XOctagon"
+            color={ButtonColor.yellow}
+          >
+            {t('categories.organizer.form.editCancel')}
+          </Button>,
+          <Button
+            key={1}
+            icon="CheckSquare"
+            color={ButtonColor.green}
+            onClick={() => {
+              onSubmitEnglish();
+              onSubmitGerman();
+            }}
+            disabled={pristineEnglish && pristineGerman}
+          >
+            {t('categories.organizer.form.save')}
+          </Button>,
+        ]}
+      />
+      <FormGrid>
+        <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
+        <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
+      </FormGrid>
+    </div>
+  );
+};
 
 // const StyledDescriptionForm = styled.div`
 //   padding: 0 0 1.5rem;
 // `;
 
-// const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+// const DescriptionForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
 //   const t = useT();
 
 //   return (
@@ -112,7 +114,7 @@ import { useLinkList } from '../../linklist';
 //   );
 // };
 
-// const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+// const LinksForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
 //   const t = useT();
 //   const call = useApiCall();
 //   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -214,7 +216,7 @@ import { useLinkList } from '../../linklist';
 //   );
 // };
 
-// const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+// const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
 //   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
 //   const call = useApiCall();
 //   const mutateList = useMutateList(category);
@@ -368,7 +370,7 @@ import { useLinkList } from '../../linklist';
 //   );
 // };
 
-// const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+// const ContactForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
 //   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
 //   const call = useApiCall();
 //   const mutateList = useMutateList(category);
@@ -498,7 +500,9 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
 
   return (
     <EntryFormWrapper>
-      <EntryFormContainer>{entry && JSON.stringify(entry.data)}</EntryFormContainer>
+      <EntryFormContainer>
+        <NameForm category={category} query={query} />
+      </EntryFormContainer>
     </EntryFormWrapper>
   );
 };

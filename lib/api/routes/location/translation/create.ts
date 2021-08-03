@@ -1,12 +1,12 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../../..';
 import { Language } from '../../../../../config/locale';
-import { OrganizerTranslation } from '../../../types/organizer';
+import { LocationTranslation } from '../../../types/location';
 
 /**
  * /auth/info
  */
 
-export type OrganizerTranslationCreate = ApiCall & {
+export type LocationTranslationCreate = ApiCall & {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'POST';
@@ -14,12 +14,12 @@ export type OrganizerTranslationCreate = ApiCall & {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: OrganizerTranslation;
+    body: LocationTranslation;
   };
   response: {
     status: 200;
     body: {
-      data: OrganizerTranslation;
+      data: LocationTranslation;
       meta: {
         language: Language;
       };
@@ -27,15 +27,15 @@ export type OrganizerTranslationCreate = ApiCall & {
   };
 };
 
-export const organizerTranslationCreateFactory = (
-  token: OrganizerTranslationCreate['request']['headers']['Authorization'],
+export const locationTranslationCreateFactory = (
+  token: LocationTranslationCreate['request']['headers']['Authorization'],
   query: {
     id: string;
-    translation: OrganizerTranslation;
+    translation: LocationTranslation;
   }
-): OrganizerTranslationCreate => ({
+): LocationTranslationCreate => ({
   request: {
-    route: apiRoutes.OrganizerTranslationCreate({
+    route: apiRoutes.LocationTranslationCreate({
       id: query.id,
     }),
     method: 'POST',

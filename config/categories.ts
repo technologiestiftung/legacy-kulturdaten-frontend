@@ -1,9 +1,4 @@
-import {
-  ApiRoutes,
-  locationListFactory,
-  locationShowFactory,
-  organizerListFactory,
-} from '../lib/api';
+import { ApiRoutes, locationListFactory, organizerListFactory } from '../lib/api';
 import { organizerShowFactory } from '../lib/api/routes/organizer/show';
 import { organizerCreateFactory } from '../lib/api/routes/organizer/create';
 import { useT } from '../lib/i18n';
@@ -19,8 +14,13 @@ import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
-import { OrganizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
+import { organizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
 import { LocationInfoPage } from '../components/pages/location/info';
+import { locationCreateFactory } from '../lib/api/routes/location/create';
+import { locationUpdateFactory } from '../lib/api/routes/location/update';
+import { locationTranslationCreateFactory } from '../lib/api/routes/location/translation/create';
+import { locationDeleteFactory } from '../lib/api/routes/location/delete';
+import { locationShowFactory } from '../lib/api/routes/location/show';
 
 export type Requirement = {
   translationKey: string;
@@ -89,7 +89,7 @@ export const useCategories: () => {
         },
         translationCreate: {
           route: ApiRoutes.OrganizerTranslationCreate,
-          factory: OrganizerTranslationCreateFactory,
+          factory: organizerTranslationCreateFactory,
         },
         delete: {
           route: ApiRoutes.organizerDelete,
@@ -163,20 +163,20 @@ export const useCategories: () => {
           factory: locationShowFactory,
         },
         create: {
-          route: ApiRoutes.organizerCreate,
-          factory: organizerCreateFactory,
+          route: ApiRoutes.locationCreate,
+          factory: locationCreateFactory,
         },
         update: {
-          route: ApiRoutes.organizerUpdate,
-          factory: organizerUpdateFactory,
+          route: ApiRoutes.locationUpdate,
+          factory: locationUpdateFactory,
         },
         translationCreate: {
-          route: ApiRoutes.OrganizerTranslationCreate,
-          factory: OrganizerTranslationCreateFactory,
+          route: ApiRoutes.LocationTranslationCreate,
+          factory: locationTranslationCreateFactory,
         },
         delete: {
-          route: ApiRoutes.organizerDelete,
-          factory: organizerDeleteFactory,
+          route: ApiRoutes.locationDelete,
+          factory: locationDeleteFactory,
         },
       },
     },

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Check, X } from 'react-feather';
-import { OrganizerFormProps } from '.';
+import { EntryFormProps } from '.';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { useApiCall } from '../../../../lib/api';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
@@ -65,7 +65,7 @@ const StyledDescriptionEditButton = styled.div`
   padding: 0.375rem 0;
 `;
 
-interface DescriptionProps extends OrganizerFormProps {
+interface DescriptionProps extends EntryFormProps {
   language: Language;
   title: string;
 }
@@ -159,7 +159,7 @@ export const Description: React.FC<DescriptionProps> = ({
                 const resp = await call<OrganizerTranslationCreate>(
                   category.api.translationCreate.factory,
                   {
-                    organizerTranslation: {
+                    translation: {
                       ...entryTranslation,
                       attributes: {
                         description: serializedMarkdown,
@@ -172,7 +172,7 @@ export const Description: React.FC<DescriptionProps> = ({
                       },
                     },
                     translationId: entryTranslation?.id,
-                    organizerId: entry?.data?.id,
+                    id: entry?.data?.id,
                   }
                 );
 

@@ -48,3 +48,11 @@ export type Location = {
         };
   };
 } & CategoryEntry;
+
+export type CreateLocation = {
+  relations?: {
+    links?: string[];
+    translations?: LocationTranslation[];
+    address?: Address;
+  };
+};
