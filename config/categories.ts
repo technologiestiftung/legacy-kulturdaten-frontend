@@ -21,6 +21,7 @@ import { locationUpdateFactory } from '../lib/api/routes/location/update';
 import { locationTranslationCreateFactory } from '../lib/api/routes/location/translation/create';
 import { locationDeleteFactory } from '../lib/api/routes/location/delete';
 import { locationShowFactory } from '../lib/api/routes/location/show';
+import { LocationMediaPage } from '../components/pages/location/media';
 
 export type Requirement = {
   translationKey: string;
@@ -139,15 +140,13 @@ export const useCategories: () => {
         preview: OrganizerPreviewPage,
         info: LocationInfoPage,
         categorization: OrganizerCategorizationPage,
-        media: OrganizerMediaPage,
+        media: LocationMediaPage,
         rights: OrganizerRightsPage,
         export: OrganizerExportPage,
       },
       tabs: [
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
-        { title: t('categories.organizer.tabs.categorization') as string, sub: 'categorization' },
         { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
-        { title: t('categories.organizer.tabs.preview') as string, sub: 'preview' },
       ],
       metaLinks: [
         { title: t('categories.organizer.metaLinks.rights') as string, icon: 'Users' },

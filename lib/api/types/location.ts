@@ -20,15 +20,7 @@ export type Location = {
     relations?: {
       translations: LocationTranslation[];
       organizer?: Organizer;
-      address?: {
-        type: 'address';
-        attributes: {
-          street1: string;
-          street2?: string;
-          city: string;
-          zipCode: string;
-        };
-      };
+      address?: Address;
       links?: [
         {
           id: number;
