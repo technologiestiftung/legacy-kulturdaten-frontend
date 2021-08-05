@@ -15,22 +15,26 @@ const StyledEntryCardLink = styled.a`
 `;
 
 const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean }>`
-  border: 1px solid var(--black);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: var(--white);
   border-radius: 0.75rem;
   cursor: pointer;
   transition: box-shadow var(--transition-duration-fast);
 
   &:hover {
     box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+    border-color: rgba(0, 0, 0, 0.5);
   }
 
   ${({ active }) =>
     active
       ? css`
           box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+          border-color: rgba(0, 0, 0, 1);
 
           &:hover {
             box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+            border-color: rgba(0, 0, 0, 1);
           }
         `
       : ''}
@@ -158,8 +162,8 @@ export const EntryCardGrid = styled.div<{ expanded: boolean }>`
   display: grid;
   grid-template-columns: auto;
   grid-column-gap: 0.75rem;
-  grid-row-gap: 0.75rem;
-  padding: 1.5rem 0.75rem;
+  grid-row-gap: 1.5rem;
+  padding: 2.25rem 0;
 
   ${({ expanded }) =>
     expanded

@@ -57,10 +57,6 @@ const StyledExpandableButton = styled.button`
   cursor: pointer;
   color: var(--white);
 
-  svg {
-    transform: rotate(45deg);
-  }
-
   &:hover {
     background: var(--grey-600);
   }

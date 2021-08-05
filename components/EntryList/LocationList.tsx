@@ -179,7 +179,6 @@ const StyledEntryListTable = styled.div`
 `;
 
 const EntryListSort = styled.div<{ expanded: boolean }>`
-  padding: 0 0.75rem;
   display: grid;
   row-gap: 0.75rem;
 
@@ -191,7 +190,7 @@ const EntryListSort = styled.div<{ expanded: boolean }>`
     ${({ expanded }) =>
       expanded
         ? css`
-            padding: 0.75rem;
+            padding: 3rem 0 1.5rem;
             display: flex;
             justify-content: flex-end;
 

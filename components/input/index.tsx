@@ -11,11 +11,11 @@ const StyledInputContainer = styled.div`
   align-items: flex-start;
 
   ${StyledLabel} {
-    padding-bottom: 0.75rem;
+    padding-bottom: 0.375rem;
   }
 `;
 
-const borderShadow = 'inset 0px 0px 0px 1px var(--black)';
+const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
 const errorBorderShadow = 'inset 0px 0px 0px 1px var(--error)';
 const errorShadow = '0px 0px 0px 2px var(--error-o50)';
 
@@ -32,8 +32,8 @@ export const inputStyles = ({
 }): SerializedStyles => css`
   appearance: none;
   border: none;
-  border-radius: 0.75rem;
-  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1.125rem;
   font-family: var(--font-family);
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);

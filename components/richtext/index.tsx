@@ -36,27 +36,21 @@ const StyledEditableContainer = styled.div`
   background: var(--white);
   min-height: 100%;
   flex-grow: 1;
-
-  ${mq(Breakpoint.mid)} {
-    ${contentGrid(9)}
-  }
-
-  ${mq(Breakpoint.wide)} {
-    ${contentGrid(8)}
-  }
 `;
 
 const StyledEditable = styled.div`
   caret-color: #0000ff;
-  padding: 2rem 0.75rem;
 
   > div {
+    padding: 2rem 0.75rem;
     min-height: 100%;
-  }
 
-  ${mq(Breakpoint.mid)} {
-    padding: 4rem 0;
-    grid-column: 2 / -2;
+    max-width: 44rem;
+    margin: 0 auto;
+
+    ${mq(Breakpoint.mid)} {
+      padding: 4rem 4rem;
+    }
   }
 `;
 

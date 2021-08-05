@@ -8,13 +8,13 @@ export const EntryFormWrapper = styled.div`
   row-gap: 1.5rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: 2.25rem 0.75rem;
-    row-gap: 2.25rem;
+    padding: 3rem 0.75rem;
+    row-gap: 3rem;
     ${contentGrid(8)}
   }
 
   ${mq(Breakpoint.widish)} {
-    padding: 2.25rem 0;
+    padding: 3rem 0;
   }
 `;
 

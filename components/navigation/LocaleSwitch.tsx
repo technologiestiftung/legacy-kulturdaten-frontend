@@ -4,9 +4,8 @@ import { Locale, locales } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { useLocale, useSwitchLocale } from '../../lib/routing';
 import { Select, SelectVariant } from '../select';
-
 const StyledLocaleSwitch = styled.div`
-  padding: 0 0.75rem 2.25rem;
+  padding: 1.5rem 1.5rem 2.25rem;
 `;
 
 export const LocaleSwitch: React.FC = () => {

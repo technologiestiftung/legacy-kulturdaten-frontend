@@ -3,8 +3,8 @@ import { Language } from '../../config/locale';
 import { CategoryEntry } from '../../lib/api/types/general';
 
 export const StyledEntryListBody = styled.div`
-  background: var(--white);
-  padding: 1.5rem 0;
+  background: var(--grey-200);
+  padding: 2.25rem 1.5rem;
 `;
 
 export interface EntryListProps<EntryType extends CategoryEntry> {

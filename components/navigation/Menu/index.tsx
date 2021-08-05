@@ -59,10 +59,10 @@ export type MenuSectionData = {
 };
 
 const StyledMenuSections = styled.div`
-  padding: 1.5rem 0.75rem;
+  padding: 2.25rem 1.5rem;
   display: grid;
   grid-template-columns: 100%;
-  grid-row-gap: 1.5rem;
+  grid-row-gap: 2.25rem;
   width: 100%;
 `;
 
