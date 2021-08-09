@@ -8,14 +8,14 @@ const StyledEntryFormHead = styled.div`
   border-bottom: 1px solid var(--white);
   background: var(--white);
   position: sticky;
-  top: var(--header-height);
+  top: 0;
   left: 0;
   align-items: flex-end;
   flex-wrap: wrap;
   z-index: 1;
 
   ${mq(Breakpoint.mid)} {
-    top: 0;
+    top: var(--header-height);
   }
 `;
 

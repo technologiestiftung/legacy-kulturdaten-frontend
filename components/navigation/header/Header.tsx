@@ -1,14 +1,11 @@
-import NextLink from 'next/link';
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useContext } from 'react';
 import { useT } from '../../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
-import { Button, ButtonVariant, IconPosition } from '../../button';
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
-import { NavigationContext } from '../NavigationContext';
 import { HeaderMenuLink } from './HeaderMenuLink';
+import { User } from '../../user/useUser';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -23,13 +20,6 @@ const StyledHeader = styled.header<{ isSecondary?: boolean }>`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
   }
-  /* 
-  ${({ isSecondary }) =>
-    isSecondary
-      ? css`
-          background: var(--grey-200);
-        `
-      : ''} */
 `;
 
 const StyledLink = styled.a`
@@ -41,6 +31,9 @@ const StyledLink = styled.a`
   padding: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
+    padding: 1.125rem 0.75rem;
+  }
+  ${mq(Breakpoint.wide)} {
     padding: 1.125rem 1.5rem;
   }
 `;
@@ -99,20 +92,18 @@ interface HeaderProps {
   title: string;
   Link: React.FC<{ children: React.ReactElement<HTMLAnchorElement> }>;
   menuItems: MenuItem[];
-  user: {
-    name: string;
-  };
+  user: User;
+  userIsLoggedIn: boolean;
 }
 
-export const HeaderComplete: React.FC<HeaderProps> = ({
+export const HeaderMain: React.FC<HeaderProps> = ({
   title,
   Link,
   menuItems,
-  user,
+  userIsLoggedIn,
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
-  const t = useT();
 
   const renderedLink = (
     <Link>
@@ -144,45 +135,17 @@ export const HeaderComplete: React.FC<HeaderProps> = ({
     }
   });
 
-  return (
+  return isMidOrWider ? (
     <StyledHeader>
       <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
-      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+      {userIsLoggedIn && (
+        <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+      )}
     </StyledHeader>
-  );
-};
-
-export const HeaderPartMain: React.FC<HeaderProps> = ({ menuItems }: HeaderProps) => {
-  const { rendered } = useContext(WindowContext);
-
-  const renderedMenuSection = menuItems.map(({ type, action }, index) => {
-    switch (type) {
-      case MenuItemType.link: {
-        return (
-          <StyledHeaderMenuItem key={index}>
-            <HeaderMenuLink {...(action as MenuItemLink)} />
-          </StyledHeaderMenuItem>
-        );
-      }
-
-      case MenuItemType.divider: {
-        return (
-          <StyledHeaderMenuItem key={index}>
-            <HeaderMenuDivider />
-          </StyledHeaderMenuItem>
-        );
-      }
-
-      default: {
-        return null;
-      }
-    }
-  });
-
-  return (
-    <StyledHeader>
+  ) : (
+    userIsLoggedIn && (
       <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
-    </StyledHeader>
+    )
   );
 };
 

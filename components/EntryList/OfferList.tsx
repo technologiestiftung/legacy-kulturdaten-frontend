@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
-import { Plus } from 'react-feather';
+import { ChevronDown } from 'react-feather';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall } from '../../lib/api';
@@ -27,6 +27,9 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
+import { ButtonColor, ButtonSize } from '../button';
+import { ButtonLink } from '../button/ButtonLink';
+import Link from 'next/link';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -54,9 +57,6 @@ const StyledFiltersBox = styled.div<{ expanded: boolean }>`
 `;
 
 const StyledFiltersBoxTitle = styled.div`
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  font-weight: 700;
   width: 100%;
   border-bottom: 1px solid var(--grey-400);
   padding: 0 0 0.375rem;
@@ -67,6 +67,8 @@ const StyledFilterBoxChild = styled.div``;
 
 const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
   display: flex;
+  background: var(--white);
+  border-radius: 0 0 calc(0.75rem - 1px) calc(0.75rem - 1px);
 
   ${({ expanded }) =>
     expanded
@@ -101,24 +103,25 @@ const StyledFiltersBoxTitleButton = styled.button<{ isCollapsed: boolean }>`
   align-items: center;
   appearance: none;
   width: 100%;
-  background: none;
+  background: var(--white);
   border: none;
-  padding: 0.375rem 0.75rem;
+  padding: 0.75rem 1.125rem;
   margin: 0;
   text-align: left;
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
   font-weight: 700;
   cursor: pointer;
   color: var(--black);
-  border-radius: ${({ isCollapsed }) => (isCollapsed ? '0.75rem' : '0.75rem 0.75rem 0 0')};
+  border-radius: ${({ isCollapsed }) =>
+    isCollapsed ? 'calc(0.75rem - 1px)' : 'calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0'};
 
   > svg {
     display: block;
     width: 1.125rem;
     height: 1.125rem;
     transition: transform var(--transition-duration);
-    transform: rotate(${({ isCollapsed }) => (isCollapsed ? '0deg' : '45deg')});
+    transform: rotateX(${({ isCollapsed }) => (isCollapsed ? '0deg' : '180deg')});
   }
 `;
 
@@ -165,7 +168,7 @@ const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
             {activeFiltersCount
               ? ` (${t('categories.organizer.filters.activeFilters', { activeFiltersCount })})`
               : ''}
-            <Plus />
+            <ChevronDown />
           </StyledFiltersBoxTitleButton>
           {renderedCollapsable}
         </>
@@ -205,6 +208,7 @@ const EntryListSort = styled.div<{ expanded: boolean }>`
         : ''}
   }
 `;
+
 interface ListLinkProps {
   children: React.ReactNode;
 }
@@ -391,6 +395,13 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
         expanded={expanded}
         accentColor="var(--red)"
       >
+        <Link href={routes.createOffer({ locale })} passHref>
+          <ButtonLink size={ButtonSize.big} color={ButtonColor.white} icon="Plus">
+            {t('categories.offer.form.create')}
+          </ButtonLink>
+        </Link>
+      </EntryListHead>
+      <StyledEntryListBody>
         <FiltersBox
           isCollapsed={filtersBoxExpanded}
           setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
@@ -416,74 +427,73 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
           </Select>
+          <EntryListSort expanded={expanded}>
+            <Select
+              id={`entry-sort-${pseudoUID}`}
+              label={t('general.sort') as string}
+              onChange={(e) => {
+                setCurrentPage(listName, 1);
+                setSortKey(listName, e.target.value);
+              }}
+              value={sortKey}
+              labelPosition={
+                expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
+              }
+            >
+              <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
+              <option value="createdAt">{t('categories.organizer.sort.created')}</option>
+              <option value="name">{t('categories.organizer.sort.name')}</option>
+            </Select>
+            <RadioSwitch
+              value={order}
+              name={`entry-order-${pseudoUID}`}
+              onChange={(value) => {
+                setCurrentPage(listName, 1);
+                setOrder(listName, value as Order);
+              }}
+              options={[
+                {
+                  value: Order.ASC,
+                  label: t('general.ascending') as string,
+                  ariaLabel: t('general.ascendingAriaLabel') as string,
+                  icon: 'ArrowUp',
+                },
+                {
+                  value: Order.DESC,
+                  label: t('general.descending') as string,
+                  ariaLabel: t('general.descendingAriaLabel') as string,
+                  icon: 'ArrowDown',
+                },
+              ]}
+            />
+            <RadioSwitch
+              value={view}
+              name={`entry-view-${pseudoUID}`}
+              onChange={(value) => {
+                setView(listName, value as EntryListView);
+              }}
+              label={t('categories.organizer.view.label') as string}
+              labelPosition={
+                expanded && isWidishOrWider
+                  ? RadioSwitchLabelPosition.left
+                  : RadioSwitchLabelPosition.top
+              }
+              options={[
+                {
+                  value: EntryListView.cards,
+                  label: t('categories.organizer.view.cards') as string,
+                  icon: 'Grid',
+                },
+                {
+                  value: EntryListView.table,
+                  label: t('categories.organizer.view.table') as string,
+                  icon: 'AlignJustify',
+                },
+              ]}
+            />
+          </EntryListSort>
         </FiltersBox>
-      </EntryListHead>
-      <StyledEntryListBody>
-        <EntryListSort expanded={expanded}>
-          <Select
-            id={`entry-sort-${pseudoUID}`}
-            label={t('general.sort') as string}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              setSortKey(listName, e.target.value);
-            }}
-            value={sortKey}
-            labelPosition={
-              expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
-            }
-          >
-            <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
-            <option value="createdAt">{t('categories.organizer.sort.created')}</option>
-            <option value="name">{t('categories.organizer.sort.name')}</option>
-          </Select>
-          <RadioSwitch
-            value={order}
-            name={`entry-order-${pseudoUID}`}
-            onChange={(value) => {
-              setCurrentPage(listName, 1);
-              setOrder(listName, value as Order);
-            }}
-            options={[
-              {
-                value: Order.ASC,
-                label: t('general.ascending') as string,
-                ariaLabel: t('general.ascendingAriaLabel') as string,
-                icon: 'ArrowUp',
-              },
-              {
-                value: Order.DESC,
-                label: t('general.descending') as string,
-                ariaLabel: t('general.descendingAriaLabel') as string,
-                icon: 'ArrowDown',
-              },
-            ]}
-          />
-          <RadioSwitch
-            value={view}
-            name={`entry-view-${pseudoUID}`}
-            onChange={(value) => {
-              setView(listName, value as EntryListView);
-            }}
-            label={t('categories.organizer.view.label') as string}
-            labelPosition={
-              expanded && isWidishOrWider
-                ? RadioSwitchLabelPosition.left
-                : RadioSwitchLabelPosition.top
-            }
-            options={[
-              {
-                value: EntryListView.cards,
-                label: t('categories.organizer.view.cards') as string,
-                icon: 'Grid',
-              },
-              {
-                value: EntryListView.table,
-                label: t('categories.organizer.view.table') as string,
-                icon: 'AlignJustify',
-              },
-            ]}
-          />
-        </EntryListSort>
+
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded}>
             {cards && cards.length > 0 ? (

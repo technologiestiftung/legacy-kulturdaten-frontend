@@ -2,12 +2,13 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Categories, useCategories } from '../../../config/categories';
 import { routes } from '../../../config/routes';
-import { LocationList } from '../../../lib/api';
+import { LocationList as LocationListCall } from '../../../lib/api';
 import { Location } from '../../../lib/api/types/location';
 import { CategoryPage, useList } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
+import { LocationList } from '../../EntryList/LocationList';
 import { AppWrapper } from '../../wrappers/AppWrapper';
 
 export const LocationListPage: React.FC<CategoryPage> = () => {
@@ -34,7 +35,7 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
   const lastEntryId = useMemo(() => getLastEntryId(listName), [getLastEntryId, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
 
-  const list = useList<LocationList, Location>(
+  const list = useList<LocationListCall, Location>(
     categories.location,
     currentPage,
     entriesPerPage,
@@ -53,5 +54,7 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
     }
   }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
 
-  return listEvaluated ? <AppWrapper>Location List</AppWrapper> : null;
+  return listEvaluated ? (
+    <AppWrapper>{!isMidOrWider ? <LocationList expanded={false} /> : 'Location List'}</AppWrapper>
+  ) : null;
 };

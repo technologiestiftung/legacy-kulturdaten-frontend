@@ -2,12 +2,13 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Categories, useCategories } from '../../../config/categories';
 import { routes } from '../../../config/routes';
-import { OfferList } from '../../../lib/api';
+import { OfferList as OfferListCall } from '../../../lib/api';
 import { Offer } from '../../../lib/api/types/offer';
 import { CategoryPage, useList } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
+import { OfferList } from '../../EntryList/OfferList';
 import { AppWrapper } from '../../wrappers/AppWrapper';
 
 export const OfferListPage: React.FC<CategoryPage> = () => {
@@ -34,7 +35,7 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
   const lastEntryId = useMemo(() => getLastEntryId(listName), [getLastEntryId, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
 
-  const list = useList<OfferList, Offer>(
+  const list = useList<OfferListCall, Offer>(
     categories.offer,
     currentPage,
     entriesPerPage,
@@ -53,5 +54,7 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
     }
   }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
 
-  return listEvaluated ? <AppWrapper>Offer List</AppWrapper> : null;
+  return listEvaluated ? (
+    <AppWrapper>{!isMidOrWider ? <OfferList expanded={false} /> : 'Offer List'}</AppWrapper>
+  ) : null;
 };

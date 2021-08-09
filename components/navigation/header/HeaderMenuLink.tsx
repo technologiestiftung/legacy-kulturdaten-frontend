@@ -2,8 +2,6 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 
 import { useIsRouteStringActive } from '../../../lib/routing';
-import { insetBorder } from '../../globals/Constants';
-import { ArrowRight, File } from 'react-feather';
 import { css } from '@emotion/react';
 
 const StyledA = styled.a<{ active?: boolean }>`
@@ -20,10 +18,8 @@ const StyledA = styled.a<{ active?: boolean }>`
   line-height: var(--line-height-300);
   font-weight: 700;
 
-  @media screen and (pointer: fine) {
-    &:hover {
-      background: var(--grey-400);
-    }
+  &:hover {
+    background: var(--grey-400);
   }
 
   ${({ active }) =>
@@ -33,11 +29,8 @@ const StyledA = styled.a<{ active?: boolean }>`
           border-color: var(--black);
           color: var(--white);
 
-          @media screen and (pointer: fine) {
-            &:hover {
-              border-color: var(--grey-600);
-              background: var(--grey-600);
-            }
+          &:hover {
+            background: var(--black);
           }
         `
       : ''}
@@ -78,7 +71,7 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   return (
     <Link href={href} passHref>
       <StyledA title={title} active={linkIsActive}>
-        {linkIsActive && <ArrowRight />}
+        {/* {linkIsActive && <ArrowRight />} */}
         <span>{title}</span>
       </StyledA>
     </Link>

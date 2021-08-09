@@ -2,12 +2,13 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Categories, useCategories } from '../../../config/categories';
 import { routes } from '../../../config/routes';
-import { OrganizerList } from '../../../lib/api';
+import { OrganizerList as OrganizerListCall } from '../../../lib/api';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryPage, useList } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
+import { OrganizerList } from '../../EntryList/OrganizerList';
 import { AppWrapper } from '../../wrappers/AppWrapper';
 
 export const OrganizerListPage: React.FC<CategoryPage> = () => {
@@ -34,7 +35,7 @@ export const OrganizerListPage: React.FC<CategoryPage> = () => {
   const lastEntryId = useMemo(() => getLastEntryId(listName), [getLastEntryId, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
 
-  const list = useList<OrganizerList, Organizer>(
+  const list = useList<OrganizerListCall, Organizer>(
     categories.organizer,
     currentPage,
     entriesPerPage,
@@ -53,5 +54,7 @@ export const OrganizerListPage: React.FC<CategoryPage> = () => {
     }
   }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
 
-  return listEvaluated ? <AppWrapper>Organizer List</AppWrapper> : null;
+  return listEvaluated ? (
+    <AppWrapper>{!isMidOrWider ? <OrganizerList expanded={false} /> : 'Organizer List'}</AppWrapper>
+  ) : null;
 };

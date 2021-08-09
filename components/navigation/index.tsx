@@ -1,52 +1,10 @@
-import { css } from '@emotion/react';
-import styled from '@emotion/styled';
-import React, { useContext, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
-import { useKeyboard } from '../../lib/useKeyboard';
-import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
-import { HeaderComplete, HeaderPartMain, HeaderPartSecondary } from './header/Header';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { useUser } from '../user/useUser';
+import { HeaderMain, HeaderPartSecondary } from './header/Header';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Menu, MenuData, MenuItemType, MenuItemButton, MenuItemFolder, MenuItemLink } from './Menu';
-import { NavigationContext } from './NavigationContext';
-
-const StyledNavigation = styled.div<{ fullscreen?: boolean }>`
-  background: var(--grey-200);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-
-  ${({ fullscreen }) =>
-    fullscreen
-      ? css`
-          height: var(--app-height);
-          overflow: hidden;
-        `
-      : ''};
-`;
-
-const StyledNavigationContent = styled.div<{ show: boolean }>`
-  display: none;
-  visibility: hidden;
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex-grow: 1;
-  width: 100%;
-  padding-bottom: env(safe-area-inset-bottom);
-
-  ${({ show }) =>
-    show
-      ? css`
-          display: block;
-          visibility: inherit;
-        `
-      : ''}
-`;
-
-const StyledNavigationHeader = styled.div`
-  position: sticky;
-  top: 0;
-  left: 0;
-`;
 
 export interface NavigationProps {
   menus: {
@@ -74,15 +32,14 @@ export type NavigationStructure = {
 export const useNavigation = (
   structure: NavigationStructure,
   title: string,
-  Link: React.FC<HeaderLinkProps>,
-  subMenuKey?: string
+  Link: React.FC<HeaderLinkProps>
 ): {
   header: { main: React.ReactElement; secondary: React.ReactElement };
   sidebar: React.ReactElement;
 } => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
-
   const category = useCategory();
+  const user = useUser();
 
   const menus = structure.menus.map((menuData) => {
     const { key, expandable, title } = menuData;
@@ -100,42 +57,23 @@ export const useNavigation = (
     return menuKey ? menus?.filter(({ key }) => key === menuKey)[0] : undefined;
   }, [category?.subMenuKey, menus]);
 
-  // const renderedNavigation = (
-  //   <Navigation
-  //     defaultMenuKey={structure.defaultMenuKey}
-  //     menus={menus}
-  //     title={title}
-  //     Link={Link}
-  //     subMenuKey={subMenuKey}
-  //   />
-  // );
-
-  const renderedHeaderMain = useMemo(
-    () =>
-      isMidOrWider ? (
-        <HeaderComplete
-          title={title}
-          Link={Link}
-          menuItems={structure.header.menuItems}
-          user={undefined}
-        />
-      ) : (
-        <HeaderPartMain
-          title={title}
-          Link={Link}
-          menuItems={structure.header.menuItems}
-          user={undefined}
-        />
-      ),
-    [Link, isMidOrWider, structure.header.menuItems, title]
+  const renderedHeaderMain = (
+    <HeaderMain
+      user={user?.user}
+      userIsLoggedIn={user?.isLoggedIn}
+      title={title}
+      Link={Link}
+      menuItems={structure.header.menuItems}
+    />
   );
 
   const renderedHeaderSecondary = isMidOrWider ? undefined : (
     <HeaderPartSecondary
+      user={user?.user}
+      userIsLoggedIn={user?.isLoggedIn}
       title={title}
       Link={Link}
       menuItems={structure.header.menuItems}
-      user={undefined}
     />
   );
 

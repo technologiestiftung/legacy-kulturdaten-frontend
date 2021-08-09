@@ -162,8 +162,12 @@ export const EntryCardGrid = styled.div<{ expanded: boolean }>`
   display: grid;
   grid-template-columns: auto;
   grid-column-gap: 0.75rem;
-  grid-row-gap: 1.5rem;
+  grid-row-gap: 0.75rem;
   padding: 2.25rem 0;
+
+  ${mq(Breakpoint.wide)} {
+    grid-row-gap: 1.5rem;
+  }
 
   ${({ expanded }) =>
     expanded

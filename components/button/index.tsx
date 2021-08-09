@@ -147,6 +147,7 @@ const StyledButton = styled.button<{
   display: inline-flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   border: 1px solid var(--black);
   background: ${({ color }) => buttonColors[color].background};
   color: ${({ color }) => buttonColors[color].color};

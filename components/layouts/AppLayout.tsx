@@ -30,7 +30,7 @@ const HeaderSlot = styled.div`
   position: fixed;
   width: 100%;
   z-index: 1001;
-  box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.25);
+  box-shadow: 0 -0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.25);
   max-width: 100%;
   overflow-y: hidden;
   overflow-x: auto;
@@ -40,6 +40,8 @@ const HeaderSlot = styled.div`
   background: var(--white);
 
   ${mq(Breakpoint.mid)} {
+    padding-bottom: 0;
+    box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.25);
     position: sticky;
     top: 0;
   }
@@ -107,7 +109,7 @@ const ContentSlot = styled.div`
   position: relative;
   grid-column: 1 / -1;
   min-height: calc(var(--app-height) - var(--header-height));
-  margin-bottom: var(--header-height);
+  margin-bottom: calc(var(--header-height) + env(safe-area-inset-bottom));
 
   ${mq(Breakpoint.mid)} {
     min-height: var(--app-height);
@@ -147,7 +149,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
   return (
     <div>
-      <HeaderSlot>{headerMain}</HeaderSlot>
+      {headerMain && <HeaderSlot>{headerMain}</HeaderSlot>}
       {headerSecondary && <HeaderSlotSecondary>{headerSecondary}</HeaderSlotSecondary>}
       {isMidOrWider && sidebar && <MenuSlot>{sidebar}</MenuSlot>}
       <Container>{rendered && renderedContentSlot}</Container>
