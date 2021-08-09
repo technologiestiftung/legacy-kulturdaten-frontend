@@ -14,6 +14,8 @@ const StyledEntryHeader = styled.div`
 
   ${mq(Breakpoint.mid)} {
     grid-row-gap: 2.25rem;
+    background: var(--white);
+    padding: 0 1.5rem;
 
     ${contentGrid(8)}
   }
@@ -29,14 +31,14 @@ const StyledEntryHeaderHead = styled.div`
   margin-top: 1.5rem;
 
   ${mq(Breakpoint.mid)} {
-    margin-top: 0.75rem;
+    margin-top: 1.5rem;
     flex-direction: row;
     justify-content: space-between;
     grid-column: 1 / -1;
   }
 
   ${mq(Breakpoint.widish)} {
-    margin-top: 1.5rem;
+    margin-top: 3rem;
     grid-column: 2 / -2;
   }
 `;

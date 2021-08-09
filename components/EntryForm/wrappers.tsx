@@ -8,7 +8,7 @@ export const EntryFormWrapper = styled.div`
   row-gap: 1.5rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: 3rem 0.75rem;
+    padding: 3rem 1.5rem;
     row-gap: 3rem;
     ${contentGrid(8)}
   }

@@ -8,7 +8,7 @@ import { MenuLink, MenuLinkProps } from './MenuLink';
 import { MenuSection, MenuSectionVariant } from './MenuSection';
 import { MenuSectionDivider } from './MenuSectionDivider';
 
-export enum MenuItem {
+export enum MenuItemType {
   link = 'link',
   folder = 'folder',
   button = 'button',
@@ -45,7 +45,7 @@ export type MenuData = {
 export type MenuSectionData = {
   title: string;
   items: {
-    type: MenuItem;
+    type: MenuItemType;
     action?: MenuItemLink | MenuItemButton | MenuItemFolder;
   }[];
   button?: React.ReactElement;
@@ -56,6 +56,11 @@ export type MenuSectionData = {
     uppercase?: boolean;
   };
   variant?: MenuSectionVariant;
+};
+
+export type MenuItem = {
+  type: MenuItemType;
+  action?: MenuItemLink | MenuItemButton | MenuItemFolder;
 };
 
 const StyledMenuSections = styled.div`
@@ -70,6 +75,7 @@ const StyledMenu = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
+  background: var(--grey-200);
 `;
 
 interface MenuProps {
@@ -77,7 +83,7 @@ interface MenuProps {
 }
 
 export const Menu: React.FC<MenuProps> = ({ menuData }: MenuProps) => {
-  const { setNavigationOpen, menuExpanded } = useContext(NavigationContext);
+  const { menuExpanded } = useContext(NavigationContext);
 
   const { sections, List, AdditionalContent } = menuData;
 
@@ -85,17 +91,16 @@ export const Menu: React.FC<MenuProps> = ({ menuData }: MenuProps) => {
     ({ title, icon, items, headOptions, variant, button }, index) => {
       const renderedItems = items?.map(({ type, action }, actionIndex) => {
         switch (type) {
-          case MenuItem.link: {
+          case MenuItemType.link: {
             return <MenuLink key={actionIndex} {...(action as MenuLinkProps)} />;
           }
 
-          case MenuItem.button: {
+          case MenuItemType.button: {
             const { label, onClick, icon, iconPosition } = action as MenuItemButton;
             return (
               <Button
                 onClick={() => {
                   onClick();
-                  setNavigationOpen(false);
                 }}
                 variant={ButtonVariant.minimal}
                 size={ButtonSize.small}
@@ -107,12 +112,12 @@ export const Menu: React.FC<MenuProps> = ({ menuData }: MenuProps) => {
             );
           }
 
-          case MenuItem.folder: {
+          case MenuItemType.folder: {
             const { label, menuKey } = action as MenuItemFolder;
             return <MenuFolder label={label} menuKey={menuKey} />;
           }
 
-          case MenuItem.divider: {
+          case MenuItemType.divider: {
             return <MenuSectionDivider />;
           }
 

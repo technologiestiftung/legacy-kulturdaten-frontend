@@ -9,7 +9,7 @@ import { AppLayout } from '../layouts/AppLayout';
 import { TitleBar } from './TitleBar';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Button, ButtonColor, ButtonVariant } from '../button';
-import { MenuItem } from './Menu';
+import { MenuItemType } from './Menu';
 
 export default {
   title: 'Navigation',
@@ -50,7 +50,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -58,7 +58,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',
@@ -80,7 +80,7 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.folder,
+              type: MenuItemType.folder,
               action: {
                 label: 'Alle Angebote',
                 menuKey: 'offer',
@@ -102,7 +102,7 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.folder,
+              type: MenuItemType.folder,
               action: {
                 label: 'Alle Anbieter:innen',
                 menuKey: 'organizer',
@@ -124,7 +124,7 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.folder,
+              type: MenuItemType.folder,
               action: {
                 label: 'Alle Orte',
                 menuKey: 'location',
@@ -142,14 +142,14 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Mein Profil',
                 href: '#',
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Meine Einstellungen',
                 href: '#',
@@ -169,7 +169,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -177,7 +177,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',
@@ -197,7 +197,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -205,7 +205,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',
@@ -225,7 +225,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -233,7 +233,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',

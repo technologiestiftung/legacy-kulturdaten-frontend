@@ -1,10 +1,11 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { useMenuStructure, useAppTitle } from '../../config/structure';
 import { AppLayout } from '../layouts/AppLayout';
 import { HeaderLink } from '../navigation/header/HeaderLink';
 import { useNavigation } from '../navigation';
 
 import { useUser } from '../user/useUser';
+import { WindowContext } from '../../lib/WindowService';
 
 const UseUser: React.FC = () => {
   useUser();
@@ -22,13 +23,14 @@ export const AppWrapper: React.FC<AppWrapperProps> = ({
 }: AppWrapperProps) => {
   const NavigationStructure = useMenuStructure();
   const appTitle = useAppTitle();
+  const { rendered } = useContext(WindowContext);
 
-  const navigation = useNavigation(NavigationStructure, appTitle, HeaderLink, subMenuKey);
+  const { header, sidebar } = useNavigation(NavigationStructure, appTitle, HeaderLink, subMenuKey);
 
   return (
     <>
       <UseUser />
-      <AppLayout navigation={navigation} content={children} />
+      {rendered && <AppLayout header={header} sidebar={sidebar} content={children} />}
     </>
   );
 };

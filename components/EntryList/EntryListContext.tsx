@@ -60,23 +60,27 @@ type EntryListContext = {
   setView: (listName: string, view: EntryListView) => void;
   getFiltersBoxExpanded: (listName: string) => boolean;
   setFiltersBoxExpanded: (listName: string, filtersBoxExpanded: boolean) => void;
+  getLastEntryId: (listName: string) => string;
+  setLastEntryId: (listName: string, id: string) => void;
 };
 
 export const EntryListContext = React.createContext<EntryListContext>({
   getCurrentPage: undefined,
-  setCurrentPage: () => undefined,
+  setCurrentPage: undefined,
   getEntriesPerPage: undefined,
-  setEntriesPerPage: () => undefined,
+  setEntriesPerPage: undefined,
   getOrder: undefined,
-  setOrder: () => undefined,
+  setOrder: undefined,
   getSortKey: undefined,
-  setSortKey: () => undefined,
+  setSortKey: undefined,
   getFilters: undefined,
-  getDispatchFilters: () => undefined,
+  getDispatchFilters: undefined,
   getView: undefined,
-  setView: () => undefined,
+  setView: undefined,
   getFiltersBoxExpanded: undefined,
-  setFiltersBoxExpanded: () => undefined,
+  setFiltersBoxExpanded: undefined,
+  getLastEntryId: undefined,
+  setLastEntryId: undefined,
 });
 
 interface EntryListContextProviderProps {
@@ -91,6 +95,10 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
   const [filters, dispatchFilters] = useReducer(
     filtersReducer,
     listNames.reduce((pages, listName) => ({ ...pages, [listName]: {} }), {})
+  );
+
+  const [lastEntryIds, setLastEntryIds] = useState(
+    listNames.reduce((pages, listName) => ({ ...pages, [listName]: undefined }), {})
   );
 
   const [currentPages, setCurrentPages] = useState(
@@ -130,6 +138,8 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
         setOrder: (listName, order) => setOrders({ ...orders, [listName]: order }),
         getSortKey: (listName) => sortKeys[listName],
         setSortKey: (listName, sortKey) => setSortKeys({ ...sortKeys, [listName]: sortKey }),
+        getLastEntryId: (listName) => lastEntryIds[listName],
+        setLastEntryId: (listName, id) => setLastEntryIds({ ...lastEntryIds, [listName]: id }),
         getFilters: (listName) => filters[listName],
         getDispatchFilters: (listName) => (action) => dispatchFilters({ ...action, listName }),
         getView: (listName) => views[listName],

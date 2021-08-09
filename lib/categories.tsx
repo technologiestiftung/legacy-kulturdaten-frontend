@@ -55,6 +55,7 @@ export type Category = {
     create: React.FC<CategoryPage>;
     info: React.FC<CategoryEntryPage>;
     media: React.FC<CategoryEntryPage>;
+    list: React.FC<CategoryPage>;
   } & { [key: string]: React.FC<CategoryEntryPage> };
   tabs: {
     title: string;

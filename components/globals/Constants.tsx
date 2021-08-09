@@ -9,7 +9,7 @@ export const CSSVars: React.FC = () => (
         --white: #f9f9f9;
         --grey-200: #e6e6e6;
         --grey-350: #c8c8c8;
-        --grey-400: #aaaaaa;
+        --grey-400: #cbcbcb;
         --grey-600: #474747;
         --black: #181818;
         --black-o25: rgba(17, 17, 17, 0.25);

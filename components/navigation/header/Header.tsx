@@ -1,38 +1,57 @@
+import NextLink from 'next/link';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useContext } from 'react';
-import { Maximize2, Minimize2 } from 'react-feather';
 import { useT } from '../../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { Button, ButtonVariant, IconPosition } from '../../button';
 import { mq } from '../../globals/Constants';
+import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
 import { NavigationContext } from '../NavigationContext';
+import { HeaderMenuLink } from './HeaderMenuLink';
 
-const StyledHeader = styled.header`
+const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
-  background: var(--grey-200);
+  background: var(--white);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--grey-400);
 
   ${mq(Breakpoint.mid)} {
     box-shadow: none;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
   }
+  /* 
+  ${({ isSecondary }) =>
+    isSecondary
+      ? css`
+          background: var(--grey-200);
+        `
+      : ''} */
 `;
 
 const StyledLink = styled.a`
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
   text-decoration: none;
   color: inherit;
   padding: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: 1.125rem 0.75rem;
+    padding: 1.125rem 1.5rem;
   }
+`;
+
+const StyledHeaderTitle = styled.div`
+  display: flex;
+`;
+
+const StyledHeaderMenuItems = styled.div`
+  display: flex;
+  padding: 0.75rem 0.375rem;
 `;
 
 const StyledHeaderButton = styled.div`
@@ -62,36 +81,38 @@ const StyledExpandableButton = styled.button`
   }
 `;
 
+const StyledHeaderMenuItem = styled.div`
+  flex-shrink: 0;
+  padding: 0 0.375rem;
+`;
+
+const HeaderMenuDivider = styled.div`
+  display: block;
+  background: var(--grey-400);
+  height: 100%;
+  border-top: 0.375rem solid var(--white);
+  border-bottom: 0.375rem solid var(--white);
+  width: 1px;
+`;
+
 interface HeaderProps {
   title: string;
   Link: React.FC<{ children: React.ReactElement<HTMLAnchorElement> }>;
-  expandable?: boolean;
-  subMenuKey?: string;
-  defaultMenuKey: string;
-  activeMenuTitle: string;
+  menuItems: MenuItem[];
+  user: {
+    name: string;
+  };
 }
 
-export const Header: React.FC<HeaderProps> = ({
+export const HeaderComplete: React.FC<HeaderProps> = ({
   title,
   Link,
-  expandable,
-  subMenuKey,
-  defaultMenuKey,
-  activeMenuTitle,
+  menuItems,
+  user,
 }: HeaderProps) => {
-  const {
-    navigationOpen,
-    setNavigationOpen,
-    menuExpanded,
-    setMenuExpanded,
-    setActiveMenuKey,
-    activeMenuKey,
-  } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const t = useT();
-
-  const isDefaultMenu = typeof activeMenuKey === 'undefined' || activeMenuKey === defaultMenuKey;
 
   const renderedLink = (
     <Link>
@@ -99,63 +120,84 @@ export const Header: React.FC<HeaderProps> = ({
     </Link>
   );
 
-  const renderedButton =
-    !isDefaultMenu || (!isMidOrWider && !navigationOpen) ? (
-      <StyledHeaderButton>
-        <Button
-          variant={ButtonVariant.minimal}
-          onClick={() => {
-            setActiveMenuKey(defaultMenuKey);
-            setNavigationOpen(true);
-          }}
-          icon="ChevronLeft"
-          iconPosition={IconPosition.left}
-          css={css`
-            background: var(--white);
-          `}
-        >
-          {t('menu.main')}
-        </Button>
-      </StyledHeaderButton>
-    ) : undefined;
+  const renderedMenuSection = menuItems.map(({ type, action }, index) => {
+    switch (type) {
+      case MenuItemType.link: {
+        return (
+          <StyledHeaderMenuItem key={index}>
+            <HeaderMenuLink {...(action as MenuItemLink)} />
+          </StyledHeaderMenuItem>
+        );
+      }
 
-  const renderedSubMenuButton = (
-    <StyledHeaderButton>
-      <Button
-        variant={ButtonVariant.minimal}
-        onClick={() => {
-          setActiveMenuKey(subMenuKey);
-          setNavigationOpen(true);
-        }}
-        icon="ChevronLeft"
-        iconPosition={IconPosition.left}
-        css={css`
-          background: var(--white);
-        `}
-      >
-        {activeMenuTitle}
-      </Button>
-    </StyledHeaderButton>
-  );
+      case MenuItemType.divider: {
+        return (
+          <StyledHeaderMenuItem key={index}>
+            <HeaderMenuDivider />
+          </StyledHeaderMenuItem>
+        );
+      }
+
+      default: {
+        return null;
+      }
+    }
+  });
 
   return (
     <StyledHeader>
-      {rendered && !isMidOrWider
-        ? navigationOpen || typeof subMenuKey === 'undefined'
-          ? renderedButton
-          : renderedSubMenuButton
-        : renderedButton}
+      <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
+      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+    </StyledHeader>
+  );
+};
 
-      {rendered &&
-        (isMidOrWider || !expandable) &&
-        (!isMidOrWider || !renderedButton) &&
-        renderedLink}
+export const HeaderPartMain: React.FC<HeaderProps> = ({ menuItems }: HeaderProps) => {
+  const { rendered } = useContext(WindowContext);
 
-      {rendered && isMidOrWider && expandable && (
-        <StyledExpandableButton onClick={() => setMenuExpanded(!menuExpanded)}>
-          {menuExpanded ? <Minimize2 /> : <Maximize2 />}
-        </StyledExpandableButton>
-      )}
+  const renderedMenuSection = menuItems.map(({ type, action }, index) => {
+    switch (type) {
+      case MenuItemType.link: {
+        return (
+          <StyledHeaderMenuItem key={index}>
+            <HeaderMenuLink {...(action as MenuItemLink)} />
+          </StyledHeaderMenuItem>
+        );
+      }
+
+      case MenuItemType.divider: {
+        return (
+          <StyledHeaderMenuItem key={index}>
+            <HeaderMenuDivider />
+          </StyledHeaderMenuItem>
+        );
+      }
+
+      default: {
+        return null;
+      }
+    }
+  });
+
+  return (
+    <StyledHeader>
+      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+    </StyledHeader>
+  );
+};
+
+export const HeaderPartSecondary: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
+  const { rendered } = useContext(WindowContext);
+
+  const renderedLink = (
+    <Link>
+      <StyledLink>{title}</StyledLink>
+    </Link>
+  );
+
+  return (
+    <StyledHeader isSecondary>
+      <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
     </StyledHeader>
   );
 };

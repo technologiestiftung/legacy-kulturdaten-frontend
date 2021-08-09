@@ -32,6 +32,9 @@ import { OfferInfoPage } from '../components/pages/offer/info';
 import { OfferMediaPage } from '../components/pages/offer/media';
 import { LocationCreatePage } from '../components/pages/location/create';
 import { OfferCreatePage } from '../components/pages/offer/create';
+import { OrganizerListPage } from '../components/pages/organizer/list';
+import { OfferListPage } from '../components/pages/offer/list';
+import { LocationListPage } from '../components/pages/location/list';
 
 export type Requirement = {
   translationKey: string;
@@ -70,6 +73,7 @@ export const useCategories: () => {
         media: OrganizerMediaPage,
         rights: OrganizerRightsPage,
         export: OrganizerExportPage,
+        list: OrganizerListPage,
       },
       tabs: [
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
@@ -148,6 +152,7 @@ export const useCategories: () => {
         create: OfferCreatePage,
         info: OfferInfoPage,
         media: OfferMediaPage,
+        list: OfferListPage,
       },
       tabs: [
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
@@ -200,6 +205,7 @@ export const useCategories: () => {
         create: LocationCreatePage,
         info: LocationInfoPage,
         media: LocationMediaPage,
+        list: LocationListPage,
       },
       tabs: [
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },

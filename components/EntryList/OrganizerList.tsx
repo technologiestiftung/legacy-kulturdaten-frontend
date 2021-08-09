@@ -36,7 +36,7 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
   min-height: 100%;
-  background: var(--white);
+  background: var(--grey-200);
 `;
 
 const viewEntriesPerPageMap = {
@@ -223,7 +223,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
   const locale = useLocale();
   const language = useLanguage();
   const t = useT();
-  const { setNavigationOpen, setMenuExpanded } = useContext(NavigationContext);
+  const { setMenuExpanded } = useContext(NavigationContext);
   const {
     getCurrentPage,
     setCurrentPage,
@@ -239,6 +239,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     setView,
     getFiltersBoxExpanded,
     setFiltersBoxExpanded,
+    setLastEntryId,
   } = useContext(EntryListContext);
   const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
   const pseudoUID = usePseudoUID();
@@ -337,7 +338,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                 <EntryCard
                   onClick={() => {
                     setMenuExpanded(false);
-                    setNavigationOpen(false);
+                    setLastEntryId(Categories.organizer, id);
                   }}
                   href={href('info')}
                   menuExpanded={expanded}
@@ -353,7 +354,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             }
           )
         : undefined,
-    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setNavigationOpen]
+    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setLastEntryId]
   );
 
   const rows: TableProps['content'] = useMemo(
@@ -392,8 +393,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
                 <TableLink
                   onClick={() => {
-                    setNavigationOpen(false);
                     setMenuExpanded(false);
+                    setLastEntryId(Categories.organizer, id);
                   }}
                   href={href('info')}
                   isActive={router.asPath.includes(href())}
@@ -422,7 +423,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             }
           )
         : undefined,
-    [list.data, language, date, expanded, locale, router.asPath, setNavigationOpen, setMenuExpanded]
+    [list.data, language, date, expanded, locale, router.asPath, setMenuExpanded, setLastEntryId]
   );
 
   return (

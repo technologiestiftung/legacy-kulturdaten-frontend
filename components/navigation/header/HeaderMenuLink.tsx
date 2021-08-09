@@ -3,31 +3,52 @@ import styled from '@emotion/styled';
 
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { insetBorder } from '../../globals/Constants';
-import { File } from 'react-feather';
+import { ArrowRight, File } from 'react-feather';
+import { css } from '@emotion/react';
 
 const StyledA = styled.a<{ active?: boolean }>`
   color: inherit;
-  text-decoration: ${({ active }) => (active ? 'underline' : 'none')};
+  text-decoration: none;
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 0.75rem;
-  box-shadow: ${insetBorder(true, false, false)};
+  padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
+  border: 1px solid var(--grey-400);
   background: var(--white);
+  border-radius: 0.75rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
 
-  &:hover {
-    text-decoration: underline;
-    background: var(--grey-350);
+  @media screen and (pointer: fine) {
+    &:hover {
+      background: var(--grey-400);
+    }
   }
+
+  ${({ active }) =>
+    active
+      ? css`
+          background: var(--black);
+          border-color: var(--black);
+          color: var(--white);
+
+          @media screen and (pointer: fine) {
+            &:hover {
+              border-color: var(--grey-600);
+              background: var(--grey-600);
+            }
+          }
+        `
+      : ''}
 
   svg {
     display: inline-block;
-    margin: 0 0.75rem 0 0;
+    margin: 0 0.375rem 0 0;
     padding: 0;
     flex-shrink: 0;
-    width: 1.5rem;
-    height: 1.5rem;
-    color: var(--black);
+    width: 1.125rem;
+    height: 1.125rem;
   }
 `;
 
@@ -42,7 +63,7 @@ interface InternalMenuLinkProps {
   active?: boolean;
 }
 
-export interface MenuLinkProps extends InternalMenuLinkProps {
+export interface HeaderMenuLinkProps extends InternalMenuLinkProps {
   type?: MenuLinkType;
 }
 
@@ -57,14 +78,14 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   return (
     <Link href={href} passHref>
       <StyledA title={title} active={linkIsActive}>
-        <File />
+        {linkIsActive && <ArrowRight />}
         <span>{title}</span>
       </StyledA>
     </Link>
   );
 };
 
-export const MenuLink: React.FC<MenuLinkProps> = (props: MenuLinkProps) => {
+export const HeaderMenuLink: React.FC<HeaderMenuLinkProps> = (props: HeaderMenuLinkProps) => {
   const { type = MenuLinkType.internal } = props;
 
   switch (type) {
