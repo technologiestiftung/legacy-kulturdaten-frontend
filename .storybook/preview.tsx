@@ -6,6 +6,7 @@ import { Reset } from '../components/globals/Reset';
 import { WindowContextProvider } from '../lib/WindowService';
 import { NavigationContextProvider } from '../components/navigation/NavigationContext';
 import { EntryListContextProvider } from '../components/EntryList/EntryListContext';
+import { Categories } from '../config/categories';
 
 addDecorator((story) => {
   return (
@@ -15,9 +16,13 @@ addDecorator((story) => {
       <Global />
       <Typography />
       <WindowContextProvider>
-        <EntryListContextProvider>
-          <NavigationContextProvider>{story()}</NavigationContextProvider>
-        </EntryListContextProvider>
+        <NavigationContextProvider>
+          <EntryListContextProvider
+            listNames={[Categories.organizer, Categories.location, Categories.offer]}
+          >
+            {story()}
+          </EntryListContextProvider>
+        </NavigationContextProvider>
       </WindowContextProvider>
     </>
   );

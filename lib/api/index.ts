@@ -4,9 +4,7 @@ import { useCallback } from 'react';
 import { useAuthToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
 
-const {
-  publicRuntimeConfig: { api },
-} = getConfig();
+const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
 type StructuredData =
   | string
@@ -124,6 +122,8 @@ export const call = async <T extends ApiCall>(
     ? addUrlParam(request.route, `include=${includes.join(',')}`)
     : request.route;
 
+  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+
   try {
     const resp = await fetch(new URL(routeWithIncludes, api).toString(), {
       method: request.method,
@@ -189,6 +189,8 @@ export const getApiUrl = (
   query?: ParsedUrlQuery,
   includes?: string[]
 ): URL => {
+  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+
   const route = apiRoutes[apiRoute](query);
   const routeWithIncludes = Array.isArray(includes)
     ? addUrlParam(route, `include=${includes.join(',')}`)

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { useUser } from '../user/useUser';
-import { HeaderMain, HeaderPartSecondary } from './header/Header';
+import { HeaderMain, HeaderSecondary } from './header/Header';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Menu, MenuData, MenuItemType, MenuItemButton, MenuItemFolder, MenuItemLink } from './Menu';
 
@@ -68,7 +68,7 @@ export const useNavigation = (
   );
 
   const renderedHeaderSecondary = isMidOrWider ? undefined : (
-    <HeaderPartSecondary
+    <HeaderSecondary
       user={user?.user}
       userIsLoggedIn={user?.isLoggedIn}
       title={title}

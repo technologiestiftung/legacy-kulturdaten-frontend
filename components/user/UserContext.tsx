@@ -4,9 +4,7 @@ import getConfig from 'next/config';
 import { getCookie } from '../../lib/cookies';
 import { User } from './useUser';
 
-const {
-  publicRuntimeConfig: { authTokenCookieName },
-} = getConfig();
+const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
 type UserContext = {
   authToken: string;
@@ -45,6 +43,7 @@ type UserContextProviderProps = {
 export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   children,
 }: UserContextProviderProps) => {
+  const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
   const [authToken, setAuthToken] = useState<string>();
   const [stateUser, setStateUser] = useState<User>();
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(false);
@@ -52,7 +51,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 
   useEffect(() => {
     setAuthToken(getCookie(authTokenCookieName)?.value);
-  }, [setAuthToken]);
+  }, [setAuthToken, authTokenCookieName]);
 
   return (
     <UserContext.Provider

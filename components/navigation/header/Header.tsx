@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { useContext } from 'react';
-import { useT } from '../../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
@@ -149,7 +148,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   );
 };
 
-export const HeaderPartSecondary: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
+export const HeaderSecondary: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
 
   const renderedLink = (
