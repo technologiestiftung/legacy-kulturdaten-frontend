@@ -3,13 +3,13 @@
 exports[`Header renders 1`] = `
 <div>
   <header
-    class="css-iwcrly-StyledHeader e1sn27877"
+    class="css-iwcrly-StyledHeader e1sn27875"
   >
     <div
-      class="css-7737st-StyledHeaderTitle e1sn27875"
+      class="css-7737st-StyledHeaderTitle e1sn27873"
     >
       <a
-        class="css-gxm01f-StyledLink e1sn27876"
+        class="css-gxm01f-StyledLink e1sn27874"
         href="/undefined"
       >
         Test title
