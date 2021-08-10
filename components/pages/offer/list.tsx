@@ -55,6 +55,6 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
   }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
 
   return listEvaluated ? (
-    <AppWrapper>{!isMidOrWider ? <OfferList expanded={false} /> : 'Offer List'}</AppWrapper>
+    <AppWrapper>{!isMidOrWider ? <OfferList expanded={false} /> : ''}</AppWrapper>
   ) : null;
 };

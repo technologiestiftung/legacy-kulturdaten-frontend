@@ -55,6 +55,6 @@ export const OrganizerListPage: React.FC<CategoryPage> = () => {
   }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
 
   return listEvaluated ? (
-    <AppWrapper>{!isMidOrWider ? <OrganizerList expanded={false} /> : 'Organizer List'}</AppWrapper>
+    <AppWrapper>{!isMidOrWider ? <OrganizerList expanded={false} /> : ''}</AppWrapper>
   ) : null;
 };

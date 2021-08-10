@@ -10,53 +10,73 @@ import { mq } from '../globals/Constants';
 const StyledFiltersBox = styled.div<{ expanded: boolean }>`
   ${({ expanded }) =>
     expanded
-      ? css``
+      ? css`
+          border-bottom: 1px solid var(--grey-400);
+          padding-bottom: 1.125rem;
+        `
       : css`
+          border-top: 1px solid var(--grey-400);
           border-bottom: 1px solid var(--grey-400);
         `}
 `;
 
 const StyledFiltersBoxTitle = styled.div`
-  width: 100%;
+  width: calc(100% - 3rem);
   border-bottom: 1px solid var(--grey-400);
-  padding: 0 0 0.375rem;
-  margin: 0 0 0.75rem;
+  font-weight: 700;
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+  padding: 1.125rem 0;
+  margin: 0 1.5rem;
 `;
-
-const StyledFilterBoxChild = styled.div``;
 
 const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
   display: flex;
+  flex-direction: column;
+
+  ${({ expanded }) =>
+    expanded
+      ? css``
+      : css`
+          border-top: 1px solid var(--grey-400);
+        `}
+`;
+
+export const StyledFilters = styled.div<{ expanded: boolean }>`
+  display: flex;
   background: var(--grey-200);
+  flex-direction: column;
 
   ${({ expanded }) =>
     expanded
       ? css`
-          ${StyledFilterBoxChild} {
+          padding: 0.75rem 1.5rem;
+          flex-direction: row;
+          align-items: flex-end;
+
+          > div {
             margin-right: 0.75rem;
             flex-grow: 1;
             flex-basis: 0;
           }
         `
       : css`
-          flex-direction: column;
           padding: 0.75rem;
-          border-top: 1px solid var(--grey-400);
           grid-template-columns: auto;
 
-          ${StyledFilterBoxChild} {
+          > * {
             margin-bottom: 0.75rem;
           }
 
           ${mq(Breakpoint.wide)} {
             padding: 1.125rem 1.5rem;
-            ${StyledFilterBoxChild} {
+            > * {
               margin-bottom: 1.125rem;
             }
           }
         `}
 
-  ${StyledFilterBoxChild} {
+  > * {
     &:last-of-type {
       margin: 0;
     }
@@ -115,22 +135,18 @@ export const EntryListFiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> =
 }: PropsWithChildren<FiltersBoxProps>) => {
   const t = useT();
 
-  const wrappedChildren = (
-    <StyledFiltersBoxChildren expanded={expanded}>
-      {React.Children.map(children, (child, index) => (
-        <StyledFilterBoxChild key={index}>{child}</StyledFilterBoxChild>
-      ))}
-    </StyledFiltersBoxChildren>
+  const renderedChildren = (
+    <StyledFiltersBoxChildren expanded={expanded}>{children}</StyledFiltersBoxChildren>
   );
 
-  const { renderedCollapsable } = useCollapsable(wrappedChildren, isCollapsed, setIsCollapsed);
+  const { renderedCollapsable } = useCollapsable(renderedChildren, isCollapsed, setIsCollapsed);
 
   return (
     <StyledFiltersBox expanded={expanded}>
       {expanded ? (
         <>
           <StyledFiltersBoxTitle>{t('general.filter')}</StyledFiltersBoxTitle>
-          {wrappedChildren}
+          {renderedChildren}
         </>
       ) : (
         <>

@@ -33,7 +33,7 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { ButtonLink } from '../button/ButtonLink';
 import { ButtonColor, ButtonSize } from '../button';
 import Link from 'next/link';
-import { EntryListFiltersBox } from './EntryListFiltersBox';
+import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -52,30 +52,6 @@ interface OrganizerListProps {
 
 const StyledEntryListTable = styled.div`
   padding: 1.5rem 0;
-`;
-
-const EntryListSort = styled.div<{ expanded: boolean }>`
-  display: grid;
-  row-gap: 0.75rem;
-
-  ${mq(Breakpoint.widish)} {
-    ${({ expanded }) =>
-      expanded
-        ? css`
-            padding: 3rem 0 1.5rem;
-            display: flex;
-            justify-content: flex-end;
-
-            > * {
-              padding: 0 0 0 0.75rem;
-
-              &:last-of-type {
-                padding: 0 0 0 1.5rem;
-              }
-            }
-          `
-        : ''}
-  }
 `;
 
 interface ListLinkProps {
@@ -292,18 +268,19 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={true}
-      >
-        <Link href={routes.createOrganizer({ locale })} passHref>
-          <ButtonLink
-            size={ButtonSize.big}
-            color={ButtonColor.white}
-            icon="Plus"
-            onClick={() => setMenuExpanded(false)}
-          >
-            {t('categories.organizer.form.create')}
-          </ButtonLink>
-        </Link>
-      </EntryListHead>
+        actionButton={
+          <Link href={routes.createOrganizer({ locale })} passHref>
+            <ButtonLink
+              size={ButtonSize.big}
+              color={ButtonColor.white}
+              icon="Plus"
+              onClick={() => setMenuExpanded(false)}
+            >
+              {t('categories.organizer.form.create')}
+            </ButtonLink>
+          </Link>
+        }
+      />
 
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
@@ -311,99 +288,101 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         expanded={expanded}
         activeFiltersCount={activeFiltersCount}
       >
-        <Select
-          label={t('categories.organizer.filters.type.label') as string}
-          id={`entry-filter-type-${pseudoUID}`}
-          value={filters?.type}
-          onChange={(e) => {
-            setCurrentPage(listName, 1);
-            dispatchFilters({
-              type: FiltersActions.set,
-              payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
-            });
+        <StyledFilters expanded={expanded}>
+          <Select
+            label={t('categories.organizer.filters.type.label') as string}
+            id={`entry-filter-type-${pseudoUID}`}
+            value={filters?.type}
+            onChange={(e) => {
+              setCurrentPage(listName, 1);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
+              });
 
-            dispatchFilters({
-              type: FiltersActions.set,
-              payload: { key: 'subject', value: undefined },
-            });
-          }}
-        >
-          <option value="">{t('categories.organizer.filters.type.all')}</option>
-          {typeOptions?.map(({ id, relations }, index) => {
-            const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-              language,
-              relations.translations
-            );
-
-            return (
-              <option key={index} value={String(id)}>
-                {typeTranslation?.attributes?.name}
-              </option>
-            );
-          })}
-        </Select>
-        <Select
-          label={t('categories.organizer.filters.subject.label') as string}
-          id={`entry-filter-subject-${pseudoUID}`}
-          value={filters?.subject}
-          disabled={!filters?.type}
-          onChange={(e) => {
-            setCurrentPage(listName, 1);
-            dispatchFilters({
-              type: FiltersActions.set,
-              payload: {
-                key: 'subject',
-                value: e.target.value !== '' ? e.target.value : undefined,
-              },
-            });
-          }}
-        >
-          <option value="">
-            {!filters?.type
-              ? t('categories.organizer.filters.subject.typeFirst')
-              : t('categories.organizer.filters.subject.all')}
-          </option>
-          {typeOptions
-            ?.filter((typeOption) => typeOption.id === parseInt(filters?.type, 10))
-            .map(({ relations }) => {
-              const subjects = relations?.subjects?.map(
-                ({ relations: subjectRelations, id: subjectId }, index) => {
-                  const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                    language,
-                    subjectRelations?.translations
-                  );
-                  return (
-                    <option key={index} value={String(subjectId)}>
-                      {subjectTranslation?.attributes?.name}
-                    </option>
-                  );
-                }
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: { key: 'subject', value: undefined },
+              });
+            }}
+          >
+            <option value="">{t('categories.organizer.filters.type.all')}</option>
+            {typeOptions?.map(({ id, relations }, index) => {
+              const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                language,
+                relations.translations
               );
 
-              return subjects;
+              return (
+                <option key={index} value={String(id)}>
+                  {typeTranslation?.attributes?.name}
+                </option>
+              );
             })}
-        </Select>
-        <Select
-          label={t('categories.organizer.filters.status.label') as string}
-          id={`entry-filter-status-${pseudoUID}`}
-          value={filters?.status}
-          onChange={(e) => {
-            setCurrentPage(listName, 1);
-            dispatchFilters({
-              type: FiltersActions.set,
-              payload: {
-                key: 'status',
-                value: e.target.value !== '' ? e.target.value : undefined,
-              },
-            });
-          }}
-        >
-          <option value="">{t('categories.organizer.filters.status.all')}</option>
-          <option value="published">{t('categories.organizer.filters.status.published')}</option>
-          <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
-        </Select>
+          </Select>
+          <Select
+            label={t('categories.organizer.filters.subject.label') as string}
+            id={`entry-filter-subject-${pseudoUID}`}
+            value={filters?.subject}
+            disabled={!filters?.type}
+            onChange={(e) => {
+              setCurrentPage(listName, 1);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: {
+                  key: 'subject',
+                  value: e.target.value !== '' ? e.target.value : undefined,
+                },
+              });
+            }}
+          >
+            <option value="">
+              {!filters?.type
+                ? t('categories.organizer.filters.subject.typeFirst')
+                : t('categories.organizer.filters.subject.all')}
+            </option>
+            {typeOptions
+              ?.filter((typeOption) => typeOption.id === parseInt(filters?.type, 10))
+              .map(({ relations }) => {
+                const subjects = relations?.subjects?.map(
+                  ({ relations: subjectRelations, id: subjectId }, index) => {
+                    const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                      language,
+                      subjectRelations?.translations
+                    );
+                    return (
+                      <option key={index} value={String(subjectId)}>
+                        {subjectTranslation?.attributes?.name}
+                      </option>
+                    );
+                  }
+                );
 
-        <EntryListSort expanded={expanded}>
+                return subjects;
+              })}
+          </Select>
+          <Select
+            label={t('categories.organizer.filters.status.label') as string}
+            id={`entry-filter-status-${pseudoUID}`}
+            value={filters?.status}
+            onChange={(e) => {
+              setCurrentPage(listName, 1);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: {
+                  key: 'status',
+                  value: e.target.value !== '' ? e.target.value : undefined,
+                },
+              });
+            }}
+          >
+            <option value="">{t('categories.organizer.filters.status.all')}</option>
+            <option value="published">{t('categories.organizer.filters.status.published')}</option>
+            <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
+          </Select>
+        </StyledFilters>
+
+        <StyledFilters expanded={expanded}>
           <Select
             id={`entry-sort-${pseudoUID}`}
             label={t('general.sort') as string}
@@ -412,9 +391,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               setSortKey(listName, e.target.value);
             }}
             value={sortKey}
-            labelPosition={
-              expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
-            }
           >
             <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
             <option value="createdAt">{t('categories.organizer.sort.created')}</option>
@@ -449,11 +425,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               setView(listName, value as EntryListView);
             }}
             label={t('categories.organizer.view.label') as string}
-            labelPosition={
-              expanded && isWidishOrWider
-                ? RadioSwitchLabelPosition.left
-                : RadioSwitchLabelPosition.top
-            }
             options={[
               {
                 value: EntryListView.cards,
@@ -467,7 +438,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               },
             ]}
           />
-        </EntryListSort>
+        </StyledFilters>
       </EntryListFiltersBox>
       <StyledEntryListBody>
         {view === EntryListView.cards ? (

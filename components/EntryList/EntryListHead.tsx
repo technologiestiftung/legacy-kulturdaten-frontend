@@ -1,10 +1,10 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Maximize2, Minimize2 } from 'react-feather';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 
 const StyledEntryListHead = styled.div`
-  border-bottom: 1px solid var(--grey-400);
   position: relative;
   z-index: 1;
   background: var(--grey-200);
@@ -26,6 +26,15 @@ const StyledEntryListHeadTitleRow = styled.div`
   }
 `;
 
+const StyledEntryListHeadTitleRowRight = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  > * {
+    margin-left: 1.5rem;
+  }
+`;
+
 const StyledEntryListHeadTitle = styled.div`
   padding: 0 0.75rem;
 
@@ -37,14 +46,19 @@ const StyledEntryListHeadTitle = styled.div`
 const StyledEntryListHeadActions = styled.div``;
 const StyledEntryListHeadAction = styled.div``;
 
-const StyledEntryListHeadContent = styled.div`
-  padding: 0.75rem 0.75rem 1.875rem;
-  display: flex;
-  flex-direction: column;
+const StyledEntryListHeadActionButton = styled.div<{ expanded: boolean }>`
+  ${({ expanded }) =>
+    expanded
+      ? css``
+      : css`
+          padding: 0.75rem 0.75rem 1.875rem;
+          display: flex;
+          flex-direction: column;
 
-  ${mq(Breakpoint.wide)} {
-    padding: 1.125rem 1.5rem 2.25rem;
-  }
+          ${mq(Breakpoint.wide)} {
+            padding: 1.125rem 1.5rem 2.25rem;
+          }
+        `}
 `;
 
 const StyledExpandableButton = styled.button`
@@ -79,13 +93,13 @@ interface EntryListHeadProps {
   expanded: boolean;
   setExpanded?: (expanded: boolean) => void;
   expandable?: boolean;
-  children?: React.ReactNode;
+  actionButton?: React.ReactNode;
   actions?: React.ReactElement[];
 }
 
 export const EntryListHead: React.FC<EntryListHeadProps> = ({
   title,
-  children,
+  actionButton,
   actions,
   expanded,
   setExpanded,
@@ -98,15 +112,22 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
       <StyledEntryListHeadTop>
         <StyledEntryListHeadTitleRow>
           <StyledEntryListHeadTitle>{title}</StyledEntryListHeadTitle>
-          {isMidOrWider && expandable && (
-            <div>
-              <StyledExpandableButton
-                onClick={() => (setExpanded ? setExpanded(!expanded) : undefined)}
-              >
-                {expanded ? <Minimize2 /> : <Maximize2 />}
-              </StyledExpandableButton>
-            </div>
-          )}
+          <StyledEntryListHeadTitleRowRight>
+            {expanded && actionButton && (
+              <StyledEntryListHeadActionButton expanded={expanded}>
+                {actionButton}
+              </StyledEntryListHeadActionButton>
+            )}
+            {isMidOrWider && expandable && (
+              <div>
+                <StyledExpandableButton
+                  onClick={() => (setExpanded ? setExpanded(!expanded) : undefined)}
+                >
+                  {expanded ? <Minimize2 /> : <Maximize2 />}
+                </StyledExpandableButton>
+              </div>
+            )}
+          </StyledEntryListHeadTitleRowRight>
         </StyledEntryListHeadTitleRow>
         {expanded && actions && (
           <StyledEntryListHeadActions>
@@ -116,7 +137,11 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
           </StyledEntryListHeadActions>
         )}
       </StyledEntryListHeadTop>
-      {children && <StyledEntryListHeadContent>{children}</StyledEntryListHeadContent>}
+      {!expanded && actionButton && (
+        <StyledEntryListHeadActionButton expanded={expanded}>
+          {actionButton}
+        </StyledEntryListHeadActionButton>
+      )}
     </StyledEntryListHead>
   );
 };

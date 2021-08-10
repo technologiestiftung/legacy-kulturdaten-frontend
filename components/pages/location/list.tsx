@@ -55,6 +55,6 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
   }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
 
   return listEvaluated ? (
-    <AppWrapper>{!isMidOrWider ? <LocationList expanded={false} /> : 'Location List'}</AppWrapper>
+    <AppWrapper>{!isMidOrWider ? <LocationList expanded={false} /> : ''}</AppWrapper>
   ) : null;
 };

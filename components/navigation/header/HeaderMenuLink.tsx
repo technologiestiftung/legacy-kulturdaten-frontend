@@ -17,6 +17,7 @@ const StyledA = styled.a<{ active?: boolean }>`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
+  transition: background var(--transition-duration-fast);
 
   &:hover {
     background: var(--grey-400);
@@ -71,7 +72,6 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   return (
     <Link href={href} passHref>
       <StyledA title={title} active={linkIsActive}>
-        {/* {linkIsActive && <ArrowRight />} */}
         <span>{title}</span>
       </StyledA>
     </Link>

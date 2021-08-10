@@ -12,14 +12,13 @@ import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { NavigationContext } from '../navigation/NavigationContext';
-import { Select, SelectLabelPosition } from '../select';
+import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
 import { EntryCard, EntryCardGrid } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
-import { RadioSwitch, RadioSwitchLabelPosition } from '../RadioSwitch';
+import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
-import { mq } from '../globals/Constants';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
@@ -28,7 +27,7 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { ButtonColor, ButtonSize } from '../button';
 import { ButtonLink } from '../button/ButtonLink';
 import Link from 'next/link';
-import { EntryListFiltersBox } from './EntryListFiltersBox';
+import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -47,30 +46,6 @@ interface OfferListProps {
 
 const StyledEntryListTable = styled.div`
   padding: 1.5rem 0;
-`;
-
-const EntryListSort = styled.div<{ expanded: boolean }>`
-  display: grid;
-  row-gap: 0.75rem;
-
-  ${mq(Breakpoint.wide)} {
-    ${({ expanded }) =>
-      expanded
-        ? css`
-            padding: 3rem 0 1.5rem;
-            display: flex;
-            justify-content: flex-end;
-
-            > * {
-              padding: 0 0 0 0.75rem;
-
-              &:last-of-type {
-                padding: 0 0 0 1.5rem;
-              }
-            }
-          `
-        : ''}
-  }
 `;
 
 interface ListLinkProps {
@@ -259,44 +234,47 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={true}
-      >
-        <Link href={routes.createOffer({ locale })} passHref>
-          <ButtonLink
-            size={ButtonSize.big}
-            color={ButtonColor.white}
-            icon="Plus"
-            onClick={() => setMenuExpanded(false)}
-          >
-            {t('categories.offer.form.create')}
-          </ButtonLink>
-        </Link>
-      </EntryListHead>
+        actionButton={
+          <Link href={routes.createOffer({ locale })} passHref>
+            <ButtonLink
+              size={ButtonSize.big}
+              color={ButtonColor.white}
+              icon="Plus"
+              onClick={() => setMenuExpanded(false)}
+            >
+              {t('categories.offer.form.create')}
+            </ButtonLink>
+          </Link>
+        }
+      />
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
         expanded={expanded}
         activeFiltersCount={activeFiltersCount}
       >
-        <Select
-          label={t('categories.organizer.filters.status.label') as string}
-          id={`entry-filter-status-${pseudoUID}`}
-          value={filters?.status}
-          onChange={(e) => {
-            setCurrentPage(listName, 1);
-            dispatchFilters({
-              type: FiltersActions.set,
-              payload: {
-                key: 'status',
-                value: e.target.value !== '' ? e.target.value : undefined,
-              },
-            });
-          }}
-        >
-          <option value="">{t('categories.organizer.filters.status.all')}</option>
-          <option value="published">{t('categories.organizer.filters.status.published')}</option>
-          <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
-        </Select>
-        <EntryListSort expanded={expanded}>
+        <StyledFilters expanded={expanded}>
+          <Select
+            label={t('categories.organizer.filters.status.label') as string}
+            id={`entry-filter-status-${pseudoUID}`}
+            value={filters?.status}
+            onChange={(e) => {
+              setCurrentPage(listName, 1);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: {
+                  key: 'status',
+                  value: e.target.value !== '' ? e.target.value : undefined,
+                },
+              });
+            }}
+          >
+            <option value="">{t('categories.organizer.filters.status.all')}</option>
+            <option value="published">{t('categories.organizer.filters.status.published')}</option>
+            <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
+          </Select>
+        </StyledFilters>
+        <StyledFilters expanded={expanded}>
           <Select
             id={`entry-sort-${pseudoUID}`}
             label={t('general.sort') as string}
@@ -305,9 +283,6 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
               setSortKey(listName, e.target.value);
             }}
             value={sortKey}
-            labelPosition={
-              expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
-            }
           >
             <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
             <option value="createdAt">{t('categories.organizer.sort.created')}</option>
@@ -342,11 +317,6 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
               setView(listName, value as EntryListView);
             }}
             label={t('categories.organizer.view.label') as string}
-            labelPosition={
-              expanded && isWidishOrWider
-                ? RadioSwitchLabelPosition.left
-                : RadioSwitchLabelPosition.top
-            }
             options={[
               {
                 value: EntryListView.cards,
@@ -360,7 +330,7 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
               },
             ]}
           />
-        </EntryListSort>
+        </StyledFilters>
       </EntryListFiltersBox>
       <StyledEntryListBody>
         {view === EntryListView.cards ? (
