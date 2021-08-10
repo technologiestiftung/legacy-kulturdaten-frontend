@@ -14,7 +14,7 @@ const StyledOverlay = styled.div`
   top: 0;
   left: 0;
   display: flex;
-  z-index: 1000;
+  z-index: 10000;
 
   ${mq(Breakpoint.mid)} {
     ${contentGrid(11)}

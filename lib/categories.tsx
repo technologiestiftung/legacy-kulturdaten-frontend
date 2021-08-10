@@ -53,13 +53,10 @@ export type Category = {
   };
   pages: {
     create: React.FC<CategoryPage>;
-    preview: React.FC<CategoryEntryPage>;
     info: React.FC<CategoryEntryPage>;
     media: React.FC<CategoryEntryPage>;
-    categorization: React.FC<CategoryEntryPage>;
-    rights: React.FC<CategoryEntryPage>;
-    export: React.FC<CategoryEntryPage>;
-  };
+    list: React.FC<CategoryPage>;
+  } & { [key: string]: React.FC<CategoryEntryPage> };
   tabs: {
     title: string;
     sub?: string;
@@ -76,7 +73,7 @@ export type Category = {
     translationCreate: categoryApi;
     delete: categoryApi;
   };
-  requirements: Requirement[];
+  requirements?: Requirement[];
 };
 
 export const useCategory = (): Category => {
@@ -157,11 +154,20 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
 };
 
 export const useMutateList = (category: Category): (() => void) => {
-  const { currentPage: page, entriesPerPage: size, filters, sortKey, order } = useContext(
-    EntryListContext
-  );
+  const {
+    getCurrentPage: getPage,
+    getEntriesPerPage: getSize,
+    getFilters,
+    getSortKey,
+    getOrder,
+  } = useContext(EntryListContext);
   const apiCallRoute = category?.api.list.route;
-  const query = makeListQuery(page, size, Object.entries(filters), { key: sortKey, order });
+  const query = makeListQuery(
+    getPage(category.name),
+    getSize(category.name),
+    Object.entries(getFilters(category.name)),
+    { key: getSortKey(category.name), order: getOrder(category.name) }
+  );
 
   return () => mutateSwr(getApiUrlString(apiCallRoute, query));
 };

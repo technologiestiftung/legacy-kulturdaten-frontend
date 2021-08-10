@@ -8,6 +8,10 @@ export const Global: React.FC = () => (
         color: var(--black);
         background: var(--white);
         width: 100%;
+
+        * {
+          letter-spacing: 0.01em;
+        }
       }
     `}
   />

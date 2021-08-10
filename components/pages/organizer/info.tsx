@@ -3,10 +3,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { OrganizerTranslationCreate } from '../../../lib/api/routes/organizer/translation/create';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
 import { PublishedStatus } from '../../../lib/api/types/general';
-import { Organizer } from '../../../lib/api/types/organizer';
+import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { Button, ButtonColor, ButtonType } from '../../button';
@@ -14,12 +15,12 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { useLinkList } from '../../linklist';
-import { OrganizerFormProps } from './form';
-import { Description } from './form/Description';
-import { useName } from './form/Name';
-import { FormGrid, FormItem, FormItemWidth } from './helpers';
+import { EntryFormProps } from '../helpers/form';
+import { Description } from '../helpers/form/Description';
+import { useName } from '../helpers/form/Name';
+import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 
-const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const t = useT();
 
   const {
@@ -27,7 +28,7 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
     onSubmit: onSubmitGerman,
     pristine: pristineGerman,
     reset: resetGerman,
-  } = useName({
+  } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
     category,
     query,
     language: Language.de,
@@ -39,7 +40,7 @@ const NameForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFo
     onSubmit: onSubmitEnglish,
     pristine: pristineEnglish,
     reset: resetEnglish,
-  } = useName({
+  } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
     category,
     query,
     language: Language.en,
@@ -89,7 +90,7 @@ const StyledDescriptionForm = styled.div`
   padding: 0 0 1.5rem;
 `;
 
-const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+const DescriptionForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const t = useT();
 
   return (
@@ -111,7 +112,7 @@ const DescriptionForm: React.FC<OrganizerFormProps> = ({ category, query }: Orga
   );
 };
 
-const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+const LinksForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -213,7 +214,7 @@ const LinksForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerF
   );
 };
 
-const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -367,7 +368,7 @@ const AddressForm: React.FC<OrganizerFormProps> = ({ category, query }: Organize
   );
 };
 
-const ContactForm: React.FC<OrganizerFormProps> = ({ category, query }: OrganizerFormProps) => {
+const ContactForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);

@@ -18,21 +18,23 @@ import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { routes, useLocale } from '../../lib/routing';
 
-const {
-  publicRuntimeConfig: { authTokenCookieName },
-} = getConfig();
+const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
 export interface User {
   authToken: string;
 }
 
-export const useUser = (): {
+export type WrappedUser = {
   user: User;
   authToken: string;
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
   logout: () => void;
-} => {
+};
+
+export const useUser = (): WrappedUser => {
+  const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
+
   const {
     authToken,
     setAuthToken,
@@ -45,7 +47,7 @@ export const useUser = (): {
 
   const authTokenFromStateOrCookie = useMemo(
     () => authToken || getCookie(authTokenCookieName)?.value,
-    [authToken]
+    [authToken, authTokenCookieName]
   );
 
   const router = useRouter();
@@ -71,7 +73,14 @@ export const useUser = (): {
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate();
     invalidateUser();
-  }, [invalidateUser, mutateValidate, locale, call, authTokenFromStateOrCookie]);
+  }, [
+    authTokenCookieName,
+    invalidateUser,
+    mutateValidate,
+    locale,
+    call,
+    authTokenFromStateOrCookie,
+  ]);
 
   useEffect(() => {
     const userData = (userResponse?.body.data.attributes as unknown) as User;

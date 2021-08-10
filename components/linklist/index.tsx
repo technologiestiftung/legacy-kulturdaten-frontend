@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
-import { Breakpoint } from '../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Button, ButtonSize, ButtonType } from '../button';
 import { insetBorder, mq } from '../globals/Constants';
 import { Info } from '../info';
@@ -31,7 +31,7 @@ const StyledLinkListList = styled.ul`
 `;
 
 const StyledLinkListListPlaceholder = styled.div`
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
 `;
@@ -39,7 +39,7 @@ const StyledLinkListListPlaceholder = styled.div`
 const StyledLinkListListItem = styled.li`
   display: flex;
   align-items: stretch;
-  padding: 0.375rem 0.75rem;
+  padding: 0.75rem 1.5rem;
   box-shadow: ${insetBorder(false, false, true)};
   flex-direction: column;
 
@@ -81,7 +81,7 @@ const StyledLinkListAddNew = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 0.375rem 0.75rem;
+  padding: 0.75rem 1.5rem;
   box-shadow: ${insetBorder(false, true, true, true)};
   border-radius: 0 0 0.75rem 0.75rem;
 
@@ -183,6 +183,7 @@ const LinkList: React.FC<LinkListProps> = ({
   const externalValue = useMemo(() => links, [links]);
   const [externalValueDefined, setExternalValueDefined] = useState<boolean>(false);
   const uid = usePseudoUID();
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   const [inputState, setInputState] = useState<string>('');
 
@@ -211,14 +212,14 @@ const LinkList: React.FC<LinkListProps> = ({
 
   return (
     <StyledLinkList>
-      <StyledLinkListLabel>
-        {label && (
+      {label && (
+        <StyledLinkListLabel>
           <Label>
             {label}
             {maxLinks ? ` (${t('linkList.maxLinks', { amount: maxLinks })})` : ''}
           </Label>
-        )}
-      </StyledLinkListLabel>
+        </StyledLinkListLabel>
+      )}
       <StyledLinkListList>
         {linksState && linksState.length > 0 ? (
           linksState.map((link, index) => (
@@ -239,7 +240,7 @@ const LinkList: React.FC<LinkListProps> = ({
               <StyledLinkListLinkButtons>
                 <StyledLinkListLinkButton>
                   <Button
-                    size={ButtonSize.default}
+                    size={isMidOrWider ? ButtonSize.big : ButtonSize.default}
                     onClick={() =>
                       dispatch({ type: LinksActions.delete, payload: { link: { index } } })
                     }
@@ -287,7 +288,12 @@ const LinkList: React.FC<LinkListProps> = ({
             />
           </StyledLinkListInput>
           <StyledLinkListInputButton>
-            <Button icon="Plus" type={ButtonType.submit} disabled={inputState.length < 1}>
+            <Button
+              icon="Plus"
+              type={ButtonType.submit}
+              disabled={inputState.length < 1}
+              size={isMidOrWider ? ButtonSize.big : ButtonSize.default}
+            >
               {t('general.add')}
             </Button>
           </StyledLinkListInputButton>

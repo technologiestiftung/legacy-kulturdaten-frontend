@@ -4,9 +4,7 @@ import { useCallback } from 'react';
 import { useAuthToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
 
-const {
-  publicRuntimeConfig: { api },
-} = getConfig();
+const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
 type StructuredData =
   | string
@@ -25,7 +23,7 @@ export interface ApiCall {
     };
     body?: { [key: string]: StructuredData };
   };
-  response: { status: number; body: { [key: string]: StructuredData } };
+  response: { status: number; body: { [key: string]: StructuredData & { id?: string } } };
 }
 
 export type ApiCallFactory = (
@@ -47,9 +45,21 @@ export enum ApiRoutes {
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
-  OrganizerTranslationCreate = 'OrganizerTranslationCreate',
+  organizerTranslationCreate = 'organizerTranslationCreate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
+  locationList = 'locationList',
+  locationShow = 'locationShow',
+  locationCreate = 'locationCreate',
+  locationUpdate = 'locationUpdate',
+  locationTranslationCreate = 'locationTranslationCreate',
+  locationDelete = 'locationDelete',
+  offerList = 'offerList',
+  offerShow = 'offerShow',
+  offerCreate = 'offerCreate',
+  offerUpdate = 'offerUpdate',
+  offerTranslationCreate = 'offerTranslationCreate',
+  offerDelete = 'offerDelete',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -73,10 +83,27 @@ export const apiRoutes: {
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) =>
     `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
-  OrganizerTranslationCreate: ({ organizerId }) =>
-    `/${apiVersion}/organizer/${organizerId}/translate`,
+  organizerTranslationCreate: ({ id }) => `/${apiVersion}/organizer/${id}/translate`,
   organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
+  locationList: (query) =>
+    `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${
+      query?.size && `&size=${query.size}`
+    }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
+  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
+  locationCreate: () => `/${apiVersion}/location`,
+  locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
+  locationTranslationCreate: ({ id }) => `/${apiVersion}/location/${id}/translate`,
+  locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
+  offerList: (query) =>
+    `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
+      query?.size && `&size=${query.size}`
+    }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
+  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
+  offerCreate: () => `/${apiVersion}/offer`,
+  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
+  offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
+  offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
 };
 
 const addUrlParam = (url: string, param: string): string =>
@@ -94,6 +121,8 @@ export const call = async <T extends ApiCall>(
   const routeWithIncludes = Array.isArray(includes)
     ? addUrlParam(request.route, `include=${includes.join(',')}`)
     : request.route;
+
+  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
 
   try {
     const resp = await fetch(new URL(routeWithIncludes, api).toString(), {
@@ -160,6 +189,8 @@ export const getApiUrl = (
   query?: ParsedUrlQuery,
   includes?: string[]
 ): URL => {
+  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+
   const route = apiRoutes[apiRoute](query);
   const routeWithIncludes = Array.isArray(includes)
     ? addUrlParam(route, `include=${includes.join(',')}`)
@@ -189,3 +220,7 @@ export type { AuthValidate } from './routes/auth/validate';
 export { authValidateFactory } from './routes/auth/validate';
 export type { OrganizerList } from './routes/organizer/list';
 export { organizerListFactory } from './routes/organizer/list';
+export type { LocationList } from './routes/location/list';
+export { locationListFactory } from './routes/location/list';
+export type { OfferList } from './routes/offer/list';
+export { offerListFactory } from './routes/offer/list';

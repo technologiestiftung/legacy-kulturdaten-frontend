@@ -27,23 +27,23 @@ export type OrganizerTranslationCreate = ApiCall & {
   };
 };
 
-export const OrganizerTranslationCreateFactory = (
+export const organizerTranslationCreateFactory = (
   token: OrganizerTranslationCreate['request']['headers']['Authorization'],
   query: {
-    organizerId: string;
-    organizerTranslation: OrganizerTranslation;
+    id: string;
+    translation: OrganizerTranslation;
   }
 ): OrganizerTranslationCreate => ({
   request: {
-    route: apiRoutes.OrganizerTranslationCreate({
-      organizerId: query.organizerId,
+    route: apiRoutes.organizerTranslationCreate({
+      id: query.id,
     }),
     method: 'POST',
     headers: {
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.organizerTranslation,
+    body: query.translation,
   },
   response: {
     status: 200,

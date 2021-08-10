@@ -2,14 +2,13 @@ import { Story } from '@storybook/react';
 import React from 'react';
 import styled from '@emotion/styled';
 
-import { Header } from './header/Header';
+import { HeaderMain } from './header/Header';
 import { NavigationStructure, useNavigation } from '.';
 import { MenuIconName } from './Menu/MenuIcon';
 import { AppLayout } from '../layouts/AppLayout';
-import { TitleBar } from './TitleBar';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Button, ButtonColor, ButtonVariant } from '../button';
-import { MenuItem } from './Menu';
+import { MenuItemType } from './Menu';
 
 export default {
   title: 'Navigation',
@@ -38,7 +37,17 @@ const StyledTestContentBox = styled.div`
 `;
 
 const testMenuStructure: NavigationStructure = {
-  defaultMenuKey: 'main',
+  header: {
+    menuItems: [
+      {
+        type: MenuItemType.link,
+        action: {
+          href: '#',
+          title: 'Dashboard',
+        },
+      },
+    ],
+  },
   menus: [
     {
       key: 'main',
@@ -50,7 +59,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -58,7 +67,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',
@@ -80,7 +89,7 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.folder,
+              type: MenuItemType.folder,
               action: {
                 label: 'Alle Angebote',
                 menuKey: 'offer',
@@ -102,7 +111,7 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.folder,
+              type: MenuItemType.folder,
               action: {
                 label: 'Alle Anbieter:innen',
                 menuKey: 'organizer',
@@ -124,7 +133,7 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.folder,
+              type: MenuItemType.folder,
               action: {
                 label: 'Alle Orte',
                 menuKey: 'location',
@@ -142,14 +151,14 @@ const testMenuStructure: NavigationStructure = {
           ),
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Mein Profil',
                 href: '#',
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Meine Einstellungen',
                 href: '#',
@@ -169,7 +178,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -177,7 +186,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',
@@ -197,7 +206,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -205,7 +214,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',
@@ -225,7 +234,7 @@ const testMenuStructure: NavigationStructure = {
           icon: MenuIconName.start,
           items: [
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Dashboard',
                 href: '#',
@@ -233,7 +242,7 @@ const testMenuStructure: NavigationStructure = {
               },
             },
             {
-              type: MenuItem.link,
+              type: MenuItemType.link,
               action: {
                 title: 'Benachrichtigungen',
                 href: '#',
@@ -247,11 +256,12 @@ const testMenuStructure: NavigationStructure = {
 };
 
 const X: React.FC = () => {
-  const navigation = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+  const { header, sidebar } = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
 
   return (
     <AppLayout
-      navigation={navigation}
+      header={{ main: header?.main, secondary: header?.secondary }}
+      sidebar={sidebar}
       content={
         <StyledTestContent>
           {[...Array(10)].map((i, index) => (
@@ -267,16 +277,22 @@ export const NavigationStory: Story = () => <X />;
 NavigationStory.storyName = 'Navigation complete';
 
 export const HeaderStory: Story = () => (
-  <Header activeMenuTitle="main" defaultMenuKey="main" title="Kulturdaten.Berlin" Link={TestLink} />
+  <HeaderMain
+    menuItems={testMenuStructure.header.menuItems}
+    title="Kulturdaten.Berlin"
+    Link={TestLink}
+    userIsLoggedIn={true}
+    user={undefined}
+  />
 );
 HeaderStory.storyName = 'Header';
 
-export const MainMenuStory: Story = () => {
-  const navigation = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+// export const MainMenuStory: Story = () => {
+//   const navigation = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
 
-  return navigation;
-};
-MainMenuStory.storyName = 'Main Menu';
+//   return navigation;
+// };
+// MainMenuStory.storyName = 'Main Menu';
 
-export const TitleBarStory: Story = () => <TitleBar title="Page Title" />;
-TitleBarStory.storyName = 'Title Bar';
+// export const TitleBarStory: Story = () => <TitleBar title="Page Title" />;
+// TitleBarStory.storyName = 'Title Bar';

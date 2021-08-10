@@ -1,11 +1,8 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { defaultLanguage, Language } from '../../../../config/locale';
-import { useApiCall } from '../../../../lib/api';
-import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
-import { OrganizerTranslationCreate } from '../../../../lib/api/routes/organizer/translation/create';
-import { PublishedStatus } from '../../../../lib/api/types/general';
-import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
+import { ApiCall, useApiCall } from '../../../../lib/api';
+import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { getTranslation } from '../../../../lib/translations';
 import { Input, InputType } from '../../../input';
@@ -54,7 +51,12 @@ const Name: React.FC<SetNameProps> = ({
   );
 };
 
-export const useName = (props: {
+export const useName = <
+  EntryType extends CategoryEntry,
+  EntryShowCallType extends ApiCall,
+  TranslationType extends Translation,
+  TranslationCreateCallType extends ApiCall
+>(props: {
   category: Category;
   query: ParsedUrlQuery;
   language: Language;
@@ -67,12 +69,12 @@ export const useName = (props: {
 } => {
   const { category, query, language, label } = props;
 
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
   const mutateList = useMutateList(category);
   const call = useApiCall();
-  const entryTranslation = getTranslation<OrganizerTranslation>(
+  const entryTranslation = getTranslation<TranslationType>(
     language,
-    entry?.data?.relations?.translations,
+    entry?.data?.relations?.translations as TranslationType[],
     false
   );
   const name = useMemo(() => entryTranslation?.attributes?.name, [
@@ -92,20 +94,17 @@ export const useName = (props: {
 
     if (!pristine) {
       try {
-        const resp = await call<OrganizerTranslationCreate>(
-          category.api.translationCreate.factory,
-          {
-            organizerTranslation: {
-              ...entryTranslation,
-              attributes: {
-                name: value,
-                language,
-              },
+        const resp = await call<TranslationCreateCallType>(category.api.translationCreate.factory, {
+          translation: {
+            ...entryTranslation,
+            attributes: {
+              name: value,
+              language,
             },
-            translationId: entryTranslation?.id,
-            organizerId: entry?.data?.id,
-          }
-        );
+          },
+          translationId: entryTranslation?.id,
+          id: entry?.data?.id,
+        });
 
         if (resp.status === 200) {
           mutate();

@@ -10,7 +10,7 @@ import { MarkButton, MarkButtonFormat } from './MarkButton';
 import { BlockButton } from './BlockButton';
 import { Leaf } from './Leaf';
 import { Button, ButtonVariant, IconPosition } from '../button';
-import { contentGrid, mq } from '../globals/Constants';
+import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { PSvg } from '../assets/PSvg';
 import { H1Svg } from '../assets/H1Svg';
@@ -36,27 +36,21 @@ const StyledEditableContainer = styled.div`
   background: var(--white);
   min-height: 100%;
   flex-grow: 1;
-
-  ${mq(Breakpoint.mid)} {
-    ${contentGrid(9)}
-  }
-
-  ${mq(Breakpoint.wide)} {
-    ${contentGrid(8)}
-  }
 `;
 
 const StyledEditable = styled.div`
   caret-color: #0000ff;
-  padding: 2rem 0.75rem;
 
   > div {
+    padding: 2rem 0.75rem;
     min-height: 100%;
-  }
 
-  ${mq(Breakpoint.mid)} {
-    padding: 4rem 0;
-    grid-column: 2 / -2;
+    max-width: 44rem;
+    margin: 0 auto;
+
+    ${mq(Breakpoint.mid)} {
+      padding: 4rem 4rem;
+    }
   }
 `;
 

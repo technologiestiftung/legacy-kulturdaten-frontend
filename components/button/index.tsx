@@ -70,29 +70,32 @@ const buttonSizes: {
     lineHeight: 'var(--line-height-400)',
     padding: 'calc(0.75rem - 1px) calc(1rem - 1px)',
     borderRadius: '0.75rem',
-    iconGap: '0.375rem',
+    iconGap: '0.75rem',
   },
 };
 
 const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
   default: css`
-    border: 1px solid var(--black);
-    transition: box-shadow var(--transition-duration), transform var(--transition-duration);
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    transition: box-shadow var(--transition-duration), transform var(--transition-duration),
+      border-color var(--transition-duration);
 
     box-shadow: var(--shadow);
 
     &:hover {
-      box-shadow: var(--shadow-hover), inset 0px 0px 0px 1px var(--black);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(0, 0, 0, 0.75);
     }
 
     &:active {
-      box-shadow: var(--shadow-active), inset 0px 0px 0px 1px var(--black);
+      box-shadow: var(--shadow-active);
       transform: translateY(0.125rem);
     }
 
     &:disabled {
       box-shadow: var(--shadow);
       transform: none;
+      border-color: rgba(0, 0, 0, 0.25);
     }
   `,
   minimal: css`
@@ -144,6 +147,7 @@ const StyledButton = styled.button<{
   display: inline-flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   border: 1px solid var(--black);
   background: ${({ color }) => buttonColors[color].background};
   color: ${({ color }) => buttonColors[color].color};

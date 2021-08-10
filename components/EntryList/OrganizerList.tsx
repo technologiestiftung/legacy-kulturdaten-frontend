@@ -1,10 +1,8 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
-import { Plus } from 'react-feather';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { StyledEntryListBody } from '.';
-import { useCategories } from '../../config/categories';
+import { Categories, useCategories } from '../../config/categories';
 import { OrganizerList as OrganizerListCall } from '../../lib/api';
 import {
   Organizer,
@@ -17,26 +15,27 @@ import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
-import { useCollapsable } from '../collapsable';
 import { NavigationContext } from '../navigation/NavigationContext';
-import { Select, SelectLabelPosition } from '../select';
+import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
 import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
-import { RadioSwitch, RadioSwitchLabelPosition } from '../RadioSwitch';
+import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
-import { mq } from '../globals/Constants';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
+import { ButtonLink } from '../button/ButtonLink';
+import { ButtonColor, ButtonSize } from '../button';
+import Link from 'next/link';
+import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
   min-height: 100%;
-  background: var(--white);
+  background: var(--grey-200);
 `;
 
 const viewEntriesPerPageMap = {
@@ -48,168 +47,8 @@ interface OrganizerListProps {
   expanded: boolean;
 }
 
-const StyledFiltersBox = styled.div<{ expanded: boolean }>`
-  ${({ expanded }) =>
-    expanded
-      ? css``
-      : css`
-          border: 1px solid var(--grey-400);
-          border-radius: 0.75rem;
-        `}
-`;
-
-const StyledFiltersBoxTitle = styled.div`
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  font-weight: 700;
-  width: 100%;
-  border-bottom: 1px solid var(--grey-400);
-  padding: 0 0 0.375rem;
-  margin: 0 0 0.75rem;
-`;
-
-const StyledFilterBoxChild = styled.div``;
-
-const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
-  display: flex;
-
-  ${({ expanded }) =>
-    expanded
-      ? css`
-          ${StyledFilterBoxChild} {
-            margin-right: 0.75rem;
-            flex-grow: 1;
-            flex-basis: 0;
-          }
-        `
-      : css`
-          flex-direction: column;
-          padding: 0.75rem;
-          border-top: 1px solid var(--grey-400);
-          grid-template-columns: auto;
-
-          ${StyledFilterBoxChild} {
-            margin-bottom: 0.75rem;
-          }
-        `}
-
-  ${StyledFilterBoxChild} {
-    &:last-of-type {
-      margin: 0;
-    }
-  }
-`;
-
-const StyledFiltersBoxTitleButton = styled.button<{ isCollapsed: boolean }>`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  appearance: none;
-  width: 100%;
-  background: none;
-  border: none;
-  padding: 0.375rem 0.75rem;
-  margin: 0;
-  text-align: left;
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--black);
-  border-radius: ${({ isCollapsed }) => (isCollapsed ? '0.75rem' : '0.75rem 0.75rem 0 0')};
-
-  > svg {
-    display: block;
-    width: 1.125rem;
-    height: 1.125rem;
-    transition: transform var(--transition-duration);
-    transform: rotate(${({ isCollapsed }) => (isCollapsed ? '0deg' : '45deg')});
-  }
-`;
-
-interface FiltersBoxProps {
-  expanded: boolean;
-  activeFiltersCount?: number;
-  isCollapsed: boolean;
-  setIsCollapsed: (isCollapsed: boolean) => void;
-}
-
-const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
-  expanded,
-  children,
-  activeFiltersCount,
-  isCollapsed,
-  setIsCollapsed,
-}: PropsWithChildren<FiltersBoxProps>) => {
-  const t = useT();
-
-  const wrappedChildren = (
-    <StyledFiltersBoxChildren expanded={expanded}>
-      {React.Children.map(children, (child, index) => (
-        <StyledFilterBoxChild key={index}>{child}</StyledFilterBoxChild>
-      ))}
-    </StyledFiltersBoxChildren>
-  );
-
-  const { renderedCollapsable } = useCollapsable(wrappedChildren, isCollapsed, setIsCollapsed);
-
-  return (
-    <StyledFiltersBox expanded={expanded}>
-      {expanded ? (
-        <>
-          <StyledFiltersBoxTitle>{t('general.filter')}</StyledFiltersBoxTitle>
-          {wrappedChildren}
-        </>
-      ) : (
-        <>
-          <StyledFiltersBoxTitleButton
-            isCollapsed={isCollapsed}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          >
-            {t('general.filter')}
-            {activeFiltersCount
-              ? ` (${t('categories.organizer.filters.activeFilters', { activeFiltersCount })})`
-              : ''}
-            <Plus />
-          </StyledFiltersBoxTitleButton>
-          {renderedCollapsable}
-        </>
-      )}
-    </StyledFiltersBox>
-  );
-};
-
 const StyledEntryListTable = styled.div`
-  padding: 1.5rem 0;
-`;
-
-const EntryListSort = styled.div<{ expanded: boolean }>`
-  padding: 0 0.75rem;
-  display: grid;
-  row-gap: 0.75rem;
-
-  > *:last-of-type {
-    padding: 0.75rem 0 0;
-  }
-
-  ${mq(Breakpoint.widish)} {
-    ${({ expanded }) =>
-      expanded
-        ? css`
-            padding: 0.75rem;
-            display: flex;
-            justify-content: flex-end;
-
-            > * {
-              padding: 0 0 0 0.75rem;
-
-              &:last-of-type {
-                padding: 0 0 0 1.5rem;
-              }
-            }
-          `
-        : ''}
-  }
+  padding: 0 0 1.5rem;
 `;
 
 interface ListLinkProps {
@@ -224,27 +63,43 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
   const locale = useLocale();
   const language = useLanguage();
   const t = useT();
-  const { setNavigationOpen, setMenuExpanded } = useContext(NavigationContext);
+  const { setMenuExpanded } = useContext(NavigationContext);
   const {
-    currentPage,
+    getCurrentPage,
     setCurrentPage,
-    entriesPerPage,
+    getEntriesPerPage,
     setEntriesPerPage,
-    sortKey,
+    getSortKey,
     setSortKey,
-    order,
+    getOrder,
     setOrder,
-    filters,
-    dispatchFilters,
-    view,
+    getFilters,
+    getDispatchFilters,
+    getView,
     setView,
-    filtersBoxExpanded,
+    getFiltersBoxExpanded,
     setFiltersBoxExpanded,
+    setLastEntryId,
   } = useContext(EntryListContext);
-  const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
   const pseudoUID = usePseudoUID();
 
   const typeOptions = useOrganizerTypeList();
+
+  const listName = Categories.organizer;
+  const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
+  const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
+  const entriesPerPage = useMemo(() => getEntriesPerPage(listName), [getEntriesPerPage, listName]);
+  const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
+  const order = useMemo(() => getOrder(listName), [getOrder, listName]);
+  const view = useMemo(() => getView(listName), [getView, listName]);
+  const filtersBoxExpanded = useMemo(() => getFiltersBoxExpanded(listName), [
+    getFiltersBoxExpanded,
+    listName,
+  ]);
+  const dispatchFilters = useMemo(() => getDispatchFilters(listName), [
+    getDispatchFilters,
+    listName,
+  ]);
 
   const list = useList<OrganizerListCall, Organizer>(
     categories.organizer,
@@ -280,10 +135,10 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
 
   useEffect(() => {
     if (viewEntriesPerPageMap[view] !== entriesPerPage) {
-      setEntriesPerPage(viewEntriesPerPageMap[view]);
-      setCurrentPage(1);
+      setEntriesPerPage(listName, viewEntriesPerPageMap[view]);
+      setCurrentPage(listName, 1);
     }
-  }, [view, setEntriesPerPage, entriesPerPage, setCurrentPage]);
+  }, [view, setEntriesPerPage, entriesPerPage, setCurrentPage, listName]);
 
   const date = useDate();
 
@@ -310,19 +165,11 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                 return typeTranslation?.attributes.name;
               });
 
-              const subjectNames = relations?.subjects?.map((subject) => {
-                const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                  language,
-                  subject.relations.translations
-                );
-                return subjectTranslation?.attributes.name;
-              });
-
               return (
                 <EntryCard
                   onClick={() => {
                     setMenuExpanded(false);
-                    setNavigationOpen(false);
+                    setLastEntryId(Categories.organizer, id);
                   }}
                   href={href('info')}
                   menuExpanded={expanded}
@@ -330,7 +177,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                   title={currentTranslation?.attributes?.name}
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href())}
-                  meta={<EntryCardTypesSubjects types={typeNames} subjects={subjectNames} />}
+                  meta={<EntryCardTypesSubjects types={typeNames} />}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
                 />
@@ -338,7 +185,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             }
           )
         : undefined,
-    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setNavigationOpen]
+    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setLastEntryId]
   );
 
   const rows: TableProps['content'] = useMemo(
@@ -377,8 +224,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
                 <TableLink
                   onClick={() => {
-                    setNavigationOpen(false);
                     setMenuExpanded(false);
+                    setLastEntryId(Categories.organizer, id);
                   }}
                   href={href('info')}
                   isActive={router.asPath.includes(href())}
@@ -407,7 +254,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             }
           )
         : undefined,
-    [list.data, language, date, expanded, locale, router.asPath, setNavigationOpen, setMenuExpanded]
+    [list.data, language, date, expanded, locale, router.asPath, setMenuExpanded, setLastEntryId]
   );
 
   return (
@@ -415,20 +262,35 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
       <EntryListHead
         title={t('categories.organizer.title.plural') as string}
         expanded={expanded}
-        accentColor="var(--red)"
+        setExpanded={setMenuExpanded}
+        expandable={true}
+        actionButton={
+          <Link href={routes.createOrganizer({ locale })} passHref>
+            <ButtonLink
+              size={ButtonSize.big}
+              color={ButtonColor.white}
+              icon="Plus"
+              onClick={() => setMenuExpanded(false)}
+            >
+              {t('categories.organizer.form.create')}
+            </ButtonLink>
+          </Link>
+        }
+      />
+
+      <EntryListFiltersBox
+        isCollapsed={filtersBoxExpanded}
+        setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
+        expanded={expanded}
+        activeFiltersCount={activeFiltersCount}
       >
-        <FiltersBox
-          isCollapsed={filtersBoxExpanded}
-          setIsCollapsed={setFiltersBoxExpanded}
-          expanded={expanded}
-          activeFiltersCount={activeFiltersCount}
-        >
+        <StyledFilters expanded={expanded}>
           <Select
             label={t('categories.organizer.filters.type.label') as string}
             id={`entry-filter-type-${pseudoUID}`}
             value={filters?.type}
             onChange={(e) => {
-              setCurrentPage(1);
+              setCurrentPage(listName, 1);
               dispatchFilters({
                 type: FiltersActions.set,
                 payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
@@ -460,7 +322,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             value={filters?.subject}
             disabled={!filters?.type}
             onChange={(e) => {
-              setCurrentPage(1);
+              setCurrentPage(listName, 1);
               dispatchFilters({
                 type: FiltersActions.set,
                 payload: {
@@ -500,7 +362,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             id={`entry-filter-status-${pseudoUID}`}
             value={filters?.status}
             onChange={(e) => {
-              setCurrentPage(1);
+              setCurrentPage(listName, 1);
               dispatchFilters({
                 type: FiltersActions.set,
                 payload: {
@@ -514,21 +376,17 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
           </Select>
-        </FiltersBox>
-      </EntryListHead>
-      <StyledEntryListBody>
-        <EntryListSort expanded={expanded}>
+        </StyledFilters>
+
+        <StyledFilters expanded={expanded}>
           <Select
             id={`entry-sort-${pseudoUID}`}
             label={t('general.sort') as string}
             onChange={(e) => {
-              setCurrentPage(1);
-              setSortKey(e.target.value);
+              setCurrentPage(listName, 1);
+              setSortKey(listName, e.target.value);
             }}
             value={sortKey}
-            labelPosition={
-              expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
-            }
           >
             <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
             <option value="createdAt">{t('categories.organizer.sort.created')}</option>
@@ -538,8 +396,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             value={order}
             name={`entry-order-${pseudoUID}`}
             onChange={(value) => {
-              setCurrentPage(1);
-              setOrder(value as Order);
+              setCurrentPage(listName, 1);
+              setOrder(listName, value as Order);
             }}
             options={[
               {
@@ -560,14 +418,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             value={view}
             name={`entry-view-${pseudoUID}`}
             onChange={(value) => {
-              setView(value as EntryListView);
+              setView(listName, value as EntryListView);
             }}
             label={t('categories.organizer.view.label') as string}
-            labelPosition={
-              expanded && isWidishOrWider
-                ? RadioSwitchLabelPosition.left
-                : RadioSwitchLabelPosition.top
-            }
             options={[
               {
                 value: EntryListView.cards,
@@ -581,7 +434,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
               },
             ]}
           />
-        </EntryListSort>
+        </StyledFilters>
+      </EntryListFiltersBox>
+      <StyledEntryListBody>
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded}>
             {cards && cards.length > 0 ? (
@@ -624,9 +479,15 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             lastPage={lastPage}
             totalEntries={totalEntries}
             entriesPerPage={entriesPerPage}
-            nextPage={() => (currentPage < lastPage ? setCurrentPage(currentPage + 1) : undefined)}
-            previousPage={() => (currentPage > 1 ? setCurrentPage(currentPage - 1) : undefined)}
-            goToPage={(index: number) => (index <= lastPage ? setCurrentPage(index) : undefined)}
+            nextPage={() =>
+              currentPage < lastPage ? setCurrentPage(listName, currentPage + 1) : undefined
+            }
+            previousPage={() =>
+              currentPage > 1 ? setCurrentPage(listName, currentPage - 1) : undefined
+            }
+            goToPage={(index: number) =>
+              index <= lastPage ? setCurrentPage(listName, index) : undefined
+            }
             expanded={expanded}
           />
         )}

@@ -23,7 +23,7 @@ export interface OrganizerCreate extends ApiCall {
 
 export const organizerCreateFactory: ApiCallFactory = (
   token: OrganizerCreate['request']['headers']['Authorization'],
-  query: { organizer: CreateOrganizer }
+  query: { entry: CreateOrganizer }
 ): OrganizerCreate => ({
   request: {
     route: apiRoutes.organizerCreate(),
@@ -32,7 +32,7 @@ export const organizerCreateFactory: ApiCallFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.organizer,
+    body: query.entry,
   },
   response: {
     status: 200,

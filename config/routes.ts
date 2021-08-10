@@ -52,13 +52,13 @@ export const routes: { [key in Routes]: Route } = {
     }/`,
   offer: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offer][locale]}/${
-      query?.id ? `${query?.id}/` : ''
+      query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
   createOffer: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.createOffer][locale]}/`,
   location: ({ query, locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.location][locale]}/${
-      query?.id ? `${query?.id}/` : ''
+      query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
   createLocation: ({ locale }) =>
     `/${localizedRoutes[Routes.dashboard][locale]}/${

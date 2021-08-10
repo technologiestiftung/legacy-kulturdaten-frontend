@@ -16,17 +16,14 @@ import { Button, ButtonColor } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { TypesSubjects } from '../../TypesSubjects';
-import { FormGrid, FormItem, FormItemWidth } from './helpers';
+import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 
-interface OrganizerFormProps {
+interface EntryFormProps {
   category: Category;
   query: ParsedUrlQuery;
 }
 
-const ClassificationForm: React.FC<OrganizerFormProps> = ({
-  category,
-  query,
-}: OrganizerFormProps) => {
+const ClassificationForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const t = useT();
   const call = useApiCall();

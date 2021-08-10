@@ -3,8 +3,7 @@ import { Language } from '../../config/locale';
 import { CategoryEntry } from '../../lib/api/types/general';
 
 export const StyledEntryListBody = styled.div`
-  background: var(--white);
-  padding: 1.5rem 0;
+  background: var(--grey-200);
 `;
 
 export interface EntryListProps<EntryType extends CategoryEntry> {
@@ -26,8 +25,3 @@ export interface EntryListProps<EntryType extends CategoryEntry> {
   };
   expanded: boolean;
 }
-
-export const EntryList = <EntryType extends CategoryEntry>({
-  title,
-  useList,
-}: EntryListProps<EntryType>): React.ReactElement<EntryListProps<EntryType>> => undefined;

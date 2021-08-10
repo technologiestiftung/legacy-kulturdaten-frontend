@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Reducer, useEffect, useReducer, useState } from 'react';
-import { Plus } from 'react-feather';
+import { ChevronDown } from 'react-feather';
 import {
   OrganizerSubjectTranslation,
   OrganizerType,
@@ -43,11 +43,21 @@ const StyledTypesSubjectsTypeHead = styled.div<{ hasSubjects: boolean }>`
       : ''}
 `;
 
-const StyledTypesSubjectsPlus = styled.div`
+const StyledTypesSubjectsChevron = styled.div<{ isOpen: boolean }>`
   position: absolute;
   right: 0.75rem;
   top: 0.75rem;
   pointer-events: none;
+  transition: transform var(--transition-duration);
+
+  ${({ isOpen }) =>
+    isOpen
+      ? css`
+          transform: rotateX(-180deg);
+        `
+      : css`
+          transform: rotateX(0deg);
+        `}
 `;
 
 const StyledTypesSubjectsSubjects = styled.div`
@@ -181,9 +191,9 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
               />
             </StyledTypesSubjectsTypeHead>
             {hasSubjects && (
-              <StyledTypesSubjectsPlus>
-                <Plus color="var(--grey-600)" />
-              </StyledTypesSubjectsPlus>
+              <StyledTypesSubjectsChevron isOpen={typeIsChecked}>
+                <ChevronDown color="var(--grey-600)" />
+              </StyledTypesSubjectsChevron>
             )}
             {hasSubjects && typeIsChecked && (
               <StyledTypesSubjectsSubjects>

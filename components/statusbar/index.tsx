@@ -59,7 +59,7 @@ const statusBarStatuses: {
   [key in PublishedStatus]: { backgroundColor: string; textKey: string };
 } = {
   draft: {
-    backgroundColor: 'var(--mustard)',
+    backgroundColor: 'var(--yellow)',
     textKey: 'statusBar.draft',
   },
   published: {

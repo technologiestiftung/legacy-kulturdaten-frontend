@@ -2,8 +2,6 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 
 import { useIsRouteStringActive } from '../../../lib/routing';
-import { useContext } from 'react';
-import { NavigationContext } from '../NavigationContext';
 import { insetBorder } from '../../globals/Constants';
 import { File } from 'react-feather';
 
@@ -55,11 +53,10 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
 }: InternalMenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active || isRouteActive;
-  const { setNavigationOpen } = useContext(NavigationContext);
 
   return (
     <Link href={href} passHref>
-      <StyledA title={title} onClick={() => setNavigationOpen(false)} active={linkIsActive}>
+      <StyledA title={title} active={linkIsActive}>
         <File />
         <span>{title}</span>
       </StyledA>

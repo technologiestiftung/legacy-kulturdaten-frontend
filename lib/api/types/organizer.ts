@@ -31,6 +31,7 @@ export type OrganizerType = {
 };
 
 export type OrganizerTranslation = {
+  type: 'organizertranslation';
   attributes: {
     language?: Language;
     name: string;
