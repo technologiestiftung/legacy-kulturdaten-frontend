@@ -1,11 +1,14 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { BodyLock, useBodyLock } from '../../lib/BodyLock';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
-import { NavigationProps } from '../navigation';
+import { mq, overlayStyles } from '../globals/Constants';
+import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
+
+const StyledAppLayout = styled.div``;
 
 const Container = styled.div`
   display: grid;
@@ -26,7 +29,7 @@ const Container = styled.div`
   }
 `;
 
-const HeaderSlot = styled.div`
+const HeaderSlot = styled.div<{ locked: boolean }>`
   position: fixed;
   width: 100%;
   z-index: 1001;
@@ -42,8 +45,9 @@ const HeaderSlot = styled.div`
   ${mq(Breakpoint.mid)} {
     padding-bottom: 0;
     box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.25);
-    position: sticky;
+    position: ${({ locked }) => (locked ? 'fixed' : 'sticky')};
     top: 0;
+    bottom: auto;
   }
 `;
 
@@ -90,6 +94,8 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
   ${({ expanded }) =>
     expanded
       ? css`
+          filter: grayscale(0);
+
           ${mq(Breakpoint.mid)} {
             width: 100%;
           }
@@ -105,7 +111,7 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
       : ''}
 `;
 
-const ContentSlot = styled.div`
+const ContentSlot = styled.div<{ locked: boolean }>`
   position: relative;
   grid-column: 1 / -1;
   min-height: calc(var(--app-height) - var(--header-height));
@@ -115,10 +121,22 @@ const ContentSlot = styled.div`
     min-height: var(--app-height);
     margin-top: var(--header-height);
     margin-bottom: 0;
-    margin-top: 0;
+    margin-top: ${({ locked }) => (locked ? 'var(--header-height)' : '0')};
     grid-column: 4 / -1;
     grid-row: 1;
   }
+`;
+
+const StyledMainMenuOverlay = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+
+  ${overlayStyles}
 `;
 
 interface AppLayoutProps {
@@ -134,10 +152,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 }: AppLayoutProps) => {
   const headerMain = header?.main;
   const headerSecondary = header?.secondary;
-  const { setMenuExpanded } = useContext(NavigationContext);
+  const { menuExpanded, setMenuExpanded, overlayOpen } = useContext(NavigationContext);
   const { rendered } = useContext(WindowContext);
   const contentSlotRef = useRef<HTMLDivElement>();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const isMainMenuOverlayVisible = useNavigationOverlayVisible();
+  const enableMenuExpanded = useMemo(() => typeof sidebar !== 'undefined', [sidebar]);
+  const { bodyLock, locked } = useBodyLock([menuExpanded && enableMenuExpanded, overlayOpen]);
 
   useEffect(() => {
     if (!isMidOrWider) {
@@ -145,14 +166,39 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     }
   }, [isMidOrWider, setMenuExpanded]);
 
-  const renderedContentSlot = <ContentSlot ref={contentSlotRef}>{content}</ContentSlot>;
+  // Add "inert" attribute to elements behind MainMenuOverlay.
+  // Inert is a new web standard which marks elements as not interactive while keeping them visible.
+  // Think of "visiblity: hidden" but still visible.
+  // Used for preventing not/partially visible elements from being focusable via tabbing.
+  useEffect(() => {
+    if (enableMenuExpanded && isMainMenuOverlayVisible) {
+      contentSlotRef.current?.setAttribute('inert', '');
+    } else {
+      contentSlotRef.current?.removeAttribute('inert');
+    }
+  }, [isMainMenuOverlayVisible, enableMenuExpanded]);
+
+  const renderedContentSlot = (
+    <ContentSlot ref={contentSlotRef} locked={locked}>
+      {content}
+    </ContentSlot>
+  );
 
   return (
-    <div>
-      {headerMain && <HeaderSlot>{headerMain}</HeaderSlot>}
+    <StyledAppLayout>
+      {bodyLock}
+
+      {headerMain && <HeaderSlot locked={locked}>{headerMain}</HeaderSlot>}
       {headerSecondary && <HeaderSlotSecondary>{headerSecondary}</HeaderSlotSecondary>}
-      {isMidOrWider && sidebar && <MenuSlot>{sidebar}</MenuSlot>}
+      {isMidOrWider && sidebar && <MenuSlot expanded={menuExpanded}>{sidebar}</MenuSlot>}
       <Container>{rendered && renderedContentSlot}</Container>
-    </div>
+      {enableMenuExpanded && isMainMenuOverlayVisible && (
+        <StyledMainMenuOverlay
+          onClick={() => {
+            setMenuExpanded(false);
+          }}
+        />
+      )}
+    </StyledAppLayout>
   );
 };

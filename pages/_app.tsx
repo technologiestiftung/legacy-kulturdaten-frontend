@@ -19,12 +19,6 @@ import { useNavigation } from '../components/navigation';
 import { useAppTitle, useMenuStructure } from '../config/structure';
 import { HeaderLink } from '../components/navigation/header/HeaderLink';
 
-const EmbeddedBodyLock: React.FC = () => {
-  const { menuExpanded, overlayOpen } = useContext(NavigationContext);
-
-  return <BodyLock conditions={[menuExpanded, overlayOpen]} />;
-};
-
 const EmbeddedAppLayout: React.FC<{ content: React.ReactElement }> = ({
   content,
 }: {
@@ -47,7 +41,6 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
           listNames={[Categories.organizer, Categories.location, Categories.offer]}
         >
           <UserContextProvider>
-            {typeof window !== 'undefined' && <EmbeddedBodyLock />}
             <Reset />
             <CSSVars />
             <Global />

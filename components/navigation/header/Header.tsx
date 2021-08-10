@@ -93,6 +93,7 @@ interface HeaderProps {
   menuItems: MenuItem[];
   user: User;
   userIsLoggedIn: boolean;
+  customLink?: React.ReactElement;
 }
 
 export const HeaderMain: React.FC<HeaderProps> = ({
@@ -148,10 +149,14 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   );
 };
 
-export const HeaderSecondary: React.FC<HeaderProps> = ({ title, Link }: HeaderProps) => {
+export const HeaderSecondary: React.FC<HeaderProps> = ({
+  title,
+  Link,
+  customLink,
+}: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
 
-  const renderedLink = (
+  const renderedLink = customLink || (
     <Link>
       <StyledLink>{title}</StyledLink>
     </Link>

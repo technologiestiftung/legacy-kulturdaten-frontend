@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
-import { ChevronDown } from 'react-feather';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall } from '../../lib/api';
@@ -12,7 +11,6 @@ import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
-import { useCollapsable } from '../collapsable';
 import { NavigationContext } from '../navigation/NavigationContext';
 import { Select, SelectLabelPosition } from '../select';
 import { EntryListHead } from './EntryListHead';
@@ -30,6 +28,7 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import Link from 'next/link';
 import { ButtonLink } from '../button/ButtonLink';
 import { ButtonColor, ButtonSize } from '../button';
+import { EntryListFiltersBox } from './EntryListFiltersBox';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -46,137 +45,6 @@ interface LocationListProps {
   expanded: boolean;
 }
 
-const StyledFiltersBox = styled.div<{ expanded: boolean }>`
-  ${({ expanded }) =>
-    expanded
-      ? css``
-      : css`
-          border: 1px solid var(--grey-400);
-          border-radius: 0.75rem;
-        `}
-`;
-
-const StyledFiltersBoxTitle = styled.div`
-  width: 100%;
-  border-bottom: 1px solid var(--grey-400);
-  padding: 0 0 0.375rem;
-  margin: 0 0 0.75rem;
-`;
-
-const StyledFilterBoxChild = styled.div``;
-
-const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
-  display: flex;
-  background: var(--white);
-  border-radius: 0 0 calc(0.75rem - 1px) calc(0.75rem - 1px);
-
-  ${({ expanded }) =>
-    expanded
-      ? css`
-          ${StyledFilterBoxChild} {
-            margin-right: 0.75rem;
-            flex-grow: 1;
-            flex-basis: 0;
-          }
-        `
-      : css`
-          flex-direction: column;
-          padding: 0.75rem;
-          border-top: 1px solid var(--grey-400);
-          grid-template-columns: auto;
-
-          ${StyledFilterBoxChild} {
-            margin-bottom: 0.75rem;
-          }
-        `}
-
-  ${StyledFilterBoxChild} {
-    &:last-of-type {
-      margin: 0;
-    }
-  }
-`;
-
-const StyledFiltersBoxTitleButton = styled.button<{ isCollapsed: boolean }>`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  appearance: none;
-  width: 100%;
-  background: var(--white);
-  border: none;
-  padding: 0.75rem 1.125rem;
-  margin: 0;
-  text-align: left;
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--black);
-  border-radius: ${({ isCollapsed }) =>
-    isCollapsed ? 'calc(0.75rem - 1px)' : 'calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0'};
-
-  > svg {
-    display: block;
-    width: 1.125rem;
-    height: 1.125rem;
-    transition: transform var(--transition-duration);
-    transform: rotateX(${({ isCollapsed }) => (isCollapsed ? '0deg' : '180deg')});
-  }
-`;
-
-interface FiltersBoxProps {
-  expanded: boolean;
-  activeFiltersCount?: number;
-  isCollapsed: boolean;
-  setIsCollapsed: (isCollapsed: boolean) => void;
-}
-
-const FiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
-  expanded,
-  children,
-  activeFiltersCount,
-  isCollapsed,
-  setIsCollapsed,
-}: PropsWithChildren<FiltersBoxProps>) => {
-  const t = useT();
-
-  const wrappedChildren = (
-    <StyledFiltersBoxChildren expanded={expanded}>
-      {React.Children.map(children, (child, index) => (
-        <StyledFilterBoxChild key={index}>{child}</StyledFilterBoxChild>
-      ))}
-    </StyledFiltersBoxChildren>
-  );
-
-  const { renderedCollapsable } = useCollapsable(wrappedChildren, isCollapsed, setIsCollapsed);
-
-  return (
-    <StyledFiltersBox expanded={expanded}>
-      {expanded ? (
-        <>
-          <StyledFiltersBoxTitle>{t('general.filter')}</StyledFiltersBoxTitle>
-          {wrappedChildren}
-        </>
-      ) : (
-        <>
-          <StyledFiltersBoxTitleButton
-            isCollapsed={isCollapsed}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          >
-            {t('general.filter')}
-            {activeFiltersCount
-              ? ` (${t('categories.organizer.filters.activeFilters', { activeFiltersCount })})`
-              : ''}
-            <ChevronDown />
-          </StyledFiltersBoxTitleButton>
-          {renderedCollapsable}
-        </>
-      )}
-    </StyledFiltersBox>
-  );
-};
-
 const StyledEntryListTable = styled.div`
   padding: 1.5rem 0;
 `;
@@ -184,10 +52,6 @@ const StyledEntryListTable = styled.div`
 const EntryListSort = styled.div<{ expanded: boolean }>`
   display: grid;
   row-gap: 0.75rem;
-
-  > *:last-of-type {
-    padding: 0.75rem 0 0;
-  }
 
   ${mq(Breakpoint.widish)} {
     ${({ expanded }) =>
@@ -393,107 +257,113 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
       <EntryListHead
         title={t('categories.location.title.plural') as string}
         expanded={expanded}
-        accentColor="var(--red)"
+        setExpanded={setMenuExpanded}
+        expandable={true}
       >
         <Link href={routes.createLocation({ locale })} passHref>
-          <ButtonLink size={ButtonSize.big} color={ButtonColor.white} icon="Plus">
+          <ButtonLink
+            size={ButtonSize.big}
+            color={ButtonColor.white}
+            icon="Plus"
+            onClick={() => setMenuExpanded(false)}
+          >
             {t('categories.location.form.create')}
           </ButtonLink>
         </Link>
       </EntryListHead>
-      <StyledEntryListBody>
-        <FiltersBox
-          isCollapsed={filtersBoxExpanded}
-          setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
-          expanded={expanded}
-          activeFiltersCount={activeFiltersCount}
+
+      <EntryListFiltersBox
+        isCollapsed={filtersBoxExpanded}
+        setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
+        expanded={expanded}
+        activeFiltersCount={activeFiltersCount}
+      >
+        <Select
+          label={t('categories.organizer.filters.status.label') as string}
+          id={`entry-filter-status-${pseudoUID}`}
+          value={filters?.status}
+          onChange={(e) => {
+            setCurrentPage(listName, 1);
+            dispatchFilters({
+              type: FiltersActions.set,
+              payload: {
+                key: 'status',
+                value: e.target.value !== '' ? e.target.value : undefined,
+              },
+            });
+          }}
         >
+          <option value="">{t('categories.organizer.filters.status.all')}</option>
+          <option value="published">{t('categories.organizer.filters.status.published')}</option>
+          <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
+        </Select>
+        <EntryListSort expanded={expanded}>
           <Select
-            label={t('categories.organizer.filters.status.label') as string}
-            id={`entry-filter-status-${pseudoUID}`}
-            value={filters?.status}
+            id={`entry-sort-${pseudoUID}`}
+            label={t('general.sort') as string}
             onChange={(e) => {
               setCurrentPage(listName, 1);
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: {
-                  key: 'status',
-                  value: e.target.value !== '' ? e.target.value : undefined,
-                },
-              });
+              setSortKey(listName, e.target.value);
             }}
+            value={sortKey}
+            labelPosition={
+              expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
+            }
           >
-            <option value="">{t('categories.organizer.filters.status.all')}</option>
-            <option value="published">{t('categories.organizer.filters.status.published')}</option>
-            <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
+            <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
+            <option value="createdAt">{t('categories.organizer.sort.created')}</option>
+            <option value="name">{t('categories.organizer.sort.name')}</option>
           </Select>
-          <EntryListSort expanded={expanded}>
-            <Select
-              id={`entry-sort-${pseudoUID}`}
-              label={t('general.sort') as string}
-              onChange={(e) => {
-                setCurrentPage(listName, 1);
-                setSortKey(listName, e.target.value);
-              }}
-              value={sortKey}
-              labelPosition={
-                expanded && isWidishOrWider ? SelectLabelPosition.left : SelectLabelPosition.top
-              }
-            >
-              <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
-              <option value="createdAt">{t('categories.organizer.sort.created')}</option>
-              <option value="name">{t('categories.organizer.sort.name')}</option>
-            </Select>
-            <RadioSwitch
-              value={order}
-              name={`entry-order-${pseudoUID}`}
-              onChange={(value) => {
-                setCurrentPage(listName, 1);
-                setOrder(listName, value as Order);
-              }}
-              options={[
-                {
-                  value: Order.ASC,
-                  label: t('general.ascending') as string,
-                  ariaLabel: t('general.ascendingAriaLabel') as string,
-                  icon: 'ArrowUp',
-                },
-                {
-                  value: Order.DESC,
-                  label: t('general.descending') as string,
-                  ariaLabel: t('general.descendingAriaLabel') as string,
-                  icon: 'ArrowDown',
-                },
-              ]}
-            />
-            <RadioSwitch
-              value={view}
-              name={`entry-view-${pseudoUID}`}
-              onChange={(value) => {
-                setView(listName, value as EntryListView);
-              }}
-              label={t('categories.organizer.view.label') as string}
-              labelPosition={
-                expanded && isWidishOrWider
-                  ? RadioSwitchLabelPosition.left
-                  : RadioSwitchLabelPosition.top
-              }
-              options={[
-                {
-                  value: EntryListView.cards,
-                  label: t('categories.organizer.view.cards') as string,
-                  icon: 'Grid',
-                },
-                {
-                  value: EntryListView.table,
-                  label: t('categories.organizer.view.table') as string,
-                  icon: 'AlignJustify',
-                },
-              ]}
-            />
-          </EntryListSort>
-        </FiltersBox>
-
+          <RadioSwitch
+            value={order}
+            name={`entry-order-${pseudoUID}`}
+            onChange={(value) => {
+              setCurrentPage(listName, 1);
+              setOrder(listName, value as Order);
+            }}
+            options={[
+              {
+                value: Order.ASC,
+                label: t('general.ascending') as string,
+                ariaLabel: t('general.ascendingAriaLabel') as string,
+                icon: 'ArrowUp',
+              },
+              {
+                value: Order.DESC,
+                label: t('general.descending') as string,
+                ariaLabel: t('general.descendingAriaLabel') as string,
+                icon: 'ArrowDown',
+              },
+            ]}
+          />
+          <RadioSwitch
+            value={view}
+            name={`entry-view-${pseudoUID}`}
+            onChange={(value) => {
+              setView(listName, value as EntryListView);
+            }}
+            label={t('categories.organizer.view.label') as string}
+            labelPosition={
+              expanded && isWidishOrWider
+                ? RadioSwitchLabelPosition.left
+                : RadioSwitchLabelPosition.top
+            }
+            options={[
+              {
+                value: EntryListView.cards,
+                label: t('categories.organizer.view.cards') as string,
+                icon: 'Grid',
+              },
+              {
+                value: EntryListView.table,
+                label: t('categories.organizer.view.table') as string,
+                icon: 'AlignJustify',
+              },
+            ]}
+          />
+        </EntryListSort>
+      </EntryListFiltersBox>
+      <StyledEntryListBody>
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded}>
             {cards && cards.length > 0 ? (

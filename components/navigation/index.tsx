@@ -1,10 +1,15 @@
-import { useMemo } from 'react';
+import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useContext, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
+import { useLocale } from '../../lib/routing';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
+import { HeaderBackLink } from './header/HeaderBackLink';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Menu, MenuData, MenuItemType, MenuItemButton, MenuItemFolder, MenuItemLink } from './Menu';
+import { NavigationContext } from './NavigationContext';
 
 export interface NavigationProps {
   menus: {
@@ -40,6 +45,12 @@ export const useNavigation = (
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const category = useCategory();
   const user = useUser();
+  const locale = useLocale();
+  const router = useRouter();
+
+  const isEntryPage = useMemo(() => router?.pathname === '/app/[category]/[id]/[sub]', [
+    router?.pathname,
+  ]);
 
   const menus = structure.menus.map((menuData) => {
     const { key, expandable, title } = menuData;
@@ -56,6 +67,14 @@ export const useNavigation = (
     const menuKey = category?.subMenuKey;
     return menuKey ? menus?.filter(({ key }) => key === menuKey)[0] : undefined;
   }, [category?.subMenuKey, menus]);
+
+  const customHeaderLink = useMemo(
+    () =>
+      isEntryPage && !isMidOrWider && category ? (
+        <HeaderBackLink href={category.routes.list({ locale })} title={category.title.plural} />
+      ) : undefined,
+    [isEntryPage, category, isMidOrWider, locale]
+  );
 
   const renderedHeaderMain = (
     <HeaderMain
@@ -74,6 +93,7 @@ export const useNavigation = (
       title={title}
       Link={Link}
       menuItems={structure.header.menuItems}
+      customLink={customHeaderLink}
     />
   );
 
@@ -81,4 +101,11 @@ export const useNavigation = (
     header: { main: renderedHeaderMain, secondary: renderedHeaderSecondary },
     sidebar: currentMenu?.menu,
   };
+};
+
+export const useNavigationOverlayVisible = (): boolean => {
+  const { menuExpanded } = useContext(NavigationContext);
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+
+  return menuExpanded && isMidOrWider;
 };

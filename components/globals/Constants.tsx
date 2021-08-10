@@ -6,12 +6,12 @@ export const CSSVars: React.FC = () => (
   <Global
     styles={css`
       html {
-        --white: #f9f9f9;
+        --white: #f8f8f8;
         --grey-200: #e6e6e6;
         --grey-350: #c8c8c8;
         --grey-400: #cbcbcb;
         --grey-600: #474747;
-        --black: #181818;
+        --black: #1a1a1a;
         --black-o25: rgba(17, 17, 17, 0.25);
         --black-o40: rgba(0, 0, 0, 0.4);
         --black-o70: rgba(17, 17, 17, 0.7);
