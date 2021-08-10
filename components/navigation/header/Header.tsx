@@ -4,7 +4,8 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/Wi
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
 import { HeaderMenuLink } from './HeaderMenuLink';
-import { User } from '../../user/useUser';
+import { User, WrappedUser } from '../../user/useUser';
+import { UserMenu } from './UserMenu';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -60,12 +61,27 @@ const HeaderMenuDivider = styled.div`
   width: 1px;
 `;
 
+const StyledHeaderUserMenu = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 0.75rem;
+  position: absolute;
+  top: 0.375rem;
+  right: 0;
+  z-index: 999;
+
+  ${mq(Breakpoint.mid)} {
+    top: 0.75rem;
+    position: fixed;
+    padding: 0 1.5rem;
+  }
+`;
+
 interface HeaderProps {
   title: string;
   Link: React.FC<{ children: React.ReactElement<HTMLAnchorElement> }>;
   menuItems: MenuItem[];
-  user: User;
-  userIsLoggedIn: boolean;
+  user: WrappedUser;
   customLink?: React.ReactElement;
 }
 
@@ -73,7 +89,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   title,
   Link,
   menuItems,
-  userIsLoggedIn,
+  user,
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
@@ -111,12 +127,17 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   return isMidOrWider ? (
     <StyledHeader>
       <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
-      {userIsLoggedIn && (
-        <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+      {user?.isLoggedIn && (
+        <>
+          <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+          <StyledHeaderUserMenu>
+            <UserMenu user={user} />
+          </StyledHeaderUserMenu>
+        </>
       )}
     </StyledHeader>
   ) : (
-    userIsLoggedIn && (
+    user?.isLoggedIn && (
       <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
     )
   );
@@ -126,6 +147,7 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
   title,
   Link,
   customLink,
+  user,
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
 
@@ -138,6 +160,11 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
   return (
     <StyledHeader isSecondary>
       <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
+      {user?.isLoggedIn && (
+        <StyledHeaderUserMenu>
+          <UserMenu user={user} />
+        </StyledHeaderUserMenu>
+      )}
     </StyledHeader>
   );
 };

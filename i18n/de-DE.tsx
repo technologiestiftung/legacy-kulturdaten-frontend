@@ -8,6 +8,11 @@ export const deDE: Localization = {
     open: () => 'anzeigen',
     close: () => 'ausblenden',
   },
+  userMenu: {
+    loggedIn: () => 'Angemeldet',
+    settings: () => 'Einstellungen',
+    logOut: () => 'Abmelden',
+  },
   forms: {
     required: () => 'Pflichtfeld',
     errors: {

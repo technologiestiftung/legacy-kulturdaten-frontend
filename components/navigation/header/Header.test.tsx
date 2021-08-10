@@ -1,4 +1,5 @@
 import { render } from '../../../lib/test-utils';
+import { WrappedUser } from '../../user/useUser';
 import { MenuItemType } from '../Menu';
 import { HeaderMain } from './Header';
 import { HeaderLink } from './HeaderLink';
@@ -12,8 +13,7 @@ test('Header renders', () => {
         { type: MenuItemType.link, action: { href: '#', title: 'Test' } },
         { type: MenuItemType.divider },
       ]}
-      user={undefined}
-      userIsLoggedIn={false}
+      user={{ isLoggedIn: false } as WrappedUser}
     />
   );
   expect(container).toMatchSnapshot();

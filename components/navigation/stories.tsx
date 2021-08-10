@@ -9,6 +9,7 @@ import { AppLayout } from '../layouts/AppLayout';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Button, ButtonColor, ButtonVariant } from '../button';
 import { MenuItemType } from './Menu';
+import { WrappedUser } from '../user/useUser';
 
 export default {
   title: 'Navigation',
@@ -281,8 +282,7 @@ export const HeaderStory: Story = () => (
     menuItems={testMenuStructure.header.menuItems}
     title="Kulturdaten.Berlin"
     Link={TestLink}
-    userIsLoggedIn={true}
-    user={undefined}
+    user={{ isLoggedIn: true } as WrappedUser}
   />
 );
 HeaderStory.storyName = 'Header';

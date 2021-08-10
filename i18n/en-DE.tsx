@@ -8,6 +8,11 @@ export const enDE: Localization = {
     open: () => 'show',
     close: () => 'hide',
   },
+  userMenu: {
+    loggedIn: () => 'Logged in',
+    settings: () => 'Settings',
+    logOut: () => 'Log out',
+  },
   forms: {
     required: () => 'required',
     errors: {

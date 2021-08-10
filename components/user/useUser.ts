@@ -22,6 +22,7 @@ const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undef
 
 export interface User {
   authToken: string;
+  email: string;
 }
 
 export type WrappedUser = {
