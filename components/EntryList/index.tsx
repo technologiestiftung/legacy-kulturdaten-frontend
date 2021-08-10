@@ -25,8 +25,3 @@ export interface EntryListProps<EntryType extends CategoryEntry> {
   };
   expanded: boolean;
 }
-
-export const EntryList = <EntryType extends CategoryEntry>({
-  title,
-  useList,
-}: EntryListProps<EntryType>): React.ReactElement<EntryListProps<EntryType>> => undefined;

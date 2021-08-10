@@ -1,4 +1,3 @@
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useContext, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';

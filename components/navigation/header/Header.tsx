@@ -46,33 +46,6 @@ const StyledHeaderMenuItems = styled.div`
   padding: 0.75rem 0.375rem;
 `;
 
-const StyledHeaderButton = styled.div`
-  padding: 0.375rem 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    padding: 0.75rem;
-  }
-`;
-
-const StyledExpandableButton = styled.button`
-  appearance: none;
-  border: none;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--black);
-  border-left: 1px solid var(--grey-400);
-  align-self: stretch;
-  width: 3.75rem;
-  cursor: pointer;
-  color: var(--white);
-
-  &:hover {
-    background: var(--grey-600);
-  }
-`;
-
 const StyledHeaderMenuItem = styled.div`
   flex-shrink: 0;
   padding: 0 0.375rem;

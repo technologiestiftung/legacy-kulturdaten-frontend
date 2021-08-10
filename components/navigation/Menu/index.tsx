@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import React, { useContext } from 'react';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { NavigationContext } from '../NavigationContext';
-import { MenuFolder } from './MenuFolder';
 import { MenuIcon, MenuIconName } from './MenuIcon';
 import { MenuLink, MenuLinkProps } from './MenuLink';
 import { MenuSection, MenuSectionVariant } from './MenuSection';
@@ -110,11 +109,6 @@ export const Menu: React.FC<MenuProps> = ({ menuData }: MenuProps) => {
                 {label}
               </Button>
             );
-          }
-
-          case MenuItemType.folder: {
-            const { label, menuKey } = action as MenuItemFolder;
-            return <MenuFolder label={label} menuKey={menuKey} />;
           }
 
           case MenuItemType.divider: {

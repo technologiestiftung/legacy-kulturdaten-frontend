@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { BodyLock, useBodyLock } from '../../lib/BodyLock';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { useBodyLock } from '../../lib/BodyLock';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
 import { mq, overlayStyles } from '../globals/Constants';

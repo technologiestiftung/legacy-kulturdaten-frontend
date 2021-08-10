@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Reducer, useEffect, useReducer, useState } from 'react';
-import { ChevronDown, Plus } from 'react-feather';
+import { ChevronDown } from 'react-feather';
 import {
   OrganizerSubjectTranslation,
   OrganizerType,

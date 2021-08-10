@@ -6,11 +6,7 @@ import { Global } from '../components/globals/Global';
 import { CSSVars } from '../components/globals/Constants';
 import { Typography } from '../components/globals/Typography';
 import { WindowContext, WindowContextProvider } from '../lib/WindowService';
-import {
-  NavigationContext,
-  NavigationContextProvider,
-} from '../components/navigation/NavigationContext';
-import { BodyLock } from '../lib/BodyLock';
+import { NavigationContextProvider } from '../components/navigation/NavigationContext';
 import { useContext } from 'react';
 import { EntryListContextProvider } from '../components/EntryList/EntryListContext';
 import { Categories } from '../config/categories';

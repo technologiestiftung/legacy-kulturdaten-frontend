@@ -1,15 +1,13 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { FormEvent, useContext, useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import { ButtonColor } from '../../../button';
 import { Input, InputType } from '../../../input';
 import { Category } from '../../../../lib/categories';
-import { Routes, routes } from '../../../../config/routes';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { useT } from '../../../../lib/i18n';
 import { useLocale } from '../../../../lib/routing';
 import { Breakpoint } from '../../../../lib/WindowService';
-import { NavigationContext } from '../../../navigation/NavigationContext';
 import { contentGrid, mq } from '../../../globals/Constants';
 
 const CreateWrapper = styled.div`
@@ -69,7 +67,6 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
-  const { setActiveMenuKey } = useContext(NavigationContext);
 
   const [formState, setFormState] = useState<{
     name: string;
@@ -92,7 +89,6 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
             if (resp.status === 200) {
               const id = resp.body.data.id;
 
-              setActiveMenuKey(category.subMenuKey);
               router.push(category.routes.list({ locale, query: { id, sub: 'info' } }));
             }
           } catch (e) {

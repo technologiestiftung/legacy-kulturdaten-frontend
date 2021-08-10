@@ -6,7 +6,7 @@ export interface BodyLockProps {
   setWindowScrollY: (windowScrollY: number) => void;
 }
 
-export const BodyLock: React.FC<BodyLockProps> = ({
+const BodyLock: React.FC<BodyLockProps> = ({
   locked,
   windowScrollY,
   setWindowScrollY,

@@ -10,7 +10,7 @@ import { MarkButton, MarkButtonFormat } from './MarkButton';
 import { BlockButton } from './BlockButton';
 import { Leaf } from './Leaf';
 import { Button, ButtonVariant, IconPosition } from '../button';
-import { contentGrid, mq } from '../globals/Constants';
+import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { PSvg } from '../assets/PSvg';
 import { H1Svg } from '../assets/H1Svg';
