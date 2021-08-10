@@ -163,9 +163,10 @@ export const EntryCardGrid = styled.div<{ expanded: boolean }>`
   grid-template-columns: auto;
   grid-column-gap: 0.75rem;
   grid-row-gap: 0.75rem;
-  padding: 0 0 2.25rem;
+  padding: 1.5rem 0.75rem 2.25rem;
 
   ${mq(Breakpoint.wide)} {
+    padding: 2.25rem 1.5rem 2.25rem;
     grid-row-gap: 1.5rem;
   }
 
@@ -177,6 +178,10 @@ export const EntryCardGrid = styled.div<{ expanded: boolean }>`
           ${mq(Breakpoint.widish)} {
             grid-column-gap: 1.5rem;
             grid-row-gap: 1.5rem;
+          }
+
+          ${mq(Breakpoint.ultra)} {
+            grid-template-columns: 1fr 1fr 1fr;
           }
         `
       : ''}

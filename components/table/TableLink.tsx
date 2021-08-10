@@ -43,7 +43,13 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
   ${({ isActive }) =>
     isActive
       ? css`
-          background: var(--grey-350);
+          background: var(--black);
+          color: var(--white);
+
+          &:hover {
+            background: var(--black);
+            color: var(--white);
+          }
 
           ${StyledTableLinkText} {
             text-decoration: underline;

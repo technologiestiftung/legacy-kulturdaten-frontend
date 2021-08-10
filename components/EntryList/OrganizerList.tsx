@@ -17,15 +17,13 @@ import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { NavigationContext } from '../navigation/NavigationContext';
-import { Select, SelectLabelPosition } from '../select';
+import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
 import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
-import { RadioSwitch, RadioSwitchLabelPosition } from '../RadioSwitch';
+import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
-import { mq } from '../globals/Constants';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
@@ -51,7 +49,7 @@ interface OrganizerListProps {
 }
 
 const StyledEntryListTable = styled.div`
-  padding: 1.5rem 0;
+  padding: 0 0 1.5rem;
 `;
 
 interface ListLinkProps {
@@ -84,7 +82,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
     setFiltersBoxExpanded,
     setLastEntryId,
   } = useContext(EntryListContext);
-  const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
   const pseudoUID = usePseudoUID();
 
   const typeOptions = useOrganizerTypeList();

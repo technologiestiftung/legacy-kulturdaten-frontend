@@ -8,7 +8,6 @@ const StyledTable = styled.div`
   display: grid;
   grid-template-columns: auto;
   row-gap: 0;
-  border-top: 1px solid var(--grey-400);
 `;
 
 const StyledRow = styled.div<{ columnCount: number; isTitleRow?: boolean; narrow?: boolean }>`
@@ -63,6 +62,10 @@ const StyledRowWrapper = styled.div<{ narrow?: boolean; isTitleRow?: boolean }>`
 
 const StyledRowContainer = styled.div<{ narrow?: boolean }>`
   padding: 0 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0 1.5rem;
+  }
 `;
 
 const StyledCell = styled.div<{
@@ -131,7 +134,6 @@ export const TableContextProvider: React.FC<TableContextProviderProps> = ({
 
 export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }: TableProps) => {
   const columnCount = columns.reduce((count, { width = 1 }) => count + width, 0);
-  // const columnCount = columns.length;
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   return (

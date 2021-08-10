@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
@@ -19,7 +18,6 @@ import { EntryCard, EntryCardGrid } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
@@ -45,7 +43,7 @@ interface OfferListProps {
 }
 
 const StyledEntryListTable = styled.div`
-  padding: 1.5rem 0;
+  padding: 0 0 1.5rem;
 `;
 
 interface ListLinkProps {
@@ -78,7 +76,6 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
     setFiltersBoxExpanded,
     setLastEntryId,
   } = useContext(EntryListContext);
-  const isWidishOrWider = useBreakpointOrWider(Breakpoint.widish);
   const pseudoUID = usePseudoUID();
 
   const listName = Categories.offer;

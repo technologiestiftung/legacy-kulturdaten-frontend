@@ -1,13 +1,19 @@
 import styled from '@emotion/styled';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
+import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonVariant, IconPosition } from '../button';
+import { mq } from '../globals/Constants';
 import { Select, SelectVariant } from '../select';
 
 const StyledEntryListPagination = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0.75rem 0;
+  padding: 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.5rem;
+  }
 `;
 
 const StyledEntryListPaginationInteractive = styled.div`
