@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
+import * as feather from 'react-feather';
 
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { css } from '@emotion/react';
+import React from 'react';
 
 const StyledA = styled.a<{ active?: boolean }>`
   color: inherit;
   text-decoration: none;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
   border: 1px solid var(--grey-400);
@@ -35,12 +38,12 @@ const StyledA = styled.a<{ active?: boolean }>`
           }
         `
       : ''}
+`;
 
+const StyledHeaderMenuLinkIcon = styled.div`
+  display: flex;
+  align-items: center;
   svg {
-    display: inline-block;
-    margin: 0 0.375rem 0 0;
-    padding: 0;
-    flex-shrink: 0;
     width: 1.125rem;
     height: 1.125rem;
   }
@@ -55,6 +58,8 @@ interface InternalMenuLinkProps {
   title: string;
   href: string;
   active?: boolean;
+  icon?: string;
+  onClick?: () => void;
 }
 
 export interface HeaderMenuLinkProps extends InternalMenuLinkProps {
@@ -65,14 +70,19 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   title,
   href,
   active,
+  icon,
+  onClick,
 }: InternalMenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active || isRouteActive;
 
   return (
     <Link href={href} passHref>
-      <StyledA title={title} active={linkIsActive}>
+      <StyledA title={title} active={linkIsActive} onClick={onClick}>
         <span>{title}</span>
+        {icon && (
+          <StyledHeaderMenuLinkIcon>{React.createElement(feather[icon])}</StyledHeaderMenuLinkIcon>
+        )}
       </StyledA>
     </Link>
   );

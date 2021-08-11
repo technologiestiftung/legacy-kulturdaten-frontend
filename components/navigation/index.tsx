@@ -76,19 +76,12 @@ export const useNavigation = (
   );
 
   const renderedHeaderMain = (
-    <HeaderMain
-      user={user?.user}
-      userIsLoggedIn={user?.isLoggedIn}
-      title={title}
-      Link={Link}
-      menuItems={structure.header.menuItems}
-    />
+    <HeaderMain user={user} title={title} Link={Link} menuItems={structure.header.menuItems} />
   );
 
   const renderedHeaderSecondary = isMidOrWider ? undefined : (
     <HeaderSecondary
-      user={user?.user}
-      userIsLoggedIn={user?.isLoggedIn}
+      user={user}
       title={title}
       Link={Link}
       menuItems={structure.header.menuItems}
