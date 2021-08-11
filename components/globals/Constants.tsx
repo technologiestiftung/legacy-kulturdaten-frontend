@@ -63,10 +63,9 @@ export const CSSVars: React.FC = () => (
 
         --overlay-opacity: 0.85;
 
-        --header-height: 3rem;
+        --header-height: 3.75rem;
 
         @media screen and (min-width: 768px) {
-          --header-height: 3.75rem;
           --font-size-600: 1.5rem;
           --line-height-600: 2.25rem;
           --font-size-700: 2rem;

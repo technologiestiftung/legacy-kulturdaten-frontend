@@ -147,7 +147,15 @@ export const UserMenu: React.FC<UserMenuProps> = () => {
 
   return (
     <StyledUserMenu ref={userMenuRef}>
-      <StyledUserMenuButton onClick={() => clickHandler()} visible={visible}>
+      <StyledUserMenuButton
+        onClick={() => clickHandler()}
+        visible={visible}
+        aria-label={
+          visible
+            ? (t('userMenu.ariaLabelClose') as string)
+            : (t('userMenu.ariaLabelOpen') as string)
+        }
+      >
         {visible ? <X /> : <User />}
       </StyledUserMenuButton>
       <StyledUserMenuDropdown visible={visible} animating={animating}>
@@ -158,7 +166,7 @@ export const UserMenu: React.FC<UserMenuProps> = () => {
           <HeaderMenuLink
             href={routes.userSettings({ locale })}
             title={t('userMenu.settings') as string}
-            icon="Settings"
+            icon="Sliders"
             onClick={() => clickHandler(false)}
           />
           <Button

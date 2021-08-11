@@ -4,6 +4,7 @@ import { CategoryEntry } from '../../lib/api/types/general';
 
 export const StyledEntryListBody = styled.div`
   background: var(--grey-200);
+  padding: 0 0 1.5rem;
 `;
 
 export interface EntryListProps<EntryType extends CategoryEntry> {
