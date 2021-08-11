@@ -91,9 +91,13 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
             content: '';
             display: block;
             position: relative;
-            height: var(--line-height-600);
+            height: var(--line-height-700);
             width: 20rem;
             background: var(--grey-350);
+
+            ${mq(Breakpoint.mid)} {
+              height: var(--line-height-600);
+            }
           }
         `
       : ''}
