@@ -45,7 +45,6 @@ const HeaderSlot = styled.div<{ locked: boolean }>`
   ${mq(Breakpoint.mid)} {
     padding-bottom: 0;
     box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.25);
-    position: ${({ locked }) => (locked ? 'fixed' : 'sticky')};
     top: 0;
     bottom: auto;
   }
@@ -121,7 +120,6 @@ const ContentSlot = styled.div<{ locked: boolean }>`
     min-height: var(--app-height);
     margin-top: var(--header-height);
     margin-bottom: 0;
-    margin-top: ${({ locked }) => (locked ? 'var(--header-height)' : '0')};
     grid-column: 4 / -1;
     grid-row: 1;
   }
