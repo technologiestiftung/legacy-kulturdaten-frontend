@@ -12,6 +12,8 @@ export const enDE: Localization = {
     loggedIn: () => 'Logged in',
     settings: () => 'Settings',
     logOut: () => 'Log out',
+    ariaTitleOpen: () => 'Show user menu',
+    ariaTitleClose: () => 'Hide user menu',
   },
   forms: {
     required: () => 'required',
@@ -63,6 +65,7 @@ export const enDE: Localization = {
     descending: () => 'descending',
     ascendingAriaLabel: () => 'Sort list ascending',
     descendingAriaLabel: () => 'Sort list descending',
+    options: () => 'Options',
   },
   tooltip: {
     open: () => 'open tooltip',

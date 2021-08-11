@@ -12,6 +12,8 @@ export const deDE: Localization = {
     loggedIn: () => 'Angemeldet',
     settings: () => 'Einstellungen',
     logOut: () => 'Abmelden',
+    ariaLabelOpen: () => 'Nutzer:innen Menü anzeigen',
+    ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
   },
   forms: {
     required: () => 'Pflichtfeld',
@@ -63,6 +65,7 @@ export const deDE: Localization = {
     descending: () => 'absteigend',
     ascendingAriaLabel: () => 'Liste aufsteigend sortieren',
     descendingAriaLabel: () => 'Liste absteigend sortieren',
+    options: () => 'Optionen',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
