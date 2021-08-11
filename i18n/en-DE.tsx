@@ -12,8 +12,8 @@ export const enDE: Localization = {
     loggedIn: () => 'Logged in',
     settings: () => 'Settings',
     logOut: () => 'Log out',
-    ariaTitleOpen: () => 'Show user menu',
-    ariaTitleClose: () => 'Hide user menu',
+    ariaLabelOpen: () => 'Show user menu',
+    ariaLabelClose: () => 'Hide user menu',
   },
   forms: {
     required: () => 'required',
