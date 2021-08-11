@@ -37,11 +37,14 @@ const StyledEntryListHeadTitleRowRight = styled.div`
 `;
 
 const StyledEntryListHeadTitle = styled.div`
-  text-decoration: underline;
-  padding: 0 0.75rem;
+  margin: 0 0.75rem;
+
+  span {
+    border-bottom: 0.125rem solid currentColor;
+  }
 
   ${mq(Breakpoint.wide)} {
-    padding: 0 1.5rem;
+    margin: 0 1.5rem;
   }
 `;
 
@@ -114,7 +117,9 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
     <StyledEntryListHead>
       <StyledEntryListHeadTop>
         <StyledEntryListHeadTitleRow>
-          <StyledEntryListHeadTitle>{title}</StyledEntryListHeadTitle>
+          <StyledEntryListHeadTitle>
+            <span>{title}</span>
+          </StyledEntryListHeadTitle>
           <StyledEntryListHeadTitleRowRight>
             {expanded && actionButton && (
               <StyledEntryListHeadActionButton expanded={expanded}>

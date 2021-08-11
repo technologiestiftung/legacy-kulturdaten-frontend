@@ -65,6 +65,8 @@ export const deDE: Localization = {
     descending: () => 'absteigend',
     ascendingAriaLabel: () => 'Liste aufsteigend sortieren',
     descendingAriaLabel: () => 'Liste absteigend sortieren',
+    expandList: () => 'Listenansicht vergrößern',
+    minimizeList: () => 'Listenansicht verkleinern',
     options: () => 'Optionen',
   },
   tooltip: {

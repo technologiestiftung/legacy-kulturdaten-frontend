@@ -28,10 +28,9 @@ const StyledEntryHeader = styled.div`
 const StyledEntryHeaderHead = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 1.5rem;
+  margin-top: 2.25rem;
 
   ${mq(Breakpoint.mid)} {
-    margin-top: 1.5rem;
     flex-direction: row;
     justify-content: space-between;
     grid-column: 1 / -1;
@@ -45,20 +44,25 @@ const StyledEntryHeaderHead = styled.div`
 
 const StyledEntryHeaderActions = styled.div`
   display: flex;
-  justify-content: flex-end;
-  order: -1;
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 2.25rem;
 
   ${mq(Breakpoint.mid)} {
-    order: 1;
-  }
-
-  ${mq(Breakpoint.widish)} {
-    margin-top: 0.375rem;
+    padding-top: 0;
+    flex-direction: row;
+    justify-content: flex-end;
   }
 `;
 
 const StyledEntryHeaderAction = styled.div`
-  margin: 0 0 0.75rem 0.75rem;
+  margin: 0 0 0.75rem;
+  display: flex;
+  flex-direction: column;
+
+  ${mq(Breakpoint.mid)} {
+    margin: 0 0 0.75rem 0.75rem;
+  }
 `;
 
 const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
@@ -67,16 +71,17 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
   font-weight: 700;
 
   ${mq(Breakpoint.mid)} {
+    grid-column: 1 / -1;
     font-size: var(--font-size-600);
     line-height: var(--line-height-600);
-    font-weight: 700;
-    grid-column: 1 / -1;
   }
 
   ${mq(Breakpoint.widish)} {
-    font-size: var(--font-size-700);
-    line-height: var(--line-height-700);
     grid-column: 2 / -2;
+  }
+
+  span {
+    border-bottom: 0.125rem solid currentColor;
   }
 
   ${({ skeleton }) =>
@@ -86,7 +91,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
             content: '';
             display: block;
             position: relative;
-            height: var(--line-height-700);
+            height: var(--line-height-600);
             width: 20rem;
             background: var(--grey-350);
           }
@@ -144,7 +149,7 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
     <StyledEntryHeader>
       <StyledEntryHeaderHead>
         <StyledEntryHeaderTitle skeleton={typeof title === 'undefined'}>
-          {title}
+          <span>{title}</span>
         </StyledEntryHeaderTitle>
         {actions && (
           <StyledEntryHeaderActions>

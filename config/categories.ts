@@ -81,10 +81,7 @@ export const useCategories: () => {
         { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
         { title: t('categories.organizer.tabs.preview') as string, sub: 'preview' },
       ],
-      metaLinks: [
-        { title: t('categories.organizer.metaLinks.rights') as string, icon: 'Users' },
-        { title: t('categories.organizer.metaLinks.export') as string, icon: 'Archive' },
-      ],
+      metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
         list: {
           route: ApiRoutes.organizerList,
@@ -158,10 +155,7 @@ export const useCategories: () => {
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
         { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
       ],
-      metaLinks: [
-        { title: t('categories.organizer.metaLinks.rights') as string, icon: 'Users' },
-        { title: t('categories.organizer.metaLinks.export') as string, icon: 'Archive' },
-      ],
+      metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
         list: {
           route: ApiRoutes.offerList,
@@ -211,10 +205,7 @@ export const useCategories: () => {
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
         { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
       ],
-      metaLinks: [
-        { title: t('categories.organizer.metaLinks.rights') as string, icon: 'Users' },
-        { title: t('categories.organizer.metaLinks.export') as string, icon: 'Archive' },
-      ],
+      metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
         list: {
           route: ApiRoutes.locationList,

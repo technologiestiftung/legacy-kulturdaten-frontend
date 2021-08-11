@@ -65,6 +65,8 @@ export const enDE: Localization = {
     descending: () => 'descending',
     ascendingAriaLabel: () => 'Sort list ascending',
     descendingAriaLabel: () => 'Sort list descending',
+    expandList: () => 'Expand list view',
+    minimizeList: () => 'Minimize list view',
     options: () => 'Options',
   },
   tooltip: {
