@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Maximize2, Minimize2 } from 'react-feather';
+import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 
@@ -36,6 +37,7 @@ const StyledEntryListHeadTitleRowRight = styled.div`
 `;
 
 const StyledEntryListHeadTitle = styled.div`
+  text-decoration: underline;
   padding: 0 0.75rem;
 
   ${mq(Breakpoint.wide)} {
@@ -106,6 +108,7 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
   expandable,
 }: EntryListHeadProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const t = useT();
 
   return (
     <StyledEntryListHead>
@@ -122,6 +125,11 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
               <div>
                 <StyledExpandableButton
                   onClick={() => (setExpanded ? setExpanded(!expanded) : undefined)}
+                  aria-label={
+                    expanded
+                      ? (t('general.minimizeList') as string)
+                      : (t('general.expandList') as string)
+                  }
                 >
                   {expanded ? <Minimize2 /> : <Maximize2 />}
                 </StyledExpandableButton>
