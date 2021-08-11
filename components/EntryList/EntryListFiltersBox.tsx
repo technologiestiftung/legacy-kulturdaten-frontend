@@ -21,13 +21,18 @@ const StyledFiltersBox = styled.div<{ expanded: boolean }>`
 `;
 
 const StyledFiltersBoxTitle = styled.div`
-  width: calc(100% - 3rem);
   border-bottom: 1px solid var(--grey-400);
   font-weight: 700;
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   padding: 1.125rem 0;
-  margin: 0 1.5rem;
+  margin: 0 0.75rem;
+  width: calc(100% - 1.5rem);
+
+  ${mq(Breakpoint.wide)} {
+    margin: 0 1.5rem;
+    width: calc(100% - 3rem);
+  }
 `;
 
 const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
@@ -50,9 +55,13 @@ export const StyledFilters = styled.div<{ expanded: boolean }>`
   ${({ expanded }) =>
     expanded
       ? css`
-          padding: 0.75rem 1.5rem;
+          padding: 0.75rem;
           flex-direction: row;
           align-items: flex-end;
+
+          ${mq(Breakpoint.wide)} {
+            padding: 0.75rem 1.5rem;
+          }
 
           > div {
             margin-right: 0.75rem;
