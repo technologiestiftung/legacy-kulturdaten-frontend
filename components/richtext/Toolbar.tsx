@@ -10,20 +10,20 @@ export enum ToolbarGroupWidth {
 }
 
 const StyledToolbar = styled.div`
-  position: sticky;
   top: 0;
   left: 0;
+  position: sticky;
   z-index: 1;
+  transition: transform var(--transition-duration);
 
-  &::after {
+  &::before {
     content: '';
     position: absolute;
     width: 100%;
     height: 25%;
     bottom: 0;
     left: 0;
-    z-index: -1;
-    box-shadow: 0px 2px 10px var(--black-o25);
+    box-shadow: 0px 1px 6px var(--black-o25);
     pointer-events: none;
   }
 `;

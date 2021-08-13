@@ -7,16 +7,15 @@ const StyledEntryFormHead = styled.div`
   justify-content: space-between;
   border-bottom: 1px solid var(--white);
   background: var(--white);
-  position: sticky;
-  top: 0;
-  left: 0;
+  position: relative;
+
   align-items: flex-end;
   flex-wrap: wrap;
   z-index: 1;
 
-  ${mq(Breakpoint.mid)} {
+  /* ${mq(Breakpoint.mid)} {
     top: var(--header-height);
-  }
+  } */
 `;
 
 const StyledEntryFormHeadTitle = styled.h2`
@@ -29,22 +28,22 @@ const StyledEntryFormHeadTitle = styled.h2`
   position: relative;
 `;
 
-const StyledEntryFormHeadBackground = styled.div`
-  position: absolute;
-  width: calc(100% + 1.5rem);
-  height: calc(100% + 1px);
-  left: -0.75rem;
-  top: 0;
-  background: var(--white);
+// const StyledEntryFormHeadBackground = styled.div`
+//   position: absolute;
+//   width: calc(100% + 1.5rem);
+//   height: calc(100% + 1px);
+//   left: -0.75rem;
+//   top: 0;
+//   background: var(--white);
 
-  ${mq(Breakpoint.mid)} {
-    border-left: none;
-  }
+//   ${mq(Breakpoint.mid)} {
+//     border-left: none;
+//   }
 
-  ${mq(Breakpoint.widish)} {
-    border-right: none;
-  }
-`;
+//   ${mq(Breakpoint.widish)} {
+//     border-right: none;
+//   }
+// `;
 
 const StyledEntryFormHeadBorder = styled.div`
   position: absolute;
@@ -74,7 +73,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   actions,
 }: EntryFormHeadProps) => (
   <StyledEntryFormHead>
-    <StyledEntryFormHeadBackground />
+    {/* <StyledEntryFormHeadBackground /> */}
     <StyledEntryFormHeadBorder />
     <StyledEntryFormHeadTitle>{title}</StyledEntryFormHeadTitle>
     {actions && (

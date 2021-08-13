@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, X } from 'react-feather';
 import { EntryFormProps } from '.';
 import { defaultLanguage, Language } from '../../../../config/locale';
@@ -10,7 +10,9 @@ import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organ
 import { useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
+import { WindowContext } from '../../../../lib/WindowService';
 import { Button, ButtonColor } from '../../../button';
+import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { useOverlay } from '../../../overlay';
 import { OverlayContainer } from '../../../overlay/OverlayContainer';
 import { OverlayTitleBar } from '../../../overlay/OverlayTitleBar';
@@ -18,11 +20,12 @@ import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
 
 const StyledDescription = styled.div`
-  display: grid;
-  column-gap: 0.75rem;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   border-bottom: 1px solid var(--grey-400);
   padding: 0.375rem 0;
+  /* position: sticky; */
+  /* top: 0; */
 `;
 
 const StyledDescriptionTitle = styled.div`
@@ -60,9 +63,19 @@ const StyledDescriptionStatusFlag = styled.div<{ descriptionExists: boolean }>`
   }
 `;
 
-const StyledDescriptionEditButton = styled.div`
-  justify-self: flex-end;
-  padding: 0.375rem 0;
+const StyledDescriptionRichTextWrapper = styled.div`
+  position: relative;
+  border: 1px solid var(--grey-400);
+  border-radius: 0.75rem;
+  max-height: calc(var(--app-height) - var(--header-height) - 8rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* box-shadow: inset 2px 2px 10px var(--black-o25); */
+  box-shadow: var(--shadow-inset);
+
+  @media screen and (min-height: 75rem) {
+    max-height: 63.25rem;
+  }
 `;
 
 interface DescriptionProps extends EntryFormProps {
@@ -81,6 +94,7 @@ export const Description: React.FC<DescriptionProps> = ({
   const mutateList = useMutateList(category);
   const t = useT();
   const [cachedApiText, setCachedApiText] = useState<string>();
+  const { rendered } = useContext(WindowContext);
 
   const entryTranslation = getTranslation<OrganizerTranslation>(
     language,
@@ -120,6 +134,12 @@ export const Description: React.FC<DescriptionProps> = ({
     [cachedApiText]
   );
 
+  const [delayed, setDelayed] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => setDelayed(true), 2000);
+  }, []);
+
   useEffect(() => {
     if (textFromApi !== cachedApiText) {
       setCachedApiText(textFromApi);
@@ -131,93 +151,85 @@ export const Description: React.FC<DescriptionProps> = ({
     }
   }, [initRichText, textFromApi, cachedApiText]);
 
-  const { renderedOverlay, setIsOpen } = useOverlay(
-    <OverlayContainer>
-      <OverlayTitleBar
-        title={title}
-        actions={[
-          <Button
-            key={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              initRichText(cachedApiText ? markdownToSlate(cachedApiText) : emptyRichTextValue);
-            }}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            disabled={pristine}
-            onClick={async () => {
-              try {
-                const resp = await call<OrganizerTranslationCreate>(
-                  category.api.translationCreate.factory,
-                  {
-                    translation: {
-                      ...entryTranslation,
-                      attributes: {
-                        description: serializedMarkdown,
-                        // set translation name in case it is not present. Necessary for API validation
-                        name:
-                          typeof entryTranslation?.attributes?.name === 'undefined'
-                            ? defaultTranslation?.attributes?.name
-                            : undefined,
-                        language,
-                      },
-                    },
-                    translationId: entryTranslation?.id,
-                    id: entry?.data?.id,
-                  }
-                );
-
-                if (resp.status === 200) {
-                  mutate();
-                  mutateList();
-                }
-              } catch (e) {
-                console.error(e);
-              }
-            }}
-          >
-            {t('categories.organizer.form.save')}
-          </Button>,
-        ]}
-      />
-      {renderedRichText}
-    </OverlayContainer>
-  );
-
   return (
     <StyledDescription>
-      <StyledDescriptionTitleStatus>
-        <StyledDescriptionTitle>{title}: </StyledDescriptionTitle>
-        <StyledDescriptionStatus descriptionExists={descriptionExists}>
-          {typeof descriptionExists !== 'undefined' && (
-            <StyledDescriptionStatusFlag descriptionExists={descriptionExists}>
-              <span>
-                {t(
-                  descriptionExists
-                    ? 'categories.organizer.form.descriptionExists'
-                    : 'categories.organizer.form.descriptionExistsNot'
-                )}
-              </span>
-              {descriptionExists ? <Check color="var(--black)" /> : <X color="var(--black)" />}
-            </StyledDescriptionStatusFlag>
-          )}
-        </StyledDescriptionStatus>
-      </StyledDescriptionTitleStatus>
-      <StyledDescriptionEditButton>
-        <Button onClick={() => setIsOpen(true)} icon="ArrowUpRight">
-          {t('categories.organizer.form.edit')}
-        </Button>
-      </StyledDescriptionEditButton>
-      <div>{renderedOverlay}</div>
+      {rendered && (
+        <>
+          <StyledDescriptionTitleStatus>
+            <StyledDescriptionTitle>{title}: </StyledDescriptionTitle>
+            <StyledDescriptionStatus descriptionExists={descriptionExists}>
+              {typeof descriptionExists !== 'undefined' && (
+                <StyledDescriptionStatusFlag descriptionExists={descriptionExists}>
+                  <span>
+                    {t(
+                      descriptionExists
+                        ? 'categories.organizer.form.descriptionExists'
+                        : 'categories.organizer.form.descriptionExistsNot'
+                    )}
+                  </span>
+                  {descriptionExists ? <Check color="var(--black)" /> : <X color="var(--black)" />}
+                </StyledDescriptionStatusFlag>
+              )}
+            </StyledDescriptionStatus>
+            <div>
+              <Button
+                key={0}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  initRichText(cachedApiText ? markdownToSlate(cachedApiText) : emptyRichTextValue);
+                }}
+                icon="XOctagon"
+                color={ButtonColor.yellow}
+                disabled={pristine}
+              >
+                {t('categories.organizer.form.editCancel')}
+              </Button>
+              <Button
+                key={1}
+                icon="CheckSquare"
+                color={ButtonColor.green}
+                disabled={pristine}
+                onClick={async () => {
+                  try {
+                    const resp = await call<OrganizerTranslationCreate>(
+                      category.api.translationCreate.factory,
+                      {
+                        translation: {
+                          ...entryTranslation,
+                          attributes: {
+                            description: serializedMarkdown,
+                            // set translation name in case it is not present. Necessary for API validation
+                            name:
+                              typeof entryTranslation?.attributes?.name === 'undefined'
+                                ? defaultTranslation?.attributes?.name
+                                : undefined,
+                            language,
+                          },
+                        },
+                        translationId: entryTranslation?.id,
+                        id: entry?.data?.id,
+                      }
+                    );
+
+                    if (resp.status === 200) {
+                      mutate();
+                      mutateList();
+                    }
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }}
+              >
+                {t('categories.organizer.form.save')}
+              </Button>
+            </div>
+          </StyledDescriptionTitleStatus>
+          <div>
+            <StyledDescriptionRichTextWrapper>{renderedRichText}</StyledDescriptionRichTextWrapper>
+          </div>
+        </>
+      )}
     </StyledDescription>
   );
 };
