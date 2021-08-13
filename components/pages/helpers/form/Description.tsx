@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, X } from 'react-feather';
 import { EntryFormProps } from '.';
 import { defaultLanguage, Language } from '../../../../config/locale';
@@ -11,11 +11,6 @@ import { useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { WindowContext } from '../../../../lib/WindowService';
-import { Button, ButtonColor } from '../../../button';
-import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
-import { useOverlay } from '../../../overlay';
-import { OverlayContainer } from '../../../overlay/OverlayContainer';
-import { OverlayTitleBar } from '../../../overlay/OverlayTitleBar';
 import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
 
@@ -83,12 +78,12 @@ interface DescriptionProps extends EntryFormProps {
   title: string;
 }
 
-export const Description: React.FC<DescriptionProps> = ({
+export const useDescription = ({
   category,
   query,
   language,
   title,
-}: DescriptionProps) => {
+}: DescriptionProps): { renderedDescription: React.ReactElement; submit: () => Promise<void> } => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -134,12 +129,6 @@ export const Description: React.FC<DescriptionProps> = ({
     [cachedApiText]
   );
 
-  const [delayed, setDelayed] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => setDelayed(true), 2000);
-  }, []);
-
   useEffect(() => {
     if (textFromApi !== cachedApiText) {
       setCachedApiText(textFromApi);
@@ -151,85 +140,72 @@ export const Description: React.FC<DescriptionProps> = ({
     }
   }, [initRichText, textFromApi, cachedApiText]);
 
-  return (
-    <StyledDescription>
-      {rendered && (
-        <>
-          <StyledDescriptionTitleStatus>
-            <StyledDescriptionTitle>{title}: </StyledDescriptionTitle>
-            <StyledDescriptionStatus descriptionExists={descriptionExists}>
-              {typeof descriptionExists !== 'undefined' && (
-                <StyledDescriptionStatusFlag descriptionExists={descriptionExists}>
-                  <span>
-                    {t(
-                      descriptionExists
-                        ? 'categories.organizer.form.descriptionExists'
-                        : 'categories.organizer.form.descriptionExistsNot'
+  return {
+    renderedDescription: (
+      <StyledDescription>
+        {rendered && (
+          <>
+            <StyledDescriptionTitleStatus>
+              <StyledDescriptionTitle>{title}: </StyledDescriptionTitle>
+              <StyledDescriptionStatus descriptionExists={descriptionExists}>
+                {typeof descriptionExists !== 'undefined' && (
+                  <StyledDescriptionStatusFlag descriptionExists={descriptionExists}>
+                    <span>
+                      {t(
+                        descriptionExists
+                          ? 'categories.organizer.form.descriptionExists'
+                          : 'categories.organizer.form.descriptionExistsNot'
+                      )}
+                    </span>
+                    {descriptionExists ? (
+                      <Check color="var(--black)" />
+                    ) : (
+                      <X color="var(--black)" />
                     )}
-                  </span>
-                  {descriptionExists ? <Check color="var(--black)" /> : <X color="var(--black)" />}
-                </StyledDescriptionStatusFlag>
-              )}
-            </StyledDescriptionStatus>
+                  </StyledDescriptionStatusFlag>
+                )}
+              </StyledDescriptionStatus>
+            </StyledDescriptionTitleStatus>
             <div>
-              <Button
-                key={0}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  initRichText(cachedApiText ? markdownToSlate(cachedApiText) : emptyRichTextValue);
-                }}
-                icon="XOctagon"
-                color={ButtonColor.yellow}
-                disabled={pristine}
-              >
-                {t('categories.organizer.form.editCancel')}
-              </Button>
-              <Button
-                key={1}
-                icon="CheckSquare"
-                color={ButtonColor.green}
-                disabled={pristine}
-                onClick={async () => {
-                  try {
-                    const resp = await call<OrganizerTranslationCreate>(
-                      category.api.translationCreate.factory,
-                      {
-                        translation: {
-                          ...entryTranslation,
-                          attributes: {
-                            description: serializedMarkdown,
-                            // set translation name in case it is not present. Necessary for API validation
-                            name:
-                              typeof entryTranslation?.attributes?.name === 'undefined'
-                                ? defaultTranslation?.attributes?.name
-                                : undefined,
-                            language,
-                          },
-                        },
-                        translationId: entryTranslation?.id,
-                        id: entry?.data?.id,
-                      }
-                    );
-
-                    if (resp.status === 200) {
-                      mutate();
-                      mutateList();
-                    }
-                  } catch (e) {
-                    console.error(e);
-                  }
-                }}
-              >
-                {t('categories.organizer.form.save')}
-              </Button>
+              <StyledDescriptionRichTextWrapper>
+                {renderedRichText}
+              </StyledDescriptionRichTextWrapper>
             </div>
-          </StyledDescriptionTitleStatus>
-          <div>
-            <StyledDescriptionRichTextWrapper>{renderedRichText}</StyledDescriptionRichTextWrapper>
-          </div>
-        </>
-      )}
-    </StyledDescription>
-  );
+          </>
+        )}
+      </StyledDescription>
+    ),
+    submit: async () => {
+      if (!pristine) {
+        try {
+          const resp = await call<OrganizerTranslationCreate>(
+            category.api.translationCreate.factory,
+            {
+              translation: {
+                ...entryTranslation,
+                attributes: {
+                  description: serializedMarkdown,
+                  // set translation name in case it is not present. Necessary for API validation
+                  name:
+                    typeof entryTranslation?.attributes?.name === 'undefined'
+                      ? defaultTranslation?.attributes?.name
+                      : undefined,
+                  language,
+                },
+              },
+              translationId: entryTranslation?.id,
+              id: entry?.data?.id,
+            }
+          );
+
+          if (resp.status === 200) {
+            mutate();
+            mutateList();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+  };
 };
