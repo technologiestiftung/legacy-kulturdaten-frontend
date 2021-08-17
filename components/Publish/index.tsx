@@ -36,7 +36,7 @@ const StyledPublishRequirements = styled.div`
   row-gap: 0.75rem;
   grid-column: 1 / -1;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.widish)} {
     grid-column: 1 / span 4;
     grid-template-columns: 1fr 1fr;
   }
@@ -50,7 +50,7 @@ const StyledPublishAction = styled.div`
   align-self: flex-end;
   align-items: center;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.widish)} {
     grid-column: 5 / span 2;
     grid-template-columns: 1fr 1fr;
   }
