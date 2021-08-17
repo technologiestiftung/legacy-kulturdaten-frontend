@@ -1,16 +1,17 @@
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
-import { useApiCall } from '../../../lib/api';
+import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerTranslationCreate } from '../../../lib/api/routes/organizer/translation/create';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
-import { PublishedStatus } from '../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
+import { DateFormat, useDate } from '../../../lib/date';
 import { useT } from '../../../lib/i18n';
-import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -20,11 +21,16 @@ import { EntryFormProps } from '../helpers/form';
 import { useDescription } from '../helpers/form/Description';
 import { useName } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { useEntryHeader } from '../helpers/useEntryHeader';
 
 const useNameForm = ({
   category,
   query,
-}: EntryFormProps): { renderedNameForm: React.ReactElement; submit: () => Promise<void> } => {
+}: EntryFormProps): {
+  renderedNameForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const t = useT();
 
   const {
@@ -51,6 +57,11 @@ const useNameForm = ({
     label: t('categories.organizer.form.nameEnglish') as string,
   });
 
+  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
+    pristineEnglish,
+    pristineGerman,
+  ]);
+
   return {
     renderedNameForm: (
       <div>
@@ -65,6 +76,7 @@ const useNameForm = ({
       onSubmitEnglish();
       onSubmitGerman();
     },
+    pristine,
   };
 };
 
@@ -78,23 +90,35 @@ const useDescriptionForm = ({
 }: EntryFormProps): {
   renderedDescriptionForm: React.ReactElement;
   submit: () => Promise<void>;
+  pristine: boolean;
 } => {
   const t = useT();
 
-  const { renderedDescription: renderedDescriptionGerman, submit: submitGerman } = useDescription({
+  const {
+    renderedDescription: renderedDescriptionGerman,
+    submit: submitGerman,
+    pristine: pristineGerman,
+  } = useDescription({
     category,
     query,
     language: Language.de,
     title: t('categories.organizer.form.descriptionGerman') as string,
   });
-  const { renderedDescription: renderedDescriptionEnglish, submit: submitEnglish } = useDescription(
-    {
-      category,
-      query,
-      language: Language.en,
-      title: t('categories.organizer.form.descriptionEnglish') as string,
-    }
-  );
+  const {
+    renderedDescription: renderedDescriptionEnglish,
+    submit: submitEnglish,
+    pristine: pristineEnglish,
+  } = useDescription({
+    category,
+    query,
+    language: Language.en,
+    title: t('categories.organizer.form.descriptionEnglish') as string,
+  });
+
+  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
+    pristineEnglish,
+    pristineGerman,
+  ]);
 
   return {
     renderedDescriptionForm: (
@@ -108,13 +132,18 @@ const useDescriptionForm = ({
       submitGerman();
       submitEnglish();
     },
+    pristine,
   };
 };
 
 const useLinksForm = ({
   category,
   query,
-}: EntryFormProps): { renderedForm: React.ReactElement; submit: () => Promise<void> } => {
+}: EntryFormProps): {
+  renderedForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -190,13 +219,18 @@ const useLinksForm = ({
         }
       }
     },
+    pristine,
   };
 };
 
 const useAddressForm = ({
   category,
   query,
-}: EntryFormProps): { renderedAddressForm: React.ReactElement; submit: () => Promise<void> } => {
+}: EntryFormProps): {
+  renderedAddressForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -325,13 +359,18 @@ const useAddressForm = ({
         }
       }
     },
+    pristine,
   };
 };
 
 const useContactForm = ({
   category,
   query,
-}: EntryFormProps): { renderedForm: React.ReactElement; submit: () => Promise<void> } => {
+}: EntryFormProps): {
+  renderedForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -427,6 +466,7 @@ const useContactForm = ({
         }
       }
     },
+    pristine,
   };
 };
 
@@ -434,23 +474,78 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
-  const { renderedNameForm, submit: submitNameForm } = useNameForm({ category, query });
-  const { renderedAddressForm, submit: submitAddressForm } = useAddressForm({ category, query });
-  const { renderedForm: renderedLinksForm, submit: submitLinksForm } = useLinksForm({
+  const { renderedNameForm, submit: submitNameForm, pristine: namePristine } = useNameForm({
     category,
     query,
   });
-  const { renderedForm: renderedContactForm, submit: submitContactForm } = useContactForm({
+  const {
+    renderedAddressForm,
+    submit: submitAddressForm,
+    pristine: addressPristine,
+  } = useAddressForm({ category, query });
+  const {
+    renderedForm: renderedLinksForm,
+    submit: submitLinksForm,
+    pristine: linksPristine,
+  } = useLinksForm({
     category,
     query,
   });
-  const { renderedDescriptionForm, submit: submitDescriptionForm } = useDescriptionForm({
+  const {
+    renderedForm: renderedContactForm,
+    submit: submitContactForm,
+    pristine: contactPristine,
+  } = useContactForm({
     category,
     query,
   });
+  const {
+    renderedDescriptionForm,
+    submit: submitDescriptionForm,
+    pristine: descriptionPristine,
+  } = useDescriptionForm({
+    category,
+    query,
+  });
+  const router = useRouter();
+
+  const { entry } = useEntry<CategoryEntry, ApiCall>(category, router?.query);
+
+  const renderedEntryHeader = useEntryHeader({ category, query });
+
+  const date = useDate();
+
+  const formattedDate = entry?.data?.attributes?.updatedAt
+    ? date(new Date(entry?.data?.attributes.updatedAt), DateFormat.dateTime)
+    : undefined;
+
+  const pristine = useMemo(
+    () =>
+      ![
+        namePristine,
+        addressPristine,
+        linksPristine,
+        contactPristine,
+        descriptionPristine,
+      ].includes(false),
+    [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
+  );
 
   return (
     <>
+      <Save
+        onClick={async () => {
+          submitNameForm();
+          submitAddressForm();
+          submitDescriptionForm();
+          submitLinksForm();
+          submitContactForm();
+        }}
+        date={formattedDate}
+        active={!pristine}
+      />
+
+      {renderedEntryHeader}
       <EntryFormWrapper>
         <EntryFormContainer>{renderedNameForm}</EntryFormContainer>
         <EntryFormContainer>{renderedDescriptionForm}</EntryFormContainer>
@@ -458,20 +553,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
         <EntryFormContainer>{renderedLinksForm}</EntryFormContainer>
         <EntryFormContainer>{renderedAddressForm}</EntryFormContainer>
       </EntryFormWrapper>
-      <Save>
-        <Button
-          onClick={async () => {
-            submitNameForm();
-            submitAddressForm();
-            submitDescriptionForm();
-            submitLinksForm();
-            submitContactForm();
-          }}
-        >
-          submit all
-        </Button>
-        <div>Alle aktualisierten Daten werden gespeichert.</div>
-      </Save>
     </>
   );
 };

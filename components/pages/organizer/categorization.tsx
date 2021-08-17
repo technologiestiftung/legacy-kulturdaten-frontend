@@ -17,6 +17,7 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { TypesSubjects } from '../../TypesSubjects';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { useEntryHeader } from '../helpers/useEntryHeader';
 
 interface EntryFormProps {
   category: Category;
@@ -206,11 +207,16 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
+  const renderedEntryHeader = useEntryHeader({ category, query });
+
   return (
-    <EntryFormWrapper>
-      <EntryFormContainer>
-        <ClassificationForm category={category} query={query} />
-      </EntryFormContainer>
-    </EntryFormWrapper>
+    <>
+      {renderedEntryHeader}
+      <EntryFormWrapper>
+        <EntryFormContainer>
+          <ClassificationForm category={category} query={query} />
+        </EntryFormContainer>
+      </EntryFormWrapper>
+    </>
   );
 };

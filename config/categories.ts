@@ -79,7 +79,6 @@ export const useCategories: () => {
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
         { title: t('categories.organizer.tabs.categorization') as string, sub: 'categorization' },
         { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
-        { title: t('categories.organizer.tabs.preview') as string, sub: 'preview' },
       ],
       metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
