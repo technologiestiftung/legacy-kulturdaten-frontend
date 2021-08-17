@@ -68,6 +68,9 @@ export const deDE: Localization = {
     expandList: () => 'Listenansicht vergrößern',
     minimizeList: () => 'Listenansicht verkleinern',
     options: () => 'Optionen',
+    save: () => 'speichern',
+    saving: () => 'speichert',
+    saved: () => 'gespeichert',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',

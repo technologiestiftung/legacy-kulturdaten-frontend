@@ -134,16 +134,17 @@ export const UserMenu: React.FC<UserMenuProps> = () => {
 
   useEffect(() => {
     const handle = (e: MouseEvent) => {
-      if (!userMenuRef.current.contains(e.target as Node)) {
+      if ((visible || animating) && !userMenuRef.current.contains(e.target as Node)) {
         clickHandler(false);
       }
     };
+
     document?.body.addEventListener('click', handle);
 
     return () => {
       document?.body.removeEventListener('click', handle);
     };
-  }, [clickHandler]);
+  }, [visible, animating, clickHandler]);
 
   return (
     <StyledUserMenu ref={userMenuRef}>
