@@ -12,19 +12,27 @@ import {
   useOrganizerTypeList,
 } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { Button, ButtonColor } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
+import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { TypesSubjects } from '../../TypesSubjects';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
+import { useSaveDate } from '../helpers/useSaveDate';
 
 interface EntryFormProps {
   category: Category;
   query: ParsedUrlQuery;
 }
 
-const ClassificationForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
+const useClassificationForm = ({
+  category,
+  query,
+}: EntryFormProps): {
+  renderedForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -115,107 +123,88 @@ const ClassificationForm: React.FC<EntryFormProps> = ({ category, query }: Entry
     }
   }, [typesSubjectsPristine, initialSubjects]);
 
-  return (
-    <div>
-      <EntryFormHead
-        title={t('categories.organizer.form.classification') as string}
-        actions={[
-          <Button
-            key={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setTypes(initialTypes);
-              setSubjects(initialSubjects);
-              setTypesSubjectsPristine(true);
-            }}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            onClick={async (e) => {
-              e.preventDefault();
+  return {
+    renderedForm: (
+      <div>
+        <EntryFormHead title={t('categories.organizer.form.classification') as string} />
+        <FormGrid>
+          <FormItem width={FormItemWidth.full}>
+            <TypesSubjects
+              options={typeOptions}
+              value={{ types, subjects }}
+              onChange={({ types, subjects }) => {
+                setTypes(types);
+                setSubjects(subjects);
+              }}
+              pristine={typesSubjectsPristine}
+              setPristine={setTypesSubjectsPristine}
+            />
+          </FormItem>
+        </FormGrid>
+      </div>
+    ),
+    submit: async () => {
+      try {
+        const validTypeOptions = typeOptions.filter((type) => types.includes(String(type.id)));
 
-              try {
-                const validTypeOptions = typeOptions.filter((type) =>
-                  types.includes(String(type.id))
-                );
+        const subs = subjects.filter((subject) => {
+          for (let i = 0; i < validTypeOptions.length; i += 1) {
+            const validSubjects = validTypeOptions[i].relations.subjects.map(
+              (subject) => subject.id
+            );
+            if (validSubjects.includes(parseInt(subject, 10))) {
+              return true;
+            }
+          }
 
-                const subs = subjects.filter((subject) => {
-                  for (let i = 0; i < validTypeOptions.length; i += 1) {
-                    const validSubjects = validTypeOptions[i].relations.subjects.map(
-                      (subject) => subject.id
-                    );
-                    if (validSubjects.includes(parseInt(subject, 10))) {
-                      return true;
-                    }
-                  }
+          return false;
+        });
 
-                  return false;
-                });
+        const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+          id: entry.data.id,
+          organizer: {
+            relations: {
+              types: types.map((type) => parseInt(type, 10)),
+              subjects: subs.map((subject) => parseInt(subject, 10)),
+              address: entry.data.relations.address,
+            },
+          },
+        });
 
-                const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                  id: entry.data.id,
-                  organizer: {
-                    relations: {
-                      types: types.map((type) => parseInt(type, 10)),
-                      subjects: subs.map((subject) => parseInt(subject, 10)),
-                      address: entry.data.relations.address,
-                    },
-                  },
-                });
-
-                if (resp.status === 200) {
-                  mutate();
-                  mutateList();
-                }
-              } catch (e) {
-                console.error(e);
-              }
-            }}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            disabled={!valid || pristine}
-          >
-            {t('categories.organizer.form.save')}
-          </Button>,
-        ]}
-      />
-      <FormGrid>
-        <FormItem width={FormItemWidth.full}>
-          <TypesSubjects
-            options={typeOptions}
-            value={{ types, subjects }}
-            onChange={({ types, subjects }) => {
-              setTypes(types);
-              setSubjects(subjects);
-            }}
-            pristine={typesSubjectsPristine}
-            setPristine={setTypesSubjectsPristine}
-          />
-        </FormItem>
-      </FormGrid>
-    </div>
-  );
+        if (resp.status === 200) {
+          mutate();
+          mutateList();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    pristine,
+  };
 };
 
 export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
+  const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
+  const formattedDate = useSaveDate(entry);
   const renderedEntryHeader = useEntryHeader({ category, query });
+
+  const { renderedForm, submit, pristine } = useClassificationForm({ category, query });
 
   return (
     <>
+      <Save
+        onClick={async () => {
+          submit();
+        }}
+        active={!pristine}
+        date={formattedDate}
+      />
       {renderedEntryHeader}
       <EntryFormWrapper>
-        <EntryFormContainer>
-          <ClassificationForm category={category} query={query} />
-        </EntryFormContainer>
+        <EntryFormContainer>{renderedForm}</EntryFormContainer>
       </EntryFormWrapper>
     </>
   );

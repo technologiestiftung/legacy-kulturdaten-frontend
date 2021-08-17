@@ -10,7 +10,6 @@ import { Address } from '../../../lib/api/types/address';
 import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
-import { DateFormat, useDate } from '../../../lib/date';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
@@ -22,6 +21,7 @@ import { useDescription } from '../helpers/form/Description';
 import { useName } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
+import { useSaveDate } from '../helpers/useSaveDate';
 
 const useNameForm = ({
   category,
@@ -513,11 +513,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const renderedEntryHeader = useEntryHeader({ category, query });
 
-  const date = useDate();
-
-  const formattedDate = entry?.data?.attributes?.updatedAt
-    ? date(new Date(entry?.data?.attributes.updatedAt), DateFormat.dateTime)
-    : undefined;
+  const formattedDate = useSaveDate(entry);
 
   const pristine = useMemo(
     () =>
