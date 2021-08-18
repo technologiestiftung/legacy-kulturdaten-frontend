@@ -1,26 +1,36 @@
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
-import { useApiCall } from '../../../lib/api';
+import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerTranslationCreate } from '../../../lib/api/routes/organizer/translation/create';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
-import { PublishedStatus } from '../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
+import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { useLinkList } from '../../linklist';
 import { EntryFormProps } from '../helpers/form';
-import { Description } from '../helpers/form/Description';
+import { useDescription } from '../helpers/form/Description';
 import { useName } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { useEntryHeader } from '../helpers/useEntryHeader';
+import { useSaveDate } from '../helpers/useSaveDate';
 
-const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
+const useNameForm = ({
+  category,
+  query,
+}: EntryFormProps): {
+  renderedNameForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const t = useT();
 
   const {
@@ -47,72 +57,93 @@ const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps)
     label: t('categories.organizer.form.nameEnglish') as string,
   });
 
-  return (
-    <div>
-      <EntryFormHead
-        title={t('categories.organizer.form.name') as string}
-        actions={[
-          <Button
-            key={0}
-            onClick={() => {
-              resetGerman();
-              resetEnglish();
-            }}
-            disabled={pristineEnglish && pristineGerman}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-          >
-            {t('categories.organizer.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            onClick={() => {
-              onSubmitEnglish();
-              onSubmitGerman();
-            }}
-            disabled={pristineEnglish && pristineGerman}
-          >
-            {t('categories.organizer.form.save')}
-          </Button>,
-        ]}
-      />
-      <FormGrid>
-        <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
-        <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
-      </FormGrid>
-    </div>
-  );
+  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
+    pristineEnglish,
+    pristineGerman,
+  ]);
+
+  return {
+    renderedNameForm: (
+      <div>
+        <EntryFormHead title={t('categories.organizer.form.name') as string} />
+        <FormGrid>
+          <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
+          <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
+        </FormGrid>
+      </div>
+    ),
+    submit: async () => {
+      onSubmitEnglish();
+      onSubmitGerman();
+    },
+    pristine,
+  };
 };
 
 const StyledDescriptionForm = styled.div`
   padding: 0 0 1.5rem;
 `;
 
-const DescriptionForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
+const useDescriptionForm = ({
+  category,
+  query,
+}: EntryFormProps): {
+  renderedDescriptionForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const t = useT();
 
-  return (
-    <StyledDescriptionForm>
-      <EntryFormHead title={t('categories.organizer.form.description') as string} />
-      <Description
-        category={category}
-        query={query}
-        language={Language.de}
-        title={t('categories.organizer.form.descriptionGerman') as string}
-      />
-      <Description
-        category={category}
-        query={query}
-        language={Language.en}
-        title={t('categories.organizer.form.descriptionEnglish') as string}
-      />
-    </StyledDescriptionForm>
-  );
+  const {
+    renderedDescription: renderedDescriptionGerman,
+    submit: submitGerman,
+    pristine: pristineGerman,
+  } = useDescription({
+    category,
+    query,
+    language: Language.de,
+    title: t('categories.organizer.form.descriptionGerman') as string,
+  });
+  const {
+    renderedDescription: renderedDescriptionEnglish,
+    submit: submitEnglish,
+    pristine: pristineEnglish,
+  } = useDescription({
+    category,
+    query,
+    language: Language.en,
+    title: t('categories.organizer.form.descriptionEnglish') as string,
+  });
+
+  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
+    pristineEnglish,
+    pristineGerman,
+  ]);
+
+  return {
+    renderedDescriptionForm: (
+      <StyledDescriptionForm>
+        <EntryFormHead title={t('categories.organizer.form.description') as string} />
+        {renderedDescriptionGerman}
+        {renderedDescriptionEnglish}
+      </StyledDescriptionForm>
+    ),
+    submit: async () => {
+      submitGerman();
+      submitEnglish();
+    },
+    pristine,
+  };
 };
 
-const LinksForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
+const useLinksForm = ({
+  category,
+  query,
+}: EntryFormProps): {
+  renderedForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -158,63 +189,48 @@ const LinksForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps
     }
   }, [init, linksFromApi, initialLinks]);
 
-  return (
-    <StyledDescriptionForm>
-      <EntryFormHead
-        title={t('categories.organizer.form.links') as string}
-        actions={[
-          <Button
-            key={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              init(linksFromApi);
-            }}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            disabled={pristine}
-            onClick={async (e) => {
-              e.preventDefault();
+  return {
+    renderedForm: (
+      <StyledDescriptionForm>
+        <EntryFormHead title={t('categories.organizer.form.links') as string} />
+        <FormGrid>
+          <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
+        </FormGrid>
+      </StyledDescriptionForm>
+    ),
+    submit: async () => {
+      if (!pristine) {
+        try {
+          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            organizer: {
+              relations: {
+                links,
+              },
+            },
+          });
 
-              try {
-                const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                  id: entry.data.id,
-                  organizer: {
-                    relations: {
-                      links,
-                    },
-                  },
-                });
-
-                if (resp.status === 200) {
-                  mutate();
-                  mutateList();
-                }
-              } catch (e) {
-                console.error(e);
-              }
-            }}
-          >
-            {t('categories.organizer.form.save')}
-          </Button>,
-        ]}
-      />
-      <FormGrid>
-        <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
-      </FormGrid>
-    </StyledDescriptionForm>
-  );
+          if (resp.status === 200) {
+            mutate();
+            mutateList();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+  };
 };
 
-const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
+const useAddressForm = ({
+  category,
+  query,
+}: EntryFormProps): {
+  renderedAddressForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -238,11 +254,91 @@ const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
 
   const t = useT();
 
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-
+  return {
+    renderedAddressForm: (
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+        }}
+      >
+        <EntryFormHead title={t('categories.organizer.form.address') as string} />
+        <FormGrid>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.street1') as string}
+              type={InputType.text}
+              value={address?.attributes?.street1 || ''}
+              onChange={(e) => {
+                setPristine(false);
+                setAddress({
+                  ...address,
+                  attributes: {
+                    ...address?.attributes,
+                    street1: e.target.value,
+                  },
+                });
+              }}
+              required={required}
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.street2') as string}
+              type={InputType.text}
+              value={address?.attributes?.street2 || ''}
+              onChange={(e) => {
+                setPristine(false);
+                setAddress({
+                  ...address,
+                  attributes: {
+                    ...address?.attributes,
+                    street2: e.target.value,
+                  },
+                });
+              }}
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.quarter}>
+            <Input
+              label={t('categories.organizer.form.zipCode') as string}
+              type={InputType.text}
+              value={address?.attributes?.zipCode || ''}
+              onChange={(e) => {
+                setPristine(false);
+                setAddress({
+                  ...address,
+                  attributes: {
+                    ...address?.attributes,
+                    zipCode: e.target.value,
+                  },
+                });
+              }}
+              required={required}
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
+            <Input
+              label={t('categories.organizer.form.city') as string}
+              type={InputType.text}
+              value={address?.attributes?.city || ''}
+              onChange={(e) => {
+                setPristine(false);
+                setAddress({
+                  ...address,
+                  attributes: {
+                    ...address?.attributes,
+                    city: e.target.value,
+                  },
+                });
+              }}
+              required={required}
+            />
+          </FormItem>
+        </FormGrid>
+      </form>
+    ),
+    submit: async () => {
+      if (!pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -261,114 +357,20 @@ const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
         } catch (e) {
           console.error(e);
         }
-      }}
-    >
-      <EntryFormHead
-        title={t('categories.organizer.form.address') as string}
-        actions={[
-          <Button
-            key={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setAddress(initialAddress);
-              setPristine(true);
-            }}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            type={ButtonType.submit}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.save')}
-          </Button>,
-        ]}
-      />
-      <FormGrid>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.street1') as string}
-            type={InputType.text}
-            value={address?.attributes?.street1 || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setAddress({
-                ...address,
-                attributes: {
-                  ...address?.attributes,
-                  street1: e.target.value,
-                },
-              });
-            }}
-            required={required}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.street2') as string}
-            type={InputType.text}
-            value={address?.attributes?.street2 || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setAddress({
-                ...address,
-                attributes: {
-                  ...address?.attributes,
-                  street2: e.target.value,
-                },
-              });
-            }}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.quarter}>
-          <Input
-            label={t('categories.organizer.form.zipCode') as string}
-            type={InputType.text}
-            value={address?.attributes?.zipCode || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setAddress({
-                ...address,
-                attributes: {
-                  ...address?.attributes,
-                  zipCode: e.target.value,
-                },
-              });
-            }}
-            required={required}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
-          <Input
-            label={t('categories.organizer.form.city') as string}
-            type={InputType.text}
-            value={address?.attributes?.city || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setAddress({
-                ...address,
-                attributes: {
-                  ...address?.attributes,
-                  city: e.target.value,
-                },
-              });
-            }}
-            required={required}
-          />
-        </FormItem>
-      </FormGrid>
-    </form>
-  );
+      }
+    },
+    pristine,
+  };
 };
 
-const ContactForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
+const useContactForm = ({
+  category,
+  query,
+}: EntryFormProps): {
+  renderedForm: React.ReactElement;
+  submit: () => Promise<void>;
+  pristine: boolean;
+} => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -386,11 +388,62 @@ const ContactForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
 
   const t = useT();
 
-  return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-
+  return {
+    renderedForm: (
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+        }}
+      >
+        <EntryFormHead title={t('categories.organizer.form.contact') as string} />
+        <FormGrid>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.email') as string}
+              type={InputType.email}
+              value={attributes?.email || ''}
+              onChange={(e) => {
+                setPristine(false);
+                setAttributes({
+                  ...attributes,
+                  email: e.target.value,
+                });
+              }}
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.half}>
+            <Input
+              label={t('categories.organizer.form.tel') as string}
+              type={InputType.tel}
+              value={attributes?.phone || ''}
+              onChange={(e) => {
+                setPristine(false);
+                setAttributes({
+                  ...attributes,
+                  phone: e.target.value,
+                });
+              }}
+            />
+          </FormItem>
+          <FormItem width={FormItemWidth.full}>
+            <Input
+              label={t('categories.organizer.form.website') as string}
+              type={InputType.url}
+              value={attributes?.homepage || ''}
+              onChange={(e) => {
+                setPristine(false);
+                setAttributes({
+                  ...attributes,
+                  homepage: e.target.value,
+                });
+              }}
+            />
+          </FormItem>
+        </FormGrid>
+      </form>
+    ),
+    submit: async () => {
+      if (!pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -411,105 +464,91 @@ const ContactForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
         } catch (e) {
           console.error(e);
         }
-      }}
-    >
-      <EntryFormHead
-        title={t('categories.organizer.form.contact') as string}
-        actions={[
-          <Button
-            key={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setAttributes(initialAttributes);
-              setPristine(true);
-            }}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            type={ButtonType.submit}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            disabled={pristine}
-          >
-            {t('categories.organizer.form.save')}
-          </Button>,
-        ]}
-      />
-      <FormGrid>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.email') as string}
-            type={InputType.email}
-            value={attributes?.email || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setAttributes({
-                ...attributes,
-                email: e.target.value,
-              });
-            }}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.half}>
-          <Input
-            label={t('categories.organizer.form.tel') as string}
-            type={InputType.tel}
-            value={attributes?.phone || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setAttributes({
-                ...attributes,
-                phone: e.target.value,
-              });
-            }}
-          />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Input
-            label={t('categories.organizer.form.website') as string}
-            type={InputType.url}
-            value={attributes?.homepage || ''}
-            onChange={(e) => {
-              setPristine(false);
-              setAttributes({
-                ...attributes,
-                homepage: e.target.value,
-              });
-            }}
-          />
-        </FormItem>
-      </FormGrid>
-    </form>
-  );
+      }
+    },
+    pristine,
+  };
 };
 
 export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
+  const { renderedNameForm, submit: submitNameForm, pristine: namePristine } = useNameForm({
+    category,
+    query,
+  });
+  const {
+    renderedAddressForm,
+    submit: submitAddressForm,
+    pristine: addressPristine,
+  } = useAddressForm({ category, query });
+  const {
+    renderedForm: renderedLinksForm,
+    submit: submitLinksForm,
+    pristine: linksPristine,
+  } = useLinksForm({
+    category,
+    query,
+  });
+  const {
+    renderedForm: renderedContactForm,
+    submit: submitContactForm,
+    pristine: contactPristine,
+  } = useContactForm({
+    category,
+    query,
+  });
+  const {
+    renderedDescriptionForm,
+    submit: submitDescriptionForm,
+    pristine: descriptionPristine,
+  } = useDescriptionForm({
+    category,
+    query,
+  });
+  const router = useRouter();
+
+  const { entry } = useEntry<CategoryEntry, ApiCall>(category, router?.query);
+
+  const renderedEntryHeader = useEntryHeader({ category, query });
+
+  const formattedDate = useSaveDate(entry);
+
+  const pristine = useMemo(
+    () =>
+      ![
+        namePristine,
+        addressPristine,
+        linksPristine,
+        contactPristine,
+        descriptionPristine,
+      ].includes(false),
+    [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
+  );
+
   return (
-    <EntryFormWrapper>
-      <EntryFormContainer>
-        <NameForm category={category} query={query} />
-      </EntryFormContainer>
-      <EntryFormContainer>
-        <DescriptionForm category={category} query={query} />
-      </EntryFormContainer>
-      <EntryFormContainer>
-        <ContactForm category={category} query={query} />
-      </EntryFormContainer>
-      <EntryFormContainer>
-        <LinksForm category={category} query={query} />
-      </EntryFormContainer>
-      <EntryFormContainer>
-        <AddressForm category={category} query={query} />
-      </EntryFormContainer>
-    </EntryFormWrapper>
+    <>
+      <Save
+        onClick={async () => {
+          submitNameForm();
+          submitAddressForm();
+          submitDescriptionForm();
+          submitLinksForm();
+          submitContactForm();
+        }}
+        date={formattedDate}
+        active={!pristine}
+      />
+
+      {renderedEntryHeader}
+      <EntryFormWrapper>
+        <EntryFormContainer>{renderedNameForm}</EntryFormContainer>
+        <EntryFormContainer>{renderedDescriptionForm}</EntryFormContainer>
+        <EntryFormContainer>{renderedContactForm}</EntryFormContainer>
+        <EntryFormContainer>{renderedLinksForm}</EntryFormContainer>
+        <EntryFormContainer>{renderedAddressForm}</EntryFormContainer>
+      </EntryFormWrapper>
+    </>
   );
 };

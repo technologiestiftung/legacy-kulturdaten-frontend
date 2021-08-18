@@ -68,6 +68,9 @@ export const enDE: Localization = {
     expandList: () => 'Expand list view',
     minimizeList: () => 'Minimize list view',
     options: () => 'Options',
+    save: () => 'save',
+    saving: () => 'saving',
+    saved: () => 'saved',
   },
   tooltip: {
     open: () => 'open tooltip',

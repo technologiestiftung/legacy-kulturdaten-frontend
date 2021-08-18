@@ -1,5 +1,12 @@
 import styled from '@emotion/styled';
-import { Editable, withReact, Slate, ReactEditor, RenderElementProps } from 'slate-react';
+import {
+  Editable,
+  withReact,
+  Slate,
+  ReactEditor,
+  RenderElementProps,
+  useFocused,
+} from 'slate-react';
 import { createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import React, { Ref, useCallback, useEffect, useMemo, useState } from 'react';
@@ -24,7 +31,7 @@ interface CustomRenderElementProps extends RenderElementProps {
 }
 
 const StyledRichText = styled.div`
-  background: var(--white);
+  /* background: var(--white); */
   min-height: 100%;
   flex-grow: 1;
   display: flex;
@@ -33,7 +40,7 @@ const StyledRichText = styled.div`
 `;
 
 const StyledEditableContainer = styled.div`
-  background: var(--white);
+  /* background: var(--white); */
   min-height: 100%;
   flex-grow: 1;
 `;
@@ -197,7 +204,6 @@ const RichText: React.FC<RichTextProps> = ({
               renderLeaf={renderLeaf}
               placeholder={placeholder || ''}
               spellCheck
-              autoFocus
             />
           </StyledEditable>
         </StyledEditableContainer>

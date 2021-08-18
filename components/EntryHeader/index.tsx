@@ -9,13 +9,11 @@ const StyledEntryHeader = styled.div`
   box-shadow: ${insetBorder(false, false, true)};
   grid-row-gap: 1.5rem;
 
-  padding: 0 0.75rem;
   ${contentGrid(1)}
 
   ${mq(Breakpoint.mid)} {
     grid-row-gap: 2.25rem;
     background: var(--white);
-    padding: 0 1.5rem;
 
     ${contentGrid(8)}
   }
@@ -30,7 +28,10 @@ const StyledEntryHeaderHead = styled.div`
   flex-direction: column;
   margin-top: 2.25rem;
 
+  padding: 0 0.75rem;
+
   ${mq(Breakpoint.mid)} {
+    padding: 0 1.5rem;
     flex-direction: row;
     justify-content: space-between;
     grid-column: 1 / -1;
@@ -38,6 +39,7 @@ const StyledEntryHeaderHead = styled.div`
 
   ${mq(Breakpoint.widish)} {
     margin-top: 3rem;
+    padding: 0;
     grid-column: 2 / -2;
   }
 `;
@@ -104,12 +106,17 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
 `;
 
 const StyledEntryHeaderStatusSlot = styled.div`
+  padding: 0 0.75rem;
+
   ${mq(Breakpoint.mid)} {
+    padding: 0 1.5rem;
+
     grid-column: 1 / -1;
   }
 
   ${mq(Breakpoint.widish)} {
     grid-column: 2 / -2;
+    padding: 0;
   }
 `;
 
@@ -124,11 +131,18 @@ const StyledEntryHeaderPublishSlot = styled.div`
 `;
 
 const StyledEntryHeaderTabsSlot = styled.div`
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0.75rem;
+
+  overflow: hidden;
+
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
   }
 
   ${mq(Breakpoint.widish)} {
+    margin-top: 1.5rem;
     grid-column: 2 / -2;
   }
 `;

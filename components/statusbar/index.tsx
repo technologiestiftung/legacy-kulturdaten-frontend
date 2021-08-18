@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Breakpoint } from '../../lib/WindowService';
 import { useT } from '../../lib/i18n';
 import { mq } from '../globals/Constants';
 import { PublishedStatus } from '../../lib/api/types/general';
@@ -49,12 +49,6 @@ const StyledStatusBarInfo = styled.div`
   }
 `;
 
-const StyledStatusBarInfoBold = styled.span`
-  font-weight: 700;
-`;
-
-const StyledStatusBarInfoDate = styled.span``;
-
 const statusBarStatuses: {
   [key in PublishedStatus]: { backgroundColor: string; textKey: string };
 } = {
@@ -86,21 +80,11 @@ interface StatusBarProps {
 export const StatusBar: React.FC<StatusBarProps> = ({ date, status }: StatusBarProps) => {
   const flag = useStatusBarFlag(status);
   const t = useT();
-  const midOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   return (
     <StyledStatusBar>
       <StatusBarLabel>{t('statusBar.status')}</StatusBarLabel>
-      <StyledStatusBarInfo>
-        {date && (
-          <>
-            <StyledStatusBarInfoBold>
-              {midOrWider ? t('statusBar.saved') : t('statusBar.savedShort')}
-            </StyledStatusBarInfoBold>{' '}
-            <StyledStatusBarInfoDate>{date}</StyledStatusBarInfoDate>
-          </>
-        )}
-      </StyledStatusBarInfo>
+      <StyledStatusBarInfo></StyledStatusBarInfo>
       {flag}
     </StyledStatusBar>
   );
