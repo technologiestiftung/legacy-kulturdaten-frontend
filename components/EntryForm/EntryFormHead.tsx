@@ -66,11 +66,13 @@ const StyledEntryFormHeadAction = styled.div`
 interface EntryFormHeadProps {
   title: string;
   actions?: React.ReactElement[];
+  valid?: boolean;
 }
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   title,
   actions,
+  valid,
 }: EntryFormHeadProps) => (
   <StyledEntryFormHead>
     {/* <StyledEntryFormHeadBackground /> */}
@@ -83,5 +85,6 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
         ))}
       </StyledEntryFormHeadActions>
     )}
+    {valid === false ? 'invalid' : ''}
   </StyledEntryFormHead>
 );

@@ -16,6 +16,7 @@ interface SetNameProps {
   setValue: (value: string) => void;
   name: string;
   required?: boolean;
+  valid?: boolean;
 }
 
 const Name: React.FC<SetNameProps> = ({
@@ -66,6 +67,7 @@ export const useName = <
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
   reset: () => void;
+  valid: boolean;
 } => {
   const { category, query, language, label } = props;
 
@@ -83,11 +85,19 @@ export const useName = <
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
 
+  useEffect(() => {
+    if (pristine && name !== value) {
+      setValue(name);
+    }
+  }, [pristine, name, value]);
+
   const required = useMemo(
     () =>
       entry?.data?.attributes?.status === PublishedStatus.published && language === defaultLanguage,
     [entry?.data?.attributes?.status, language]
   );
+
+  const valid = useMemo(() => required !== true || (value && value.length > 0), [required, value]);
 
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
@@ -129,6 +139,7 @@ export const useName = <
           onSubmit,
           name,
           required,
+          valid,
         }}
       />
     ),
@@ -138,5 +149,6 @@ export const useName = <
       setValue(name);
       setPristine(true);
     },
+    valid,
   };
 };

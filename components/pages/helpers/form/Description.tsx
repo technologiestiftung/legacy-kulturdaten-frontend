@@ -34,6 +34,7 @@ const StyledDescriptionRichTextWrapper = styled.div`
   max-height: calc(var(--app-height) - var(--header-height) - 8rem);
   overflow-y: auto;
   overflow-x: hidden;
+  mask-image: -webkit-radial-gradient(white, black);
   box-shadow: var(--shadow-inset);
 
   @media screen and (min-height: 75rem) {
