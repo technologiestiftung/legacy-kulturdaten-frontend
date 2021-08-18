@@ -92,7 +92,10 @@ export const useDescription = ({
   });
 
   const pristine = useMemo(() => {
-    return serializedMarkdown && cachedApiText && serializedMarkdown === cachedApiText;
+    return (
+      (serializedMarkdown && cachedApiText && serializedMarkdown === cachedApiText) ||
+      (!cachedApiText && !serializedMarkdown)
+    );
   }, [cachedApiText, serializedMarkdown]);
 
   useEffect(() => {
