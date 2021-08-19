@@ -11,7 +11,7 @@ import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { useLocale } from '../../../lib/routing';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -524,39 +524,14 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
   );
 
-  const locale = useLocale();
+  const message = "Sure 'bout that bra?";
 
-  useEffect(() => {
-    let warned = false;
-
-    const cb = (url: string) => {
-      console.log('ejoo', warned, `${router.asPath} -> ${url}`, router);
-      if (`/${locale}${router.asPath}` !== url && !warned && !pristine) {
-        warned = true;
-        // setWarned(true);
-        if (window.confirm("Sure 'bout that bra?")) {
-          nameReset();
-          addressReset();
-          descriptionReset();
-          contactReset();
-          return;
-        } else {
-          warned = false;
-          // setWarned(false);
-          router.events.emit('routeChangeError');
-          console.log('replace', router.asPath);
-          router.replace(router, router.asPath, { shallow: true });
-          throw 'routeChange aborted.';
-        }
-      }
-    };
-
-    router.events.on('routeChangeStart', cb);
-
-    return () => {
-      router.events.off('routeChangeStart', cb);
-    };
-  }, [locale, pristine, nameReset, router, addressReset, descriptionReset, contactReset]);
+  useConfirmExit(!pristine, message, () => {
+    nameReset();
+    addressReset();
+    descriptionReset();
+    contactReset();
+  });
 
   return (
     <>
