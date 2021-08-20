@@ -25,7 +25,8 @@ import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 
 type EntryFormHook = (
-  props: EntryFormProps
+  props: EntryFormProps,
+  loaded: boolean
 ) => {
   renderedForm: React.ReactElement;
   submit: () => Promise<void>;
@@ -34,7 +35,7 @@ type EntryFormHook = (
   valid: boolean;
 };
 
-const useNameForm: EntryFormHook = ({ category, query }) => {
+const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
   const t = useT();
 
   const {
@@ -68,7 +69,11 @@ const useNameForm: EntryFormHook = ({ category, query }) => {
     pristineGerman,
   ]);
 
-  const valid = useMemo(() => Boolean(validGerman && validEnglish), [validEnglish, validGerman]);
+  const valid = useMemo(() => !loaded || Boolean(validGerman && validEnglish), [
+    loaded,
+    validEnglish,
+    validGerman,
+  ]);
 
   return {
     renderedForm: (
@@ -97,7 +102,7 @@ const StyledDescriptionForm = styled.div`
   padding: 0 0 1.5rem;
 `;
 
-const useDescriptionForm: EntryFormHook = ({ category, query }) => {
+const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
   const t = useT();
   const { entry } = useEntry(category, query);
 
@@ -134,7 +139,10 @@ const useDescriptionForm: EntryFormHook = ({ category, query }) => {
     pristineGerman,
   ]);
 
-  const valid = useMemo(() => validGerman && validEnglish, [validEnglish, validGerman]);
+  const valid = useMemo(() => !loaded || (validGerman && validEnglish), [
+    validEnglish,
+    validGerman,
+  ]);
 
   return {
     renderedForm: (
@@ -157,7 +165,7 @@ const useDescriptionForm: EntryFormHook = ({ category, query }) => {
   };
 };
 
-const useLinksForm: EntryFormHook = ({ category, query }) => {
+const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -192,7 +200,7 @@ const useLinksForm: EntryFormHook = ({ category, query }) => {
     onChange: (updatedLinks) => {
       setLinks(updatedLinks);
     },
-    maxLinks: 20,
+    maxLinks: 3,
     required: false,
   });
 
@@ -207,7 +215,10 @@ const useLinksForm: EntryFormHook = ({ category, query }) => {
   return {
     renderedForm: (
       <StyledDescriptionForm>
-        <EntryFormHead title={`${t('categories.organizer.form.links') as string}`} valid={valid} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.links') as string}`}
+          valid={!loaded || valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
         </FormGrid>
@@ -235,12 +246,16 @@ const useLinksForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
-    valid,
+    reset: () => {
+      setLinksFromApi(initialLinks);
+      setLinks(initialLinks);
+      init(initialLinks);
+    },
+    valid: !loaded || valid,
   };
 };
 
-const useAddressForm: EntryFormHook = ({ category, query }) => {
+const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -266,11 +281,13 @@ const useAddressForm: EntryFormHook = ({ category, query }) => {
 
   const valid = useMemo(
     () =>
+      !loaded ||
       !required ||
       (address?.attributes?.street1?.length > 0 &&
         address?.attributes?.zipCode?.length > 0 &&
         address?.attributes?.city?.length > 0),
     [
+      loaded,
       address?.attributes?.city?.length,
       address?.attributes?.street1?.length,
       address?.attributes?.zipCode?.length,
@@ -395,7 +412,7 @@ const useAddressForm: EntryFormHook = ({ category, query }) => {
   };
 };
 
-const useContactForm: EntryFormHook = ({ category, query }) => {
+const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -411,17 +428,18 @@ const useContactForm: EntryFormHook = ({ category, query }) => {
   const phoneRef = useRef<HTMLInputElement>(null);
   const websiteRef = useRef<HTMLInputElement>(null);
 
-  const valid = useMemo(() => (validity ? !Object.values(validity).includes(false) : true), [
-    validity,
-  ]);
+  const valid = useMemo(
+    () => !loaded || (validity ? !Object.values(validity).includes(false) : true),
+    [loaded, validity]
+  );
 
   useEffect(() => {
     if (pristine) {
       setAttributes(initialAttributes);
       setValidity({
-        email: emailRef.current?.checkValidity(),
-        phone: phoneRef.current?.checkValidity(),
-        website: websiteRef.current?.checkValidity(),
+        email: emailRef.current?.value?.length === 0 || emailRef.current?.checkValidity(),
+        phone: websiteRef.current?.value?.length === 0 || phoneRef.current?.checkValidity(),
+        website: websiteRef.current?.value?.length === 0 || websiteRef.current?.checkValidity(),
       });
     }
   }, [pristine, initialAttributes]);
@@ -534,50 +552,71 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
+  const router = useRouter();
+
+  const { entry } = useEntry<CategoryEntry, ApiCall>(category, router?.query);
+
+  const loaded = useMemo(() => typeof entry !== 'undefined', [entry]);
+
   const {
     renderedForm: nameForm,
     submit: nameSubmit,
     pristine: namePristine,
     reset: nameReset,
     valid: nameValid,
-  } = useNameForm({
-    category,
-    query,
-  });
+  } = useNameForm(
+    {
+      category,
+      query,
+    },
+    loaded
+  );
   const {
     renderedForm: addressForm,
     submit: addressSubmit,
     pristine: addressPristine,
     reset: addressReset,
     valid: addressValid,
-  } = useAddressForm({ category, query });
-  const { renderedForm: linksForm, submit: linksSubmit, pristine: linksPristine } = useLinksForm({
-    category,
-    query,
-  });
+  } = useAddressForm({ category, query }, loaded);
+  const {
+    renderedForm: linksForm,
+    submit: linksSubmit,
+    pristine: linksPristine,
+    reset: linksReset,
+    valid: linksValid,
+  } = useLinksForm(
+    {
+      category,
+      query,
+    },
+    loaded
+  );
   const {
     renderedForm: contactForm,
     submit: contactSubmit,
     pristine: contactPristine,
     reset: contactReset,
     valid: contactValid,
-  } = useContactForm({
-    category,
-    query,
-  });
+  } = useContactForm(
+    {
+      category,
+      query,
+    },
+    loaded
+  );
   const {
     renderedForm: descriptionForm,
     submit: descriptionSubmit,
     pristine: descriptionPristine,
     reset: descriptionReset,
     valid: descriptionValid,
-  } = useDescriptionForm({
-    category,
-    query,
-  });
-  const router = useRouter();
-
-  const { entry } = useEntry<CategoryEntry, ApiCall>(category, router?.query);
+  } = useDescriptionForm(
+    {
+      category,
+      query,
+    },
+    loaded
+  );
 
   const renderedEntryHeader = useEntryHeader({ category, query });
 
@@ -596,8 +635,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   );
 
   const valid = useMemo(
-    () => ![nameValid, addressValid, contactValid, descriptionValid].includes(false),
-    [addressValid, contactValid, descriptionValid, nameValid]
+    () => ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false),
+    [addressValid, contactValid, descriptionValid, nameValid, linksValid]
   );
 
   const message = "Sure 'bout that bra?";
@@ -607,6 +646,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     addressReset();
     descriptionReset();
     contactReset();
+    linksReset();
   });
 
   return (
@@ -621,7 +661,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
         }}
         date={formattedDate}
         active={!pristine}
-        valid={valid}
+        valid={typeof entry === 'undefined' || valid}
       />
 
       {renderedEntryHeader}
