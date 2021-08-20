@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import styled from '@emotion/styled';
-import React, { Ref } from 'react';
+import React, { RefObject } from 'react';
 import { insetBorder } from '../globals/Constants';
 import { Label } from '../label';
 
@@ -86,7 +86,7 @@ interface ToolbarProps {
 }
 
 export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
-  ({ groups }: ToolbarProps, ref: Ref<HTMLDivElement>) => {
+  ({ groups }: ToolbarProps, ref: RefObject<HTMLDivElement>) => {
     return (
       <StyledToolbar ref={ref}>
         <StyledToolbarContainer>

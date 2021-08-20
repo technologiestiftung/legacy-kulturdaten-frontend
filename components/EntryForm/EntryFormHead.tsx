@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
-import { ExclamationMarkSvg } from '../assets/ExclamationMarkSvg';
+import { AlertSymbol } from '../assets/AlertSymbol';
 import { mq } from '../globals/Constants';
 
 const StyledEntryFormHead = styled.div`
@@ -8,14 +8,9 @@ const StyledEntryFormHead = styled.div`
   border-bottom: 1px solid var(--white);
   background: var(--white);
   position: relative;
-
   align-items: center;
   flex-wrap: wrap;
   z-index: 1;
-
-  /* ${mq(Breakpoint.mid)} {
-    top: var(--header-height);
-  } */
 `;
 
 const StyledEntryFormHeadTitle = styled.h2`
@@ -38,27 +33,15 @@ const StyledEntryFormHeadBorder = styled.div`
 
 const StyledEntryFormHeadAlert = styled.div`
   position: relative;
-  background: #f19203;
-  color: var(--white);
-  border-radius: 0.375rem;
-  line-height: 0;
   margin: 0 0.75rem 0 0;
-
-  svg {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
+  width: 1.5rem;
+  height: 1.5rem;
 
   ${mq(Breakpoint.widish)} {
     position: absolute;
-    top: 0.375rem;
-    left: -3rem;
+    top: 0.75rem;
+    left: -2.25rem;
     margin: 0;
-
-    svg {
-      width: 2.25rem;
-      height: 2.25rem;
-    }
   }
 `;
 
@@ -74,7 +57,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   <StyledEntryFormHead>
     {valid === false ? (
       <StyledEntryFormHeadAlert>
-        <ExclamationMarkSvg />
+        <AlertSymbol />
       </StyledEntryFormHeadAlert>
     ) : (
       ''

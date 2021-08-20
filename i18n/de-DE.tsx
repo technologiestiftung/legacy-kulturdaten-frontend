@@ -46,6 +46,9 @@ export const deDE: Localization = {
     saved: () => 'Gespeichert',
     savedShort: () => 'Gesp.',
   },
+  save: {
+    issues: () => 'Es sind Fehler in den Eingaben vorhanden.',
+  },
   general: {
     name: () => 'Bezeichnung',
     city: () => 'Stadt',

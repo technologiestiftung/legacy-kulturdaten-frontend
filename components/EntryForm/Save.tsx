@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
-import { AlertTriangle } from 'react-feather';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { AlertSymbol } from '../assets/AlertSymbol';
 import { AlertTriangleSvg } from '../assets/AlertTriangleSvg';
 import { CheckSvg } from '../assets/CheckSvg';
 import { UploadCloudSvg } from '../assets/UploadCloudSvg';
@@ -62,6 +62,31 @@ const StyledSaveContainer = styled.div`
     grid-column: 2 / -2;
     padding: 0;
   }
+`;
+
+const StyledSaveAlert = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+`;
+
+const StyledSaveAlertSymbol = styled.div`
+  position: relative;
+  margin: 0 0.75rem 0 0;
+  width: 1.5rem;
+  height: 1.5rem;
+
+  ${mq(Breakpoint.widish)} {
+    position: absolute;
+    top: 0;
+    left: -2.25rem;
+    margin: 0;
+  }
+`;
+
+const StyledSaveAlertText = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
 `;
 
 const StyledSaveDate = styled.div`
@@ -247,9 +272,12 @@ export const Save: React.FC<SaveProps> = ({
             )}
           </StyledSaveDate>
         ) : (
-          <div>
-            <AlertTriangle /> alert
-          </div>
+          <StyledSaveAlert>
+            <StyledSaveAlertSymbol>
+              <AlertSymbol />
+            </StyledSaveAlertSymbol>
+            <StyledSaveAlertText>{t('save.issues')}</StyledSaveAlertText>
+          </StyledSaveAlert>
         )}
         <StyledSaveButton
           onClick={() => {

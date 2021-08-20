@@ -46,6 +46,9 @@ export const enDE: Localization = {
     saved: () => 'Saved',
     savedShort: () => 'Saved',
   },
+  save: {
+    issues: () => 'There are issues with your inputs.',
+  },
   general: {
     name: () => 'name',
     city: () => 'city',
