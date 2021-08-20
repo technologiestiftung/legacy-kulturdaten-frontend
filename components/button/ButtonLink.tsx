@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { Ref } from 'react';
+import React, { RefObject } from 'react';
 import { Button, ButtonProps } from '.';
 
 const StyledA = styled.a`
@@ -14,7 +14,7 @@ interface ButtonLinkProps extends ButtonProps {
 
 // eslint-disable-next-line react/display-name
 export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  (props: ButtonLinkProps, ref: Ref<HTMLAnchorElement>) => (
+  (props: ButtonLinkProps, ref: RefObject<HTMLAnchorElement>) => (
     <StyledA ref={ref} href={props?.href}>
       <Button {...props} />
     </StyledA>

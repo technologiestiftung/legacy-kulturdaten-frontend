@@ -91,11 +91,7 @@ export const useName = <
     }
   }, [pristine, name, value]);
 
-  const required = useMemo(
-    () =>
-      entry?.data?.attributes?.status === PublishedStatus.published && language === defaultLanguage,
-    [entry?.data?.attributes?.status, language]
-  );
+  const required = useMemo(() => language === defaultLanguage, [language]);
 
   const valid = useMemo(() => required !== true || (value && value.length > 0), [required, value]);
 

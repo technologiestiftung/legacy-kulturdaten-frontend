@@ -1,7 +1,8 @@
 import { css, SerializedStyles } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { ChangeEvent, ChangeEventHandler, Ref, useState } from 'react';
+import React, { ChangeEvent, ChangeEventHandler, RefObject, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n';
+import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/validations';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { Label, StyledLabel } from '../label';
 
@@ -115,9 +116,57 @@ interface InputProps {
 
 // eslint-disable-next-line react/display-name
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  (props: InputProps, ref: Ref<HTMLInputElement>) => {
+  (props: InputProps, forwardedRef: RefObject<HTMLInputElement>) => {
     const [pristine, setPristine] = useState<boolean>(true);
+    const [normalized, setNormalized] = useState(true);
+
     const t = useT();
+
+    const internalRef = useRef<HTMLInputElement>(null);
+
+    const ref = forwardedRef || internalRef;
+
+    const normalizeStrings = () => {
+      switch (props?.type) {
+        case InputType.url: {
+          if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
+            if (!props?.value?.includes('://')) {
+              if (props?.value?.includes(':/')) {
+                props.onChange({
+                  target: {
+                    value: props.value.replace(':/', '://'),
+                  },
+                } as ChangeEvent<HTMLInputElement>);
+              } else if (typeof props?.onChange === 'function') {
+                props.onChange({
+                  target: {
+                    value: `http://${props.value}`,
+                  },
+                } as ChangeEvent<HTMLInputElement>);
+              }
+            }
+          }
+          break;
+        }
+
+        case InputType.tel: {
+          if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
+            props.onChange({
+              target: {
+                value: props.value.replace(/\+/g, '00').match(/[0-9]/g).join(''),
+              },
+            } as ChangeEvent<HTMLInputElement>);
+          }
+          break;
+        }
+
+        default: {
+          break;
+        }
+      }
+
+      setNormalized(true);
+    };
 
     return (
       <StyledInputContainer>
@@ -135,55 +184,38 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             <StyledInput
               {...props}
+              onChange={(e) => {
+                if (typeof props?.onChange === 'function') {
+                  props?.onChange(e);
+                }
+                setNormalized(false);
+              }}
               ref={ref}
               pristine={pristine}
               valid={props.valid}
               pattern={
                 props?.type === InputType.url
-                  ? '^(https?://)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$'
+                  ? urlRegExpString
                   : props?.type === InputType.email
-                  ? '[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}'
+                  ? emailRegExpString
+                  : props?.type === InputType.tel
+                  ? telRegExpString
                   : undefined
               }
               onBlur={() => {
                 setPristine(false);
+                normalizeStrings();
+              }}
+              onKeyDown={(e) => {
+                if (
+                  (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
+                  !normalized
+                ) {
+                  console.log(ref);
+                  e.preventDefault();
+                  normalizeStrings();
 
-                switch (props?.type) {
-                  case InputType.url: {
-                    if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
-                      if (!props?.value?.includes('://')) {
-                        if (props?.value?.includes(':/')) {
-                          props.onChange({
-                            target: {
-                              value: props.value.replace(':/', '://'),
-                            },
-                          } as ChangeEvent<HTMLInputElement>);
-                        } else if (typeof props?.onChange === 'function') {
-                          props.onChange({
-                            target: {
-                              value: `http://${props.value}`,
-                            },
-                          } as ChangeEvent<HTMLInputElement>);
-                        }
-                      }
-                    }
-                    break;
-                  }
-
-                  case InputType.tel: {
-                    if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
-                      props.onChange({
-                        target: {
-                          value: props.value.replace(/\+/g, '00').match(/[0-9]/g).join(''),
-                        },
-                      } as ChangeEvent<HTMLInputElement>);
-                    }
-                    break;
-                  }
-
-                  default: {
-                    break;
-                  }
+                  return true;
                 }
               }}
             />
