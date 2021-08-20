@@ -10,7 +10,7 @@ import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
-import { Translation } from './api/types/general';
+import { DefaultAttributes, Translation } from './api/types/general';
 import { OrganizerType } from './api/types/organizer';
 import { Route, useLocale } from './routing';
 
@@ -29,6 +29,7 @@ export interface CategoryEntryPage extends CategoryPage {
 
 export interface CategoryEntry {
   data: {
+    attributes?: DefaultAttributes;
     relations?: {
       translations?: Translation[];
     };

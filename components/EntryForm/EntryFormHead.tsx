@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
+import { ExclamationMarkSvg } from '../assets/ExclamationMarkSvg';
 import { mq } from '../globals/Constants';
 
 const StyledEntryFormHead = styled.div`
   display: flex;
-  justify-content: space-between;
   border-bottom: 1px solid var(--white);
   background: var(--white);
   position: relative;
 
-  align-items: flex-end;
+  align-items: center;
   flex-wrap: wrap;
   z-index: 1;
 
@@ -28,23 +28,6 @@ const StyledEntryFormHeadTitle = styled.h2`
   position: relative;
 `;
 
-// const StyledEntryFormHeadBackground = styled.div`
-//   position: absolute;
-//   width: calc(100% + 1.5rem);
-//   height: calc(100% + 1px);
-//   left: -0.75rem;
-//   top: 0;
-//   background: var(--white);
-
-//   ${mq(Breakpoint.mid)} {
-//     border-left: none;
-//   }
-
-//   ${mq(Breakpoint.widish)} {
-//     border-right: none;
-//   }
-// `;
-
 const StyledEntryFormHeadBorder = styled.div`
   position: absolute;
   width: 100%;
@@ -53,38 +36,50 @@ const StyledEntryFormHeadBorder = styled.div`
   border-bottom: 1px solid var(--grey-400);
 `;
 
-const StyledEntryFormHeadActions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  flex-grow: 1;
+const StyledEntryFormHeadAlert = styled.div`
   position: relative;
-`;
-const StyledEntryFormHeadAction = styled.div`
-  margin: 0.375rem 0 0.375rem 0.75rem;
+  background: #f19203;
+  color: var(--white);
+  border-radius: 0.375rem;
+  line-height: 0;
+  margin: 0 0.75rem 0 0;
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  ${mq(Breakpoint.widish)} {
+    position: absolute;
+    top: 0.375rem;
+    left: -3rem;
+    margin: 0;
+
+    svg {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
 `;
 
 interface EntryFormHeadProps {
   title: string;
-  actions?: React.ReactElement[];
   valid?: boolean;
 }
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   title,
-  actions,
   valid,
 }: EntryFormHeadProps) => (
   <StyledEntryFormHead>
-    {/* <StyledEntryFormHeadBackground /> */}
+    {valid === false ? (
+      <StyledEntryFormHeadAlert>
+        <ExclamationMarkSvg />
+      </StyledEntryFormHeadAlert>
+    ) : (
+      ''
+    )}
     <StyledEntryFormHeadBorder />
     <StyledEntryFormHeadTitle>{title}</StyledEntryFormHeadTitle>
-    {actions && (
-      <StyledEntryFormHeadActions>
-        {actions.map((action, index) => (
-          <StyledEntryFormHeadAction key={index}>{action}</StyledEntryFormHeadAction>
-        ))}
-      </StyledEntryFormHeadActions>
-    )}
-    {valid === false ? 'invalid' : ''}
   </StyledEntryFormHead>
 );

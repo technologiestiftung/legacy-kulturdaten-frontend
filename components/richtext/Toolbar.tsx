@@ -85,7 +85,7 @@ interface ToolbarProps {
   }[];
 }
 
-export const Toolbar: React.FC<ToolbarProps> = React.forwardRef(
+export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
   ({ groups }: ToolbarProps, ref: Ref<HTMLDivElement>) => {
     return (
       <StyledToolbar ref={ref}>

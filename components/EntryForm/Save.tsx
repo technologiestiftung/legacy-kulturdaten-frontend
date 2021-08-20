@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useEffect, useState } from 'react';
+import { AlertTriangle } from 'react-feather';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { AlertTriangleSvg } from '../assets/AlertTriangleSvg';
 import { CheckSvg } from '../assets/CheckSvg';
 import { UploadCloudSvg } from '../assets/UploadCloudSvg';
 import { contentGrid, mq } from '../globals/Constants';
@@ -123,7 +125,7 @@ const StyledSaveButton = styled.button<{ saving: boolean }>`
 `;
 
 const StyledSaveButtonText = styled.div`
-  padding: calc(0.5rem - 1px) 0.625rem;
+  padding: calc(0.5rem - 1px) calc(1rem - 1px);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
@@ -203,9 +205,15 @@ interface SaveProps {
   onClick: () => Promise<void>;
   date: string;
   active?: boolean;
+  valid?: boolean;
 }
 
-export const Save: React.FC<SaveProps> = ({ onClick, date, active = false }: SaveProps) => {
+export const Save: React.FC<SaveProps> = ({
+  onClick,
+  date,
+  active = false,
+  valid = true,
+}: SaveProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const t = useT();
 
@@ -230,13 +238,19 @@ export const Save: React.FC<SaveProps> = ({ onClick, date, active = false }: Sav
   return (
     <StyledSave>
       <StyledSaveContainer>
-        <StyledSaveDate>
-          {date && (
-            <>
-              {isMidOrWider ? t('statusBar.saved') : t('statusBar.savedShort')}: {date}
-            </>
-          )}
-        </StyledSaveDate>
+        {valid ? (
+          <StyledSaveDate>
+            {date && (
+              <>
+                {isMidOrWider ? t('statusBar.saved') : t('statusBar.savedShort')}: {date}
+              </>
+            )}
+          </StyledSaveDate>
+        ) : (
+          <div>
+            <AlertTriangle /> alert
+          </div>
+        )}
         <StyledSaveButton
           onClick={() => {
             if (!saving && typeof onClick === 'function') {
@@ -244,14 +258,20 @@ export const Save: React.FC<SaveProps> = ({ onClick, date, active = false }: Sav
               onClick();
             }
           }}
-          disabled={!active}
+          disabled={!active || !valid}
           saving={saving}
         >
           <StyledSaveButtonText>
-            {saving ? `${t('general.saving')}...` : active ? t('general.save') : t('general.saved')}
+            {!valid
+              ? 'not valid'
+              : saving
+              ? `${t('general.saving')}...`
+              : active
+              ? t('general.save')
+              : t('general.saved')}
           </StyledSaveButtonText>
           <StyledSaveButtonIcon saving={saving} active={saving || active}>
-            {saving || active ? <UploadCloudSvg /> : <CheckSvg />}
+            {!valid ? <AlertTriangleSvg /> : saving || active ? <UploadCloudSvg /> : <CheckSvg />}
             {/* <UploadCloudSvg /> */}
           </StyledSaveButtonIcon>
         </StyledSaveButton>

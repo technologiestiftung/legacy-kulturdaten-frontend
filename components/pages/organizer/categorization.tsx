@@ -12,6 +12,7 @@ import {
   useOrganizerTypeList,
 } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -32,6 +33,7 @@ const useClassificationForm = ({
   renderedForm: React.ReactElement;
   submit: () => Promise<void>;
   pristine: boolean;
+  reset: () => void;
 } => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const t = useT();
@@ -180,6 +182,11 @@ const useClassificationForm = ({
       }
     },
     pristine,
+    reset: () => {
+      setTypes(initialTypes);
+      setSubjects(initialSubjects);
+      setTypesSubjectsPristine(true);
+    },
   };
 };
 
@@ -191,7 +198,9 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const renderedEntryHeader = useEntryHeader({ category, query });
 
-  const { renderedForm, submit, pristine } = useClassificationForm({ category, query });
+  const { renderedForm, submit, pristine, reset } = useClassificationForm({ category, query });
+
+  useConfirmExit(!pristine, 'message', () => reset());
 
   return (
     <>

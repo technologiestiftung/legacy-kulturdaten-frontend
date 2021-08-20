@@ -13,7 +13,7 @@ interface ButtonLinkProps extends ButtonProps {
 }
 
 // eslint-disable-next-line react/display-name
-export const ButtonLink: React.FC<ButtonLinkProps> = React.forwardRef(
+export const ButtonLink = React.forwardRef<HTMLAnchorElement, ButtonLinkProps>(
   (props: ButtonLinkProps, ref: Ref<HTMLAnchorElement>) => (
     <StyledA ref={ref} href={props?.href}>
       <Button {...props} />

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -31,6 +31,7 @@ type EntryFormHook = (
   submit: () => Promise<void>;
   pristine: boolean;
   reset: () => void;
+  valid: boolean;
 };
 
 const useNameForm: EntryFormHook = ({ category, query }) => {
@@ -72,7 +73,7 @@ const useNameForm: EntryFormHook = ({ category, query }) => {
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={t('categories.organizer.form.name') as string} valid={valid} />
+        <EntryFormHead title={`${t('categories.organizer.form.name') as string}`} valid={valid} />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
@@ -88,6 +89,7 @@ const useNameForm: EntryFormHook = ({ category, query }) => {
       resetGerman();
       resetEnglish();
     },
+    valid,
   };
 };
 
@@ -97,26 +99,34 @@ const StyledDescriptionForm = styled.div`
 
 const useDescriptionForm: EntryFormHook = ({ category, query }) => {
   const t = useT();
+  const { entry } = useEntry(category, query);
+
+  const isPublished = entry?.data?.attributes?.status === PublishedStatus.published;
 
   const {
     renderedDescription: renderedDescriptionGerman,
     submit: submitGerman,
     pristine: pristineGerman,
+    valid: validGerman,
   } = useDescription({
     category,
     query,
     language: Language.de,
     title: t('categories.organizer.form.descriptionGerman') as string,
+    required: isPublished,
   });
+
   const {
     renderedDescription: renderedDescriptionEnglish,
     submit: submitEnglish,
     pristine: pristineEnglish,
+    valid: validEnglish,
   } = useDescription({
     category,
     query,
     language: Language.en,
     title: t('categories.organizer.form.descriptionEnglish') as string,
+    required: false,
   });
 
   const pristine = useMemo(() => pristineEnglish && pristineGerman, [
@@ -124,10 +134,15 @@ const useDescriptionForm: EntryFormHook = ({ category, query }) => {
     pristineGerman,
   ]);
 
+  const valid = useMemo(() => validGerman && validEnglish, [validEnglish, validGerman]);
+
   return {
     renderedForm: (
       <StyledDescriptionForm>
-        <EntryFormHead title={t('categories.organizer.form.description') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.description') as string}`}
+          valid={valid}
+        />
         {renderedDescriptionGerman}
         {renderedDescriptionEnglish}
       </StyledDescriptionForm>
@@ -138,6 +153,7 @@ const useDescriptionForm: EntryFormHook = ({ category, query }) => {
     },
     pristine,
     reset: () => undefined,
+    valid,
   };
 };
 
@@ -171,12 +187,13 @@ const useLinksForm: EntryFormHook = ({ category, query }) => {
     [links, initialLinks]
   );
 
-  const { renderedLinkList, init } = useLinkList({
+  const { renderedLinkList, init, valid } = useLinkList({
     links: links || [],
     onChange: (updatedLinks) => {
       setLinks(updatedLinks);
     },
     maxLinks: 20,
+    required: false,
   });
 
   useEffect(() => {
@@ -190,14 +207,14 @@ const useLinksForm: EntryFormHook = ({ category, query }) => {
   return {
     renderedForm: (
       <StyledDescriptionForm>
-        <EntryFormHead title={t('categories.organizer.form.links') as string} />
+        <EntryFormHead title={`${t('categories.organizer.form.links') as string}`} valid={valid} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
         </FormGrid>
       </StyledDescriptionForm>
     ),
     submit: async () => {
-      if (!pristine) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -219,6 +236,7 @@ const useLinksForm: EntryFormHook = ({ category, query }) => {
     },
     pristine,
     reset: () => undefined,
+    valid,
   };
 };
 
@@ -246,6 +264,20 @@ const useAddressForm: EntryFormHook = ({ category, query }) => {
 
   const t = useT();
 
+  const valid = useMemo(
+    () =>
+      !required ||
+      (address?.attributes?.street1?.length > 0 &&
+        address?.attributes?.zipCode?.length > 0 &&
+        address?.attributes?.city?.length > 0),
+    [
+      address?.attributes?.city?.length,
+      address?.attributes?.street1?.length,
+      address?.attributes?.zipCode?.length,
+      required,
+    ]
+  );
+
   return {
     renderedForm: (
       <form
@@ -253,7 +285,10 @@ const useAddressForm: EntryFormHook = ({ category, query }) => {
           e.preventDefault();
         }}
       >
-        <EntryFormHead title={t('categories.organizer.form.address') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.address') as string}`}
+          valid={valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
             <Input
@@ -330,7 +365,7 @@ const useAddressForm: EntryFormHook = ({ category, query }) => {
       </form>
     ),
     submit: async () => {
-      if (!pristine) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -356,6 +391,7 @@ const useAddressForm: EntryFormHook = ({ category, query }) => {
       setAddress(initialAddress);
       setPristine(true);
     },
+    valid,
   };
 };
 
@@ -369,9 +405,24 @@ const useContactForm: EntryFormHook = ({ category, query }) => {
   const [attributes, setAttributes] = useState<Organizer['data']['attributes']>(initialAttributes);
   const [pristine, setPristine] = useState(true);
 
+  const [validity, setValidity] = useState<{ [key: string]: boolean }>();
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const websiteRef = useRef<HTMLInputElement>(null);
+
+  const valid = useMemo(() => (validity ? !Object.values(validity).includes(false) : true), [
+    validity,
+  ]);
+
   useEffect(() => {
     if (pristine) {
       setAttributes(initialAttributes);
+      setValidity({
+        email: emailRef.current?.checkValidity(),
+        phone: phoneRef.current?.checkValidity(),
+        website: websiteRef.current?.checkValidity(),
+      });
     }
   }, [pristine, initialAttributes]);
 
@@ -384,7 +435,10 @@ const useContactForm: EntryFormHook = ({ category, query }) => {
           e.preventDefault();
         }}
       >
-        <EntryFormHead title={t('categories.organizer.form.contact') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.contact') as string}`}
+          valid={valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
             <Input
@@ -397,7 +451,11 @@ const useContactForm: EntryFormHook = ({ category, query }) => {
                   ...attributes,
                   email: e.target.value,
                 });
+                requestAnimationFrame(() =>
+                  setValidity({ ...validity, email: emailRef.current?.checkValidity() })
+                );
               }}
+              ref={emailRef}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -411,7 +469,11 @@ const useContactForm: EntryFormHook = ({ category, query }) => {
                   ...attributes,
                   phone: e.target.value,
                 });
+                requestAnimationFrame(() =>
+                  setValidity({ ...validity, phone: phoneRef.current?.checkValidity() })
+                );
               }}
+              ref={phoneRef}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
@@ -425,14 +487,18 @@ const useContactForm: EntryFormHook = ({ category, query }) => {
                   ...attributes,
                   homepage: e.target.value,
                 });
+                requestAnimationFrame(() =>
+                  setValidity({ ...validity, website: websiteRef.current?.checkValidity() })
+                );
               }}
+              ref={websiteRef}
             />
           </FormItem>
         </FormGrid>
       </form>
     ),
     submit: async () => {
-      if (!pristine) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -460,6 +526,7 @@ const useContactForm: EntryFormHook = ({ category, query }) => {
       setAttributes(initialAttributes);
       setPristine(true);
     },
+    valid,
   };
 };
 
@@ -472,6 +539,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     submit: nameSubmit,
     pristine: namePristine,
     reset: nameReset,
+    valid: nameValid,
   } = useNameForm({
     category,
     query,
@@ -481,6 +549,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     submit: addressSubmit,
     pristine: addressPristine,
     reset: addressReset,
+    valid: addressValid,
   } = useAddressForm({ category, query });
   const { renderedForm: linksForm, submit: linksSubmit, pristine: linksPristine } = useLinksForm({
     category,
@@ -491,6 +560,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     submit: contactSubmit,
     pristine: contactPristine,
     reset: contactReset,
+    valid: contactValid,
   } = useContactForm({
     category,
     query,
@@ -500,6 +570,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     submit: descriptionSubmit,
     pristine: descriptionPristine,
     reset: descriptionReset,
+    valid: descriptionValid,
   } = useDescriptionForm({
     category,
     query,
@@ -524,6 +595,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
   );
 
+  const valid = useMemo(
+    () => ![nameValid, addressValid, contactValid, descriptionValid].includes(false),
+    [addressValid, contactValid, descriptionValid, nameValid]
+  );
+
   const message = "Sure 'bout that bra?";
 
   useConfirmExit(!pristine, message, () => {
@@ -545,6 +621,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
         }}
         date={formattedDate}
         active={!pristine}
+        valid={valid}
       />
 
       {renderedEntryHeader}

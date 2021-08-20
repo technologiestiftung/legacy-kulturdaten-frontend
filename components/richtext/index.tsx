@@ -1,17 +1,10 @@
 import styled from '@emotion/styled';
-import {
-  Editable,
-  withReact,
-  Slate,
-  ReactEditor,
-  RenderElementProps,
-  useFocused,
-} from 'slate-react';
+import { Editable, withReact, Slate, ReactEditor, RenderElementProps } from 'slate-react';
 import { createEditor } from 'slate';
 import { withHistory } from 'slate-history';
 import React, { Ref, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { CustomDescendant, CustomElement, ElementType, Element } from './Element';
+import { CustomDescendant, CustomElement, ElementType, Element, CustomText } from './Element';
 import { Toolbar, ToolbarGroupWidth } from './Toolbar';
 import { MarkButton, MarkButtonFormat } from './MarkButton';
 import { BlockButton } from './BlockButton';
@@ -68,6 +61,8 @@ type RichTextProps = {
   contentRef?: Ref<HTMLDivElement>;
   intValue: CustomDescendant[];
   setIntValue: (value: CustomDescendant[]) => void;
+  required?: boolean;
+  valid: boolean;
 };
 
 export const emptyRichTextValue = [{ type: ElementType.paragraph, children: [{ text: '' }] }];
@@ -78,6 +73,7 @@ const RichText: React.FC<RichTextProps> = ({
   contentRef,
   intValue,
   setIntValue,
+  valid,
 }: RichTextProps) => {
   const renderElement = useCallback(
     (props: CustomRenderElementProps) => <Element {...props} />,
@@ -212,19 +208,57 @@ const RichText: React.FC<RichTextProps> = ({
   );
 };
 
+const hasDescendantText = (descendant: CustomDescendant): boolean => {
+  if ((descendant as CustomText).text?.length > 0) {
+    return true;
+  }
+
+  if ((descendant as CustomElement).children?.length > 0) {
+    const children = (descendant as CustomElement).children;
+
+    for (let i = 0; i < children.length; i += 1) {
+      if (hasDescendantText(children[i])) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+const haveDescendantsText = (descendants: CustomDescendant[]): boolean => {
+  if (descendants && descendants.length > 0) {
+    for (let i = 0; i < descendants.length; i += 1) {
+      if (hasDescendantText(descendants[i])) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
 export const useRichText = (
-  props: Pick<RichTextProps, 'value' | 'placeholder' | 'onChange' | 'contentRef'>
+  props: Pick<RichTextProps, 'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required'>
 ): {
   renderedRichText: React.ReactElement<RichTextProps>;
   init: (value: RichTextProps['value']) => void;
+  valid: boolean;
 } => {
   const [intValue, setIntValue] = useState<CustomDescendant[]>(emptyRichTextValue);
 
+  const hasText = useMemo(() => haveDescendantsText(intValue), [intValue]);
+
+  const valid = useMemo(() => props.required !== true || hasText, [hasText, props?.required]);
+
   return {
-    renderedRichText: <RichText {...props} intValue={intValue} setIntValue={setIntValue} />,
+    renderedRichText: (
+      <RichText {...props} intValue={intValue} setIntValue={setIntValue} valid={valid} />
+    ),
     init: (value) => {
       setIntValue(value);
     },
+    valid,
   };
 };
 

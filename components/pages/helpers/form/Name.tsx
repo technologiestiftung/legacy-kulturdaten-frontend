@@ -102,7 +102,7 @@ export const useName = <
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
 
-    if (!pristine) {
+    if (valid && !pristine) {
       try {
         const resp = await call<TranslationCreateCallType>(category.api.translationCreate.factory, {
           translation: {

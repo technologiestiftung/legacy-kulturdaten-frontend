@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useLocale } from './routing';
+import { WindowContext } from './WindowService';
 
 export const useConfirmExit = (
   shouldWarn: boolean,
@@ -9,6 +10,7 @@ export const useConfirmExit = (
 ): void => {
   const locale = useLocale();
   const router = useRouter();
+  const { rendered } = useContext(WindowContext);
 
   useEffect(() => {
     let warned = false;
@@ -26,7 +28,7 @@ export const useConfirmExit = (
     window.addEventListener('beforeunload', beforeUnload);
 
     const routeChangeHandler = (url: string) => {
-      if (`/${locale}${router.asPath}` !== url && shouldWarn && !warned) {
+      if (rendered && `/${locale}${router.asPath}` !== url && shouldWarn && !warned) {
         warned = true;
 
         if (window.confirm(message)) {
@@ -74,5 +76,5 @@ export const useConfirmExit = (
         return true;
       });
     };
-  }, [locale, message, onAbort, router, shouldWarn]);
+  }, [rendered, locale, message, onAbort, router, shouldWarn]);
 };
