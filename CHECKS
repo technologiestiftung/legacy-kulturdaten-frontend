@@ -1,1 +1,5 @@
-/api/health OK
+WAIT=10
+TIMEOUT=60
+ATTEMPTS=5
+
+/
