@@ -48,6 +48,12 @@ export const deDE: Localization = {
   },
   save: {
     issues: () => 'Es sind Fehler in den Eingaben vorhanden.',
+    issuesShort: () => 'Fehlerhafte Felder',
+    invalid: () => 'Fehler vorhanden',
+    hint: () => 'Es gibt noch Felder, die ausgefüllt werden sollten.',
+    hintShort: () => 'Leere Felder',
+    confirmExit: () =>
+      'Es gibt ungespeicherte Änderungen auf dieser Seite. Beim Verlassen gehen diese verloren. Wollen Sie die Seite trotzdem verlassen?',
   },
   general: {
     name: () => 'Bezeichnung',
@@ -84,7 +90,7 @@ export const deDE: Localization = {
     addNew: () => 'Neuen Link hinzufügen',
     maxLinks: ({ amount }) => `maximal ${amount} Links`,
     maxReached: ({ amount }) =>
-      `Das Maximum von ${amount} Links ist erreicht. Mehr Links können nicht hinzugefügt werden. Aber bestehende Links können verändert oder gelöscht werden.`,
+      `Das Maximum von ${amount} Links ist erreicht. Mehr Links können nicht hinzugefügt werden. Bestehende Links können aber verändert oder gelöscht werden.`,
   },
   richText: {
     history: () => 'Verlauf',
@@ -162,7 +168,7 @@ export const deDE: Localization = {
         descriptionGermanSimple: () => 'Deutsch: einfache Sprache',
         descriptionEnglish: () => 'Englisch',
         descriptionEnglishSimple: () => 'Englisch: einfache Sprache',
-        classification: () => 'Einordnung',
+        classification: () => 'Art und Sparte (min. 1 Art notwendig)',
         type: () => 'Typ(en)',
         subjects: () => 'Sparte(n)',
         chooseTypeFirst: () => 'Bitte zunächst Typ auswählen',

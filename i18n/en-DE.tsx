@@ -48,6 +48,12 @@ export const enDE: Localization = {
   },
   save: {
     issues: () => 'There are issues with your inputs.',
+    issuesShort: () => 'Input issues',
+    invalid: () => 'issues present',
+    hint: () => 'There are fields which should be filled.',
+    hintShort: () => 'Empty fields',
+    confirmExit: () =>
+      'There are unsaved changes on this page. When leaving these will be lost. Are you sure you want to leave?',
   },
   general: {
     name: () => 'name',

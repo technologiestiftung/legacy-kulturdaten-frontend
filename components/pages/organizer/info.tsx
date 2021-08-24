@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -12,6 +12,7 @@ import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organize
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { WindowContext } from '../../../lib/WindowService';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -24,7 +25,7 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 
-type EntryFormHook = (
+export type EntryFormHook = (
   props: EntryFormProps,
   loaded: boolean
 ) => {
@@ -33,6 +34,7 @@ type EntryFormHook = (
   pristine: boolean;
   reset: () => void;
   valid: boolean;
+  hint: boolean;
 };
 
 const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
@@ -44,11 +46,13 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
     pristine: pristineGerman,
     reset: resetGerman,
     valid: validGerman,
+    value: valueGerman,
   } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
     category,
     query,
     language: Language.de,
     label: t('categories.organizer.form.nameGerman') as string,
+    loaded,
   });
 
   const {
@@ -57,11 +61,13 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
     pristine: pristineEnglish,
     reset: resetEnglish,
     valid: validEnglish,
+    value: valueEnglish,
   } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
     category,
     query,
     language: Language.en,
     label: t('categories.organizer.form.nameEnglish') as string,
+    loaded,
   });
 
   const pristine = useMemo(() => Boolean(pristineGerman && pristineEnglish), [
@@ -75,10 +81,24 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
     validGerman,
   ]);
 
+  const hint = useMemo(
+    () =>
+      loaded &&
+      (typeof valueEnglish === 'undefined' ||
+        typeof valueGerman === 'undefined' ||
+        valueEnglish.length < 1 ||
+        valueGerman.length < 1),
+    [loaded, valueEnglish, valueGerman]
+  );
+
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={`${t('categories.organizer.form.name') as string}`} valid={valid} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.name') as string}`}
+          valid={valid}
+          hint={hint}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
@@ -95,6 +115,7 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
       resetEnglish();
     },
     valid,
+    hint,
   };
 };
 
@@ -113,6 +134,7 @@ const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
     submit: submitGerman,
     pristine: pristineGerman,
     valid: validGerman,
+    hint: hintGerman,
   } = useDescription({
     category,
     query,
@@ -126,6 +148,7 @@ const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
     submit: submitEnglish,
     pristine: pristineEnglish,
     valid: validEnglish,
+    hint: hintEnglish,
   } = useDescription({
     category,
     query,
@@ -140,8 +163,15 @@ const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
   ]);
 
   const valid = useMemo(() => !loaded || (validGerman && validEnglish), [
+    loaded,
     validEnglish,
     validGerman,
+  ]);
+
+  const hint = useMemo(() => loaded && (hintGerman || hintEnglish), [
+    loaded,
+    hintEnglish,
+    hintGerman,
   ]);
 
   return {
@@ -150,6 +180,7 @@ const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
         <EntryFormHead
           title={`${t('categories.organizer.form.description') as string}`}
           valid={valid}
+          hint={hint}
         />
         {renderedDescriptionGerman}
         {renderedDescriptionEnglish}
@@ -162,6 +193,7 @@ const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
     pristine,
     reset: () => undefined,
     valid,
+    hint,
   };
 };
 
@@ -252,6 +284,7 @@ const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
       init(initialLinks);
     },
     valid: !loaded || valid,
+    hint: false,
   };
 };
 
@@ -295,6 +328,20 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
     ]
   );
 
+  const hint = useMemo(
+    () =>
+      loaded &&
+      address?.attributes?.street1?.length < 1 &&
+      address?.attributes?.zipCode?.length < 1 &&
+      address?.attributes?.city?.length < 1,
+    [
+      loaded,
+      address?.attributes?.city?.length,
+      address?.attributes?.street1?.length,
+      address?.attributes?.zipCode?.length,
+    ]
+  );
+
   return {
     renderedForm: (
       <form
@@ -323,6 +370,7 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
                 });
               }}
               required={required}
+              hint={!address?.attributes?.street1 || address?.attributes?.street1.length < 1}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -358,6 +406,7 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
                 });
               }}
               required={required}
+              hint={!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1}
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
@@ -376,6 +425,7 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
                 });
               }}
               required={required}
+              hint={!address?.attributes?.city || address?.attributes?.city.length < 1}
             />
           </FormItem>
         </FormGrid>
@@ -409,6 +459,7 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
       setPristine(true);
     },
     valid,
+    hint,
   };
 };
 
@@ -545,6 +596,7 @@ const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
       setPristine(true);
     },
     valid,
+    hint: false,
   };
 };
 
@@ -553,10 +605,21 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   query,
 }: CategoryEntryPage) => {
   const router = useRouter();
-
   const { entry } = useEntry<CategoryEntry, ApiCall>(category, router?.query);
+  const t = useT();
 
-  const loaded = useMemo(() => typeof entry !== 'undefined', [entry]);
+  const [loaded, setLoaded] = useState(false);
+  const { rendered } = useContext(WindowContext);
+
+  useEffect(() => {
+    if (rendered && typeof entry !== 'undefined') {
+      setTimeout(() => setLoaded(true), 150);
+    }
+
+    return () => {
+      setLoaded(false);
+    };
+  }, [rendered, entry]);
 
   const {
     renderedForm: nameForm,
@@ -564,6 +627,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     reset: nameReset,
     valid: nameValid,
+    hint: nameHint,
   } = useNameForm(
     {
       category,
@@ -577,6 +641,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: addressPristine,
     reset: addressReset,
     valid: addressValid,
+    hint: addressHint,
   } = useAddressForm({ category, query }, loaded);
   const {
     renderedForm: linksForm,
@@ -584,6 +649,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: linksPristine,
     reset: linksReset,
     valid: linksValid,
+    hint: linksHint,
   } = useLinksForm(
     {
       category,
@@ -597,6 +663,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: contactPristine,
     reset: contactReset,
     valid: contactValid,
+    hint: contactHint,
   } = useContactForm(
     {
       category,
@@ -610,6 +677,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     reset: descriptionReset,
     valid: descriptionValid,
+    hint: descriptionHint,
   } = useDescriptionForm(
     {
       category,
@@ -639,7 +707,12 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [addressValid, contactValid, descriptionValid, nameValid, linksValid]
   );
 
-  const message = "Sure 'bout that bra?";
+  const hint = useMemo(
+    () => addressHint || contactHint || linksHint || nameHint || descriptionHint,
+    [addressHint, contactHint, descriptionHint, linksHint, nameHint]
+  );
+
+  const message = t('save.confirmExit') as string;
 
   useConfirmExit(!pristine, message, () => {
     nameReset();
@@ -651,6 +724,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   return (
     <>
+      {renderedEntryHeader}
       <Save
         onClick={async () => {
           nameSubmit();
@@ -661,10 +735,9 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
         }}
         date={formattedDate}
         active={!pristine}
-        valid={typeof entry === 'undefined' || valid}
+        valid={loaded === false || valid}
+        hint={loaded === true && hint}
       />
-
-      {renderedEntryHeader}
       <EntryFormWrapper>
         <EntryFormContainer>{nameForm}</EntryFormContainer>
         <EntryFormContainer>{descriptionForm}</EntryFormContainer>

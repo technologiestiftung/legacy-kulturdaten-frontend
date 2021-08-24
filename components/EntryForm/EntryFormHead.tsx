@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
+import { InfoSymbol } from '../assets/InfoSymbol';
 import { mq } from '../globals/Constants';
 
 const StyledEntryFormHead = styled.div`
@@ -48,16 +49,22 @@ const StyledEntryFormHeadAlert = styled.div`
 interface EntryFormHeadProps {
   title: string;
   valid?: boolean;
+  hint?: boolean;
 }
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   title,
-  valid,
+  valid = true,
+  hint = false,
 }: EntryFormHeadProps) => (
   <StyledEntryFormHead>
     {valid === false ? (
       <StyledEntryFormHeadAlert>
         <AlertSymbol />
+      </StyledEntryFormHeadAlert>
+    ) : hint ? (
+      <StyledEntryFormHeadAlert>
+        <InfoSymbol />
       </StyledEntryFormHeadAlert>
     ) : (
       ''

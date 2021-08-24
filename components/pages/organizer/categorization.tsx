@@ -1,11 +1,9 @@
-import { ParsedUrlQuery } from 'node:querystring';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
 import {
-  Category,
   CategoryEntryPage,
   useMutateList,
   useEntry,
@@ -13,6 +11,7 @@ import {
 } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { WindowContext } from '../../../lib/WindowService';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -20,21 +19,9 @@ import { TypesSubjects } from '../../TypesSubjects';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
+import { EntryFormHook } from './info';
 
-interface EntryFormProps {
-  category: Category;
-  query: ParsedUrlQuery;
-}
-
-const useClassificationForm = ({
-  category,
-  query,
-}: EntryFormProps): {
-  renderedForm: React.ReactElement;
-  submit: () => Promise<void>;
-  pristine: boolean;
-  reset: () => void;
-} => {
+const useClassificationForm: EntryFormHook = ({ category, query }, loaded) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -70,8 +57,8 @@ const useClassificationForm = ({
 
   // Valid if types and subjects are defined
   const valid = useMemo(() => {
-    return types && types.length > 0;
-  }, [types]);
+    return !loaded || (types && types.length > 0);
+  }, [loaded, types]);
 
   const initialSubjects = useMemo(
     () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),
@@ -128,7 +115,10 @@ const useClassificationForm = ({
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={t('categories.organizer.form.classification') as string} />
+        <EntryFormHead
+          title={t('categories.organizer.form.classification') as string}
+          valid={!loaded || valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             <TypesSubjects
@@ -187,6 +177,8 @@ const useClassificationForm = ({
       setSubjects(initialSubjects);
       setTypesSubjectsPristine(true);
     },
+    valid,
+    hint: false,
   };
 };
 
@@ -197,21 +189,40 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const formattedDate = useSaveDate(entry);
   const renderedEntryHeader = useEntryHeader({ category, query });
+  const t = useT();
+  // const loaded = useMemo(() => typeof entry !== 'undefined', [entry]);
 
-  const { renderedForm, submit, pristine, reset } = useClassificationForm({ category, query });
+  const [loaded, setLoaded] = useState(false);
+  const { rendered } = useContext(WindowContext);
 
-  useConfirmExit(!pristine, 'message', () => reset());
+  useEffect(() => {
+    if (rendered && typeof entry !== 'undefined') {
+      setTimeout(() => setLoaded(true), 150);
+    }
+
+    return () => {
+      setLoaded(false);
+    };
+  }, [rendered, entry]);
+
+  const { renderedForm, submit, pristine, reset, valid } = useClassificationForm(
+    { category, query },
+    loaded
+  );
+
+  useConfirmExit(!pristine, t('save.confirmExit') as string, () => reset());
 
   return (
     <>
+      {renderedEntryHeader}
       <Save
         onClick={async () => {
           submit();
         }}
         active={!pristine}
         date={formattedDate}
+        valid={loaded !== true || valid}
       />
-      {renderedEntryHeader}
       <EntryFormWrapper>
         <EntryFormContainer>{renderedForm}</EntryFormContainer>
       </EntryFormWrapper>

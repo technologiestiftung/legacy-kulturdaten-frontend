@@ -49,6 +49,8 @@ const StyledTypesSubjectsChevron = styled.div<{ isOpen: boolean }>`
   top: 0.75rem;
   pointer-events: none;
   transition: transform var(--transition-duration);
+  transform-origin: 50% 50%;
+  line-height: 0;
 
   ${({ isOpen }) =>
     isOpen

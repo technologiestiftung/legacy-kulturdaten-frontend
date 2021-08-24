@@ -2,7 +2,7 @@ import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
-import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
+import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { getTranslation } from '../../../../lib/translations';
 import { Input, InputType } from '../../../input';
@@ -17,6 +17,7 @@ interface SetNameProps {
   name: string;
   required?: boolean;
   valid?: boolean;
+  hint?: boolean;
 }
 
 const Name: React.FC<SetNameProps> = ({
@@ -28,6 +29,7 @@ const Name: React.FC<SetNameProps> = ({
   name,
   value,
   required,
+  hint,
 }: SetNameProps) => {
   // set initial value
   useEffect(() => {
@@ -47,6 +49,7 @@ const Name: React.FC<SetNameProps> = ({
           setValue(e.target.value);
         }}
         required={required}
+        hint={hint}
       />
     </form>
   );
@@ -62,14 +65,16 @@ export const useName = <
   query: ParsedUrlQuery;
   language: Language;
   label: string;
+  loaded: boolean;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
   reset: () => void;
   valid: boolean;
+  value: string;
 } => {
-  const { category, query, language, label } = props;
+  const { category, query, language, label, loaded } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
   const mutateList = useMutateList(category);
@@ -123,6 +128,8 @@ export const useName = <
     }
   };
 
+  const hint = useMemo(() => loaded && (!value || value?.length < 1), [loaded, value]);
+
   return {
     form: (
       <Name
@@ -136,6 +143,7 @@ export const useName = <
           name,
           required,
           valid,
+          hint,
         }}
       />
     ),
@@ -146,5 +154,6 @@ export const useName = <
       setPristine(true);
     },
     valid,
+    value,
   };
 };

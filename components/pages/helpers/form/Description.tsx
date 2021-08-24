@@ -29,11 +29,20 @@ const StyledDescriptionTitleStatus = styled.div`
 `;
 
 const errorShadow = '0px 0px 0px 0.1125rem var(--error-o50)';
+const hintShadow = '0px 0px 0px 0.1125rem rgba(10, 47, 211, 0.4)';
 
-const StyledDescriptionRichTextWrapper = styled.div<{ valid?: boolean }>`
+const StyledDescriptionRichTextWrapper = styled.div<{ valid?: boolean; hint?: boolean }>`
   border: 1px solid var(--grey-600);
   border-radius: 0.375rem;
   overflow: hidden;
+
+  ${({ hint }) =>
+    hint
+      ? css`
+          box-shadow: ${hintShadow};
+          border-color: rgb(10, 47, 211);
+        `
+      : ''}
 
   ${({ valid }) =>
     valid
@@ -75,6 +84,7 @@ export const useDescription = ({
   submit: () => Promise<void>;
   pristine: boolean;
   valid: boolean;
+  hint: boolean;
 } => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
@@ -102,7 +112,7 @@ export const useDescription = ({
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
 
-  const { renderedRichText, init: initRichText, valid } = useRichText({
+  const { renderedRichText, init: initRichText, valid, textLength } = useRichText({
     onChange: () => {
       if (richTextRef.current) {
         setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
@@ -130,6 +140,8 @@ export const useDescription = ({
     }
   }, [initRichText, textFromApi, cachedApiText]);
 
+  const hint = useMemo(() => textLength < 1, [textLength]);
+
   return {
     renderedDescription: (
       <StyledDescription>
@@ -140,7 +152,7 @@ export const useDescription = ({
                 <Label>{title}</Label>
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
-            <StyledDescriptionRichTextWrapper valid={valid}>
+            <StyledDescriptionRichTextWrapper valid={valid} hint={hint}>
               <StyledDescriptionRichTextContainer valid={valid}>
                 {renderedRichText}
               </StyledDescriptionRichTextContainer>
@@ -183,5 +195,6 @@ export const useDescription = ({
     },
     pristine,
     valid,
+    hint,
   };
 };

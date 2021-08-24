@@ -238,18 +238,51 @@ const haveDescendantsText = (descendants: CustomDescendant[]): boolean => {
   return false;
 };
 
+const getDescendantTextLength = (descendant: CustomDescendant): number => {
+  if ((descendant as CustomText).text?.length > 0) {
+    return (descendant as CustomText).text?.length;
+  }
+
+  if ((descendant as CustomElement).children?.length > 0) {
+    const children = (descendant as CustomElement).children;
+
+    const length = children.reduce<number>((combined, child) => {
+      return combined + getDescendantTextLength(child);
+    }, 0);
+
+    return length;
+  }
+
+  return 0;
+};
+
+const getDescendantsTextLength = (descendants: CustomDescendant[]): number => {
+  if (descendants && descendants.length > 0) {
+    const length = descendants.reduce<number>((combined, descendant) => {
+      return combined + getDescendantTextLength(descendant);
+    }, 0);
+
+    return length;
+  }
+
+  return 0;
+};
+
 export const useRichText = (
   props: Pick<RichTextProps, 'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required'>
 ): {
   renderedRichText: React.ReactElement<RichTextProps>;
   init: (value: RichTextProps['value']) => void;
   valid: boolean;
+  textLength: number;
 } => {
   const [intValue, setIntValue] = useState<CustomDescendant[]>(emptyRichTextValue);
 
   const hasText = useMemo(() => haveDescendantsText(intValue), [intValue]);
 
   const valid = useMemo(() => props.required !== true || hasText, [hasText, props?.required]);
+
+  const textLength = useMemo(() => getDescendantsTextLength(intValue), [intValue]);
 
   return {
     renderedRichText: (
@@ -259,6 +292,7 @@ export const useRichText = (
       setIntValue(value);
     },
     valid,
+    textLength,
   };
 };
 

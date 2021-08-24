@@ -20,16 +20,25 @@ const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
 const errorBorderShadow = 'inset 0px 0px 0px 1px var(--error)';
 const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
 
+const hintBorderShadow = 'inset 0px 0px 0px 1px rgb(10, 47, 211)';
+const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
+
 const errorStyle = css`
   box-shadow: ${errorBorderShadow}, ${errorShadow}, var(--shadow-inset);
+`;
+
+const hintStyle = css`
+  box-shadow: ${hintBorderShadow}, ${hintShadow}, var(--shadow-inset);
 `;
 
 export const inputStyles = ({
   pristine,
   valid,
+  hint,
 }: {
   pristine?: boolean;
   valid?: boolean;
+  hint?: boolean;
 }): SerializedStyles => css`
   appearance: none;
   border: none;
@@ -55,6 +64,8 @@ export const inputStyles = ({
     background: var(--grey-350);
     cursor: not-allowed;
   }
+
+  ${hint ? hintStyle : ''}
 
   ${!pristine && valid === false
     ? errorStyle
@@ -98,7 +109,7 @@ interface InputProps {
   disabled?: boolean;
   error?: string;
   id?: string;
-  hint?: string;
+  hint?: boolean;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   label?: string;
   min?: number | string;
