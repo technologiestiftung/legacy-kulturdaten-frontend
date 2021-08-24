@@ -63,7 +63,7 @@ const StyledRowWrapper = styled.div<{ narrow?: boolean; isTitleRow?: boolean }>`
 const StyledRowContainer = styled.div<{ narrow?: boolean }>`
   padding: 0 0.75rem;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.wide)} {
     padding: 0 1.5rem;
   }
 `;

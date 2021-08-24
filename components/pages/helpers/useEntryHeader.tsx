@@ -73,6 +73,7 @@ export const useEntryHeader = ({ category, query }: EntryFormProps): React.React
           />
         ) : undefined
       }
+      status={entry?.data?.attributes?.status}
     />
   );
 };

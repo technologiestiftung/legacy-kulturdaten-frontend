@@ -1,5 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { PublishedStatus } from '../../lib/api/types/general';
+import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, insetBorder, mq } from '../globals/Constants';
 import { TabsProps } from '../navigation/tabs';
@@ -8,6 +10,8 @@ const StyledEntryHeader = styled.div`
   background: var(--grey-200);
   box-shadow: ${insetBorder(false, false, true)};
   grid-row-gap: 1.5rem;
+  position: relative;
+  z-index: 20;
 
   ${contentGrid(1)}
 
@@ -31,14 +35,18 @@ const StyledEntryHeaderHead = styled.div`
   padding: 0 0.75rem;
 
   ${mq(Breakpoint.mid)} {
+    align-items: flex-start;
+    margin-top: 3rem;
     padding: 0 1.5rem;
     flex-direction: row;
     justify-content: space-between;
     grid-column: 1 / -1;
+    margin-bottom: 0.75rem;
   }
 
   ${mq(Breakpoint.widish)} {
-    margin-top: 3rem;
+    margin-top: 4.5rem;
+    margin-bottom: 2.25rem;
     padding: 0;
     grid-column: 2 / -2;
   }
@@ -46,24 +54,36 @@ const StyledEntryHeaderHead = styled.div`
 
 const StyledEntryHeaderActions = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
+  justify-content: stretch;
+  align-items: flex-start;
+  column-gap: 0.75rem;
+  row-gap: 0.75rem;
   padding-top: 2.25rem;
+  flex-wrap: wrap;
 
   ${mq(Breakpoint.mid)} {
+    flex-direction: column;
+    align-items: flex-start;
+    display: flex;
     padding-top: 0;
     flex-direction: row;
     justify-content: flex-end;
   }
+
+  ${mq(Breakpoint.wide)} {
+    flex-wrap: nowrap;
+  }
 `;
 
 const StyledEntryHeaderAction = styled.div`
-  margin: 0 0 0.75rem;
   display: flex;
   flex-direction: column;
+  flex-basis: 0;
+  flex-grow: 1;
 
   ${mq(Breakpoint.mid)} {
-    margin: 0 0 0.75rem 0.75rem;
+    flex-basis: initial;
+    flex-grow: initial;
   }
 `;
 
@@ -71,6 +91,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
   font-size: var(--font-size-700);
   line-height: var(--line-height-700);
   font-weight: 700;
+  padding-right: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
@@ -79,6 +100,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
   }
 
   ${mq(Breakpoint.widish)} {
+    padding-right: 1.5rem;
     grid-column: 2 / -2;
   }
 
@@ -105,7 +127,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
       : ''}
 `;
 
-const StyledEntryHeaderStatusSlot = styled.div`
+const StyledEntryHeaderPublishSlot = styled.div`
   padding: 0 0.75rem;
 
   ${mq(Breakpoint.mid)} {
@@ -120,35 +142,89 @@ const StyledEntryHeaderStatusSlot = styled.div`
   }
 `;
 
-const StyledEntryHeaderPublishSlot = styled.div`
-  ${mq(Breakpoint.mid)} {
-    grid-column: 1 / -1;
-  }
-
-  ${mq(Breakpoint.widish)} {
-    grid-column: 2 / -2;
-  }
-`;
-
 const StyledEntryHeaderTabsSlot = styled.div`
   width: 100%;
   max-width: 100%;
-  margin-top: 0.75rem;
-
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
   }
 
+  ${contentGrid(8)}
+`;
+
+const StyledEntryHeaderTabsSlotContainer = styled.div`
+  ${mq(Breakpoint.mid)} {
+    padding: 0;
+    grid-column: 1 / -1;
+  }
+
   ${mq(Breakpoint.widish)} {
-    margin-top: 1.5rem;
     grid-column: 2 / -2;
+    padding: 0;
   }
 `;
 
+const StyledEntryHeaderStatus = styled.div`
+  display: flex;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: var(--white);
+  flex-basis: 0;
+  flex-grow: 1;
+
+  ${mq(Breakpoint.mid)} {
+    flex-basis: initial;
+    flex-grow: initial;
+    background: var(--grey-200);
+  }
+`;
+
+const StyledEntryHeaderStatusLabel = styled.div`
+  padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
+  flex-grow: 1;
+  text-align: center;
+`;
+
+const StyledEntryHeaderStatusFlag = styled.div<{ backgroundColor: string }>`
+  text-align: center;
+  background: ${({ backgroundColor }) => backgroundColor};
+  padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
+  flex-grow: 1;
+`;
+
+const statusBarStatuses: {
+  [key in PublishedStatus]: { backgroundColor: string; textKey: string };
+} = {
+  draft: {
+    backgroundColor: 'var(--yellow)',
+    textKey: 'statusBar.draft',
+  },
+  published: {
+    backgroundColor: 'var(--green-light)',
+    textKey: 'statusBar.published',
+  },
+};
+
+const useStatusBarFlag = (status = PublishedStatus.draft): React.ReactElement => {
+  const t = useT();
+
+  return (
+    <StyledEntryHeaderStatusFlag backgroundColor={statusBarStatuses[status].backgroundColor}>
+      {t(statusBarStatuses[status].textKey)}
+    </StyledEntryHeaderStatusFlag>
+  );
+};
+
 interface EntryHeaderProps {
   title: string;
+  status: PublishedStatus;
   backButton?: React.ReactElement;
   actions?: React.ReactElement[];
   statusBar?: React.ReactElement;
@@ -159,27 +235,37 @@ interface EntryHeaderProps {
 export const EntryHeader: React.FC<EntryHeaderProps> = ({
   title,
   actions,
-  statusBar,
   publish,
   tabs,
+  status,
 }: EntryHeaderProps) => {
+  const t = useT();
+
+  const statusFlag = useStatusBarFlag(status);
+
   return (
     <StyledEntryHeader>
       <StyledEntryHeaderHead>
         <StyledEntryHeaderTitle skeleton={typeof title === 'undefined'}>
           <span>{title}</span>
         </StyledEntryHeaderTitle>
-        {actions && (
-          <StyledEntryHeaderActions>
-            {actions.map((action, index) => (
-              <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
-            ))}
-          </StyledEntryHeaderActions>
-        )}
+        <StyledEntryHeaderActions>
+          <StyledEntryHeaderStatus>
+            <StyledEntryHeaderStatusLabel>{t('statusBar.status')}</StyledEntryHeaderStatusLabel>
+
+            {statusFlag}
+          </StyledEntryHeaderStatus>
+          {actions?.map((action, index) => (
+            <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
+          ))}
+        </StyledEntryHeaderActions>
       </StyledEntryHeaderHead>
-      {statusBar && <StyledEntryHeaderStatusSlot>{statusBar}</StyledEntryHeaderStatusSlot>}
       {publish && <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>}
-      {tabs && <StyledEntryHeaderTabsSlot>{tabs}</StyledEntryHeaderTabsSlot>}
+      {tabs && (
+        <StyledEntryHeaderTabsSlot>
+          <StyledEntryHeaderTabsSlotContainer>{tabs}</StyledEntryHeaderTabsSlotContainer>
+        </StyledEntryHeaderTabsSlot>
+      )}
     </StyledEntryHeader>
   );
 };
