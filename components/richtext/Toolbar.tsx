@@ -88,7 +88,7 @@ interface ToolbarProps {
 export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
   ({ groups }: ToolbarProps, ref: RefObject<HTMLDivElement>) => {
     return (
-      <StyledToolbar ref={ref}>
+      <StyledToolbar ref={ref} role="toolbar">
         <StyledToolbarContainer>
           {groups.map(({ width, label, items }, index) => (
             <StyledToolbarGroup key={index} width={width}>

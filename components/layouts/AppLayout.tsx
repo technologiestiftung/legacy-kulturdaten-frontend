@@ -182,14 +182,30 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     </ContentSlot>
   );
 
+  useEffect(() => {
+    if (document) {
+      document.getElementById('__next').setAttribute('role', 'application');
+    }
+  }, []);
+
   return (
     <StyledAppLayout>
       {bodyLock}
 
-      {headerMain && <HeaderSlot locked={locked}>{headerMain}</HeaderSlot>}
-      {headerSecondary && <HeaderSlotSecondary>{headerSecondary}</HeaderSlotSecondary>}
-      {isMidOrWider && sidebar && <MenuSlot expanded={menuExpanded}>{sidebar}</MenuSlot>}
-      <Container>{rendered && renderedContentSlot}</Container>
+      {headerMain && (
+        <HeaderSlot locked={locked} role="navigation">
+          {headerMain}
+        </HeaderSlot>
+      )}
+      {headerSecondary && (
+        <HeaderSlotSecondary role="navigation">{headerSecondary}</HeaderSlotSecondary>
+      )}
+      {isMidOrWider && sidebar && (
+        <MenuSlot expanded={menuExpanded} role="navigation">
+          {sidebar}
+        </MenuSlot>
+      )}
+      <Container role="main">{rendered && renderedContentSlot}</Container>
       {enableMenuExpanded && isMainMenuOverlayVisible && (
         <StyledMainMenuOverlay
           onClick={() => {

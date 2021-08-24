@@ -155,7 +155,7 @@ export const RadioSwitch: React.FC<RadioSwitchProps> = ({
   const state = value || internalState;
 
   return (
-    <StyledRadioSwitch labelPosition={labelPosition}>
+    <StyledRadioSwitch labelPosition={labelPosition} role="radiogroup">
       {label && <Label>{label}</Label>}
       <StyledRadioSwitchOptions>
         {options.map(({ value, label, icon, id, ariaLabel }, index) => {
@@ -163,7 +163,7 @@ export const RadioSwitch: React.FC<RadioSwitchProps> = ({
           const optionActive = value === state;
 
           return (
-            <StyledRadioSwitchOption key={index} active={optionActive}>
+            <StyledRadioSwitchOption key={index} active={optionActive} role="radio">
               <StyledRadioSwitchOptionLabel htmlFor={optionId} active={optionActive}>
                 <StyledRadioSwitchOptionLabelIcon>
                   {icon && React.createElement(feather[icon])}

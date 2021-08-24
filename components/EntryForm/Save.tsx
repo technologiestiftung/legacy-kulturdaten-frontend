@@ -251,7 +251,7 @@ export const Save: React.FC<SaveProps> = ({
   return (
     <StyledSave>
       <StyledSaveContainer>
-        <StyledSaveMessage>
+        <StyledSaveMessage role={!valid ? 'alert' : ''}>
           {valid === false ? (
             <>
               <StyledSaveMessageSymbol>

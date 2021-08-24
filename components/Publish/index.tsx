@@ -102,7 +102,7 @@ export const Publish: React.FC<PublishProps> = ({
   );
 
   return (
-    <StyledPublish>
+    <StyledPublish role="group">
       <StyledPublishLabel>
         <Label>{t('categories.organizer.requirements.label')}</Label>
       </StyledPublishLabel>

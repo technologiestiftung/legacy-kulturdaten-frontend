@@ -4,7 +4,7 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/Wi
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
 import { HeaderMenuLink } from './HeaderMenuLink';
-import { User, WrappedUser } from '../../user/useUser';
+import { WrappedUser } from '../../user/useUser';
 import { UserMenu } from './UserMenu';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`

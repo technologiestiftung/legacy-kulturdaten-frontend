@@ -91,7 +91,7 @@ const RichText: React.FC<RichTextProps> = ({
   }, [intValue, onChange]);
 
   return (
-    <StyledRichText>
+    <StyledRichText role="group">
       <Slate
         editor={editor}
         value={intValue || []}
@@ -197,6 +197,7 @@ const RichText: React.FC<RichTextProps> = ({
         <StyledEditableContainer>
           <StyledEditable ref={contentRef}>
             <Editable
+              role="textbox"
               renderElement={renderElement}
               renderLeaf={renderLeaf}
               placeholder={placeholder || ''}

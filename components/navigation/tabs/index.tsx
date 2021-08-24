@@ -93,7 +93,7 @@ export interface TabsProps {
 
 export const Tabs: React.FC<TabsProps> = ({ links }: TabsProps) => (
   <StyledTabs>
-    <StyledTabsContainer itemCount={links.length}>
+    <StyledTabsContainer itemCount={links.length} role="navigation">
       {links.map(({ title, href, isActive }, index) => (
         <Link key={index} href={href} passHref shallow>
           <StyledTabLink isActive={isActive} itemCount={links.length} index={index}>
