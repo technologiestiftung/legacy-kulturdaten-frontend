@@ -73,6 +73,7 @@ const RichText: React.FC<RichTextProps> = ({
   contentRef,
   intValue,
   setIntValue,
+  required,
   valid,
 }: RichTextProps) => {
   const renderElement = useCallback(
@@ -200,6 +201,8 @@ const RichText: React.FC<RichTextProps> = ({
               renderLeaf={renderLeaf}
               placeholder={placeholder || ''}
               spellCheck
+              aria-invalid={!valid}
+              aria-required={required}
             />
           </StyledEditable>
         </StyledEditableContainer>

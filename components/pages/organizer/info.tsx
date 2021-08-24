@@ -725,26 +725,28 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   return (
     <>
       {renderedEntryHeader}
-      <Save
-        onClick={async () => {
-          nameSubmit();
-          addressSubmit();
-          descriptionSubmit();
-          linksSubmit();
-          contactSubmit();
-        }}
-        date={formattedDate}
-        active={!pristine}
-        valid={loaded === false || valid}
-        hint={loaded === true && hint}
-      />
-      <EntryFormWrapper>
-        <EntryFormContainer>{nameForm}</EntryFormContainer>
-        <EntryFormContainer>{descriptionForm}</EntryFormContainer>
-        <EntryFormContainer>{contactForm}</EntryFormContainer>
-        <EntryFormContainer>{linksForm}</EntryFormContainer>
-        <EntryFormContainer>{addressForm}</EntryFormContainer>
-      </EntryFormWrapper>
+      <div role="form">
+        <Save
+          onClick={async () => {
+            nameSubmit();
+            addressSubmit();
+            descriptionSubmit();
+            linksSubmit();
+            contactSubmit();
+          }}
+          date={formattedDate}
+          active={!pristine}
+          valid={loaded === false || valid}
+          hint={loaded === true && hint}
+        />
+        <EntryFormWrapper>
+          <EntryFormContainer>{nameForm}</EntryFormContainer>
+          <EntryFormContainer>{descriptionForm}</EntryFormContainer>
+          <EntryFormContainer>{contactForm}</EntryFormContainer>
+          <EntryFormContainer>{linksForm}</EntryFormContainer>
+          <EntryFormContainer>{addressForm}</EntryFormContainer>
+        </EntryFormWrapper>
+      </div>
     </>
   );
 };

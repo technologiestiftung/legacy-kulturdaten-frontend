@@ -130,6 +130,7 @@ const useClassificationForm: EntryFormHook = ({ category, query }, loaded) => {
               }}
               pristine={typesSubjectsPristine}
               setPristine={setTypesSubjectsPristine}
+              required
             />
           </FormItem>
         </FormGrid>
@@ -215,17 +216,19 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   return (
     <>
       {renderedEntryHeader}
-      <Save
-        onClick={async () => {
-          submit();
-        }}
-        active={!pristine}
-        date={formattedDate}
-        valid={loaded !== true || valid}
-      />
-      <EntryFormWrapper>
-        <EntryFormContainer>{renderedForm}</EntryFormContainer>
-      </EntryFormWrapper>
+      <div role="form">
+        <Save
+          onClick={async () => {
+            submit();
+          }}
+          active={!pristine}
+          date={formattedDate}
+          valid={loaded !== true || valid}
+        />
+        <EntryFormWrapper>
+          <EntryFormContainer>{renderedForm}</EntryFormContainer>
+        </EntryFormWrapper>
+      </div>
     </>
   );
 };

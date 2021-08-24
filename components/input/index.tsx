@@ -203,7 +203,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               }}
               ref={ref}
               pristine={pristine}
-              valid={props.valid}
+              valid={typeof props.valid === 'undefined' ? true : props.valid}
               pattern={
                 props?.type === InputType.url
                   ? urlRegExpString
