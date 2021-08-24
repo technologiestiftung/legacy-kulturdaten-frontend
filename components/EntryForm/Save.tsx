@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
-import { AlertTriangleSvg } from '../assets/AlertTriangleSvg';
 import { CheckSvg } from '../assets/CheckSvg';
+import { ExclamationMarkSvg } from '../assets/ExclamationMarkSvg';
+import { InfoSymbol } from '../assets/InfoSymbol';
 import { UploadCloudSvg } from '../assets/UploadCloudSvg';
 import { contentGrid, mq } from '../globals/Constants';
 
@@ -15,42 +16,32 @@ const StyledSave = styled.div`
   top: 0;
   right: 0;
   margin: 0;
+  padding: 0.375rem 0;
   z-index: 10;
-  background: var(--grey-200);
-  border-bottom: 1px solid var(--grey-400);
-  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.125);
 
   ${mq(Breakpoint.mid)} {
     ${contentGrid(8)}
-    background: var(--white);
+    padding: 0.75rem 0;
     top: var(--header-height);
   }
 
   @supports (backdrop-filter: blur(16px)) {
     backdrop-filter: blur(16px);
-    background: rgba(248, 248, 248, 0.75);
-
-    ${mq(Breakpoint.mid)} {
-      ${contentGrid(8)}
-      top: var(--header-height);
-    }
+    background: rgba(248, 248, 248, 0.8);
   }
 
   @supports (-webkit-backdrop-filter: blur(16px)) {
     -webkit-backdrop-filter: blur(16px);
-    background: rgba(248, 248, 248, 0.75);
-
-    ${mq(Breakpoint.mid)} {
-      ${contentGrid(8)}
-      top: var(--header-height);
-    }
+    background: rgba(248, 248, 248, 0.8);
   }
 `;
 
 const StyledSaveContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding: 0 0.75rem;
 
   ${mq(Breakpoint.mid)} {
@@ -64,13 +55,14 @@ const StyledSaveContainer = styled.div`
   }
 `;
 
-const StyledSaveAlert = styled.div`
+const StyledSaveMessage = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
+  padding: 0.5rem 0.75rem 0.5rem 0;
 `;
 
-const StyledSaveAlertSymbol = styled.div`
+const StyledSaveMessageSymbol = styled.div`
   position: relative;
   margin: 0 0.75rem 0 0;
   width: 1.5rem;
@@ -78,21 +70,15 @@ const StyledSaveAlertSymbol = styled.div`
 
   ${mq(Breakpoint.widish)} {
     position: absolute;
-    top: 0;
+    top: 0.5rem;
     left: -2.25rem;
     margin: 0;
   }
 `;
 
-const StyledSaveAlertText = styled.div`
+const StyledSaveMessageText = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
-`;
-
-const StyledSaveDate = styled.div`
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  padding: 0.75rem 0.75rem 0.75rem 0;
 `;
 
 const StyledSaveButton = styled.button<{ saving: boolean }>`
@@ -104,7 +90,7 @@ const StyledSaveButton = styled.button<{ saving: boolean }>`
   border-radius: 0.75rem;
   appearance: none;
   padding: 0;
-  margin: 0.375rem 0;
+  margin: 0;
   overflow: hidden;
   background: rgb(10, 47, 211);
   color: var(--white);
@@ -231,6 +217,7 @@ interface SaveProps {
   date: string;
   active?: boolean;
   valid?: boolean;
+  hint?: boolean;
 }
 
 export const Save: React.FC<SaveProps> = ({
@@ -238,6 +225,7 @@ export const Save: React.FC<SaveProps> = ({
   date,
   active = false,
   valid = true,
+  hint = false,
 }: SaveProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const t = useT();
@@ -263,22 +251,35 @@ export const Save: React.FC<SaveProps> = ({
   return (
     <StyledSave>
       <StyledSaveContainer>
-        {valid ? (
-          <StyledSaveDate>
-            {date && (
-              <>
-                {isMidOrWider ? t('statusBar.saved') : t('statusBar.savedShort')}: {date}
-              </>
-            )}
-          </StyledSaveDate>
-        ) : (
-          <StyledSaveAlert>
-            <StyledSaveAlertSymbol>
-              <AlertSymbol />
-            </StyledSaveAlertSymbol>
-            <StyledSaveAlertText>{t('save.issues')}</StyledSaveAlertText>
-          </StyledSaveAlert>
-        )}
+        <StyledSaveMessage>
+          {valid === false ? (
+            <>
+              <StyledSaveMessageSymbol>
+                <AlertSymbol />
+              </StyledSaveMessageSymbol>
+              <StyledSaveMessageText>
+                {t(isMidOrWider ? 'save.issues' : 'save.issuesShort')}
+              </StyledSaveMessageText>
+            </>
+          ) : hint ? (
+            <>
+              <StyledSaveMessageSymbol>
+                <InfoSymbol />
+              </StyledSaveMessageSymbol>
+              <StyledSaveMessageText>
+                {t(isMidOrWider ? 'save.hint' : 'save.hintShort')}
+              </StyledSaveMessageText>
+            </>
+          ) : (
+            <StyledSaveMessageText>
+              {date && (
+                <>
+                  {isMidOrWider ? t('statusBar.saved') : t('statusBar.savedShort')}: {date}
+                </>
+              )}
+            </StyledSaveMessageText>
+          )}
+        </StyledSaveMessage>
         <StyledSaveButton
           onClick={() => {
             if (!saving && typeof onClick === 'function') {
@@ -291,7 +292,7 @@ export const Save: React.FC<SaveProps> = ({
         >
           <StyledSaveButtonText>
             {!valid
-              ? 'not valid'
+              ? t('save.invalid')
               : saving
               ? `${t('general.saving')}...`
               : active
@@ -299,8 +300,7 @@ export const Save: React.FC<SaveProps> = ({
               : t('general.saved')}
           </StyledSaveButtonText>
           <StyledSaveButtonIcon saving={saving} active={saving || active}>
-            {!valid ? <AlertTriangleSvg /> : saving || active ? <UploadCloudSvg /> : <CheckSvg />}
-            {/* <UploadCloudSvg /> */}
+            {!valid ? <ExclamationMarkSvg /> : saving || active ? <UploadCloudSvg /> : <CheckSvg />}
           </StyledSaveButtonIcon>
         </StyledSaveButton>
       </StyledSaveContainer>
