@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -11,6 +11,8 @@ import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { WindowContext } from '../../../lib/WindowService';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -23,14 +25,20 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 
-const useNameForm = ({
-  category,
-  query,
-}: EntryFormProps): {
-  renderedNameForm: React.ReactElement;
+export type EntryFormHook = (
+  props: EntryFormProps,
+  loaded: boolean,
+  showHint: boolean
+) => {
+  renderedForm: React.ReactElement;
   submit: () => Promise<void>;
   pristine: boolean;
-} => {
+  reset: () => void;
+  valid: boolean;
+  hint: boolean;
+};
+
+const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const t = useT();
 
   const {
@@ -38,11 +46,15 @@ const useNameForm = ({
     onSubmit: onSubmitGerman,
     pristine: pristineGerman,
     reset: resetGerman,
+    valid: validGerman,
+    value: valueGerman,
   } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
     category,
     query,
     language: Language.de,
     label: t('categories.organizer.form.nameGerman') as string,
+    loaded,
+    showHint,
   });
 
   const {
@@ -50,22 +62,46 @@ const useNameForm = ({
     onSubmit: onSubmitEnglish,
     pristine: pristineEnglish,
     reset: resetEnglish,
+    valid: validEnglish,
+    value: valueEnglish,
   } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
     category,
     query,
     language: Language.en,
     label: t('categories.organizer.form.nameEnglish') as string,
+    loaded,
+    showHint,
   });
 
-  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
-    pristineEnglish,
-    pristineGerman,
-  ]);
+  const pristine = useMemo(
+    () => Boolean(pristineGerman && pristineEnglish),
+    [pristineEnglish, pristineGerman]
+  );
+
+  const valid = useMemo(
+    () => !loaded || Boolean(validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
+
+  const hint = useMemo(
+    () =>
+      showHint &&
+      loaded &&
+      (typeof valueEnglish === 'undefined' ||
+        typeof valueGerman === 'undefined' ||
+        valueEnglish.length < 1 ||
+        valueGerman.length < 1),
+    [showHint, loaded, valueEnglish, valueGerman]
+  );
 
   return {
-    renderedNameForm: (
+    renderedForm: (
       <div>
-        <EntryFormHead title={t('categories.organizer.form.name') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.name') as string}`}
+          valid={valid}
+          hint={hint}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
@@ -77,6 +113,12 @@ const useNameForm = ({
       onSubmitGerman();
     },
     pristine,
+    reset: () => {
+      resetGerman();
+      resetEnglish();
+    },
+    valid,
+    hint,
   };
 };
 
@@ -84,46 +126,65 @@ const StyledDescriptionForm = styled.div`
   padding: 0 0 1.5rem;
 `;
 
-const useDescriptionForm = ({
-  category,
-  query,
-}: EntryFormProps): {
-  renderedDescriptionForm: React.ReactElement;
-  submit: () => Promise<void>;
-  pristine: boolean;
-} => {
+const useDescriptionForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const t = useT();
+  const { entry } = useEntry(category, query);
+
+  const isPublished = entry?.data?.attributes?.status === PublishedStatus.published;
 
   const {
     renderedDescription: renderedDescriptionGerman,
     submit: submitGerman,
     pristine: pristineGerman,
+    valid: validGerman,
+    hint: hintGerman,
   } = useDescription({
     category,
     query,
     language: Language.de,
     title: t('categories.organizer.form.descriptionGerman') as string,
+    required: isPublished,
+    showHint,
   });
+
   const {
     renderedDescription: renderedDescriptionEnglish,
     submit: submitEnglish,
     pristine: pristineEnglish,
+    valid: validEnglish,
+    hint: hintEnglish,
   } = useDescription({
     category,
     query,
     language: Language.en,
     title: t('categories.organizer.form.descriptionEnglish') as string,
+    required: false,
+    showHint,
   });
 
-  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
-    pristineEnglish,
-    pristineGerman,
-  ]);
+  const pristine = useMemo(
+    () => pristineEnglish && pristineGerman,
+    [pristineEnglish, pristineGerman]
+  );
+
+  const valid = useMemo(
+    () => !loaded || (validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
+
+  const hint = useMemo(
+    () => showHint && loaded && (hintGerman || hintEnglish),
+    [showHint, loaded, hintEnglish, hintGerman]
+  );
 
   return {
-    renderedDescriptionForm: (
+    renderedForm: (
       <StyledDescriptionForm>
-        <EntryFormHead title={t('categories.organizer.form.description') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.description') as string}`}
+          valid={valid}
+          hint={hint}
+        />
         {renderedDescriptionGerman}
         {renderedDescriptionEnglish}
       </StyledDescriptionForm>
@@ -133,17 +194,13 @@ const useDescriptionForm = ({
       submitEnglish();
     },
     pristine,
+    reset: () => undefined,
+    valid,
+    hint,
   };
 };
 
-const useLinksForm = ({
-  category,
-  query,
-}: EntryFormProps): {
-  renderedForm: React.ReactElement;
-  submit: () => Promise<void>;
-  pristine: boolean;
-} => {
+const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -173,12 +230,13 @@ const useLinksForm = ({
     [links, initialLinks]
   );
 
-  const { renderedLinkList, init } = useLinkList({
+  const { renderedLinkList, init, valid } = useLinkList({
     links: links || [],
     onChange: (updatedLinks) => {
       setLinks(updatedLinks);
     },
-    maxLinks: 20,
+    maxLinks: 3,
+    required: false,
   });
 
   useEffect(() => {
@@ -192,14 +250,17 @@ const useLinksForm = ({
   return {
     renderedForm: (
       <StyledDescriptionForm>
-        <EntryFormHead title={t('categories.organizer.form.links') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.links') as string}`}
+          valid={!loaded || valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
         </FormGrid>
       </StyledDescriptionForm>
     ),
     submit: async () => {
-      if (!pristine) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -220,31 +281,33 @@ const useLinksForm = ({
       }
     },
     pristine,
+    reset: () => {
+      setLinksFromApi(initialLinks);
+      setLinks(initialLinks);
+      init(initialLinks);
+    },
+    valid: !loaded || valid,
+    hint: false,
   };
 };
 
-const useAddressForm = ({
-  category,
-  query,
-}: EntryFormProps): {
-  renderedAddressForm: React.ReactElement;
-  submit: () => Promise<void>;
-  pristine: boolean;
-} => {
+const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
 
-  const initialAddress = useMemo(() => entry?.data?.relations?.address, [
-    entry?.data?.relations?.address,
-  ]);
+  const initialAddress = useMemo(
+    () => entry?.data?.relations?.address,
+    [entry?.data?.relations?.address]
+  );
 
   const [address, setAddress] = useState<Address>(initialAddress);
   const [pristine, setPristine] = useState(true);
 
-  const required = useMemo(() => entry?.data?.attributes?.status === PublishedStatus.published, [
-    entry?.data?.attributes?.status,
-  ]);
+  const required = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
 
   useEffect(() => {
     if (pristine) {
@@ -254,14 +317,49 @@ const useAddressForm = ({
 
   const t = useT();
 
+  const valid = useMemo(
+    () =>
+      !loaded ||
+      !required ||
+      (address?.attributes?.street1?.length > 0 &&
+        address?.attributes?.zipCode?.length > 0 &&
+        address?.attributes?.city?.length > 0),
+    [
+      loaded,
+      address?.attributes?.city?.length,
+      address?.attributes?.street1?.length,
+      address?.attributes?.zipCode?.length,
+      required,
+    ]
+  );
+
+  const hint = useMemo(
+    () =>
+      showHint &&
+      loaded &&
+      address?.attributes?.street1?.length < 1 &&
+      address?.attributes?.zipCode?.length < 1 &&
+      address?.attributes?.city?.length < 1,
+    [
+      showHint,
+      loaded,
+      address?.attributes?.city?.length,
+      address?.attributes?.street1?.length,
+      address?.attributes?.zipCode?.length,
+    ]
+  );
+
   return {
-    renderedAddressForm: (
+    renderedForm: (
       <form
         onSubmit={async (e) => {
           e.preventDefault();
         }}
       >
-        <EntryFormHead title={t('categories.organizer.form.address') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.address') as string}`}
+          valid={valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
             <Input
@@ -279,6 +377,10 @@ const useAddressForm = ({
                 });
               }}
               required={required}
+              hint={
+                showHint &&
+                (!address?.attributes?.street1 || address?.attributes?.street1.length < 1)
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -314,6 +416,10 @@ const useAddressForm = ({
                 });
               }}
               required={required}
+              hint={
+                showHint &&
+                (!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1)
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
@@ -332,13 +438,16 @@ const useAddressForm = ({
                 });
               }}
               required={required}
+              hint={
+                showHint && (!address?.attributes?.city || address?.attributes?.city.length < 1)
+              }
             />
           </FormItem>
         </FormGrid>
       </form>
     ),
     submit: async () => {
-      if (!pristine) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -360,17 +469,16 @@ const useAddressForm = ({
       }
     },
     pristine,
+    reset: () => {
+      setAddress(initialAddress);
+      setPristine(true);
+    },
+    valid,
+    hint,
   };
 };
 
-const useContactForm = ({
-  category,
-  query,
-}: EntryFormProps): {
-  renderedForm: React.ReactElement;
-  submit: () => Promise<void>;
-  pristine: boolean;
-} => {
+const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
@@ -380,9 +488,25 @@ const useContactForm = ({
   const [attributes, setAttributes] = useState<Organizer['data']['attributes']>(initialAttributes);
   const [pristine, setPristine] = useState(true);
 
+  const [validity, setValidity] = useState<{ [key: string]: boolean }>();
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const websiteRef = useRef<HTMLInputElement>(null);
+
+  const valid = useMemo(
+    () => !loaded || (validity ? !Object.values(validity).includes(false) : true),
+    [loaded, validity]
+  );
+
   useEffect(() => {
     if (pristine) {
       setAttributes(initialAttributes);
+      setValidity({
+        email: emailRef.current?.value?.length === 0 || emailRef.current?.checkValidity(),
+        phone: websiteRef.current?.value?.length === 0 || phoneRef.current?.checkValidity(),
+        website: websiteRef.current?.value?.length === 0 || websiteRef.current?.checkValidity(),
+      });
     }
   }, [pristine, initialAttributes]);
 
@@ -395,7 +519,10 @@ const useContactForm = ({
           e.preventDefault();
         }}
       >
-        <EntryFormHead title={t('categories.organizer.form.contact') as string} />
+        <EntryFormHead
+          title={`${t('categories.organizer.form.contact') as string}`}
+          valid={valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
             <Input
@@ -408,7 +535,11 @@ const useContactForm = ({
                   ...attributes,
                   email: e.target.value,
                 });
+                requestAnimationFrame(() =>
+                  setValidity({ ...validity, email: emailRef.current?.checkValidity() })
+                );
               }}
+              ref={emailRef}
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -422,7 +553,11 @@ const useContactForm = ({
                   ...attributes,
                   phone: e.target.value,
                 });
+                requestAnimationFrame(() =>
+                  setValidity({ ...validity, phone: phoneRef.current?.checkValidity() })
+                );
               }}
+              ref={phoneRef}
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
@@ -436,14 +571,18 @@ const useContactForm = ({
                   ...attributes,
                   homepage: e.target.value,
                 });
+                requestAnimationFrame(() =>
+                  setValidity({ ...validity, website: websiteRef.current?.checkValidity() })
+                );
               }}
+              ref={websiteRef}
             />
           </FormItem>
         </FormGrid>
       </form>
     ),
     submit: async () => {
-      if (!pristine) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
@@ -467,6 +606,12 @@ const useContactForm = ({
       }
     },
     pristine,
+    reset: () => {
+      setAttributes(initialAttributes);
+      setPristine(true);
+    },
+    valid,
+    hint: false,
   };
 };
 
@@ -474,42 +619,93 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
-  const { renderedNameForm, submit: submitNameForm, pristine: namePristine } = useNameForm({
-    category,
-    query,
-  });
-  const {
-    renderedAddressForm,
-    submit: submitAddressForm,
-    pristine: addressPristine,
-  } = useAddressForm({ category, query });
-  const {
-    renderedForm: renderedLinksForm,
-    submit: submitLinksForm,
-    pristine: linksPristine,
-  } = useLinksForm({
-    category,
-    query,
-  });
-  const {
-    renderedForm: renderedContactForm,
-    submit: submitContactForm,
-    pristine: contactPristine,
-  } = useContactForm({
-    category,
-    query,
-  });
-  const {
-    renderedDescriptionForm,
-    submit: submitDescriptionForm,
-    pristine: descriptionPristine,
-  } = useDescriptionForm({
-    category,
-    query,
-  });
   const router = useRouter();
-
   const { entry } = useEntry<CategoryEntry, ApiCall>(category, router?.query);
+  const t = useT();
+
+  const [loaded, setLoaded] = useState(false);
+  const { rendered } = useContext(WindowContext);
+
+  const [valid, setValid] = useState(true);
+
+  useEffect(() => {
+    if (rendered && typeof entry !== 'undefined') {
+      setTimeout(() => setLoaded(true), 150);
+    }
+
+    return () => {
+      setLoaded(false);
+    };
+  }, [rendered, entry]);
+
+  const {
+    renderedForm: nameForm,
+    submit: nameSubmit,
+    pristine: namePristine,
+    reset: nameReset,
+    valid: nameValid,
+    hint: nameHint,
+  } = useNameForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
+  const {
+    renderedForm: addressForm,
+    submit: addressSubmit,
+    pristine: addressPristine,
+    reset: addressReset,
+    valid: addressValid,
+    hint: addressHint,
+  } = useAddressForm({ category, query }, loaded, valid);
+  const {
+    renderedForm: linksForm,
+    submit: linksSubmit,
+    pristine: linksPristine,
+    reset: linksReset,
+    valid: linksValid,
+    hint: linksHint,
+  } = useLinksForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
+  const {
+    renderedForm: contactForm,
+    submit: contactSubmit,
+    pristine: contactPristine,
+    reset: contactReset,
+    valid: contactValid,
+    hint: contactHint,
+  } = useContactForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
+  const {
+    renderedForm: descriptionForm,
+    submit: descriptionSubmit,
+    pristine: descriptionPristine,
+    reset: descriptionReset,
+    valid: descriptionValid,
+    hint: descriptionHint,
+  } = useDescriptionForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
 
   const renderedEntryHeader = useEntryHeader({ category, query });
 
@@ -527,28 +723,59 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
   );
 
+  // const valid = useMemo(
+  //   () => ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false),
+  //   [addressValid, contactValid, descriptionValid, nameValid, linksValid]
+  // );
+
+  useEffect(() => {
+    setValid(
+      ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false)
+    );
+  }, [addressValid, contactValid, descriptionValid, linksValid, nameValid]);
+
+  const hint = useMemo(
+    () => addressHint || contactHint || linksHint || nameHint || descriptionHint,
+    [addressHint, contactHint, descriptionHint, linksHint, nameHint]
+  );
+
+  const message = t('save.confirmExit') as string;
+
+  useConfirmExit(!pristine, message, () => {
+    nameReset();
+    addressReset();
+    descriptionReset();
+    contactReset();
+    linksReset();
+  });
+
   return (
     <>
-      <Save
-        onClick={async () => {
-          submitNameForm();
-          submitAddressForm();
-          submitDescriptionForm();
-          submitLinksForm();
-          submitContactForm();
-        }}
-        date={formattedDate}
-        active={!pristine}
-      />
-
       {renderedEntryHeader}
-      <EntryFormWrapper>
-        <EntryFormContainer>{renderedNameForm}</EntryFormContainer>
-        <EntryFormContainer>{renderedDescriptionForm}</EntryFormContainer>
-        <EntryFormContainer>{renderedContactForm}</EntryFormContainer>
-        <EntryFormContainer>{renderedLinksForm}</EntryFormContainer>
-        <EntryFormContainer>{renderedAddressForm}</EntryFormContainer>
-      </EntryFormWrapper>
+      <div role="tabpanel">
+        <div role="form" aria-invalid={!valid}>
+          <Save
+            onClick={async () => {
+              nameSubmit();
+              addressSubmit();
+              descriptionSubmit();
+              linksSubmit();
+              contactSubmit();
+            }}
+            date={formattedDate}
+            active={!pristine}
+            valid={loaded === false || valid}
+            hint={loaded === true && hint}
+          />
+          <EntryFormWrapper>
+            <EntryFormContainer>{nameForm}</EntryFormContainer>
+            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
+            <EntryFormContainer>{contactForm}</EntryFormContainer>
+            <EntryFormContainer>{linksForm}</EntryFormContainer>
+            <EntryFormContainer>{addressForm}</EntryFormContainer>
+          </EntryFormWrapper>
+        </div>
+      </div>
     </>
   );
 };

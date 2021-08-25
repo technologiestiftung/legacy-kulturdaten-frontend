@@ -46,6 +46,17 @@ export const enDE: Localization = {
     saved: () => 'Saved',
     savedShort: () => 'Saved',
   },
+  save: {
+    issues: () => 'There are issues with your inputs.',
+    issuesShort: () => 'Input issues',
+    invalid: () => 'issues present',
+    hint: () => 'There are fields which should be filled.',
+    hintShort: () => 'Empty fields',
+    confirmExit: () =>
+      'There are unsaved changes on this page. When leaving these will be lost. Are you sure you want to leave?',
+    alertSymbolAriaLabel: () => 'There are errors in this input fields.',
+    infoSymbolAriaLabel: () => 'Here are input fields which should be filled.',
+  },
   general: {
     name: () => 'name',
     city: () => 'city',

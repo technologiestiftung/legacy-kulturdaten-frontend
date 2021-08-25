@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
+import { isUrl } from '../../lib/validations';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Button, ButtonSize, ButtonType } from '../button';
 import { insetBorder, mq } from '../globals/Constants';
@@ -169,6 +170,7 @@ type LinkListProps = {
   label?: string;
   onChange?: (updatedLinks: string[]) => void;
   maxLinks?: number;
+  required?: boolean;
 };
 
 const LinkList: React.FC<LinkListProps> = ({
@@ -308,11 +310,30 @@ export const useLinkList = (
 ): {
   renderedLinkList: React.ReactElement<LinkListProps>;
   init: (links: string[]) => void;
+  valid: boolean;
 } => {
   const [linksState, dispatch] = useReducer(linksReducer, props?.links || []);
+
+  const valid = useMemo(() => {
+    if (linksState?.length > 0) {
+      for (let i = 0; i < linksState?.length; i += 1) {
+        if (!isUrl(linksState[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    if (props?.required !== true) {
+      return true;
+    }
+
+    return false;
+  }, [linksState, props?.required]);
 
   return {
     renderedLinkList: <LinkList {...props} linksState={linksState} dispatch={dispatch} />,
     init: (links: string[]) => dispatch({ type: LinksActions.init, payload: { links } }),
+    valid,
   };
 };

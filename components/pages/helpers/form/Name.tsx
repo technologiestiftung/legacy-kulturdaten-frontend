@@ -2,7 +2,7 @@ import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
-import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
+import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { getTranslation } from '../../../../lib/translations';
 import { Input, InputType } from '../../../input';
@@ -16,6 +16,8 @@ interface SetNameProps {
   setValue: (value: string) => void;
   name: string;
   required?: boolean;
+  valid?: boolean;
+  hint?: boolean;
 }
 
 const Name: React.FC<SetNameProps> = ({
@@ -27,6 +29,7 @@ const Name: React.FC<SetNameProps> = ({
   name,
   value,
   required,
+  hint,
 }: SetNameProps) => {
   // set initial value
   useEffect(() => {
@@ -46,6 +49,7 @@ const Name: React.FC<SetNameProps> = ({
           setValue(e.target.value);
         }}
         required={required}
+        hint={hint}
       />
     </form>
   );
@@ -61,13 +65,17 @@ export const useName = <
   query: ParsedUrlQuery;
   language: Language;
   label: string;
+  loaded: boolean;
+  showHint: boolean;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
   reset: () => void;
+  valid: boolean;
+  value: string;
 } => {
-  const { category, query, language, label } = props;
+  const { category, query, language, label, loaded, showHint } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
   const mutateList = useMutateList(category);
@@ -77,22 +85,27 @@ export const useName = <
     entry?.data?.relations?.translations as TranslationType[],
     false
   );
-  const name = useMemo(() => entryTranslation?.attributes?.name, [
-    entryTranslation?.attributes?.name,
-  ]);
+  const name = useMemo(
+    () => entryTranslation?.attributes?.name,
+    [entryTranslation?.attributes?.name]
+  );
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
 
-  const required = useMemo(
-    () =>
-      entry?.data?.attributes?.status === PublishedStatus.published && language === defaultLanguage,
-    [entry?.data?.attributes?.status, language]
-  );
+  useEffect(() => {
+    if (pristine && name !== value) {
+      setValue(name);
+    }
+  }, [pristine, name, value]);
+
+  const required = useMemo(() => language === defaultLanguage, [language]);
+
+  const valid = useMemo(() => required !== true || (value && value.length > 0), [required, value]);
 
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
 
-    if (!pristine) {
+    if (valid && !pristine) {
       try {
         const resp = await call<TranslationCreateCallType>(category.api.translationCreate.factory, {
           translation: {
@@ -117,6 +130,11 @@ export const useName = <
     }
   };
 
+  const hint = useMemo(
+    () => showHint && loaded && (!value || value?.length < 1),
+    [showHint, loaded, value]
+  );
+
   return {
     form: (
       <Name
@@ -129,6 +147,8 @@ export const useName = <
           onSubmit,
           name,
           required,
+          valid,
+          hint,
         }}
       />
     ),
@@ -138,5 +158,7 @@ export const useName = <
       setValue(name);
       setPristine(true);
     },
+    valid,
+    value,
   };
 };

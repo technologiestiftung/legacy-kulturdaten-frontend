@@ -1,7 +1,7 @@
-/* eslint-disable react/display-name */
 import styled from '@emotion/styled';
-import React, { Ref } from 'react';
-import { insetBorder } from '../globals/Constants';
+import React, { RefObject } from 'react';
+import { Breakpoint } from '../../lib/WindowService';
+import { insetBorder, mq } from '../globals/Constants';
 import { Label } from '../label';
 
 export enum ToolbarGroupWidth {
@@ -42,7 +42,7 @@ const StyledToolbarGroupItems = styled.div`
 `;
 
 const StyledToolbarGroup = styled.div<{ width: ToolbarGroupWidth }>`
-  margin-right: 0.75rem;
+  margin-right: 0.375rem;
   position: relative;
 
   &:last-of-type {
@@ -52,7 +52,7 @@ const StyledToolbarGroup = styled.div<{ width: ToolbarGroupWidth }>`
   &:not(:last-of-type) {
     ${StyledToolbarGroupItems} {
       &:after {
-        margin-left: 0.75rem;
+        margin-left: 0.375rem;
         border-top: 0.375rem solid var(--grey-200);
         border-bottom: 0.375rem solid var(--grey-200);
         padding: 3px 0;
@@ -65,15 +65,31 @@ const StyledToolbarGroup = styled.div<{ width: ToolbarGroupWidth }>`
       }
     }
   }
+
+  ${mq(Breakpoint.mid)} {
+    margin-right: 0.75rem;
+
+    &:not(:last-of-type) {
+      ${StyledToolbarGroupItems} {
+        &:after {
+          margin-left: 0.75rem;
+        }
+      }
+    }
+  }
 `;
 
 const StyledToolbarGroupLabel = styled.div``;
 
 const StyledToolbarGroupItem = styled.div`
-  margin-right: 0.375rem;
+  margin-right: 0.1875rem;
 
   &:last-of-type {
     margin-right: 0;
+  }
+
+  ${mq(Breakpoint.mid)} {
+    margin-right: 0.375rem;
   }
 `;
 
@@ -85,10 +101,11 @@ interface ToolbarProps {
   }[];
 }
 
-export const Toolbar: React.FC<ToolbarProps> = React.forwardRef(
-  ({ groups }: ToolbarProps, ref: Ref<HTMLDivElement>) => {
+// eslint-disable-next-line react/display-name
+export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
+  ({ groups }: ToolbarProps, ref: RefObject<HTMLDivElement>) => {
     return (
-      <StyledToolbar ref={ref}>
+      <StyledToolbar ref={ref} role="toolbar">
         <StyledToolbarContainer>
           {groups.map(({ width, label, items }, index) => (
             <StyledToolbarGroup key={index} width={width}>

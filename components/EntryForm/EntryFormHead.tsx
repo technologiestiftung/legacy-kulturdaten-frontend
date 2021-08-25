@@ -1,21 +1,17 @@
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
+import { AlertSymbol } from '../assets/AlertSymbol';
+import { InfoSymbol } from '../assets/InfoSymbol';
 import { mq } from '../globals/Constants';
 
 const StyledEntryFormHead = styled.div`
   display: flex;
-  justify-content: space-between;
   border-bottom: 1px solid var(--white);
   background: var(--white);
   position: relative;
-
-  align-items: flex-end;
+  align-items: center;
   flex-wrap: wrap;
   z-index: 1;
-
-  /* ${mq(Breakpoint.mid)} {
-    top: var(--header-height);
-  } */
 `;
 
 const StyledEntryFormHeadTitle = styled.h2`
@@ -28,23 +24,6 @@ const StyledEntryFormHeadTitle = styled.h2`
   position: relative;
 `;
 
-// const StyledEntryFormHeadBackground = styled.div`
-//   position: absolute;
-//   width: calc(100% + 1.5rem);
-//   height: calc(100% + 1px);
-//   left: -0.75rem;
-//   top: 0;
-//   background: var(--white);
-
-//   ${mq(Breakpoint.mid)} {
-//     border-left: none;
-//   }
-
-//   ${mq(Breakpoint.widish)} {
-//     border-right: none;
-//   }
-// `;
-
 const StyledEntryFormHeadBorder = styled.div`
   position: absolute;
   width: 100%;
@@ -53,35 +32,44 @@ const StyledEntryFormHeadBorder = styled.div`
   border-bottom: 1px solid var(--grey-400);
 `;
 
-const StyledEntryFormHeadActions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  flex-grow: 1;
+const StyledEntryFormHeadAlert = styled.div`
   position: relative;
-`;
-const StyledEntryFormHeadAction = styled.div`
-  margin: 0.375rem 0 0.375rem 0.75rem;
+  margin: 0 0.75rem 0 0;
+  width: 1.5rem;
+  height: 1.5rem;
+
+  ${mq(Breakpoint.widish)} {
+    position: absolute;
+    top: 0.75rem;
+    left: -2.25rem;
+    margin: 0;
+  }
 `;
 
 interface EntryFormHeadProps {
   title: string;
-  actions?: React.ReactElement[];
+  valid?: boolean;
+  hint?: boolean;
 }
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   title,
-  actions,
+  valid = true,
+  hint = false,
 }: EntryFormHeadProps) => (
   <StyledEntryFormHead>
-    {/* <StyledEntryFormHeadBackground /> */}
+    {valid === false ? (
+      <StyledEntryFormHeadAlert>
+        <AlertSymbol />
+      </StyledEntryFormHeadAlert>
+    ) : hint ? (
+      <StyledEntryFormHeadAlert>
+        <InfoSymbol />
+      </StyledEntryFormHeadAlert>
+    ) : (
+      ''
+    )}
     <StyledEntryFormHeadBorder />
     <StyledEntryFormHeadTitle>{title}</StyledEntryFormHeadTitle>
-    {actions && (
-      <StyledEntryFormHeadActions>
-        {actions.map((action, index) => (
-          <StyledEntryFormHeadAction key={index}>{action}</StyledEntryFormHeadAction>
-        ))}
-      </StyledEntryFormHeadActions>
-    )}
   </StyledEntryFormHead>
 );

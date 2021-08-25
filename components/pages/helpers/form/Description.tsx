@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { EntryFormProps } from '.';
@@ -27,13 +28,38 @@ const StyledDescriptionTitleStatus = styled.div`
   display: flex;
 `;
 
-const StyledDescriptionRichTextWrapper = styled.div`
-  position: relative;
+const errorShadow = '0px 0px 0px 0.1125rem var(--error-o50)';
+const hintShadow = '0px 0px 0px 0.1125rem rgba(10, 47, 211, 0.4)';
+
+const StyledDescriptionRichTextWrapper = styled.div<{ valid?: boolean; hint?: boolean }>`
   border: 1px solid var(--grey-600);
   border-radius: 0.375rem;
+  overflow: hidden;
+
+  ${({ hint }) =>
+    hint
+      ? css`
+          box-shadow: ${hintShadow};
+          border-color: rgb(10, 47, 211);
+        `
+      : ''}
+
+  ${({ valid }) =>
+    valid
+      ? ''
+      : css`
+          box-shadow: ${errorShadow};
+          border-color: var(--error);
+        `}
+`;
+
+const StyledDescriptionRichTextContainer = styled.div<{ valid?: boolean }>`
+  position: relative;
+
   max-height: calc(var(--app-height) - var(--header-height) - 8rem);
   overflow-y: auto;
   overflow-x: hidden;
+  mask-image: -webkit-radial-gradient(white, black);
   box-shadow: var(--shadow-inset);
 
   @media screen and (min-height: 75rem) {
@@ -44,6 +70,8 @@ const StyledDescriptionRichTextWrapper = styled.div`
 interface DescriptionProps extends EntryFormProps {
   language: Language;
   title: string;
+  showHint: boolean;
+  required?: boolean;
 }
 
 export const useDescription = ({
@@ -51,10 +79,14 @@ export const useDescription = ({
   query,
   language,
   title,
+  required,
+  showHint,
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
   pristine: boolean;
+  valid: boolean;
+  hint: boolean;
 } => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
@@ -82,13 +114,19 @@ export const useDescription = ({
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
 
-  const { renderedRichText, init: initRichText } = useRichText({
+  const {
+    renderedRichText,
+    init: initRichText,
+    valid,
+    textLength,
+  } = useRichText({
     onChange: () => {
       if (richTextRef.current) {
         setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
       }
     },
     contentRef: richTextRef,
+    required,
   });
 
   const pristine = useMemo(() => {
@@ -109,6 +147,8 @@ export const useDescription = ({
     }
   }, [initRichText, textFromApi, cachedApiText]);
 
+  const hint = useMemo(() => showHint && textLength < 1, [showHint, textLength]);
+
   return {
     renderedDescription: (
       <StyledDescription>
@@ -119,17 +159,17 @@ export const useDescription = ({
                 <Label>{title}</Label>
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
-            <div>
-              <StyledDescriptionRichTextWrapper>
+            <StyledDescriptionRichTextWrapper valid={valid} hint={hint}>
+              <StyledDescriptionRichTextContainer valid={valid}>
                 {renderedRichText}
-              </StyledDescriptionRichTextWrapper>
-            </div>
+              </StyledDescriptionRichTextContainer>
+            </StyledDescriptionRichTextWrapper>
           </>
         )}
       </StyledDescription>
     ),
     submit: async () => {
-      if (!pristine) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OrganizerTranslationCreate>(
             category.api.translationCreate.factory,
@@ -161,5 +201,7 @@ export const useDescription = ({
       }
     },
     pristine,
+    valid,
+    hint,
   };
 };

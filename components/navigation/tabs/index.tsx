@@ -21,7 +21,7 @@ const StyledTabsContainer = styled.div<{ itemCount: number }>`
 
   ${mq(Breakpoint.mid)} {
     display: grid;
-    padding: 0 1.5rem;
+    padding: 0 1.5rem 0;
     grid-template-columns: ${({ itemCount }) => `repeat(${itemCount < 4 ? itemCount : '4'}, 1fr)`};
     grid-column: 2 / -2;
     column-gap: 0.75rem;
@@ -53,7 +53,6 @@ const StyledTabLink = styled.a<{ isActive?: boolean; itemCount: number; index: n
 
   @media screen and (pointer: fine) {
     &:hover {
-      text-decoration: underline;
       background: var(--grey-350);
     }
   }
@@ -63,13 +62,14 @@ const StyledTabLink = styled.a<{ isActive?: boolean; itemCount: number; index: n
   ${({ isActive, itemCount }) =>
     isActive
       ? css`
-          text-decoration: underline;
           background: var(--black);
+          border-color: var(--black);
           color: var(--white);
           z-index: ${itemCount};
 
           &:hover {
             background: var(--black);
+            border-color: var(--black);
             color: var(--white);
           }
         `
@@ -92,11 +92,11 @@ export interface TabsProps {
 }
 
 export const Tabs: React.FC<TabsProps> = ({ links }: TabsProps) => (
-  <StyledTabs>
+  <StyledTabs role="tablist">
     <StyledTabsContainer itemCount={links.length}>
       {links.map(({ title, href, isActive }, index) => (
         <Link key={index} href={href} passHref shallow>
-          <StyledTabLink isActive={isActive} itemCount={links.length} index={index}>
+          <StyledTabLink isActive={isActive} itemCount={links.length} index={index} role="tab">
             {title}
           </StyledTabLink>
         </Link>

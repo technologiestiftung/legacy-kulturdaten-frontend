@@ -25,6 +25,8 @@ const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps)
     query,
     language: Language.de,
     label: t('categories.location.form.nameGerman') as string,
+    loaded: true,
+    showHint: false,
   });
 
   const {
@@ -37,38 +39,40 @@ const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps)
     query,
     language: Language.en,
     label: t('categories.location.form.nameEnglish') as string,
+    loaded: true,
+    showHint: false,
   });
 
   return (
     <div>
       <EntryFormHead
         title={t('categories.location.form.name') as string}
-        actions={[
-          <Button
-            key={0}
-            onClick={() => {
-              resetGerman();
-              resetEnglish();
-            }}
-            disabled={pristineEnglish && pristineGerman}
-            icon="XOctagon"
-            color={ButtonColor.yellow}
-          >
-            {t('categories.location.form.editCancel')}
-          </Button>,
-          <Button
-            key={1}
-            icon="CheckSquare"
-            color={ButtonColor.green}
-            onClick={() => {
-              onSubmitEnglish();
-              onSubmitGerman();
-            }}
-            disabled={pristineEnglish && pristineGerman}
-          >
-            {t('categories.location.form.save')}
-          </Button>,
-        ]}
+        // actions={[
+        //   <Button
+        //     key={0}
+        //     onClick={() => {
+        //       resetGerman();
+        //       resetEnglish();
+        //     }}
+        //     disabled={pristineEnglish && pristineGerman}
+        //     icon="XOctagon"
+        //     color={ButtonColor.yellow}
+        //   >
+        //     {t('categories.location.form.editCancel')}
+        //   </Button>,
+        //   <Button
+        //     key={1}
+        //     icon="CheckSquare"
+        //     color={ButtonColor.green}
+        //     onClick={() => {
+        //       onSubmitEnglish();
+        //       onSubmitGerman();
+        //     }}
+        //     disabled={pristineEnglish && pristineGerman}
+        //   >
+        //     {t('categories.location.form.save')}
+        //   </Button>,
+        // ]}
       />
       <FormGrid>
         <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>

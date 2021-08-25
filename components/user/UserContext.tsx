@@ -67,7 +67,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
         invalidateUser: () => {
           setAuthToken(undefined);
           setStateUser(undefined);
-          setUserIsAuthenticated(false);
+          setUserIsAuthenticated(undefined);
         },
         rand,
       }}

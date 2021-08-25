@@ -49,6 +49,8 @@ const StyledTypesSubjectsChevron = styled.div<{ isOpen: boolean }>`
   top: 0.75rem;
   pointer-events: none;
   transition: transform var(--transition-duration);
+  transform-origin: 50% 50%;
+  line-height: 0;
 
   ${({ isOpen }) =>
     isOpen
@@ -116,6 +118,8 @@ interface TypesSubjectsProps {
   onChange?: (value: TypesSubjectsState) => void;
   pristine?: boolean;
   setPristine?: (pristine: boolean) => void;
+  required?: boolean;
+  valid?: boolean;
 }
 
 export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
@@ -124,6 +128,8 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
   onChange,
   pristine,
   setPristine,
+  required = false,
+  valid = true,
 }: TypesSubjectsProps) => {
   const pseudoUid = usePseudoUID();
   const [intPristine, intSetPristine] = useState(true);
@@ -159,7 +165,7 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
   });
 
   return (
-    <StyledTypesSubjects>
+    <StyledTypesSubjects aria-required={required} aria-invalid={!valid} role="listbox">
       {options?.map((type, index) => {
         const typeTranslation = getTranslation<OrganizerTypeTranslation>(
           language,

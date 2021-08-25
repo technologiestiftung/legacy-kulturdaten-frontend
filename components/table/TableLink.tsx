@@ -73,7 +73,7 @@ export const TableLink: React.FC<TableLinkProps> = ({
 }: TableLinkProps) => {
   return (
     <Link href={href} passHref>
-      <StyledTableLink isActive={isActive} onClick={onClick}>
+      <StyledTableLink isActive={isActive} onClick={onClick} role="menuitem">
         <div>{children}</div>
       </StyledTableLink>
     </Link>
