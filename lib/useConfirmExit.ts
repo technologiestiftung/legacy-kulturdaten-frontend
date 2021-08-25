@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
+import { UserContext } from '../components/user/UserContext';
 import { useLocale } from './routing';
 import { WindowContext } from './WindowService';
 
@@ -11,12 +12,13 @@ export const useConfirmExit = (
   const locale = useLocale();
   const router = useRouter();
   const { rendered } = useContext(WindowContext);
+  const { isAuthenticated } = useContext(UserContext);
 
   useEffect(() => {
     let warned = false;
 
     const beforeUnload = (e: BeforeUnloadEvent) => {
-      if (!warned && shouldWarn) {
+      if (isAuthenticated && !warned && shouldWarn) {
         const event = e || window.event;
         event.returnValue = message;
         return message;
@@ -28,7 +30,13 @@ export const useConfirmExit = (
     window.addEventListener('beforeunload', beforeUnload);
 
     const routeChangeHandler = (url: string) => {
-      if (rendered && `/${locale}${router.asPath}` !== url && shouldWarn && !warned) {
+      if (
+        isAuthenticated &&
+        rendered &&
+        `/${locale}${router.asPath}` !== url &&
+        shouldWarn &&
+        !warned
+      ) {
         warned = true;
 
         if (window.confirm(message)) {
@@ -49,7 +57,7 @@ export const useConfirmExit = (
     router.events.on('routeChangeStart', routeChangeHandler);
 
     router.beforePopState(({ url }) => {
-      if (`/${locale}${router.asPath}` !== url && shouldWarn && !warned) {
+      if (isAuthenticated && `/${locale}${router.asPath}` !== url && shouldWarn && !warned) {
         warned = true;
         if (window.confirm(message)) {
           if (typeof onAbort === 'function') {
@@ -76,5 +84,5 @@ export const useConfirmExit = (
         return true;
       });
     };
-  }, [rendered, locale, message, onAbort, router, shouldWarn]);
+  }, [isAuthenticated, rendered, locale, message, onAbort, router, shouldWarn]);
 };

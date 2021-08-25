@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import getConfig from 'next/config';
 
@@ -55,13 +55,19 @@ export const useUser = (): WrappedUser => {
   const locale = useLocale();
   const call = useApiCall(authTokenFromStateOrCookie);
 
-  const { data, mutate: mutateValidate } = useSWR(getApiUrlString(ApiRoutes.authValidate), () =>
-    authTokenFromStateOrCookie
-      ? call<AuthValidate>(authValidateFactory)
-      : { body: { meta: { valid: undefined } } }
+  const { data, mutate: mutateValidate } = useSWR(
+    [getApiUrlString(ApiRoutes.authValidate), authTokenFromStateOrCookie],
+    (url: string, requestAuthToken: string) =>
+      requestAuthToken
+        ? call<AuthValidate>(authValidateFactory)
+        : { body: { meta: { valid: undefined } } }
   );
 
-  const userTokenIsValid = data?.body?.meta?.valid;
+  const [userTokenIsValid, setUserTokenIsValid] = useState<boolean>();
+
+  useEffect(() => {
+    setUserTokenIsValid(data?.body?.meta?.valid);
+  }, [data?.body?.meta?.valid]);
 
   const { data: userResponse } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
     authTokenFromStateOrCookie ? call<AuthInfo>(authInfoFactory) : undefined
@@ -72,23 +78,24 @@ export const useUser = (): WrappedUser => {
       call<AuthLogout>(authLogoutFactory).catch((e) => console.error(e));
     }
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
-    mutateValidate();
+    mutateValidate(undefined);
+    setUserTokenIsValid(false);
     invalidateUser();
   }, [
-    authTokenCookieName,
-    invalidateUser,
-    mutateValidate,
-    locale,
-    call,
     authTokenFromStateOrCookie,
+    authTokenCookieName,
+    locale,
+    mutateValidate,
+    invalidateUser,
+    call,
   ]);
 
   useEffect(() => {
-    const userData = (userResponse?.body.data.attributes as unknown) as User;
+    const userData = userResponse?.body.data.attributes as unknown as User;
 
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
-        console.log('useTokenIsValid = false, log out!');
+        console.log('userTokenIsValid = false, log out!');
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
         if (userData) {
@@ -124,8 +131,10 @@ export const useUser = (): WrappedUser => {
     authToken: authTokenFromStateOrCookie,
     isLoggedIn: isAuthenticated,
     login: (cookie: Cookie, redirectRoute: string) => {
+      setAuthToken(cookie.value);
       setCookie(cookie);
-      setAuthToken(authTokenFromStateOrCookie);
+      mutateValidate({ body: { meta: { valid: true } } });
+      setUserTokenIsValid(true);
       router.replace(redirectRoute);
     },
     logout: async () => {
