@@ -8,6 +8,7 @@ import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { OrganizerTranslationCreate } from '../../../../lib/api/routes/organizer/translation/create';
 import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
 import { useEntry, useMutateList } from '../../../../lib/categories';
+import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { WindowContext } from '../../../../lib/WindowService';
 import { Label } from '../../../label';
@@ -93,6 +94,7 @@ export const useDescription = ({
   const mutateList = useMutateList(category);
   const [cachedApiText, setCachedApiText] = useState<string>();
   const { rendered } = useContext(WindowContext);
+  const t = useT();
 
   const entryTranslation = getTranslation<OrganizerTranslation>(
     language,
@@ -156,7 +158,10 @@ export const useDescription = ({
           <>
             <StyledDescriptionTitleStatus>
               <StyledDescriptionTitle>
-                <Label>{title}</Label>
+                <Label>
+                  {title}
+                  {required && ` (${t('forms.required')})`}
+                </Label>
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
             <StyledDescriptionRichTextWrapper valid={valid} hint={hint}>
