@@ -172,7 +172,6 @@ const StyledEntryHeaderStatus = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
-  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.75rem;
   overflow: hidden;
   background: var(--white);
@@ -187,7 +186,7 @@ const StyledEntryHeaderStatus = styled.div`
 `;
 
 const StyledEntryHeaderStatusLabel = styled.div`
-  padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
+  padding: calc(0.375rem) calc(0.75rem);
   flex-grow: 1;
   text-align: center;
 `;
@@ -195,7 +194,7 @@ const StyledEntryHeaderStatusLabel = styled.div`
 const StyledEntryHeaderStatusFlag = styled.div<{ backgroundColor: string }>`
   text-align: center;
   background: ${({ backgroundColor }) => backgroundColor};
-  padding: calc(0.375rem - 1px) calc(0.75rem - 1px);
+  padding: calc(0.375rem) calc(0.75rem);
   flex-grow: 1;
 `;
 

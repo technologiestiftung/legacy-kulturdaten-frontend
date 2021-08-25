@@ -255,7 +255,7 @@ export const Save: React.FC<SaveProps> = ({
           {valid === false ? (
             <>
               <StyledSaveMessageSymbol>
-                <AlertSymbol />
+                <AlertSymbol ariaLabel="" />
               </StyledSaveMessageSymbol>
               <StyledSaveMessageText>
                 {t(isMidOrWider ? 'save.issues' : 'save.issuesShort')}
@@ -264,7 +264,7 @@ export const Save: React.FC<SaveProps> = ({
           ) : hint ? (
             <>
               <StyledSaveMessageSymbol>
-                <InfoSymbol />
+                <InfoSymbol ariaLabel="" />
               </StyledSaveMessageSymbol>
               <StyledSaveMessageText>
                 {t(isMidOrWider ? 'save.hint' : 'save.hintShort')}
