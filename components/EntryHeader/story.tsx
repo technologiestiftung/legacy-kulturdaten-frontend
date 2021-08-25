@@ -1,5 +1,6 @@
 import { Story } from '@storybook/react';
 import { EntryHeader } from '.';
+import { PublishedStatus } from '../../lib/api/types/general';
 import { Button, ButtonVariant, IconPosition } from '../button';
 import { Tabs } from '../navigation/tabs';
 
@@ -45,6 +46,7 @@ export const EntryHeaderDefaultStory: Story = () => {
       ]}
       title="This is a very long title"
       tabs={<Tabs links={testTabLinks} />}
+      status={PublishedStatus.published}
     />
   );
 };

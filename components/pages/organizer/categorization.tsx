@@ -208,7 +208,8 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
 
   const { renderedForm, submit, pristine, reset, valid } = useClassificationForm(
     { category, query },
-    loaded
+    loaded,
+    false
   );
 
   useConfirmExit(!pristine, t('save.confirmExit') as string, () => reset());
