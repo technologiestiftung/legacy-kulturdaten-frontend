@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useT } from '../../lib/i18n';
 import { InfoISvg } from '../assets/InfoISvg';
 
 export const StyledInfoSymbol = styled.div`
@@ -15,8 +16,20 @@ export const StyledInfoSymbol = styled.div`
   }
 `;
 
-export const InfoSymbol: React.FC = () => (
-  <StyledInfoSymbol>
-    <InfoISvg />
-  </StyledInfoSymbol>
-);
+interface InfoSymbolProps {
+  ariaLabel?: string;
+}
+
+export const InfoSymbol: React.FC<InfoSymbolProps> = ({ ariaLabel }: InfoSymbolProps) => {
+  const t = useT();
+
+  return (
+    <StyledInfoSymbol
+      aria-label={
+        typeof ariaLabel !== 'undefined' ? ariaLabel : (t('save.infoSymbolAriaLabel') as string)
+      }
+    >
+      <InfoISvg />
+    </StyledInfoSymbol>
+  );
+};

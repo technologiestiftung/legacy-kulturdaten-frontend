@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useT } from '../../lib/i18n';
 import { ExclamationMarkSvg } from '../assets/ExclamationMarkSvg';
 
 export const StyledAlertSymbol = styled.div`
@@ -15,8 +16,20 @@ export const StyledAlertSymbol = styled.div`
   }
 `;
 
-export const AlertSymbol: React.FC = () => (
-  <StyledAlertSymbol>
-    <ExclamationMarkSvg />
-  </StyledAlertSymbol>
-);
+interface AlertSymbolProps {
+  ariaLabel?: string;
+}
+
+export const AlertSymbol: React.FC<AlertSymbolProps> = ({ ariaLabel }: AlertSymbolProps) => {
+  const t = useT();
+
+  return (
+    <StyledAlertSymbol
+      aria-label={
+        typeof ariaLabel !== 'undefined' ? ariaLabel : (t('save.alertSymbolAriaLabel') as string)
+      }
+    >
+      <ExclamationMarkSvg />
+    </StyledAlertSymbol>
+  );
+};

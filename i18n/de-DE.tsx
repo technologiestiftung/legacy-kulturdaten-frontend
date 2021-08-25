@@ -54,6 +54,8 @@ export const deDE: Localization = {
     hintShort: () => 'Leere Felder',
     confirmExit: () =>
       'Es gibt ungespeicherte Änderungen auf dieser Seite. Beim Verlassen gehen diese verloren. Wollen Sie die Seite trotzdem verlassen?',
+    alertSymbolAriaLabel: () => 'In diesen Eingabefeldern existieren Fehler.',
+    infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
   },
   general: {
     name: () => 'Bezeichnung',
