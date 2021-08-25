@@ -66,6 +66,7 @@ export const useName = <
   language: Language;
   label: string;
   loaded: boolean;
+  showHint: boolean;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -74,7 +75,7 @@ export const useName = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, loaded } = props;
+  const { category, query, language, label, loaded, showHint } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
   const mutateList = useMutateList(category);
@@ -84,9 +85,10 @@ export const useName = <
     entry?.data?.relations?.translations as TranslationType[],
     false
   );
-  const name = useMemo(() => entryTranslation?.attributes?.name, [
-    entryTranslation?.attributes?.name,
-  ]);
+  const name = useMemo(
+    () => entryTranslation?.attributes?.name,
+    [entryTranslation?.attributes?.name]
+  );
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
 
@@ -128,7 +130,10 @@ export const useName = <
     }
   };
 
-  const hint = useMemo(() => loaded && (!value || value?.length < 1), [loaded, value]);
+  const hint = useMemo(
+    () => showHint && loaded && (!value || value?.length < 1),
+    [showHint, loaded, value]
+  );
 
   return {
     form: (

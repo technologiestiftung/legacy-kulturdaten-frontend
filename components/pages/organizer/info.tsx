@@ -27,7 +27,8 @@ import { useSaveDate } from '../helpers/useSaveDate';
 
 export type EntryFormHook = (
   props: EntryFormProps,
-  loaded: boolean
+  loaded: boolean,
+  showHint: boolean
 ) => {
   renderedForm: React.ReactElement;
   submit: () => Promise<void>;
@@ -37,7 +38,7 @@ export type EntryFormHook = (
   hint: boolean;
 };
 
-const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
+const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const t = useT();
 
   const {
@@ -53,6 +54,7 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
     language: Language.de,
     label: t('categories.organizer.form.nameGerman') as string,
     loaded,
+    showHint,
   });
 
   const {
@@ -68,27 +70,28 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded) => {
     language: Language.en,
     label: t('categories.organizer.form.nameEnglish') as string,
     loaded,
+    showHint,
   });
 
-  const pristine = useMemo(() => Boolean(pristineGerman && pristineEnglish), [
-    pristineEnglish,
-    pristineGerman,
-  ]);
+  const pristine = useMemo(
+    () => Boolean(pristineGerman && pristineEnglish),
+    [pristineEnglish, pristineGerman]
+  );
 
-  const valid = useMemo(() => !loaded || Boolean(validGerman && validEnglish), [
-    loaded,
-    validEnglish,
-    validGerman,
-  ]);
+  const valid = useMemo(
+    () => !loaded || Boolean(validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
 
   const hint = useMemo(
     () =>
+      showHint &&
       loaded &&
       (typeof valueEnglish === 'undefined' ||
         typeof valueGerman === 'undefined' ||
         valueEnglish.length < 1 ||
         valueGerman.length < 1),
-    [loaded, valueEnglish, valueGerman]
+    [showHint, loaded, valueEnglish, valueGerman]
   );
 
   return {
@@ -123,7 +126,7 @@ const StyledDescriptionForm = styled.div`
   padding: 0 0 1.5rem;
 `;
 
-const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
+const useDescriptionForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const t = useT();
   const { entry } = useEntry(category, query);
 
@@ -141,6 +144,7 @@ const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
     language: Language.de,
     title: t('categories.organizer.form.descriptionGerman') as string,
     required: isPublished,
+    showHint,
   });
 
   const {
@@ -155,24 +159,23 @@ const useDescriptionForm: EntryFormHook = ({ category, query }, loaded) => {
     language: Language.en,
     title: t('categories.organizer.form.descriptionEnglish') as string,
     required: false,
+    showHint,
   });
 
-  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
-    pristineEnglish,
-    pristineGerman,
-  ]);
+  const pristine = useMemo(
+    () => pristineEnglish && pristineGerman,
+    [pristineEnglish, pristineGerman]
+  );
 
-  const valid = useMemo(() => !loaded || (validGerman && validEnglish), [
-    loaded,
-    validEnglish,
-    validGerman,
-  ]);
+  const valid = useMemo(
+    () => !loaded || (validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
 
-  const hint = useMemo(() => loaded && (hintGerman || hintEnglish), [
-    loaded,
-    hintEnglish,
-    hintGerman,
-  ]);
+  const hint = useMemo(
+    () => showHint && loaded && (hintGerman || hintEnglish),
+    [showHint, loaded, hintEnglish, hintGerman]
+  );
 
   return {
     renderedForm: (
@@ -288,21 +291,23 @@ const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
   };
 };
 
-const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
+const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
 
-  const initialAddress = useMemo(() => entry?.data?.relations?.address, [
-    entry?.data?.relations?.address,
-  ]);
+  const initialAddress = useMemo(
+    () => entry?.data?.relations?.address,
+    [entry?.data?.relations?.address]
+  );
 
   const [address, setAddress] = useState<Address>(initialAddress);
   const [pristine, setPristine] = useState(true);
 
-  const required = useMemo(() => entry?.data?.attributes?.status === PublishedStatus.published, [
-    entry?.data?.attributes?.status,
-  ]);
+  const required = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
 
   useEffect(() => {
     if (pristine) {
@@ -330,11 +335,13 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
 
   const hint = useMemo(
     () =>
+      showHint &&
       loaded &&
       address?.attributes?.street1?.length < 1 &&
       address?.attributes?.zipCode?.length < 1 &&
       address?.attributes?.city?.length < 1,
     [
+      showHint,
       loaded,
       address?.attributes?.city?.length,
       address?.attributes?.street1?.length,
@@ -370,7 +377,10 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
                 });
               }}
               required={required}
-              hint={!address?.attributes?.street1 || address?.attributes?.street1.length < 1}
+              hint={
+                showHint &&
+                (!address?.attributes?.street1 || address?.attributes?.street1.length < 1)
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -406,7 +416,10 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
                 });
               }}
               required={required}
-              hint={!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1}
+              hint={
+                showHint &&
+                (!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1)
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
@@ -425,7 +438,9 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded) => {
                 });
               }}
               required={required}
-              hint={!address?.attributes?.city || address?.attributes?.city.length < 1}
+              hint={
+                showHint && (!address?.attributes?.city || address?.attributes?.city.length < 1)
+              }
             />
           </FormItem>
         </FormGrid>
@@ -611,6 +626,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
 
+  const [valid, setValid] = useState(true);
+
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
       setTimeout(() => setLoaded(true), 150);
@@ -633,7 +650,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       category,
       query,
     },
-    loaded
+    loaded,
+    valid
   );
   const {
     renderedForm: addressForm,
@@ -642,7 +660,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     reset: addressReset,
     valid: addressValid,
     hint: addressHint,
-  } = useAddressForm({ category, query }, loaded);
+  } = useAddressForm({ category, query }, loaded, valid);
   const {
     renderedForm: linksForm,
     submit: linksSubmit,
@@ -655,7 +673,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       category,
       query,
     },
-    loaded
+    loaded,
+    valid
   );
   const {
     renderedForm: contactForm,
@@ -669,7 +688,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       category,
       query,
     },
-    loaded
+    loaded,
+    valid
   );
   const {
     renderedForm: descriptionForm,
@@ -683,7 +703,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       category,
       query,
     },
-    loaded
+    loaded,
+    valid
   );
 
   const renderedEntryHeader = useEntryHeader({ category, query });
@@ -702,10 +723,16 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
   );
 
-  const valid = useMemo(
-    () => ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false),
-    [addressValid, contactValid, descriptionValid, nameValid, linksValid]
-  );
+  // const valid = useMemo(
+  //   () => ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false),
+  //   [addressValid, contactValid, descriptionValid, nameValid, linksValid]
+  // );
+
+  useEffect(() => {
+    setValid(
+      ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false)
+    );
+  }, [addressValid, contactValid, descriptionValid, linksValid, nameValid]);
 
   const hint = useMemo(
     () => addressHint || contactHint || linksHint || nameHint || descriptionHint,

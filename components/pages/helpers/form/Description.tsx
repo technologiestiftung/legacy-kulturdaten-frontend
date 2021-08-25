@@ -70,6 +70,7 @@ const StyledDescriptionRichTextContainer = styled.div<{ valid?: boolean }>`
 interface DescriptionProps extends EntryFormProps {
   language: Language;
   title: string;
+  showHint: boolean;
   required?: boolean;
 }
 
@@ -79,6 +80,7 @@ export const useDescription = ({
   language,
   title,
   required,
+  showHint,
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
@@ -112,7 +114,12 @@ export const useDescription = ({
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
 
-  const { renderedRichText, init: initRichText, valid, textLength } = useRichText({
+  const {
+    renderedRichText,
+    init: initRichText,
+    valid,
+    textLength,
+  } = useRichText({
     onChange: () => {
       if (richTextRef.current) {
         setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
@@ -140,7 +147,7 @@ export const useDescription = ({
     }
   }, [initRichText, textFromApi, cachedApiText]);
 
-  const hint = useMemo(() => textLength < 1, [textLength]);
+  const hint = useMemo(() => showHint && textLength < 1, [showHint, textLength]);
 
   return {
     renderedDescription: (

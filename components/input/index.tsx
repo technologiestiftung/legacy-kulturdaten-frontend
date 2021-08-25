@@ -67,15 +67,9 @@ export const inputStyles = ({
 
   ${hint ? hintStyle : ''}
 
-  ${!pristine && valid === false
-    ? errorStyle
-    : !pristine
-    ? css`
-        &:invalid {
-          ${errorStyle}
-        }
-      `
-    : ''}
+  &:invalid {
+    ${errorStyle}
+  }
 `;
 
 const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
