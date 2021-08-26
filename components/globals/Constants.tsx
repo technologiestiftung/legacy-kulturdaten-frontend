@@ -55,11 +55,11 @@ export const CSSVars: React.FC = () => (
         --transition-duration: 0.125s;
         --transition-duration-fast: 0.03125s;
 
-        --shadow: 2px 2px 10px -4px var(--black-o70);
-        --shadow-hover: 2px 2px 12px -2px var(--black-o70);
-        --shadow-active: 2px 2px 8px -4px var(--black-o70);
-        --shadow-inset: inset 0px 1px 6px var(--black-o25);
-        --shadow-light: 2px 2px 10px -2px var(--black-o40);
+        --shadow: 0.125rem 0.125rem 10px -0.25rem var(--black-o70);
+        --shadow-hover: 0.125rem 0.125rem 0.75rem -0.125rem var(--black-o70);
+        --shadow-active: 0.125rem 0.125rem 0.5rem -0.25rem var(--black-o70);
+        --shadow-inset: inset 0px 0.0625rem 0.375rem var(--black-o25);
+        --shadow-light: 0.125rem 0.125rem 10px -0.125rem var(--black-o40);
 
         --overlay-opacity: 0.85;
 
@@ -88,10 +88,10 @@ export const contentGrid = (columnCount: number): SerializedStyles => css`
 const defaultShadowColor = 'var(--grey-400)';
 
 const shadowMap4 = (shadowColor = defaultShadowColor) => ({
-  top: `inset 0px 1px 0px ${shadowColor}`,
-  right: `inset -1px 0px 0px ${shadowColor}`,
-  bottom: `inset 0px -1px 0px ${shadowColor}`,
-  left: `inset 1px 0px 0px ${shadowColor}`,
+  top: `inset 0px 0.0625rem 0px ${shadowColor}`,
+  right: `inset -0.0625rem 0px 0px ${shadowColor}`,
+  bottom: `inset 0px -0.0625rem 0px ${shadowColor}`,
+  left: `inset 0.0625rem 0px 0px ${shadowColor}`,
 });
 
 const shadowMap2 = (shadowColor = defaultShadowColor) => ({
@@ -99,7 +99,8 @@ const shadowMap2 = (shadowColor = defaultShadowColor) => ({
   rightLeft: `${shadowMap4(shadowColor).right}, ${shadowMap4(shadowColor).left}`,
 });
 
-const shadowMap1 = (shadowColor = defaultShadowColor) => `inset 0px 0px 0px 1px ${shadowColor}`;
+const shadowMap1 = (shadowColor = defaultShadowColor) =>
+  `inset 0px 0px 0px 0.0625rem ${shadowColor}`;
 
 /**
  * Creates border like attributes to be used with css `box-shadow`
