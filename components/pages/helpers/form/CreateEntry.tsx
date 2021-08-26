@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import React, { FormEvent, useState } from 'react';
 import { ButtonColor } from '../../../button';
 import { Input, InputType } from '../../../input';
-import { Category } from '../../../../lib/categories';
+import { Category, useMutateList } from '../../../../lib/categories';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { useT } from '../../../../lib/i18n';
 import { useLocale } from '../../../../lib/routing';
@@ -67,6 +67,7 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
+  const mutateList = useMutateList(category);
 
   const [formState, setFormState] = useState<{
     name: string;
@@ -89,6 +90,7 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
             if (resp.status === 200) {
               const id = resp.body.data.id;
 
+              mutateList();
               router.push(category.routes.list({ locale, query: { id, sub: 'info' } }));
             }
           } catch (e) {

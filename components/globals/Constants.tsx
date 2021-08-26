@@ -12,9 +12,9 @@ export const CSSVars: React.FC = () => (
         --grey-400: #cbcbcb;
         --grey-600: #474747;
         --black: #1a1a1a;
-        --black-o25: rgba(17, 17, 17, 0.25);
+        --black-o25: rgba(0, 0, 0, 0.25);
         --black-o40: rgba(0, 0, 0, 0.4);
-        --black-o70: rgba(17, 17, 17, 0.7);
+        --black-o70: rgba(0, 0, 0, 0.7);
         --yellow: #f6ef31;
         --yellow-dark: #a7ad00;
         --green-light: #41b496;
