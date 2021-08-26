@@ -337,15 +337,18 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) =>
     () =>
       showHint &&
       loaded &&
-      address?.attributes?.street1?.length < 1 &&
-      address?.attributes?.zipCode?.length < 1 &&
-      address?.attributes?.city?.length < 1,
+      (!address?.attributes?.street1 ||
+        address.attributes.street1.length < 1 ||
+        !address?.attributes?.zipCode ||
+        address.attributes.zipCode?.length < 1 ||
+        !address?.attributes?.city ||
+        address.attributes.city?.length < 1),
     [
       showHint,
       loaded,
-      address?.attributes?.city?.length,
-      address?.attributes?.street1?.length,
-      address?.attributes?.zipCode?.length,
+      address?.attributes?.street1,
+      address?.attributes?.zipCode,
+      address?.attributes?.city,
     ]
   );
 
@@ -359,6 +362,7 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) =>
         <EntryFormHead
           title={`${t('categories.organizer.form.address') as string}`}
           valid={valid}
+          hint={hint}
         />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>
