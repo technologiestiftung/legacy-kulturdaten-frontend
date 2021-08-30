@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useMemo } from 'react';
 import { Categories, useCategories } from '../../config/categories';
@@ -10,15 +11,60 @@ import { OverlayContainer } from '../overlay/OverlayContainer';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
 
 const StyledEntryPicker = styled.div``;
+const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
 
-const StyledEntryPickerSlot = styled.div``;
+const StyledEntryPickerSlot = styled.div<{ showHint?: boolean }>`
+  border: 1px solid var(--grey-600);
+  width: 100%;
+  display: block;
+  position: relative;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+  padding: 0.75rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 400;
+  transition: box-shadow var(--transition-duration-fast);
 
-const StyledEntryPickerSlotActiveEntry = styled.div``;
-const StyledEntryPickerSlotActiveEntryTitle = styled.div``;
+  ${({ showHint }) =>
+    showHint
+      ? css`
+          box-shadow: ${hintShadow};
+          border-color: rgb(10, 47, 211);
+        `
+      : ''}
 
-const StyledEntryPickerSlotEdit = styled.div``;
+  &:hover {
+    box-shadow: var(--shadow-sharp-hover);
+    border-color: var(--grey-600);
+  }
+`;
 
-const StyledEntryPickerSlotChoose = styled.div``;
+const StyledEntryPickerSlotActiveEntry = styled.div`
+  border: 1px solid var(--grey-400);
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  background: var(--grey-200);
+`;
+const StyledEntryPickerSlotActiveEntryTitle = styled.div`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+  font-weight: 700;
+`;
+
+const StyledEntryPickerSlotEdit = styled.div`
+  text-align: right;
+  text-decoration: underline;
+`;
+
+const StyledEntryPickerSlotChoose = styled.div`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+  font-weight: 700;
+`;
 
 interface EntryPickerProps {
   chooseText: string;
@@ -28,6 +74,8 @@ interface EntryPickerProps {
   list: React.ReactElement;
   categoryName: Categories;
   onChange: (value: string) => void;
+  showHint?: boolean;
+  error?: boolean;
 }
 
 export const EntryPicker: React.FC<EntryPickerProps> = ({
@@ -38,6 +86,8 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
   value,
   list,
   onChange,
+  showHint,
+  error,
 }: EntryPickerProps) => {
   const categories = useCategories();
   const language = useLanguage();
@@ -68,7 +118,7 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
 
   return (
     <StyledEntryPicker>
-      <StyledEntryPickerSlot>
+      <StyledEntryPickerSlot onClick={() => setIsOpen(true)} showHint={showHint}>
         {value ? (
           <>
             <StyledEntryPickerSlotActiveEntry>
@@ -76,14 +126,10 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
                 {translation?.attributes?.name}
               </StyledEntryPickerSlotActiveEntryTitle>
             </StyledEntryPickerSlotActiveEntry>
-            <StyledEntryPickerSlotEdit onClick={() => setIsOpen(true)}>
-              {editText}
-            </StyledEntryPickerSlotEdit>
+            <StyledEntryPickerSlotEdit>{editText}</StyledEntryPickerSlotEdit>
           </>
         ) : (
-          <StyledEntryPickerSlotChoose onClick={() => setIsOpen(true)}>
-            {chooseText}
-          </StyledEntryPickerSlotChoose>
+          <StyledEntryPickerSlotChoose>{chooseText}</StyledEntryPickerSlotChoose>
         )}
       </StyledEntryPickerSlot>
       <EntryListContextProvider

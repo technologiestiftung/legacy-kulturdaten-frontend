@@ -56,6 +56,7 @@ export interface OrganizerListProps {
   expandable?: boolean;
   enableUltraWideLayout?: boolean;
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
+  activeEntryId?: string;
 }
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({
@@ -63,6 +64,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
   expandable = true,
   enableUltraWideLayout = true,
   customEntryOnClick,
+  activeEntryId,
 }: OrganizerListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -188,7 +190,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
                   key={index}
                   title={currentTranslation?.attributes?.name}
                   status={attributes?.status || PublishedStatus.draft}
-                  active={router.asPath.includes(href())}
+                  active={router.asPath.includes(href()) || activeEntryId === id}
                   meta={<EntryCardTypesSubjects types={typeNames} />}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
@@ -198,6 +200,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
           )
         : undefined,
     [
+      activeEntryId,
       expanded,
       language,
       list.data,
@@ -252,7 +255,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
                     }
                   }}
                   href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
-                  isActive={router.asPath.includes(href())}
+                  isActive={router.asPath.includes(href()) || activeEntryId === id}
                 >
                   {children}
                 </TableLink>
@@ -279,6 +282,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
           )
         : undefined,
     [
+      activeEntryId,
       list.data,
       language,
       date,

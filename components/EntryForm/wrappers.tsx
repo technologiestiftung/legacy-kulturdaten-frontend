@@ -27,3 +27,17 @@ export const EntryFormContainer = styled.div`
     grid-column: 2 / -2;
   }
 `;
+
+export const EntryFormContainerColumns = styled.div`
+  display: grid;
+  grid-template-columns: 100%;
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+  align-items: flex-start;
+  justify-items: stretch;
+
+  ${mq(Breakpoint.mid)} {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 3rem;
+  }
+`;

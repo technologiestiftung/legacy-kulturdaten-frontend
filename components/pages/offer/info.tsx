@@ -1,9 +1,12 @@
 import { Language } from '../../../config/locale';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { Button, ButtonColor } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import {
+  EntryFormContainer,
+  EntryFormContainerColumns,
+  EntryFormWrapper,
+} from '../../EntryForm/wrappers';
 import { useName } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { EntryFormProps } from '../helpers/form';
@@ -110,26 +113,37 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
           <NameForm category={category} query={query} />
         </EntryFormContainer>
         <EntryFormContainer>
-          <FormGrid>
-            <FormItem width={FormItemWidth.half}>
-              <EntryFormHead title="Angeboten von" />
-              <EntryPicker
-                chooseText="Wähle Anbieter:in"
-                editText="Wähle andere Anbieter:in"
-                overlayTitle={`Anbieter:in für "${translation?.attributes?.name}" wählen`}
-                value={entryId}
-                onChange={(value) => setEntryId(value)}
-                categoryName={Categories.organizer}
-                list={
-                  <OrganizerList
-                    expanded={isMidOrWider}
-                    expandable={false}
-                    enableUltraWideLayout={false}
+          <EntryFormContainerColumns>
+            <div>
+              <EntryFormHead title="Angeboten von" hint={typeof entryId === 'undefined'} />
+              <FormGrid>
+                <FormItem width={FormItemWidth.full}>
+                  <EntryPicker
+                    chooseText="Anbieter:in auswählen"
+                    editText="Anbieter:in ändern"
+                    overlayTitle={`Anbieter:in für "${translation?.attributes?.name}" wählen`}
+                    value={entryId}
+                    onChange={(value) => setEntryId(value)}
+                    categoryName={Categories.organizer}
+                    showHint={typeof entryId === 'undefined'}
+                    list={
+                      <OrganizerList
+                        expanded={isMidOrWider}
+                        expandable={false}
+                        enableUltraWideLayout={false}
+                        activeEntryId={entryId}
+                      />
+                    }
                   />
-                }
-              />
-            </FormItem>
-          </FormGrid>
+                </FormItem>
+              </FormGrid>
+            </div>
+            <EntryFormHead
+              title="Veranstaltungsort"
+              hint={typeof entryId === 'undefined'}
+              showHintInline
+            />
+          </EntryFormContainerColumns>
         </EntryFormContainer>
       </EntryFormWrapper>
     </>

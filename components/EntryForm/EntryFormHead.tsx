@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
@@ -32,18 +33,23 @@ const StyledEntryFormHeadBorder = styled.div`
   border-bottom: 1px solid var(--grey-400);
 `;
 
-const StyledEntryFormHeadAlert = styled.div`
+const StyledEntryFormHeadAlert = styled.div<{ showInline?: boolean }>`
   position: relative;
   margin: 0 0.75rem 0 0;
   width: 1.5rem;
   height: 1.5rem;
 
-  ${mq(Breakpoint.widish)} {
-    position: absolute;
-    top: 0.75rem;
-    left: -2.25rem;
-    margin: 0;
-  }
+  ${({ showInline }) =>
+    showInline
+      ? css``
+      : css`
+          ${mq(Breakpoint.widish)} {
+            position: absolute;
+            top: 0.75rem;
+            left: -2.25rem;
+            margin: 0;
+          }
+        `}
 `;
 
 interface EntryFormHeadProps {
@@ -51,6 +57,7 @@ interface EntryFormHeadProps {
   id?: string;
   valid?: boolean;
   hint?: boolean;
+  showHintInline?: boolean;
 }
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
@@ -58,14 +65,15 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   id,
   valid = true,
   hint = false,
+  showHintInline = false,
 }: EntryFormHeadProps) => (
   <StyledEntryFormHead>
     {valid === false ? (
-      <StyledEntryFormHeadAlert>
+      <StyledEntryFormHeadAlert showInline={showHintInline}>
         <AlertSymbol />
       </StyledEntryFormHeadAlert>
     ) : hint ? (
-      <StyledEntryFormHeadAlert>
+      <StyledEntryFormHeadAlert showInline={showHintInline}>
         <InfoSymbol />
       </StyledEntryFormHeadAlert>
     ) : (
