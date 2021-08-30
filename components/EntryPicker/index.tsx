@@ -27,6 +27,7 @@ const StyledEntryPickerSlot = styled.button<{ showHint?: boolean }>`
   cursor: pointer;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   row-gap: 0.75rem;
   padding: 0.75rem;
   font-size: var(--font-size-300);
