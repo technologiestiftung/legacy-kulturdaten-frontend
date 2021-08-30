@@ -151,8 +151,11 @@ export const useCategories: () => {
         list: OfferListPage,
       },
       tabs: [
-        { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
-        { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
+        { title: t('categories.offer.tabs.info') as string, sub: 'info' },
+        { title: t('categories.offer.tabs.categorization') as string, sub: 'media' },
+        { title: t('categories.offer.tabs.dates') as string, sub: 'media' },
+        { title: t('categories.offer.tabs.media') as string, sub: 'media' },
+        { title: t('categories.offer.tabs.accessibility') as string, sub: 'media' },
       ],
       metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {

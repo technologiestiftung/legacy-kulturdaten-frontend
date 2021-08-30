@@ -193,7 +193,6 @@ export const deDE: Localization = {
         info: () => 'Informationen',
         categorization: () => 'Kategorisierung',
         media: () => 'Bilder',
-        preview: () => 'Vorschau',
       },
       metaLinks: {
         rights: () => 'Zugriffsrechte',
@@ -237,6 +236,13 @@ export const deDE: Localization = {
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
+      },
+      tabs: {
+        info: () => 'Informationen',
+        categorization: () => 'Kategorisierung',
+        dates: () => 'Termine',
+        accessibility: () => 'Barrierefreiheit',
+        media: () => 'Bilder',
       },
     },
     location: {

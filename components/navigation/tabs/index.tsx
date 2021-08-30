@@ -22,13 +22,27 @@ const StyledTabsContainer = styled.div<{ itemCount: number }>`
   ${mq(Breakpoint.mid)} {
     display: grid;
     padding: 0 1.5rem 0;
-    grid-template-columns: ${({ itemCount }) => `repeat(${itemCount < 4 ? itemCount : '4'}, 1fr)`};
+    grid-template-columns: ${({ itemCount }) => `repeat(${itemCount < 5 ? itemCount : '5'}, 1fr)`};
     grid-column: 2 / -2;
     column-gap: 0.75rem;
   }
 
   ${mq(Breakpoint.widish)} {
     padding: 0;
+  }
+`;
+
+const StyledTab = styled.div`
+  position: relative;
+  margin-right: -0.375rem;
+
+  &:last-of-type {
+    margin: 0;
+    padding-right: 0.75rem;
+
+    ${mq(Breakpoint.mid)} {
+      padding-right: 0;
+    }
   }
 `;
 
@@ -45,7 +59,6 @@ const StyledTabLink = styled.a<{ isActive?: boolean; itemCount: number; index: n
   align-items: center;
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem 0.75rem 0 0;
-  margin-right: -0.375rem;
 
   ${mq(Breakpoint.mid)} {
     margin: 0;
@@ -95,11 +108,13 @@ export const Tabs: React.FC<TabsProps> = ({ links }: TabsProps) => (
   <StyledTabs role="tablist">
     <StyledTabsContainer itemCount={links.length}>
       {links.map(({ title, href, isActive }, index) => (
-        <Link key={index} href={href} passHref shallow>
-          <StyledTabLink isActive={isActive} itemCount={links.length} index={index} role="tab">
-            {title}
-          </StyledTabLink>
-        </Link>
+        <StyledTab key={index}>
+          <Link href={href} passHref shallow>
+            <StyledTabLink isActive={isActive} itemCount={links.length} index={index} role="tab">
+              {title}
+            </StyledTabLink>
+          </Link>
+        </StyledTab>
       ))}
     </StyledTabsContainer>
   </StyledTabs>

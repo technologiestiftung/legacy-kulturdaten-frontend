@@ -143,11 +143,6 @@ const StyledEntryHeaderPublishSlot = styled.div`
 `;
 
 const StyledEntryHeaderTabsSlot = styled.div`
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
   }
@@ -156,12 +151,21 @@ const StyledEntryHeaderTabsSlot = styled.div`
 `;
 
 const StyledEntryHeaderTabsSlotContainer = styled.div`
-  ${mq(Breakpoint.mid)} {
-    padding: 0;
-    grid-column: 1 / -1;
-  }
+  min-width: 0;
+  grid-column: 1 / -1;
+  padding: 0;
 
   ${mq(Breakpoint.widish)} {
+    grid-column: 1 / -1;
+    padding: 0 1.5rem;
+  }
+
+  @media screen and (min-width: 78.125rem) {
+    grid-column: 2 / -2;
+    padding: 0;
+  }
+
+  ${mq(Breakpoint.ultra)} {
     grid-column: 2 / -2;
     padding: 0;
   }

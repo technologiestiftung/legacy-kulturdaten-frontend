@@ -193,7 +193,6 @@ export const enDE: Localization = {
         info: () => 'Information',
         categorization: () => 'Categorization',
         media: () => 'Images',
-        preview: () => 'Preview',
       },
       metaLinks: {
         rights: () => 'Access rights',
@@ -237,6 +236,13 @@ export const enDE: Localization = {
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
+      },
+      tabs: {
+        info: () => 'Information',
+        categorization: () => 'Categorization',
+        dates: () => 'Dates',
+        accessibility: () => 'Accessibility',
+        media: () => 'Images',
       },
     },
     location: {
