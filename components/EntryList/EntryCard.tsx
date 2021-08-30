@@ -22,18 +22,18 @@ const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean }>`
   transition: box-shadow var(--transition-duration-fast);
 
   &:hover {
-    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-sharp-hover);
     border-color: rgba(0, 0, 0, 0.5);
   }
 
   ${({ active }) =>
     active
       ? css`
-          box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+          box-shadow: var(--shadow-sharp-active);
           border-color: rgba(0, 0, 0, 1);
 
           &:hover {
-            box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-sharp-active);
             border-color: rgba(0, 0, 0, 1);
           }
         `

@@ -60,6 +60,8 @@ export const CSSVars: React.FC = () => (
         --shadow-active: 0.125rem 0.125rem 0.5rem -0.25rem var(--black-o70);
         --shadow-inset: inset 0px 0.0625rem 0.375rem var(--black-o25);
         --shadow-light: 0.125rem 0.125rem 10px -0.125rem var(--black-o40);
+        --shadow-sharp-hover: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+        --shadow-sharp-active: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
 
         --overlay-opacity: 0.85;
 
