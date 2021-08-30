@@ -1,5 +1,5 @@
 import { Language } from '../../../config/locale';
-import { CategoryEntryPage } from '../../../lib/categories';
+import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { Button, ButtonColor } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -11,6 +11,13 @@ import { Offer, OfferTranslation } from '../../../lib/api/types/offer';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { OfferTranslationCreate } from '../../../lib/api/routes/offer/translation/create';
 import { useEntryHeader } from '../helpers/useEntryHeader';
+import { EntryPicker } from '../../EntryPicker';
+import { OrganizerList } from '../../EntryList/OrganizerList';
+import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { getTranslation } from '../../../lib/translations';
+import { useLanguage } from '../../../lib/routing';
+import { useState } from 'react';
+import { Categories } from '../../../config/categories';
 
 const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const t = useT();
@@ -87,6 +94,13 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
   query,
 }: CategoryEntryPage) => {
   const renderedEntryHeader = useEntryHeader({ category, query });
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const { entry } = useEntry<Offer, OfferShow>(category, query);
+  const language = useLanguage();
+
+  const translation = getTranslation(language, entry?.data?.relations?.translations, true);
+
+  const [entryId, setEntryId] = useState<string>();
 
   return (
     <>
@@ -94,6 +108,28 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       <EntryFormWrapper>
         <EntryFormContainer>
           <NameForm category={category} query={query} />
+        </EntryFormContainer>
+        <EntryFormContainer>
+          <FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <EntryFormHead title="Angeboten von" />
+              <EntryPicker
+                chooseText="Wähle Anbieter:in"
+                editText="Wähle andere Anbieter:in"
+                overlayTitle={`Anbieter:in für "${translation?.attributes?.name}" wählen`}
+                value={entryId}
+                onChange={(value) => setEntryId(value)}
+                categoryName={Categories.organizer}
+                list={
+                  <OrganizerList
+                    expanded={isMidOrWider}
+                    expandable={false}
+                    enableUltraWideLayout={false}
+                  />
+                }
+              />
+            </FormItem>
+          </FormGrid>
         </EntryFormContainer>
       </EntryFormWrapper>
     </>

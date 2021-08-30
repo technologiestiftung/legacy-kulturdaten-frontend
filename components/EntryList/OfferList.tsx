@@ -38,10 +38,6 @@ const viewEntriesPerPageMap = {
   table: 16,
 };
 
-interface OfferListProps {
-  expanded: boolean;
-}
-
 const StyledEntryListTable = styled.div`
   padding: 0 0 1.5rem;
 `;
@@ -50,7 +46,17 @@ interface ListLinkProps {
   children: React.ReactNode;
 }
 
-export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps) => {
+interface OfferListProps {
+  expanded: boolean;
+  expandable?: boolean;
+  enableUltraWideLayout?: boolean;
+}
+
+export const OfferList: React.FC<OfferListProps> = ({
+  expanded,
+  expandable = true,
+  enableUltraWideLayout = true,
+}: OfferListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
@@ -85,14 +91,14 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
   const view = useMemo(() => getView(listName), [getView, listName]);
-  const filtersBoxExpanded = useMemo(() => getFiltersBoxExpanded(listName), [
-    getFiltersBoxExpanded,
-    listName,
-  ]);
-  const dispatchFilters = useMemo(() => getDispatchFilters(listName), [
-    getDispatchFilters,
-    listName,
-  ]);
+  const filtersBoxExpanded = useMemo(
+    () => getFiltersBoxExpanded(listName),
+    [getFiltersBoxExpanded, listName]
+  );
+  const dispatchFilters = useMemo(
+    () => getDispatchFilters(listName),
+    [getDispatchFilters, listName]
+  );
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -230,7 +236,7 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
         title={t('categories.offer.title.plural') as string}
         expanded={expanded}
         setExpanded={setMenuExpanded}
-        expandable={true}
+        expandable={expandable}
         actionButton={
           <Link href={routes.createOffer({ locale })} passHref>
             <ButtonLink
@@ -331,7 +337,7 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
       </EntryListFiltersBox>
       <StyledEntryListBody>
         {view === EntryListView.cards ? (
-          <EntryCardGrid expanded={expanded}>
+          <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
@@ -356,11 +362,11 @@ export const OfferList: React.FC<OfferListProps> = ({ expanded }: OfferListProps
                 narrow={!expanded}
               />
             ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded}>
+              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
                 <div>{t('categories.organizer.list.nothing')}</div>
               </EntryCardGrid>
             ) : (
-              <EntryCardGrid expanded={expanded}>
+              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
                 <div>{t('categories.organizer.list.loading')}</div>
               </EntryCardGrid>
             )}

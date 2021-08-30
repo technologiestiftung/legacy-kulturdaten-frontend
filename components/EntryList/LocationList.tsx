@@ -38,10 +38,6 @@ const viewEntriesPerPageMap = {
   table: 16,
 };
 
-interface LocationListProps {
-  expanded: boolean;
-}
-
 const StyledEntryListTable = styled.div`
   padding: 0 0 1.5rem;
 `;
@@ -50,7 +46,17 @@ interface ListLinkProps {
   children: React.ReactNode;
 }
 
-export const LocationList: React.FC<LocationListProps> = ({ expanded }: LocationListProps) => {
+interface LocationListProps {
+  expanded: boolean;
+  expandable?: boolean;
+  enableUltraWideLayout?: boolean;
+}
+
+export const LocationList: React.FC<LocationListProps> = ({
+  expanded,
+  expandable = true,
+  enableUltraWideLayout = true,
+}: LocationListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
@@ -85,14 +91,14 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
   const view = useMemo(() => getView(listName), [getView, listName]);
-  const filtersBoxExpanded = useMemo(() => getFiltersBoxExpanded(listName), [
-    getFiltersBoxExpanded,
-    listName,
-  ]);
-  const dispatchFilters = useMemo(() => getDispatchFilters(listName), [
-    getDispatchFilters,
-    listName,
-  ]);
+  const filtersBoxExpanded = useMemo(
+    () => getFiltersBoxExpanded(listName),
+    [getFiltersBoxExpanded, listName]
+  );
+  const dispatchFilters = useMemo(
+    () => getDispatchFilters(listName),
+    [getDispatchFilters, listName]
+  );
 
   const list = useList<LocationListCall, Location>(
     categories.location,
@@ -230,7 +236,7 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
         title={t('categories.location.title.plural') as string}
         expanded={expanded}
         setExpanded={setMenuExpanded}
-        expandable={true}
+        expandable={expandable}
         actionButton={
           <Link href={routes.createLocation({ locale })} passHref>
             <ButtonLink
@@ -332,7 +338,7 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
       </EntryListFiltersBox>
       <StyledEntryListBody>
         {view === EntryListView.cards ? (
-          <EntryCardGrid expanded={expanded}>
+          <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
@@ -357,11 +363,11 @@ export const LocationList: React.FC<LocationListProps> = ({ expanded }: Location
                 narrow={!expanded}
               />
             ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded}>
+              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
                 <div>{t('categories.organizer.list.nothing')}</div>
               </EntryCardGrid>
             ) : (
-              <EntryCardGrid expanded={expanded}>
+              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
                 <div>{t('categories.organizer.list.loading')}</div>
               </EntryCardGrid>
             )}

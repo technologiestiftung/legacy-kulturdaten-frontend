@@ -63,7 +63,7 @@ export const CSSVars: React.FC = () => (
         --shadow-sharp-hover: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
         --shadow-sharp-active: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
 
-        --overlay-opacity: 0.85;
+        --overlay-opacity: 0.75;
 
         --header-height: 3.75rem;
 

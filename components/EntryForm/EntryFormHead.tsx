@@ -48,12 +48,14 @@ const StyledEntryFormHeadAlert = styled.div`
 
 interface EntryFormHeadProps {
   title: string;
+  id?: string;
   valid?: boolean;
   hint?: boolean;
 }
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   title,
+  id,
   valid = true,
   hint = false,
 }: EntryFormHeadProps) => (
@@ -70,6 +72,6 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       ''
     )}
     <StyledEntryFormHeadBorder />
-    <StyledEntryFormHeadTitle>{title}</StyledEntryFormHeadTitle>
+    <StyledEntryFormHeadTitle id={id}>{title}</StyledEntryFormHeadTitle>
   </StyledEntryFormHead>
 );

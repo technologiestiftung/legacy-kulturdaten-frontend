@@ -43,10 +43,6 @@ const viewEntriesPerPageMap = {
   table: 16,
 };
 
-interface OrganizerListProps {
-  expanded: boolean;
-}
-
 const StyledEntryListTable = styled.div`
   padding: 0 0 1.5rem;
 `;
@@ -55,7 +51,19 @@ interface ListLinkProps {
   children: React.ReactNode;
 }
 
-export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: OrganizerListProps) => {
+export interface OrganizerListProps {
+  expanded: boolean;
+  expandable?: boolean;
+  enableUltraWideLayout?: boolean;
+  customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
+}
+
+export const OrganizerList: React.FC<OrganizerListProps> = ({
+  expanded,
+  expandable = true,
+  enableUltraWideLayout = true,
+  customEntryOnClick,
+}: OrganizerListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
@@ -92,14 +100,14 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
   const view = useMemo(() => getView(listName), [getView, listName]);
-  const filtersBoxExpanded = useMemo(() => getFiltersBoxExpanded(listName), [
-    getFiltersBoxExpanded,
-    listName,
-  ]);
-  const dispatchFilters = useMemo(() => getDispatchFilters(listName), [
-    getDispatchFilters,
-    listName,
-  ]);
+  const filtersBoxExpanded = useMemo(
+    () => getFiltersBoxExpanded(listName),
+    [getFiltersBoxExpanded, listName]
+  );
+  const dispatchFilters = useMemo(
+    () => getDispatchFilters(listName),
+    [getDispatchFilters, listName]
+  );
 
   const list = useList<OrganizerListCall, Organizer>(
     categories.organizer,
@@ -170,8 +178,12 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                   onClick={() => {
                     setMenuExpanded(false);
                     setLastEntryId(Categories.organizer, id);
+
+                    if (typeof customEntryOnClick === 'function') {
+                      customEntryOnClick(Categories.organizer, id);
+                    }
                   }}
-                  href={href('info')}
+                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
                   menuExpanded={expanded}
                   key={index}
                   title={currentTranslation?.attributes?.name}
@@ -185,7 +197,16 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             }
           )
         : undefined,
-    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setLastEntryId]
+    [
+      expanded,
+      language,
+      list.data,
+      locale,
+      router.asPath,
+      setMenuExpanded,
+      setLastEntryId,
+      customEntryOnClick,
+    ]
   );
 
   const rows: TableProps['content'] = useMemo(
@@ -226,8 +247,11 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                   onClick={() => {
                     setMenuExpanded(false);
                     setLastEntryId(Categories.organizer, id);
+                    if (typeof customEntryOnClick === 'function') {
+                      customEntryOnClick(Categories.organizer, id);
+                    }
                   }}
-                  href={href('info')}
+                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
                   isActive={router.asPath.includes(href())}
                 >
                   {children}
@@ -254,7 +278,17 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
             }
           )
         : undefined,
-    [list.data, language, date, expanded, locale, router.asPath, setMenuExpanded, setLastEntryId]
+    [
+      list.data,
+      language,
+      date,
+      expanded,
+      locale,
+      router.asPath,
+      setMenuExpanded,
+      setLastEntryId,
+      customEntryOnClick,
+    ]
   );
 
   return (
@@ -263,7 +297,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
         title={t('categories.organizer.title.plural') as string}
         expanded={expanded}
         setExpanded={setMenuExpanded}
-        expandable={true}
+        expandable={expandable}
         actionButton={
           <Link href={routes.createOrganizer({ locale })} passHref>
             <ButtonLink
@@ -438,7 +472,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
       </EntryListFiltersBox>
       <StyledEntryListBody>
         {view === EntryListView.cards ? (
-          <EntryCardGrid expanded={expanded}>
+          <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
@@ -463,11 +497,11 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({ expanded }: Organi
                 narrow={!expanded}
               />
             ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded}>
+              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
                 <div>{t('categories.organizer.list.nothing')}</div>
               </EntryCardGrid>
             ) : (
-              <EntryCardGrid expanded={expanded}>
+              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
                 <div>{t('categories.organizer.list.loading')}</div>
               </EntryCardGrid>
             )}
