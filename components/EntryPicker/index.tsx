@@ -15,6 +15,7 @@ const StyledEntryPicker = styled.div``;
 const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
 
 const StyledEntryPickerSlot = styled.button<{ showHint?: boolean }>`
+  color: var(--black);
   appearance: none;
   margin: 0;
   background: var(--white);
@@ -50,8 +51,7 @@ const StyledEntryPickerSlot = styled.button<{ showHint?: boolean }>`
 `;
 
 const StyledEntryPickerSlotActiveEntry = styled.div`
-  border: 1px solid var(--grey-400);
-  border-radius: 0.375rem;
+  border-radius: 0.1875rem;
   padding: 0.75rem;
   background: var(--grey-200);
 `;
@@ -69,7 +69,6 @@ const StyledEntryPickerSlotEdit = styled.div`
 const StyledEntryPickerSlotChoose = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
-  font-weight: 700;
 `;
 
 interface EntryPickerProps {
