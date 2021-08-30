@@ -82,6 +82,7 @@ export const deDE: Localization = {
     save: () => 'speichern',
     saving: () => 'speichert',
     saved: () => 'gespeichert',
+    loading: () => 'lädt',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -236,6 +237,18 @@ export const deDE: Localization = {
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
+        organizer: {
+          label: () => 'Angeboten von',
+          choose: () => 'Anbieter:in auswählen',
+          edit: () => 'Anbieter:in ändern',
+          title: ({ name }) => `Anbieter:in für ‚${name}‘ wählen`,
+        },
+        location: {
+          label: () => 'Veranstaltungsort',
+          choose: () => 'Ort auswählen',
+          edit: () => 'Ort ändern',
+          title: ({ name }) => `Ort für ‚${name}‘ wählen`,
+        },
       },
       tabs: {
         info: () => 'Informationen',

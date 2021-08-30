@@ -82,6 +82,7 @@ export const enDE: Localization = {
     save: () => 'save',
     saving: () => 'saving',
     saved: () => 'saved',
+    loading: () => 'loading',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -236,6 +237,18 @@ export const enDE: Localization = {
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
+        organizer: {
+          label: () => 'Organized by',
+          choose: () => 'Choose Organizer',
+          edit: () => 'Change Organizer',
+          title: ({ name }) => `Choose Organizer for ‘${name}’`,
+        },
+        location: {
+          label: () => 'Location',
+          choose: () => 'Choose Location',
+          edit: () => 'Change Location',
+          title: ({ name }) => `Choose Location for ‘${name}’`,
+        },
       },
       tabs: {
         info: () => 'Information',

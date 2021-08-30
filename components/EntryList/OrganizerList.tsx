@@ -250,6 +250,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
                   onClick={() => {
                     setMenuExpanded(false);
                     setLastEntryId(Categories.organizer, id);
+
                     if (typeof customEntryOnClick === 'function') {
                       customEntryOnClick(Categories.organizer, id);
                     }

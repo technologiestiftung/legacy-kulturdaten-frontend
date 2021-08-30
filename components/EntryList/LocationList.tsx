@@ -50,12 +50,16 @@ interface LocationListProps {
   expanded: boolean;
   expandable?: boolean;
   enableUltraWideLayout?: boolean;
+  customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
+  activeEntryId?: string;
 }
 
 export const LocationList: React.FC<LocationListProps> = ({
   expanded,
   expandable = true,
   enableUltraWideLayout = true,
+  customEntryOnClick,
+  activeEntryId,
 }: LocationListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -162,13 +166,17 @@ export const LocationList: React.FC<LocationListProps> = ({
                   onClick={() => {
                     setMenuExpanded(false);
                     setLastEntryId(Categories.location, id);
+
+                    if (typeof customEntryOnClick === 'function') {
+                      customEntryOnClick(Categories.organizer, id);
+                    }
                   }}
-                  href={href('info')}
+                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
                   menuExpanded={expanded}
                   key={index}
                   title={currentTranslation?.attributes?.name}
                   status={attributes?.status || PublishedStatus.draft}
-                  active={router.asPath.includes(href())}
+                  active={router.asPath.includes(href()) || activeEntryId === id}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
                 />
@@ -176,7 +184,17 @@ export const LocationList: React.FC<LocationListProps> = ({
             }
           )
         : undefined,
-    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setLastEntryId]
+    [
+      expanded,
+      language,
+      list.data,
+      locale,
+      router.asPath,
+      setMenuExpanded,
+      setLastEntryId,
+      customEntryOnClick,
+      activeEntryId,
+    ]
   );
 
   const rows: TableProps['content'] = useMemo(
@@ -201,9 +219,13 @@ export const LocationList: React.FC<LocationListProps> = ({
                   onClick={() => {
                     setMenuExpanded(false);
                     setLastEntryId(Categories.location, id);
+
+                    if (typeof customEntryOnClick === 'function') {
+                      customEntryOnClick(Categories.organizer, id);
+                    }
                   }}
-                  href={href('info')}
-                  isActive={router.asPath.includes(href())}
+                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
+                  isActive={router.asPath.includes(href()) || activeEntryId === id}
                 >
                   {children}
                 </TableLink>
@@ -227,7 +249,18 @@ export const LocationList: React.FC<LocationListProps> = ({
             }
           )
         : undefined,
-    [list.data, language, date, expanded, locale, router.asPath, setMenuExpanded, setLastEntryId]
+    [
+      customEntryOnClick,
+      activeEntryId,
+      list.data,
+      language,
+      date,
+      expanded,
+      locale,
+      router.asPath,
+      setMenuExpanded,
+      setLastEntryId,
+    ]
   );
 
   return (

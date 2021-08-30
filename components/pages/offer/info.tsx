@@ -21,6 +21,7 @@ import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
 import { useState } from 'react';
 import { Categories } from '../../../config/categories';
+import { LocationList } from '../../EntryList/LocationList';
 
 const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
   const t = useT();
@@ -100,10 +101,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const { entry } = useEntry<Offer, OfferShow>(category, query);
   const language = useLanguage();
+  const t = useT();
+  const [organizerId, setOrganizerId] = useState<string>();
+  const [locationId, setLocationId] = useState<string>();
 
   const translation = getTranslation(language, entry?.data?.relations?.translations, true);
-
-  const [entryId, setEntryId] = useState<string>();
 
   return (
     <>
@@ -115,34 +117,68 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
         <EntryFormContainer>
           <EntryFormContainerColumns>
             <div>
-              <EntryFormHead title="Angeboten von" hint={typeof entryId === 'undefined'} />
+              <EntryFormHead
+                title={t('categories.offer.form.organizer.label') as string}
+                hint={typeof organizerId === 'undefined'}
+              />
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
                   <EntryPicker
-                    chooseText="Anbieter:in auswählen"
-                    editText="Anbieter:in ändern"
-                    overlayTitle={`Anbieter:in für "${translation?.attributes?.name}" wählen`}
-                    value={entryId}
-                    onChange={(value) => setEntryId(value)}
+                    chooseText={t('categories.offer.form.organizer.choose') as string}
+                    editText={t('categories.offer.form.organizer.edit') as string}
+                    overlayTitle={
+                      t('categories.offer.form.organizer.title', {
+                        name: translation?.attributes?.name,
+                      }) as string
+                    }
+                    value={organizerId}
+                    onChange={(value) => setOrganizerId(value)}
                     categoryName={Categories.organizer}
-                    showHint={typeof entryId === 'undefined'}
+                    showHint={typeof organizerId === 'undefined'}
                     list={
                       <OrganizerList
                         expanded={isMidOrWider}
                         expandable={false}
                         enableUltraWideLayout={false}
-                        activeEntryId={entryId}
+                        activeEntryId={organizerId}
                       />
                     }
                   />
                 </FormItem>
               </FormGrid>
             </div>
-            <EntryFormHead
-              title="Veranstaltungsort"
-              hint={typeof entryId === 'undefined'}
-              showHintInline
-            />
+            <div>
+              <EntryFormHead
+                title={t('categories.offer.form.location.label') as string}
+                hint={typeof locationId === 'undefined'}
+                showHintInline
+              />
+              <FormGrid>
+                <FormItem width={FormItemWidth.full}>
+                  <EntryPicker
+                    chooseText={t('categories.offer.form.location.choose') as string}
+                    editText={t('categories.offer.form.location.edit') as string}
+                    overlayTitle={
+                      t('categories.offer.form.location.title', {
+                        name: translation?.attributes?.name,
+                      }) as string
+                    }
+                    value={locationId}
+                    onChange={(value) => setLocationId(value)}
+                    categoryName={Categories.location}
+                    showHint={typeof locationId === 'undefined'}
+                    list={
+                      <LocationList
+                        expanded={isMidOrWider}
+                        expandable={false}
+                        enableUltraWideLayout={false}
+                        activeEntryId={locationId}
+                      />
+                    }
+                  />
+                </FormItem>
+              </FormGrid>
+            </div>
           </EntryFormContainerColumns>
         </EntryFormContainer>
       </EntryFormWrapper>

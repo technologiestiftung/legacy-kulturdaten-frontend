@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import React, { useMemo } from 'react';
 import { Categories, useCategories } from '../../config/categories';
 import { useEntry } from '../../lib/categories';
+import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { EntryListContextProvider } from '../EntryList/EntryListContext';
@@ -13,7 +14,11 @@ import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
 const StyledEntryPicker = styled.div``;
 const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
 
-const StyledEntryPickerSlot = styled.div<{ showHint?: boolean }>`
+const StyledEntryPickerSlot = styled.button<{ showHint?: boolean }>`
+  appearance: none;
+  margin: 0;
+  background: var(--white);
+  text-align: left;
   border: 1px solid var(--grey-600);
   width: 100%;
   display: block;
@@ -92,6 +97,7 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
   const categories = useCategories();
   const language = useLanguage();
   const category = useMemo(() => categories[categoryName], [categories, categoryName]);
+  const t = useT();
 
   const { entry } = useEntry(category, { id: value });
 
@@ -118,12 +124,16 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
 
   return (
     <StyledEntryPicker>
-      <StyledEntryPickerSlot onClick={() => setIsOpen(true)} showHint={showHint}>
+      <StyledEntryPickerSlot
+        onClick={() => setIsOpen(true)}
+        showHint={showHint}
+        aria-label={typeof value !== 'undefined' ? editText : chooseText}
+      >
         {value ? (
           <>
             <StyledEntryPickerSlotActiveEntry>
               <StyledEntryPickerSlotActiveEntryTitle>
-                {translation?.attributes?.name}
+                {translation?.attributes?.name || `${t('general.loading')}...`}
               </StyledEntryPickerSlotActiveEntryTitle>
             </StyledEntryPickerSlotActiveEntry>
             <StyledEntryPickerSlotEdit>{editText}</StyledEntryPickerSlotEdit>
