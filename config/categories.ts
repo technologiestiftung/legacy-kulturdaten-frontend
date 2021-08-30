@@ -35,6 +35,9 @@ import { OfferCreatePage } from '../components/pages/offer/create';
 import { OrganizerListPage } from '../components/pages/organizer/list';
 import { OfferListPage } from '../components/pages/offer/list';
 import { LocationListPage } from '../components/pages/location/list';
+import { OfferCategorizationPage } from '../components/pages/offer/categorization';
+import { OfferAccessibilityPage } from '../components/pages/offer/accessibility';
+import { OfferDatesPage } from '../components/pages/offer/dates';
 
 export type Requirement = {
   translationKey: string;
@@ -148,14 +151,17 @@ export const useCategories: () => {
         create: OfferCreatePage,
         info: OfferInfoPage,
         media: OfferMediaPage,
+        categorization: OfferCategorizationPage,
+        accessibility: OfferAccessibilityPage,
         list: OfferListPage,
+        dates: OfferDatesPage,
       },
       tabs: [
         { title: t('categories.offer.tabs.info') as string, sub: 'info' },
-        { title: t('categories.offer.tabs.categorization') as string, sub: 'media' },
-        { title: t('categories.offer.tabs.dates') as string, sub: 'media' },
+        { title: t('categories.offer.tabs.categorization') as string, sub: 'categorization' },
+        { title: t('categories.offer.tabs.dates') as string, sub: 'dates' },
         { title: t('categories.offer.tabs.media') as string, sub: 'media' },
-        { title: t('categories.offer.tabs.accessibility') as string, sub: 'media' },
+        { title: t('categories.offer.tabs.accessibility') as string, sub: 'accessibility' },
       ],
       metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
