@@ -7,6 +7,7 @@ export const CSSVars: React.FC = () => (
     styles={css`
       html {
         --white: #f8f8f8;
+        --white-o0: rgba(248, 248, 248, 0);
         --grey-200: #e6e6e6;
         --grey-350: #c8c8c8;
         --grey-400: #cbcbcb;
