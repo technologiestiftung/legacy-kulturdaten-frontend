@@ -4,7 +4,8 @@ import { Dispatch, Reducer, SetStateAction, useMemo, useReducer, useState } from
 import { ArrowRight, ChevronDown } from 'react-feather';
 import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
-import { useLanguage, useLocale } from '../../lib/routing';
+import { useT } from '../../lib/i18n';
+import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
@@ -36,6 +37,10 @@ const StyledDateListBody = styled.div`
 const StyledDateListTitleRowCell = styled.div`
   background: var(--grey-200);
   border-bottom: 1px solid var(--grey-400);
+`;
+
+const StyledDateListTitleRow = styled(StyledDateListTitleRowCell)`
+  display: flex;
 `;
 
 const StyledDateListRowCell = styled.div<{ lastRow: boolean }>`
@@ -263,11 +268,11 @@ const DateListRow: React.FC<DateListItemProps> = ({
 }: DateListItemProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
+  const t = useT();
+  const formatDate = useDate();
 
   const fromDate = from && new Date(from);
   const toDate = to && new Date(to);
-
-  const formatDate = useDate();
 
   const dateFormat = allDay ? DateFormat.date : DateFormat.dateTime;
 
@@ -284,8 +289,13 @@ const DateListRow: React.FC<DateListItemProps> = ({
     <StyledDateListItemExpand
       onClick={() => setIsCollapsed(!isCollapsed)}
       isCollapsed={isCollapsed}
+      aria-label={
+        isCollapsed
+          ? (t('dateList.detailsShowAriaLabel') as string)
+          : (t('dateList.detailsHideAriaLabel') as string)
+      }
     >
-      <span>Details</span>
+      <span>{t('dateList.details')}</span>
       <ChevronDown />
     </StyledDateListItemExpand>
   );
@@ -296,17 +306,20 @@ const DateListRow: React.FC<DateListItemProps> = ({
     </StyledDateListItemStatus>
   );
 
+  const renderedCheckbox = (
+    <StyledDateListItemCheckbox>
+      <Checkbox
+        ariaLabel={t('dateList.checkboxAriaLabel') as string}
+        id={`${uid}-checkbox`}
+        checked={checked}
+        onChange={(e) => onChange(e?.target?.checked)}
+      />
+    </StyledDateListItemCheckbox>
+  );
+
   const renderedGridContent = (
     <>
-      <StyledDateListRowCell lastRow={lastRow}>
-        <StyledDateListItemCheckbox>
-          <Checkbox
-            id={`${uid}-checkbox`}
-            checked={checked}
-            onChange={(e) => onChange(e?.target?.checked)}
-          />
-        </StyledDateListItemCheckbox>
-      </StyledDateListRowCell>
+      <StyledDateListRowCell lastRow={lastRow}>{renderedCheckbox}</StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow}>
         <StyledDateListItemTime>
           <span>{formattedFrom}</span>
@@ -330,11 +343,7 @@ const DateListRow: React.FC<DateListItemProps> = ({
   const renderedFlexContent = (
     <>
       <StyledDateListRow lastRow={lastRow}>
-        <StyledDateListRowLeft>
-          <StyledDateListItemCheckbox>
-            <Checkbox id={`${uid}-checkbox`} />
-          </StyledDateListItemCheckbox>
-        </StyledDateListRowLeft>
+        <StyledDateListRowLeft>{renderedCheckbox}</StyledDateListRowLeft>
         <StyledDateListRowMid>
           <StyledDateListRowMidInner>
             <StyledDateListItemTime>
@@ -375,10 +384,10 @@ const DateList: React.FC<DateListProps> = ({
   setCheckedDateIds,
 }: DateListProps) => {
   const language = useLanguage();
-  const locale = useLocale();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const rowCount = Object.values(state).length;
   const uid = usePseudoUID();
+  const t = useT();
 
   const allDateIds = useMemo(() => Object.values(state).map((date) => date?.data?.id), [state]);
 
@@ -394,8 +403,8 @@ const DateList: React.FC<DateListProps> = ({
 
   return (
     <StyledDateList>
-      <StyledDateListBody>
-        {isMidOrWider && (
+      <StyledDateListBody role="table">
+        {isMidOrWider ? (
           <>
             <StyledDateListTitleRowCell>
               <StyledDateListItemCheckbox>
@@ -409,16 +418,34 @@ const DateList: React.FC<DateListProps> = ({
               </StyledDateListItemCheckbox>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTitleBold noPaddingLeft>Zeit</StyledDateListItemTitleBold>
+              <StyledDateListItemTitleBold noPaddingLeft>
+                {t('dateList.time')}
+              </StyledDateListItemTitleBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTitleBold>Titel</StyledDateListItemTitleBold>
+              <StyledDateListItemTitleBold>{t('dateList.title')}</StyledDateListItemTitleBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTitleBold>Status</StyledDateListItemTitleBold>
+              <StyledDateListItemTitleBold>{t('dateList.status')}</StyledDateListItemTitleBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell />
           </>
+        ) : (
+          <StyledDateListTitleRow>
+            <StyledDateListItemCheckbox>
+              <Checkbox
+                id={`${uid}-checkbox`}
+                ariaLabel={t('dateList.allCheckboxAriaLabel') as string}
+                checked={allCheckboxesChecked}
+                onChange={(e) =>
+                  e?.target.checked ? setCheckedDateIds(allDateIds) : setCheckedDateIds([])
+                }
+              />
+            </StyledDateListItemCheckbox>
+            <StyledDateListItemTitleBold noPaddingLeft>
+              {t('dateList.info')}
+            </StyledDateListItemTitleBold>
+          </StyledDateListTitleRow>
         )}
         {Object.values(state).map((date, index) => {
           const translation = getTranslation(language, date?.data?.relations?.translations);
