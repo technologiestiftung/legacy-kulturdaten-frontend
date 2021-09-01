@@ -20,8 +20,8 @@ export type OfferDate = {
     id?: string;
     type?: 'offerdate';
     attributes?: {
-      from: Date;
-      to: Date;
+      from: string;
+      to: string;
       allDay: boolean;
       status: OfferDateStatus;
       ticketLink?: string;

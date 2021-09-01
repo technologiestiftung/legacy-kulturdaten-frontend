@@ -6,8 +6,8 @@ export const dummyDates: OfferDate[] = [
     data: {
       id: '0',
       attributes: {
-        from: new Date('2021-08-31T14:30:00'),
-        to: new Date('2021-08-31T17:30:00'),
+        from: '2021-08-31T14:30:00',
+        to: '2021-08-31T17:30:00',
         allDay: false,
         status: OfferDateStatus.confirmed,
         ticketLink: 'https://ticket.link',
@@ -38,8 +38,8 @@ export const dummyDates: OfferDate[] = [
     data: {
       id: '1',
       attributes: {
-        from: new Date('2021-08-31T00:00:00'),
-        to: new Date('2021-09-01T00:00:00'),
+        from: '2021-08-31T00:00:00',
+        to: '2021-09-01T00:00:00',
         allDay: true,
         status: OfferDateStatus.confirmed,
         ticketLink: 'https://ticket.link',
