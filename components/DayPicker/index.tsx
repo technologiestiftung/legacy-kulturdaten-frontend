@@ -6,15 +6,58 @@ const StyledDayPicker = styled.div`
   display: flex;
   border: 1px solid var(--grey-600);
   border-radius: 0.375rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  column-gap: 0.1875rem;
+  padding: calc(0.375rem - 1px);
+  min-width: min(100%, 22.5rem);
 `;
 
-const StyledDayPickerDay = styled.div``;
+const StyledDayPickerDay = styled.div<{ checked: boolean }>`
+  position: relative;
+  border: 1px solid var(--black-o25);
+  border-radius: 0.1875rem;
+  background: ${({ checked }) => (checked ? 'var(--green-light)' : 'var(--grey-200)')};
+  cursor: pointer;
+  transition: background var(--transition-duration-fast);
 
-const StyledDayPickerDayName = styled.div``;
+  @media (pointer: fine) {
+    &:hover {
+      background: ${({ checked }) => (checked ? 'var(--green-light)' : 'var(--grey-400)')};
+    }
+  }
+`;
 
-const StyledDayPickerDayCheckbox = styled.input``;
+const StyledDayPickerDayLabel = styled.label`
+  display: block;
+  position: relative;
+  cursor: pointer;
+`;
 
-const StyledDayPickerDayLabel = styled.label``;
+const StyledDayPickerDayCheckbox = styled.input`
+  appearance: none;
+  background: none;
+  border: none;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.1875rem;
+  cursor: pointer;
+`;
+
+const StyledDayPickerDayName = styled.div`
+  position: relative;
+  padding: calc(0.375rem - 1px) calc(0.5rem - 1px);
+  text-align: center;
+  cursor: pointer;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+`;
 
 export enum DayPickerMode {
   week = 'week',
@@ -94,14 +137,19 @@ export const DayPicker: React.FC<DayPicker> = ({ value, onChange }: DayPicker) =
   return (
     <StyledDayPicker aria-label={t('dayPicker.ariaLabel') as string} role="group">
       {weekdays.map(({ name: { short, long } }, index) => (
-        <StyledDayPickerDay key={index} aria-label={t(long) as string} role="checkbox">
+        <StyledDayPickerDay
+          key={index}
+          aria-label={t(long) as string}
+          role="checkbox"
+          checked={state[index]}
+        >
           <StyledDayPickerDayLabel title={t(long) as string}>
-            <StyledDayPickerDayName>{t(short)}</StyledDayPickerDayName>
             <StyledDayPickerDayCheckbox
               type="checkbox"
               checked={state[index]}
               onChange={(e) => changeHandler(e.target.checked, index)}
             />
+            <StyledDayPickerDayName>{t(short)}</StyledDayPickerDayName>
           </StyledDayPickerDayLabel>
         </StyledDayPickerDay>
       ))}

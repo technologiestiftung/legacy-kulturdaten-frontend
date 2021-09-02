@@ -10,31 +10,31 @@ export const deDE: Localization = {
   days: {
     monday: {
       long: () => 'Montag',
-      short: () => 'Mo.',
+      short: () => 'Mo',
     },
     tuesday: {
       long: () => 'Dienstag',
-      short: () => 'Di.',
+      short: () => 'Di',
     },
     wednesday: {
       long: () => 'Mittwoch',
-      short: () => 'Mi.',
+      short: () => 'Mi',
     },
     thursday: {
       long: () => 'Donnerstag',
-      short: () => 'Do.',
+      short: () => 'Do',
     },
     friday: {
       long: () => 'Freitag',
-      short: () => 'Fr.',
+      short: () => 'Fr',
     },
     saturday: {
       long: () => 'Samstag',
-      short: () => 'Sa.',
+      short: () => 'Sa',
     },
     sunday: {
       long: () => 'Sonntag',
-      short: () => 'So.',
+      short: () => 'So',
     },
   },
   accordion: {
