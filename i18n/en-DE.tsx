@@ -4,6 +4,39 @@ export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
   },
+  dayPicker: {
+    ariaLabel: () => 'Choose weekdays',
+  },
+  days: {
+    monday: {
+      long: () => 'Monday',
+      short: () => 'Mo.',
+    },
+    tuesday: {
+      long: () => 'Tuesday',
+      short: () => 'Tu.',
+    },
+    wednesday: {
+      long: () => 'Wednesday',
+      short: () => 'We.',
+    },
+    thursday: {
+      long: () => 'Thursday',
+      short: () => 'Th.',
+    },
+    friday: {
+      long: () => 'Friday',
+      short: () => 'Fr.',
+    },
+    saturday: {
+      long: () => 'Saturday',
+      short: () => 'Sa.',
+    },
+    sunday: {
+      long: () => 'Sunday',
+      short: () => 'Su.',
+    },
+  },
   accordion: {
     open: () => 'show',
     close: () => 'hide',
