@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { useT } from '../../lib/i18n';
@@ -14,6 +15,16 @@ const StyledDayPicker = styled.div`
   min-width: min(100%, 22.5rem);
 `;
 
+const StyledDayPickerDayName = styled.div`
+  position: relative;
+  padding: calc(0.375rem - 1px) calc(0.5rem - 1px);
+  text-align: center;
+  cursor: pointer;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+`;
+
 const StyledDayPickerDay = styled.div<{ checked: boolean }>`
   position: relative;
   border: 1px solid var(--black-o25);
@@ -21,6 +32,15 @@ const StyledDayPickerDay = styled.div<{ checked: boolean }>`
   background: ${({ checked }) => (checked ? 'var(--green-light)' : 'var(--grey-200)')};
   cursor: pointer;
   transition: background var(--transition-duration-fast);
+
+  ${StyledDayPickerDayName} {
+    ${({ checked }) =>
+      checked
+        ? css`
+            text-decoration: underline;
+          `
+        : ''}
+  }
 
   @media (pointer: fine) {
     &:hover {
@@ -47,16 +67,6 @@ const StyledDayPickerDayCheckbox = styled.input`
   height: 100%;
   border-radius: 0.1875rem;
   cursor: pointer;
-`;
-
-const StyledDayPickerDayName = styled.div`
-  position: relative;
-  padding: calc(0.375rem - 1px) calc(0.5rem - 1px);
-  text-align: center;
-  cursor: pointer;
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  font-weight: 700;
 `;
 
 export enum DayPickerMode {
