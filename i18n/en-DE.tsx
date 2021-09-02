@@ -37,6 +37,10 @@ export const enDE: Localization = {
       short: () => 'Su',
     },
   },
+  dateCreate: {
+    overlayTitle: ({ offerTitle }) => `Create date for ‘${offerTitle}’`,
+    create: () => 'Create date',
+  },
   accordion: {
     open: () => 'show',
     close: () => 'hide',
