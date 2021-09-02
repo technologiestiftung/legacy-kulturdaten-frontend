@@ -41,7 +41,7 @@ export const dummyDates: OfferDate[] = [
         from: '2021-08-31T00:00:00',
         to: '2021-09-01T00:00:00',
         allDay: true,
-        status: OfferDateStatus.confirmed,
+        status: OfferDateStatus.cancelled,
         ticketLink: 'https://ticket.link',
       },
       relations: {

@@ -29,7 +29,7 @@ const StyledDateListBody = styled.div`
   ${mq(Breakpoint.mid)} {
     border: 1px solid var(--grey-400);
     display: grid;
-    grid-template-columns: 4.5rem 2fr 1fr 0fr 0fr;
+    grid-template-columns: auto 2fr 1fr auto auto;
     border-radius: 0.75rem;
   }
 `;
@@ -142,6 +142,7 @@ const StyledDateListItemTitleBold = styled(StyledDateListItemTitle)`
 
 const StyledDateListItemStatus = styled.div`
   padding: 0.75rem 0.75rem 0.75rem 0.375rem;
+  display: flex;
 
   ${mq(Breakpoint.mid)} {
     padding: 1.5rem 1.5rem 1.5rem 0.75rem;
@@ -302,7 +303,9 @@ const DateListRow: React.FC<DateListItemProps> = ({
 
   const renderedStatus = (
     <StyledDateListItemStatus>
-      <StyledDateListItemStatusFlag status={status}>{status}</StyledDateListItemStatusFlag>
+      <StyledDateListItemStatusFlag status={status}>
+        {t(OfferDateStatusToL10nMap[status])}
+      </StyledDateListItemStatusFlag>
     </StyledDateListItemStatus>
   );
 
@@ -366,6 +369,11 @@ const DateListRow: React.FC<DateListItemProps> = ({
   );
 
   return isMidOrWider ? renderedGridContent : renderedFlexContent;
+};
+
+const OfferDateStatusToL10nMap: { [key in OfferDateStatus]: string } = {
+  [OfferDateStatus.confirmed]: 'dateList.confirmed',
+  [OfferDateStatus.cancelled]: 'dateList.cancelled',
 };
 
 interface DateListProps {
