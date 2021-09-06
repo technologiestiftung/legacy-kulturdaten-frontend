@@ -70,6 +70,8 @@ export const inputStyles = ({
   &:invalid {
     ${errorStyle}
   }
+
+  ${valid === false && !pristine && errorStyle}
 `;
 
 const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
@@ -81,6 +83,7 @@ const StyledError = styled.div`
   line-height: var(--line-height-300);
   color: var(--error);
   padding-top: 0.75rem;
+  flex-basis: 0;
 `;
 
 export enum InputType {

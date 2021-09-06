@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { differenceInSeconds } from 'date-fns/esm';
+import { differenceInSeconds } from 'date-fns';
 import { Dispatch, Reducer, SetStateAction, useMemo, useReducer, useState } from 'react';
 import { ArrowRight, ChevronDown } from 'react-feather';
 import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
@@ -26,10 +26,10 @@ const StyledDateListBody = styled.div`
   border-top: 1px solid var(--grey-400);
   border-bottom: 1px solid var(--grey-400);
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.widish)} {
     border: 1px solid var(--grey-400);
     display: grid;
-    grid-template-columns: auto 2fr 1fr auto auto;
+    grid-template-columns: auto 1fr 1fr 1fr auto auto;
     border-radius: 0.75rem;
   }
 `;
@@ -45,8 +45,10 @@ const StyledDateListTitleRow = styled(StyledDateListTitleRowCell)`
 
 const StyledDateListRowCell = styled.div<{ lastRow: boolean }>`
   flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.widish)} {
     border-bottom: 1px solid var(--grey-400);
     ${({ lastRow }) => (lastRow ? 'border-bottom: none;' : '')}
   }
@@ -102,8 +104,9 @@ const StyledDateListRowRight = styled.div`
 
 const StyledDateListItemCheckbox = styled.div`
   padding: 0.75rem;
+  align-self: center;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.ultra)} {
     padding: 1.5rem;
   }
 `;
@@ -116,7 +119,7 @@ const StyledDateListItemTime = styled.div`
   align-items: center;
   padding: 0.75rem 0.375rem 0.75rem 0;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.ultra)} {
     padding: 1.5rem 0;
   }
 
@@ -126,25 +129,31 @@ const StyledDateListItemTime = styled.div`
   }
 `;
 
-const StyledDateListItemTitle = styled.div<{ noPaddingLeft?: boolean }>`
+const StyledDateListItemTimeFrom = styled.span`
+  /* font-weight: 700; */
+`;
+
+const StyledDateListItemText = styled.div<{ noPaddingLeft?: boolean }>`
+  align-self: center;
   padding: 0.75rem 0.375rem;
   ${({ noPaddingLeft }) => (noPaddingLeft ? 'padding-left: 0;' : '')}
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.ultra)} {
     padding: 1.5rem 0.75rem;
     ${({ noPaddingLeft }) => (noPaddingLeft ? 'padding-left: 0;' : '')}
   }
 `;
 
-const StyledDateListItemTitleBold = styled(StyledDateListItemTitle)`
+const StyledDateListItemTextBold = styled(StyledDateListItemText)`
   font-weight: 700;
 `;
 
 const StyledDateListItemStatus = styled.div`
   padding: 0.75rem 0.75rem 0.75rem 0.375rem;
   display: flex;
+  align-self: center;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.ultra)} {
     padding: 1.5rem 1.5rem 1.5rem 0.75rem;
   }
 `;
@@ -153,7 +162,7 @@ const StyledDateListItemStatusFlag = styled.div<{ status: OfferDateStatus }>`
   padding: 0 0.375rem;
   border-radius: 0.375rem;
   background: ${({ status }) =>
-    status === OfferDateStatus.confirmed ? 'var(--green-light)' : 'var(--yellow)'};
+    status === OfferDateStatus.confirmed ? 'var(--green-light)' : 'var(--error-light)'};
 `;
 
 const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
@@ -179,7 +188,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
     background: var(--grey-200);
   }
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.ultra)} {
     column-gap: 0.75rem;
     padding: 1.5rem;
   }
@@ -193,7 +202,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
 `;
 
 const StyledDateListItemBody = styled.div`
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.widish)} {
     grid-column: 1 / -1;
   }
 `;
@@ -267,7 +276,7 @@ const DateListRow: React.FC<DateListItemProps> = ({
   checked,
   onChange,
 }: DateListItemProps) => {
-  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const uid = usePseudoUID();
   const t = useT();
   const formatDate = useDate();
@@ -325,17 +334,16 @@ const DateListRow: React.FC<DateListItemProps> = ({
       <StyledDateListRowCell lastRow={lastRow}>{renderedCheckbox}</StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow}>
         <StyledDateListItemTime>
-          <span>{formattedFrom}</span>
-          {to && (!allDay || longerThanOneDay) && (
-            <>
-              <ArrowRight />
-              <span>{formattedTo}</span>
-            </>
-          )}
+          <StyledDateListItemTimeFrom>{formattedFrom}</StyledDateListItemTimeFrom>
         </StyledDateListItemTime>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow}>
-        <StyledDateListItemTitle>{title}</StyledDateListItemTitle>
+        {to && (!allDay || longerThanOneDay) && (
+          <StyledDateListItemText>{formattedTo}</StyledDateListItemText>
+        )}
+      </StyledDateListRowCell>
+      <StyledDateListRowCell lastRow={lastRow}>
+        <StyledDateListItemText>{title}</StyledDateListItemText>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow}>{renderedStatus}</StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow}>{renderedExpandButton}</StyledDateListRowCell>
@@ -358,7 +366,7 @@ const DateListRow: React.FC<DateListItemProps> = ({
                 </>
               )}
             </StyledDateListItemTime>
-            <StyledDateListItemTitle>{title}</StyledDateListItemTitle>
+            <StyledDateListItemText>{title}</StyledDateListItemText>
             {renderedStatus}
           </StyledDateListRowMidInner>
         </StyledDateListRowMid>
@@ -368,7 +376,7 @@ const DateListRow: React.FC<DateListItemProps> = ({
     </>
   );
 
-  return isMidOrWider ? renderedGridContent : renderedFlexContent;
+  return isWideOrWider ? renderedGridContent : renderedFlexContent;
 };
 
 const OfferDateStatusToL10nMap: { [key in OfferDateStatus]: string } = {
@@ -392,7 +400,7 @@ const DateList: React.FC<DateListProps> = ({
   setCheckedDateIds,
 }: DateListProps) => {
   const language = useLanguage();
-  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const rowCount = Object.values(state).length;
   const uid = usePseudoUID();
   const t = useT();
@@ -412,7 +420,7 @@ const DateList: React.FC<DateListProps> = ({
   return (
     <StyledDateList>
       <StyledDateListBody role="table">
-        {isMidOrWider ? (
+        {isWideOrWider ? (
           <>
             <StyledDateListTitleRowCell>
               <StyledDateListItemCheckbox>
@@ -426,15 +434,18 @@ const DateList: React.FC<DateListProps> = ({
               </StyledDateListItemCheckbox>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTitleBold noPaddingLeft>
+              <StyledDateListItemTextBold noPaddingLeft>
                 {t('dateList.time')}
-              </StyledDateListItemTitleBold>
+              </StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTitleBold>{t('dateList.title')}</StyledDateListItemTitleBold>
+              <StyledDateListItemTextBold>{t('dateList.time')}</StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTitleBold>{t('dateList.status')}</StyledDateListItemTitleBold>
+              <StyledDateListItemTextBold>{t('dateList.title')}</StyledDateListItemTextBold>
+            </StyledDateListTitleRowCell>
+            <StyledDateListTitleRowCell>
+              <StyledDateListItemTextBold>{t('dateList.status')}</StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell />
           </>
@@ -450,9 +461,9 @@ const DateList: React.FC<DateListProps> = ({
                 }
               />
             </StyledDateListItemCheckbox>
-            <StyledDateListItemTitleBold noPaddingLeft>
+            <StyledDateListItemTextBold noPaddingLeft>
               {t('dateList.info')}
-            </StyledDateListItemTitleBold>
+            </StyledDateListItemTextBold>
           </StyledDateListTitleRow>
         )}
         {Object.values(state).map((date, index) => {

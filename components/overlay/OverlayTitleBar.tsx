@@ -27,7 +27,7 @@ const StyledOverlayTitleBar = styled.div<{ sticky?: boolean }>`
         `
       : ''}
 
-  ${mq(Breakpoint.wide)} {
+  ${mq(Breakpoint.mid)} {
     padding: 0.375rem 1.5rem;
   }
 `;

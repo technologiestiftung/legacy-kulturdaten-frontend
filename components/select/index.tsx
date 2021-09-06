@@ -42,9 +42,7 @@ const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>
 `;
 
 const selectSizes: {
-  [key in SelectSize]: (
-    withIcon: boolean
-  ) => {
+  [key in SelectSize]: (withIcon: boolean) => {
     fontSize: string;
     lineHeight: string;
     padding: string;
@@ -125,7 +123,7 @@ const StyledSelect = styled.select<{
 }>`
   margin: 0;
   appearance: none;
-  border-radius: 0.75rem;
+  border-radius: 0.375rem;
   font-size: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).fontSize};
   line-height: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).lineHeight};
   padding: ${({ selectSize, withIcon }) => selectSizes[selectSize](withIcon).padding};

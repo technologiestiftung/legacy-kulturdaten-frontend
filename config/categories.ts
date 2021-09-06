@@ -160,8 +160,8 @@ export const useCategories: () => {
         { title: t('categories.offer.tabs.info') as string, sub: 'info' },
         { title: t('categories.offer.tabs.categorization') as string, sub: 'categorization' },
         { title: t('categories.offer.tabs.dates') as string, sub: 'dates' },
-        { title: t('categories.offer.tabs.media') as string, sub: 'media' },
         { title: t('categories.offer.tabs.accessibility') as string, sub: 'accessibility' },
+        { title: t('categories.offer.tabs.media') as string, sub: 'media' },
       ],
       metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {

@@ -55,7 +55,7 @@ const StyledTabLink = styled.a<{ isActive?: boolean; itemCount: number; index: n
   text-decoration: none;
   padding: calc(0.75rem - 1px) calc(1.5rem - 1px);
   background: var(--white);
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem 0.75rem 0 0;

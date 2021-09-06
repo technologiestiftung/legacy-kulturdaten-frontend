@@ -114,10 +114,17 @@ const StyledRadioVariantOptionLabelContent = styled.div`
   max-width: 52ch;
 `;
 
-const StyledRadioVariantOptionLabelHeadline = styled.div`
+const StyledRadioVariantOptionLabelHeadline = styled.div<{ active: boolean }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: var(--font-weight-bold);
+
+  ${({ active }) =>
+    active
+      ? css`
+          text-decoration: underline;
+        `
+      : ''}
 `;
 
 const StyledRadioVariantOptionLabelChildren = styled.div`
@@ -173,7 +180,7 @@ export const RadioVariant: React.FC<RadioVariantProps> = ({
             <StyledRadioVariantOption key={index} active={optionActive} role="radio">
               <StyledRadioVariantOptionLabel htmlFor={optionId} active={optionActive}>
                 <StyledRadioVariantOptionLabelContent>
-                  <StyledRadioVariantOptionLabelHeadline>
+                  <StyledRadioVariantOptionLabelHeadline active={optionActive}>
                     {label}
                   </StyledRadioVariantOptionLabelHeadline>
                   {children && (
