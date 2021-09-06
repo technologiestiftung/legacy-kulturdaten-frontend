@@ -1,128 +1,19 @@
 import { css } from '@emotion/react';
 import { useCallback, useState, useMemo } from 'react';
-import { RRule, Frequency } from 'rrule';
-import styled from '@emotion/styled';
 import { OfferDate } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { Checkbox } from '../checkbox';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import {
-  EntryFormContainer,
-  EntryFormContainerColumns,
-  EntryFormWrapper,
-} from '../EntryForm/wrappers';
+import { EntryFormContainer, EntryFormWrapper } from '../EntryForm/wrappers';
 import { Input, InputType } from '../input';
 import { useOverlay } from '../overlay';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
-import { Select, SelectSize } from '../select';
-import { DayPicker } from '../DayPicker';
-import { mq } from '../globals/Constants';
-import { Breakpoint } from '../../lib/WindowService';
-import { add, compareAsc, format, formatISO, max, min } from 'date-fns';
+import { add, compareAsc, format, formatISO, max } from 'date-fns';
 import { parseISO } from 'date-fns/esm';
-
-const StyledDateRecurrence = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  column-gap: 1.5rem;
-  justify-items: stretch;
-
-  ${mq(Breakpoint.mid)} {
-    row-gap: 1.5rem;
-    max-width: 35rem;
-    grid-template-columns: auto 1fr;
-  }
-`;
-
-const StyledDateRecurrenceLabel = styled.label`
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  font-weight: 700;
-  padding: 1.5rem 0 0.75rem;
-
-  &:first-of-type {
-    padding: 0 0 0.75rem;
-  }
-
-  ${mq(Breakpoint.mid)} {
-    padding: 0.75rem 0;
-
-    &:first-of-type {
-      padding: 0.75rem 0;
-    }
-  }
-`;
-
-const StyledDateRecurrenceItem = styled.div`
-  width: 100%;
-  display: flex;
-  column-gap: 0.75rem;
-`;
-
-const frequencyNameMap = {
-  [Frequency.DAILY]: 'Tage',
-  [Frequency.WEEKLY]: 'Wochen',
-  [Frequency.MONTHLY]: 'Monate',
-};
-
-interface DateRecurrenceProps {
-  todayDateISOString: string;
-  latestDateISOString: string;
-}
-
-const DateRecurrence: React.FC<DateRecurrenceProps> = ({
-  todayDateISOString,
-  latestDateISOString,
-}: DateRecurrenceProps) => {
-  const uid = usePseudoUID();
-  const [frequency, setFrequency] = useState<Frequency>();
-
-  return (
-    <StyledDateRecurrence>
-      <StyledDateRecurrenceLabel>Häufigkeit</StyledDateRecurrenceLabel>
-      <StyledDateRecurrenceItem>
-        <Select
-          id={`select-${uid}`}
-          size={SelectSize.big}
-          value={frequency ? frequency.toString() : undefined}
-          onChange={(e) => {
-            console.log(e.target.value);
-            setFrequency(e.target.value !== 'undefined' ? parseInt(e.target.value, 10) : undefined);
-          }}
-        >
-          <option value="undefined">nie wiederholen</option>
-          <option value={Frequency.DAILY}>täglich</option>
-          <option value={Frequency.WEEKLY}>wöchentlich</option>
-          <option value={Frequency.MONTHLY}>monatlich</option>
-        </Select>
-      </StyledDateRecurrenceItem>
-      {frequency && (
-        <>
-          <StyledDateRecurrenceLabel>Wiederholen alle</StyledDateRecurrenceLabel>
-          <StyledDateRecurrenceItem>
-            <Input type={InputType.number} min={1} max={100} />
-            <div>{frequencyNameMap[frequency]}</div>
-          </StyledDateRecurrenceItem>
-          {frequency === Frequency.WEEKLY && (
-            <>
-              <StyledDateRecurrenceLabel>An Wochentagen</StyledDateRecurrenceLabel>
-              <StyledDateRecurrenceItem>
-                <DayPicker />
-              </StyledDateRecurrenceItem>
-            </>
-          )}
-          <StyledDateRecurrenceLabel>Endet am</StyledDateRecurrenceLabel>
-          <StyledDateRecurrenceItem>
-            <Input type={InputType.date} min={todayDateISOString} max={latestDateISOString} />
-          </StyledDateRecurrenceItem>
-        </>
-      )}
-    </StyledDateRecurrence>
-  );
-};
+import { useDateRecurrence } from '../DateRecurrence';
 
 const DateCreateForm: React.FC = () => {
   const uid = usePseudoUID();
@@ -131,7 +22,13 @@ const DateCreateForm: React.FC = () => {
   const today = new Date();
   const latestDate = add(today, { years: 1 });
 
-  const [ticketUrl, setTicketUrl] = useState<string>();
+  const [ticketUrl, setTicketUrl] = useState('');
+  const [titleGerman, setTitleGerman] = useState('');
+  const [titleEnglish, setTitleEnglish] = useState('');
+  const [roomGerman, setRoomGerman] = useState('');
+  const [roomEnglish, setRoomEnglish] = useState('');
+
+  const [recurrence, setRecurrence] = useState<string>();
 
   const todayDateISOString = formatISO(today, { representation: 'date' });
   const todayTimeISOString = format(today, 'HH:mm');
@@ -163,24 +60,33 @@ const DateCreateForm: React.FC = () => {
     [fromDateTime, toDateTime]
   );
 
+  const { renderedDateRecurrence } = useDateRecurrence({
+    startDate: fromDate,
+    latestDate,
+    recurrence,
+    onChange: (changedRecurrence) => setRecurrence(changedRecurrence),
+  });
+
   return (
     <>
       <EntryFormWrapper fullWidth reducedVerticalpadding>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Informationen" />
+          <EntryFormHead title="Titel (optional)" />
           <FormGrid>
-            <FormItem width={FormItemWidth.full}>
-              <Input type={InputType.text} label="Titel (optional)" />
-            </FormItem>
             <FormItem width={FormItemWidth.half}>
-              <Input type={InputType.text} label="Rauminformation (optional)" />
+              <Input
+                type={InputType.text}
+                label="Titel deutsch"
+                value={titleGerman}
+                onChange={(e) => setTitleGerman(e.target.value)}
+              />
             </FormItem>
             <FormItem width={FormItemWidth.half}>
               <Input
-                type={InputType.url}
-                label="Ticketlink (optional)"
-                value={ticketUrl}
-                onChange={(e) => setTicketUrl(e.target.value)}
+                type={InputType.text}
+                label="Titel english"
+                value={titleEnglish}
+                onChange={(e) => setTitleEnglish(e.target.value)}
               />
             </FormItem>
           </FormGrid>
@@ -250,10 +156,37 @@ const DateCreateForm: React.FC = () => {
         <EntryFormContainer fullWidth>
           <EntryFormHead title="Termin wiederholen" />
           <FormGrid>
+            <FormItem width={FormItemWidth.full}>{renderedDateRecurrence}</FormItem>
+          </FormGrid>
+        </EntryFormContainer>
+        <EntryFormContainer fullWidth>
+          <EntryFormHead title="Rauminformation (optional)" />
+          <FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                type={InputType.text}
+                label="Rauminformation deutsch"
+                value={roomGerman}
+                onChange={(e) => setRoomGerman(e.target.value)}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                type={InputType.text}
+                label="Rauminformation english"
+                value={roomEnglish}
+                onChange={(e) => setRoomEnglish(e.target.value)}
+              />
+            </FormItem>
+          </FormGrid>
+          <EntryFormHead title="Weiterführende Links (optional)" />
+          <FormGrid>
             <FormItem width={FormItemWidth.full}>
-              <DateRecurrence
-                todayDateISOString={todayDateISOString}
-                latestDateISOString={latestDateISOString}
+              <Input
+                type={InputType.url}
+                label="Ticketlink"
+                value={ticketUrl}
+                onChange={(e) => setTicketUrl(e.target.value)}
               />
             </FormItem>
           </FormGrid>
@@ -274,7 +207,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
 }: DateCreateProps) => {
   const t = useT();
 
-  const { renderedOverlay, isOpen, setIsOpen } = useOverlay(
+  const { renderedOverlay, setIsOpen } = useOverlay(
     <>
       <OverlayTitleBar
         title={t('dateCreate.overlayTitle', { offerTitle }) as string}
