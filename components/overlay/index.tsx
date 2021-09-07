@@ -130,12 +130,16 @@ export const useOverlay = (
 } => {
   const [overlayId, setOverlayId] = useState<string>();
   const [isOpen, setIsOpen] = useState<boolean>(initialIsOpen || false);
-  const { registerOverlay, setOverlayOpen } = useContext(NavigationContext);
+  const { registerOverlay, setOverlayOpen, removeOverlay } = useContext(NavigationContext);
 
   useEffect(() => {
     const { id } = registerOverlay();
     setOverlayId(id);
-  }, [registerOverlay]);
+
+    return () => {
+      removeOverlay(id);
+    };
+  }, [registerOverlay, removeOverlay]);
 
   useEffect(() => {
     if (overlayId) {

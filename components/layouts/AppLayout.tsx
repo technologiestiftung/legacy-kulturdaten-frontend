@@ -156,7 +156,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const isMainMenuOverlayVisible = useNavigationOverlayVisible();
   const enableMenuExpanded = useMemo(() => typeof sidebar !== 'undefined', [sidebar]);
-  const { bodyLock, locked } = useBodyLock([menuExpanded && enableMenuExpanded, overlayOpen]);
+  const bodyLockConditions = useMemo(
+    () => [menuExpanded && enableMenuExpanded, overlayOpen],
+    [enableMenuExpanded, menuExpanded, overlayOpen]
+  );
+  const { bodyLock, locked } = useBodyLock(bodyLockConditions);
 
   useEffect(() => {
     if (!isMidOrWider) {
