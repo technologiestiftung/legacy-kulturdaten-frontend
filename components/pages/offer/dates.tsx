@@ -1,9 +1,10 @@
+import { compareAsc } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { dummyDates } from '../../../dummy-data/dates';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
-import { Offer } from '../../../lib/api/types/offer';
+import { Offer, OfferDate } from '../../../lib/api/types/offer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
@@ -29,8 +30,10 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const uid = usePseudoUID();
   const { entry } = useEntry<Offer, OfferShow>(category, query);
 
+  const [dates, setDates] = useState<OfferDate[]>(dummyDates);
+
   const translations = entry?.data?.relations?.translations;
-  const { renderedDateList } = useDateList({ dates: dummyDates });
+  const { renderedDateList } = useDateList({ dates });
 
   const offerTitles = useMemo<{ [key in Language]: string }>(() => {
     const languageNamePairs = Object.keys(languages).map<[Language, string]>((lang: Language) => {
@@ -93,7 +96,20 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
             <EntryFormHead title="Termine" />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
-                <DateCreate onSubmit={(date) => console.log(date)} offerTitles={offerTitles} />
+                <DateCreate
+                  onSubmit={(date) => {
+                    console.log(date);
+                    setDates(
+                      [date, ...dates].sort((firstDate, secondDate) =>
+                        compareAsc(
+                          new Date(firstDate.data.attributes.from),
+                          new Date(secondDate.data.attributes.from)
+                        )
+                      )
+                    );
+                  }}
+                  offerTitles={offerTitles}
+                />
               </FormItem>
               <FormItem width={FormItemWidth.full}>{renderedDateList}</FormItem>
             </FormGrid>

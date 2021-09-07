@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { differenceInSeconds } from 'date-fns';
-import { Dispatch, Reducer, SetStateAction, useMemo, useReducer, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { ArrowRight, ChevronDown } from 'react-feather';
 import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
@@ -214,45 +214,6 @@ const StyledDateListItemBodyInner = styled.div<{ lastRow: boolean }>`
 
 const StyledDateListItemBodyHeadline = styled.div``;
 
-export enum DatesActions {
-  init = 'init',
-  set = 'set',
-  delete = 'delete',
-}
-
-type DatesState = { [key: string]: OfferDate };
-
-type DatesAction = {
-  type: DatesActions;
-  payload?: OfferDate | OfferDate[];
-};
-
-const datesReducer: Reducer<DatesState, DatesAction> = (state, action) => {
-  switch (action.type) {
-    case DatesActions.init: {
-      return (action.payload as OfferDate[]).reduce(
-        (combined, date) => ({ ...combined, [date?.data?.id]: date }),
-        {}
-      );
-    }
-
-    case DatesActions.set: {
-      return { ...state, [(action.payload as OfferDate)?.data?.id]: action.payload };
-    }
-
-    case DatesActions.delete: {
-      const updatedState = { ...state };
-      delete updatedState[(action.payload as OfferDate)?.data?.id];
-
-      return updatedState;
-    }
-
-    default: {
-      break;
-    }
-  }
-};
-
 interface DateListItemProps {
   from: string;
   status: OfferDateStatus;
@@ -387,25 +348,22 @@ const OfferDateStatusToL10nMap: { [key in OfferDateStatus]: string } = {
 interface DateListProps {
   dates: OfferDate[];
   onChange?: (dates: OfferDate[]) => void;
-  state?: DatesState;
-  dispatch?: Dispatch<DatesAction>;
   checkedDateIds?: string[];
   setCheckedDateIds?: Dispatch<SetStateAction<string[]>>;
 }
 
 const DateList: React.FC<DateListProps> = ({
-  state,
-  dispatch,
+  dates,
   checkedDateIds,
   setCheckedDateIds,
 }: DateListProps) => {
   const language = useLanguage();
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
-  const rowCount = Object.values(state).length;
+  const rowCount = dates.length;
   const uid = usePseudoUID();
   const t = useT();
 
-  const allDateIds = useMemo(() => Object.values(state).map((date) => date?.data?.id), [state]);
+  const allDateIds = useMemo(() => dates.map((date) => date?.data?.id), [dates]);
 
   const allCheckboxesChecked = useMemo<boolean>(() => {
     for (let i = 0; i < allDateIds.length; i += 1) {
@@ -466,7 +424,7 @@ const DateList: React.FC<DateListProps> = ({
             </StyledDateListItemTextBold>
           </StyledDateListTitleRow>
         )}
-        {Object.values(state).map((date, index) => {
+        {dates.map((date, index) => {
           const translation = getTranslation(language, date?.data?.relations?.translations);
           const dateId = date?.data?.id;
 
@@ -509,22 +467,11 @@ export const useDateList = (
   renderedDateList: React.ReactElement<DateListProps>;
   checkedDateIds: string[];
 } => {
-  const [datesState, dispatchDates] = useReducer(
-    datesReducer,
-    props?.dates?.reduce((combined, date) => ({ ...combined, [date?.data?.id]: date }), {})
-  );
-
   const [checkedDateIds, setCheckedDateIds] = useState<string[]>([]);
 
   return {
     renderedDateList: (
-      <DateList
-        state={datesState}
-        dispatch={dispatchDates}
-        checkedDateIds={checkedDateIds}
-        setCheckedDateIds={setCheckedDateIds}
-        {...props}
-      />
+      <DateList checkedDateIds={checkedDateIds} setCheckedDateIds={setCheckedDateIds} {...props} />
     ),
     checkedDateIds,
   };

@@ -3,7 +3,7 @@ import { useCallback, useState, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
-import { usePseudoUID } from '../../lib/uid';
+import { getPseudoUID, usePseudoUID } from '../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { Checkbox } from '../checkbox';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
@@ -125,7 +125,9 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                   if (!recurrence) {
                     // initRecurrence();
                   }
-                  setFromDateISOString(e.target.value);
+                  if (e.target.value) {
+                    setFromDateISOString(e.target.value);
+                  }
                 }}
                 min={startDateISOString}
                 max={latestDateISOString}
@@ -135,7 +137,11 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                   type={InputType.time}
                   label="Uhrzeit"
                   value={fromTimeISOString}
-                  onChange={(e) => setFromTimeISOString(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setFromTimeISOString(e.target.value);
+                    }
+                  }}
                 />
               )}
             </FormItem>
@@ -312,10 +318,11 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const date = useMemo<OfferDate>(
     () => ({
       data: {
+        id: getPseudoUID(),
         attributes: {
           allDay,
-          from: fromDateTime.toISOString(),
-          to: toDateTime.toISOString(),
+          from: fromDateTime?.toISOString(),
+          to: toDateTime?.toISOString(),
           status: OfferDateStatus.confirmed,
           ticketLink: ticketUrl,
           recurrence,
@@ -400,7 +407,25 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const submitHandler = useCallback(() => {
     onSubmit(date);
     setIsOpen(false);
-  }, [date, onSubmit, setIsOpen]);
+    setTicketUrl('');
+    setTitleGerman('');
+    setTitleEnglish('');
+    setAllDay(false);
+    setRoomGerman('');
+    setRoomEnglish('');
+    setFromDateISOString(startDateISOString);
+    setFromTimeISOString(startTimeISOString);
+    setToDateISOString(startDateISOString);
+    setToTimeISOString(startPlusOneHourTimeISOString);
+    setRecurrence(undefined);
+  }, [
+    date,
+    onSubmit,
+    setIsOpen,
+    startDateISOString,
+    startTimeISOString,
+    startPlusOneHourTimeISOString,
+  ]);
 
   return (
     <div>
