@@ -14,7 +14,7 @@ export const EntryFormWrapper = styled.div<{
 
   ${mq(Breakpoint.mid)} {
     padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '1.5rem' : '3rem')} 1.5rem;
-    row-gap: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '1.5rem' : '3rem')};
+    row-gap: 3rem;
     ${contentGrid(8)}
   }
 

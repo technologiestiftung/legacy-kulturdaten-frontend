@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
+import { Language } from '../../../config/locale';
+import { languages } from '../../../config/locales';
 import { dummyDates } from '../../../dummy-data/dates';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { Offer } from '../../../lib/api/types/offer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
-import { useLanguage } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
 import { DateCreate } from '../../DateCreate';
@@ -27,14 +28,18 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const [value, setValue] = useState<OfferDateType>(OfferDateType.permanent);
   const uid = usePseudoUID();
   const { entry } = useEntry<Offer, OfferShow>(category, query);
-  const language = useLanguage();
 
-  const currentTranslation = useMemo(
-    () => getTranslation(language, entry?.data?.relations?.translations, true),
-    [entry?.data?.relations?.translations, language]
-  );
-
+  const translations = entry?.data?.relations?.translations;
   const { renderedDateList } = useDateList({ dates: dummyDates });
+
+  const offerTitles = useMemo<{ [key in Language]: string }>(() => {
+    const languageNamePairs = Object.keys(languages).map<[Language, string]>((lang: Language) => {
+      const trans = getTranslation(lang, translations, true);
+      return [lang, trans?.attributes?.name];
+    });
+
+    return Object.fromEntries(languageNamePairs) as { [key in Language]: string };
+  }, [translations]);
 
   return (
     <>
@@ -88,10 +93,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
             <EntryFormHead title="Termine" />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
-                <DateCreate
-                  onSubmit={() => undefined}
-                  offerTitle={currentTranslation?.attributes?.name}
-                />
+                <DateCreate onSubmit={() => undefined} offerTitles={offerTitles} />
               </FormItem>
               <FormItem width={FormItemWidth.full}>{renderedDateList}</FormItem>
             </FormGrid>

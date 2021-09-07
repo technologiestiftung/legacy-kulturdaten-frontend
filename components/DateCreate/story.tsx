@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import { DateCreate } from '.';
+import { Language } from '../../config/locale';
 
 export default {
   title: 'Date Create',
@@ -15,6 +16,12 @@ const StoryWrapper = styled.div`
 
 export const DateCreateDefaultStory: Story = () => (
   <StoryWrapper>
-    <DateCreate onSubmit={() => undefined} offerTitle="Offer" />
+    <DateCreate
+      onSubmit={() => undefined}
+      offerTitles={{
+        [Language.de]: 'Angebot',
+        [Language.en]: 'Offer',
+      }}
+    />
   </StoryWrapper>
 );

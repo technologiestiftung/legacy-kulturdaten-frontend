@@ -12,10 +12,16 @@ import { useOverlay } from '../overlay';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 import { add, compareAsc, format, formatISO, max } from 'date-fns';
-import { parseISO } from 'date-fns/esm';
+import { parseISO } from 'date-fns';
 import { useDateRecurrence } from '../DateRecurrence';
+import { useLanguage } from '../../lib/routing';
+import { Language } from '../../config/locale';
 
-const DateCreateForm: React.FC = () => {
+interface DateCreateFormProps {
+  offerTitles: { [key in Language]: string };
+}
+
+const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCreateFormProps) => {
   const uid = usePseudoUID();
   const [allDay, setAllDay] = useState(false);
 
@@ -89,6 +95,18 @@ const DateCreateForm: React.FC = () => {
                 onChange={(e) => setTitleEnglish(e.target.value)}
               />
             </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <div>
+                {offerTitles[Language.de]}
+                {titleGerman ? ` – ${titleGerman}` : ''}
+              </div>
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <div>
+                {offerTitles[Language.en]}
+                {titleEnglish ? ` – ${titleEnglish}` : ''}
+              </div>
+            </FormItem>
           </FormGrid>
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
@@ -154,7 +172,7 @@ const DateCreateForm: React.FC = () => {
           </FormGrid>
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Termin wiederholen" />
+          <EntryFormHead title="Termin wiederholen (optional)" />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>{renderedDateRecurrence}</FormItem>
           </FormGrid>
@@ -179,6 +197,8 @@ const DateCreateForm: React.FC = () => {
               />
             </FormItem>
           </FormGrid>
+        </EntryFormContainer>
+        <EntryFormContainer fullWidth>
           <EntryFormHead title="Weiterführende Links (optional)" />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
@@ -198,26 +218,27 @@ const DateCreateForm: React.FC = () => {
 
 interface DateCreateProps {
   onSubmit: (date: OfferDate) => void;
-  offerTitle: string;
+  offerTitles: { [key in Language]: string };
 }
 
 export const DateCreate: React.FC<DateCreateProps> = ({
   onSubmit,
-  offerTitle,
+  offerTitles,
 }: DateCreateProps) => {
   const t = useT();
+  const language = useLanguage();
 
   const { renderedOverlay, setIsOpen } = useOverlay(
     <>
       <OverlayTitleBar
-        title={t('dateCreate.overlayTitle', { offerTitle }) as string}
+        title={t('dateCreate.overlayTitle', { offerTitle: offerTitles[language] }) as string}
         actions={[
           <Button key={0} color={ButtonColor.black} onClick={() => submitHandler()}>
             {t('dateCreate.create')}
           </Button>,
         ]}
       />
-      <DateCreateForm />
+      <DateCreateForm offerTitles={offerTitles} />
     </>,
     true
   );
