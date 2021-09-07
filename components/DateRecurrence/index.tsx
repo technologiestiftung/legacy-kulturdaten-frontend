@@ -4,10 +4,10 @@ import styled from '@emotion/styled';
 import { usePseudoUID } from '../../lib/uid';
 import { Input, InputType } from '../input';
 import { Select, SelectSize } from '../select';
-import { DayPicker } from '../DayPicker';
+import { Day, DayPicker } from '../DayPicker';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
-import { add, formatISO } from 'date-fns';
+import { add, formatISO, getISODay } from 'date-fns';
 
 const StyledDateRecurrence = styled.div`
   display: grid;
@@ -41,6 +41,16 @@ const StyledDateRecurrenceLabel = styled.label`
   }
 `;
 
+const StyledDateRecurrenceInterval = styled.div`
+  width: calc(3ch + 4.5rem);
+`;
+
+const StyledDateRecurrenceText = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  padding: 0.75rem 0;
+`;
+
 const StyledDateRecurrenceItem = styled.div`
   width: 100%;
   display: flex;
@@ -54,7 +64,6 @@ const frequencyNameMap = {
 };
 
 const rruleWeekdays = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
-const emptyWeekdays = [...Array(7)].map(() => false);
 
 interface DateRecurrenceProps {
   recurrence: string;
@@ -65,8 +74,8 @@ interface DateRecurrenceProps {
   setFrequency?: (frequency: Frequency) => void;
   interval?: number;
   setInterval?: (interval: number) => void;
-  weekdays?: boolean[];
-  setWeekdays?: (weekdays: boolean[]) => void;
+  weekdays?: Day[];
+  setWeekdays?: (weekdays: Day[]) => void;
   rule?: RRule;
   setRule?: (rule: RRule) => void;
 }
@@ -74,7 +83,6 @@ interface DateRecurrenceProps {
 const DateRecurrence: React.FC<DateRecurrenceProps> = ({
   startDate,
   latestDate,
-  rule,
   setRule,
   frequency,
   setFrequency,
@@ -113,31 +121,29 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
   }, [chosenRruleWeekdays, endDate, frequency, interval, setRule, startDate]);
 
   return (
-    <>
-      <StyledDateRecurrence>
-        <StyledDateRecurrenceLabel>Häufigkeit</StyledDateRecurrenceLabel>
-        <StyledDateRecurrenceItem>
-          <Select
-            id={`select-${uid}`}
-            size={SelectSize.big}
-            value={frequency ? frequency.toString() : undefined}
-            onChange={(e) => {
-              console.log(e.target.value);
-              setFrequency(
-                e.target.value !== 'undefined' ? parseInt(e.target.value, 10) : undefined
-              );
-            }}
-          >
-            <option value="undefined">nie wiederholen</option>
-            <option value={Frequency.DAILY}>täglich</option>
-            <option value={Frequency.WEEKLY}>wöchentlich</option>
-            <option value={Frequency.MONTHLY}>monatlich</option>
-          </Select>
-        </StyledDateRecurrenceItem>
-        {frequency && (
-          <>
-            <StyledDateRecurrenceLabel>Wiederholen alle</StyledDateRecurrenceLabel>
-            <StyledDateRecurrenceItem>
+    <StyledDateRecurrence>
+      <StyledDateRecurrenceLabel>Häufigkeit</StyledDateRecurrenceLabel>
+      <StyledDateRecurrenceItem>
+        <Select
+          id={`select-${uid}`}
+          size={SelectSize.big}
+          value={frequency ? frequency.toString() : undefined}
+          onChange={(e) => {
+            console.log(e.target.value);
+            setFrequency(e.target.value !== 'undefined' ? parseInt(e.target.value, 10) : undefined);
+          }}
+        >
+          <option value="undefined">nie wiederholen</option>
+          <option value={Frequency.DAILY}>täglich</option>
+          <option value={Frequency.WEEKLY}>wöchentlich</option>
+          <option value={Frequency.MONTHLY}>monatlich</option>
+        </Select>
+      </StyledDateRecurrenceItem>
+      {frequency && (
+        <>
+          <StyledDateRecurrenceLabel>Wiederholen alle</StyledDateRecurrenceLabel>
+          <StyledDateRecurrenceItem>
+            <StyledDateRecurrenceInterval>
               <Input
                 type={InputType.number}
                 min={1}
@@ -145,39 +151,40 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
                 value={interval}
                 onChange={(e) => setInterval(parseInt(e.target.value, 10))}
               />
-              <div>{frequencyNameMap[frequency]}</div>
-            </StyledDateRecurrenceItem>
-            {frequency === Frequency.WEEKLY && (
-              <>
-                <StyledDateRecurrenceLabel>An Wochentagen</StyledDateRecurrenceLabel>
-                <StyledDateRecurrenceItem>
-                  <DayPicker value={weekdays} onChange={(value) => setWeekdays(value)} />
-                </StyledDateRecurrenceItem>
-              </>
-            )}
-            <StyledDateRecurrenceLabel>Endet am</StyledDateRecurrenceLabel>
-            <StyledDateRecurrenceItem>
-              <Input
-                type={InputType.date}
-                min={formatISO(startDate, { representation: 'date' })}
-                max={formatISO(latestDate, { representation: 'date' })}
-                value={endDateISOString}
-                onChange={(e) => setEndDateISOString(e.target.value)}
-              />
-            </StyledDateRecurrenceItem>
-          </>
-        )}
-      </StyledDateRecurrence>
-      <div>{rule?.toString()}</div>
-    </>
+            </StyledDateRecurrenceInterval>
+            <StyledDateRecurrenceText>{frequencyNameMap[frequency]}</StyledDateRecurrenceText>
+          </StyledDateRecurrenceItem>
+          {frequency === Frequency.WEEKLY && (
+            <>
+              <StyledDateRecurrenceLabel>An Wochentagen</StyledDateRecurrenceLabel>
+              <StyledDateRecurrenceItem>
+                <DayPicker value={weekdays} onChange={(value) => setWeekdays(value)} min={1} />
+              </StyledDateRecurrenceItem>
+            </>
+          )}
+          <StyledDateRecurrenceLabel>Endet am</StyledDateRecurrenceLabel>
+          <StyledDateRecurrenceItem>
+            <Input
+              type={InputType.date}
+              min={formatISO(startDate, { representation: 'date' })}
+              max={formatISO(latestDate, { representation: 'date' })}
+              value={endDateISOString}
+              onChange={(e) => setEndDateISOString(e.target.value)}
+            />
+          </StyledDateRecurrenceItem>
+        </>
+      )}
+    </StyledDateRecurrence>
   );
 };
+
+const getRRuleDay = (date: Date) => getISODay(date) - 1;
 
 export const useDateRecurrence = (
   props: DateRecurrenceProps
 ): {
   renderedDateRecurrence: React.ReactElement<DateRecurrenceProps>;
-  init: (recurrence: string) => void;
+  initViaRecurrenceString: (recurrence: string) => void;
 } => {
   const [rule, setRule] = useState<RRule>(
     props?.recurrence ? RRule.fromString(props.recurrence) : undefined
@@ -187,11 +194,19 @@ export const useDateRecurrence = (
   const [interval, setInterval] = useState(rule?.options?.interval || 1);
   const [weekdays, setWeekdays] = useState(
     rule?.options?.byweekday
-      ? emptyWeekdays.map((weekday, index) => rule.options.byweekday.includes(index))
-      : emptyWeekdays
+      ? (rule?.options?.byweekday as Day[])
+      : props?.startDate
+      ? [getRRuleDay(props?.startDate) as Day]
+      : []
   );
 
   useEffect(() => props?.onChange(rule?.toString()), [props, props?.onChange, rule]);
+
+  useEffect(() => {
+    if (frequency !== Frequency.WEEKLY) {
+      setWeekdays([getRRuleDay(props?.startDate) as Day]);
+    }
+  }, [frequency, props?.startDate]);
 
   return {
     renderedDateRecurrence: (
@@ -209,12 +224,12 @@ export const useDateRecurrence = (
         }}
       />
     ),
-    init: (recurrence) => {
+    initViaRecurrenceString: (recurrence) => {
       const newRule = RRule.fromString(recurrence);
       setRule(newRule);
       setFrequency(newRule.options.freq);
       setInterval(newRule?.options.interval);
-      setWeekdays(emptyWeekdays.map((weekday, index) => rule.options.byweekday.includes(index)));
+      setWeekdays(rule.options.byweekday as Day[]);
     },
   };
 };

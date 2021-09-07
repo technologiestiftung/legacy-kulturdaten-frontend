@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { useCallback, useState, useMemo } from 'react';
+import styled from '@emotion/styled';
 import { OfferDate } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
@@ -16,6 +17,9 @@ import { parseISO } from 'date-fns';
 import { useDateRecurrence } from '../DateRecurrence';
 import { useLanguage } from '../../lib/routing';
 import { Language } from '../../config/locale';
+import { Info, InfoColor } from '../info';
+import { mq } from '../globals/Constants';
+import { Breakpoint } from '../../lib/WindowService';
 
 interface DateCreateFormProps {
   offerTitles: { [key in Language]: string };
@@ -77,39 +81,6 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCrea
     <>
       <EntryFormWrapper fullWidth reducedVerticalpadding>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Titel (optional)" />
-          <FormGrid>
-            <FormItem width={FormItemWidth.half}>
-              <Input
-                type={InputType.text}
-                label="Titel deutsch"
-                value={titleGerman}
-                onChange={(e) => setTitleGerman(e.target.value)}
-              />
-            </FormItem>
-            <FormItem width={FormItemWidth.half}>
-              <Input
-                type={InputType.text}
-                label="Titel english"
-                value={titleEnglish}
-                onChange={(e) => setTitleEnglish(e.target.value)}
-              />
-            </FormItem>
-            <FormItem width={FormItemWidth.half}>
-              <div>
-                {offerTitles[Language.de]}
-                {titleGerman ? ` – ${titleGerman}` : ''}
-              </div>
-            </FormItem>
-            <FormItem width={FormItemWidth.half}>
-              <div>
-                {offerTitles[Language.en]}
-                {titleEnglish ? ` – ${titleEnglish}` : ''}
-              </div>
-            </FormItem>
-          </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer fullWidth>
           <EntryFormHead title="Zeit" />
           <FormGrid>
             <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
@@ -125,7 +96,12 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCrea
                 type={InputType.date}
                 label="von"
                 value={fromDateISOString}
-                onChange={(e) => setFromDateISOString(e.target.value)}
+                onChange={(e) => {
+                  if (!recurrence) {
+                    // initRecurrence();
+                  }
+                  setFromDateISOString(e.target.value);
+                }}
                 min={todayDateISOString}
                 max={latestDateISOString}
               />
@@ -178,12 +154,46 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCrea
           </FormGrid>
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
+          <EntryFormHead title="Titel (optional)" />
+          <FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                type={InputType.text}
+                label="Titel deutsch"
+                value={titleGerman}
+                onChange={(e) => setTitleGerman(e.target.value)}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                type={InputType.text}
+                label="Titel english"
+                value={titleEnglish}
+                onChange={(e) => setTitleEnglish(e.target.value)}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Info
+                color={InfoColor.grey}
+                title="Der Titel des Termins wird mit dem Titel des Angebots kombiniert."
+                noMaxWidth
+              >
+                Deutsch: {offerTitles[Language.de]}
+                {titleGerman ? ` - ${titleGerman}` : ''}
+                <br />
+                Englisch: {offerTitles[Language.en]}
+                {titleEnglish ? ` - ${titleEnglish}` : ''}
+              </Info>
+            </FormItem>
+          </FormGrid>
+        </EntryFormContainer>
+        <EntryFormContainer fullWidth>
           <EntryFormHead title="Rauminformation (optional)" />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.text}
-                label="Rauminformation deutsch"
+                label="Rauminformation Deutsch"
                 value={roomGerman}
                 onChange={(e) => setRoomGerman(e.target.value)}
               />
@@ -191,7 +201,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCrea
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.text}
-                label="Rauminformation english"
+                label="Rauminformation Englisch"
                 value={roomEnglish}
                 onChange={(e) => setRoomEnglish(e.target.value)}
               />
@@ -216,6 +226,18 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCrea
   );
 };
 
+const StyledDateCreateBottomBar = styled.div`
+  padding: 0.75rem;
+  background: var(--grey-200);
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid var(--grey-400);
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.5rem;
+  }
+`;
+
 interface DateCreateProps {
   onSubmit: (date: OfferDate) => void;
   offerTitles: { [key in Language]: string };
@@ -228,17 +250,20 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const t = useT();
   const language = useLanguage();
 
+  const createButton = (
+    <Button key={0} color={ButtonColor.black} onClick={() => submitHandler()}>
+      {t('dateCreate.create')}
+    </Button>
+  );
+
   const { renderedOverlay, setIsOpen } = useOverlay(
     <>
       <OverlayTitleBar
         title={t('dateCreate.overlayTitle', { offerTitle: offerTitles[language] }) as string}
-        actions={[
-          <Button key={0} color={ButtonColor.black} onClick={() => submitHandler()}>
-            {t('dateCreate.create')}
-          </Button>,
-        ]}
+        actions={[createButton]}
       />
       <DateCreateForm offerTitles={offerTitles} />
+      <StyledDateCreateBottomBar>{createButton}</StyledDateCreateBottomBar>
     </>,
     true
   );

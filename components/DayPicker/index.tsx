@@ -1,9 +1,12 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useT } from '../../lib/i18n';
+import { StyledError } from '../Error';
 
-const StyledDayPicker = styled.div`
+const errorShadow = '0px 0px 0px 0.1125rem var(--error-o50)';
+
+const StyledDayPicker = styled.div<{ valid: boolean }>`
   display: flex;
   border: 1px solid var(--grey-600);
   border-radius: 0.375rem;
@@ -13,6 +16,14 @@ const StyledDayPicker = styled.div`
   column-gap: 0.1875rem;
   padding: calc(0.375rem - 1px);
   min-width: min(100%, 22.5rem);
+
+  ${({ valid }) =>
+    !valid
+      ? css`
+          box-shadow: ${errorShadow};
+          border-color: var(--error);
+        `
+      : ''}
 `;
 
 const StyledDayPickerDayName = styled.div`
@@ -123,14 +134,17 @@ export const weekdays: {
   },
 ];
 
+export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
 interface DayPicker {
-  value?: boolean[];
-  onChange?: (value: boolean[]) => void;
+  value?: Day[];
+  onChange?: (value: Day[]) => void;
   mode?: DayPickerMode;
+  min?: number;
 }
 
-export const DayPicker: React.FC<DayPicker> = ({ value, onChange }: DayPicker) => {
-  const [internalState, setInternalState] = useState<boolean[]>(weekdays.map(() => false));
+export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min }: DayPicker) => {
+  const [internalState, setInternalState] = useState<Day[]>([]);
   const t = useT();
 
   const state = value || internalState;
@@ -138,31 +152,40 @@ export const DayPicker: React.FC<DayPicker> = ({ value, onChange }: DayPicker) =
   const changeHandler = (checked: boolean, index: number): void => {
     const updateState = onChange || setInternalState;
 
-    const updatedState = [...state];
-    updatedState[index] = checked;
+    const updatedState = state.filter((day) => day !== index);
 
-    updateState(updatedState);
+    updateState(checked ? [...updatedState, index as Day].sort() : updatedState);
   };
 
+  const valid = useMemo(() => typeof min === 'undefined' || state.length >= min, [state, min]);
+
   return (
-    <StyledDayPicker aria-label={t('dayPicker.ariaLabel') as string} role="group">
-      {weekdays.map(({ name: { short, long } }, index) => (
-        <StyledDayPickerDay
-          key={index}
-          aria-label={t(long) as string}
-          role="checkbox"
-          checked={state[index]}
-        >
-          <StyledDayPickerDayLabel title={t(long) as string}>
-            <StyledDayPickerDayCheckbox
-              type="checkbox"
-              checked={state[index]}
-              onChange={(e) => changeHandler(e.target.checked, index)}
-            />
-            <StyledDayPickerDayName>{t(short)}</StyledDayPickerDayName>
-          </StyledDayPickerDayLabel>
-        </StyledDayPickerDay>
-      ))}
-    </StyledDayPicker>
+    <div>
+      <StyledDayPicker
+        aria-label={t('dayPicker.ariaLabel') as string}
+        role="group"
+        aria-invalid={!valid}
+        valid={valid}
+      >
+        {weekdays.map(({ name: { short, long } }, index) => (
+          <StyledDayPickerDay
+            key={index}
+            aria-label={t(long) as string}
+            role="checkbox"
+            checked={state.includes(index as Day)}
+          >
+            <StyledDayPickerDayLabel title={t(long) as string}>
+              <StyledDayPickerDayCheckbox
+                type="checkbox"
+                checked={state.includes(index as Day)}
+                onChange={(e) => changeHandler(e.target.checked, index)}
+              />
+              <StyledDayPickerDayName>{t(short)}</StyledDayPickerDayName>
+            </StyledDayPickerDayLabel>
+          </StyledDayPickerDay>
+        ))}
+      </StyledDayPicker>
+      {!valid && <StyledError>{t('dayPicker.minError', { min })}</StyledError>}
+    </div>
   );
 };

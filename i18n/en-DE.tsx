@@ -6,6 +6,7 @@ export const enDE: Localization = {
   },
   dayPicker: {
     ariaLabel: () => 'Choose',
+    minError: ({ min }) => `Please choose at least ${min} ${min === 1 ? 'day' : 'days'}`,
   },
   days: {
     monday: {

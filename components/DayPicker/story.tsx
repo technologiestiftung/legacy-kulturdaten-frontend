@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import { useState } from 'react';
-import { DayPicker, weekdays } from '.';
+import { DayPicker } from '.';
 
 export default {
   title: 'Day Picker',
@@ -16,11 +16,11 @@ const StoryWrapper = styled.div`
 `;
 
 const EmbeddedComponent: React.FC = () => {
-  const [state, setState] = useState(weekdays.map(() => false));
+  const [state, setState] = useState([]);
 
   return (
     <StoryWrapper>
-      <DayPicker value={state} onChange={setState} />
+      <DayPicker value={state} onChange={setState} min={1} />
     </StoryWrapper>
   );
 };
