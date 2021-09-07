@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useCallback, useState, useMemo } from 'react';
 import styled from '@emotion/styled';
-import { OfferDate } from '../../lib/api/types/offer';
+import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../button';
@@ -23,45 +23,70 @@ import { Breakpoint } from '../../lib/WindowService';
 
 interface DateCreateFormProps {
   offerTitles: { [key in Language]: string };
+  allDay: boolean;
+  setAllDay: (allDay: boolean) => void;
+  ticketUrl: string;
+  setTicketUrl: (ticketUrl: string) => void;
+  titleGerman: string;
+  setTitleGerman: (title: string) => void;
+  titleEnglish: string;
+  setTitleEnglish: (title: string) => void;
+  roomGerman: string;
+  setRoomGerman: (room: string) => void;
+  roomEnglish: string;
+  setRoomEnglish: (room: string) => void;
+  fromDateISOString: string;
+  setFromDateISOString: (dateISOString: string) => void;
+  fromTimeISOString: string;
+  setFromTimeISOString: (timeISOString: string) => void;
+  toDateISOString: string;
+  setToDateISOString: (dateISOString: string) => void;
+  toTimeISOString: string;
+  setToTimeISOString: (timeISOString: string) => void;
+  recurrence: string;
+  setRecurrence: (recurrence: string) => void;
+  startDate: Date;
+  latestDate: Date;
+  fromDateTime: Date;
+  toDateTime: Date;
 }
 
-const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCreateFormProps) => {
+const DateCreateForm: React.FC<DateCreateFormProps> = ({
+  offerTitles,
+  allDay,
+  setAllDay,
+  ticketUrl,
+  setTicketUrl,
+  titleGerman,
+  setTitleGerman,
+  titleEnglish,
+  setTitleEnglish,
+  roomGerman,
+  setRoomGerman,
+  roomEnglish,
+  setRoomEnglish,
+  fromDateISOString,
+  setFromTimeISOString,
+  fromTimeISOString,
+  setFromDateISOString,
+  toDateISOString,
+  setToDateISOString,
+  toTimeISOString,
+  setToTimeISOString,
+  recurrence,
+  setRecurrence,
+  startDate,
+  latestDate,
+  fromDateTime,
+  toDateTime,
+}: DateCreateFormProps) => {
   const uid = usePseudoUID();
-  const [allDay, setAllDay] = useState(false);
 
-  const today = new Date();
-  const latestDate = add(today, { years: 1 });
-
-  const [ticketUrl, setTicketUrl] = useState('');
-  const [titleGerman, setTitleGerman] = useState('');
-  const [titleEnglish, setTitleEnglish] = useState('');
-  const [roomGerman, setRoomGerman] = useState('');
-  const [roomEnglish, setRoomEnglish] = useState('');
-
-  const [recurrence, setRecurrence] = useState<string>();
-
-  const todayDateISOString = formatISO(today, { representation: 'date' });
-  const todayTimeISOString = format(today, 'HH:mm');
-  const todayPlusOneHourTimeISOString = format(add(today, { hours: 1 }), 'HH:mm');
+  const startDateISOString = formatISO(startDate, { representation: 'date' });
   const latestDateISOString = formatISO(latestDate, { representation: 'date' });
-
-  const [fromDateISOString, setFromDateISOString] = useState<string>(todayDateISOString);
-  const [fromTimeISOString, setFromTimeISOString] = useState<string>(todayTimeISOString);
-  const [toDateISOString, setToDateISOString] = useState<string>(todayDateISOString);
-  const [toTimeISOString, setToTimeISOString] = useState<string>(todayPlusOneHourTimeISOString);
 
   const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
   const toDate = useMemo(() => new Date(toDateISOString), [toDateISOString]);
-
-  const fromDateTime = useMemo(
-    () => parseISO(`${fromDateISOString}T${!allDay ? fromTimeISOString : '00:00'}`),
-    [allDay, fromDateISOString, fromTimeISOString]
-  );
-
-  const toDateTime = useMemo(
-    () => parseISO(`${toDateISOString}T${!allDay ? toTimeISOString : '00:00'}`),
-    [allDay, toDateISOString, toTimeISOString]
-  );
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
@@ -102,7 +127,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCrea
                   }
                   setFromDateISOString(e.target.value);
                 }}
-                min={todayDateISOString}
+                min={startDateISOString}
                 max={latestDateISOString}
               />
               {!allDay && (
@@ -120,7 +145,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({ offerTitles }: DateCrea
                 label="bis"
                 value={toDateISOString}
                 onChange={(e) => setToDateISOString(e.target.value)}
-                min={formatISO(max([today, fromDate]), { representation: 'date' })}
+                min={formatISO(max([startDate, fromDate]), { representation: 'date' })}
                 max={latestDateISOString}
                 valid={toDateValid}
                 error={
@@ -256,22 +281,126 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     </Button>
   );
 
+  const startDate = new Date();
+  const latestDate = add(startDate, { years: 1 });
+  const startDateISOString = formatISO(startDate, { representation: 'date' });
+  const startTimeISOString = format(startDate, 'HH:mm');
+  const startPlusOneHourTimeISOString = format(add(startDate, { hours: 1 }), 'HH:mm');
+
+  const [allDay, setAllDay] = useState(false);
+  const [ticketUrl, setTicketUrl] = useState('');
+  const [titleGerman, setTitleGerman] = useState('');
+  const [titleEnglish, setTitleEnglish] = useState('');
+  const [roomGerman, setRoomGerman] = useState('');
+  const [roomEnglish, setRoomEnglish] = useState('');
+  const [recurrence, setRecurrence] = useState<string>();
+  const [fromDateISOString, setFromDateISOString] = useState<string>(startDateISOString);
+  const [fromTimeISOString, setFromTimeISOString] = useState<string>(startTimeISOString);
+  const [toDateISOString, setToDateISOString] = useState<string>(startDateISOString);
+  const [toTimeISOString, setToTimeISOString] = useState<string>(startPlusOneHourTimeISOString);
+
+  const fromDateTime = useMemo(
+    () => parseISO(`${fromDateISOString}T${!allDay ? fromTimeISOString : '00:00'}`),
+    [allDay, fromDateISOString, fromTimeISOString]
+  );
+
+  const toDateTime = useMemo(
+    () => parseISO(`${toDateISOString}T${!allDay ? toTimeISOString : '00:00'}`),
+    [allDay, toDateISOString, toTimeISOString]
+  );
+
+  const date = useMemo<OfferDate>(
+    () => ({
+      data: {
+        attributes: {
+          allDay,
+          from: fromDateTime.toISOString(),
+          to: toDateTime.toISOString(),
+          status: OfferDateStatus.confirmed,
+          ticketLink: ticketUrl,
+          recurrence,
+        },
+        relations: {
+          translations: [
+            {
+              type: 'offerdatetranslation',
+              attributes: {
+                language: Language.de,
+                name: titleGerman,
+                room: roomGerman,
+              },
+            },
+            {
+              type: 'offerdatetranslation',
+              attributes: {
+                language: Language.en,
+                name: titleEnglish,
+                room: roomEnglish,
+              },
+            },
+          ],
+        },
+      },
+    }),
+    [
+      allDay,
+      fromDateTime,
+      recurrence,
+      roomEnglish,
+      roomGerman,
+      ticketUrl,
+      titleEnglish,
+      titleGerman,
+      toDateTime,
+    ]
+  );
+
   const { renderedOverlay, setIsOpen } = useOverlay(
     <>
       <OverlayTitleBar
         title={t('dateCreate.overlayTitle', { offerTitle: offerTitles[language] }) as string}
         actions={[createButton]}
       />
-      <DateCreateForm offerTitles={offerTitles} />
+      <DateCreateForm
+        {...{
+          offerTitles,
+          ticketUrl,
+          setTicketUrl,
+          titleGerman,
+          setTitleGerman,
+          titleEnglish,
+          setTitleEnglish,
+          roomGerman,
+          setRoomGerman,
+          roomEnglish,
+          setRoomEnglish,
+          allDay,
+          setAllDay,
+          fromDateISOString,
+          setFromDateISOString,
+          fromTimeISOString,
+          setFromTimeISOString,
+          toDateISOString,
+          setToDateISOString,
+          toTimeISOString,
+          setToTimeISOString,
+          recurrence,
+          setRecurrence,
+          startDate,
+          latestDate,
+          fromDateTime,
+          toDateTime,
+        }}
+      />
       <StyledDateCreateBottomBar>{createButton}</StyledDateCreateBottomBar>
     </>,
     true
   );
 
   const submitHandler = useCallback(() => {
-    onSubmit(undefined);
+    onSubmit(date);
     setIsOpen(false);
-  }, [onSubmit, setIsOpen]);
+  }, [date, onSubmit, setIsOpen]);
 
   return (
     <div>

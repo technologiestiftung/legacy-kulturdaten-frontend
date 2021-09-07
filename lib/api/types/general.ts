@@ -1,7 +1,7 @@
 import { Language } from '../../../config/locale';
 
 export type Translation = {
-  id: number;
+  id?: number;
   type: string;
   attributes: {
     name: string;

@@ -93,7 +93,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
             <EntryFormHead title="Termine" />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
-                <DateCreate onSubmit={() => undefined} offerTitles={offerTitles} />
+                <DateCreate onSubmit={(date) => console.log(date)} offerTitles={offerTitles} />
               </FormItem>
               <FormItem width={FormItemWidth.full}>{renderedDateList}</FormItem>
             </FormGrid>
