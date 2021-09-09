@@ -60,14 +60,13 @@ const StyledEntryHeaderActions = styled.div`
   row-gap: 0.75rem;
   padding-top: 2.25rem;
   flex-wrap: wrap;
+  flex-direction: row-reverse;
 
   ${mq(Breakpoint.mid)} {
-    flex-direction: column;
     align-items: flex-start;
     display: flex;
     padding-top: 0;
-    flex-direction: row;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   ${mq(Breakpoint.wide)} {
@@ -253,14 +252,14 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
           <span>{title}</span>
         </StyledEntryHeaderTitle>
         <StyledEntryHeaderActions>
+          {actions?.map((action, index) => (
+            <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
+          ))}
           <StyledEntryHeaderStatus>
             <StyledEntryHeaderStatusLabel>{t('statusBar.status')}</StyledEntryHeaderStatusLabel>
 
             {statusFlag}
           </StyledEntryHeaderStatus>
-          {actions?.map((action, index) => (
-            <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
-          ))}
         </StyledEntryHeaderActions>
       </StyledEntryHeaderHead>
       {publish && <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>}

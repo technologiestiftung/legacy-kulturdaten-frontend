@@ -21,11 +21,14 @@ const StyledDateListBody = styled.div<{ hideCheckboxes: boolean }>`
   border-top: 1px solid var(--grey-400);
   border-bottom: 1px solid var(--grey-400);
 
-  ${mq(Breakpoint.widish)} {
+  ${mq(Breakpoint.mid)} {
     border: 1px solid var(--grey-400);
+    border-radius: 0.75rem;
+  }
+
+  ${mq(Breakpoint.widish)} {
     display: grid;
     grid-template-columns: auto 1fr 1fr 1fr auto auto;
-    border-radius: 0.75rem;
   }
 `;
 

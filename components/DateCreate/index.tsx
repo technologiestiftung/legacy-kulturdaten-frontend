@@ -314,6 +314,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
 
 const StyledDateCreateBottomBar = styled.div`
   padding: 0.75rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
   background: var(--grey-200);
   display: flex;
   justify-content: flex-end;
@@ -321,6 +322,7 @@ const StyledDateCreateBottomBar = styled.div`
 
   ${mq(Breakpoint.mid)} {
     padding: 0.75rem 1.5rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
   }
 `;
 

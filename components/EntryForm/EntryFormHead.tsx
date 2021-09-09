@@ -8,15 +8,29 @@ import { AlertSymbol } from '../assets/AlertSymbol';
 import { InfoSymbol } from '../assets/InfoSymbol';
 import { mq } from '../globals/Constants';
 
-const StyledEntryFormHead = styled.div<{ isExpander?: boolean }>`
+const StyledEntryFormHead = styled.div<{ isExpander?: boolean; addPadding?: boolean }>`
   display: flex;
   border: none;
-  border-bottom: 1px solid var(--white);
   background: transparent;
   position: relative;
   align-items: center;
   flex-wrap: wrap;
   z-index: 1;
+
+  ${({ addPadding }) =>
+    addPadding
+      ? css`
+          padding: 0 0.75rem;
+
+          ${mq(Breakpoint.mid)} {
+            padding: 0 1.5rem;
+          }
+
+          ${mq(Breakpoint.widish)} {
+            padding: 0;
+          }
+        `
+      : ''}
 
   ${({ isExpander }) =>
     isExpander &&
@@ -103,6 +117,7 @@ interface EntryFormHeadProps {
     isExpanded: boolean;
   };
   size?: EntryFormHeadSize;
+  addPadding?: boolean;
 }
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
@@ -113,6 +128,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   showHintInline = false,
   expander,
   size,
+  addPadding,
 }: EntryFormHeadProps) => {
   const t = useT();
   const isExpander = useMemo(() => typeof expander !== 'undefined', [expander]);
@@ -129,6 +145,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       as={isExpander ? 'button' : 'div'}
       aria-label={ariaLabel}
       title={ariaLabel}
+      addPadding={addPadding}
     >
       {valid === false ? (
         <StyledEntryFormHeadAlert showInline={showHintInline}>

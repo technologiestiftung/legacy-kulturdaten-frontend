@@ -7,13 +7,12 @@ export const EntryFormWrapper = styled.div<{
   fullWidth?: boolean;
   reducedVerticalpadding?: boolean;
 }>`
-  padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '0.75rem' : '1.5rem')}
-    0.75rem;
+  padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '0.75rem' : '1.5rem')} 0;
   ${contentGrid(1)}
   row-gap: 1.5rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '1.5rem' : '3rem')} 1.5rem;
+    padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '1.5rem' : '3rem')} 0;
     row-gap: 3rem;
     ${contentGrid(8)}
   }
@@ -28,9 +27,12 @@ export const EntryFormWrapper = styled.div<{
         `}
 `;
 
-export const EntryFormContainer = styled.div<{ fullWidth?: boolean }>`
+export const EntryFormContainer = styled.div<{ fullWidth?: boolean; noPadding?: boolean }>`
+  padding: 0 ${({ noPadding }) => (noPadding ? '0' : '0.75rem')};
+
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
+    padding: 0 ${({ noPadding }) => (noPadding ? '0' : '1.5rem')};
   }
 
   ${({ fullWidth }) =>
@@ -39,6 +41,7 @@ export const EntryFormContainer = styled.div<{ fullWidth?: boolean }>`
       : css`
           ${mq(Breakpoint.widish)} {
             grid-column: 2 / -2;
+            padding: 0;
           }
         `}
 `;

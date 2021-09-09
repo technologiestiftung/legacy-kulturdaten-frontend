@@ -38,14 +38,22 @@ export const formItemWidthMap: { [key in FormItemWidth]: SerializedStyles } = {
   `,
 };
 
-const StyledFormItem = styled.div<{ width: FormItemWidth; alignSelf?: string }>`
+const StyledFormItem = styled.div<{
+  width: FormItemWidth;
+  alignSelf?: string;
+  customCss?: SerializedStyles;
+}>`
   ${({ width }) => formItemWidthMap[width]}
   align-self: ${({ alignSelf }) => alignSelf || 'stretch'};
 
   display: flex;
   flex-direction: row;
   column-gap: 0.75rem;
+  row-gap: 0.75rem;
   align-items: flex-start;
+  flex-wrap: wrap;
+
+  ${({ customCss }) => customCss}
 `;
 
 const StyledFormItemChild = styled.div<{ flexGrow?: string }>`
@@ -56,6 +64,7 @@ interface FormItemProps {
   width: FormItemWidth;
   alignSelf?: string;
   childrenFlexGrow?: string;
+  css?: SerializedStyles;
 }
 
 export const FormItem: React.FC<PropsWithChildren<FormItemProps>> = ({
@@ -63,8 +72,9 @@ export const FormItem: React.FC<PropsWithChildren<FormItemProps>> = ({
   width,
   alignSelf,
   childrenFlexGrow,
+  css,
 }: PropsWithChildren<FormItemProps>) => (
-  <StyledFormItem width={width} alignSelf={alignSelf}>
+  <StyledFormItem width={width} alignSelf={alignSelf} customCss={css}>
     {React.Children.toArray(children).map((child, index) => (
       <StyledFormItemChild key={index} flexGrow={childrenFlexGrow}>
         {child}

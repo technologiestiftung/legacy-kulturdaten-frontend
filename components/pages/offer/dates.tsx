@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { compareAsc, compareDesc } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
@@ -8,14 +9,24 @@ import { Offer, OfferDate, OfferMode } from '../../../lib/api/types/offer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
+import { Breakpoint } from '../../../lib/WindowService';
 import { useCollapsable } from '../../collapsable';
 import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { mq } from '../../globals/Constants';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
+
+const customFormItemCss = css`
+  margin: 0 -0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    margin: 0;
+  }
+`;
 
 export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   category,
@@ -53,7 +64,9 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <FormGrid>
-      <FormItem width={FormItemWidth.full}>{renderedArchivedDateList}</FormItem>
+      <FormItem width={FormItemWidth.full} css={customFormItemCss}>
+        {renderedArchivedDateList}
+      </FormItem>
     </FormGrid>,
     undefined,
     undefined,
@@ -128,7 +141,9 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                     offerTitles={offerTitles}
                   />
                 </FormItem>
-                <FormItem width={FormItemWidth.full}>{renderedDateList}</FormItem>
+                <FormItem width={FormItemWidth.full} css={customFormItemCss}>
+                  {renderedDateList}
+                </FormItem>
               </FormGrid>
             </EntryFormContainer>
             <EntryFormContainer>
