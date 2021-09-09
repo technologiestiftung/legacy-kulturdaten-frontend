@@ -149,6 +149,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   label="ist ganztägig"
                   checked={attributes.allDay}
                   onChange={(e) => undefined}
+                  disabled={!editable}
                 />
               </FormItem>
               <FormItem width={FormItemWidth.half}>
@@ -159,6 +160,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   onChange={(e) => undefined}
                   min={formatISO9075(today, { representation: 'date' })}
                   max={formatISO9075(add(today, { years: 1 }), { representation: 'date' })}
+                  disabled={!editable}
                 />
                 {!attributes.allDay && (
                   <Input
@@ -166,6 +168,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     label="Uhrzeit"
                     value={format(fromDate, 'HH:mm')}
                     onChange={(e) => undefined}
+                    disabled={!editable}
                   />
                 )}
               </FormItem>
@@ -181,6 +184,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   error={
                     !toDateValid ? 'Das Enddatum muss später als das Startdatum sein.' : undefined
                   }
+                  disabled={!editable}
                 />
                 {!allDay && (
                   <Input
@@ -197,6 +201,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     error={
                       !toTimeValid ? 'Die Endzeit muss später als die Startzeit sein.' : undefined
                     }
+                    disabled={!editable}
                   />
                 )}
               </FormItem>
@@ -215,6 +220,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   value={attributes.status}
                   ariaLabelledby={`entryformhead-${uid}`}
                   size={SelectSize.big}
+                  disabled={!editable}
                 >
                   <option value={OfferDateStatus.confirmed}>{t('dateList.confirmed')}</option>
                   <option value={OfferDateStatus.cancelled}>{t('dateList.cancelled')}</option>
@@ -231,6 +237,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   label="Titel deutsch"
                   value={titleGerman}
                   onChange={(e) => undefined}
+                  disabled={!editable}
                 />
               </FormItem>
               <FormItem width={FormItemWidth.half}>
@@ -239,6 +246,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   label="Titel english"
                   value={titleEnglish}
                   onChange={(e) => undefined}
+                  disabled={!editable}
                 />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
@@ -265,6 +273,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   label="Rauminformation Deutsch"
                   value={roomGerman}
                   onChange={(e) => undefined}
+                  disabled={!editable}
                 />
               </FormItem>
               <FormItem width={FormItemWidth.half}>
@@ -273,6 +282,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   label="Rauminformation Englisch"
                   value={roomEnglish}
                   onChange={(e) => undefined}
+                  disabled={!editable}
                 />
               </FormItem>
             </FormGrid>
@@ -286,6 +296,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   label="Ticketlink"
                   value={ticketUrl}
                   onChange={(e) => undefined}
+                  disabled={!editable}
                 />
               </FormItem>
             </FormGrid>
