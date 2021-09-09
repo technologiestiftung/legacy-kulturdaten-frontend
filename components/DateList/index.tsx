@@ -129,17 +129,17 @@ const DateList: React.FC<DateListProps> = ({
                 noPaddingLeft={!hideCheckboxes}
                 doublePaddingLeft={hideCheckboxes}
               >
-                {t('dateList.from')}
+                {t('date.from')}
               </StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold>{t('dateList.to')}</StyledDateListItemTextBold>
+              <StyledDateListItemTextBold>{t('date.to')}</StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold>{t('dateList.title')}</StyledDateListItemTextBold>
+              <StyledDateListItemTextBold>{t('date.title')}</StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold>{t('dateList.status')}</StyledDateListItemTextBold>
+              <StyledDateListItemTextBold>{t('date.status')}</StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell />
           </>
@@ -149,7 +149,7 @@ const DateList: React.FC<DateListProps> = ({
               <StyledDateListItemCheckbox>
                 <Checkbox
                   id={`${uid}-checkbox`}
-                  ariaLabel={t('dateList.allCheckboxAriaLabel') as string}
+                  ariaLabel={t('date.allCheckboxAriaLabel') as string}
                   checked={allCheckboxesChecked}
                   onChange={(e) =>
                     e?.target.checked ? setCheckedDateIds(allDateIds) : setCheckedDateIds([])
@@ -161,7 +161,7 @@ const DateList: React.FC<DateListProps> = ({
               noPaddingLeft={!hideCheckboxes}
               doublePaddingLeft={hideCheckboxes}
             >
-              {t('dateList.info')}
+              {t('date.info')}
             </StyledDateListItemTextBold>
           </StyledDateListTitleRow>
         )}

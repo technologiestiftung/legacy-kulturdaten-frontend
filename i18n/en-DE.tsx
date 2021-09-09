@@ -54,6 +54,7 @@ export const enDE: Localization = {
     ariaLabelClose: () => 'Hide user menu',
   },
   forms: {
+    optional: () => 'optional',
     required: () => 'required',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
@@ -95,7 +96,7 @@ export const enDE: Localization = {
     alertSymbolAriaLabel: () => 'There are errors in this input fields.',
     infoSymbolAriaLabel: () => 'Here are input fields which should be filled.',
   },
-  dateList: {
+  date: {
     time: () => 'Time',
     from: () => 'From',
     to: () => 'To',
@@ -111,6 +112,8 @@ export const enDE: Localization = {
     cancelled: () => 'cancelled',
   },
   general: {
+    german: () => 'German',
+    english: () => 'English',
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',
@@ -136,6 +139,14 @@ export const enDE: Localization = {
     saving: () => 'saving',
     saved: () => 'saved',
     loading: () => 'loading',
+    allDay: () => 'is all day',
+    clock: () => 'time',
+    toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',
+    toTimeInvalid: () => 'Die Endzeit muss später als die Startzeit sein.',
+    titleInfoTitle: () => 'Der Titel des Termins wird mit dem Titel des Angebots kombiniert.',
+    roomInfo: () => 'Room information',
+    additionalLinks: () => 'Additional links',
+    ticketLink: () => 'Ticket link',
   },
   tooltip: {
     open: () => 'open tooltip',

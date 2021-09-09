@@ -147,7 +147,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
                 <Checkbox
                   id={`checkbox-${uid}`}
-                  label="ist ganztägig"
+                  label={t('date.allDay') as string}
                   checked={attributes.allDay}
                   onChange={(e) => undefined}
                   disabled={!editable}
@@ -156,7 +156,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.date}
-                  label="von"
+                  label={t('date.from') as string}
                   value={formatISO9075(fromDate, { representation: 'date' })}
                   onChange={(e) => undefined}
                   min={formatISO9075(today, { representation: 'date' })}
@@ -166,7 +166,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                 {!attributes.allDay && (
                   <Input
                     type={InputType.time}
-                    label="Uhrzeit"
+                    label={t('date.clock') as string}
                     value={format(fromDate, 'HH:mm')}
                     onChange={(e) => undefined}
                     disabled={!editable}
@@ -176,21 +176,19 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.date}
-                  label="bis"
+                  label={t('date.to') as string}
                   value={formatISO9075(toDate, { representation: 'date' })}
                   onChange={(e) => undefined}
                   min={formatISO9075(today, { representation: 'date' })}
                   max={formatISO9075(latestDate, { representation: 'date' })}
                   valid={toDateValid}
-                  error={
-                    !toDateValid ? 'Das Enddatum muss später als das Startdatum sein.' : undefined
-                  }
+                  error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
                   disabled={!editable}
                 />
                 {!allDay && (
                   <Input
                     type={InputType.time}
-                    label="Uhrzeit"
+                    label={t('date.clock') as string}
                     value={toTimeISOString}
                     onChange={(e) => undefined}
                     min={
@@ -199,9 +197,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                         : undefined
                     }
                     valid={toTimeValid}
-                    error={
-                      !toTimeValid ? 'Die Endzeit muss später als die Startzeit sein.' : undefined
-                    }
+                    error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
                     disabled={!editable}
                   />
                 )}
@@ -210,7 +206,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={isUltraOrWider ? 1 : 3}>
             <EntryFormHead
-              title="Status"
+              title={t('date.status') as string}
               size={EntryFormHeadSize.small}
               id={`entryformhead-${uid}`}
             />
@@ -223,8 +219,8 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   size={SelectSize.big}
                   disabled={!editable}
                 >
-                  <option value={OfferDateStatus.confirmed}>{t('dateList.confirmed')}</option>
-                  <option value={OfferDateStatus.cancelled}>{t('dateList.cancelled')}</option>
+                  <option value={OfferDateStatus.confirmed}>{t('date.confirmed')}</option>
+                  <option value={OfferDateStatus.cancelled}>{t('date.cancelled')}</option>
                 </Select>
               </FormItem>
             </FormGrid>
@@ -251,27 +247,23 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                 />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
-                <Info
-                  color={InfoColor.grey}
-                  title="Der Titel des Termins wird mit dem Titel des Angebots kombiniert."
-                  noMaxWidth
-                >
-                  Deutsch: {offerTitles[Language.de]}
+                <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
+                  {t('general.german')}: {offerTitles[Language.de]}
                   {titleGerman ? ` - ${titleGerman}` : ''}
                   <br />
-                  Englisch: {offerTitles[Language.en]}
+                  {t('general.english')}: {offerTitles[Language.en]}
                   {titleEnglish ? ` - ${titleEnglish}` : ''}
                 </Info>
               </FormItem>
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title="Rauminformationen" size={EntryFormHeadSize.small} />
+            <EntryFormHead title={t('date.roomInfo') as string} size={EntryFormHeadSize.small} />
             <FormGrid>
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.text}
-                  label="Rauminformation Deutsch"
+                  label={`${t('date.roomInfo')} ${t('general.german')}`}
                   value={roomGerman}
                   onChange={(e) => undefined}
                   disabled={!editable}
@@ -280,7 +272,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.text}
-                  label="Rauminformation Englisch"
+                  label={`${t('date.roomInfo')} ${t('general.english')}`}
                   value={roomEnglish}
                   onChange={(e) => undefined}
                   disabled={!editable}
@@ -289,12 +281,12 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title="Weiterführende Links (optional)" />
+            <EntryFormHead title={`${t('date.additionalLinks')} ${t('forms.optional')}`} />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
                 <Input
                   type={InputType.url}
-                  label="Ticketlink"
+                  label={t('date.ticketLink') as string}
                   value={ticketUrl}
                   onChange={(e) => undefined}
                   disabled={!editable}

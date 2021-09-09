@@ -194,8 +194,8 @@ interface DateListRowProps {
 }
 
 const OfferDateStatusToL10nMap: { [key in OfferDateStatus]: string } = {
-  [OfferDateStatus.confirmed]: 'dateList.confirmed',
-  [OfferDateStatus.cancelled]: 'dateList.cancelled',
+  [OfferDateStatus.confirmed]: 'date.confirmed',
+  [OfferDateStatus.cancelled]: 'date.cancelled',
 };
 
 export const DateListRow: React.FC<DateListRowProps> = ({
@@ -238,11 +238,11 @@ export const DateListRow: React.FC<DateListRowProps> = ({
       isCollapsed={isCollapsed}
       aria-label={
         isCollapsed
-          ? (t('dateList.detailsShowAriaLabel') as string)
-          : (t('dateList.detailsHideAriaLabel') as string)
+          ? (t('date.detailsShowAriaLabel') as string)
+          : (t('date.detailsHideAriaLabel') as string)
       }
     >
-      <span>{t('dateList.details')}</span>
+      <span>{t('date.details')}</span>
       <ChevronDown />
     </StyledDateListItemExpand>
   );
@@ -258,7 +258,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const renderedCheckbox = (
     <StyledDateListItemCheckbox>
       <Checkbox
-        ariaLabel={t('dateList.checkboxAriaLabel') as string}
+        ariaLabel={t('date.checkboxAriaLabel') as string}
         id={`${uid}-checkbox`}
         checked={checked}
         onChange={(e) => onChange(e?.target?.checked)}

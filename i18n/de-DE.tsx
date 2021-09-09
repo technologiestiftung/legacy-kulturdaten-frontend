@@ -54,6 +54,7 @@ export const deDE: Localization = {
     ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
   },
   forms: {
+    optional: () => 'optional',
     required: () => 'Pflichtfeld',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
@@ -95,9 +96,9 @@ export const deDE: Localization = {
     alertSymbolAriaLabel: () => 'In diesen Eingabefeldern existieren Fehler.',
     infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
   },
-  dateList: {
-    from: () => 'Von',
-    to: () => 'Bis',
+  date: {
+    from: () => 'von',
+    to: () => 'bis',
     time: () => 'Zeit',
     title: () => 'Titel',
     status: () => 'Status',
@@ -109,8 +110,18 @@ export const deDE: Localization = {
     detailsHideAriaLabel: () => 'Details ausblenden',
     confirmed: () => 'findet statt',
     cancelled: () => 'abgesagt',
+    allDay: () => 'ist ganztätig',
+    clock: () => 'Uhrzeit',
+    toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',
+    toTimeInvalid: () => 'Die Endzeit muss später als die Startzeit sein.',
+    titleInfoTitle: () => 'Der Titel des Termins wird mit dem Titel des Angebots kombiniert.',
+    roomInfo: () => 'Rauminformation',
+    additionalLinks: () => 'Weiterführende Links',
+    ticketLink: () => 'Ticketlink',
   },
   general: {
+    german: () => 'Deutsch',
+    english: () => 'Englisch',
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
     created: () => 'erstellt',
