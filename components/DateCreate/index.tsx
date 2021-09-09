@@ -21,38 +21,6 @@ import { Info, InfoColor } from '../info';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 
-interface DateCreateFormProps {
-  offerTitles: { [key in Language]: string };
-  allDay: boolean;
-  setAllDay: (allDay: boolean) => void;
-  ticketUrl: string;
-  setTicketUrl: (ticketUrl: string) => void;
-  titleGerman: string;
-  setTitleGerman: (title: string) => void;
-  titleEnglish: string;
-  setTitleEnglish: (title: string) => void;
-  roomGerman: string;
-  setRoomGerman: (room: string) => void;
-  roomEnglish: string;
-  setRoomEnglish: (room: string) => void;
-  fromDateISOString: string;
-  setFromDateISOString: (dateISOString: string) => void;
-  fromTimeISOString: string;
-  setFromTimeISOString: (timeISOString: string) => void;
-  toDateISOString: string;
-  setToDateISOString: (dateISOString: string) => void;
-  toTimeISOString: string;
-  setToTimeISOString: (timeISOString: string) => void;
-  recurrence: string;
-  setRecurrence: (recurrence: string) => void;
-  earliestDate: Date;
-  latestDate: Date;
-  fromDateTime: Date;
-  fromDate: Date;
-  toDateValid: boolean;
-  toTimeValid: boolean;
-}
-
 interface DateFormTimeProps {
   allDay: boolean;
   setAllDay: (allDay: boolean) => void;
@@ -164,6 +132,38 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
     </>
   );
 };
+
+interface DateCreateFormProps {
+  offerTitles: { [key in Language]: string };
+  allDay: boolean;
+  setAllDay: (allDay: boolean) => void;
+  ticketUrl: string;
+  setTicketUrl: (ticketUrl: string) => void;
+  titleGerman: string;
+  setTitleGerman: (title: string) => void;
+  titleEnglish: string;
+  setTitleEnglish: (title: string) => void;
+  roomGerman: string;
+  setRoomGerman: (room: string) => void;
+  roomEnglish: string;
+  setRoomEnglish: (room: string) => void;
+  fromDateISOString: string;
+  setFromDateISOString: (dateISOString: string) => void;
+  fromTimeISOString: string;
+  setFromTimeISOString: (timeISOString: string) => void;
+  toDateISOString: string;
+  setToDateISOString: (dateISOString: string) => void;
+  toTimeISOString: string;
+  setToTimeISOString: (timeISOString: string) => void;
+  recurrence: string;
+  setRecurrence: (recurrence: string) => void;
+  earliestDate: Date;
+  latestDate: Date;
+  fromDateTime: Date;
+  fromDate: Date;
+  toDateValid: boolean;
+  toTimeValid: boolean;
+}
 
 const DateCreateForm: React.FC<DateCreateFormProps> = ({
   offerTitles,

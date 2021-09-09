@@ -1,33 +1,37 @@
 import styled from '@emotion/styled';
 import { add, compareAsc, format, formatISO9075, parseISO } from 'date-fns';
 import { useMemo } from 'react';
-import { OfferDate } from '../../lib/api/types/offer';
+import { Language } from '../../config/locale';
+import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
+import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
-import { Breakpoint } from '../../lib/WindowService';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Checkbox } from '../checkbox';
 import { EntryFormHead, EntryFormHeadSize } from '../EntryForm/EntryFormHead';
 import { mq } from '../globals/Constants';
+import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
+import { Select, SelectSize } from '../select';
 import { DateListRow } from './DateListRow';
 
 const StyledDateListItemBody = styled.div`
   display: grid;
+  padding: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: 0.75rem;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 0.75rem;
-    row-gap: 2.25rem;
+    row-gap: 0.375rem;
   }
 
   ${mq(Breakpoint.ultra)} {
     padding: 1.5rem;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 1.5rem;
-    row-gap: 2.25rem;
+    row-gap: 0.75rem;
   }
 `;
 
@@ -41,6 +45,7 @@ interface DateListItemProps {
   editable: boolean;
   checked: boolean;
   setChecked: (checked: boolean) => void;
+  offerTitles: { [key in Language]: string };
 }
 
 export const DateListItem: React.FC<DateListItemProps> = ({
@@ -49,10 +54,15 @@ export const DateListItem: React.FC<DateListItemProps> = ({
   checked,
   setChecked,
   editable,
+  offerTitles,
 }: DateListItemProps) => {
   const uid = usePseudoUID();
   const language = useLanguage();
-  const translation = getTranslation(language, date?.data?.relations?.translations);
+  const t = useT();
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
+
+  const translations = date?.data?.relations?.translations;
+  const currentTranslation = translations ? getTranslation(language, translations) : undefined;
   const dateId = date?.data?.id;
 
   const attributes = date.data.attributes;
@@ -87,9 +97,31 @@ export const DateListItem: React.FC<DateListItemProps> = ({
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
+  const ticketUrl = attributes.ticketLink;
+
   const toTimeValid = useMemo(
     () => compareAsc(fromDateTime, toDateTime) === -1,
     [fromDateTime, toDateTime]
+  );
+
+  const titleGerman = useMemo(
+    () => getTranslation(Language['de'], translations)?.attributes?.name,
+    [translations]
+  );
+
+  const titleEnglish = useMemo(
+    () => getTranslation(Language['en'], translations)?.attributes?.name,
+    [translations]
+  );
+
+  const roomGerman = useMemo(
+    () => getTranslation(Language['de'], translations)?.attributes?.room,
+    [translations]
+  );
+
+  const roomEnglish = useMemo(
+    () => getTranslation(Language['en'], translations)?.attributes?.room,
+    [translations]
   );
 
   return (
@@ -98,7 +130,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
       to={attributes.to}
       allDay={attributes.allDay}
       status={attributes.status}
-      title={translation?.attributes?.name}
+      title={currentTranslation?.attributes?.name}
       lastRow={lastRow}
       checked={checked}
       onChange={(checked) => {
@@ -108,7 +140,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
       }}
       body={
         <StyledDateListItemBody>
-          <StyledDateListItemContainer columns={3}>
+          <StyledDateListItemContainer columns={isUltraOrWider ? 2 : 3}>
             <EntryFormHead title="Zeit" size={EntryFormHeadSize.small} />
             <FormGrid>
               <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
@@ -167,6 +199,94 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     }
                   />
                 )}
+              </FormItem>
+            </FormGrid>
+          </StyledDateListItemContainer>
+          <StyledDateListItemContainer columns={isUltraOrWider ? 1 : 3}>
+            <EntryFormHead
+              title="Status"
+              size={EntryFormHeadSize.small}
+              id={`entryformhead-${uid}`}
+            />
+            <FormGrid>
+              <FormItem width={isUltraOrWider ? FormItemWidth.full : FormItemWidth.half}>
+                <Select
+                  id={`entryformstatusselect-${uid}`}
+                  value={attributes.status}
+                  ariaLabelledby={`entryformhead-${uid}`}
+                  size={SelectSize.big}
+                >
+                  <option value={OfferDateStatus.confirmed}>{t('dateList.confirmed')}</option>
+                  <option value={OfferDateStatus.cancelled}>{t('dateList.cancelled')}</option>
+                </Select>
+              </FormItem>
+            </FormGrid>
+          </StyledDateListItemContainer>
+          <StyledDateListItemContainer columns={3}>
+            <EntryFormHead title="Titel" size={EntryFormHeadSize.small} />
+            <FormGrid>
+              <FormItem width={FormItemWidth.half}>
+                <Input
+                  type={InputType.text}
+                  label="Titel deutsch"
+                  value={titleGerman}
+                  onChange={(e) => undefined}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.half}>
+                <Input
+                  type={InputType.text}
+                  label="Titel english"
+                  value={titleEnglish}
+                  onChange={(e) => undefined}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Info
+                  color={InfoColor.grey}
+                  title="Der Titel des Termins wird mit dem Titel des Angebots kombiniert."
+                  noMaxWidth
+                >
+                  Deutsch: {offerTitles[Language.de]}
+                  {titleGerman ? ` - ${titleGerman}` : ''}
+                  <br />
+                  Englisch: {offerTitles[Language.en]}
+                  {titleEnglish ? ` - ${titleEnglish}` : ''}
+                </Info>
+              </FormItem>
+            </FormGrid>
+          </StyledDateListItemContainer>
+          <StyledDateListItemContainer columns={3}>
+            <EntryFormHead title="Rauminformationen" size={EntryFormHeadSize.small} />
+            <FormGrid>
+              <FormItem width={FormItemWidth.half}>
+                <Input
+                  type={InputType.text}
+                  label="Rauminformation Deutsch"
+                  value={roomGerman}
+                  onChange={(e) => undefined}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.half}>
+                <Input
+                  type={InputType.text}
+                  label="Rauminformation Englisch"
+                  value={roomEnglish}
+                  onChange={(e) => undefined}
+                />
+              </FormItem>
+            </FormGrid>
+          </StyledDateListItemContainer>
+          <StyledDateListItemContainer columns={3}>
+            <EntryFormHead title="Weiterführende Links (optional)" />
+            <FormGrid>
+              <FormItem width={FormItemWidth.full}>
+                <Input
+                  type={InputType.url}
+                  label="Ticketlink"
+                  value={ticketUrl}
+                  onChange={(e) => undefined}
+                />
               </FormItem>
             </FormGrid>
           </StyledDateListItemContainer>

@@ -181,6 +181,7 @@ interface SelectProps {
   disabled?: boolean;
   placeholder?: string;
   required?: boolean;
+  ariaLabelledby?: string;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -198,6 +199,7 @@ export const Select: React.FC<SelectProps> = ({
   disabled,
   placeholder,
   required,
+  ariaLabelledby,
 }: SelectProps) => {
   const internalState = useState<string>(defaultValue);
   const t = useT();
@@ -225,6 +227,7 @@ export const Select: React.FC<SelectProps> = ({
           withIcon={typeof icon !== 'undefined'}
           disabled={disabled}
           required={required}
+          aria-labelledby={ariaLabelledby}
         >
           {placeholder && <option value="">{placeholder}</option>}
           {children}

@@ -6,6 +6,7 @@ import { insetBorderColored } from '../globals/Constants';
 export enum InfoColor {
   yellow = 'yellow',
   grey = 'grey',
+  white = 'white',
 }
 
 const infoColorMap: {
@@ -23,12 +24,17 @@ const infoColorMap: {
   grey: {
     background: 'var(--grey-200)',
     color: 'var(--black)',
+    borderColor: 'var(--black-o25)',
+  },
+  white: {
+    background: 'var(--white)',
+    color: 'var(--black)',
     borderColor: 'transparent',
   },
 };
 
 const StyledInfo = styled.div<{ color: InfoColor }>`
-  border-radius: 0.75rem;
+  border-radius: 0.375rem;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0.75rem;

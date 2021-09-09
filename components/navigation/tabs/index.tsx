@@ -59,6 +59,7 @@ const StyledTabLink = styled.a<{ isActive?: boolean; itemCount: number; index: n
   align-items: center;
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem 0.75rem 0 0;
+  position: relative;
 
   ${mq(Breakpoint.mid)} {
     margin: 0;

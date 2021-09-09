@@ -41,17 +41,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const [archivedDates, setArchivedDates] = useState<OfferDate[]>(dummyArchivedDates);
 
   const translations = entry?.data?.relations?.translations;
-  const { renderedDateList } = useDateList({ dates });
-
-  const { renderedDateList: renderedArchivedDateList } = useDateList({
-    dates: archivedDates.sort((firstDate, secondDate) =>
-      compareDesc(
-        new Date(firstDate.data.attributes.from),
-        new Date(secondDate.data.attributes.from)
-      )
-    ),
-    hideCheckboxes: true,
-  });
 
   const offerTitles = useMemo<{ [key in Language]: string }>(() => {
     const languageNamePairs = Object.keys(languages).map<[Language, string]>((lang: Language) => {
@@ -61,6 +50,19 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
     return Object.fromEntries(languageNamePairs) as { [key in Language]: string };
   }, [translations]);
+
+  const { renderedDateList } = useDateList({ dates, offerTitles });
+
+  const { renderedDateList: renderedArchivedDateList } = useDateList({
+    dates: archivedDates.sort((firstDate, secondDate) =>
+      compareDesc(
+        new Date(firstDate.data.attributes.from),
+        new Date(secondDate.data.attributes.from)
+      )
+    ),
+    hideCheckboxes: true,
+    offerTitles,
+  });
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <FormGrid>

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { Language } from '../../config/locale';
 import { OfferDate } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
@@ -78,6 +79,7 @@ interface DateListProps {
   onChange?: (dates: OfferDate[]) => void;
   checkedDateIds?: string[];
   setCheckedDateIds?: Dispatch<SetStateAction<string[]>>;
+  offerTitles: { [key in Language]: string };
 }
 
 const DateList: React.FC<DateListProps> = ({
@@ -85,6 +87,7 @@ const DateList: React.FC<DateListProps> = ({
   checkedDateIds,
   setCheckedDateIds,
   hideCheckboxes = false,
+  offerTitles,
 }: DateListProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const rowCount = dates.length;
@@ -178,6 +181,7 @@ const DateList: React.FC<DateListProps> = ({
               }}
               editable={!hideCheckboxes}
               lastRow={index === rowCount - 1}
+              offerTitles={offerTitles}
             />
           );
         })}
