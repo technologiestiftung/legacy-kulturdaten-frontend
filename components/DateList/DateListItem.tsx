@@ -138,6 +138,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
           setChecked(checked);
         }
       }}
+      disabled={!editable}
       body={
         <StyledDateListItemBody>
           <StyledDateListItemContainer columns={isUltraOrWider ? 2 : 3}>

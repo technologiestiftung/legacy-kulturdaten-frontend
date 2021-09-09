@@ -122,11 +122,15 @@ const StyledDateListItemStatus = styled.div`
   }
 `;
 
-const StyledDateListItemStatusFlag = styled.div<{ status: OfferDateStatus }>`
+const StyledDateListItemStatusFlag = styled.div<{ status: OfferDateStatus; disabled?: boolean }>`
   padding: 0 0.375rem;
   border-radius: 0.375rem;
-  background: ${({ status }) =>
-    status === OfferDateStatus.confirmed ? 'var(--green-light)' : 'var(--error-light)'};
+  background: ${({ status, disabled }) =>
+    disabled
+      ? 'var(--grey-350)'
+      : status === OfferDateStatus.confirmed
+      ? 'var(--green-light)'
+      : 'var(--error-light)'};
 `;
 
 const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
@@ -175,7 +179,7 @@ const StyledDateListItemBodyInner = styled.div<{ lastRow: boolean }>`
   ${({ lastRow }) => (lastRow ? 'border-top' : 'border-bottom')}: 1px solid var(--grey-400);
 `;
 
-interface DateListItemProps {
+interface DateListRowProps {
   from: string;
   status: OfferDateStatus;
   allDay: boolean;
@@ -186,6 +190,7 @@ interface DateListItemProps {
   title?: string;
   body?: React.ReactNode;
   hideCheckboxes?: boolean;
+  disabled?: boolean;
 }
 
 const OfferDateStatusToL10nMap: { [key in OfferDateStatus]: string } = {
@@ -193,7 +198,7 @@ const OfferDateStatusToL10nMap: { [key in OfferDateStatus]: string } = {
   [OfferDateStatus.cancelled]: 'dateList.cancelled',
 };
 
-export const DateListRow: React.FC<DateListItemProps> = ({
+export const DateListRow: React.FC<DateListRowProps> = ({
   from,
   to,
   allDay,
@@ -204,7 +209,8 @@ export const DateListRow: React.FC<DateListItemProps> = ({
   checked,
   onChange,
   hideCheckboxes = false,
-}: DateListItemProps) => {
+  disabled,
+}: DateListRowProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const uid = usePseudoUID();
   const t = useT();
@@ -243,7 +249,7 @@ export const DateListRow: React.FC<DateListItemProps> = ({
 
   const renderedStatus = (
     <StyledDateListItemStatus>
-      <StyledDateListItemStatusFlag status={status}>
+      <StyledDateListItemStatusFlag status={status} disabled={disabled}>
         {t(OfferDateStatusToL10nMap[status])}
       </StyledDateListItemStatusFlag>
     </StyledDateListItemStatus>
