@@ -1,6 +1,11 @@
 import { Language } from '../../../config/locale';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
 
+export enum OfferMode {
+  permanent = 'permanent',
+  scheduled = 'scheduled',
+}
+
 export enum OfferDateStatus {
   confirmed = 'confirmed',
   cancelled = 'cancelled',
@@ -46,7 +51,9 @@ export type Offer = {
   data: {
     id?: string;
     type?: 'offer';
-    attributes?: DefaultAttributes;
+    attributes?: {
+      mode?: OfferMode;
+    } & DefaultAttributes;
     relations?: {
       translations: OfferTranslation[];
     };

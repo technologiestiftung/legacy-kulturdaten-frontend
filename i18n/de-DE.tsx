@@ -96,6 +96,8 @@ export const deDE: Localization = {
     infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
   },
   dateList: {
+    from: () => 'Von',
+    to: () => 'Bis',
     time: () => 'Zeit',
     title: () => 'Titel',
     status: () => 'Status',
@@ -127,6 +129,8 @@ export const deDE: Localization = {
     descending: () => 'absteigend',
     ascendingAriaLabel: () => 'Liste aufsteigend sortieren',
     descendingAriaLabel: () => 'Liste absteigend sortieren',
+    show: (props) => `${props?.name ? `${props.name} ` : ''}anzeigen`,
+    hide: (props) => `${props?.name ? `${props.name} ` : ''}ausblenden`,
     expandList: () => 'Listenansicht vergrößern',
     minimizeList: () => 'Listenansicht verkleinern',
     options: () => 'Optionen',

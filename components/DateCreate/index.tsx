@@ -45,11 +45,125 @@ interface DateCreateFormProps {
   setToTimeISOString: (timeISOString: string) => void;
   recurrence: string;
   setRecurrence: (recurrence: string) => void;
-  startDate: Date;
+  earliestDate: Date;
   latestDate: Date;
   fromDateTime: Date;
-  toDateTime: Date;
+  fromDate: Date;
+  toDateValid: boolean;
+  toTimeValid: boolean;
 }
+
+interface DateFormTimeProps {
+  allDay: boolean;
+  setAllDay: (allDay: boolean) => void;
+  earliestDate: Date;
+  latestDate: Date;
+  fromDateISOString: string;
+  setFromDateISOString: (dateISOString: string) => void;
+  fromTimeISOString: string;
+  setFromTimeISOString: (timeISOString: string) => void;
+  toDateISOString: string;
+  setToDateISOString: (dateISOString: string) => void;
+  toTimeISOString: string;
+  setToTimeISOString: (timeISOString: string) => void;
+  fromDateTime: Date;
+  fromDate: Date;
+  toDateValid: boolean;
+  toTimeValid: boolean;
+}
+
+export const DateFormTime: React.FC<DateFormTimeProps> = ({
+  allDay,
+  setAllDay,
+  earliestDate,
+  latestDate,
+  fromDateISOString,
+  setFromDateISOString,
+  fromTimeISOString,
+  setFromTimeISOString,
+  toDateISOString,
+  setToDateISOString,
+  toTimeISOString,
+  setToTimeISOString,
+  fromDate,
+  fromDateTime,
+  toDateValid,
+  toTimeValid,
+}: DateFormTimeProps) => {
+  const uid = usePseudoUID();
+
+  const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
+  const latestDateISOString = formatISO(latestDate, { representation: 'date' });
+
+  return (
+    <>
+      <EntryFormHead title="Zeit" />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
+          <Checkbox
+            id={`checkbox-${uid}`}
+            label="ist ganztägig"
+            checked={allDay}
+            onChange={(e) => setAllDay(e.target.checked)}
+          />
+        </FormItem>
+        <FormItem width={FormItemWidth.half}>
+          <Input
+            type={InputType.date}
+            label="von"
+            value={fromDateISOString}
+            onChange={(e) => {
+              if (e.target.value) {
+                setFromDateISOString(e.target.value);
+              }
+            }}
+            min={earliestDateISOString}
+            max={latestDateISOString}
+          />
+          {!allDay && (
+            <Input
+              type={InputType.time}
+              label="Uhrzeit"
+              value={fromTimeISOString}
+              onChange={(e) => {
+                if (e.target.value) {
+                  setFromTimeISOString(e.target.value);
+                }
+              }}
+            />
+          )}
+        </FormItem>
+        <FormItem width={FormItemWidth.half}>
+          <Input
+            type={InputType.date}
+            label="bis"
+            value={toDateISOString}
+            onChange={(e) => setToDateISOString(e.target.value)}
+            min={formatISO(max([earliestDate, fromDate]), { representation: 'date' })}
+            max={latestDateISOString}
+            valid={toDateValid}
+            error={!toDateValid ? 'Das Enddatum muss später als das Startdatum sein.' : undefined}
+          />
+          {!allDay && (
+            <Input
+              type={InputType.time}
+              label="Uhrzeit"
+              value={toTimeISOString}
+              onChange={(e) => setToTimeISOString(e.target.value)}
+              min={
+                compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
+                  ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
+                  : undefined
+              }
+              valid={toTimeValid}
+              error={!toTimeValid ? 'Die Endzeit muss später als die Startzeit sein.' : undefined}
+            />
+          )}
+        </FormItem>
+      </FormGrid>
+    </>
+  );
+};
 
 const DateCreateForm: React.FC<DateCreateFormProps> = ({
   offerTitles,
@@ -75,25 +189,17 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   setToTimeISOString,
   recurrence,
   setRecurrence,
-  startDate,
+  earliestDate,
   latestDate,
   fromDateTime,
-  toDateTime,
+  fromDate,
+  toDateValid,
+  toTimeValid,
 }: DateCreateFormProps) => {
   const uid = usePseudoUID();
 
-  const startDateISOString = formatISO(startDate, { representation: 'date' });
+  const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
   const latestDateISOString = formatISO(latestDate, { representation: 'date' });
-
-  const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
-  const toDate = useMemo(() => new Date(toDateISOString), [toDateISOString]);
-
-  const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
-
-  const toTimeValid = useMemo(
-    () => compareAsc(fromDateTime, toDateTime) === -1,
-    [fromDateTime, toDateTime]
-  );
 
   const { renderedDateRecurrence } = useDateRecurrence({
     startDate: fromDate,
@@ -106,77 +212,26 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
     <>
       <EntryFormWrapper fullWidth reducedVerticalpadding>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Zeit" />
-          <FormGrid>
-            <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
-              <Checkbox
-                id={`checkbox-${uid}`}
-                label="ist ganztägig"
-                checked={allDay}
-                onChange={(e) => setAllDay(e.target.checked)}
-              />
-            </FormItem>
-            <FormItem width={FormItemWidth.half}>
-              <Input
-                type={InputType.date}
-                label="von"
-                value={fromDateISOString}
-                onChange={(e) => {
-                  if (!recurrence) {
-                    // initRecurrence();
-                  }
-                  if (e.target.value) {
-                    setFromDateISOString(e.target.value);
-                  }
-                }}
-                min={startDateISOString}
-                max={latestDateISOString}
-              />
-              {!allDay && (
-                <Input
-                  type={InputType.time}
-                  label="Uhrzeit"
-                  value={fromTimeISOString}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setFromTimeISOString(e.target.value);
-                    }
-                  }}
-                />
-              )}
-            </FormItem>
-            <FormItem width={FormItemWidth.half}>
-              <Input
-                type={InputType.date}
-                label="bis"
-                value={toDateISOString}
-                onChange={(e) => setToDateISOString(e.target.value)}
-                min={formatISO(max([startDate, fromDate]), { representation: 'date' })}
-                max={latestDateISOString}
-                valid={toDateValid}
-                error={
-                  !toDateValid ? 'Das Enddatum muss später als das Startdatum sein.' : undefined
-                }
-              />
-              {!allDay && (
-                <Input
-                  type={InputType.time}
-                  label="Uhrzeit"
-                  value={toTimeISOString}
-                  onChange={(e) => setToTimeISOString(e.target.value)}
-                  min={
-                    compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
-                      ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
-                      : undefined
-                  }
-                  valid={toTimeValid}
-                  error={
-                    !toTimeValid ? 'Die Endzeit muss später als die Startzeit sein.' : undefined
-                  }
-                />
-              )}
-            </FormItem>
-          </FormGrid>
+          <DateFormTime
+            {...{
+              allDay,
+              setAllDay,
+              earliestDate,
+              latestDate,
+              fromDateISOString,
+              setFromDateISOString,
+              fromTimeISOString,
+              setFromTimeISOString,
+              toDateISOString,
+              setToDateISOString,
+              toTimeISOString,
+              setToTimeISOString,
+              fromDate,
+              fromDateTime,
+              toDateValid,
+              toTimeValid,
+            }}
+          />
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
           <EntryFormHead title="Termin wiederholen (optional)" />
@@ -287,11 +342,11 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     </Button>
   );
 
-  const startDate = new Date();
-  const latestDate = add(startDate, { years: 1 });
-  const startDateISOString = formatISO(startDate, { representation: 'date' });
-  const startTimeISOString = format(startDate, 'HH:mm');
-  const startPlusOneHourTimeISOString = format(add(startDate, { hours: 1 }), 'HH:mm');
+  const earliestDate = new Date();
+  const latestDate = add(earliestDate, { years: 1 });
+  const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
+  const startTimeISOString = format(earliestDate, 'HH:mm');
+  const startPlusOneHourTimeISOString = format(add(earliestDate, { hours: 1 }), 'HH:mm');
 
   const [allDay, setAllDay] = useState(false);
   const [ticketUrl, setTicketUrl] = useState('');
@@ -300,9 +355,9 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const [roomGerman, setRoomGerman] = useState('');
   const [roomEnglish, setRoomEnglish] = useState('');
   const [recurrence, setRecurrence] = useState<string>();
-  const [fromDateISOString, setFromDateISOString] = useState<string>(startDateISOString);
+  const [fromDateISOString, setFromDateISOString] = useState<string>(earliestDateISOString);
   const [fromTimeISOString, setFromTimeISOString] = useState<string>(startTimeISOString);
-  const [toDateISOString, setToDateISOString] = useState<string>(startDateISOString);
+  const [toDateISOString, setToDateISOString] = useState<string>(earliestDateISOString);
   const [toTimeISOString, setToTimeISOString] = useState<string>(startPlusOneHourTimeISOString);
 
   const fromDateTime = useMemo(
@@ -313,6 +368,16 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const toDateTime = useMemo(
     () => parseISO(`${toDateISOString}T${!allDay ? toTimeISOString : '00:00'}`),
     [allDay, toDateISOString, toTimeISOString]
+  );
+
+  const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
+  const toDate = useMemo(() => new Date(toDateISOString), [toDateISOString]);
+
+  const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
+
+  const toTimeValid = useMemo(
+    () => compareAsc(fromDateTime, toDateTime) === -1,
+    [fromDateTime, toDateTime]
   );
 
   const date = useMemo<OfferDate>(
@@ -393,10 +458,13 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           setToTimeISOString,
           recurrence,
           setRecurrence,
-          startDate,
+          earliestDate,
           latestDate,
           fromDateTime,
           toDateTime,
+          toDateValid,
+          toTimeValid,
+          fromDate,
         }}
       />
       <StyledDateCreateBottomBar>{createButton}</StyledDateCreateBottomBar>
@@ -413,16 +481,16 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     setAllDay(false);
     setRoomGerman('');
     setRoomEnglish('');
-    setFromDateISOString(startDateISOString);
+    setFromDateISOString(earliestDateISOString);
     setFromTimeISOString(startTimeISOString);
-    setToDateISOString(startDateISOString);
+    setToDateISOString(earliestDateISOString);
     setToTimeISOString(startPlusOneHourTimeISOString);
     setRecurrence(undefined);
   }, [
     date,
     onSubmit,
     setIsOpen,
-    startDateISOString,
+    earliestDateISOString,
     startTimeISOString,
     startPlusOneHourTimeISOString,
   ]);

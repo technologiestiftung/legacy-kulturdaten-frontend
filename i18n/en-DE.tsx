@@ -97,6 +97,8 @@ export const enDE: Localization = {
   },
   dateList: {
     time: () => 'Time',
+    from: () => 'From',
+    to: () => 'To',
     title: () => 'Title',
     status: () => 'Status',
     info: () => 'Information',
