@@ -1,12 +1,13 @@
 import { css } from '@emotion/react';
 import { compareAsc, compareDesc } from 'date-fns';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { dummyArchivedDates, dummyDates } from '../../../dummy-data/dates';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { Offer, OfferDate, OfferMode } from '../../../lib/api/types/offer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
+import { useT } from '../../../lib/i18n';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
 import { Breakpoint } from '../../../lib/WindowService';
@@ -33,6 +34,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   query,
 }: CategoryEntryPage) => {
   const renderedEntryHeader = useEntryHeader({ category, query });
+  const t = useT();
   const [value, setValue] = useState<OfferMode>(OfferMode.scheduled);
   const uid = usePseudoUID();
   const { entry } = useEntry<Offer, OfferShow>(category, query);
@@ -80,7 +82,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
       {renderedEntryHeader}
       <EntryFormWrapper>
         <EntryFormContainer>
-          <EntryFormHead title="Art des Angebots" id={`radio-${uid}`} />
+          <EntryFormHead title={t('date.mode.title') as string} id={`radio-${uid}`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
               <RadioVariant
@@ -93,27 +95,25 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 options={[
                   {
                     value: OfferMode.permanent,
-                    label: 'Dauerangebot',
+                    label: t('date.mode.permanent.label') as string,
                     children: [
                       <RadioVariantOptionParagraph key={0}>
-                        Zeitlich nicht begrenzte Angebote, wie z.B.: Dauerausstellungen, Sammlungen
+                        {t('date.mode.permanent.description1')}
                       </RadioVariantOptionParagraph>,
                       <RadioVariantOptionParagraph key={1}>
-                        Dauerangebote übernehmen die Öffnungszeiten des zugewiesenen Ortes.
+                        {t('date.mode.permanent.description2')}
                       </RadioVariantOptionParagraph>,
                     ],
                   },
                   {
                     value: OfferMode.scheduled,
-                    label: 'Angebot mit Terminen',
+                    label: t('date.mode.scheduled.label') as string,
                     children: [
                       <RadioVariantOptionParagraph key={0}>
-                        Zeitlich begrenzte Angebote, wie z.B.: Vorstellungen, Konzerte,
-                        Filmvorführungen, Kurse
+                        {t('date.mode.scheduled.description1')}
                       </RadioVariantOptionParagraph>,
                       <RadioVariantOptionParagraph key={1}>
-                        Angebote mit Terminen können beliebig viele Einzel- und Serientermine
-                        enthalten, mit jeweils individuellen Zeiten.
+                        {t('date.mode.scheduled.description2')}
                       </RadioVariantOptionParagraph>,
                     ],
                   },
@@ -125,7 +125,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         {value === OfferMode.scheduled && (
           <>
             <EntryFormContainer>
-              <EntryFormHead title="Aktuelle Termine" />
+              <EntryFormHead title={t('date.currentDates') as string} />
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
                   <DateCreate
@@ -150,7 +150,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
             </EntryFormContainer>
             <EntryFormContainer>
               <EntryFormHead
-                title="Vergangene Termine"
+                title={t('date.archivedDates') as string}
                 expander={{
                   onClick: () => {
                     setIsCollapsed(!isCollapsed);

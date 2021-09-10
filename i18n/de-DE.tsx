@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
@@ -119,6 +120,38 @@ export const deDE: Localization = {
     roomInfo: () => 'Rauminformation',
     additionalLinks: () => 'Weiterführende Links',
     ticketLink: () => 'Ticketlink',
+    currentDates: () => 'Aktuelle Termine',
+    archivedDates: () => 'Vergangene Termine',
+    mode: {
+      title: () => 'Modus des Angebots',
+      permanent: {
+        label: () => 'Dauerangebot',
+        description1: () =>
+          'Zeitlich nicht begrenzte Angebote, wie z.B.: Dauerausstellungen, Sammlungen',
+        description2: () => 'Dauerangebote übernehmen die Öffnungszeiten des zugewiesenen Ortes.',
+      },
+      scheduled: {
+        label: () => 'Angebot mit Terminen',
+        description1: () =>
+          'Zeitlich begrenzte Angebote, wie z.B.: Vorstellungen, Konzerte, Filmvorführungen, Kurse',
+        description2: () =>
+          'Angebote mit Terminen können beliebig viele Einzel- und Serientermine enthalten, mit jeweils individuellen Zeiten.',
+      },
+    },
+    recurrence: {
+      title: () => 'Termin wiederholen',
+      frequency: () => 'Häufigkeit',
+      days: () => 'Tage',
+      weeks: () => 'Wochen',
+      months: () => 'Monate',
+      never: () => 'nie wiederholen',
+      daily: () => 'täglich',
+      weekly: () => 'wöchentlich',
+      monthly: () => 'monatlich',
+      repeatEvery: () => 'Wiederholen alle',
+      onWeekdays: () => 'An Wochentagen',
+      ends: () => 'Endet am',
+    },
   },
   general: {
     german: () => 'Deutsch',

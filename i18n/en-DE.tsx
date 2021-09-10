@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
@@ -113,12 +114,45 @@ export const enDE: Localization = {
     cancelled: () => 'cancelled',
     allDay: () => 'is all day',
     clock: () => 'time',
-    toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',
-    toTimeInvalid: () => 'Die Endzeit muss später als die Startzeit sein.',
-    titleInfoTitle: () => 'Der Titel des Termins wird mit dem Titel des Angebots kombiniert.',
+    toDateInvalid: () => 'The date needs to end at a later day that it starts.',
+    toTimeInvalid: () => 'The date needs to end at a later time than it starts.',
+    titleInfoTitle: () => 'The title of the date will be combined with the title of the offer.',
     roomInfo: () => 'Room information',
     additionalLinks: () => 'Additional links',
     ticketLink: () => 'Ticket link',
+    currentDates: () => 'Current dates',
+    archivedDates: () => 'Past dates',
+    mode: {
+      title: () => 'Offer mode',
+      permanent: {
+        label: () => 'Permanent offer',
+        description1: () =>
+          'Offers not limited in time, such as: permanent exhibitions, collections',
+        description2: () =>
+          'Permanent offers take over the opening times of the assigned location.',
+      },
+      scheduled: {
+        label: () => 'Offer with dates',
+        description1: () =>
+          'Time-limited offers, such as: performances, concerts, film screenings, courses',
+        description2: () =>
+          'Offers with dates can contain any number of individual and series dates, each with individual times.',
+      },
+    },
+    recurrence: {
+      title: () => 'Repeat date',
+      frequency: () => 'Frequency',
+      days: () => 'days',
+      weeks: () => 'weeks',
+      months: () => 'months',
+      never: () => 'never repeat',
+      daily: () => 'daily',
+      weekly: () => 'weekly',
+      monthly: () => 'monthly',
+      repeatEvery: () => 'Repeat every',
+      onWeekdays: () => 'On weekdays',
+      ends: () => 'Ends',
+    },
   },
   general: {
     german: () => 'German',
@@ -141,6 +175,8 @@ export const enDE: Localization = {
     descending: () => 'descending',
     ascendingAriaLabel: () => 'Sort list ascending',
     descendingAriaLabel: () => 'Sort list descending',
+    show: (props) => `show${props?.name ? ` ${props.name}` : ''}`,
+    hide: (props) => `hide${props?.name ? ` ${props.name}` : ''}`,
     expandList: () => 'Expand list view',
     minimizeList: () => 'Minimize list view',
     options: () => 'Options',

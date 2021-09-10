@@ -59,18 +59,19 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
   toTimeValid,
 }: DateFormTimeProps) => {
   const uid = usePseudoUID();
+  const t = useT();
 
   const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
   const latestDateISOString = formatISO(latestDate, { representation: 'date' });
 
   return (
     <>
-      <EntryFormHead title="Zeit" />
+      <EntryFormHead title={t('date.time') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
           <Checkbox
             id={`checkbox-${uid}`}
-            label="ist ganztägig"
+            label={t('date.allDay') as string}
             checked={allDay}
             onChange={(e) => setAllDay(e.target.checked)}
           />
@@ -78,7 +79,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
-            label="von"
+            label={t('date.from') as string}
             value={fromDateISOString}
             onChange={(e) => {
               if (e.target.value) {
@@ -91,7 +92,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
           {!allDay && (
             <Input
               type={InputType.time}
-              label="Uhrzeit"
+              label={t('date.clock') as string}
               value={fromTimeISOString}
               onChange={(e) => {
                 if (e.target.value) {
@@ -104,18 +105,18 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
-            label="bis"
+            label={t('date.to') as string}
             value={toDateISOString}
             onChange={(e) => setToDateISOString(e.target.value)}
             min={formatISO(max([earliestDate, fromDate]), { representation: 'date' })}
             max={latestDateISOString}
             valid={toDateValid}
-            error={!toDateValid ? 'Das Enddatum muss später als das Startdatum sein.' : undefined}
+            error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
           />
           {!allDay && (
             <Input
               type={InputType.time}
-              label="Uhrzeit"
+              label={t('date.clock') as string}
               value={toTimeISOString}
               onChange={(e) => setToTimeISOString(e.target.value)}
               min={
@@ -124,7 +125,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
                   : undefined
               }
               valid={toTimeValid}
-              error={!toTimeValid ? 'Die Endzeit muss später als die Startzeit sein.' : undefined}
+              error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
             />
           )}
         </FormItem>
@@ -196,10 +197,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   toDateValid,
   toTimeValid,
 }: DateCreateFormProps) => {
+  const t = useT();
   const uid = usePseudoUID();
-
-  const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
-  const latestDateISOString = formatISO(latestDate, { representation: 'date' });
 
   const { renderedDateRecurrence } = useDateRecurrence({
     startDate: fromDate,
@@ -234,18 +233,18 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
           />
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Termin wiederholen (optional)" />
+          <EntryFormHead title={`${t('date.recurrence.title')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>{renderedDateRecurrence}</FormItem>
           </FormGrid>
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Titel (optional)" />
+          <EntryFormHead title={`${t('date.title')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.text}
-                label="Titel deutsch"
+                label={`${t('date.title')} ${t('general.german')}`}
                 value={titleGerman}
                 onChange={(e) => setTitleGerman(e.target.value)}
               />
@@ -253,33 +252,29 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.text}
-                label="Titel english"
+                label={`${t('date.title')} ${t('general.english')}`}
                 value={titleEnglish}
                 onChange={(e) => setTitleEnglish(e.target.value)}
               />
             </FormItem>
             <FormItem width={FormItemWidth.full}>
-              <Info
-                color={InfoColor.grey}
-                title="Der Titel des Termins wird mit dem Titel des Angebots kombiniert."
-                noMaxWidth
-              >
-                Deutsch: {offerTitles[Language.de]}
+              <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
+                {t('general.german')}: {offerTitles[Language.de]}
                 {titleGerman ? ` - ${titleGerman}` : ''}
                 <br />
-                Englisch: {offerTitles[Language.en]}
-                {titleEnglish ? ` - ${titleEnglish}` : ''}
+                {t('general.german')}: {offerTitles[Language.de]}
+                {titleGerman ? ` - ${titleGerman}` : ''}
               </Info>
             </FormItem>
           </FormGrid>
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Rauminformation (optional)" />
+          <EntryFormHead title={`${t('date.roomInfo')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.text}
-                label="Rauminformation Deutsch"
+                label={`${t('date.roomInfo')} ${t('general.german')}`}
                 value={roomGerman}
                 onChange={(e) => setRoomGerman(e.target.value)}
               />
@@ -287,7 +282,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.text}
-                label="Rauminformation Englisch"
+                label={`${t('date.roomInfo')} ${t('general.english')}`}
                 value={roomEnglish}
                 onChange={(e) => setRoomEnglish(e.target.value)}
               />
@@ -295,12 +290,12 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
           </FormGrid>
         </EntryFormContainer>
         <EntryFormContainer fullWidth>
-          <EntryFormHead title="Weiterführende Links (optional)" />
+          <EntryFormHead title={`${t('date.additionalLinks')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
               <Input
                 type={InputType.url}
-                label="Ticketlink"
+                label={t('date.ticketLink') as string}
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
               />

@@ -142,7 +142,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
       body={
         <StyledDateListItemBody>
           <StyledDateListItemContainer columns={isUltraOrWider ? 2 : 3}>
-            <EntryFormHead title="Zeit" size={EntryFormHeadSize.small} />
+            <EntryFormHead title={t('date.time') as string} size={EntryFormHeadSize.small} />
             <FormGrid>
               <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
                 <Checkbox
@@ -228,7 +228,10 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title="Titel" size={EntryFormHeadSize.small} />
+            <EntryFormHead
+              title={`${t('date.title')} (${t('forms.optional')})`}
+              size={EntryFormHeadSize.small}
+            />
             <FormGrid>
               <FormItem width={FormItemWidth.half}>
                 <Input
@@ -253,14 +256,17 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   {t('general.german')}: {offerTitles[Language.de]}
                   {titleGerman ? ` - ${titleGerman}` : ''}
                   <br />
-                  {t('general.english')}: {offerTitles[Language.en]}
-                  {titleEnglish ? ` - ${titleEnglish}` : ''}
+                  {t('general.german')}: {offerTitles[Language.de]}
+                  {titleGerman ? ` - ${titleGerman}` : ''}
                 </Info>
               </FormItem>
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title={t('date.roomInfo') as string} size={EntryFormHeadSize.small} />
+            <EntryFormHead
+              title={`${t('date.roomInfo')} (${t('forms.optional')})`}
+              size={EntryFormHeadSize.small}
+            />
             <FormGrid>
               <FormItem width={FormItemWidth.half}>
                 <Input
@@ -283,7 +289,10 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title={`${t('date.additionalLinks')} ${t('forms.optional')}`} />
+            <EntryFormHead
+              title={`${t('date.additionalLinks')} (${t('forms.optional')})`}
+              size={EntryFormHeadSize.small}
+            />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
                 <Input
