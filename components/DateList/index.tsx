@@ -17,7 +17,7 @@ const StyledDateList = styled.div`
   line-height: var(--line-height-300);
 `;
 
-const StyledDateListBody = styled.div<{ hideCheckboxes: boolean }>`
+const StyledDateListBody = styled.div`
   overflow: hidden;
   border-top: 1px solid var(--grey-400);
   border-bottom: 1px solid var(--grey-400);
@@ -75,7 +75,7 @@ enum DateListActions {
 
 interface DateListProps {
   dates: OfferDate[];
-  hideCheckboxes?: boolean;
+  editable?: boolean;
   onChange?: (dates: OfferDate[]) => void;
   checkedDateIds?: string[];
   setCheckedDateIds?: Dispatch<SetStateAction<string[]>>;
@@ -86,7 +86,7 @@ const DateList: React.FC<DateListProps> = ({
   dates,
   checkedDateIds,
   setCheckedDateIds,
-  hideCheckboxes = false,
+  editable = true,
   offerTitles,
 }: DateListProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
@@ -108,11 +108,11 @@ const DateList: React.FC<DateListProps> = ({
 
   return (
     <StyledDateList>
-      <StyledDateListBody role="table" hideCheckboxes={hideCheckboxes}>
+      <StyledDateListBody role="table">
         {isWideOrWider ? (
           <>
             <StyledDateListTitleRowCell>
-              {!hideCheckboxes && (
+              {editable && (
                 <StyledDateListItemCheckbox>
                   <Checkbox
                     id={`${uid}-checkbox`}
@@ -125,10 +125,7 @@ const DateList: React.FC<DateListProps> = ({
               )}
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold
-                noPaddingLeft={!hideCheckboxes}
-                doublePaddingLeft={hideCheckboxes}
-              >
+              <StyledDateListItemTextBold noPaddingLeft={editable} doublePaddingLeft={!editable}>
                 {t('date.from')}
               </StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
@@ -145,7 +142,7 @@ const DateList: React.FC<DateListProps> = ({
           </>
         ) : (
           <StyledDateListTitleRow>
-            {!hideCheckboxes && (
+            {editable && (
               <StyledDateListItemCheckbox>
                 <Checkbox
                   id={`${uid}-checkbox`}
@@ -157,10 +154,7 @@ const DateList: React.FC<DateListProps> = ({
                 />
               </StyledDateListItemCheckbox>
             )}
-            <StyledDateListItemTextBold
-              noPaddingLeft={!hideCheckboxes}
-              doublePaddingLeft={hideCheckboxes}
-            >
+            <StyledDateListItemTextBold noPaddingLeft={editable} doublePaddingLeft={!editable}>
               {t('date.info')}
             </StyledDateListItemTextBold>
           </StyledDateListTitleRow>
@@ -179,7 +173,7 @@ const DateList: React.FC<DateListProps> = ({
                   setCheckedDateIds(checkedDateIds.filter((id) => id !== dateId));
                 }
               }}
-              editable={!hideCheckboxes}
+              editable={editable}
               lastRow={index === rowCount - 1}
               offerTitles={offerTitles}
             />

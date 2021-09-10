@@ -189,14 +189,16 @@ interface DateListRowProps {
   to?: string;
   title?: string;
   body?: React.ReactNode;
-  hideCheckboxes?: boolean;
+  editable?: boolean;
   disabled?: boolean;
 }
 
-const OfferDateStatusToL10nMap: { [key in OfferDateStatus]: string } = {
-  [OfferDateStatus.confirmed]: 'date.confirmed',
+const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus]: string } = (
+  editable
+) => ({
+  [OfferDateStatus.confirmed]: editable ? 'date.confirmed' : 'date.confirmedArchived',
   [OfferDateStatus.cancelled]: 'date.cancelled',
-};
+});
 
 export const DateListRow: React.FC<DateListRowProps> = ({
   from,
@@ -208,7 +210,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   body,
   checked,
   onChange,
-  hideCheckboxes = false,
+  editable = true,
   disabled,
 }: DateListRowProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
@@ -250,7 +252,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const renderedStatus = (
     <StyledDateListItemStatus>
       <StyledDateListItemStatusFlag status={status} disabled={disabled}>
-        {t(OfferDateStatusToL10nMap[status])}
+        {t(OfferDateStatusToL10nMap(editable)[status])}
       </StyledDateListItemStatusFlag>
     </StyledDateListItemStatus>
   );
@@ -269,11 +271,11 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const renderedGridContent = (
     <>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {!hideCheckboxes && renderedCheckbox}
+        {editable && renderedCheckbox}
       </StyledDateListRowCell>
 
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        <StyledDateListItemText noPaddingLeft={!hideCheckboxes} doublePaddingLeft={hideCheckboxes}>
+        <StyledDateListItemText noPaddingLeft={editable} doublePaddingLeft={!editable}>
           <StyledDateListItemTimeFrom>{formattedFrom}</StyledDateListItemTimeFrom>
         </StyledDateListItemText>
       </StyledDateListRowCell>
@@ -298,13 +300,10 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const renderedFlexContent = (
     <>
       <StyledDateListRow lastRow={lastRow}>
-        <StyledDateListRowLeft>{!hideCheckboxes && renderedCheckbox}</StyledDateListRowLeft>
+        <StyledDateListRowLeft>{editable && renderedCheckbox}</StyledDateListRowLeft>
         <StyledDateListRowMid>
           <StyledDateListRowMidInner>
-            <StyledDateListItemTime
-              noPaddingLeft={!hideCheckboxes}
-              doublePaddingLeft={hideCheckboxes}
-            >
+            <StyledDateListItemTime noPaddingLeft={editable} doublePaddingLeft={!editable}>
               <span>{formattedFrom}</span>
               {to && (!allDay || longerThanOneDay) && (
                 <>

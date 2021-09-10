@@ -60,7 +60,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         new Date(secondDate.data.attributes.from)
       )
     ),
-    hideCheckboxes: true,
+    editable: false,
     offerTitles,
   });
 

@@ -219,7 +219,9 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   size={SelectSize.big}
                   disabled={!editable}
                 >
-                  <option value={OfferDateStatus.confirmed}>{t('date.confirmed')}</option>
+                  <option value={OfferDateStatus.confirmed}>
+                    {t(editable ? 'date.confirmed' : 'date.confirmedArchived')}
+                  </option>
                   <option value={OfferDateStatus.cancelled}>{t('date.cancelled')}</option>
                 </Select>
               </FormItem>
@@ -231,7 +233,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.text}
-                  label="Titel deutsch"
+                  label={`${t('date.title')} ${t('general.german')}`}
                   value={titleGerman}
                   onChange={(e) => undefined}
                   disabled={!editable}
@@ -240,7 +242,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.text}
-                  label="Titel english"
+                  label={`${t('date.title')} ${t('general.english')}`}
                   value={titleEnglish}
                   onChange={(e) => undefined}
                   disabled={!editable}
@@ -296,7 +298,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
           </StyledDateListItemContainer>
         </StyledDateListItemBody>
       }
-      hideCheckboxes={!editable}
+      editable={editable}
     />
   );
 };

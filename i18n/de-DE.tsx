@@ -109,6 +109,7 @@ export const deDE: Localization = {
     detailsShowAriaLabel: () => 'Details anzeigen',
     detailsHideAriaLabel: () => 'Details ausblenden',
     confirmed: () => 'findet statt',
+    confirmedArchived: () => 'fand statt',
     cancelled: () => 'abgesagt',
     allDay: () => 'ist ganztätig',
     clock: () => 'Uhrzeit',
