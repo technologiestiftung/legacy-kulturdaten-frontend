@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import { useDateList } from '.';
+import { Language } from '../../config/locale';
 import { dummyDates } from '../../dummy-data/dates';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, mq } from '../globals/Constants';
@@ -28,7 +29,13 @@ const StoryContainer = styled.div`
 `;
 
 const EmbeddedStory: React.FC = () => {
-  const { renderedDateList } = useDateList({ dates: dummyDates });
+  const { renderedDateList } = useDateList({
+    dates: dummyDates,
+    offerTitles: {
+      [Language.de]: 'Angebotstitel',
+      [Language.en]: 'Offer title',
+    },
+  });
 
   return (
     <StoryWrapper>
