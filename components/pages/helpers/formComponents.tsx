@@ -2,6 +2,7 @@ import { css, SerializedStyles } from '@emotion/react';
 import { insetBorder, mq } from '../../globals/Constants';
 import { Breakpoint } from '../../../lib/WindowService';
 import styled from '@emotion/styled';
+import React, { PropsWithChildren } from 'react';
 
 export const FormGrid = styled.div`
   display: grid;
@@ -37,10 +38,50 @@ export const formItemWidthMap: { [key in FormItemWidth]: SerializedStyles } = {
   `,
 };
 
-export const FormItem = styled.div<{ width: FormItemWidth; alignSelf?: string }>`
+const StyledFormItem = styled.div<{
+  width: FormItemWidth;
+  alignSelf?: string;
+  customCss?: SerializedStyles;
+}>`
   ${({ width }) => formItemWidthMap[width]}
-  ${({ alignSelf }) => (alignSelf ? `align-self: ${alignSelf};` : '')}
+  align-self: ${({ alignSelf }) => alignSelf || 'stretch'};
+
+  display: flex;
+  flex-direction: row;
+  column-gap: 0.75rem;
+  row-gap: 0.75rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  ${({ customCss }) => customCss}
 `;
+
+const StyledFormItemChild = styled.div<{ flexGrow?: string }>`
+  flex-grow: ${({ flexGrow }) => flexGrow || '1'};
+`;
+
+interface FormItemProps {
+  width: FormItemWidth;
+  alignSelf?: string;
+  childrenFlexGrow?: string;
+  css?: SerializedStyles;
+}
+
+export const FormItem: React.FC<PropsWithChildren<FormItemProps>> = ({
+  children,
+  width,
+  alignSelf,
+  childrenFlexGrow,
+  css,
+}: PropsWithChildren<FormItemProps>) => (
+  <StyledFormItem width={width} alignSelf={alignSelf} customCss={css}>
+    {React.Children.toArray(children).map((child, index) => (
+      <StyledFormItemChild key={index} flexGrow={childrenFlexGrow}>
+        {child}
+      </StyledFormItemChild>
+    ))}
+  </StyledFormItem>
+);
 
 export const FormButtons = styled.div`
   padding: 0.75rem 0;

@@ -33,7 +33,7 @@ const borderWidth = '1px';
 const StyledRadioSwitchOptions = styled.div`
   display: flex;
   border: ${borderWidth} solid var(--black);
-  border-radius: 0.75rem;
+  border-radius: 0.375rem;
   overflow: hidden;
   background: var(--black);
   mask-image: -webkit-radial-gradient(white, black);
@@ -48,7 +48,7 @@ const StyledRadioSwitchOption = styled.div<{ active: boolean }>`
 
 const StyledRadioSwitchOptionInput = styled.input`
   appearance: none;
-  margin: 0 0 0 0.75rem;
+  margin: 0 0 0 0.375rem;
   position: relative;
   background: var(--white);
   width: 1rem;

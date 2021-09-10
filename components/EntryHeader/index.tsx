@@ -60,14 +60,13 @@ const StyledEntryHeaderActions = styled.div`
   row-gap: 0.75rem;
   padding-top: 2.25rem;
   flex-wrap: wrap;
+  flex-direction: row-reverse;
 
   ${mq(Breakpoint.mid)} {
-    flex-direction: column;
     align-items: flex-start;
     display: flex;
     padding-top: 0;
-    flex-direction: row;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   ${mq(Breakpoint.wide)} {
@@ -143,11 +142,6 @@ const StyledEntryHeaderPublishSlot = styled.div`
 `;
 
 const StyledEntryHeaderTabsSlot = styled.div`
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
   }
@@ -156,12 +150,21 @@ const StyledEntryHeaderTabsSlot = styled.div`
 `;
 
 const StyledEntryHeaderTabsSlotContainer = styled.div`
-  ${mq(Breakpoint.mid)} {
-    padding: 0;
-    grid-column: 1 / -1;
-  }
+  min-width: 0;
+  grid-column: 1 / -1;
+  padding: 0;
 
   ${mq(Breakpoint.widish)} {
+    grid-column: 1 / -1;
+    padding: 0 1.5rem;
+  }
+
+  @media screen and (min-width: 78.125rem) {
+    grid-column: 2 / -2;
+    padding: 0;
+  }
+
+  ${mq(Breakpoint.ultra)} {
     grid-column: 2 / -2;
     padding: 0;
   }
@@ -249,14 +252,14 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
           <span>{title}</span>
         </StyledEntryHeaderTitle>
         <StyledEntryHeaderActions>
+          {actions?.map((action, index) => (
+            <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
+          ))}
           <StyledEntryHeaderStatus>
             <StyledEntryHeaderStatusLabel>{t('statusBar.status')}</StyledEntryHeaderStatusLabel>
 
             {statusFlag}
           </StyledEntryHeaderStatus>
-          {actions?.map((action, index) => (
-            <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
-          ))}
         </StyledEntryHeaderActions>
       </StyledEntryHeaderHead>
       {publish && <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>}

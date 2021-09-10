@@ -22,6 +22,7 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
   color: inherit;
   text-decoration: none;
   width: 100%;
+  cursor: pointer;
 
   box-shadow: ${insetBorder(false, false, true, false)};
 
@@ -60,7 +61,7 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
 
 interface TableLinkProps {
   children: React.ReactNode;
-  href: string;
+  href?: string;
   isActive?: boolean;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
@@ -71,11 +72,17 @@ export const TableLink: React.FC<TableLinkProps> = ({
   isActive,
   onClick,
 }: TableLinkProps) => {
-  return (
+  const renderedLink = (
+    <StyledTableLink isActive={isActive} onClick={onClick} role="menuitem">
+      <div>{children}</div>
+    </StyledTableLink>
+  );
+
+  return href ? (
     <Link href={href} passHref>
-      <StyledTableLink isActive={isActive} onClick={onClick} role="menuitem">
-        <div>{children}</div>
-      </StyledTableLink>
+      {renderedLink}
     </Link>
+  ) : (
+    renderedLink
   );
 };

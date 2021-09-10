@@ -10,7 +10,7 @@ exports[`Header renders 1`] = `
     >
       <a
         class="css-gxm01f-StyledLink e1sn27875"
-        href="/undefined"
+        href="/app"
       >
         Test title
       </a>

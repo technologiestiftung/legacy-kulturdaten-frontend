@@ -1,8 +1,47 @@
+/* eslint-disable react/display-name */
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
+  },
+  dayPicker: {
+    ariaLabel: () => 'Choose',
+    minError: ({ min }) => `Please choose at least ${min} ${min === 1 ? 'day' : 'days'}`,
+  },
+  days: {
+    monday: {
+      long: () => 'Monday',
+      short: () => 'Mo',
+    },
+    tuesday: {
+      long: () => 'Tuesday',
+      short: () => 'Tu',
+    },
+    wednesday: {
+      long: () => 'Wednesday',
+      short: () => 'We',
+    },
+    thursday: {
+      long: () => 'Thursday',
+      short: () => 'Th',
+    },
+    friday: {
+      long: () => 'Friday',
+      short: () => 'Fr',
+    },
+    saturday: {
+      long: () => 'Saturday',
+      short: () => 'Sa',
+    },
+    sunday: {
+      long: () => 'Sunday',
+      short: () => 'Su',
+    },
+  },
+  dateCreate: {
+    overlayTitle: ({ offerTitle }) => `Create date for ‘${offerTitle}’`,
+    create: () => 'Create date',
   },
   accordion: {
     open: () => 'show',
@@ -16,6 +55,7 @@ export const enDE: Localization = {
     ariaLabelClose: () => 'Hide user menu',
   },
   forms: {
+    optional: () => 'optional',
     required: () => 'required',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
@@ -57,7 +97,66 @@ export const enDE: Localization = {
     alertSymbolAriaLabel: () => 'There are errors in this input fields.',
     infoSymbolAriaLabel: () => 'Here are input fields which should be filled.',
   },
+  date: {
+    time: () => 'Time',
+    from: () => 'From',
+    to: () => 'To',
+    title: () => 'Title',
+    status: () => 'Status',
+    info: () => 'Information',
+    checkboxAriaLabel: () => 'Select date',
+    allCheckboxAriaLabel: () => 'Select all dates',
+    details: () => 'Details',
+    detailsShowAriaLabel: () => 'Show details',
+    detailsHideAriaLabel: () => 'Hide details',
+    confirmed: () => 'confirmed',
+    confirmedArchived: () => 'confirmed',
+    cancelled: () => 'cancelled',
+    allDay: () => 'is all day',
+    clock: () => 'time',
+    toDateInvalid: () => 'The date needs to end at a later day that it starts.',
+    toTimeInvalid: () => 'The date needs to end at a later time than it starts.',
+    titleInfoTitle: () => 'The title of the date will be combined with the title of the offer.',
+    roomInfo: () => 'Room information',
+    additionalLinks: () => 'Additional links',
+    ticketLink: () => 'Ticket link',
+    currentDates: () => 'Current dates',
+    archivedDates: () => 'Past dates',
+    mode: {
+      title: () => 'Offer mode',
+      permanent: {
+        label: () => 'Permanent offer',
+        description1: () =>
+          'Offers not limited in time, such as: permanent exhibitions, collections',
+        description2: () =>
+          'Permanent offers take over the opening times of the assigned location.',
+      },
+      scheduled: {
+        label: () => 'Offer with dates',
+        description1: () =>
+          'Time-limited offers, such as: performances, concerts, film screenings, courses',
+        description2: () =>
+          'Offers with dates can contain any number of individual and series dates, each with individual times.',
+      },
+    },
+    recurrence: {
+      title: () => 'Repeat date',
+      frequency: () => 'Frequency',
+      days: () => 'days',
+      weeks: () => 'weeks',
+      months: () => 'months',
+      never: () => 'never repeat',
+      daily: () => 'daily',
+      weekly: () => 'weekly',
+      monthly: () => 'monthly',
+      repeatEvery: () => 'Repeat every',
+      onWeekdays: () => 'On weekdays',
+      ends: () => 'Ends',
+    },
+  },
   general: {
+    german: () => 'German',
+    english: () => 'English',
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',
@@ -76,12 +175,15 @@ export const enDE: Localization = {
     descending: () => 'descending',
     ascendingAriaLabel: () => 'Sort list ascending',
     descendingAriaLabel: () => 'Sort list descending',
+    show: (props) => `show${props?.name ? ` ${props.name}` : ''}`,
+    hide: (props) => `hide${props?.name ? ` ${props.name}` : ''}`,
     expandList: () => 'Expand list view',
     minimizeList: () => 'Minimize list view',
     options: () => 'Options',
     save: () => 'save',
     saving: () => 'saving',
     saved: () => 'saved',
+    loading: () => 'loading',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -193,7 +295,6 @@ export const enDE: Localization = {
         info: () => 'Information',
         categorization: () => 'Categorization',
         media: () => 'Images',
-        preview: () => 'Preview',
       },
       metaLinks: {
         rights: () => 'Access rights',
@@ -237,6 +338,25 @@ export const enDE: Localization = {
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
+        organizer: {
+          label: () => 'Organized by',
+          choose: () => 'Choose Organizer',
+          edit: () => 'Change Organizer',
+          title: ({ name }) => `Choose Organizer for ‘${name}’`,
+        },
+        location: {
+          label: () => 'Location',
+          choose: () => 'Choose Location',
+          edit: () => 'Change Location',
+          title: ({ name }) => `Choose Location for ‘${name}’`,
+        },
+      },
+      tabs: {
+        info: () => 'Information',
+        categorization: () => 'Categorization',
+        dates: () => 'Dates',
+        accessibility: () => 'Accessibility',
+        media: () => 'Images',
       },
     },
     location: {

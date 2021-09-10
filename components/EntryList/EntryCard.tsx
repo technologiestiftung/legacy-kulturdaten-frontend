@@ -22,18 +22,18 @@ const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean }>`
   transition: box-shadow var(--transition-duration-fast);
 
   &:hover {
-    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
+    box-shadow: var(--shadow-sharp-hover);
     border-color: rgba(0, 0, 0, 0.5);
   }
 
   ${({ active }) =>
     active
       ? css`
-          box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+          box-shadow: var(--shadow-sharp-active);
           border-color: rgba(0, 0, 0, 1);
 
           &:hover {
-            box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-sharp-active);
             border-color: rgba(0, 0, 0, 1);
           }
         `
@@ -158,7 +158,7 @@ const StyledEntryCardDate = styled.div`
   text-transform: capitalize;
 `;
 
-export const EntryCardGrid = styled.div<{ expanded: boolean }>`
+export const EntryCardGrid = styled.div<{ expanded: boolean; enableUltraWideLayout: boolean }>`
   display: grid;
   grid-template-columns: auto;
   grid-column-gap: 0.75rem;
@@ -170,7 +170,7 @@ export const EntryCardGrid = styled.div<{ expanded: boolean }>`
     grid-row-gap: 1.5rem;
   }
 
-  ${({ expanded }) =>
+  ${({ expanded, enableUltraWideLayout }) =>
     expanded
       ? css`
           grid-template-columns: 1fr 1fr;
@@ -180,9 +180,13 @@ export const EntryCardGrid = styled.div<{ expanded: boolean }>`
             grid-row-gap: 1.5rem;
           }
 
-          ${mq(Breakpoint.ultra)} {
-            grid-template-columns: 1fr 1fr 1fr;
-          }
+          ${enableUltraWideLayout
+            ? css`
+                ${mq(Breakpoint.ultra)} {
+                  grid-template-columns: 1fr 1fr 1fr;
+                }
+              `
+            : ''}
         `
       : ''}
 `;
@@ -193,8 +197,8 @@ interface EntryCardProps {
   createdDate: Date;
   updatedDate: Date;
   menuExpanded: boolean;
-  href: string;
   onClick: MouseEventHandler<HTMLAnchorElement>;
+  href?: string;
   meta?: React.ReactElement;
   image?: string;
   active?: boolean;
@@ -214,35 +218,41 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   const date = useDate();
   const t = useT();
 
-  return (
+  const renderedCard = (
+    <StyledEntryCardLink onClick={onClick}>
+      <StyledEntryCard menuExpanded={menuExpanded} active={active}>
+        <StyledEntryCardTop>
+          <StyledEntryCardTopLeft>
+            <StyledEntryCardTitle menuExpanded={menuExpanded} active={active}>
+              {title}
+            </StyledEntryCardTitle>
+            <StyledEntryCardMeta menuExpanded={menuExpanded}>{meta}</StyledEntryCardMeta>
+          </StyledEntryCardTopLeft>
+          <StyledEntryCardImage menuExpanded={menuExpanded}></StyledEntryCardImage>
+        </StyledEntryCardTop>
+        <StyledEntryCardBottom>
+          <StyledEntryCardDates menuExpanded={menuExpanded}>
+            <StyledEntryCardDate>
+              {t('general.updated')}: {updatedDate ? date(updatedDate, DateFormat.date) : ''}
+            </StyledEntryCardDate>
+            <StyledEntryCardDate>
+              {t('general.created')}: {createdDate ? date(createdDate, DateFormat.date) : ''}
+            </StyledEntryCardDate>
+          </StyledEntryCardDates>
+          <StyledEntryCardStatus status={status} menuExpanded={menuExpanded}>
+            <StatusFlag status={status} />
+          </StyledEntryCardStatus>
+        </StyledEntryCardBottom>
+      </StyledEntryCard>
+    </StyledEntryCardLink>
+  );
+
+  return href ? (
     <Link href={href} passHref>
-      <StyledEntryCardLink onClick={onClick}>
-        <StyledEntryCard menuExpanded={menuExpanded} active={active}>
-          <StyledEntryCardTop>
-            <StyledEntryCardTopLeft>
-              <StyledEntryCardTitle menuExpanded={menuExpanded} active={active}>
-                {title}
-              </StyledEntryCardTitle>
-              <StyledEntryCardMeta menuExpanded={menuExpanded}>{meta}</StyledEntryCardMeta>
-            </StyledEntryCardTopLeft>
-            <StyledEntryCardImage menuExpanded={menuExpanded}></StyledEntryCardImage>
-          </StyledEntryCardTop>
-          <StyledEntryCardBottom>
-            <StyledEntryCardDates menuExpanded={menuExpanded}>
-              <StyledEntryCardDate>
-                {t('general.updated')}: {updatedDate ? date(updatedDate, DateFormat.date) : ''}
-              </StyledEntryCardDate>
-              <StyledEntryCardDate>
-                {t('general.created')}: {createdDate ? date(createdDate, DateFormat.date) : ''}
-              </StyledEntryCardDate>
-            </StyledEntryCardDates>
-            <StyledEntryCardStatus status={status} menuExpanded={menuExpanded}>
-              <StatusFlag status={status} />
-            </StyledEntryCardStatus>
-          </StyledEntryCardBottom>
-        </StyledEntryCard>
-      </StyledEntryCardLink>
+      {renderedCard}
     </Link>
+  ) : (
+    renderedCard
   );
 };
 

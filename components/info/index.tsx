@@ -1,15 +1,56 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Info as InfoIcon } from 'react-feather';
 import { insetBorderColored } from '../globals/Constants';
 
-const StyledInfo = styled.div`
-  border-radius: 0.75rem;
-  background: var(--yellow);
+export enum InfoColor {
+  yellow = 'yellow',
+  grey = 'grey',
+  white = 'white',
+}
+
+const infoColorMap: {
+  [key in InfoColor]: {
+    background: string;
+    color: string;
+    borderColor: string;
+  };
+} = {
+  yellow: {
+    background: 'var(--mustard)',
+    color: 'var(--black)',
+    borderColor: 'var(--black-o25)',
+  },
+  grey: {
+    background: 'var(--grey-200)',
+    color: 'var(--black)',
+    borderColor: 'var(--black-o25)',
+  },
+  white: {
+    background: 'var(--white)',
+    color: 'var(--black)',
+    borderColor: 'transparent',
+  },
+};
+
+const StyledInfo = styled.div<{ color: InfoColor }>`
+  border-radius: 0.375rem;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0.75rem;
   display: flex;
-  box-shadow: ${insetBorderColored('var(--yellow-dark)', true)};
+
+  ${({ color }) => css`
+    box-shadow: ${insetBorderColored(infoColorMap[color].borderColor, true)};
+    background: ${infoColorMap[color].background};
+    color: ${infoColorMap[color].color};
+  `}
+`;
+
+const StyledInfoContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
 `;
 
 const StyledInfoIcon = styled.div`
@@ -24,19 +65,30 @@ const StyledInfoIcon = styled.div`
   }
 `;
 
-const StyledInfoText = styled.div`
-  max-width: 64ch;
+const StyledInfoText = styled.div<{ noMaxWidth?: boolean }>`
+  ${({ noMaxWidth }) => (noMaxWidth ? '' : 'max-width: 64ch;')}
 `;
 
 interface InfoProps {
   children: React.ReactNode;
+  color?: InfoColor;
+  title?: string;
+  noMaxWidth?: boolean;
 }
 
-export const Info: React.FC<InfoProps> = ({ children }: InfoProps) => (
-  <StyledInfo>
+export const Info: React.FC<InfoProps> = ({
+  children,
+  color = InfoColor.yellow,
+  title,
+  noMaxWidth,
+}: InfoProps) => (
+  <StyledInfo color={color}>
     <StyledInfoIcon>
-      <InfoIcon color="var(--black)" />
+      <InfoIcon />
     </StyledInfoIcon>
-    <StyledInfoText>{children}</StyledInfoText>
+    <StyledInfoContent>
+      {title && <StyledInfoText noMaxWidth={noMaxWidth}>{title}</StyledInfoText>}
+      <StyledInfoText noMaxWidth={noMaxWidth}>{children}</StyledInfoText>
+    </StyledInfoContent>
   </StyledInfo>
 );

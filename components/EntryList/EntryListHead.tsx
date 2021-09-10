@@ -30,10 +30,6 @@ const StyledEntryListHeadTitleRow = styled.div`
 const StyledEntryListHeadTitleRowRight = styled.div`
   display: flex;
   flex-direction: row;
-
-  > * {
-    margin-left: 1.5rem;
-  }
 `;
 
 const StyledEntryListHeadTitle = styled.div`
@@ -54,7 +50,9 @@ const StyledEntryListHeadAction = styled.div``;
 const StyledEntryListHeadActionButton = styled.div<{ expanded: boolean }>`
   ${({ expanded }) =>
     expanded
-      ? css``
+      ? css`
+          margin-right: 1.5rem;
+        `
       : css`
           padding: 0.75rem 0.75rem 1.875rem;
           display: flex;

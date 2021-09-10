@@ -85,7 +85,8 @@ const StyledCheckboxLabel = styled.label<{ disabled?: boolean }>`
 
 export interface CheckboxProps {
   id: string;
-  label: string;
+  label?: string;
+  ariaLabel?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   checked?: boolean;
   name?: string;
@@ -97,6 +98,7 @@ export interface CheckboxProps {
 export const Checkbox: React.FC<CheckboxProps> = ({
   id,
   label,
+  ariaLabel,
   onChange,
   checked,
   name,
@@ -111,6 +113,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     <StyledCheckbox disabled={disabled}>
       <StyledCheckboxInputContainer>
         <StyledCheckboxInput
+          aria-label={ariaLabel}
           type="checkbox"
           id={id}
           name={name || id}
@@ -130,9 +133,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           <Check color="var(--black)" />
         </StyledCheckboxInputCheck>
       </StyledCheckboxInputContainer>
-      <StyledCheckboxLabel htmlFor={id} disabled={disabled}>
-        {label}
-      </StyledCheckboxLabel>
+      {label && (
+        <StyledCheckboxLabel htmlFor={id} disabled={disabled}>
+          {label}
+        </StyledCheckboxLabel>
+      )}
     </StyledCheckbox>
   );
 };

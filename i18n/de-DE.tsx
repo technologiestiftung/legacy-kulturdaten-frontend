@@ -1,8 +1,47 @@
+/* eslint-disable react/display-name */
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
+  },
+  dayPicker: {
+    ariaLabel: () => 'Wochentage auswählen',
+    minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
+  },
+  days: {
+    monday: {
+      long: () => 'Montag',
+      short: () => 'Mo',
+    },
+    tuesday: {
+      long: () => 'Dienstag',
+      short: () => 'Di',
+    },
+    wednesday: {
+      long: () => 'Mittwoch',
+      short: () => 'Mi',
+    },
+    thursday: {
+      long: () => 'Donnerstag',
+      short: () => 'Do',
+    },
+    friday: {
+      long: () => 'Freitag',
+      short: () => 'Fr',
+    },
+    saturday: {
+      long: () => 'Samstag',
+      short: () => 'Sa',
+    },
+    sunday: {
+      long: () => 'Sonntag',
+      short: () => 'So',
+    },
+  },
+  dateCreate: {
+    overlayTitle: ({ offerTitle }) => `Termin für ‚${offerTitle}‘ erstellen`,
+    create: () => 'Termin erstellen',
   },
   accordion: {
     open: () => 'anzeigen',
@@ -16,6 +55,7 @@ export const deDE: Localization = {
     ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
   },
   forms: {
+    optional: () => 'optional',
     required: () => 'Pflichtfeld',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
@@ -57,7 +97,65 @@ export const deDE: Localization = {
     alertSymbolAriaLabel: () => 'In diesen Eingabefeldern existieren Fehler.',
     infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
   },
+  date: {
+    from: () => 'von',
+    to: () => 'bis',
+    time: () => 'Zeit',
+    title: () => 'Titel',
+    status: () => 'Status',
+    info: () => 'Informationen',
+    checkboxAriaLabel: () => 'Termin auswählen',
+    allCheckboxAriaLabel: () => 'Alle Termine auswählen',
+    details: () => 'Details',
+    detailsShowAriaLabel: () => 'Details anzeigen',
+    detailsHideAriaLabel: () => 'Details ausblenden',
+    confirmed: () => 'findet statt',
+    confirmedArchived: () => 'fand statt',
+    cancelled: () => 'abgesagt',
+    allDay: () => 'ist ganztätig',
+    clock: () => 'Uhrzeit',
+    toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',
+    toTimeInvalid: () => 'Die Endzeit muss später als die Startzeit sein.',
+    titleInfoTitle: () => 'Der Titel des Termins wird mit dem Titel des Angebots kombiniert.',
+    roomInfo: () => 'Rauminformation',
+    additionalLinks: () => 'Weiterführende Links',
+    ticketLink: () => 'Ticketlink',
+    currentDates: () => 'Aktuelle Termine',
+    archivedDates: () => 'Vergangene Termine',
+    mode: {
+      title: () => 'Modus des Angebots',
+      permanent: {
+        label: () => 'Dauerangebot',
+        description1: () =>
+          'Zeitlich nicht begrenzte Angebote, wie z.B.: Dauerausstellungen, Sammlungen',
+        description2: () => 'Dauerangebote übernehmen die Öffnungszeiten des zugewiesenen Ortes.',
+      },
+      scheduled: {
+        label: () => 'Angebot mit Terminen',
+        description1: () =>
+          'Zeitlich begrenzte Angebote, wie z.B.: Vorstellungen, Konzerte, Filmvorführungen, Kurse',
+        description2: () =>
+          'Angebote mit Terminen können beliebig viele Einzel- und Serientermine enthalten, mit jeweils individuellen Zeiten.',
+      },
+    },
+    recurrence: {
+      title: () => 'Termin wiederholen',
+      frequency: () => 'Häufigkeit',
+      days: () => 'Tage',
+      weeks: () => 'Wochen',
+      months: () => 'Monate',
+      never: () => 'nie wiederholen',
+      daily: () => 'täglich',
+      weekly: () => 'wöchentlich',
+      monthly: () => 'monatlich',
+      repeatEvery: () => 'Wiederholen alle',
+      onWeekdays: () => 'An Wochentagen',
+      ends: () => 'Endet am',
+    },
+  },
   general: {
+    german: () => 'Deutsch',
+    english: () => 'Englisch',
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
     created: () => 'erstellt',
@@ -76,12 +174,15 @@ export const deDE: Localization = {
     descending: () => 'absteigend',
     ascendingAriaLabel: () => 'Liste aufsteigend sortieren',
     descendingAriaLabel: () => 'Liste absteigend sortieren',
+    show: (props) => `${props?.name ? `${props.name} ` : ''}anzeigen`,
+    hide: (props) => `${props?.name ? `${props.name} ` : ''}ausblenden`,
     expandList: () => 'Listenansicht vergrößern',
     minimizeList: () => 'Listenansicht verkleinern',
     options: () => 'Optionen',
     save: () => 'speichern',
     saving: () => 'speichert',
     saved: () => 'gespeichert',
+    loading: () => 'lädt',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -159,10 +260,10 @@ export const deDE: Localization = {
         baseInfo: () => 'Grundlagen',
         address: () => 'Adressdaten (nicht öffentlich)',
         name: () => 'Bezeichnung',
-        nameGerman: () => 'Bezeichnung deutsch',
-        nameGermanSimple: () => 'Bezeichnung deutsch: einfache Sprache',
-        nameEnglish: () => 'Bezeichnung englisch',
-        nameEnglishSimple: () => 'Bezeichnung englisch: einfache Sprache',
+        nameGerman: () => 'Bezeichnung Deutsch',
+        nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
+        nameEnglish: () => 'Bezeichnung Englisch',
+        nameEnglishSimple: () => 'Bezeichnung Englisch: einfache Sprache',
         description: () => 'Beschreibung',
         descriptionExists: () => 'ausgefüllt',
         descriptionExistsNot: () => 'nicht ausgefüllt',
@@ -193,7 +294,6 @@ export const deDE: Localization = {
         info: () => 'Informationen',
         categorization: () => 'Kategorisierung',
         media: () => 'Bilder',
-        preview: () => 'Vorschau',
       },
       metaLinks: {
         rights: () => 'Zugriffsrechte',
@@ -222,10 +322,10 @@ export const deDE: Localization = {
       form: {
         create: () => 'Neues Angebot anlegen',
         name: () => 'Bezeichnung',
-        nameGerman: () => 'Bezeichnung deutsch',
-        nameGermanSimple: () => 'Bezeichnung deutsch: einfache Sprache',
-        nameEnglish: () => 'Bezeichnung englisch',
-        nameEnglishSimple: () => 'Bezeichnung englisch: einfache Sprache',
+        nameGerman: () => 'Bezeichnung Deutsch',
+        nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
+        nameEnglish: () => 'Bezeichnung Englisch',
+        nameEnglishSimple: () => 'Bezeichnung Englisch: einfache Sprache',
         description: () => 'Beschreibung',
         descriptionExists: () => 'ausgefüllt',
         descriptionExistsNot: () => 'nicht ausgefüllt',
@@ -237,6 +337,25 @@ export const deDE: Localization = {
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
+        organizer: {
+          label: () => 'Angeboten von',
+          choose: () => 'Anbieter:in auswählen',
+          edit: () => 'Anbieter:in ändern',
+          title: ({ name }) => `Anbieter:in für ‚${name}‘ wählen`,
+        },
+        location: {
+          label: () => 'Veranstaltungsort',
+          choose: () => 'Ort auswählen',
+          edit: () => 'Ort ändern',
+          title: ({ name }) => `Ort für ‚${name}‘ wählen`,
+        },
+      },
+      tabs: {
+        info: () => 'Informationen',
+        categorization: () => 'Kategorisierung',
+        dates: () => 'Termine',
+        accessibility: () => 'Barrierefreiheit',
+        media: () => 'Bilder',
       },
     },
     location: {
@@ -248,10 +367,10 @@ export const deDE: Localization = {
         create: () => 'Neuen Ort anlegen',
         address: () => 'Adressdaten',
         name: () => 'Bezeichnung',
-        nameGerman: () => 'Bezeichnung deutsch',
-        nameGermanSimple: () => 'Bezeichnung deutsch: einfache Sprache',
-        nameEnglish: () => 'Bezeichnung englisch',
-        nameEnglishSimple: () => 'Bezeichnung englisch: einfache Sprache',
+        nameGerman: () => 'Bezeichnung Deutsch',
+        nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
+        nameEnglish: () => 'Bezeichnung Englisch',
+        nameEnglishSimple: () => 'Bezeichnung Englisch: einfache Sprache',
         description: () => 'Beschreibung',
         descriptionExists: () => 'ausgefüllt',
         descriptionExistsNot: () => 'nicht ausgefüllt',

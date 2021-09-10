@@ -37,10 +37,6 @@ const StyledOverlayContentWrapper = styled.div`
     grid-column: 2 / -2;
   }
 
-  ${mq(Breakpoint.wide)} {
-    grid-column: 3 / -3;
-  }
-
   max-width: 62.5rem;
   justify-self: center;
 `;
@@ -50,7 +46,6 @@ const StyledOverlayContent = styled.div`
   background: var(--white);
   border-radius: 0.75rem 0.75rem 0 0;
   mask-image: -webkit-radial-gradient(white, black);
-  border: 1px solid var(--grey-400);
   flex-grow: 1;
   overflow-x: hidden;
   overflow-y: auto;
@@ -135,12 +130,16 @@ export const useOverlay = (
 } => {
   const [overlayId, setOverlayId] = useState<string>();
   const [isOpen, setIsOpen] = useState<boolean>(initialIsOpen || false);
-  const { registerOverlay, setOverlayOpen } = useContext(NavigationContext);
+  const { registerOverlay, setOverlayOpen, removeOverlay } = useContext(NavigationContext);
 
   useEffect(() => {
     const { id } = registerOverlay();
     setOverlayId(id);
-  }, [registerOverlay]);
+
+    return () => {
+      removeOverlay(id);
+    };
+  }, [registerOverlay, removeOverlay]);
 
   useEffect(() => {
     if (overlayId) {

@@ -4,6 +4,7 @@ import React, { ChangeEvent, ChangeEventHandler, RefObject, useRef, useState } f
 import { useT } from '../../lib/i18n';
 import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/validations';
 import { Button, ButtonColor, ButtonSize } from '../button';
+import { StyledError } from '../Error';
 import { Label, StyledLabel } from '../label';
 
 const StyledInputContainer = styled.div`
@@ -70,17 +71,12 @@ export const inputStyles = ({
   &:invalid {
     ${errorStyle}
   }
+
+  ${valid === false && !pristine && errorStyle}
 `;
 
 const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
   ${(props) => inputStyles(props)}
-`;
-
-const StyledError = styled.div`
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  color: var(--error);
-  padding-top: 0.75rem;
 `;
 
 export enum InputType {

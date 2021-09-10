@@ -1,5 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { Breakpoint } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
 
 const StyledOverlayTitleBar = styled.div<{ sticky?: boolean }>`
   position: relative;
@@ -7,12 +9,14 @@ const StyledOverlayTitleBar = styled.div<{ sticky?: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  border-bottom: 1px solid var(--grey-400);
+  /* border-bottom: 1px solid var(--grey-400); */
   padding: 0.375rem 0.75rem;
-  background: var(--grey-200);
+  background: var(--white);
+  box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.125);
   border-radius: 0.75rem 0.75rem 0 0;
   flex-wrap: wrap;
   flex-grow: 0;
+  z-index: 2;
 
   ${({ sticky }) =>
     sticky
@@ -21,7 +25,11 @@ const StyledOverlayTitleBar = styled.div<{ sticky?: boolean }>`
           top: 0;
           left: 0;
         `
-      : ''};
+      : ''}
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.375rem 1.5rem;
+  }
 `;
 
 const StyledOverlayTitleBarTitle = styled.div`
