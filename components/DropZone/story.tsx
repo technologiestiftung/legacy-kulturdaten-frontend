@@ -18,9 +18,9 @@ export const DropZoneDefaultStory: Story = () => {
     <StoryWrapper>
       <DropZone
         files={files}
-        onDrop={(e) => setFiles(e.dataTransfer.files)}
-        label="Example Drop Zone"
-        acceptFileTypes={['image/svg+xml']}
+        onDrop={(files) => setFiles(files)}
+        label="Klicken oder Dateien per Drag-and-Drop ablegen."
+        acceptedFileTypes={[{ mimeType: 'image/svg+xml', name: 'SVG' }]}
       />
     </StoryWrapper>
   );
