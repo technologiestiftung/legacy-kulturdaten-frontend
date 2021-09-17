@@ -21,7 +21,7 @@ export interface ApiCall {
       'Content-Type'?: 'application/json' | 'multipart/form-data';
       'Authorization'?: string;
     };
-    body?: { [key: string]: StructuredData };
+    body?: { [key: string]: StructuredData | FormData | { [key: string]: FormData } } | FormData;
   };
   response: { status: number; body: { [key: string]: StructuredData & { id?: string } } };
 }
@@ -60,6 +60,8 @@ export enum ApiRoutes {
   offerUpdate = 'offerUpdate',
   offerTranslationCreate = 'offerTranslationCreate',
   offerDelete = 'offerDelete',
+  mediaShow = 'mediaShow',
+  mediaUpdate = 'mediaUpdate',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -79,7 +81,7 @@ export const apiRoutes: {
       query?.sort && `&sort=${query.sort}`
     }`,
   organizerShow: ({ id }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations`,
+    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,media`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) =>
     `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
@@ -104,6 +106,8 @@ export const apiRoutes: {
   offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
   offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
+  mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
 };
 
 const addUrlParam = (url: string, param: string): string =>
