@@ -37,7 +37,7 @@ export const MediaList: React.FC<MediaListProps> = ({ media, onChange }: MediaLi
                 <Image
                   src={mediaItem.attributes.url}
                   width={mediaItem.attributes.width}
-                  height={mediaItem.attributes.width}
+                  height={mediaItem.attributes.height}
                 />
               )}
             </StyledMediaListItemThumbnail>

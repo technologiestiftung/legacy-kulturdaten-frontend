@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
-import { useApiCall } from '../../../lib/api';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { useApiCall, useMediaUpload } from '../../../lib/api';
 import { OrganizerMedia } from '../../../lib/api/routes/organizer/media';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
+import { OrganizerUpdate, organizerUpdateFactory } from '../../../lib/api/routes/organizer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { WindowContext } from '../../../lib/WindowService';
@@ -23,14 +23,45 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
 
   const call = useApiCall();
 
+  const { progress, upload } = useMediaUpload();
+
   return {
     renderedForm: (
       <EntryFormContainer>
         <EntryFormHead title="Neue Bilder hinzufügen" />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
-            <DropZone files={files} onDrop={(newFiles) => setFiles(newFiles)} label="New File" />
+            <DropZone
+              files={files}
+              onDrop={async (newFiles) => {
+                setFiles(newFiles);
+                try {
+                  const resp = await upload(newFiles, organizerUpdateFactory, query);
+
+                  console.log(resp);
+
+                  // const resp = await fetch(
+                  //   `https://beta.api.kulturdaten.berlin/v1/organizer/${entry.data.id}`,
+                  //   {
+                  //     method: 'PATCH',
+                  //     body: formData,
+                  //   }
+                  // );
+
+                  // console.log(resp);
+
+                  if (resp.status === 200) {
+                    mutate();
+                    // mutateList();
+                  }
+                } catch (e) {
+                  console.error(e);
+                }
+              }}
+              label="New File"
+            />
           </FormItem>
+          <FormItem width={FormItemWidth.full}>{progress}</FormItem>
         </FormGrid>
       </EntryFormContainer>
     ),
@@ -38,30 +69,7 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
     valid: true,
     pristine,
     reset: () => undefined,
-    submit: async () => {
-      try {
-        const formData = new FormData();
-
-        [...files].forEach((file, index) => formData.append(`media[]`, file));
-
-        const resp = await fetch(
-          `https://beta.api.kulturdaten.berlin/v1/organizer/${entry.data.id}`,
-          {
-            method: 'PATCH',
-            body: formData,
-          }
-        );
-
-        console.log(resp);
-
-        if (resp.status === 200) {
-          mutate();
-          // mutateList();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    submit: undefined,
   };
 };
 
@@ -75,7 +83,10 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   const { rendered } = useContext(WindowContext);
   const [loaded, setLoaded] = useState(false);
 
-  const media = entry?.data?.relations?.media;
+  const media = useMemo(
+    () => (entry?.data?.relations?.media ? [...entry.data.relations.media].reverse() : undefined),
+    [entry?.data?.relations?.media]
+  );
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
