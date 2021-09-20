@@ -8,48 +8,66 @@ const hoverShadow = '0px 0px 0px 0.25rem var(--grey-400)';
 const validShadow = '0px 0px 0px 0.25rem var(--green-light)';
 const errorShadow = '0px 0px 0px 0.25rem var(--error-light)';
 
-const StyledDropZoneLabel = styled.label<{ isDropOver: boolean; isValidFiles: boolean }>`
+const StyledDropZoneLabel = styled.label<{
+  isDropOver: boolean;
+  isValidFiles: boolean;
+  isUploading?: boolean;
+}>`
   display: block;
   opacity: 1;
   visibility: initial;
   width: 100%;
   height: 100%;
   padding: 3rem;
-  cursor: pointer;
+
   border-radius: 0.75rem;
-  transition: box-shadow var(--transition-duration), border-color var(--transition-duration);
+  transition: box-shadow var(--transition-duration-fast),
+    border-color var(--transition-duration-fast);
   background: var(--grey-200);
   border: 1px solid var(--grey-400);
   position: relative;
   overflow: hidden;
 
-  &:hover {
-    box-shadow: ${hoverShadow};
-    border-color: var(--grey-600);
-  }
-
-  ${({ isDropOver, isValidFiles }) =>
-    isDropOver
+  ${({ isUploading, isDropOver, isValidFiles }) =>
+    !isUploading
       ? css`
-          opacity: 1;
-          visibility: initial;
-          box-shadow: ${isValidFiles ? validShadow : errorShadow};
+          cursor: pointer;
+          &:hover {
+            box-shadow: ${hoverShadow};
+            border-color: var(--grey-600);
+          }
 
-          border-color: ${isValidFiles ? 'var(--green-mid)' : 'var(--error)'};
+          ${isDropOver
+            ? css`
+                opacity: 1;
+                visibility: initial;
+                box-shadow: ${isValidFiles ? validShadow : errorShadow};
+
+                border-color: ${isValidFiles ? 'var(--green-mid)' : 'var(--error)'};
+              `
+            : ''}
         `
-      : ''}
+      : css`
+          border-color: var(--blue);
+        `}
 `;
 
-const StyledDropZoneMessage = styled.div<{ isDropOver: boolean; isValidFiles: boolean }>`
+const StyledDropZoneMessage = styled.div<{
+  isDropOver: boolean;
+  isValidFiles: boolean;
+  isUploading?: boolean;
+  progress?: number;
+}>`
   position: absolute;
-  width: 100%;
+  width: ${({ isUploading, progress }) => (isUploading ? `${progress * 100}%` : '100%')};
   height: 100%;
   top: 0;
   left: 0;
   pointer-events: none;
-  transition: opacity var(--transition-duration);
-  opacity: ${({ isDropOver }) => (isDropOver ? '1' : '0')};
-  background: ${({ isValidFiles }) => (isValidFiles ? 'rgb(0,255,0,0.1)' : 'rgba(255,0,0,0.1)')};
+  transition: opacity var(--transition-duration-fast), width var(--transition-duration-fast);
+  opacity: ${({ isUploading, isDropOver }) => (isUploading || isDropOver ? '1' : '0')};
+  background: ${({ isUploading, isValidFiles }) =>
+    isUploading ? 'rgba(0,0,255,0.25)' : isValidFiles ? 'rgb(0,255,0,0.1)' : 'rgba(255,0,0,0.1)'};
 `;
 
 const StyledDropZoneInput = styled.input`
@@ -61,6 +79,8 @@ interface DropZoneProps {
   label: string;
   files: FileList;
   onDrop: (files: FileList) => void;
+  isUploading?: boolean;
+  progress?: number;
   acceptedFileTypes?: { mimeType: string; name: string }[];
   acceptedFileTypesHumanReadable?: string[];
   onDragEnter?: DragEventHandler<HTMLLabelElement>;
@@ -74,6 +94,8 @@ export const DropZone: React.FC<DropZoneProps> = ({
   acceptedFileTypes,
   onDragEnter,
   onDragLeave,
+  isUploading,
+  progress,
 }: DropZoneProps) => {
   const [isDropOver, setIsDropOver] = useState(false);
   const [isValidFiles, setIsValidFiles] = useState(true);
@@ -104,47 +126,57 @@ export const DropZone: React.FC<DropZoneProps> = ({
       <StyledDropZoneLabel
         isDropOver={isDropOver}
         isValidFiles={isValidFiles}
+        isUploading={isUploading}
         onDragEnter={(e) => {
           e.preventDefault();
-          setIsDropOver(true);
 
-          const fileItems = e.dataTransfer.items;
+          if (!isUploading) {
+            setIsDropOver(true);
 
-          const fileTypesOverlap =
-            !hasFileRestrictions ||
-            [...fileItems].reduce<boolean>((overlaps, fileItem) => {
-              if (overlaps === false) {
-                return false;
-              }
+            const fileItems = e.dataTransfer.items;
 
-              return acceptedFileTypes.map(({ mimeType }) => mimeType).includes(fileItem.type);
-            }, true);
+            const fileTypesOverlap =
+              !hasFileRestrictions ||
+              [...fileItems].reduce<boolean>((overlaps, fileItem) => {
+                if (overlaps === false) {
+                  return false;
+                }
 
-          if (hasFileRestrictions) {
-            setIsValidFiles(fileTypesOverlap);
-          }
+                return acceptedFileTypes.map(({ mimeType }) => mimeType).includes(fileItem.type);
+              }, true);
 
-          if (onDragEnter) {
-            onDragEnter(e);
+            if (hasFileRestrictions) {
+              setIsValidFiles(fileTypesOverlap);
+            }
+
+            if (onDragEnter) {
+              onDragEnter(e);
+            }
           }
         }}
         onDragOver={(e) => {
+          if (!isUploading) {
+            e.preventDefault();
+          }
+
           setIsDropOver(true);
-          e.preventDefault();
         }}
         onDragLeave={(e) => {
-          setIsDropOver(false);
-
           if (onDragLeave) {
             onDragLeave(e);
           }
+
+          setIsDropOver(false);
         }}
         onDrop={(e) => {
           e.preventDefault();
-          setIsDropOver(false);
 
-          if (isValidFiles) {
-            onDrop(e.dataTransfer.files);
+          if (!isUploading) {
+            setIsDropOver(false);
+
+            if (isValidFiles) {
+              onDrop(e.dataTransfer.files);
+            }
           }
         }}
       >
@@ -157,6 +189,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
           ref={inputRef}
           multiple
           accept={acceptedFileTypes?.join(',')}
+          disabled={isUploading}
         />
         {files && (
           <div>
@@ -166,8 +199,10 @@ export const DropZone: React.FC<DropZoneProps> = ({
           </div>
         )}
         <StyledDropZoneMessage
+          isUploading={isUploading}
           isDropOver={isDropOver}
           isValidFiles={isValidFiles}
+          progress={progress}
         ></StyledDropZoneMessage>
       </StyledDropZoneLabel>
     </StyledDropZone>

@@ -20,6 +20,7 @@ export type Media = {
       format: string;
       copyright: string;
       license: string;
+      expiresAt: string;
       createdAt: string;
       updatedAt: string;
     };

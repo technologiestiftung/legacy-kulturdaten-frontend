@@ -97,6 +97,13 @@ export const enDE: Localization = {
     alertSymbolAriaLabel: () => 'There are errors in this input fields.',
     infoSymbolAriaLabel: () => 'Here are input fields which should be filled.',
   },
+  media: {
+    copyright: () => 'Author',
+    alt: () => 'Alt text',
+    license: () => 'License',
+    licenseEnd: () => 'End date license',
+    imageProcessing: () => 'The image is being processed and loaded',
+  },
   date: {
     time: () => 'Time',
     from: () => 'From',

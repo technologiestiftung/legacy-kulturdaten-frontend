@@ -97,6 +97,13 @@ export const deDE: Localization = {
     alertSymbolAriaLabel: () => 'In diesen Eingabefeldern existieren Fehler.',
     infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
   },
+  media: {
+    copyright: () => 'Urheber:in',
+    alt: () => 'Alt Text',
+    license: () => 'Lizenz',
+    licenseEnd: () => 'Ablaufdatum Lizenz',
+    imageProcessing: () => 'Das Bild wird verarbeitet und geladen',
+  },
   date: {
     from: () => 'von',
     to: () => 'bis',

@@ -204,7 +204,9 @@ export const useMediaUpload = (
       const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
 
       const formData = new FormData();
-      [...files].forEach((file: File) => formData.append('media[]', file));
+      if (files) {
+        [...files].forEach((file: File) => formData.append('media[]', file));
+      }
 
       const re = new Promise<T['response']>((resolve, reject) => {
         const req = new XMLHttpRequest();
