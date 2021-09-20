@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import formatISO9075 from 'date-fns/formatISO9075';
 import Image from 'next/image';
+import { ExternalLink } from 'react-feather';
 import { Media } from '../../lib/api/types/media';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
@@ -36,6 +37,39 @@ const StyledMediaListItemThumbnail = styled.div`
   grid-column: span 1;
   height: 100%;
   background: var(--grey-200);
+`;
+
+const StyledMediaListItemThumbnailLinkHover = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: var(--black-o40);
+  opacity: 0;
+  transition: opacity var(--transition-duration);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > svg {
+    width: 2.25rem;
+    height: 2.25em;
+  }
+`;
+
+const StyledMediaListItemThumbnailLink = styled.a`
+  display: block;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    ${StyledMediaListItemThumbnailLinkHover} {
+      opacity: 1;
+    }
+  }
 `;
 
 const thumbnailImgStyles = css`
@@ -129,13 +163,24 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
         <StyledMediaListItemThumbnail>
           {mediaItem.attributes.width && mediaItem.attributes.height ? (
             <StyledMediaListItemThumbnailInner>
-              <Image
-                src={mediaItem.attributes.url}
-                width={mediaItem.attributes.width}
-                height={mediaItem.attributes.height}
-                layout="fill"
-                objectFit="contain"
-              />
+              <StyledMediaListItemThumbnailLink
+                title={t('media.openImage') as string}
+                aria-label={t('media.openImage') as string}
+                href={mediaItem.attributes.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src={mediaItem.attributes.url}
+                  width={mediaItem.attributes.width}
+                  height={mediaItem.attributes.height}
+                  layout="fill"
+                  objectFit="contain"
+                />
+                <StyledMediaListItemThumbnailLinkHover>
+                  <ExternalLink />
+                </StyledMediaListItemThumbnailLinkHover>
+              </StyledMediaListItemThumbnailLink>
             </StyledMediaListItemThumbnailInner>
           ) : (
             <StyledMediaListItemThumbnailPlaceholder>

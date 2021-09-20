@@ -103,6 +103,7 @@ export const enDE: Localization = {
     license: () => 'License',
     licenseEnd: () => 'End date license',
     imageProcessing: () => 'The image is being processed and loaded',
+    openImage: () => 'Open original image in new tab',
   },
   date: {
     time: () => 'Time',

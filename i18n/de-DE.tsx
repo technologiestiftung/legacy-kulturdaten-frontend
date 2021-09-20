@@ -103,6 +103,7 @@ export const deDE: Localization = {
     license: () => 'Lizenz',
     licenseEnd: () => 'Ablaufdatum Lizenz',
     imageProcessing: () => 'Das Bild wird verarbeitet und geladen',
+    openImage: () => 'Original Bild in neuem Tab öffnen',
   },
   date: {
     from: () => 'von',
