@@ -57,6 +57,21 @@ const StyledMediaListItemThumbnailLinkHover = styled.div`
     width: 2.25rem;
     height: 2.25em;
   }
+
+  @media screen and (pointer: coarse) {
+    bottom: 0;
+    top: initial;
+    height: auto;
+    background: transparent;
+    opacity: 1;
+    justify-content: flex-end;
+    padding: 0.75rem;
+
+    > svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
 `;
 
 const StyledMediaListItemThumbnailLink = styled.a`
