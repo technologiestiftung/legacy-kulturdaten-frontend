@@ -12,6 +12,9 @@ import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
+import { Button } from '../button';
+import { useApiCall } from '../../lib/api';
+import { MediaDelete, mediaDeleteFactory } from '../../lib/api/routes/media/delete';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -23,6 +26,7 @@ const StyledMediaListItem = styled.div`
   background: var(--white);
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
+  /* background: var(--grey-200); */
   overflow: hidden;
 `;
 
@@ -39,7 +43,11 @@ const StyledMediaListItemThumbnail = styled.div`
   position: relative;
   grid-column: span 1;
   height: 100%;
-  background: var(--grey-200);
+  border-bottom: 1px solid var(--grey-400);
+
+  ${mq(Breakpoint.mid)} {
+    border-bottom: none;
+  }
 `;
 
 const StyledMediaListItemThumbnailLinkHover = styled.div`
@@ -75,6 +83,12 @@ const StyledMediaListItemThumbnailLinkHover = styled.div`
       height: 1.5rem;
     }
   }
+
+  ${mq(Breakpoint.mid)} {
+    @media screen and (pointer: fine) {
+      border-radius: 0.375rem;
+    }
+  }
 `;
 
 const StyledMediaListItemThumbnailLink = styled.a`
@@ -82,6 +96,16 @@ const StyledMediaListItemThumbnailLink = styled.a`
   cursor: pointer;
   color: white;
   text-decoration: none;
+  line-height: 0;
+  height: 100%;
+  box-shadow: var(--shadow-light);
+
+  ${mq(Breakpoint.mid)} {
+    position: relative;
+    border-radius: 0.375rem;
+    width: 100%;
+    height: initial;
+  }
 
   &:hover {
     ${StyledMediaListItemThumbnailLinkHover} {
@@ -91,22 +115,32 @@ const StyledMediaListItemThumbnailLink = styled.a`
 `;
 
 const thumbnailImgStyles = css`
-  background: var(--grey-500);
-  overflow: hidden;
+  background: var(--grey-200);
+
+  ${mq(Breakpoint.mid)} {
+    border-radius: 0.375rem;
+  }
 `;
 
 const StyledMediaListItemThumbnailInner = styled.div`
   position: relative;
-  height: 0;
-  padding-bottom: 50%;
+  height: 50vw;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
 
   img {
     ${thumbnailImgStyles}
+    padding: 0;
+    vertical-align: middle;
   }
 
   ${mq(Breakpoint.mid)} {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1.5rem 0 1.5rem 1.5rem;
     height: 100%;
-    padding-bottom: 0.75rem;
+    padding-bottom: 0;
   }
 `;
 
@@ -118,9 +152,10 @@ const StyledMediaListItemThumbnailPlaceholder = styled.div`
 
   ${thumbnailImgStyles}
 
+  background: var(--grey-350);
+
   ${mq(Breakpoint.mid)} {
-    height: 100%;
-    padding-bottom: 0;
+    padding-bottom: 100%;
     grid-template-columns: 1fr 2fr;
   }
 `;
@@ -160,7 +195,16 @@ const StyledMediaListItemForm = styled.div`
 `;
 
 const StyledMediaListItemFunctions = styled.div``;
-const StyledMediaListItemInfo = styled.div``;
+
+const StyledMediaListItemInfo = styled.div`
+  padding: 0.75rem;
+  border-top: 1px solid var(--grey-400);
+  background: var(--grey-200);
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.5rem;
+  }
+`;
 
 interface MediaListItemProps {
   mediaItem: Media['data'];
@@ -174,6 +218,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
   const t = useT();
+  const call = useApiCall();
 
   return (
     <StyledMediaListItem>
@@ -188,18 +233,26 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image src={mediaItem.attributes.url} layout="fill" objectFit="contain" />
+                <Image
+                  src={mediaItem.attributes.url}
+                  layout={isMidOrWider ? 'intrinsic' : 'fill'}
+                  width={isMidOrWider ? mediaItem.attributes.width : undefined}
+                  height={isMidOrWider ? mediaItem.attributes.height : undefined}
+                  objectFit="contain"
+                />
                 <StyledMediaListItemThumbnailLinkHover>
                   <ExternalLink />
                 </StyledMediaListItemThumbnailLinkHover>
               </StyledMediaListItemThumbnailLink>
             </StyledMediaListItemThumbnailInner>
           ) : (
-            <StyledMediaListItemThumbnailPlaceholder>
-              <StyledMediaListItemThumbnailPlaceholderInner>
-                <div>{t('media.imageProcessing')}</div>
-              </StyledMediaListItemThumbnailPlaceholderInner>
-            </StyledMediaListItemThumbnailPlaceholder>
+            <StyledMediaListItemThumbnailInner>
+              <StyledMediaListItemThumbnailPlaceholder>
+                <StyledMediaListItemThumbnailPlaceholderInner>
+                  <div>{t('media.imageProcessing')}</div>
+                </StyledMediaListItemThumbnailPlaceholderInner>
+              </StyledMediaListItemThumbnailPlaceholder>
+            </StyledMediaListItemThumbnailInner>
           )}
         </StyledMediaListItemThumbnail>
         <StyledMediaListItemForm>
@@ -300,7 +353,17 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
         </StyledMediaListItemForm>
         <StyledMediaListItemFunctions></StyledMediaListItemFunctions>
       </StyledMediaListItemMain>
-      <StyledMediaListItemInfo></StyledMediaListItemInfo>
+      <StyledMediaListItemInfo>
+        <Button
+          onClick={() => {
+            if (window.confirm()) {
+              () => call<MediaDelete>(mediaDeleteFactory, { id: mediaItem.id });
+            }
+          }}
+        >
+          delete
+        </Button>
+      </StyledMediaListItemInfo>
     </StyledMediaListItem>
   );
 };

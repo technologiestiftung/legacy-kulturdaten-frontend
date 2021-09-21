@@ -27,6 +27,7 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const [isUploading, setIsUploading] = useState(false);
   const { progress, upload } = useMediaUpload();
+  const [uploadSuccess, setUploadSuccess] = useState<{ count: number }>();
 
   useEffect(() => {
     const x = async () => {
@@ -38,6 +39,7 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
 
           if (resp.status === 200) {
             mutate(resp.body.data);
+            setUploadSuccess({ count: files.length });
             setFiles(undefined);
             // mutateList();
           }
@@ -54,24 +56,19 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
 
   return {
     renderedForm: (
-      <EntryFormContainer>
-        <EntryFormHead title="Neue Bilder hinzufügen" />
-        <FormGrid>
-          <FormItem width={FormItemWidth.full}>
-            <DropZone
-              files={files}
-              onDrop={async (newFiles) => {
-                setFiles(newFiles);
-              }}
-              acceptedFileTypes={[{ mimeType: 'image/jpeg', name: 'JPG/JPEG' }]}
-              label="New File"
-              isUploading={isUploading}
-              progress={progress}
-            />
-          </FormItem>
-          <FormItem width={FormItemWidth.full}>{progress}</FormItem>
-        </FormGrid>
-      </EntryFormContainer>
+      <FormItem width={FormItemWidth.full}>
+        <DropZone
+          files={files}
+          onDrop={async (newFiles) => {
+            setFiles(newFiles);
+          }}
+          acceptedFileTypes={[{ mimeType: 'image/jpeg', name: 'JPG/JPEG' }]}
+          label="Neue Bilder hochladen"
+          isUploading={isUploading}
+          progress={progress}
+          success={uploadSuccess}
+        />
+      </FormItem>
     ),
     hint: false,
     valid: true,
@@ -192,10 +189,10 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
           valid={true}
         />
         <EntryFormWrapper>
-          {renderedMediaUploadForm}
           <EntryFormContainer>
-            <EntryFormHead title="Vorhandene Bilder" />
+            <EntryFormHead title="Bilder" />
             <FormGrid>
+              {renderedMediaUploadForm}
               <FormItem width={FormItemWidth.full}>
                 <MediaList
                   media={media}

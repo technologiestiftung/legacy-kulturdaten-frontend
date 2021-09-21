@@ -109,6 +109,11 @@ export const deDE: Localization = {
     imageProcessing: () => 'Das Bild wird verarbeitet und geladen',
     openImage: () => 'Original Bild in neuem Tab öffnen',
   },
+  dropZone: {
+    allowedFileTypes: () => 'Erlaubte Dateitypen',
+    uploading: ({ progress }) => `Dateien laden hoch: ${progress} geschafft`,
+    success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
+  },
   date: {
     from: () => 'von',
     to: () => 'bis',

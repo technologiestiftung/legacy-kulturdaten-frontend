@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { DragEventHandler, useEffect, useMemo, useRef, useState } from 'react';
+import { useT } from '../../lib/i18n';
 
 const StyledDropZone = styled.div``;
 
@@ -18,7 +19,7 @@ const StyledDropZoneLabel = styled.label<{
   visibility: initial;
   width: 100%;
   height: 100%;
-  padding: 3rem;
+  padding: 2.25rem;
 
   border-radius: 0.75rem;
   transition: box-shadow var(--transition-duration-fast),
@@ -48,26 +49,81 @@ const StyledDropZoneLabel = styled.label<{
             : ''}
         `
       : css`
-          border-color: var(--blue);
+          border-color: var(--green-mid);
         `}
+`;
+
+const StlyedDropZoneSuccess = styled.div`
+  padding: 0.75rem 0 0;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+`;
+
+const dropZoneLabelTextStyles = (isUploading?: boolean) => css`
+  transition: opacity var(--transition-duration-fast);
+
+  ${isUploading &&
+  css`
+    opacity: 0;
+  `}
+`;
+
+const StyledDropZoneLabelText = styled.div<{ isUploading?: boolean }>`
+  font-size: var(--font-size-500);
+  line-height: var(--line-height-500);
+  font-weight: 700;
+  transition: opacity var(--transition-duration-fast);
+
+  ${({ isUploading }) => dropZoneLabelTextStyles(isUploading)}
+`;
+
+const StyledDropZoneLabelSubText = styled.div<{ isUploading?: boolean }>`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  transition: opacity var(--transition-duration-fast);
+
+  ${({ isUploading }) => dropZoneLabelTextStyles(isUploading)}
 `;
 
 const StyledDropZoneMessage = styled.div<{
   isDropOver: boolean;
   isValidFiles: boolean;
   isUploading?: boolean;
-  progress?: number;
 }>`
   position: absolute;
-  width: ${({ isUploading, progress }) => (isUploading ? `${progress * 100}%` : '100%')};
   height: 100%;
+  width: 100%;
   top: 0;
   left: 0;
   pointer-events: none;
-  transition: opacity var(--transition-duration-fast), width var(--transition-duration-fast);
+  transition: opacity var(--transition-duration-fast);
   opacity: ${({ isUploading, isDropOver }) => (isUploading || isDropOver ? '1' : '0')};
+
+  padding: 2.25rem;
+  font-size: var(--font-size-500);
+  line-height: var(--line-height-500);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+`;
+
+const StyledDropZoneMessageText = styled.div`
+  position: relative;
+`;
+
+const StyledDropZoneMessageBackground = styled.div<{
+  isValidFiles: boolean;
+  isUploading?: boolean;
+  progress?: number;
+}>`
+  position: absolute;
+  transition: width var(--transition-duration-fast);
+  height: 100%;
+  top: 0;
+  left: 0;
+  width: ${({ isUploading, progress }) => (isUploading ? `${progress * 100}%` : '100%')};
   background: ${({ isUploading, isValidFiles }) =>
-    isUploading ? 'rgba(0,0,255,0.25)' : isValidFiles ? 'rgb(0,255,0,0.1)' : 'rgba(255,0,0,0.1)'};
+    isUploading ? 'rgb(0,255,0,0.2)' : isValidFiles ? 'rgb(0,255,0,0.1)' : 'rgba(255,0,0,0.1)'};
 `;
 
 const StyledDropZoneInput = styled.input`
@@ -81,6 +137,9 @@ interface DropZoneProps {
   onDrop: (files: FileList) => void;
   isUploading?: boolean;
   progress?: number;
+  success?: {
+    count: number;
+  };
   acceptedFileTypes?: { mimeType: string; name: string }[];
   acceptedFileTypesHumanReadable?: string[];
   onDragEnter?: DragEventHandler<HTMLLabelElement>;
@@ -93,10 +152,15 @@ export const DropZone: React.FC<DropZoneProps> = ({
   onDrop,
   acceptedFileTypes,
   onDragEnter,
-  onDragLeave,
   isUploading,
   progress,
+  onDragLeave,
+  success,
 }: DropZoneProps) => {
+  // const isUploading = true;
+  // const progress = 0.75;
+
+  const t = useT();
   const [isDropOver, setIsDropOver] = useState(false);
   const [isValidFiles, setIsValidFiles] = useState(true);
   const hasFileRestrictions = useMemo(
@@ -109,7 +173,6 @@ export const DropZone: React.FC<DropZoneProps> = ({
     const current = inputRef.current;
 
     const inputChangeHandler = () => {
-      console.log(current?.files);
       onDrop(undefined);
       onDrop(current?.files);
     };
@@ -180,9 +243,11 @@ export const DropZone: React.FC<DropZoneProps> = ({
           }
         }}
       >
-        <div>{label}</div>
+        <StyledDropZoneLabelText isUploading={isUploading}>{label}</StyledDropZoneLabelText>
         {acceptedFileTypes && (
-          <div>Erlaubte Dateitypen: {acceptedFileTypes.map(({ name }) => name).join(', ')}</div>
+          <StyledDropZoneLabelSubText isUploading={isUploading}>
+            {t('dropZone.allowedFileTypes')}: {acceptedFileTypes.map(({ name }) => name).join(', ')}
+          </StyledDropZoneLabelSubText>
         )}
         <StyledDropZoneInput
           type="file"
@@ -191,20 +256,28 @@ export const DropZone: React.FC<DropZoneProps> = ({
           accept={acceptedFileTypes?.join(',')}
           disabled={isUploading}
         />
-        {files && (
-          <div>
-            {[...files].map((file, index) => (
-              <div key={index}>{file.type}</div>
-            ))}
-          </div>
-        )}
         <StyledDropZoneMessage
           isUploading={isUploading}
           isDropOver={isDropOver}
           isValidFiles={isValidFiles}
-          progress={progress}
-        ></StyledDropZoneMessage>
+        >
+          <StyledDropZoneMessageBackground
+            isUploading={isUploading}
+            isValidFiles={isValidFiles}
+            progress={progress}
+          />
+          {isUploading && (
+            <StyledDropZoneMessageText>
+              {t('dropZone.uploading', { progress: `${Math.ceil(progress * 100)}%` })}
+            </StyledDropZoneMessageText>
+          )}
+        </StyledDropZoneMessage>
       </StyledDropZoneLabel>
+      {success && (
+        <StlyedDropZoneSuccess>
+          {t('dropZone.success', { count: success.count })}
+        </StlyedDropZoneSuccess>
+      )}
     </StyledDropZone>
   );
 };

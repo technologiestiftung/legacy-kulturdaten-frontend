@@ -109,6 +109,11 @@ export const enDE: Localization = {
     imageProcessing: () => 'The image is being processed and loaded',
     openImage: () => 'Open original image in new tab',
   },
+  dropZone: {
+    allowedFileTypes: () => 'Allowed file types',
+    uploading: ({ progress }) => `Uploading files: ${progress} done`,
+    success: ({ count }) => `Successfully uploaded ${count} ${count === 1 ? 'file' : 'files'}`,
+  },
   date: {
     time: () => 'Time',
     from: () => 'From',
