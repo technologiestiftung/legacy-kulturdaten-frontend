@@ -20,13 +20,18 @@ const StyledMediaList = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 1.5rem;
+
+  ${mq(Breakpoint.ultra)} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
+  }
 `;
 
 const StyledMediaListItem = styled.div`
   background: var(--white);
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
-  /* background: var(--grey-200); */
   overflow: hidden;
 `;
 
@@ -107,6 +112,10 @@ const StyledMediaListItemThumbnailLink = styled.a`
     height: initial;
   }
 
+  @media screen and (pointer: coarse) {
+    color: var(--black);
+  }
+
   &:hover {
     ${StyledMediaListItemThumbnailLinkHover} {
       opacity: 1;
@@ -146,8 +155,7 @@ const StyledMediaListItemThumbnailInner = styled.div`
 
 const StyledMediaListItemThumbnailPlaceholder = styled.div`
   width: 100%;
-  height: 0;
-  padding-bottom: 50%;
+  height: 100%;
   position: relative;
 
   ${thumbnailImgStyles}
@@ -155,6 +163,7 @@ const StyledMediaListItemThumbnailPlaceholder = styled.div`
   background: var(--grey-350);
 
   ${mq(Breakpoint.mid)} {
+    height: initial;
     padding-bottom: 100%;
     grid-template-columns: 1fr 2fr;
   }
@@ -311,6 +320,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   attributes: { ...mediaItem.attributes, copyright: e.target.value },
                 })
               }
+              required
             />
           </div>
           <div>
@@ -325,6 +335,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   attributes: { ...mediaItem.attributes, license: e.target.value },
                 })
               }
+              required
             />
           </div>
           <div>
@@ -348,6 +359,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   },
                 })
               }
+              required
             />
           </div>
         </StyledMediaListItemForm>
