@@ -204,11 +204,9 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
         </StyledMediaListItemThumbnail>
         <StyledMediaListItemForm>
           {contentLanguages.map((language: Language, index) => {
-            const currentTranslation = getTranslation<MediaTranslation>(
-              language,
-              mediaItem.relations.translations,
-              false
-            );
+            const currentTranslation = mediaItem.relations?.translations
+              ? getTranslation<MediaTranslation>(language, mediaItem.relations.translations, false)
+              : undefined;
 
             return (
               <div key={index}>
@@ -217,27 +215,33 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   label={`${t('media.alt')} (${t(languageTranslationKeys[language])})`}
                   id={`${uid}-copyright`}
                   value={currentTranslation?.attributes?.alternativeText || ''}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const updatedTranslation = {
+                      ...currentTranslation,
+                      attributes: {
+                        ...currentTranslation?.attributes,
+                        language,
+                        alternativeText: e.target.value,
+                      },
+                    };
+
                     onChange({
                       ...mediaItem,
-                      relations: {
-                        ...mediaItem.relations,
-                        translations: [
-                          ...mediaItem.relations.translations.filter(
-                            (translation) => translation.attributes.language !== language
-                          ),
-                          {
-                            ...currentTranslation,
-                            attributes: {
-                              ...currentTranslation?.attributes,
-                              language,
-                              alternativeText: e.target.value,
-                            },
+                      relations: mediaItem.relations
+                        ? {
+                            ...mediaItem.relations,
+                            translations: [
+                              ...mediaItem.relations.translations?.filter(
+                                (translation) => translation.attributes?.language !== language
+                              ),
+                              updatedTranslation,
+                            ],
+                          }
+                        : {
+                            translations: [updatedTranslation],
                           },
-                        ],
-                      },
-                    })
-                  }
+                    });
+                  }}
                 />
               </div>
             );
@@ -303,7 +307,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
 
 interface MediaListProps {
   media: Media['data'][];
-  onChange: (media: Media['data'][]) => void;
+  onChange: (media: Media['data'][], changesMediaItemId: number) => void;
 }
 
 export const MediaList: React.FC<MediaListProps> = ({ media, onChange }: MediaListProps) => {
@@ -314,7 +318,10 @@ export const MediaList: React.FC<MediaListProps> = ({ media, onChange }: MediaLi
           key={index}
           mediaItem={mediaItem}
           onChange={(mediaItem) =>
-            onChange([...media.slice(0, index), mediaItem, ...media.slice(index + 1, media.length)])
+            onChange(
+              [...media.slice(0, index), mediaItem, ...media.slice(index + 1, media.length)],
+              mediaItem.id
+            )
           }
         />
       ))}

@@ -5,9 +5,8 @@ import {
   mediaTranslationCreateFactory,
 } from '../../../lib/api/routes/media/translation/create';
 import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
-import { OrganizerMedia } from '../../../lib/api/routes/organizer/media';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { OrganizerUpdate, organizerUpdateFactory } from '../../../lib/api/routes/organizer/update';
+import { organizerUpdateFactory } from '../../../lib/api/routes/organizer/update';
 import { Media } from '../../../lib/api/types/media';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
@@ -27,9 +26,6 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
   const [files, setFiles] = useState<FileList>();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const [isUploading, setIsUploading] = useState(false);
-
-  const call = useApiCall();
-
   const { progress, upload } = useMediaUpload();
 
   useEffect(() => {
@@ -39,23 +35,9 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
 
         try {
           const resp = await upload<OrganizerShow>(files, organizerUpdateFactory, query);
-          console.log('submit');
-          console.log(resp);
-
-          // const resp = await fetch(
-          //   `https://beta.api.kulturdaten.berlin/v1/organizer/${entry.data.id}`,
-          //   {
-          //     method: 'PATCH',
-          //     body: formData,
-          //   }
-          // );
-
-          // console.log(resp);
 
           if (resp.status === 200) {
-            console.log(resp.body.data);
             mutate(resp.body.data);
-            console.log(files);
             setFiles(undefined);
             // mutateList();
           }
@@ -117,6 +99,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
 
   const [media, setMedia] = useState<Media['data'][]>();
   const [mediaFromApi, setMediaFromApi] = useState<Media['data'][]>();
+  const [mediaNotPristineList, setMediaNotPristineList] = useState<number[]>([]);
 
   useEffect(() => {
     if (initialMedia) {
@@ -152,32 +135,47 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
     };
   }, [rendered, entry]);
 
-  const { renderedForm: renderedMediaUploadForm, submit } = useMediaUploadForm(
+  const pristine = useMemo(() => mediaNotPristineList.length === 0, [mediaNotPristineList]);
+
+  const { renderedForm: renderedMediaUploadForm } = useMediaUploadForm(
     { category, query },
     loaded,
     false
   );
 
   const submitMediaList = useCallback(async () => {
-    media?.forEach(async (mediaItem, index) => {
-      const resp = await call<MediaUpdate>(mediaUpdateFactory, {
-        id: mediaItem.id,
-        media: mediaItem,
-      });
+    for (const mediaItem of media) {
+      const id = mediaItem.id;
 
-      console.log(index);
-      console.log(resp);
-
-      mediaItem.relations?.translations?.forEach(async (translation) => {
-        const translationResp = await call<MediaTranslationCreate>(mediaTranslationCreateFactory, {
-          id: mediaItem.id,
-          translation,
+      if (mediaNotPristineList.includes(id)) {
+        const resp = await call<MediaUpdate>(mediaUpdateFactory, {
+          id,
+          media: mediaItem,
         });
 
-        console.log(translationResp);
-      });
-    });
-  }, [call, media]);
+        if (resp.status !== 200) {
+          console.error(resp);
+        }
+
+        const translations = mediaItem.relations?.translations;
+
+        for (const translation of translations) {
+          const translationResp = await call<MediaTranslationCreate>(
+            mediaTranslationCreateFactory,
+            {
+              id,
+              translation,
+            }
+          );
+
+          if (translationResp.status !== 200) {
+            console.error(resp);
+          }
+        }
+      }
+    }
+    setMediaNotPristineList([]);
+  }, [call, media, mediaNotPristineList]);
 
   return (
     <>
@@ -189,7 +187,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
             submitMediaList();
             // submit();
           }}
-          active={true}
+          active={!pristine}
           date={formattedDate}
           valid={true}
         />
@@ -199,7 +197,16 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
             <EntryFormHead title="Vorhandene Bilder" />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
-                <MediaList media={media} onChange={(newMedia) => setMedia(newMedia)} />
+                <MediaList
+                  media={media}
+                  onChange={(newMedia, changedMediaItemId) => {
+                    setMedia(newMedia);
+                    setMediaNotPristineList([
+                      ...mediaNotPristineList.filter((id) => id !== changedMediaItemId),
+                      changedMediaItemId,
+                    ]);
+                  }}
+                />
               </FormItem>
             </FormGrid>
           </EntryFormContainer>
