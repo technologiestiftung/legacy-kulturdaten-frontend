@@ -62,6 +62,7 @@ export enum ApiRoutes {
   offerDelete = 'offerDelete',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
+  mediaDelete = 'mediaDelete',
   mediaTranslationCreate = 'mediaTranslationCreate',
 }
 
@@ -109,6 +110,7 @@ export const apiRoutes: {
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaTranslationCreate: ({ id }) => `/${apiVersion}/media/${id}/translate`,
 };
 
