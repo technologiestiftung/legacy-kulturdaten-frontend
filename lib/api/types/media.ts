@@ -1,4 +1,4 @@
-import { Language } from 'rrule/dist/esm/src/nlp/i18n';
+import { Language } from '../../../config/locales';
 import { CategoryEntry, Translation } from './general';
 
 export type MediaTranslation = {

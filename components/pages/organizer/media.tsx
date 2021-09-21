@@ -1,5 +1,10 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useApiCall, useMediaUpload } from '../../../lib/api';
+import {
+  MediaTranslationCreate,
+  mediaTranslationCreateFactory,
+} from '../../../lib/api/routes/media/translation/create';
+import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
 import { OrganizerMedia } from '../../../lib/api/routes/organizer/media';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate, organizerUpdateFactory } from '../../../lib/api/routes/organizer/update';
@@ -76,6 +81,7 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
               onDrop={async (newFiles) => {
                 setFiles(newFiles);
               }}
+              acceptedFileTypes={[{ mimeType: 'image/jpeg', name: 'JPG/JPEG' }]}
               label="New File"
               isUploading={isUploading}
               progress={progress}
@@ -102,6 +108,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const { rendered } = useContext(WindowContext);
   const [loaded, setLoaded] = useState(false);
+  const call = useApiCall();
 
   const initialMedia = useMemo<Media['data'][]>(
     () => (entry?.data?.relations?.media ? [...entry.data.relations.media].reverse() : undefined),
@@ -151,6 +158,27 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
     false
   );
 
+  const submitMediaList = useCallback(async () => {
+    media?.forEach(async (mediaItem, index) => {
+      const resp = await call<MediaUpdate>(mediaUpdateFactory, {
+        id: mediaItem.id,
+        media: mediaItem,
+      });
+
+      console.log(index);
+      console.log(resp);
+
+      mediaItem.relations?.translations?.forEach(async (translation) => {
+        const translationResp = await call<MediaTranslationCreate>(mediaTranslationCreateFactory, {
+          id: mediaItem.id,
+          translation,
+        });
+
+        console.log(translationResp);
+      });
+    });
+  }, [call, media]);
+
   return (
     <>
       {renderedEntryHeader}
@@ -158,7 +186,8 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
         <Save
           onClick={async () => {
             console.log('ejo');
-            submit();
+            submitMediaList();
+            // submit();
           }}
           active={true}
           date={formattedDate}

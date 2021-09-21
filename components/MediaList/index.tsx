@@ -3,8 +3,11 @@ import styled from '@emotion/styled';
 import formatISO9075 from 'date-fns/formatISO9075';
 import Image from 'next/image';
 import { ExternalLink } from 'react-feather';
-import { Media } from '../../lib/api/types/media';
+import { contentLanguages, languageTranslationKeys } from '../../config/locales';
+import { Media, MediaTranslation } from '../../lib/api/types/media';
 import { useT } from '../../lib/i18n';
+import { getTranslation } from '../../lib/translations';
+import { Language } from '../../config/locales';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
@@ -185,13 +188,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Image
-                  src={mediaItem.attributes.url}
-                  width={mediaItem.attributes.width}
-                  height={mediaItem.attributes.height}
-                  layout="fill"
-                  objectFit="contain"
-                />
+                <Image src={mediaItem.attributes.url} layout="fill" objectFit="contain" />
                 <StyledMediaListItemThumbnailLinkHover>
                   <ExternalLink />
                 </StyledMediaListItemThumbnailLinkHover>
@@ -206,6 +203,45 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
           )}
         </StyledMediaListItemThumbnail>
         <StyledMediaListItemForm>
+          {contentLanguages.map((language: Language, index) => {
+            const currentTranslation = getTranslation<MediaTranslation>(
+              language,
+              mediaItem.relations.translations,
+              false
+            );
+
+            return (
+              <div key={index}>
+                <Input
+                  type={InputType.text}
+                  label={`${t('media.alt')} (${t(languageTranslationKeys[language])})`}
+                  id={`${uid}-copyright`}
+                  value={currentTranslation?.attributes?.alternativeText || ''}
+                  onChange={(e) =>
+                    onChange({
+                      ...mediaItem,
+                      relations: {
+                        ...mediaItem.relations,
+                        translations: [
+                          ...mediaItem.relations.translations.filter(
+                            (translation) => translation.attributes.language !== language
+                          ),
+                          {
+                            ...currentTranslation,
+                            attributes: {
+                              ...currentTranslation?.attributes,
+                              language,
+                              alternativeText: e.target.value,
+                            },
+                          },
+                        ],
+                      },
+                    })
+                  }
+                />
+              </div>
+            );
+          })}
           <div>
             <Input
               type={InputType.text}

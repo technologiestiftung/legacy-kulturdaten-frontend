@@ -62,6 +62,7 @@ export enum ApiRoutes {
   offerDelete = 'offerDelete',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
+  mediaTranslationCreate = 'mediaTranslationCreate',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -108,6 +109,7 @@ export const apiRoutes: {
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaTranslationCreate: ({ id }) => `/${apiVersion}/media/${id}/translate`,
 };
 
 const addUrlParam = (url: string, param: string): string =>

@@ -5,6 +5,10 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  language: {
+    de: () => 'Deutsch',
+    en: () => 'Englisch',
+  },
   dayPicker: {
     ariaLabel: () => 'Wochentage auswählen',
     minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
