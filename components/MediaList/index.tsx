@@ -12,9 +12,10 @@ import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
-import { Button } from '../button';
+import { Button, ButtonColor } from '../button';
 import { useApiCall } from '../../lib/api';
 import { MediaDelete, mediaDeleteFactory } from '../../lib/api/routes/media/delete';
+import { useFormatNumber } from '../../lib/number';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -205,14 +206,35 @@ const StyledMediaListItemForm = styled.div`
 
 const StyledMediaListItemFunctions = styled.div``;
 
-const StyledMediaListItemInfo = styled.div`
+const StyledMediaListItemSub = styled.div`
   padding: 0.75rem;
   border-top: 1px solid var(--grey-400);
   background: var(--grey-200);
+  display: flex;
+  justify-content: space-between;
 
   ${mq(Breakpoint.mid)} {
     padding: 0.75rem 1.5rem;
   }
+`;
+
+const StyledMediaListItemInfo = styled.div`
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-200);
+  line-height: calc(var(--line-height-200) * 1);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.75rem;
+`;
+
+const StyledMediaListItemInfoText = styled.div``;
+
+const StyledMediaListItemInfoLabel = styled.div`
+  font-weight: 700;
+`;
+
+const StyledMediaListItemDelete = styled.div`
+  flex-shrink: 0;
 `;
 
 interface MediaListItemProps {
@@ -228,6 +250,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const uid = usePseudoUID();
   const t = useT();
   const call = useApiCall();
+  const formatNumber = useFormatNumber();
 
   return (
     <StyledMediaListItem>
@@ -365,17 +388,45 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
         </StyledMediaListItemForm>
         <StyledMediaListItemFunctions></StyledMediaListItemFunctions>
       </StyledMediaListItemMain>
-      <StyledMediaListItemInfo>
-        <Button
-          onClick={() => {
-            if (window.confirm()) {
-              () => call<MediaDelete>(mediaDeleteFactory, { id: mediaItem.id });
-            }
-          }}
-        >
-          delete
-        </Button>
-      </StyledMediaListItemInfo>
+      <StyledMediaListItemSub>
+        <StyledMediaListItemInfo>
+          {mediaItem.attributes.format && (
+            <>
+              <StyledMediaListItemInfoLabel>{t('media.format')}</StyledMediaListItemInfoLabel>
+              <StyledMediaListItemInfoText>
+                {mediaItem.attributes.format.toUpperCase()}
+              </StyledMediaListItemInfoText>
+            </>
+          )}
+          {mediaItem.attributes.url && (
+            <>
+              <StyledMediaListItemInfoLabel>{t('media.url')}</StyledMediaListItemInfoLabel>
+              <StyledMediaListItemInfoText>{mediaItem.attributes.url}</StyledMediaListItemInfoText>
+            </>
+          )}
+          {mediaItem.attributes.filesize && (
+            <>
+              <StyledMediaListItemInfoLabel>{t('media.size')}</StyledMediaListItemInfoLabel>
+              <StyledMediaListItemInfoText>
+                {formatNumber(Math.ceil((mediaItem.attributes.filesize / 1024 / 1024) * 100) / 100)}{' '}
+                {t('media.mb')}
+              </StyledMediaListItemInfoText>
+            </>
+          )}
+        </StyledMediaListItemInfo>
+        <StyledMediaListItemDelete>
+          <Button
+            color={ButtonColor.white}
+            onClick={() => {
+              if (window.confirm(t('media.deleteConfirm') as string)) {
+                () => call<MediaDelete>(mediaDeleteFactory, { id: mediaItem.id });
+              }
+            }}
+          >
+            {t('media.delete')}
+          </Button>
+        </StyledMediaListItemDelete>
+      </StyledMediaListItemSub>
     </StyledMediaListItem>
   );
 };

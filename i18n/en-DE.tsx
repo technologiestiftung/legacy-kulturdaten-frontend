@@ -108,6 +108,12 @@ export const enDE: Localization = {
     licenseEnd: () => 'End date license',
     imageProcessing: () => 'The image is being processed and loaded',
     openImage: () => 'Open original image in new tab',
+    url: () => 'URL',
+    format: () => 'Format',
+    size: () => 'Size',
+    mb: () => 'MB',
+    delete: () => 'delete image',
+    deleteConfirm: () => 'Do you really want to delete this image? This cannot be undone.',
   },
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',

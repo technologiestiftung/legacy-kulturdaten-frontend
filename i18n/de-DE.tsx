@@ -97,7 +97,7 @@ export const deDE: Localization = {
     hint: () => 'Es gibt noch Felder, die ausgefüllt werden sollten.',
     hintShort: () => 'Leere Felder',
     confirmExit: () =>
-      'Es gibt ungespeicherte Änderungen auf dieser Seite. Beim Verlassen gehen diese verloren. Wollen Sie die Seite trotzdem verlassen?',
+      'Es gibt ungespeicherte Änderungen auf dieser Seite. Beim Verlassen gehen diese verloren. Willst du die Seite trotzdem verlassen?',
     alertSymbolAriaLabel: () => 'In diesen Eingabefeldern existieren Fehler.',
     infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
   },
@@ -108,6 +108,13 @@ export const deDE: Localization = {
     licenseEnd: () => 'Ablaufdatum Lizenz',
     imageProcessing: () => 'Das Bild wird verarbeitet und geladen',
     openImage: () => 'Original Bild in neuem Tab öffnen',
+    url: () => 'URL',
+    format: () => 'Format',
+    size: () => 'Größe',
+    mb: () => 'MB',
+    delete: () => 'Bild löschen',
+    deleteConfirm: () =>
+      'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
   },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
