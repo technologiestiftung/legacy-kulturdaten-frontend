@@ -259,9 +259,9 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const formatNumber = useFormatNumber();
 
   return (
-    <StyledMediaListItem>
+    <StyledMediaListItem role="listitem">
       <StyledMediaListItemMain>
-        <StyledMediaListItemThumbnail>
+        <StyledMediaListItemThumbnail role="image">
           {mediaItem.attributes.width && mediaItem.attributes.height ? (
             <StyledMediaListItemThumbnailInner>
               <StyledMediaListItemThumbnailLink
@@ -444,7 +444,7 @@ interface MediaListProps {
 
 export const MediaList: React.FC<MediaListProps> = ({ media, onChange }: MediaListProps) => {
   return (
-    <StyledMediaList>
+    <StyledMediaList role="list">
       {media?.map((mediaItem, index) => (
         <MediaListItem
           key={index}

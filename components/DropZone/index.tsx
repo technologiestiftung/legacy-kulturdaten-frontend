@@ -194,6 +194,10 @@ export const DropZone: React.FC<DropZoneProps> = ({
   return (
     <StyledDropZone>
       <StyledDropZoneLabel
+        aria-disabled={disabled}
+        aria-valuemax={max}
+        aria-dropeffect="execute"
+        aria-label={t('dropZone.ariaLabel') as string}
         disabled={disabled}
         isDropOver={isDropOver}
         isValidFiles={isValidFiles}

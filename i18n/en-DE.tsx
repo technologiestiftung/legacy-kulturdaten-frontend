@@ -116,6 +116,7 @@ export const enDE: Localization = {
     delete: () => 'delete image',
     deleteConfirm: () => 'Do you really want to delete this image? This cannot be undone.',
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
+    ariaLabel: () => 'Upload files',
   },
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',
