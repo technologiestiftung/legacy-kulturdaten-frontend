@@ -98,6 +98,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
+  const [showHint, setShowHint] = useState(false);
   const renderedEntryHeader = useEntryHeader({ category, query });
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const formattedDate = useSaveDate(entry);
@@ -211,6 +212,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
           active={!pristine}
           date={formattedDate}
           valid={true}
+          hint={showHint}
         />
         <EntryFormWrapper>
           <EntryFormContainer>
@@ -227,6 +229,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
                       changedMediaItemId,
                     ]);
                   }}
+                  setValid={(valid) => setShowHint(!valid)}
                 />
               </FormItem>
             </FormGrid>

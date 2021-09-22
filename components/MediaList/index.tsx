@@ -16,7 +16,7 @@ import { Button, ButtonColor } from '../button';
 import { useApiCall } from '../../lib/api';
 import { MediaDelete, mediaDeleteFactory } from '../../lib/api/routes/media/delete';
 import { useFormatNumber } from '../../lib/number';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { AlertSymbol } from '../assets/AlertSymbol';
 
 const StyledMediaList = styled.div`
@@ -262,36 +262,19 @@ const StlyedMediaListItemHint = styled.div`
 interface MediaListItemProps {
   mediaItem: Media['data'];
   onChange: (mediaItem: Media['data']) => void;
+  valid: boolean;
 }
 
 const MediaListItem: React.FC<MediaListItemProps> = ({
   mediaItem,
   onChange,
+  valid,
 }: MediaListItemProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
   const t = useT();
   const call = useApiCall();
   const formatNumber = useFormatNumber();
-
-  const valid = useMemo(() => {
-    const requiredAttributes = [
-      mediaItem.attributes.copyright,
-      mediaItem.attributes.expiresAt,
-      mediaItem.attributes.license,
-    ];
-
-    for (let i = 0; i < requiredAttributes.length; i += 1) {
-      const attribute = requiredAttributes[i];
-      console.log(attribute);
-      console.log(!attribute || typeof attribute === 'undefined' || attribute.length === 0);
-      if (!attribute || typeof attribute === 'undefined' || attribute.length === 0) {
-        return false;
-      }
-    }
-
-    return true;
-  }, [mediaItem.attributes]);
 
   return (
     <StyledMediaListItem role="listitem">
@@ -481,21 +464,54 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
 interface MediaListProps {
   media: Media['data'][];
   onChange: (media: Media['data'][], changesMediaItemId: number) => void;
+  setValid: (valid: boolean) => void;
 }
 
-export const MediaList: React.FC<MediaListProps> = ({ media, onChange }: MediaListProps) => {
+export const MediaList: React.FC<MediaListProps> = ({
+  media,
+  onChange,
+  setValid,
+}: MediaListProps) => {
+  const itemsValidList = useMemo(
+    () =>
+      media?.map((mediaItem) => {
+        const requiredAttributes = [
+          mediaItem.attributes.copyright,
+          mediaItem.attributes.expiresAt,
+          mediaItem.attributes.license,
+        ];
+
+        for (let i = 0; i < requiredAttributes.length; i += 1) {
+          const attribute = requiredAttributes[i];
+          console.log(attribute);
+          console.log(!attribute || typeof attribute === 'undefined' || attribute.length === 0);
+          if (!attribute || typeof attribute === 'undefined' || attribute.length === 0) {
+            return false;
+          }
+        }
+
+        return true;
+      }),
+    [media]
+  );
+
+  useEffect(() => {
+    setValid(!itemsValidList?.includes(false));
+  }, [itemsValidList, setValid]);
+
   return (
     <StyledMediaList role="list">
       {media?.map((mediaItem, index) => (
         <MediaListItem
           key={index}
+          valid={itemsValidList[index]}
           mediaItem={mediaItem}
-          onChange={(mediaItem) =>
+          onChange={(mediaItem) => {
             onChange(
               [...media.slice(0, index), mediaItem, ...media.slice(index + 1, media.length)],
               mediaItem.id
-            )
-          }
+            );
+          }}
         />
       ))}
     </StyledMediaList>
