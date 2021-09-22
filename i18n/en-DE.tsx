@@ -5,6 +5,10 @@ export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
   },
+  language: {
+    de: () => 'German',
+    en: () => 'English',
+  },
   dayPicker: {
     ariaLabel: () => 'Choose',
     minError: ({ min }) => `Please choose at least ${min} ${min === 1 ? 'day' : 'days'}`,
@@ -97,6 +101,30 @@ export const enDE: Localization = {
     alertSymbolAriaLabel: () => 'There are errors in this input fields.',
     infoSymbolAriaLabel: () => 'Here are input fields which should be filled.',
   },
+  media: {
+    title: () => 'Images',
+    copyright: () => 'Author',
+    alt: () => 'Alt text',
+    license: () => 'License',
+    licenseEnd: () => 'End date license',
+    imageProcessing: () => 'The image is being processed and loaded',
+    openImage: () => 'Open original image in new tab',
+    url: () => 'URL',
+    format: () => 'Format',
+    size: () => 'Size',
+    mb: () => 'MB',
+    delete: () => 'delete image',
+    deleteConfirm: () => 'Do you really want to delete this image? This cannot be undone.',
+    maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
+    ariaLabel: () => 'Upload files',
+    hint: () =>
+      'In order for the image to be publicly available, the mandatory fields must be filled out. ',
+  },
+  dropZone: {
+    allowedFileTypes: () => 'Allowed file types',
+    uploading: ({ progress }) => `Uploading files: ${progress} done`,
+    success: ({ count }) => `Successfully uploaded ${count} ${count === 1 ? 'file' : 'files'}`,
+  },
   date: {
     time: () => 'Time',
     from: () => 'From',
@@ -184,6 +212,7 @@ export const enDE: Localization = {
     saving: () => 'saving',
     saved: () => 'saved',
     loading: () => 'loading',
+    max: () => 'max.',
   },
   tooltip: {
     open: () => 'open tooltip',

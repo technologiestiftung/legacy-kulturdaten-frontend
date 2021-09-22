@@ -1,6 +1,6 @@
 import getConfig from 'next/config';
 import { ParsedUrlQuery } from 'node:querystring';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useAuthToken } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
 
@@ -21,7 +21,7 @@ export interface ApiCall {
       'Content-Type'?: 'application/json' | 'multipart/form-data';
       'Authorization'?: string;
     };
-    body?: { [key: string]: StructuredData };
+    body?: { [key: string]: StructuredData | FormData | { [key: string]: FormData } } | FormData;
   };
   response: { status: number; body: { [key: string]: StructuredData & { id?: string } } };
 }
@@ -60,6 +60,10 @@ export enum ApiRoutes {
   offerUpdate = 'offerUpdate',
   offerTranslationCreate = 'offerTranslationCreate',
   offerDelete = 'offerDelete',
+  mediaShow = 'mediaShow',
+  mediaUpdate = 'mediaUpdate',
+  mediaDelete = 'mediaDelete',
+  mediaTranslationCreate = 'mediaTranslationCreate',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -79,7 +83,7 @@ export const apiRoutes: {
       query?.sort && `&sort=${query.sort}`
     }`,
   organizerShow: ({ id }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations`,
+    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,media`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ id }) =>
     `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
@@ -104,6 +108,10 @@ export const apiRoutes: {
   offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
   offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
+  mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaTranslationCreate: ({ id }) => `/${apiVersion}/media/${id}/translate`,
 };
 
 const addUrlParam = (url: string, param: string): string =>
@@ -178,6 +186,138 @@ export const useApiCall = (
   );
 
   return cb;
+};
+
+export const useMediaUpload = (
+  overrideAuthToken?: string
+): {
+  progress: number;
+  upload: <T extends ApiCall>(
+    files: FileList | File[],
+    factory: ApiCallFactory,
+    query?: unknown
+  ) => Promise<T['response']>;
+} => {
+  const authToken = useAuthToken();
+  const [progress, setProgress] = useState<number>(0);
+
+  const cb = useCallback(
+    <T extends ApiCall>(files: FileList, factory: ApiCallFactory, query?: unknown) => {
+      const { request, response } = factory(overrideAuthToken || authToken, query);
+      const route = request.route;
+      const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+
+      const formData = new FormData();
+      if (files) {
+        [...files].forEach((file: File) => formData.append('media[]', file));
+      }
+
+      const re = new Promise<T['response']>((resolve, reject) => {
+        const req = new XMLHttpRequest();
+        req.upload.addEventListener('progress', (e) => {
+          setProgress(e.loaded / e.total);
+        });
+
+        req.addEventListener('load', (e) => {
+          resolve({
+            status: req.status,
+            body: req.responseText ? JSON.parse(req.responseText) : undefined,
+          } as T['response']);
+        });
+
+        req.addEventListener('error', (e) => {
+          console.error('error');
+          console.log(e);
+          reject({
+            status: req.status,
+            body: req.responseText ? JSON.parse(req.responseText) : undefined,
+          } as T['response']);
+        });
+
+        req.addEventListener('abort', (e) => {
+          console.log('aborted');
+          console.log(e);
+          reject({
+            status: req.status,
+            body: req.responseText ? JSON.parse(req.responseText) : undefined,
+          } as T['response']);
+        });
+
+        setProgress(0);
+        req.open('PATCH', new URL(route, api).toString());
+        req.send(formData);
+      });
+      // req.open('PATCH', );
+
+      return re;
+    },
+    [authToken, overrideAuthToken]
+  );
+
+  return { progress, upload: cb };
+};
+
+/**
+ * Makes a call to kulturdaten.berlin API
+ * @param request
+ * @returns
+ */
+export const upload = async <T extends ApiCall>(
+  { request, response }: T,
+  files: FileList
+): Promise<T['response']> => {
+  const route = request.route;
+
+  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+
+  const formData = new FormData();
+
+  [...files].forEach(<T extends ApiCall>(file: File) => formData.append('media', file));
+
+  const req = new XMLHttpRequest();
+
+  req.upload.addEventListener('progress', () => undefined);
+
+  req.upload.addEventListener('load', () => undefined);
+
+  req.upload.addEventListener('error', () => undefined);
+
+  req.upload.addEventListener('abort', () => undefined);
+
+  req.open('PATCH', route);
+  req.send(formData);
+
+  try {
+    const resp = await fetch(new URL(route, api).toString(), {
+      method: request.method,
+      headers: request.headers,
+      body: JSON.stringify(request.body, null, 2),
+    }).catch((e: ErrorEvent) => {
+      throw e;
+    });
+
+    const body: T['response']['body'] = await resp.json();
+
+    // TODO: Optimize when API became generalized
+    switch (resp.status) {
+      case response.status: {
+        return {
+          status: response.status,
+          body,
+        };
+      }
+      case 422: {
+        const regError = new Error(JSON.stringify(body));
+        regError.name = 'reg error';
+        throw regError;
+      }
+      default: {
+        throw new Error(JSON.stringify(body));
+      }
+    }
+  } catch (e) {
+    throw e;
+  }
 };
 
 /**

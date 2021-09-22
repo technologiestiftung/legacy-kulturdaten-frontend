@@ -5,6 +5,10 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  language: {
+    de: () => 'Deutsch',
+    en: () => 'Englisch',
+  },
   dayPicker: {
     ariaLabel: () => 'Wochentage auswählen',
     minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
@@ -93,9 +97,34 @@ export const deDE: Localization = {
     hint: () => 'Es gibt noch Felder, die ausgefüllt werden sollten.',
     hintShort: () => 'Leere Felder',
     confirmExit: () =>
-      'Es gibt ungespeicherte Änderungen auf dieser Seite. Beim Verlassen gehen diese verloren. Wollen Sie die Seite trotzdem verlassen?',
+      'Es gibt ungespeicherte Änderungen auf dieser Seite. Beim Verlassen gehen diese verloren. Willst du die Seite trotzdem verlassen?',
     alertSymbolAriaLabel: () => 'In diesen Eingabefeldern existieren Fehler.',
     infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
+  },
+  media: {
+    title: () => 'Bilder',
+    copyright: () => 'Urheber:in',
+    alt: () => 'Alt Text',
+    license: () => 'Lizenz',
+    licenseEnd: () => 'Ablaufdatum Lizenz',
+    imageProcessing: () => 'Das Bild wird verarbeitet und geladen',
+    openImage: () => 'Original Bild in neuem Tab öffnen',
+    url: () => 'URL',
+    format: () => 'Format',
+    size: () => 'Größe',
+    mb: () => 'MB',
+    delete: () => 'Bild löschen',
+    deleteConfirm: () =>
+      'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
+    maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
+    hint: () =>
+      'Damit das Bild öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
+  },
+  dropZone: {
+    allowedFileTypes: () => 'Erlaubte Dateitypen',
+    uploading: ({ progress }) => `Dateien laden hoch: ${progress} geschafft`,
+    success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
+    ariaLabel: () => 'Dateien hochladen',
   },
   date: {
     from: () => 'von',
@@ -183,6 +212,7 @@ export const deDE: Localization = {
     saving: () => 'speichert',
     saved: () => 'gespeichert',
     loading: () => 'lädt',
+    max: () => 'max.',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',

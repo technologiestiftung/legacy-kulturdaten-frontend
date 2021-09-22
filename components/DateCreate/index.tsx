@@ -134,6 +134,14 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
   );
 };
 
+const StyledDateCreateFormWrapper = styled.div`
+  padding: 0 0.75rem;
+
+  ${mq(Breakpoint.wide)} {
+    padding: 0 1.5rem;
+  }
+`;
+
 interface DateCreateFormProps {
   offerTitles: { [key in Language]: string };
   allDay: boolean;
@@ -208,9 +216,9 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   });
 
   return (
-    <>
+    <StyledDateCreateFormWrapper>
       <EntryFormWrapper fullWidth reducedVerticalpadding>
-        <EntryFormContainer fullWidth>
+        <EntryFormContainer noPadding fullWidth>
           <DateFormTime
             {...{
               allDay,
@@ -232,13 +240,13 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             }}
           />
         </EntryFormContainer>
-        <EntryFormContainer fullWidth>
+        <EntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.recurrence.title')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>{renderedDateRecurrence}</FormItem>
           </FormGrid>
         </EntryFormContainer>
-        <EntryFormContainer fullWidth>
+        <EntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.title')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
@@ -268,7 +276,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             </FormItem>
           </FormGrid>
         </EntryFormContainer>
-        <EntryFormContainer fullWidth>
+        <EntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.roomInfo')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
@@ -289,7 +297,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             </FormItem>
           </FormGrid>
         </EntryFormContainer>
-        <EntryFormContainer fullWidth>
+        <EntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.additionalLinks')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
@@ -303,7 +311,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
           </FormGrid>
         </EntryFormContainer>
       </EntryFormWrapper>
-    </>
+    </StyledDateCreateFormWrapper>
   );
 };
 
@@ -315,7 +323,7 @@ const StyledDateCreateBottomBar = styled.div`
   justify-content: flex-end;
   border-top: 1px solid var(--grey-400);
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.wide)} {
     padding: 0.75rem 1.5rem;
     padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
   }

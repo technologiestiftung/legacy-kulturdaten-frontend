@@ -28,7 +28,8 @@ import { useSaveDate } from '../helpers/useSaveDate';
 export type EntryFormHook = (
   props: EntryFormProps,
   loaded: boolean,
-  showHint: boolean
+  showHint: boolean,
+  ...parameters: unknown[]
 ) => {
   renderedForm: React.ReactElement;
   submit: () => Promise<void>;

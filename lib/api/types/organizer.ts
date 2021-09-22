@@ -1,6 +1,7 @@
 import { Language } from '../../../config/locale';
 import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
+import { Media } from './media';
 import { WebLink } from './webLink';
 
 export type OrganizerTypeTranslation = {
@@ -54,6 +55,7 @@ export type Organizer = {
       subjects?: OrganizerSubject[];
       translations?: OrganizerTranslation[];
       types?: OrganizerType[];
+      media?: Media['data'][];
     };
   };
   meta?: {

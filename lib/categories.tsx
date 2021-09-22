@@ -73,6 +73,7 @@ export type Category = {
     update: categoryApi;
     translationCreate: categoryApi;
     delete: categoryApi;
+    media?: categoryApi;
   };
   requirements?: Requirement[];
 };

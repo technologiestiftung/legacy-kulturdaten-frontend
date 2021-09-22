@@ -7,6 +7,7 @@ import { WindowContextProvider } from '../lib/WindowService';
 import { NavigationContextProvider } from '../components/navigation/NavigationContext';
 import { EntryListContextProvider } from '../components/EntryList/EntryListContext';
 import { Categories } from '../config/categories';
+import { PreventDrop } from '../lib/PreventDrop';
 
 addDecorator((story) => {
   return (
@@ -15,6 +16,7 @@ addDecorator((story) => {
       <CSSVars />
       <Global />
       <Typography />
+      <PreventDrop />
       <WindowContextProvider>
         <NavigationContextProvider>
           <EntryListContextProvider

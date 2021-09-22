@@ -11,7 +11,7 @@ const StyledEntryListPagination = styled.div`
   flex-direction: column;
   padding: 0.75rem;
 
-  ${mq(Breakpoint.mid)} {
+  ${mq(Breakpoint.wide)} {
     padding: 0.75rem 1.5rem;
   }
 `;
