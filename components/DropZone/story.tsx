@@ -12,12 +12,11 @@ const StoryWrapper = styled.div`
 `;
 
 export const DropZoneDefaultStory: Story = () => {
-  const [files, setFiles] = useState<FileList>();
+  const [files, setFiles] = useState<FileList | File[]>();
 
   return (
     <StoryWrapper>
       <DropZone
-        files={files}
         onDrop={(files) => setFiles(files)}
         label="Klicken oder Dateien per Drag-and-Drop ablegen."
         acceptedFileTypes={[{ mimeType: 'image/svg+xml', name: 'SVG' }]}
