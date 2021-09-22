@@ -117,6 +117,8 @@ export const deDE: Localization = {
     deleteConfirm: () =>
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
+    hint: () =>
+      'Damit das Bild öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
   },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',

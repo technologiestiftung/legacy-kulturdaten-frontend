@@ -16,6 +16,8 @@ import { Button, ButtonColor } from '../button';
 import { useApiCall } from '../../lib/api';
 import { MediaDelete, mediaDeleteFactory } from '../../lib/api/routes/media/delete';
 import { useFormatNumber } from '../../lib/number';
+import { useMemo } from 'react';
+import { AlertSymbol } from '../assets/AlertSymbol';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -243,6 +245,20 @@ const StyledMediaListItemDelete = styled.div`
   flex-shrink: 0;
 `;
 
+const StlyedMediaListItemHint = styled.div`
+  display: flex;
+  padding: 0.75rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  column-gap: 0.75rem;
+  border-bottom: 1px solid var(--grey-400);
+
+  ${mq(Breakpoint.mid)} {
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0;
+  }
+`;
+
 interface MediaListItemProps {
   mediaItem: Media['data'];
   onChange: (mediaItem: Media['data']) => void;
@@ -258,8 +274,33 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const call = useApiCall();
   const formatNumber = useFormatNumber();
 
+  const valid = useMemo(() => {
+    const requiredAttributes = [
+      mediaItem.attributes.copyright,
+      mediaItem.attributes.expiresAt,
+      mediaItem.attributes.license,
+    ];
+
+    for (let i = 0; i < requiredAttributes.length; i += 1) {
+      const attribute = requiredAttributes[i];
+      console.log(attribute);
+      console.log(!attribute || typeof attribute === 'undefined' || attribute.length === 0);
+      if (!attribute || typeof attribute === 'undefined' || attribute.length === 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [mediaItem.attributes]);
+
   return (
     <StyledMediaListItem role="listitem">
+      {!valid && (
+        <StlyedMediaListItemHint>
+          <AlertSymbol />
+          <span>{t('media.hint')}</span>
+        </StlyedMediaListItemHint>
+      )}
       <StyledMediaListItemMain>
         <StyledMediaListItemThumbnail role="image">
           {mediaItem.attributes.width && mediaItem.attributes.height ? (
@@ -303,7 +344,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
               <div key={index}>
                 <Input
                   type={InputType.text}
-                  label={`${t('media.alt')} (${t(languageTranslationKeys[language])})`}
+                  label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
                   id={`${uid}-copyright`}
                   value={currentTranslation?.attributes?.alternativeText || ''}
                   onChange={(e) => {

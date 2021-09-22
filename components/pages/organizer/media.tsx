@@ -162,7 +162,9 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   );
 
   const submitMediaList = useCallback(async () => {
-    for (const mediaItem of media) {
+    for (let i = 0; i < media.length; i += 1) {
+      const mediaItem = media[i];
+
       const id = mediaItem.id;
 
       if (mediaNotPristineList.includes(id)) {
@@ -177,7 +179,8 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
 
         const translations = mediaItem.relations?.translations;
 
-        for (const translation of translations) {
+        for (let j = 0; j < translations.length; j += 1) {
+          const translation = translations[j];
           const translationResp = await call<MediaTranslationCreate>(
             mediaTranslationCreateFactory,
             {
