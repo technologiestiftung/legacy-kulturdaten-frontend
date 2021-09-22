@@ -12,6 +12,7 @@ const errorShadow = '0px 0px 0px 0.25rem var(--error-light)';
 const StyledDropZoneLabel = styled.label<{
   isDropOver: boolean;
   isValidFiles: boolean;
+  disabled: boolean;
   isUploading?: boolean;
 }>`
   display: block;
@@ -29,8 +30,8 @@ const StyledDropZoneLabel = styled.label<{
   position: relative;
   overflow: hidden;
 
-  ${({ isUploading, isDropOver, isValidFiles }) =>
-    !isUploading
+  ${({ disabled, isUploading, isDropOver, isValidFiles }) =>
+    !disabled && !isUploading
       ? css`
           cursor: pointer;
           &:hover {
@@ -48,9 +49,11 @@ const StyledDropZoneLabel = styled.label<{
               `
             : ''}
         `
-      : css`
+      : !disabled
+      ? css`
           border-color: var(--green-mid);
-        `}
+        `
+      : ''}
 `;
 
 const StlyedDropZoneSuccess = styled.div`
@@ -133,8 +136,7 @@ const StyledDropZoneInput = styled.input`
 
 interface DropZoneProps {
   label: string;
-  files: FileList;
-  onDrop: (files: FileList) => void;
+  onDrop: (files: FileList | File[]) => void;
   isUploading?: boolean;
   progress?: number;
   success?: {
@@ -144,11 +146,13 @@ interface DropZoneProps {
   acceptedFileTypesHumanReadable?: string[];
   onDragEnter?: DragEventHandler<HTMLLabelElement>;
   onDragLeave?: DragEventHandler<HTMLLabelElement>;
+  disabled?: boolean;
+  disabledMessage?: string;
+  max?: number;
 }
 
 export const DropZone: React.FC<DropZoneProps> = ({
   label,
-  files,
   onDrop,
   acceptedFileTypes,
   onDragEnter,
@@ -156,6 +160,9 @@ export const DropZone: React.FC<DropZoneProps> = ({
   progress,
   onDragLeave,
   success,
+  disabled = false,
+  disabledMessage,
+  max,
 }: DropZoneProps) => {
   // const isUploading = true;
   // const progress = 0.75;
@@ -187,13 +194,14 @@ export const DropZone: React.FC<DropZoneProps> = ({
   return (
     <StyledDropZone>
       <StyledDropZoneLabel
+        disabled={disabled}
         isDropOver={isDropOver}
         isValidFiles={isValidFiles}
         isUploading={isUploading}
         onDragEnter={(e) => {
           e.preventDefault();
 
-          if (!isUploading) {
+          if (!disabled && !isUploading) {
             setIsDropOver(true);
 
             const fileItems = e.dataTransfer.items;
@@ -218,11 +226,11 @@ export const DropZone: React.FC<DropZoneProps> = ({
           }
         }}
         onDragOver={(e) => {
-          if (!isUploading) {
-            e.preventDefault();
-          }
+          e.preventDefault();
 
-          setIsDropOver(true);
+          if (!disabled && !isUploading) {
+            setIsDropOver(true);
+          }
         }}
         onDragLeave={(e) => {
           if (onDragLeave) {
@@ -234,17 +242,22 @@ export const DropZone: React.FC<DropZoneProps> = ({
         onDrop={(e) => {
           e.preventDefault();
 
-          if (!isUploading) {
+          if (!disabled && !isUploading) {
             setIsDropOver(false);
 
             if (isValidFiles) {
-              onDrop(e.dataTransfer.files);
+              const filesForUpload = max
+                ? [...e.dataTransfer.files].slice(0, max)
+                : e.dataTransfer.files;
+              onDrop(filesForUpload);
             }
           }
         }}
       >
-        <StyledDropZoneLabelText isUploading={isUploading}>{label}</StyledDropZoneLabelText>
-        {acceptedFileTypes && (
+        <StyledDropZoneLabelText isUploading={isUploading}>
+          {disabled ? disabledMessage : label}
+        </StyledDropZoneLabelText>
+        {!disabled && acceptedFileTypes && (
           <StyledDropZoneLabelSubText isUploading={isUploading}>
             {t('dropZone.allowedFileTypes')}: {acceptedFileTypes.map(({ name }) => name).join(', ')}
           </StyledDropZoneLabelSubText>
@@ -254,7 +267,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
           ref={inputRef}
           multiple
           accept={acceptedFileTypes?.join(',')}
-          disabled={isUploading}
+          disabled={disabled || isUploading}
         />
         <StyledDropZoneMessage
           isUploading={isUploading}

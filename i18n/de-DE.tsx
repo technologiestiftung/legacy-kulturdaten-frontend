@@ -102,6 +102,7 @@ export const deDE: Localization = {
     infoSymbolAriaLabel: () => 'In diesen Eingabefeldern sollten Eingaben ergänzt werden.',
   },
   media: {
+    title: () => 'Bilder',
     copyright: () => 'Urheber:in',
     alt: () => 'Alt Text',
     license: () => 'Lizenz',
@@ -115,6 +116,7 @@ export const deDE: Localization = {
     delete: () => 'Bild löschen',
     deleteConfirm: () =>
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
+    maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
   },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
@@ -207,6 +209,7 @@ export const deDE: Localization = {
     saving: () => 'speichert',
     saved: () => 'gespeichert',
     loading: () => 'lädt',
+    max: () => 'max.',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',

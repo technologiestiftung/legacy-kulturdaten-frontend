@@ -212,8 +212,12 @@ const StyledMediaListItemSub = styled.div`
   background: var(--grey-200);
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
+  row-gap: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
+    column-gap: 1.5rem;
+    flex-direction: row;
     padding: 0.75rem 1.5rem;
   }
 `;
@@ -227,7 +231,9 @@ const StyledMediaListItemInfo = styled.div`
   column-gap: 0.75rem;
 `;
 
-const StyledMediaListItemInfoText = styled.div``;
+const StyledMediaListItemInfoText = styled.div`
+  word-break: break-all;
+`;
 
 const StyledMediaListItemInfoLabel = styled.div`
   font-weight: 700;

@@ -102,6 +102,7 @@ export const enDE: Localization = {
     infoSymbolAriaLabel: () => 'Here are input fields which should be filled.',
   },
   media: {
+    title: () => 'Images',
     copyright: () => 'Author',
     alt: () => 'Alt text',
     license: () => 'License',
@@ -114,6 +115,7 @@ export const enDE: Localization = {
     mb: () => 'MB',
     delete: () => 'delete image',
     deleteConfirm: () => 'Do you really want to delete this image? This cannot be undone.',
+    maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
   },
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',
@@ -207,6 +209,7 @@ export const enDE: Localization = {
     saving: () => 'saving',
     saved: () => 'saved',
     loading: () => 'loading',
+    max: () => 'max.',
   },
   tooltip: {
     open: () => 'open tooltip',

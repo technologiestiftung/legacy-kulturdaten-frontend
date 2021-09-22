@@ -10,6 +10,7 @@ import { organizerUpdateFactory } from '../../../lib/api/routes/organizer/update
 import { Media } from '../../../lib/api/types/media';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
+import { useT } from '../../../lib/i18n';
 import { WindowContext } from '../../../lib/WindowService';
 import { DropZone } from '../../DropZone';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -21,9 +22,18 @@ import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { EntryFormHook } from './info';
 
-const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
+const imagesMax = 5;
+
+const useMediaUploadForm: EntryFormHook = (
+  { category, query },
+  loaded,
+  showHint,
+  ...parameters: [boolean, number]
+) => {
+  const [disabled, maxFiles] = parameters;
+  const t = useT();
   const [pristine, setPristine] = useState(true);
-  const [files, setFiles] = useState<FileList>();
+  const [files, setFiles] = useState<FileList | File[]>();
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const [isUploading, setIsUploading] = useState(false);
   const { progress, upload } = useMediaUpload();
@@ -58,15 +68,21 @@ const useMediaUploadForm: EntryFormHook = ({ category, query }) => {
     renderedForm: (
       <FormItem width={FormItemWidth.full}>
         <DropZone
-          files={files}
           onDrop={async (newFiles) => {
             setFiles(newFiles);
           }}
-          acceptedFileTypes={[{ mimeType: 'image/jpeg', name: 'JPG/JPEG' }]}
+          acceptedFileTypes={[
+            { mimeType: 'image/jpeg', name: 'JPG/JPEG' },
+            { mimeType: 'image/png', name: 'PNG' },
+            { mimeType: 'image/webp', name: 'WEBP' },
+          ]}
           label="Neue Bilder hochladen"
           isUploading={isUploading}
           progress={progress}
           success={uploadSuccess}
+          disabled={disabled}
+          disabledMessage={t('media.maxReached', { count: imagesMax }) as string}
+          max={maxFiles}
         />
       </FormItem>
     ),
@@ -88,6 +104,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   const { rendered } = useContext(WindowContext);
   const [loaded, setLoaded] = useState(false);
   const call = useApiCall();
+  const t = useT();
 
   const initialMedia = useMemo<Media['data'][]>(
     () => (entry?.data?.relations?.media ? [...entry.data.relations.media].reverse() : undefined),
@@ -97,6 +114,8 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   const [media, setMedia] = useState<Media['data'][]>();
   const [mediaFromApi, setMediaFromApi] = useState<Media['data'][]>();
   const [mediaNotPristineList, setMediaNotPristineList] = useState<number[]>([]);
+
+  const uploadDisabled = useMemo(() => media?.length >= imagesMax, [media]);
 
   useEffect(() => {
     if (initialMedia) {
@@ -137,7 +156,9 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   const { renderedForm: renderedMediaUploadForm } = useMediaUploadForm(
     { category, query },
     loaded,
-    false
+    false,
+    uploadDisabled,
+    media?.length >= imagesMax ? 0 : imagesMax - media?.length
   );
 
   const submitMediaList = useCallback(async () => {
@@ -190,7 +211,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
         />
         <EntryFormWrapper>
           <EntryFormContainer>
-            <EntryFormHead title="Bilder" />
+            <EntryFormHead title={`${t('media.title')} (${t('general.max')} ${imagesMax})`} />
             <FormGrid>
               {renderedMediaUploadForm}
               <FormItem width={FormItemWidth.full}>

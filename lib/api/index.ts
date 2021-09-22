@@ -193,7 +193,7 @@ export const useMediaUpload = (
 ): {
   progress: number;
   upload: <T extends ApiCall>(
-    files: FileList,
+    files: FileList | File[],
     factory: ApiCallFactory,
     query?: unknown
   ) => Promise<T['response']>;
