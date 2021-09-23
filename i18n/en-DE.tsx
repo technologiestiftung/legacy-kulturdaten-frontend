@@ -124,6 +124,8 @@ export const enDE: Localization = {
     allowedFileTypes: () => 'Allowed file types',
     uploading: ({ progress }) => `Uploading files: ${progress} done`,
     success: ({ count }) => `Successfully uploaded ${count} ${count === 1 ? 'file' : 'files'}`,
+    pending: () => `Upload done. Files are being processed.`,
+    ariaLabel: () => 'Upload files',
   },
   date: {
     time: () => 'Time',
