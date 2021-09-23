@@ -180,18 +180,20 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
 
         const translations = mediaItem.relations?.translations;
 
-        for (let j = 0; j < translations.length; j += 1) {
-          const translation = translations[j];
-          const translationResp = await call<MediaTranslationCreate>(
-            mediaTranslationCreateFactory,
-            {
-              id,
-              translation,
-            }
-          );
+        if (translations && translations.length > 0) {
+          for (let j = 0; j < translations.length; j += 1) {
+            const translation = translations[j];
+            const translationResp = await call<MediaTranslationCreate>(
+              mediaTranslationCreateFactory,
+              {
+                id,
+                translation,
+              }
+            );
 
-          if (translationResp.status !== 200) {
-            console.error(resp);
+            if (translationResp.status !== 200) {
+              console.error(resp);
+            }
           }
         }
       }

@@ -124,6 +124,7 @@ export const deDE: Localization = {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
     uploading: ({ progress }) => `Dateien laden hoch: ${progress} geschafft`,
     success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
+    pending: () => `Hochladen abgeschlossen. Dateien werden verarbeitet.`,
     ariaLabel: () => 'Dateien hochladen',
   },
   date: {

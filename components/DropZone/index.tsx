@@ -118,6 +118,7 @@ const StyledDropZoneMessageBackground = styled.div<{
   isValidFiles: boolean;
   isUploading?: boolean;
   progress?: number;
+  pending?: boolean;
 }>`
   position: absolute;
   transition: width var(--transition-duration-fast);
@@ -127,6 +128,28 @@ const StyledDropZoneMessageBackground = styled.div<{
   width: ${({ isUploading, progress }) => (isUploading ? `${progress * 100}%` : '100%')};
   background: ${({ isUploading, isValidFiles }) =>
     isUploading ? 'rgb(0,255,0,0.2)' : isValidFiles ? 'rgb(0,255,0,0.1)' : 'rgba(255,0,0,0.1)'};
+
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  ${({ pending }) =>
+    pending &&
+    css`
+      animation-duration: 1s;
+      animation-name: blink;
+      animation-iteration-count: infinite;
+    `}
 `;
 
 const StyledDropZoneInput = styled.input`
@@ -164,9 +187,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
   disabledMessage,
   max,
 }: DropZoneProps) => {
-  // const isUploading = true;
-  // const progress = 0.75;
-
+  const pending = useMemo(() => isUploading && progress === 1, [isUploading, progress]);
   const t = useT();
   const [isDropOver, setIsDropOver] = useState(false);
   const [isValidFiles, setIsValidFiles] = useState(true);
@@ -270,7 +291,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
           type="file"
           ref={inputRef}
           multiple
-          accept={acceptedFileTypes?.join(',')}
+          accept={acceptedFileTypes?.map(({ mimeType }) => mimeType).join(',')}
           disabled={disabled || isUploading}
         />
         <StyledDropZoneMessage
@@ -282,10 +303,13 @@ export const DropZone: React.FC<DropZoneProps> = ({
             isUploading={isUploading}
             isValidFiles={isValidFiles}
             progress={progress}
+            pending={pending}
           />
-          {isUploading && (
+          {(pending || isUploading) && (
             <StyledDropZoneMessageText>
-              {t('dropZone.uploading', { progress: `${Math.ceil(progress * 100)}%` })}
+              {pending
+                ? t('dropZone.pending')
+                : t('dropZone.uploading', { progress: `${Math.ceil(progress * 100)}%` })}
             </StyledDropZoneMessageText>
           )}
         </StyledDropZoneMessage>
