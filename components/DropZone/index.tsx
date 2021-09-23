@@ -291,7 +291,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
           type="file"
           ref={inputRef}
           multiple
-          accept={acceptedFileTypes?.join(',')}
+          accept={acceptedFileTypes?.map(({ mimeType }) => mimeType).join(',')}
           disabled={disabled || isUploading}
         />
         <StyledDropZoneMessage
