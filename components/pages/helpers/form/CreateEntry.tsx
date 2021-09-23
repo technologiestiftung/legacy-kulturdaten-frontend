@@ -91,7 +91,9 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
               const id = resp.body.data.id;
 
               mutateList();
-              router.push(category.routes.list({ locale, query: { id, sub: 'info' } }));
+              router.push(
+                category.routes.list({ locale, query: { id, sub: 'info', organizer: '1' } })
+              );
             }
           } catch (e) {
             console.error(e);

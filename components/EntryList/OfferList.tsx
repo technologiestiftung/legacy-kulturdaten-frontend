@@ -30,7 +30,7 @@ import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
   min-height: 100%;
-  background: var(--grey-200);
+  background: var(--white);
 `;
 
 const viewEntriesPerPageMap = {
@@ -149,7 +149,7 @@ export const OfferList: React.FC<OfferListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.offer]({
                   locale,
-                  query: { id, sub },
+                  query: { organizer: '1', id, sub },
                 });
 
               const translations = relations?.translations;
@@ -193,7 +193,7 @@ export const OfferList: React.FC<OfferListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.offer]({
                   locale,
-                  query: { id, sub },
+                  query: { organizer: '1', id, sub },
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
@@ -238,7 +238,7 @@ export const OfferList: React.FC<OfferListProps> = ({
         setExpanded={setMenuExpanded}
         expandable={expandable}
         actionButton={
-          <Link href={routes.createOffer({ locale })} passHref>
+          <Link href={routes.createOffer({ locale, query: { organizer: '1' } })} passHref>
             <ButtonLink
               size={ButtonSize.big}
               color={ButtonColor.white}

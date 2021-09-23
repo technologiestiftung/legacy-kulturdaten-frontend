@@ -74,7 +74,7 @@ const StyledMenu = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--grey-200);
+  background: var(--white);
 `;
 
 interface MenuProps {

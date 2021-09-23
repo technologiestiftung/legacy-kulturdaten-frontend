@@ -47,9 +47,10 @@ export const useNavigation = (
   const locale = useLocale();
   const router = useRouter();
 
-  const isEntryPage = useMemo(() => router?.pathname === '/app/[category]/[id]/[sub]', [
-    router?.pathname,
-  ]);
+  const isEntryPage = useMemo(
+    () => router?.pathname === '/app/[category]/[id]/[sub]',
+    [router?.pathname]
+  );
 
   const menus = structure.menus.map((menuData) => {
     const { key, expandable, title } = menuData;
@@ -70,7 +71,10 @@ export const useNavigation = (
   const customHeaderLink = useMemo(
     () =>
       isEntryPage && !isMidOrWider && category ? (
-        <HeaderBackLink href={category.routes.list({ locale })} title={category.title.plural} />
+        <HeaderBackLink
+          href={category.routes.list({ locale, query: { organizer: '1' } })}
+          title={category.title.plural}
+        />
       ) : undefined,
     [isEntryPage, category, isMidOrWider, locale]
   );

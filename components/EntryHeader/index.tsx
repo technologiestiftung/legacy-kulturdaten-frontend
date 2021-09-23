@@ -159,7 +159,7 @@ const StyledEntryHeaderTabsSlotContainer = styled.div`
     padding: 0 1.5rem;
   }
 
-  @media screen and (min-width: 78.125rem) {
+  @media screen and (min-width: 84.125rem) {
     grid-column: 2 / -2;
     padding: 0;
   }

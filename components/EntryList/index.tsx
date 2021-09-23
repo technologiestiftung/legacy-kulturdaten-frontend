@@ -3,16 +3,13 @@ import { Language } from '../../config/locale';
 import { CategoryEntry } from '../../lib/api/types/general';
 
 export const StyledEntryListBody = styled.div`
-  background: var(--grey-200);
+  background: var(--white);
   padding: 0 0 1.5rem;
 `;
 
 export interface EntryListProps<EntryType extends CategoryEntry> {
   title: string;
-  useList: (query: {
-    page: string;
-    size: string;
-  }) => {
+  useList: (query: { page: string; size: string }) => {
     data: EntryType[];
     meta: {
       language: Language;

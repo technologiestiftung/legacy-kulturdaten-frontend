@@ -82,13 +82,13 @@ export const apiRoutes: {
     }${query?.size && `&size=${query.size}`}${query?.filter && `&filter=${query.filter}`}${
       query?.sort && `&sort=${query.sort}`
     }`,
-  organizerShow: ({ id }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,media`,
+  organizerShow: ({ organizer }) =>
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media`,
   organizerCreate: () => `/${apiVersion}/organizer`,
-  organizerUpdate: ({ id }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
-  organizerTranslationCreate: ({ id }) => `/${apiVersion}/organizer/${id}/translate`,
-  organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerUpdate: ({ organizer }) =>
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links`,
+  organizerTranslationCreate: ({ organizer }) => `/${apiVersion}/organizer/${organizer}/translate`,
+  organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   locationList: (query) =>
     `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${

@@ -49,7 +49,7 @@ const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
 
 export const StyledFilters = styled.div<{ expanded: boolean }>`
   display: flex;
-  background: var(--grey-200);
+  background: var(--white);
   flex-direction: column;
 
   ${({ expanded }) =>
@@ -98,7 +98,7 @@ const StyledFiltersBoxTitleButton = styled.button<{ isCollapsed: boolean }>`
   align-items: center;
   appearance: none;
   width: calc(100% - 4px);
-  background: var(--grey-200);
+  background: var(--white);
   border: none;
   padding: calc(0.75rem - 2px);
   margin: 0;

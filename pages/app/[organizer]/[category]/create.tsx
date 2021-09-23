@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import React from 'react';
-import { AppWrapper } from '../../../components/wrappers/AppWrapper';
-import { useCategory } from '../../../lib/categories';
+import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
+import { useCategory } from '../../../../lib/categories';
 
 const EntryIndexPage: NextPage = () => {
   const category = useCategory();

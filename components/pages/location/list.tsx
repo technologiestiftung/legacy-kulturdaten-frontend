@@ -18,14 +18,8 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const [listEvaluated, setListEvaluated] = useState(false);
 
-  const {
-    getCurrentPage,
-    getEntriesPerPage,
-    getSortKey,
-    getOrder,
-    getFilters,
-    getLastEntryId,
-  } = useContext(EntryListContext);
+  const { getCurrentPage, getEntriesPerPage, getSortKey, getOrder, getFilters, getLastEntryId } =
+    useContext(EntryListContext);
 
   const listName = Categories.location;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
@@ -47,7 +41,10 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
     if (list) {
       if (isMidOrWider && list?.data?.length > 0) {
         router.replace(
-          routes.location({ locale, query: { id: lastEntryId || list.data[0].id, sub: 'info' } })
+          routes.location({
+            locale,
+            query: { organizer: '1', id: lastEntryId || list.data[0].id, sub: 'info' },
+          })
         );
       }
       setListEvaluated(true);

@@ -46,7 +46,7 @@ export const useEntryHeader = ({ category, query }: EntryFormProps): React.React
   );
 
   const titleBarLink = (
-    <Link href={category?.routes.list({ locale })}>
+    <Link href={category?.routes.list({ locale, query: { organizer: '1' } })}>
       <StyledA>
         <Button icon="ArrowLeft" iconPosition={IconPosition.left} variant={ButtonVariant.minimal}>
           {t('general.back')}

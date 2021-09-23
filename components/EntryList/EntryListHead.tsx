@@ -8,7 +8,7 @@ import { mq } from '../globals/Constants';
 const StyledEntryListHead = styled.div`
   position: relative;
   z-index: 1;
-  background: var(--grey-200);
+  background: var(--white);
 `;
 
 const StyledEntryListHeadTop = styled.div``;

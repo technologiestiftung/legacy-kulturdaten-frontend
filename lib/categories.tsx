@@ -82,9 +82,13 @@ export const useCategory = (): Category => {
   const router = useRouter();
   const categories = useCategories();
   const categoryName = router?.query?.category as Categories;
-  const category = categories[categoryName];
 
-  return category;
+  if (categoryName && categoryName.length > 0) {
+    const category = categories[categoryName];
+    return category;
+  } else {
+    return categories['organizer'];
+  }
 };
 
 export enum Order {
@@ -187,7 +191,9 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const apiCallRoute = category?.api.show.route;
 
   const { data, mutate } = useSWR<C['response']>(
-    apiCallRoute && query && query.id ? getApiUrlString(apiCallRoute, query) : undefined,
+    apiCallRoute && query && (query.id || query.organizer)
+      ? getApiUrlString(apiCallRoute, query)
+      : undefined,
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 

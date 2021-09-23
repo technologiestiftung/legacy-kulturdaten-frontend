@@ -43,24 +43,24 @@ export const useMenuStructure = (): NavigationStructure => {
           type: MenuItemType.link,
           action: {
             title: t('menu.offer.title') as string,
-            href: routes.offer({ locale }),
-            active: router.asPath.includes(routes.offer({ locale })),
+            href: routes.offer({ query: { organizer: '1' }, locale }),
+            active: router.asPath.includes(routes.offer({ query: { organizer: '1' }, locale })),
           },
         },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.organizer.title') as string,
-            href: routes.organizer({ locale }),
-            active: router.asPath.includes(routes.organizer({ locale })),
-          },
-        },
+        // {
+        //   type: MenuItemType.link,
+        //   action: {
+        //     title: t('menu.organizer.title') as string,
+        //     href: routes.organizer({ query: { organizer: '1' }, locale }),
+        //     active: router.asPath.includes(routes.organizer({ query: { organizer: '1' }, locale })),
+        //   },
+        // },
         {
           type: MenuItemType.link,
           action: {
             title: t('menu.location.title') as string,
-            href: routes.location({ locale }),
-            active: router.asPath.includes(routes.location({ locale })),
+            href: routes.location({ query: { organizer: '1' }, locale }),
+            active: router.asPath.includes(routes.location({ query: { organizer: '1' }, locale })),
           },
         },
       ],
@@ -99,7 +99,7 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createOffer({ locale })}>
+              <Link href={routes.createOffer({ query: { organizer: '1' }, locale })}>
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.offer.items.create')}
                 </ButtonLink>
@@ -123,7 +123,7 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createOrganizer({ locale })}>
+              <Link href={routes.createOrganizer({ query: { organizer: '1' }, locale })}>
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.organizer.items.create')}
                 </ButtonLink>
@@ -147,7 +147,7 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createLocation({ locale })}>
+              <Link href={routes.createLocation({ query: { organizer: '1' }, locale })}>
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.location.items.create')}
                 </ButtonLink>
