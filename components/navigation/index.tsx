@@ -48,7 +48,7 @@ export const useNavigation = (
   const router = useRouter();
 
   const isEntryPage = useMemo(
-    () => router?.pathname === '/app/[category]/[id]/[sub]',
+    () => router?.pathname === '/app/[organizer]/[category]/[id]/[sub]',
     [router?.pathname]
   );
 
