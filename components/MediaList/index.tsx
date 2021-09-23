@@ -4,7 +4,7 @@ import formatISO9075 from 'date-fns/formatISO9075';
 import Image from 'next/image';
 import { ExternalLink } from 'react-feather';
 import { contentLanguages, languageTranslationKeys } from '../../config/locales';
-import { Media, MediaTranslation } from '../../lib/api/types/media';
+import { Media, MediaTranslation, RenditionAttributes } from '../../lib/api/types/media';
 import { useT } from '../../lib/i18n';
 import { getTranslation } from '../../lib/translations';
 import { Language } from '../../config/locales';
@@ -276,6 +276,16 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const call = useApiCall();
   const formatNumber = useFormatNumber();
 
+  const smallestRendition =
+    mediaItem.relations?.renditions?.length > 0
+      ? mediaItem.relations.renditions.reduce<RenditionAttributes>((pick, rendition) => {
+          if (parseInt(rendition.attributes.filesize, 10) < parseInt(pick.filesize, 10)) {
+            return rendition.attributes;
+          }
+          return pick;
+        }, mediaItem.attributes)
+      : mediaItem.attributes;
+
   return (
     <StyledMediaListItem role="listitem">
       {!valid && (
@@ -286,7 +296,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
       )}
       <StyledMediaListItemMain>
         <StyledMediaListItemThumbnail role="image">
-          {mediaItem.attributes.width && mediaItem.attributes.height ? (
+          {smallestRendition.width && smallestRendition.height ? (
             <StyledMediaListItemThumbnailInner>
               <StyledMediaListItemThumbnailLink
                 title={t('media.openImage') as string}
@@ -296,10 +306,10 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                 rel="noopener noreferrer"
               >
                 <Image
-                  src={mediaItem.attributes.url}
+                  src={smallestRendition.url}
                   layout={isMidOrWider ? 'intrinsic' : 'fill'}
-                  width={isMidOrWider ? mediaItem.attributes.width : undefined}
-                  height={isMidOrWider ? mediaItem.attributes.height : undefined}
+                  width={isMidOrWider ? smallestRendition.width : undefined}
+                  height={isMidOrWider ? smallestRendition.height : undefined}
                   objectFit="contain"
                 />
                 <StyledMediaListItemThumbnailLinkHover>
@@ -438,7 +448,9 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
             <>
               <StyledMediaListItemInfoLabel>{t('media.size')}</StyledMediaListItemInfoLabel>
               <StyledMediaListItemInfoText>
-                {formatNumber(Math.ceil((mediaItem.attributes.filesize / 1024 / 1024) * 100) / 100)}{' '}
+                {formatNumber(
+                  Math.ceil((parseInt(mediaItem.attributes.filesize, 10) / 1024 / 1024) * 100) / 100
+                )}{' '}
                 {t('media.mb')}
               </StyledMediaListItemInfoText>
             </>
@@ -503,7 +515,7 @@ export const MediaList: React.FC<MediaListProps> = ({
     <StyledMediaList role="list">
       {media?.map((mediaItem, index) => (
         <MediaListItem
-          key={index}
+          key={mediaItem.id}
           valid={itemsValidList[index]}
           mediaItem={mediaItem}
           onChange={(mediaItem) => {
