@@ -435,6 +435,7 @@ export const deDE: Localization = {
       items: {
         dashboard: () => 'Dashboard',
         notifications: () => 'Benachrichtigungen',
+        team: () => 'Team',
       },
     },
     organizer: {

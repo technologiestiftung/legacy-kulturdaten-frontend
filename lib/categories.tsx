@@ -98,13 +98,13 @@ export enum Order {
 
 const makeListQuery = (
   page?: number,
-  size?: number,
+  perPage?: number,
   filter?: [string, string][],
   sort?: { key: string; order: Order }
 ) => {
   return {
     page: page ? String(page) : undefined,
-    size: size ? String(size) : undefined,
+    size: perPage ? String(perPage) : undefined,
     filter: filter
       ? filter
           .filter((currentFilter) => currentFilter[1] !== undefined && currentFilter.length > 0)
@@ -118,7 +118,7 @@ const makeListQuery = (
 export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
   page?: number,
-  size?: number,
+  perPage?: number,
   filter?: [string, string][],
   sort?: { key: string; order: Order },
   load = true
@@ -137,8 +137,7 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const call = useApiCall();
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
-
-  const query = makeListQuery(page, size, filter, sort);
+  const query = makeListQuery(page, perPage, filter, sort);
 
   const { data } = useSWR(
     load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,

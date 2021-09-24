@@ -9,6 +9,7 @@ import { useT } from '../../../../lib/i18n';
 import { useLocale } from '../../../../lib/routing';
 import { Breakpoint } from '../../../../lib/WindowService';
 import { contentGrid, mq } from '../../../globals/Constants';
+import { useOrganizerId } from '../../../../lib/useOrganizer';
 
 const CreateWrapper = styled.div`
   padding: 0 0.75rem;
@@ -68,6 +69,7 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
   const t = useT();
   const call = useApiCall();
   const mutateList = useMutateList(category);
+  const organizerId = useOrganizerId();
 
   const [formState, setFormState] = useState<{
     name: string;
@@ -92,7 +94,7 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
 
               mutateList();
               router.push(
-                category.routes.list({ locale, query: { id, sub: 'info', organizer: '1' } })
+                category.routes.list({ locale, query: { id, sub: 'info', organizer: organizerId } })
               );
             }
           } catch (e) {

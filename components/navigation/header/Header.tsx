@@ -18,7 +18,7 @@ const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   ${mq(Breakpoint.mid)} {
     box-shadow: none;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   }
 `;
 
@@ -29,6 +29,9 @@ const StyledLink = styled.a`
   text-decoration: none;
   color: inherit;
   padding: 0.75rem;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 
   ${mq(Breakpoint.mid)} {
     padding: 1.125rem 0.75rem;
@@ -40,6 +43,10 @@ const StyledLink = styled.a`
 
 const StyledHeaderTitle = styled.div`
   display: flex;
+  /* justify-self: stretch; */
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const StyledHeaderMenuItems = styled.div`
@@ -69,6 +76,8 @@ const StyledHeaderUserMenu = styled.div`
   top: 0.375rem;
   right: 0;
   z-index: 999;
+  flex-basis: 0;
+  flex-grow: 1;
 
   ${mq(Breakpoint.mid)} {
     top: 0.75rem;
@@ -96,7 +105,11 @@ export const HeaderMain: React.FC<HeaderProps> = ({
 
   const renderedLink = (
     <Link>
-      <StyledLink>{title}</StyledLink>
+      <StyledLink>
+        {/* A very very very very very very very very very very very very very very very very very very
+        very very very long title */}
+        {title}
+      </StyledLink>
     </Link>
   );
 
@@ -153,7 +166,11 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
 
   const renderedLink = customLink || (
     <Link>
-      <StyledLink>{title}</StyledLink>
+      <StyledLink>
+        {/* A very very very very very very very very very very very very very very very very very very
+        very very very long title */}
+        {title}
+      </StyledLink>
     </Link>
   );
 

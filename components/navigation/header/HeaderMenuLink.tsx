@@ -74,7 +74,7 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   onClick,
 }: InternalMenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
-  const linkIsActive = active || isRouteActive;
+  const linkIsActive = active !== undefined ? active : isRouteActive;
 
   return (
     <Link href={href} passHref>

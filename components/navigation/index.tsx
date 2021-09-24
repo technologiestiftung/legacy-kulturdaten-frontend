@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
 import { useContext, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
-import { useLocale } from '../../lib/routing';
+import { useLanguage, useLocale } from '../../lib/routing';
+import { getTranslation } from '../../lib/translations';
+import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
@@ -46,6 +48,7 @@ export const useNavigation = (
   const user = useUser();
   const locale = useLocale();
   const router = useRouter();
+  const language = useLanguage();
 
   const isEntryPage = useMemo(
     () => router?.pathname === '/app/[organizer]/[category]/[id]/[sub]',
@@ -68,25 +71,44 @@ export const useNavigation = (
     return menuKey ? menus?.filter(({ key }) => key === menuKey)[0] : undefined;
   }, [category?.subMenuKey, menus]);
 
+  const organizerId = useOrganizerId();
+
   const customHeaderLink = useMemo(
     () =>
       isEntryPage && !isMidOrWider && category ? (
         <HeaderBackLink
-          href={category.routes.list({ locale, query: { organizer: '1' } })}
+          href={category.routes.list({ locale, query: { organizer: organizerId } })}
           title={category.title.plural}
         />
       ) : undefined,
-    [isEntryPage, category, isMidOrWider, locale]
+    [isEntryPage, category, isMidOrWider, locale, organizerId]
   );
 
+  const organizer = useOrganizer();
+
+  const headerTitle = organizer
+    ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name
+    : title;
+
+  console.log('#####');
+  console.log(organizerId);
+  console.log(organizer);
+  console.log(headerTitle);
+  console.log('#####');
+
   const renderedHeaderMain = (
-    <HeaderMain user={user} title={title} Link={Link} menuItems={structure.header.menuItems} />
+    <HeaderMain
+      user={user}
+      title={headerTitle}
+      Link={Link}
+      menuItems={structure.header.menuItems}
+    />
   );
 
   const renderedHeaderSecondary = isMidOrWider ? undefined : (
     <HeaderSecondary
       user={user}
-      title={title}
+      title={headerTitle}
       Link={Link}
       menuItems={structure.header.menuItems}
       customLink={customHeaderLink}

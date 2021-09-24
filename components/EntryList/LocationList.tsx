@@ -26,6 +26,7 @@ import Link from 'next/link';
 import { ButtonLink } from '../button/ButtonLink';
 import { ButtonColor, ButtonSize } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
+import { useOrganizerId } from '../../lib/useOrganizer';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -145,6 +146,8 @@ export const LocationList: React.FC<LocationListProps> = ({
 
   const date = useDate();
 
+  const organizerId = useOrganizerId();
+
   const cards = useMemo(
     () =>
       list?.data
@@ -153,7 +156,7 @@ export const LocationList: React.FC<LocationListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.location]({
                   locale,
-                  query: { id, sub, organizer: '1' },
+                  query: { id, sub, organizer: organizerId },
                 });
 
               const translations = relations?.translations;
@@ -185,15 +188,16 @@ export const LocationList: React.FC<LocationListProps> = ({
           )
         : undefined,
     [
-      expanded,
-      language,
       list.data,
-      locale,
+      language,
+      customEntryOnClick,
+      expanded,
       router.asPath,
+      activeEntryId,
+      locale,
+      organizerId,
       setMenuExpanded,
       setLastEntryId,
-      customEntryOnClick,
-      activeEntryId,
     ]
   );
 
@@ -211,7 +215,7 @@ export const LocationList: React.FC<LocationListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.location]({
                   locale,
-                  query: { id, sub, organizer: '1' },
+                  query: { id, sub, organizer: organizerId },
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
@@ -260,6 +264,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       router.asPath,
       setMenuExpanded,
       setLastEntryId,
+      organizerId,
     ]
   );
 
@@ -271,7 +276,10 @@ export const LocationList: React.FC<LocationListProps> = ({
         setExpanded={setMenuExpanded}
         expandable={expandable}
         actionButton={
-          <Link href={routes.createLocation({ locale, query: { organizer: '1' } })} passHref>
+          <Link
+            href={routes.createLocation({ locale, query: { organizer: organizerId } })}
+            passHref
+          >
             <ButtonLink
               size={ButtonSize.big}
               color={ButtonColor.white}

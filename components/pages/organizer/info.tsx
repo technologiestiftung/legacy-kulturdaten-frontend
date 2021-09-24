@@ -712,7 +712,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     valid
   );
 
-  const renderedEntryHeader = useEntryHeader({ category, query });
+  const renderedEntryHeader = useEntryHeader({ category, query }, true);
 
   const formattedDate = useSaveDate(entry);
 
@@ -746,7 +746,12 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const message = t('save.confirmExit') as string;
 
-  useConfirmExit(!pristine, message, () => {
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
     nameReset();
     addressReset();
     descriptionReset();

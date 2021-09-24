@@ -29,8 +29,7 @@ export type OfferDate = {
       to: string;
       allDay: boolean;
       status: OfferDateStatus;
-      ticketLink?: string;
-      recurrence?: string;
+      ticketUrl?: string;
     };
     relations?: {
       translations: OfferDateTranslation[];

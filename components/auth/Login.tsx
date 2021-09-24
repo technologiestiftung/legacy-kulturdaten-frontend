@@ -9,6 +9,7 @@ import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
 import { useT } from '../../lib/i18n';
+import { useOrganizerId } from '../../lib/useOrganizer';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -42,12 +43,13 @@ export const LoginForm: React.FC = () => {
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
+  const organizerId = useOrganizerId();
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace(routes.dashboard({ locale }));
+      router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
     }
-  }, [isLoggedIn, router, locale]);
+  }, [isLoggedIn, router, locale, organizerId]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -59,7 +61,10 @@ export const LoginForm: React.FC = () => {
       if (resp.status === 200) {
         const token = resp.body.meta.token.token;
 
-        login(authCookie(token, remember, locale), routes.dashboard({ locale }));
+        login(
+          authCookie(token, remember, locale),
+          routes.dashboard({ locale, query: { organizer: organizerId } })
+        );
       }
     } catch (e) {
       setError(e);

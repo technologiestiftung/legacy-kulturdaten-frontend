@@ -8,6 +8,7 @@ import { DateFormat, useDate } from '../../../lib/date';
 import { useT } from '../../../lib/i18n';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
+import { useOrganizerId } from '../../../lib/useOrganizer';
 import { Button, ButtonVariant, IconPosition } from '../../button';
 import { EntryHeader } from '../../EntryHeader';
 import { Publish } from '../../Publish';
@@ -18,7 +19,10 @@ const StyledA = styled.a`
   text-decoration: none;
 `;
 
-export const useEntryHeader = ({ category, query }: EntryFormProps): React.ReactElement => {
+export const useEntryHeader = (
+  { category, query }: EntryFormProps,
+  wideLayout?: boolean
+): React.ReactElement => {
   const tabs = useTabs(category);
   const router = useRouter();
   const language = useLanguage();
@@ -36,6 +40,7 @@ export const useEntryHeader = ({ category, query }: EntryFormProps): React.React
 
   const date = useDate();
   const t = useT();
+  const organizerId = useOrganizerId();
 
   const formattedDate = entry?.data?.attributes?.updatedAt
     ? date(new Date(entry?.data?.attributes.updatedAt), DateFormat.dateTime)
@@ -46,7 +51,7 @@ export const useEntryHeader = ({ category, query }: EntryFormProps): React.React
   );
 
   const titleBarLink = (
-    <Link href={category?.routes.list({ locale, query: { organizer: '1' } })}>
+    <Link href={category?.routes.list({ locale, query: { organizer: organizerId } })}>
       <StyledA>
         <Button icon="ArrowLeft" iconPosition={IconPosition.left} variant={ButtonVariant.minimal}>
           {t('general.back')}
@@ -57,6 +62,7 @@ export const useEntryHeader = ({ category, query }: EntryFormProps): React.React
 
   return (
     <EntryHeader
+      wideLayout={wideLayout}
       backButton={titleBarLink}
       title={title}
       tabs={tabs}

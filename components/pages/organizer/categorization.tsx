@@ -212,7 +212,12 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
     false
   );
 
-  useConfirmExit(!pristine, t('save.confirmExit') as string, () => reset());
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
 
   return (
     <>

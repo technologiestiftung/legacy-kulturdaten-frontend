@@ -78,9 +78,9 @@ export const apiRoutes: {
   authInfo: () => '/auth/info',
   organizerList: (query) =>
     `/${apiVersion}/organizer?include=types,subjects,translations${
-      query?.page && `&page=${query.page}`
-    }${query?.size && `&size=${query.size}`}${query?.filter && `&filter=${query.filter}`}${
-      query?.sort && `&sort=${query.sort}`
+      query?.page ? `&page=${query.page}` : ''
+    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
+      query?.sort ? `&sort=${query.sort}` : ''
     }`,
   organizerShow: ({ organizer }) =>
     `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media`,
@@ -337,11 +337,13 @@ export const getApiUrl = (
     : route;
   return new URL(routeWithIncludes, api);
 };
+
 export const getApiUrlString = (
   apiRoute: ApiRoutes,
   query?: ParsedUrlQuery,
   includes?: string[]
 ): string => getApiUrl(apiRoute, query, includes).toString();
+
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 
 /**

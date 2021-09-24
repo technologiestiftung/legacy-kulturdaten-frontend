@@ -7,6 +7,7 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/Windo
 import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
+import { OrganizerBand } from '../navigation/OrganizerBand';
 
 const StyledAppLayout = styled.div``;
 
@@ -17,8 +18,8 @@ const Container = styled.div`
   position: relative;
 
   ${mq(Breakpoint.mid)} {
-    margin-left: 6rem;
-    width: calc(100% - 6rem);
+    margin-left: var(--organizer-band-width);
+    width: calc(100% - var(--organizer-band-width));
     grid-template-columns: repeat(3, 5.5625rem) repeat(11, 1fr);
   }
 
@@ -35,9 +36,9 @@ const OrganizerSlot = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 6rem;
-  background: var(--grey-200);
+  width: var(--organizer-band-width);
   height: var(--app-height);
+  background: var(--grey-200);
   z-index: 1002;
   box-shadow: inset -1.75rem 0 0.75rem -2rem var(--black-o25);
   overflow-x: hidden;
@@ -58,8 +59,8 @@ const HeaderSlot = styled.div<{ locked: boolean }>`
   background: var(--white);
 
   ${mq(Breakpoint.mid)} {
-    width: calc(100% - 6rem);
-    left: 6rem;
+    width: calc(100% - var(--organizer-band-width));
+    left: var(--organizer-band-width);
     padding-bottom: 0;
     box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.25);
     top: 0;
@@ -93,14 +94,14 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
     height: calc(var(--app-height) - 3.75rem);
     min-height: calc(var(--app-height) - 3.75rem);
     overflow-y: auto;
-    left: 6rem;
+    left: var(--organizer-band-width);
 
     width: 16.6875rem;
 
     transition: width 0.083333s, filter 0.2s;
 
     @media screen and (min-width: 67.1875rem) {
-      width: calc(calc(100% - 6rem) / 11 * 3);
+      width: calc(calc(100% - var(--organizer-band-width)) / 11 * 3);
     }
 
     ${mq(Breakpoint.ultra)} {
@@ -114,17 +115,17 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
           filter: grayscale(0);
 
           ${mq(Breakpoint.mid)} {
-            width: calc(100% - 6rem);
+            width: calc(100% - var(--organizer-band-width));
             border-right: none;
           }
 
           ${mq(Breakpoint.widish)} {
             border-right: 1px solid var(--grey-400);
-            width: calc((100% - 6rem) / 11 * 10);
+            width: calc((100% - var(--organizer-band-width)) / 11 * 10);
           }
 
           ${mq(Breakpoint.ultra)} {
-            width: calc((100% - 6rem) / 11 * 9);
+            width: calc((100% - var(--organizer-band-width)) / 11 * 9);
           }
         `
       : ''}
@@ -226,7 +227,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       {headerSecondary && (
         <HeaderSlotSecondary role="navigation">{headerSecondary}</HeaderSlotSecondary>
       )}
-      {isMidOrWider && <OrganizerSlot></OrganizerSlot>}
+      {isMidOrWider && (
+        <OrganizerSlot>
+          <OrganizerBand />
+        </OrganizerSlot>
+      )}
       {isMidOrWider && sidebar && (
         <MenuSlot expanded={menuExpanded} role="navigation">
           {sidebar}

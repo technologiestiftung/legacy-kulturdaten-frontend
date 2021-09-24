@@ -26,6 +26,7 @@ import { ButtonColor, ButtonSize } from '../button';
 import { ButtonLink } from '../button/ButtonLink';
 import Link from 'next/link';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
+import { useOrganizerId } from '../../lib/useOrganizer';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -141,6 +142,8 @@ export const OfferList: React.FC<OfferListProps> = ({
 
   const date = useDate();
 
+  const organizerId = useOrganizerId();
+
   const cards = useMemo(
     () =>
       list?.data
@@ -149,7 +152,7 @@ export const OfferList: React.FC<OfferListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.offer]({
                   locale,
-                  query: { organizer: '1', id, sub },
+                  query: { organizer: organizerId, id, sub },
                 });
 
               const translations = relations?.translations;
@@ -176,7 +179,16 @@ export const OfferList: React.FC<OfferListProps> = ({
             }
           )
         : undefined,
-    [expanded, language, list.data, locale, router.asPath, setMenuExpanded, setLastEntryId]
+    [
+      expanded,
+      language,
+      list.data,
+      locale,
+      router.asPath,
+      setMenuExpanded,
+      setLastEntryId,
+      organizerId,
+    ]
   );
 
   const rows: TableProps['content'] = useMemo(
@@ -193,7 +205,7 @@ export const OfferList: React.FC<OfferListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.offer]({
                   locale,
-                  query: { organizer: '1', id, sub },
+                  query: { organizer: organizerId, id, sub },
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
@@ -227,7 +239,17 @@ export const OfferList: React.FC<OfferListProps> = ({
             }
           )
         : undefined,
-    [list.data, language, date, expanded, locale, router.asPath, setMenuExpanded, setLastEntryId]
+    [
+      list.data,
+      language,
+      date,
+      expanded,
+      locale,
+      router.asPath,
+      setMenuExpanded,
+      setLastEntryId,
+      organizerId,
+    ]
   );
 
   return (
@@ -238,7 +260,7 @@ export const OfferList: React.FC<OfferListProps> = ({
         setExpanded={setMenuExpanded}
         expandable={expandable}
         actionButton={
-          <Link href={routes.createOffer({ locale, query: { organizer: '1' } })} passHref>
+          <Link href={routes.createOffer({ locale, query: { organizer: organizerId } })} passHref>
             <ButtonLink
               size={ButtonSize.big}
               color={ButtonColor.white}

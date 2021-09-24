@@ -149,7 +149,12 @@ const StyledEntryHeaderTabsSlot = styled.div`
   ${contentGrid(8)}
 `;
 
-const StyledEntryHeaderTabsSlotContainer = styled.div`
+const tabsSlotWideLayout = css`
+  grid-column: 2 / -2;
+  padding: 0;
+`;
+
+const StyledEntryHeaderTabsSlotContainer = styled.div<{ wideLayout?: boolean }>`
   min-width: 0;
   grid-column: 1 / -1;
   padding: 0;
@@ -159,14 +164,21 @@ const StyledEntryHeaderTabsSlotContainer = styled.div`
     padding: 0 1.5rem;
   }
 
-  @media screen and (min-width: 84.125rem) {
-    grid-column: 2 / -2;
-    padding: 0;
-  }
+  ${({ wideLayout }) =>
+    wideLayout
+      ? css`
+          ${mq(Breakpoint.widish)} {
+            ${tabsSlotWideLayout}
+          }
+        `
+      : css`
+          @media screen and (min-width: calc(78.125rem + var(--organizer-band-width))) {
+            ${tabsSlotWideLayout}
+          }
+        `}
 
   ${mq(Breakpoint.ultra)} {
-    grid-column: 2 / -2;
-    padding: 0;
+    ${tabsSlotWideLayout}
   }
 `;
 
@@ -232,6 +244,7 @@ interface EntryHeaderProps {
   statusBar?: React.ReactElement;
   publish?: React.ReactElement;
   tabs?: React.ReactElement<TabsProps>;
+  wideLayout?: boolean;
 }
 
 export const EntryHeader: React.FC<EntryHeaderProps> = ({
@@ -240,6 +253,7 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
   publish,
   tabs,
   status,
+  wideLayout,
 }: EntryHeaderProps) => {
   const t = useT();
 
@@ -265,7 +279,9 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
       {publish && <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>}
       {tabs && (
         <StyledEntryHeaderTabsSlot>
-          <StyledEntryHeaderTabsSlotContainer>{tabs}</StyledEntryHeaderTabsSlotContainer>
+          <StyledEntryHeaderTabsSlotContainer wideLayout={wideLayout}>
+            {tabs}
+          </StyledEntryHeaderTabsSlotContainer>
         </StyledEntryHeaderTabsSlot>
       )}
     </StyledEntryHeader>

@@ -6,6 +6,7 @@ import { LocationList as LocationListCall } from '../../../lib/api';
 import { Location } from '../../../lib/api/types/location';
 import { CategoryPage, useList } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
+import { useOrganizerId } from '../../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
 import { LocationList } from '../../EntryList/LocationList';
@@ -28,6 +29,7 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const lastEntryId = useMemo(() => getLastEntryId(listName), [getLastEntryId, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
+  const organizerId = useOrganizerId();
 
   const list = useList<LocationListCall, Location>(
     categories.location,
@@ -40,16 +42,24 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
   useEffect(() => {
     if (list) {
       if (isMidOrWider && list?.data?.length > 0) {
+        console.log('#####');
+        console.log(
+          routes.location({
+            locale,
+            query: { organizer: organizerId, id: lastEntryId || list.data[0].id, sub: 'info' },
+          })
+        );
+        console.log('#####');
         router.replace(
           routes.location({
             locale,
-            query: { organizer: '1', id: lastEntryId || list.data[0].id, sub: 'info' },
+            query: { organizer: organizerId, id: lastEntryId || list.data[0].id, sub: 'info' },
           })
         );
       }
       setListEvaluated(true);
     }
-  }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
+  }, [list, list.data, locale, router, isMidOrWider, lastEntryId, organizerId]);
 
   return listEvaluated ? (
     <AppWrapper>{!isMidOrWider ? <LocationList expanded={false} /> : ''}</AppWrapper>
