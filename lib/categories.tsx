@@ -190,7 +190,7 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const apiCallRoute = category?.api.show.route;
 
   const { data, mutate } = useSWR<C['response']>(
-    apiCallRoute && query && (query.id || query.organizer)
+    apiCallRoute && query && (query.id || (query.organizer && query.organizer !== 'default'))
       ? getApiUrlString(apiCallRoute, query)
       : undefined,
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)

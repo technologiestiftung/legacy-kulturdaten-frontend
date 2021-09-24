@@ -90,12 +90,6 @@ export const useNavigation = (
     ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name
     : title;
 
-  console.log('#####');
-  console.log(organizerId);
-  console.log(organizer);
-  console.log(headerTitle);
-  console.log('#####');
-
   const renderedHeaderMain = (
     <HeaderMain
       user={user}

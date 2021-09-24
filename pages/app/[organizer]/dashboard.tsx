@@ -2,10 +2,12 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 
-import { routes, useLocale } from '../../../lib/routing';
+import { routes, useLanguage, useLocale } from '../../../lib/routing';
 import { useUser } from '../../../components/user/useUser';
 import { AppWrapper } from '../../../components/wrappers/AppWrapper';
 import { useT } from '../../../lib/i18n';
+import { useOrganizer } from '../../../lib/useOrganizer';
+import { getTranslation } from '../../../lib/translations';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -38,9 +40,13 @@ const DashboardPage: NextPage = () => {
   useUser();
   const locale = useLocale();
   const t = useT();
+  const language = useLanguage();
+  const organizer = useOrganizer();
+  const currentTranslation = getTranslation(language, organizer?.data?.relations?.translations);
 
   return (
     <AppWrapper>
+      Dashboard for {currentTranslation?.attributes.name}
       <StyledUl>
         <StyledLi>
           <Link href={routes.userProfile({ locale })}>

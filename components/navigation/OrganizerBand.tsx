@@ -9,8 +9,7 @@ import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { routes } from '../../config/routes';
 import React, { RefObject } from 'react';
-import { useRouter } from 'next/router';
-import { useOrganizerId } from '../../lib/useOrganizer';
+import { useOrganizerId, useSetOrganizerId } from '../../lib/useOrganizer';
 
 const StyledOrganizerBand = styled.div`
   width: 100%;
@@ -35,24 +34,27 @@ const StyledOrganizerBandItem = styled.a<{ active: boolean }>`
 
   &:hover {
     box-shadow: var(--shadow-sharp-hover);
+    border-color: var(--grey-600);
   }
 
   ${({ active }) =>
     active &&
     css`
       background: var(--white);
-      border: 1px solid var(--grey-600);
+      border-color: var(--black);
       color: var(--black);
       box-shadow: var(--shadow-sharp-active);
 
       &:hover {
         box-shadow: var(--shadow-sharp-active);
+        border-color: var(--black);
     `}
 `;
 
 interface OrganizerBandItemProps {
   children: React.ReactNode;
   active: boolean;
+  organizerId: string;
   href?: string;
   onClick?: React.MouseEventHandler;
 }
@@ -63,13 +65,28 @@ const OrganizerBandItem: React.FC<OrganizerBandItemProps> = React.forwardRef<
   OrganizerBandItemProps
 >(
   (
-    { children, active, href, onClick }: OrganizerBandItemProps,
+    { children, active, href, onClick, organizerId }: OrganizerBandItemProps,
     ref: RefObject<HTMLAnchorElement>
-  ) => (
-    <StyledOrganizerBandItem active={active} ref={ref} href={href} onClick={onClick}>
-      {children}
-    </StyledOrganizerBandItem>
-  )
+  ) => {
+    const setOrganizerId = useSetOrganizerId();
+
+    return (
+      <StyledOrganizerBandItem
+        active={active}
+        ref={ref}
+        href={href}
+        onClick={(e) => {
+          setOrganizerId(organizerId);
+
+          if (onClick) {
+            onClick(e);
+          }
+        }}
+      >
+        {children}
+      </StyledOrganizerBandItem>
+    );
+  }
 );
 
 export const OrganizerBand: React.FC = () => {
@@ -90,7 +107,7 @@ export const OrganizerBand: React.FC = () => {
             href={routes.dashboard({ locale, query: { organizer: organizer.id } })}
             passHref
           >
-            <OrganizerBandItem active={organizerId === organizer.id}>
+            <OrganizerBandItem organizerId={organizer.id} active={organizerId === organizer.id}>
               {translation?.attributes?.name.slice(0, 1)}
             </OrganizerBandItem>
           </Link>
