@@ -23,7 +23,11 @@ const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   padding: 0.75rem;
 `;
 
-const StyledOrganizerBandItem = styled.a<{ active: boolean; layout: OrganizerBandLayout }>`
+const StyledOrganizerBandItem = styled.a<{
+  active: boolean;
+  layout: OrganizerBandLayout;
+  noBorder?: boolean;
+}>`
   text-decoration: none;
   font-size: 1.125rem;
   line-height: 1.5rem;
@@ -34,9 +38,46 @@ const StyledOrganizerBandItem = styled.a<{ active: boolean; layout: OrganizerBan
   justify-content: center;
   padding: calc(0.75rem - 1px) 0;
   background: var(--grey-200);
-  border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
   color: var(--grey-600);
+  transition: background var(--transition-duration-fast), color var(--transition-duration-fast),
+    border-color var(--transition-duration-fast), box-shadow var(--transition-duration-fast);
+
+  ${({ noBorder, active }) =>
+    noBorder
+      ? css`
+          border: 1px solid transparent;
+
+          &:hover {
+            background: var(--white);
+          }
+
+          ${active &&
+          css`
+            background: var(--white);
+          `}
+        `
+      : css`
+          border: 1px solid var(--grey-400);
+
+          &:hover {
+            box-shadow: var(--shadow-sharp-hover);
+            border-color: var(--grey-600);
+          }
+
+          ${active &&
+          css`
+            background: var(--white);
+            border-color: var(--black);
+            color: var(--black);
+            box-shadow: var(--shadow-sharp-active);
+
+            &:hover {
+              box-shadow: var(--shadow-sharp-active);
+              border-color: var(--black);
+            }
+          `}
+        `}
 
   ${({ layout }) =>
     layout === OrganizerBandLayout.wide &&
@@ -50,24 +91,6 @@ const StyledOrganizerBandItem = styled.a<{ active: boolean; layout: OrganizerBan
       text-overflow: ellipsis;
       max-width: 100%;
       justify-content: flex-start;
-    `}
-
-  &:hover {
-    box-shadow: var(--shadow-sharp-hover);
-    border-color: var(--grey-600);
-  }
-
-  ${({ active }) =>
-    active &&
-    css`
-      background: var(--white);
-      border-color: var(--black);
-      color: var(--black);
-      box-shadow: var(--shadow-sharp-active);
-
-      &:hover {
-        box-shadow: var(--shadow-sharp-active);
-        border-color: var(--black);
     `}
 
   > svg {
@@ -85,6 +108,7 @@ interface OrganizerBandItemProps {
   children: string;
   active: boolean;
   layout: OrganizerBandLayout;
+  noBorder?: boolean;
   icon?: string;
   href?: string;
   onClick?: React.MouseEventHandler;
@@ -96,7 +120,7 @@ const OrganizerBandItem: React.FC<OrganizerBandItemProps> = React.forwardRef<
   OrganizerBandItemProps
 >(
   (
-    { children, active, href, onClick, layout, icon }: OrganizerBandItemProps,
+    { children, active, href, onClick, layout, icon, noBorder }: OrganizerBandItemProps,
     ref: RefObject<HTMLAnchorElement>
   ) => {
     return (
@@ -106,6 +130,7 @@ const OrganizerBandItem: React.FC<OrganizerBandItemProps> = React.forwardRef<
         href={href}
         layout={layout}
         aria-label={children as string}
+        noBorder={noBorder}
         onClick={(e) => {
           if (onClick) {
             onClick(e);
@@ -183,6 +208,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
           active={router?.asPath === routes.createOrganizer({ locale })}
           layout={layout}
           icon="Plus"
+          noBorder
         >
           {t('menu.createOrganizer') as string}
         </OrganizerBandItem>
