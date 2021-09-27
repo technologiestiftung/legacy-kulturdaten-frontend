@@ -471,5 +471,7 @@ export const deDE: Localization = {
       label: () => 'Sprache / Language',
       description: () => 'Sprache wählen, choose Language',
     },
+    organizerBandShowAriaLabel: () => 'Liste meiner Anbieter:innen ausklappen',
+    organizerBandCollapseAriaLabel: () => 'Liste meiner Anbieter:innen einklappen',
   },
 };

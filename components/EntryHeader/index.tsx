@@ -7,7 +7,7 @@ import { contentGrid, insetBorder, mq } from '../globals/Constants';
 import { TabsProps } from '../navigation/tabs';
 
 const StyledEntryHeader = styled.div`
-  background: var(--grey-200);
+  background: var(--white);
   box-shadow: ${insetBorder(false, false, true)};
   grid-row-gap: 1.5rem;
   position: relative;
@@ -17,7 +17,6 @@ const StyledEntryHeader = styled.div`
 
   ${mq(Breakpoint.mid)} {
     grid-row-gap: 2.25rem;
-    background: var(--white);
 
     ${contentGrid(8)}
   }
@@ -189,14 +188,13 @@ const StyledEntryHeaderStatus = styled.div`
   font-weight: 700;
   border-radius: 0.75rem;
   overflow: hidden;
-  background: var(--white);
+  background: var(--grey-200);
   flex-basis: 0;
   flex-grow: 1;
 
   ${mq(Breakpoint.mid)} {
     flex-basis: initial;
     flex-grow: initial;
-    background: var(--grey-200);
   }
 `;
 

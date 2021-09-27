@@ -7,7 +7,7 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/Windo
 import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
-import { OrganizerBand } from '../navigation/OrganizerBand';
+import { OrganizerBand, OrganizerBandLayout } from '../navigation/OrganizerBand';
 
 const StyledAppLayout = styled.div``;
 
@@ -69,7 +69,8 @@ const HeaderSlot = styled.div<{ locked: boolean }>`
 `;
 
 const HeaderSlotSecondary = styled.div`
-  border-bottom: 1px solid var(--grey-400);
+  background: var(--grey-200);
+  box-shadow: inset 0 -1.75rem 0.75rem -2rem var(--black-o25);
 `;
 
 const MenuSlot = styled.div<{ expanded?: boolean }>`
@@ -229,7 +230,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       )}
       {isMidOrWider && (
         <OrganizerSlot>
-          <OrganizerBand />
+          <OrganizerBand layout={OrganizerBandLayout.narrow} />
         </OrganizerSlot>
       )}
       {isMidOrWider && sidebar && (

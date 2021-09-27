@@ -3,14 +3,14 @@
 exports[`Header renders 1`] = `
 <div>
   <header
-    class="css-40cvnf-StyledHeader e1sn27876"
+    class="css-f4v558-StyledHeader e1sn27879"
   >
     <div
-      class="css-drcwnq-StyledHeaderTitle e1sn27874"
+      class="css-1sbbrbc-StyledHeaderTitle e1sn27877"
     >
       <a
-        class="css-2l7azn-StyledLink e1sn27875"
-        href="/app/1/dashboard"
+        class="css-d2nb4b-StyledLink e1sn27878"
+        href="/app/default/dashboard"
       >
         Test title
       </a>

@@ -11,7 +11,7 @@ import { routes } from '../../config/routes';
 import React, { RefObject } from 'react';
 import { useOrganizerId, useSetOrganizerId } from '../../lib/useOrganizer';
 
-const StyledOrganizerBand = styled.div`
+const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
   min-height: 100%;
   display: flex;
@@ -20,7 +20,7 @@ const StyledOrganizerBand = styled.div`
   padding: 0.75rem;
 `;
 
-const StyledOrganizerBandItem = styled.a<{ active: boolean }>`
+const StyledOrganizerBandItem = styled.a<{ active: boolean; layout: OrganizerBandLayout }>`
   text-decoration: none;
   font-size: 1.125rem;
   line-height: 1.5rem;
@@ -31,6 +31,19 @@ const StyledOrganizerBandItem = styled.a<{ active: boolean }>`
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
   color: var(--grey-600);
+
+  ${({ layout }) =>
+    layout === OrganizerBandLayout.wide &&
+    css`
+      text-align: left;
+      font-size: var(--font-size-300);
+      line-height: var(--line-height-300);
+      padding: 0.75rem 0.75rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    `}
 
   &:hover {
     box-shadow: var(--shadow-sharp-hover);
@@ -57,6 +70,7 @@ interface OrganizerBandItemProps {
   organizerId: string;
   href?: string;
   onClick?: React.MouseEventHandler;
+  layout: OrganizerBandLayout;
 }
 
 // eslint-disable-next-line react/display-name
@@ -65,7 +79,7 @@ const OrganizerBandItem: React.FC<OrganizerBandItemProps> = React.forwardRef<
   OrganizerBandItemProps
 >(
   (
-    { children, active, href, onClick, organizerId }: OrganizerBandItemProps,
+    { children, active, href, onClick, organizerId, layout }: OrganizerBandItemProps,
     ref: RefObject<HTMLAnchorElement>
   ) => {
     const setOrganizerId = useSetOrganizerId();
@@ -75,6 +89,7 @@ const OrganizerBandItem: React.FC<OrganizerBandItemProps> = React.forwardRef<
         active={active}
         ref={ref}
         href={href}
+        layout={layout}
         onClick={(e) => {
           setOrganizerId(organizerId);
 
@@ -89,7 +104,20 @@ const OrganizerBandItem: React.FC<OrganizerBandItemProps> = React.forwardRef<
   }
 );
 
-export const OrganizerBand: React.FC = () => {
+export enum OrganizerBandLayout {
+  narrow = 'narrow',
+  wide = 'wide',
+}
+
+export interface OrganizerBandProps {
+  layout: OrganizerBandLayout;
+  onClick?: React.MouseEventHandler;
+}
+
+export const OrganizerBand: React.FC<OrganizerBandProps> = ({
+  layout,
+  onClick,
+}: OrganizerBandProps) => {
   const categories = useCategories();
   const organizers = useList<OrganizerList, Organizer>(categories?.organizer, 1, 3);
   const language = useLanguage();
@@ -97,7 +125,7 @@ export const OrganizerBand: React.FC = () => {
   const organizerId = useOrganizerId();
 
   return (
-    <StyledOrganizerBand>
+    <StyledOrganizerBand layout={layout}>
       {organizers?.data?.map((organizer, index) => {
         const translation = getTranslation(language, organizer.relations?.translations);
 
@@ -107,8 +135,15 @@ export const OrganizerBand: React.FC = () => {
             href={routes.dashboard({ locale, query: { organizer: organizer.id } })}
             passHref
           >
-            <OrganizerBandItem organizerId={organizer.id} active={organizerId === organizer.id}>
-              {translation?.attributes?.name.slice(0, 1)}
+            <OrganizerBandItem
+              organizerId={organizer.id}
+              active={organizerId === organizer.id}
+              layout={layout}
+              onClick={onClick}
+            >
+              {layout === OrganizerBandLayout.narrow
+                ? translation?.attributes?.name.slice(0, 1)
+                : translation?.attributes?.name}
             </OrganizerBandItem>
           </Link>
         );
