@@ -10,6 +10,8 @@ type NavigationContext = {
   setMenuExpanded: (expanded: boolean) => void;
   activeOrganizerId: string;
   setActiveOrganizerId: (organizerId: string) => void;
+  headerOrganizerBandCollapsed: boolean;
+  setHeaderOrganizerBandCollapsed: (collapsed: boolean) => void;
 };
 
 export const NavigationContext = React.createContext<NavigationContext>({
@@ -21,6 +23,8 @@ export const NavigationContext = React.createContext<NavigationContext>({
   setMenuExpanded: () => undefined,
   activeOrganizerId: 'default',
   setActiveOrganizerId: () => undefined,
+  headerOrganizerBandCollapsed: true,
+  setHeaderOrganizerBandCollapsed: () => undefined,
 });
 
 enum OverlayActions {
@@ -77,6 +81,7 @@ export const NavigationContextProvider: React.FC<NavigationContextProviderProps>
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
   const [activeOrganizerId, setActiveOrganizerId] = useState('default');
   const [overlays, dispatchOverlayAction] = useReducer(linksReducer, {});
+  const [headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed] = useState(true);
 
   const setOverlayOpen = useCallback((id: string, open: boolean) => {
     if (open) {
@@ -115,6 +120,8 @@ export const NavigationContextProvider: React.FC<NavigationContextProviderProps>
         setMenuExpanded,
         activeOrganizerId,
         setActiveOrganizerId,
+        headerOrganizerBandCollapsed,
+        setHeaderOrganizerBandCollapsed,
       }}
     >
       {children}

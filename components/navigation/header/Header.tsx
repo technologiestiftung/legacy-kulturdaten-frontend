@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
@@ -11,6 +11,8 @@ import { useCollapsable } from '../../collapsable';
 import { ChevronDown } from 'react-feather';
 import { OrganizerBand, OrganizerBandLayout } from '../OrganizerBand';
 import { useT } from '../../../lib/i18n';
+import { NavigationContext } from '../NavigationContext';
+import { useRouter } from 'next/router';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -221,24 +223,39 @@ const HeaderOrganizerMenu: React.FC<HeaderOrganizerMenuProps> = ({
   title,
 }: HeaderOrganizerMenuProps) => {
   const t = useT();
+  const router = useRouter();
 
   const renderedOrganizerList = (
     <StyledHeaderOrganizerMenuList>
-      <OrganizerBand layout={OrganizerBandLayout.wide} onClick={() => setIsCollapsed(true)} />
+      <OrganizerBand layout={OrganizerBandLayout.wide} />
     </StyledHeaderOrganizerMenuList>
   );
 
-  const { renderedCollapsable, isCollapsed, setIsCollapsed } =
-    useCollapsable(renderedOrganizerList);
+  const { headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed } =
+    useContext(NavigationContext);
+
+  const { renderedCollapsable } = useCollapsable(
+    renderedOrganizerList,
+    headerOrganizerBandCollapsed,
+    setHeaderOrganizerBandCollapsed
+  );
+
+  useEffect(() => {
+    if (router.asPath) {
+      setHeaderOrganizerBandCollapsed(true);
+    }
+  }, [router?.asPath, setHeaderOrganizerBandCollapsed]);
 
   return (
     <StyledHeaderOrganizerMenu>
       <StyledHeaderOrganizerMenuButton
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        isCollapsed={isCollapsed}
+        onClick={() => setHeaderOrganizerBandCollapsed(!headerOrganizerBandCollapsed)}
+        isCollapsed={headerOrganizerBandCollapsed}
         aria-label={
           t(
-            isCollapsed ? 'menu.organizerBandShowAriaLabel' : 'menu.organizerBandCollapseAriaLabel'
+            headerOrganizerBandCollapsed
+              ? 'menu.organizerBandShowAriaLabel'
+              : 'menu.organizerBandCollapseAriaLabel'
           ) as string
         }
       >
