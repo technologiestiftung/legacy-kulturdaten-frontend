@@ -17,16 +17,12 @@ import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { routes, useLocale } from '../../lib/routing';
+import { User } from '../../lib/api/types/user';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
-export interface User {
-  authToken: string;
-  email: string;
-}
-
 export type WrappedUser = {
-  user: User;
+  user: User['data'];
   authToken: string;
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
