@@ -70,6 +70,8 @@ export const CSSVars: React.FC = () => (
         --header-height: 3.75rem;
         --organizer-band-width: 4.5rem;
 
+        --max-content-width: 80rem;
+
         @media screen and (min-width: 840px) {
           --font-size-600: 1.5rem;
           --line-height-600: 2.25rem;

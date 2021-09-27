@@ -23,6 +23,7 @@ const StyledSave = styled.div`
 
   ${mq(Breakpoint.mid)} {
     ${contentGrid(8)}
+    justify-items: center;
     padding: 0.75rem 0;
     top: var(--header-height);
   }
@@ -43,6 +44,7 @@ const StyledSaveContainer = styled.div`
   justify-content: space-between;
   align-items: flex-start;
   padding: 0 0.75rem;
+  width: 100%;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
@@ -52,6 +54,7 @@ const StyledSaveContainer = styled.div`
   ${mq(Breakpoint.widish)} {
     grid-column: 2 / -2;
     padding: 0;
+    max-width: var(--max-content-width);
   }
 `;
 

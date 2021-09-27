@@ -15,6 +15,7 @@ export const EntryFormWrapper = styled.div<{
     padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '1.5rem' : '3rem')} 0;
     row-gap: 3rem;
     ${contentGrid(8)}
+    justify-items: center;
   }
 
   ${({ fullWidth }) =>
@@ -28,6 +29,8 @@ export const EntryFormWrapper = styled.div<{
 `;
 
 export const EntryFormContainer = styled.div<{ fullWidth?: boolean; noPadding?: boolean }>`
+  width: 100%;
+  max-width: var(--max-content-width);
   padding: 0 ${({ noPadding }) => (noPadding ? '0' : '0.75rem')};
 
   ${mq(Breakpoint.mid)} {

@@ -23,14 +23,15 @@ const StyledEntryHeader = styled.div`
 
   ${mq(Breakpoint.widish)} {
     padding: 0;
+    justify-items: center;
   }
 `;
 
 const StyledEntryHeaderHead = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   margin-top: 2.25rem;
-
   padding: 0 0.75rem;
 
   ${mq(Breakpoint.mid)} {
@@ -48,6 +49,7 @@ const StyledEntryHeaderHead = styled.div`
     margin-bottom: 2.25rem;
     padding: 0;
     grid-column: 2 / -2;
+    max-width: var(--max-content-width);
   }
 `;
 
@@ -90,6 +92,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
   line-height: var(--line-height-700);
   font-weight: 700;
   padding-right: 0.75rem;
+  width: 100%;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
@@ -100,6 +103,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
   ${mq(Breakpoint.widish)} {
     padding-right: 1.5rem;
     grid-column: 2 / -2;
+    max-width: var(--max-content-width);
   }
 
   span {
@@ -127,6 +131,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
 
 const StyledEntryHeaderPublishSlot = styled.div`
   padding: 0 0.75rem;
+  width: 100%;
 
   ${mq(Breakpoint.mid)} {
     padding: 0 1.5rem;
@@ -137,15 +142,20 @@ const StyledEntryHeaderPublishSlot = styled.div`
   ${mq(Breakpoint.widish)} {
     grid-column: 2 / -2;
     padding: 0;
+    max-width: var(--max-content-width);
   }
 `;
 
 const StyledEntryHeaderTabsSlot = styled.div`
+  width: 100%;
+
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
   }
 
   ${contentGrid(8)}
+
+  justify-items: center;
 `;
 
 const tabsSlotWideLayout = css`
@@ -157,6 +167,8 @@ const StyledEntryHeaderTabsSlotContainer = styled.div<{ wideLayout?: boolean }>`
   min-width: 0;
   grid-column: 1 / -1;
   padding: 0;
+  width: 100%;
+  max-width: var(--max-content-width);
 
   ${mq(Breakpoint.widish)} {
     grid-column: 1 / -1;
