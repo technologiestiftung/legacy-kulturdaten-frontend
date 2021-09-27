@@ -6,8 +6,10 @@ import { routes, useLanguage, useLocale } from '../../../lib/routing';
 import { useUser } from '../../../components/user/useUser';
 import { AppWrapper } from '../../../components/wrappers/AppWrapper';
 import { useT } from '../../../lib/i18n';
-import { useOrganizer } from '../../../lib/useOrganizer';
+import { useOrganizer, useOrganizerId } from '../../../lib/useOrganizer';
 import { getTranslation } from '../../../lib/translations';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -41,8 +43,16 @@ const DashboardPage: NextPage = () => {
   const locale = useLocale();
   const t = useT();
   const language = useLanguage();
+  const organizerId = useOrganizerId();
   const organizer = useOrganizer();
+  const router = useRouter();
   const currentTranslation = getTranslation(language, organizer?.data?.relations?.translations);
+
+  useEffect(() => {
+    if (organizerId !== 'default' && router?.query?.organizer !== organizerId) {
+      router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
+    }
+  }, [locale, organizerId, router]);
 
   return (
     <AppWrapper>

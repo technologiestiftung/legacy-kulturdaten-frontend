@@ -1,4 +1,5 @@
 import { useContext, useEffect } from 'react';
+import getConfig from 'next/config';
 import { NavigationContext } from '../components/navigation/NavigationContext';
 import { useCategories } from '../config/categories';
 import { OrganizerShow } from './api/routes/organizer/show';
@@ -7,12 +8,16 @@ import { useEntry } from './categories';
 import { getCookie, setCookie } from './cookies';
 import { routes, useLocale } from './routing';
 
+const {
+  publicRuntimeConfig: { activeOrganizerCookieName },
+} = getConfig();
+
 export const useOrganizerId = (): string => {
   const { activeOrganizerId, setActiveOrganizerId } = useContext(NavigationContext);
   const locale = useLocale();
 
   useEffect(() => {
-    const organizerIdFromCookie = getCookie('active-organizer-id')?.value;
+    const organizerIdFromCookie = getCookie(activeOrganizerCookieName)?.value;
 
     if (organizerIdFromCookie && activeOrganizerId === 'default') {
       setActiveOrganizerId(organizerIdFromCookie);
@@ -28,7 +33,7 @@ export const useSetOrganizerId = (): ((organizerId: string) => void) => {
 
   return (organizerId): void => {
     setCookie({
-      'name': 'active-organizer-id',
+      'name': activeOrganizerCookieName,
       'value': organizerId,
       'path': routes.index({ locale }),
       'max-age': 1209600,
