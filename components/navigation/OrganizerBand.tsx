@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
+import * as feather from 'react-feather';
 import { useCategories } from '../../config/categories';
 import { OrganizerList } from '../../lib/api';
 import { Organizer } from '../../lib/api/types/organizer';
@@ -9,7 +10,9 @@ import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { routes } from '../../config/routes';
 import React, { RefObject } from 'react';
-import { useOrganizerId, useSetOrganizerId } from '../../lib/useOrganizer';
+import { useSetOrganizerId } from '../../lib/useOrganizer';
+import { useRouter } from 'next/router';
+import { useT } from '../../lib/i18n';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
@@ -26,6 +29,9 @@ const StyledOrganizerBandItem = styled.a<{ active: boolean; layout: OrganizerBan
   line-height: 1.5rem;
   font-weight: 700;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   padding: calc(0.75rem - 1px) 0;
   background: var(--grey-200);
   border: 1px solid var(--grey-400);
@@ -43,6 +49,7 @@ const StyledOrganizerBandItem = styled.a<{ active: boolean; layout: OrganizerBan
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 100%;
+      justify-content: flex-start;
     `}
 
   &:hover {
@@ -62,15 +69,25 @@ const StyledOrganizerBandItem = styled.a<{ active: boolean; layout: OrganizerBan
         box-shadow: var(--shadow-sharp-active);
         border-color: var(--black);
     `}
+
+  > svg {
+    display: block;
+    padding-right: ${({ layout }) => (layout === OrganizerBandLayout.wide ? ' 0.375rem' : '0')};
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 interface OrganizerBandItemProps {
-  children: React.ReactNode;
+  children: string;
   active: boolean;
-  organizerId: string;
+  layout: OrganizerBandLayout;
+  icon?: string;
   href?: string;
   onClick?: React.MouseEventHandler;
-  layout: OrganizerBandLayout;
 }
 
 // eslint-disable-next-line react/display-name
@@ -79,26 +96,32 @@ const OrganizerBandItem: React.FC<OrganizerBandItemProps> = React.forwardRef<
   OrganizerBandItemProps
 >(
   (
-    { children, active, href, onClick, organizerId, layout }: OrganizerBandItemProps,
+    { children, active, href, onClick, layout, icon }: OrganizerBandItemProps,
     ref: RefObject<HTMLAnchorElement>
   ) => {
-    const setOrganizerId = useSetOrganizerId();
-
     return (
       <StyledOrganizerBandItem
         active={active}
         ref={ref}
         href={href}
         layout={layout}
+        aria-label={children as string}
         onClick={(e) => {
-          setOrganizerId(organizerId);
-
           if (onClick) {
             onClick(e);
           }
         }}
       >
-        {children}
+        {layout === OrganizerBandLayout.wide ? (
+          <>
+            {icon && feather[icon] && React.createElement(feather[icon])}
+            <span>{children}</span>
+          </>
+        ) : icon && feather[icon] ? (
+          React.createElement(feather[icon])
+        ) : (
+          children
+        )}
       </StyledOrganizerBandItem>
     );
   }
@@ -122,7 +145,9 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   const organizers = useList<OrganizerList, Organizer>(categories?.organizer, 1, 3);
   const language = useLanguage();
   const locale = useLocale();
-  const organizerId = useOrganizerId();
+  const router = useRouter();
+  const setOrganizerId = useSetOrganizerId();
+  const t = useT();
 
   return (
     <StyledOrganizerBand layout={layout}>
@@ -136,10 +161,15 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
             passHref
           >
             <OrganizerBandItem
-              organizerId={organizer.id}
-              active={organizerId === organizer.id}
+              active={router?.query?.organizer === organizer.id}
               layout={layout}
-              onClick={onClick}
+              onClick={(e) => {
+                setOrganizerId(organizer.id);
+
+                if (onClick) {
+                  onClick(e);
+                }
+              }}
             >
               {layout === OrganizerBandLayout.narrow
                 ? translation?.attributes?.name.slice(0, 1)
@@ -148,6 +178,15 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
           </Link>
         );
       })}
+      <Link href={routes.createOrganizer({ locale })} passHref>
+        <OrganizerBandItem
+          active={router?.asPath === routes.createOrganizer({ locale })}
+          layout={layout}
+          icon="Plus"
+        >
+          {t('menu.createOrganizer') as string}
+        </OrganizerBandItem>
+      </Link>
     </StyledOrganizerBand>
   );
 };

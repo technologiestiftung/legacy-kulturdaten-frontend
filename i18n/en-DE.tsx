@@ -475,5 +475,6 @@ export const enDE: Localization = {
     },
     organizerBandShowAriaLabel: () => 'Show list of my Organizers',
     organizerBandCollapseAriaLabel: () => 'Hide list of my Organizers',
+    createOrganizer: () => 'Create new Organizer',
   },
 };

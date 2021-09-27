@@ -95,8 +95,8 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'en-DE': 'profile',
   },
   createOrganizer: {
-    'de-DE': 'profile/create',
-    'en-DE': 'profile/create',
+    'de-DE': 'create-organizer',
+    'en-DE': 'create-organizer',
   },
   offer: {
     'de-DE': 'offer',

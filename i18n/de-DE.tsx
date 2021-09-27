@@ -474,5 +474,6 @@ export const deDE: Localization = {
     },
     organizerBandShowAriaLabel: () => 'Liste meiner Anbieter:innen ausklappen',
     organizerBandCollapseAriaLabel: () => 'Liste meiner Anbieter:innen einklappen',
+    createOrganizer: () => 'Neue Anbieter:in erstellen',
   },
 };
