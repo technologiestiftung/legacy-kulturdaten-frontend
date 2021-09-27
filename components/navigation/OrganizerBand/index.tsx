@@ -2,17 +2,17 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import * as feather from 'react-feather';
-import { useCategories } from '../../config/categories';
-import { OrganizerList } from '../../lib/api';
-import { Organizer } from '../../lib/api/types/organizer';
-import { useList } from '../../lib/categories';
-import { useLanguage, useLocale } from '../../lib/routing';
-import { getTranslation } from '../../lib/translations';
-import { routes } from '../../config/routes';
-import React, { RefObject } from 'react';
-import { useSetOrganizerId } from '../../lib/useOrganizer';
 import { useRouter } from 'next/router';
-import { useT } from '../../lib/i18n';
+import { useCategories } from '../../../config/categories';
+import { OrganizerList } from '../../../lib/api';
+import { Organizer } from '../../../lib/api/types/organizer';
+import { useList } from '../../../lib/categories';
+import { useLanguage, useLocale } from '../../../lib/routing';
+import { getTranslation } from '../../../lib/translations';
+import { routes } from '../../../config/routes';
+import React, { RefObject } from 'react';
+import { useSetOrganizerId } from '../../../lib/useOrganizer';
+import { useT } from '../../../lib/i18n';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
