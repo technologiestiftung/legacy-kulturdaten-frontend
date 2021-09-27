@@ -436,6 +436,7 @@ export const enDE: Localization = {
       items: {
         dashboard: () => 'Dashboard',
         notifications: () => 'Notifications',
+        profile: () => 'Profile',
         team: () => 'Team',
       },
     },

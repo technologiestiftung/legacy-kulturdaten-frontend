@@ -77,6 +77,13 @@ export const useMenuStructure = (): NavigationStructure => {
             active: false,
           },
         },
+        {
+          type: MenuItemType.link,
+          action: {
+            title: t('menu.start.items.profile') as string,
+            href: routes.organizer({ locale, query: { organizer: organizerId, sub: 'info' } }),
+          },
+        },
       ],
     },
     menus: [
