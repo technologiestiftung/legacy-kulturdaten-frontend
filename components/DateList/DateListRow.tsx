@@ -182,7 +182,7 @@ const StyledDateListItemBodyInner = styled.div<{ lastRow: boolean }>`
 interface DateListRowProps {
   from: string;
   status: OfferDateStatus;
-  allDay: boolean;
+  isAllDay: boolean;
   lastRow: boolean;
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -203,7 +203,7 @@ const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus
 export const DateListRow: React.FC<DateListRowProps> = ({
   from,
   to,
-  allDay,
+  isAllDay,
   lastRow,
   title,
   status,
@@ -221,7 +221,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const fromDate = from && new Date(from);
   const toDate = to && new Date(to);
 
-  const dateFormat = allDay ? DateFormat.date : DateFormat.dateTime;
+  const dateFormat = isAllDay ? DateFormat.date : DateFormat.dateTime;
 
   const formattedFrom = formatDate(fromDate, dateFormat);
   const formattedTo = toDate && formatDate(toDate, dateFormat);
@@ -252,7 +252,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const renderedStatus = (
     <StyledDateListItemStatus>
       <StyledDateListItemStatusFlag status={status} disabled={disabled}>
-        {t(OfferDateStatusToL10nMap(editable)[status])}
+        {status ? t(OfferDateStatusToL10nMap(editable)[status]) : ''}
       </StyledDateListItemStatusFlag>
     </StyledDateListItemStatus>
   );
@@ -280,7 +280,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
         </StyledDateListItemText>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {to && (!allDay || longerThanOneDay) && (
+        {to && (!isAllDay || longerThanOneDay) && (
           <StyledDateListItemText>{formattedTo}</StyledDateListItemText>
         )}
       </StyledDateListRowCell>
@@ -305,7 +305,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
           <StyledDateListRowMidInner>
             <StyledDateListItemTime noPaddingLeft={editable} doublePaddingLeft={!editable}>
               <span>{formattedFrom}</span>
-              {to && (!allDay || longerThanOneDay) && (
+              {to && (!isAllDay || longerThanOneDay) && (
                 <>
                   <ArrowRight />
                   <span>{formattedTo}</span>

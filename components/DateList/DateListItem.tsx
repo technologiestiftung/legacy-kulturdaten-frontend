@@ -40,7 +40,7 @@ const StyledDateListItemContainer = styled.div<{ columns: number }>`
 `;
 
 interface DateListItemProps {
-  date: OfferDate;
+  date: OfferDate['data'];
   lastRow: boolean;
   editable: boolean;
   checked: boolean;
@@ -61,43 +61,54 @@ export const DateListItem: React.FC<DateListItemProps> = ({
   const t = useT();
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
-  const translations = date?.data?.relations?.translations;
+  const translations = date?.relations?.translations;
   const currentTranslation = translations ? getTranslation(language, translations) : undefined;
-  const dateId = date?.data?.id;
+  const dateId = date?.id;
 
-  const attributes = date.data.attributes;
+  const attributes = date?.attributes;
 
-  const allDay = attributes.allDay;
-  const fromDate = useMemo(() => new Date(attributes.from), [attributes.from]);
-  const toDate = useMemo(() => new Date(attributes.to), [attributes.to]);
+  const isAllDay = attributes?.isAllDay;
+  const fromDate = useMemo(
+    () => (attributes.startsAt ? new Date(attributes.startsAt) : undefined),
+    [attributes.startsAt]
+  );
+  const toDate = useMemo(
+    () =>
+      attributes.endsAt
+        ? new Date(attributes.endsAt)
+        : fromDate
+        ? add(fromDate, { hours: 1 })
+        : undefined,
+    [attributes.endsAt, fromDate]
+  );
   const today = new Date();
   const earliestDate = today;
   const latestDate = add(today, { years: 1 });
 
   const fromDateISOString = useMemo(
-    () => formatISO9075(fromDate, { representation: 'date' }),
+    () => (fromDate ? formatISO9075(fromDate, { representation: 'date' }) : ''),
     [fromDate]
   );
-  const fromTimeISOString = useMemo(() => format(fromDate, 'HH:mm'), [fromDate]);
+  const fromTimeISOString = useMemo(() => (fromDate ? format(fromDate, 'HH:mm') : ''), [fromDate]);
   const toDateISOString = useMemo(
-    () => formatISO9075(toDate, { representation: 'date' }),
+    () => (toDate ? formatISO9075(toDate, { representation: 'date' }) : ''),
     [toDate]
   );
-  const toTimeISOString = useMemo(() => format(toDate, 'HH:mm'), [toDate]);
+  const toTimeISOString = useMemo(() => (toDate ? format(toDate, 'HH:mm') : ''), [toDate]);
 
   const fromDateTime = useMemo(
-    () => parseISO(`${fromDateISOString}T${!allDay ? fromTimeISOString : '00:00'}`),
-    [allDay, fromDateISOString, fromTimeISOString]
+    () => parseISO(`${fromDateISOString}T${!isAllDay ? fromTimeISOString : '00:00'}`),
+    [isAllDay, fromDateISOString, fromTimeISOString]
   );
 
   const toDateTime = useMemo(
-    () => parseISO(`${toDateISOString}T${!allDay ? toTimeISOString : '00:00'}`),
-    [allDay, toDateISOString, toTimeISOString]
+    () => parseISO(`${toDateISOString}T${!isAllDay ? toTimeISOString : '00:00'}`),
+    [isAllDay, toDateISOString, toTimeISOString]
   );
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
-  const ticketUrl = attributes.ticketLink;
+  const ticketUrl = attributes.ticketUrl;
 
   const toTimeValid = useMemo(
     () => compareAsc(fromDateTime, toDateTime) === -1,
@@ -124,11 +135,11 @@ export const DateListItem: React.FC<DateListItemProps> = ({
     [translations]
   );
 
-  return (
+  return fromDate ? (
     <DateListRow
-      from={attributes.from}
-      to={attributes.to}
-      allDay={attributes.allDay}
+      from={attributes.startsAt}
+      to={attributes.endsAt}
+      isAllDay={attributes.isAllDay}
       status={attributes.status}
       title={currentTranslation?.attributes?.name}
       lastRow={lastRow}
@@ -148,7 +159,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                 <Checkbox
                   id={`checkbox-${uid}`}
                   label={t('date.allDay') as string}
-                  checked={attributes.allDay}
+                  checked={attributes.isAllDay}
                   onChange={(e) => undefined}
                   disabled={!editable}
                 />
@@ -163,7 +174,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   max={formatISO9075(add(today, { years: 1 }), { representation: 'date' })}
                   disabled={!editable}
                 />
-                {!attributes.allDay && (
+                {!attributes.isAllDay && (
                   <Input
                     type={InputType.time}
                     label={t('date.clock') as string}
@@ -185,7 +196,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
                   disabled={!editable}
                 />
-                {!allDay && (
+                {!isAllDay && (
                   <Input
                     type={InputType.time}
                     label={t('date.clock') as string}
@@ -309,5 +320,5 @@ export const DateListItem: React.FC<DateListItemProps> = ({
       }
       editable={editable}
     />
-  );
+  ) : null;
 };

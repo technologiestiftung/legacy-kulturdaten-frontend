@@ -74,7 +74,7 @@ enum DateListActions {
 }
 
 interface DateListProps {
-  dates: OfferDate[];
+  dates: OfferDate['data'][];
   editable?: boolean;
   onChange?: (dates: OfferDate[]) => void;
   checkedDateIds?: string[];
@@ -90,20 +90,22 @@ const DateList: React.FC<DateListProps> = ({
   offerTitles,
 }: DateListProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
-  const rowCount = dates.length;
+  const rowCount = dates?.length;
   const uid = usePseudoUID();
   const t = useT();
 
-  const allDateIds = useMemo(() => dates.map((date) => date?.data?.id), [dates]);
+  const allDateIds = useMemo(() => dates?.map((date) => date?.id), [dates]);
 
   const allCheckboxesChecked = useMemo<boolean>(() => {
-    for (let i = 0; i < allDateIds.length; i += 1) {
-      if (!checkedDateIds.includes(allDateIds[i])) {
-        return false;
+    if (allDateIds) {
+      for (let i = 0; i < allDateIds.length; i += 1) {
+        if (!checkedDateIds.includes(allDateIds[i])) {
+          return false;
+        }
       }
+      return true;
     }
-
-    return true;
+    return false;
   }, [checkedDateIds, allDateIds]);
 
   return (
@@ -159,8 +161,8 @@ const DateList: React.FC<DateListProps> = ({
             </StyledDateListItemTextBold>
           </StyledDateListTitleRow>
         )}
-        {dates.map((date, index) => {
-          const dateId = date?.data?.id;
+        {dates?.map((date, index) => {
+          const dateId = date?.id;
           return (
             <DateListItem
               key={index}

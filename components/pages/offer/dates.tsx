@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { compareAsc, compareDesc } from 'date-fns';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { dummyArchivedDates, dummyDates } from '../../../dummy-data/dates';
@@ -39,10 +39,22 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const uid = usePseudoUID();
   const { entry } = useEntry<Offer, OfferShow>(category, query);
 
-  const [dates, setDates] = useState<OfferDate[]>(dummyDates);
-  const [archivedDates, setArchivedDates] = useState<OfferDate[]>(dummyArchivedDates);
+  const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
+  const datesFromApi = useMemo(
+    () => entry?.data?.relations?.dates,
+    [entry?.data?.relations?.dates]
+  );
+  const [archivedDates, setArchivedDates] = useState<OfferDate['data'][]>(
+    dummyArchivedDates?.map((date) => date?.data)
+  );
 
   const translations = entry?.data?.relations?.translations;
+
+  useEffect(() => {
+    if (datesFromApi) {
+      setDates(datesFromApi);
+    }
+  }, [datesFromApi]);
 
   const offerTitles = useMemo<{ [key in Language]: string }>(() => {
     const languageNamePairs = Object.keys(languages).map<[Language, string]>((lang: Language) => {
@@ -57,10 +69,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
   const { renderedDateList: renderedArchivedDateList } = useDateList({
     dates: archivedDates.sort((firstDate, secondDate) =>
-      compareDesc(
-        new Date(firstDate.data.attributes.from),
-        new Date(secondDate.data.attributes.from)
-      )
+      compareDesc(new Date(firstDate.attributes.startsAt), new Date(secondDate.attributes.startsAt))
     ),
     editable: false,
     offerTitles,
@@ -134,8 +143,8 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                       setDates(
                         [date, ...dates].sort((firstDate, secondDate) =>
                           compareAsc(
-                            new Date(firstDate.data.attributes.from),
-                            new Date(secondDate.data.attributes.from)
+                            new Date(firstDate.attributes.startsAt),
+                            new Date(secondDate.attributes.startsAt)
                           )
                         )
                       );
