@@ -9,34 +9,16 @@ import { useT } from '../../../lib/i18n';
 import { useOrganizer, useOrganizerId } from '../../../lib/useOrganizer';
 import { getTranslation } from '../../../lib/translations';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { ContentContainer, ContentWrapper } from '../../../components/wrappers/ContentWrappers';
+import { DashbaordGreeting } from '../../../components/Dasboard';
 
-const StyledUl = styled.ul`
-  list-style: disc inside;
-  padding: 1rem;
-`;
-
-const StyledLi = styled.li`
-  padding-bottom: 1rem;
-`;
-
-const StyledTestContent = styled.div`
-  width: 100%;
-  display: grid;
-  padding: 0.75rem;
-  grid-template-columns: repeat(2, 1fr);
-  row-gap: 1.5rem;
-  column-gap: 1.5rem;
-`;
-
-const StyledTestContentBox = styled.div`
-  height: 20rem;
-  width: 100%;
-  border: 1px solid var(--grey-400);
-  padding: 1.5rem;
-  font-weight: 700;
-  border-radius: 0.75rem;
-`;
+const greetings: {
+  [key: string]: string[];
+} = {
+  initial: ['greetings.welcome'],
+  default: ['greetings.hey', 'greetings.hello', 'greetings.heyhey'],
+};
 
 const DashboardPage: NextPage = () => {
   useUser();
@@ -48,6 +30,13 @@ const DashboardPage: NextPage = () => {
   const router = useRouter();
   const currentTranslation = getTranslation(language, organizer?.data?.relations?.translations);
 
+  const userHasNoOrganizer = useMemo(() => organizerId === 'default', [organizerId]);
+
+  const selectedGreetings = useMemo(
+    () => (userHasNoOrganizer ? greetings.initial : greetings.default),
+    [userHasNoOrganizer]
+  );
+
   useEffect(() => {
     if (organizerId !== 'default' && router?.query?.organizer !== organizerId) {
       router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
@@ -56,19 +45,14 @@ const DashboardPage: NextPage = () => {
 
   return (
     <AppWrapper>
-      Dashboard for {currentTranslation?.attributes.name}
-      <StyledUl>
-        <StyledLi>
-          <Link href={routes.userProfile({ locale })}>
-            <a>Link: {t('menu.user.items.profile')}</a>
-          </Link>
-        </StyledLi>
-      </StyledUl>
-      <StyledTestContent>
-        {[...Array(10)].map((i, index) => (
-          <StyledTestContentBox key={index}>{t('test.content')}</StyledTestContentBox>
-        ))}
-      </StyledTestContent>
+      <ContentWrapper>
+        <ContentContainer>
+          <DashbaordGreeting>
+            {t(selectedGreetings[Math.floor(Math.random() * selectedGreetings.length)])}
+          </DashbaordGreeting>
+          <div>hello</div>
+        </ContentContainer>
+      </ContentWrapper>
     </AppWrapper>
   );
 };

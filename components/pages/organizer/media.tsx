@@ -101,7 +101,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
   query,
 }: CategoryEntryPage) => {
   const [showHint, setShowHint] = useState(false);
-  const renderedEntryHeader = useEntryHeader({ category, query });
+  const renderedEntryHeader = useEntryHeader({ category, query }, true);
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const formattedDate = useSaveDate(entry);
   const { rendered } = useContext(WindowContext);

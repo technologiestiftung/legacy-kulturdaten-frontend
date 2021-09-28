@@ -189,10 +189,8 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
 }: CategoryEntryPage) => {
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const formattedDate = useSaveDate(entry);
-  const renderedEntryHeader = useEntryHeader({ category, query });
+  const renderedEntryHeader = useEntryHeader({ category, query }, true);
   const t = useT();
-  // const loaded = useMemo(() => typeof entry !== 'undefined', [entry]);
-
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
 

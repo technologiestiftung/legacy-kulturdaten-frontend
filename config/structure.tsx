@@ -77,6 +77,9 @@ export const useMenuStructure = (): NavigationStructure => {
           action: {
             title: t('menu.start.items.profile') as string,
             href: routes.organizer({ locale, query: { organizer: organizerId, sub: 'info' } }),
+            active: router.asPath.includes(
+              routes.organizer({ query: { organizer: organizerId }, locale })
+            ),
           },
         },
       ],

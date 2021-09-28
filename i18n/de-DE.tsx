@@ -9,6 +9,12 @@ export const deDE: Localization = {
     de: () => 'Deutsch',
     en: () => 'Englisch',
   },
+  greetings: {
+    welcome: () => 'Willkommen.',
+    hello: () => 'Hallo.',
+    hey: () => 'Hey.',
+    heyhey: () => 'Hey hey.',
+  },
   dayPicker: {
     ariaLabel: () => 'Wochentage auswählen',
     minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
