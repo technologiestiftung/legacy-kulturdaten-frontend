@@ -28,12 +28,12 @@ export type OrganizerMedia = ApiCall & {
 export const organizerMediaFactory = (
   token: OrganizerMedia['request']['headers']['Authorization'],
   query: {
-    id: string;
+    organizer: string;
     media: FormData;
   }
 ): OrganizerMedia => ({
   request: {
-    route: apiRoutes.organizerUpdate({ id: query.id }),
+    route: apiRoutes.organizerUpdate({ organizer: query.organizer }),
     method: 'PATCH',
     headers: {
       Authorization: makeBearer(token),

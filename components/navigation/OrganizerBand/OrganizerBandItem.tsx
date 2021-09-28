@@ -107,6 +107,7 @@ const OrganizerBandItemForwarded = (
       layout={layout}
       aria-label={children as string}
       noBorder={noBorder}
+      title={children}
       onClick={(e) => {
         if (onClick) {
           onClick(e);
@@ -121,7 +122,7 @@ const OrganizerBandItemForwarded = (
       ) : icon && feather[icon] ? (
         React.createElement(feather[icon])
       ) : (
-        children
+        children.slice(0, 1)
       )}
     </StyledOrganizerBandItem>
   );

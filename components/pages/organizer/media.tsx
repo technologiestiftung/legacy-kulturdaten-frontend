@@ -45,7 +45,9 @@ const useMediaUploadForm: EntryFormHook = (
         setIsUploading(true);
 
         try {
-          const resp = await upload<OrganizerShow>(files, organizerUpdateFactory, query);
+          const resp = await upload<OrganizerShow>(files, organizerUpdateFactory, {
+            id: query.organizer,
+          });
 
           if (resp.status === 200) {
             mutate(resp.body.data);

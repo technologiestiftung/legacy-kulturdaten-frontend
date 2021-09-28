@@ -34,7 +34,7 @@ export const organizerUpdateFactory = (
   }
 ): OrganizerUpdate => ({
   request: {
-    route: apiRoutes.organizerUpdate({ id: query.id }),
+    route: apiRoutes.organizerUpdate({ organizer: query.id }),
     method: 'PATCH',
     headers: {
       'Authorization': makeBearer(token),

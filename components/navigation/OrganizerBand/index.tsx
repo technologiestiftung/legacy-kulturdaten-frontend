@@ -66,9 +66,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
                 }
               }}
             >
-              {layout === OrganizerBandLayout.narrow
-                ? translation?.attributes?.name.slice(0, 1)
-                : translation?.attributes?.name}
+              {translation?.attributes?.name}
             </OrganizerBandItem>
           </Link>
         );

@@ -51,14 +51,6 @@ export const useMenuStructure = (): NavigationStructure => {
             ),
           },
         },
-        // {
-        //   type: MenuItemType.link,
-        //   action: {
-        //     title: t('menu.organizer.title') as string,
-        //     href: routes.organizer({ query: { organizer: organizerId }, locale }),
-        //     active: router.asPath.includes(routes.organizer({ query: { organizer: organizerId }, locale })),
-        //   },
-        // },
         {
           type: MenuItemType.link,
           action: {
@@ -68,6 +60,9 @@ export const useMenuStructure = (): NavigationStructure => {
               routes.location({ query: { organizer: organizerId }, locale })
             ),
           },
+        },
+        {
+          type: MenuItemType.divider,
         },
         {
           type: MenuItemType.link,

@@ -36,7 +36,7 @@ export const organizerTranslationCreateFactory = (
 ): OrganizerTranslationCreate => ({
   request: {
     route: apiRoutes.organizerTranslationCreate({
-      id: query.id,
+      organizer: query.id,
     }),
     method: 'POST',
     headers: {
