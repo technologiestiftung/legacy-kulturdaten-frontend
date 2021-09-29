@@ -12,11 +12,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 import { ContentContainer, ContentWrapper } from '../../../components/wrappers/ContentWrappers';
 import { DashbaordGreeting } from '../../../components/Dasboard';
+import { useRandomInt } from '../../../lib/random';
 
 const greetings: {
   [key: string]: string[];
 } = {
-  initial: ['greetings.welcome'],
+  initial: ['greetings.welcome', 'greetings.hey', 'greetings.hello', 'greetings.heyhey'],
   default: ['greetings.hey', 'greetings.hello', 'greetings.heyhey'],
 };
 
@@ -37,6 +38,8 @@ const DashboardPage: NextPage = () => {
     [userHasNoOrganizer]
   );
 
+  const randomGreetingsIndex = useRandomInt(0, selectedGreetings.length);
+
   useEffect(() => {
     if (organizerId !== 'default' && router?.query?.organizer !== organizerId) {
       router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
@@ -47,9 +50,7 @@ const DashboardPage: NextPage = () => {
     <AppWrapper>
       <ContentWrapper>
         <ContentContainer>
-          <DashbaordGreeting>
-            {t(selectedGreetings[Math.floor(Math.random() * selectedGreetings.length)])}
-          </DashbaordGreeting>
+          <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
           <div>hello</div>
         </ContentContainer>
       </ContentWrapper>
