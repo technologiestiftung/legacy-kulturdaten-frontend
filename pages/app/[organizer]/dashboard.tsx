@@ -1,6 +1,4 @@
 import { NextPage } from 'next';
-import Link from 'next/link';
-import styled from '@emotion/styled';
 
 import { routes, useLanguage, useLocale } from '../../../lib/routing';
 import { useUser } from '../../../components/user/useUser';
@@ -17,7 +15,7 @@ import { useRandomInt } from '../../../lib/random';
 const greetings: {
   [key: string]: string[];
 } = {
-  initial: ['greetings.welcome', 'greetings.hey', 'greetings.hello', 'greetings.heyhey'],
+  initial: ['greetings.welcome'],
   default: ['greetings.hey', 'greetings.hello', 'greetings.heyhey'],
 };
 

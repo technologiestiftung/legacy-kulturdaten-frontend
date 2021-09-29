@@ -350,17 +350,19 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                       },
                     };
 
+                    const filteredTranslations =
+                      mediaItem?.relations?.translations?.filter(
+                        (translation) => translation.attributes?.language !== language
+                      ) || [];
+
                     onChange({
-                      ...mediaItem,
-                      relations: mediaItem.relations
+                      attributes: mediaItem?.attributes,
+                      id: mediaItem?.id,
+                      type: mediaItem?.type,
+                      relations: mediaItem?.relations
                         ? {
                             ...mediaItem.relations,
-                            translations: [
-                              ...mediaItem.relations.translations?.filter(
-                                (translation) => translation.attributes?.language !== language
-                              ),
-                              updatedTranslation,
-                            ],
+                            translations: [...filteredTranslations, updatedTranslation],
                           }
                         : {
                             translations: [updatedTranslation],

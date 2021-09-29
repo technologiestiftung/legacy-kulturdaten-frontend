@@ -1,4 +1,5 @@
 import { Language } from '../../../config/locale';
+import { Media } from './media';
 
 export type Translation = {
   id?: number;
@@ -27,6 +28,11 @@ export type CategoryEntry = {
     attributes?: DefaultAttributes;
     relations?: {
       translations?: Translation[];
+      media?: Media['data'][];
     };
+  };
+  meta?: {
+    publishable: boolean | { [key: string]: string[] };
+    language?: Language;
   };
 };

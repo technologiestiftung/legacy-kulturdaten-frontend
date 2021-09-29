@@ -8,7 +8,6 @@ import { Routes, routes } from '../lib/routing';
 import { Category } from '../lib/categories';
 import { OrganizerCreatePage } from '../components/pages/organizer/create';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
-import { OrganizerMediaPage } from '../components/pages/organizer/media';
 import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
 import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
@@ -21,7 +20,6 @@ import { locationUpdateFactory } from '../lib/api/routes/location/update';
 import { locationTranslationCreateFactory } from '../lib/api/routes/location/translation/create';
 import { locationDeleteFactory } from '../lib/api/routes/location/delete';
 import { locationShowFactory } from '../lib/api/routes/location/show';
-import { LocationMediaPage } from '../components/pages/location/media';
 import { offerListFactory } from '../lib/api/routes/offer/list';
 import { offerShowFactory } from '../lib/api/routes/offer/show';
 import { offerCreateFactory } from '../lib/api/routes/offer/create';
@@ -29,7 +27,6 @@ import { offerUpdateFactory } from '../lib/api/routes/offer/update';
 import { offerTranslationCreateFactory } from '../lib/api/routes/offer/translation/create';
 import { offerDeleteFactory } from '../lib/api/routes/offer/delete';
 import { OfferInfoPage } from '../components/pages/offer/info';
-import { OfferMediaPage } from '../components/pages/offer/media';
 import { LocationCreatePage } from '../components/pages/location/create';
 import { OfferCreatePage } from '../components/pages/offer/create';
 import { OrganizerListPage } from '../components/pages/organizer/list';
@@ -39,6 +36,9 @@ import { OfferCategorizationPage } from '../components/pages/offer/categorizatio
 import { OfferAccessibilityPage } from '../components/pages/offer/accessibility';
 import { OfferDatesPage } from '../components/pages/offer/dates';
 import { organizerMediaFactory } from '../lib/api/routes/organizer/media';
+import { OrganizerMediaPage } from '../components/pages/organizer/media';
+import { OfferMediaPage } from '../components/pages/offer/media';
+import { LocationMediaPage } from '../components/pages/location/media';
 
 export type Requirement = {
   translationKey: string;

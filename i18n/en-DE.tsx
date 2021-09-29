@@ -125,6 +125,7 @@ export const enDE: Localization = {
     ariaLabel: () => 'Upload files',
     hint: () =>
       'In order for the image to be publicly available, the mandatory fields must be filled out. ',
+    dropZoneLabel: () => 'Upload new images',
   },
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',

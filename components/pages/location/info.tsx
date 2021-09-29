@@ -16,7 +16,7 @@ import { LocationShow } from '../../../lib/api/routes/location/show';
 import { EntryFormProps } from '../helpers/form';
 import { LocationTranslationCreate } from '../../../lib/api/routes/location/translation/create';
 import { LocationUpdate } from '../../../lib/api/routes/location/update';
-import { Select } from '../../select';
+import { Select, SelectSize } from '../../select';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 
 const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
@@ -240,11 +240,12 @@ const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
             required={required}
           />
         </FormItem>
-        <FormItem width={FormItemWidth.half}>
+        <FormItem width={FormItemWidth.half} alignSelf="flex-end">
           <Select
             disabled
             label={t('categories.location.form.district') as string}
             id="tbd-district"
+            size={SelectSize.big}
           >
             <option>tbd</option>
           </Select>

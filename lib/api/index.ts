@@ -94,7 +94,7 @@ export const apiRoutes: {
     `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
+  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations,media`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
   locationTranslationCreate: ({ id }) => `/${apiVersion}/location/${id}/translate`,
@@ -103,7 +103,7 @@ export const apiRoutes: {
     `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates`,
+  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
   offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
@@ -218,25 +218,21 @@ export const useMediaUpload = (
           setProgress(e.loaded / e.total);
         });
 
-        req.addEventListener('load', (e) => {
+        req.addEventListener('load', () => {
           resolve({
             status: req.status,
             body: req.responseText ? JSON.parse(req.responseText) : undefined,
           } as T['response']);
         });
 
-        req.addEventListener('error', (e) => {
-          console.error('error');
-          console.log(e);
+        req.addEventListener('error', () => {
           reject({
             status: req.status,
             body: req.responseText ? JSON.parse(req.responseText) : undefined,
           } as T['response']);
         });
 
-        req.addEventListener('abort', (e) => {
-          console.log('aborted');
-          console.log(e);
+        req.addEventListener('abort', () => {
           reject({
             status: req.status,
             body: req.responseText ? JSON.parse(req.responseText) : undefined,

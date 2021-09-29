@@ -10,7 +10,7 @@ import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
-import { DefaultAttributes, Translation } from './api/types/general';
+import { CategoryEntry } from './api/types/general';
 import { OrganizerType } from './api/types/organizer';
 import { Route, useLocale } from './routing';
 
@@ -25,19 +25,6 @@ export interface CategoryPage {
 
 export interface CategoryEntryPage extends CategoryPage {
   query: ParsedUrlQuery;
-}
-
-export interface CategoryEntry {
-  data: {
-    attributes?: DefaultAttributes;
-    relations?: {
-      translations?: Translation[];
-    };
-  };
-  meta?: {
-    publishable: boolean | { [key: string]: string[] };
-    language?: Language;
-  };
 }
 
 export type Category = {

@@ -36,7 +36,7 @@ const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>
           flex-direction: column;
 
           ${StyledLabel} {
-            padding-bottom: 0.75rem;
+            padding-bottom: 0.375rem;
           }
         `}
 `;

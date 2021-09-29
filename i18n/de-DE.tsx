@@ -125,6 +125,7 @@ export const deDE: Localization = {
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
     hint: () =>
       'Damit das Bild öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
+    dropZoneLabel: () => 'Neue Bilder hochladen',
   },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
