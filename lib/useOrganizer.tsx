@@ -8,9 +8,9 @@ import { useEntry } from './categories';
 import { getCookie, setCookie } from './cookies';
 import { routes, useLocale } from './routing';
 
-const {
-  publicRuntimeConfig: { activeOrganizerCookieName },
-} = getConfig();
+const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
+const activeOrganizerCookieName =
+  (publicRuntimeConfig?.activeOrganizerCookieName as string) || 'ACTIVE_ORGANIZER_ID';
 
 export const useOrganizerId = (): string => {
   const { activeOrganizerId, setActiveOrganizerId } = useContext(NavigationContext);
