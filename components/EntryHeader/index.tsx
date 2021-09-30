@@ -93,7 +93,6 @@ const StyledEntryHeaderTitleWrapper = styled.div`
   flex-direction: column;
   row-gap: 0.75rem;
   padding-right: 0.75rem;
-  width: 100%;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
@@ -102,6 +101,7 @@ const StyledEntryHeaderTitleWrapper = styled.div`
   ${mq(Breakpoint.widish)} {
     padding-right: 1.5rem;
     grid-column: 2 / -2;
+    max-width: var(--max-content-width);
   }
 `;
 

@@ -35,10 +35,6 @@ const StyledEntryListHeadTitleRowRight = styled.div`
 const StyledEntryListHeadTitle = styled.div`
   margin: 0 0.75rem;
 
-  span {
-    border-bottom: 0.125rem solid currentColor;
-  }
-
   ${mq(Breakpoint.wide)} {
     margin: 0 1.5rem;
   }
