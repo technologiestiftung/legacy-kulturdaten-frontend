@@ -10,6 +10,7 @@ import { useSaveDate } from '../helpers/useSaveDate';
 import { useMediaForm } from '../helpers/media';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { useT } from '../../../lib/i18n';
 
 export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
   T extends CategoryEntry,
@@ -18,7 +19,12 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
   category,
   query,
 }: CategoryEntryPage) => {
-  const renderedEntryHeader = useEntryHeader({ category, query }, true);
+  const t = useT();
+  const renderedEntryHeader = useEntryHeader(
+    { category, query },
+    t('menu.start.items.profile') as string,
+    true
+  );
   const { entry } = useEntry<T, C>(category, query);
   const formattedDate = useSaveDate(entry);
   const { rendered } = useContext(WindowContext);

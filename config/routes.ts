@@ -8,6 +8,7 @@ import { Locale } from './locales';
 export enum Routes {
   index = 'index',
   dashboard = 'dashboard',
+  team = 'team',
   login = 'login',
   register = 'register',
   userProfile = 'userProfile',
@@ -29,6 +30,7 @@ export const routes: { [key in Routes]: Route } = {
   index: ({ locale }) => `/${localizedRoutes[Routes.index][locale]}`,
   dashboard: ({ query, locale }) =>
     `/app/${query?.organizer}/${localizedRoutes[Routes.dashboard][locale]}/`,
+  team: ({ query, locale }) => `/app/${query?.organizer}/${localizedRoutes[Routes.team][locale]}/`,
   userProfile: ({ locale }) => `/app/${localizedRoutes[Routes.userProfile][locale]}/`,
   userSettings: ({ locale }) => `/app/${localizedRoutes[Routes.userSettings][locale]}/`,
   userNotifications: ({ locale }) => `/app/${localizedRoutes[Routes.userNotifications][locale]}/`,
@@ -69,6 +71,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   dashboard: {
     'de-DE': 'dashboard',
     'en-DE': 'dashboard',
+  },
+  team: {
+    'de-DE': 'team',
+    'en-DE': 'team',
   },
   userProfile: {
     'de-DE': 'user/profile',

@@ -68,8 +68,7 @@ export const useMenuStructure = (): NavigationStructure => {
           type: MenuItemType.link,
           action: {
             title: t('menu.start.items.team') as string,
-            href: routes.dashboard({ locale, query: { organizer: organizerId } }),
-            active: false,
+            href: routes.team({ locale, query: { organizer: organizerId } }),
           },
         },
         {

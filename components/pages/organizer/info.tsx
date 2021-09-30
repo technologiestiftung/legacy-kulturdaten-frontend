@@ -712,7 +712,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     valid
   );
 
-  const renderedEntryHeader = useEntryHeader({ category, query }, true);
+  const renderedEntryHeader = useEntryHeader(
+    { category, query },
+    t('menu.start.items.profile') as string,
+    true
+  );
 
   const formattedDate = useSaveDate(entry);
 
