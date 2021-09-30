@@ -22,7 +22,7 @@ export type OfferDateTranslation = {
 
 export type OfferDate = {
   data: {
-    id?: string;
+    id?: number;
     type?: 'offerdate';
     attributes?: {
       startsAt: string;

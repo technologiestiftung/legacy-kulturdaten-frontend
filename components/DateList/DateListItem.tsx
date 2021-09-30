@@ -2,7 +2,8 @@ import styled from '@emotion/styled';
 import { add, compareAsc, format, formatISO9075, parseISO } from 'date-fns';
 import { useMemo } from 'react';
 import { Language } from '../../config/locale';
-import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
+import { contentLanguages, languageTranslationKeys } from '../../config/locales';
+import { OfferDate, OfferDateStatus, OfferDateTranslation } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -41,6 +42,7 @@ const StyledDateListItemContainer = styled.div<{ columns: number }>`
 
 interface DateListItemProps {
   date: OfferDate['data'];
+  onChange: (date: OfferDate['data']) => void;
   lastRow: boolean;
   editable: boolean;
   checked: boolean;
@@ -50,6 +52,7 @@ interface DateListItemProps {
 
 export const DateListItem: React.FC<DateListItemProps> = ({
   date,
+  onChange,
   lastRow,
   checked,
   setChecked,
@@ -108,31 +111,9 @@ export const DateListItem: React.FC<DateListItemProps> = ({
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
-  const ticketUrl = attributes.ticketUrl;
-
   const toTimeValid = useMemo(
     () => compareAsc(fromDateTime, toDateTime) === -1,
     [fromDateTime, toDateTime]
-  );
-
-  const titleGerman = useMemo(
-    () => getTranslation(Language['de'], translations)?.attributes?.name,
-    [translations]
-  );
-
-  const titleEnglish = useMemo(
-    () => getTranslation(Language['en'], translations)?.attributes?.name,
-    [translations]
-  );
-
-  const roomGerman = useMemo(
-    () => getTranslation(Language['de'], translations)?.attributes?.room,
-    [translations]
-  );
-
-  const roomEnglish = useMemo(
-    () => getTranslation(Language['en'], translations)?.attributes?.room,
-    [translations]
   );
 
   return fromDate ? (
@@ -160,7 +141,15 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   id={`checkbox-${uid}`}
                   label={t('date.allDay') as string}
                   checked={attributes.isAllDay}
-                  onChange={(e) => undefined}
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        isAllDay: e.target.checked,
+                      },
+                    })
+                  }
                   disabled={!editable}
                 />
               </FormItem>
@@ -169,7 +158,15 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   type={InputType.date}
                   label={t('date.from') as string}
                   value={formatISO9075(fromDate, { representation: 'date' })}
-                  onChange={(e) => undefined}
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        startsAt: `${e.target.value}T${format(fromDate, 'HH:mm')}`,
+                      },
+                    })
+                  }
                   min={formatISO9075(today, { representation: 'date' })}
                   max={formatISO9075(add(today, { years: 1 }), { representation: 'date' })}
                   disabled={!editable}
@@ -179,7 +176,17 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     type={InputType.time}
                     label={t('date.clock') as string}
                     value={format(fromDate, 'HH:mm')}
-                    onChange={(e) => undefined}
+                    onChange={(e) =>
+                      onChange({
+                        ...date,
+                        attributes: {
+                          ...date.attributes,
+                          startsAt: `${formatISO9075(fromDate, { representation: 'date' })}T${
+                            e.target.value
+                          }`,
+                        },
+                      })
+                    }
                     disabled={!editable}
                   />
                 )}
@@ -189,7 +196,15 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   type={InputType.date}
                   label={t('date.to') as string}
                   value={formatISO9075(toDate, { representation: 'date' })}
-                  onChange={(e) => undefined}
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        endsAt: `${e.target.value}T${format(toDate, 'HH:mm')}`,
+                      },
+                    })
+                  }
                   min={formatISO9075(today, { representation: 'date' })}
                   max={formatISO9075(latestDate, { representation: 'date' })}
                   valid={toDateValid}
@@ -201,7 +216,17 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     type={InputType.time}
                     label={t('date.clock') as string}
                     value={toTimeISOString}
-                    onChange={(e) => undefined}
+                    onChange={(e) =>
+                      onChange({
+                        ...date,
+                        attributes: {
+                          ...date.attributes,
+                          endsAt: `${formatISO9075(toDate, { representation: 'date' })}T${
+                            e.target.value
+                          }`,
+                        },
+                      })
+                    }
                     min={
                       compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
                         ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
@@ -229,6 +254,15 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   ariaLabelledby={`entryformhead-${uid}`}
                   size={SelectSize.big}
                   disabled={!editable}
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        status: e.target.value as OfferDateStatus,
+                      },
+                    })
+                  }
                 >
                   <option value={OfferDateStatus.scheduled}>
                     {t(editable ? 'date.scheduled' : 'date.scheduledArchived')}
@@ -244,31 +278,76 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               size={EntryFormHeadSize.small}
             />
             <FormGrid>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={`${t('date.title')} ${t('general.german')}`}
-                  value={titleGerman}
-                  onChange={(e) => undefined}
-                  disabled={!editable}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={`${t('date.title')} ${t('general.english')}`}
-                  value={titleEnglish}
-                  onChange={(e) => undefined}
-                  disabled={!editable}
-                />
-              </FormItem>
+              {contentLanguages.map((language: Language, index) => {
+                const currentTranslation = date.relations?.translations
+                  ? getTranslation<OfferDateTranslation>(
+                      language,
+                      date.relations.translations,
+                      false
+                    )
+                  : undefined;
+
+                return (
+                  <FormItem width={FormItemWidth.half} key={index}>
+                    <Input
+                      type={InputType.text}
+                      label={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
+                      value={currentTranslation?.attributes?.name || ''}
+                      onChange={(e) => {
+                        const updatedTranslation = {
+                          ...currentTranslation,
+                          attributes: {
+                            ...currentTranslation?.attributes,
+                            language,
+                            name: e.target.value,
+                          },
+                        };
+
+                        const filteredTranslations =
+                          date?.relations?.translations?.filter(
+                            (translation) => translation.attributes?.language !== language
+                          ) || [];
+
+                        onChange({
+                          attributes: date?.attributes,
+                          id: date?.id,
+                          type: date?.type,
+                          relations: date?.relations
+                            ? {
+                                ...date.relations,
+                                translations: [...filteredTranslations, updatedTranslation],
+                              }
+                            : {
+                                translations: [updatedTranslation],
+                              },
+                        });
+                      }}
+                      disabled={!editable}
+                    />
+                  </FormItem>
+                );
+              })}
               <FormItem width={FormItemWidth.full}>
                 <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                  {t('general.german')}: {offerTitles[Language.de]}
-                  {titleGerman ? ` - ${titleGerman}` : ''}
-                  <br />
-                  {t('general.german')}: {offerTitles[Language.de]}
-                  {titleGerman ? ` - ${titleGerman}` : ''}
+                  {contentLanguages.map((language: Language, index) => {
+                    const currentTranslation = date.relations?.translations
+                      ? getTranslation<OfferDateTranslation>(
+                          language,
+                          date.relations.translations,
+                          false
+                        )
+                      : undefined;
+
+                    return (
+                      <span key={index}>
+                        {t(languageTranslationKeys[language])}: {offerTitles[language]}
+                        {currentTranslation?.attributes?.name
+                          ? ` - ${currentTranslation?.attributes?.name}`
+                          : ''}
+                        <br />
+                      </span>
+                    );
+                  })}
                 </Info>
               </FormItem>
             </FormGrid>
@@ -279,24 +358,55 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               size={EntryFormHeadSize.small}
             />
             <FormGrid>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={`${t('date.roomInfo')} ${t('general.german')}`}
-                  value={roomGerman}
-                  onChange={(e) => undefined}
-                  disabled={!editable}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={`${t('date.roomInfo')} ${t('general.english')}`}
-                  value={roomEnglish}
-                  onChange={(e) => undefined}
-                  disabled={!editable}
-                />
-              </FormItem>
+              {contentLanguages.map((language: Language, index) => {
+                const currentTranslation = date.relations?.translations
+                  ? getTranslation<OfferDateTranslation>(
+                      language,
+                      date.relations.translations,
+                      false
+                    )
+                  : undefined;
+
+                return (
+                  <FormItem width={FormItemWidth.half} key={index}>
+                    <Input
+                      type={InputType.text}
+                      label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
+                      value={currentTranslation?.attributes?.room || ''}
+                      onChange={(e) => {
+                        const updatedTranslation = {
+                          ...currentTranslation,
+                          attributes: {
+                            ...currentTranslation?.attributes,
+                            language,
+                            room: e.target.value,
+                          },
+                        };
+
+                        const filteredTranslations =
+                          date?.relations?.translations?.filter(
+                            (translation) => translation.attributes?.language !== language
+                          ) || [];
+
+                        onChange({
+                          attributes: date?.attributes,
+                          id: date?.id,
+                          type: date?.type,
+                          relations: date?.relations
+                            ? {
+                                ...date.relations,
+                                translations: [...filteredTranslations, updatedTranslation],
+                              }
+                            : {
+                                translations: [updatedTranslation],
+                              },
+                        });
+                      }}
+                      disabled={!editable}
+                    />
+                  </FormItem>
+                );
+              })}
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
@@ -309,8 +419,16 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                 <Input
                   type={InputType.url}
                   label={t('date.ticketLink') as string}
-                  value={ticketUrl}
-                  onChange={(e) => undefined}
+                  value={date?.attributes?.ticketUrl || ''}
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        ticketUrl: e.target.value,
+                      },
+                    })
+                  }
                   disabled={!editable}
                 />
               </FormItem>

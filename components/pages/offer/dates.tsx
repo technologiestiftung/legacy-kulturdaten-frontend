@@ -1,9 +1,15 @@
 import { css } from '@emotion/react';
 import { compareAsc, compareDesc } from 'date-fns';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { dummyArchivedDates, dummyDates } from '../../../dummy-data/dates';
+import { useApiCall } from '../../../lib/api';
+import {
+  OfferDateTranslationCreate,
+  offerDateTranslationCreateFactory,
+} from '../../../lib/api/routes/offer/date/translation/create';
+import { OfferDateUpdate, offerDateUpdateFactory } from '../../../lib/api/routes/offer/date/update';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { Offer, OfferDate, OfferMode } from '../../../lib/api/types/offer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
@@ -15,11 +21,13 @@ import { useCollapsable } from '../../collapsable';
 import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
+import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { mq } from '../../globals/Constants';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
+import { useSaveDate } from '../helpers/useSaveDate';
 
 const customFormItemCss = css`
   margin: 0 -0.75rem;
@@ -38,8 +46,11 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const [value, setValue] = useState<OfferMode>(OfferMode.scheduled);
   const uid = usePseudoUID();
   const { entry } = useEntry<Offer, OfferShow>(category, query);
+  const formattedDate = useSaveDate(entry);
 
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
+  const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
+
   const datesFromApi = useMemo(
     () => entry?.data?.relations?.dates,
     [entry?.data?.relations?.dates]
@@ -65,7 +76,17 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     return Object.fromEntries(languageNamePairs) as { [key in Language]: string };
   }, [translations]);
 
-  const { renderedDateList } = useDateList({ dates, offerTitles });
+  const { renderedDateList } = useDateList({
+    dates,
+    offerTitles,
+    onChange: (changedDates, changedDateId) => {
+      setDates(changedDates);
+      setDatesNotPristineList([
+        ...datesNotPristineList.filter((id) => id !== changedDateId),
+        changedDateId,
+      ]);
+    },
+  });
 
   const { renderedDateList: renderedArchivedDateList } = useDateList({
     dates: archivedDates.sort((firstDate, secondDate) =>
@@ -86,9 +107,63 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     true
   );
 
+  const call = useApiCall();
+
+  const pristine = useMemo(() => datesNotPristineList.length === 0, [datesNotPristineList]);
+
+  const submitDateList = useCallback(async () => {
+    for (let i = 0; i < dates.length; i += 1) {
+      const date = dates[i];
+
+      const id = date.id;
+
+      if (datesNotPristineList.includes(id)) {
+        const resp = await call<OfferDateUpdate>(offerDateUpdateFactory, {
+          offerId: entry.data.id,
+          dateId: id,
+          offerDate: date,
+        });
+
+        if (resp.status !== 200) {
+          console.error(resp);
+        }
+
+        const translations = date.relations?.translations;
+
+        if (translations && translations.length > 0) {
+          for (let j = 0; j < translations.length; j += 1) {
+            const translation = translations[j];
+            const translationResp = await call<OfferDateTranslationCreate>(
+              offerDateTranslationCreateFactory,
+              {
+                offerId: entry.data.id,
+                dateId: id,
+                translation,
+              }
+            );
+
+            if (translationResp.status !== 200) {
+              console.error(resp);
+            }
+          }
+        }
+      }
+    }
+    setDatesNotPristineList([]);
+  }, [call, dates, datesNotPristineList, entry?.data?.id]);
+
   return (
     <>
       {renderedEntryHeader}
+      <Save
+        onClick={async () => {
+          submitDateList();
+        }}
+        active={!pristine}
+        date={formattedDate}
+        valid={true}
+        hint={false}
+      />
       <EntryFormWrapper>
         <EntryFormContainer>
           <EntryFormHead title={t('date.mode.title') as string} id={`radio-${uid}`} />

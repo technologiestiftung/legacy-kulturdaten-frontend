@@ -60,6 +60,8 @@ export enum ApiRoutes {
   offerUpdate = 'offerUpdate',
   offerTranslationCreate = 'offerTranslationCreate',
   offerDelete = 'offerDelete',
+  offerDateUpdate = 'offerDateUpdate',
+  offerDateTranslationCreate = 'offerDateTranslationCreate',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
@@ -105,9 +107,13 @@ export const apiRoutes: {
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
   offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
   offerCreate: () => `/${apiVersion}/offer`,
-  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
+  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
   offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
+  offerDateUpdate: ({ offerId, dateId }) =>
+    `/${apiVersion}/offer/${offerId}/date/${dateId}?include=translations,dates,media`,
+  offerDateTranslationCreate: ({ offerId, dateId }) =>
+    `/${apiVersion}/offer/${offerId}/date/${dateId}/translate`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,

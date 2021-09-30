@@ -76,7 +76,7 @@ enum DateListActions {
 interface DateListProps {
   dates: OfferDate['data'][];
   editable?: boolean;
-  onChange?: (dates: OfferDate[]) => void;
+  onChange?: (dates: OfferDate['data'][], dateId: number) => void;
   checkedDateIds?: string[];
   setCheckedDateIds?: Dispatch<SetStateAction<string[]>>;
   offerTitles: { [key in Language]: string };
@@ -84,6 +84,7 @@ interface DateListProps {
 
 const DateList: React.FC<DateListProps> = ({
   dates,
+  onChange,
   checkedDateIds,
   setCheckedDateIds,
   editable = true,
@@ -99,7 +100,7 @@ const DateList: React.FC<DateListProps> = ({
   const allCheckboxesChecked = useMemo<boolean>(() => {
     if (allDateIds) {
       for (let i = 0; i < allDateIds.length; i += 1) {
-        if (!checkedDateIds.includes(allDateIds[i])) {
+        if (!checkedDateIds.includes(String(allDateIds[i]))) {
           return false;
         }
       }
@@ -120,7 +121,9 @@ const DateList: React.FC<DateListProps> = ({
                     id={`${uid}-checkbox`}
                     checked={allCheckboxesChecked}
                     onChange={(e) =>
-                      e?.target.checked ? setCheckedDateIds(allDateIds) : setCheckedDateIds([])
+                      e?.target.checked
+                        ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
+                        : setCheckedDateIds([])
                     }
                   />
                 </StyledDateListItemCheckbox>
@@ -151,7 +154,9 @@ const DateList: React.FC<DateListProps> = ({
                   ariaLabel={t('date.allCheckboxAriaLabel') as string}
                   checked={allCheckboxesChecked}
                   onChange={(e) =>
-                    e?.target.checked ? setCheckedDateIds(allDateIds) : setCheckedDateIds([])
+                    e?.target.checked
+                      ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
+                      : setCheckedDateIds([])
                   }
                 />
               </StyledDateListItemCheckbox>
@@ -167,12 +172,21 @@ const DateList: React.FC<DateListProps> = ({
             <DateListItem
               key={index}
               date={date}
-              checked={checkedDateIds?.includes(dateId)}
+              onChange={(changedDate) =>
+                onChange(
+                  [...dates.slice(0, index), changedDate, ...dates.slice(index + 1, dates.length)],
+                  date.id
+                )
+              }
+              checked={checkedDateIds?.includes(String(dateId))}
               setChecked={(checked) => {
                 if (checked) {
-                  setCheckedDateIds([...checkedDateIds.filter((id) => id !== dateId), dateId]);
+                  setCheckedDateIds([
+                    ...checkedDateIds.filter((id) => id !== String(dateId)),
+                    String(dateId),
+                  ]);
                 } else {
-                  setCheckedDateIds(checkedDateIds.filter((id) => id !== dateId));
+                  setCheckedDateIds(checkedDateIds.filter((id) => id !== String(dateId)));
                 }
               }}
               editable={editable}
