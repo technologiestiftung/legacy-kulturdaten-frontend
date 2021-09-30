@@ -230,8 +230,8 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   size={SelectSize.big}
                   disabled={!editable}
                 >
-                  <option value={OfferDateStatus.confirmed}>
-                    {t(editable ? 'date.confirmed' : 'date.confirmedArchived')}
+                  <option value={OfferDateStatus.scheduled}>
+                    {t(editable ? 'date.scheduled' : 'date.scheduledArchived')}
                   </option>
                   <option value={OfferDateStatus.cancelled}>{t('date.cancelled')}</option>
                 </Select>

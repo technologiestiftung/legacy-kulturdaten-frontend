@@ -7,7 +7,7 @@ export enum OfferMode {
 }
 
 export enum OfferDateStatus {
-  confirmed = 'confirmed',
+  scheduled = 'scheduled',
   cancelled = 'cancelled',
 }
 

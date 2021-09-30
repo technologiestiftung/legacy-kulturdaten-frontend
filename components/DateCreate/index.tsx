@@ -393,7 +393,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           isAllDay,
           startsAt: fromDateTime?.toISOString(),
           endsAt: toDateTime?.toISOString(),
-          status: OfferDateStatus.confirmed,
+          status: OfferDateStatus.scheduled,
           ticketLink: ticketUrl,
           recurrence,
         },

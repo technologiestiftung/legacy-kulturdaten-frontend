@@ -128,7 +128,7 @@ const StyledDateListItemStatusFlag = styled.div<{ status: OfferDateStatus; disab
   background: ${({ status, disabled }) =>
     disabled
       ? 'var(--grey-350)'
-      : status === OfferDateStatus.confirmed
+      : status === OfferDateStatus.scheduled
       ? 'var(--green-light)'
       : 'var(--error-light)'};
 `;
@@ -196,7 +196,7 @@ interface DateListRowProps {
 const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus]: string } = (
   editable
 ) => ({
-  [OfferDateStatus.confirmed]: editable ? 'date.confirmed' : 'date.confirmedArchived',
+  [OfferDateStatus.scheduled]: editable ? 'date.scheduled' : 'date.scheduledArchived',
   [OfferDateStatus.cancelled]: 'date.cancelled',
 });
 
