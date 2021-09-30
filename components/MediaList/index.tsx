@@ -497,8 +497,6 @@ export const MediaList: React.FC<MediaListProps> = ({
 
         for (let i = 0; i < requiredAttributes.length; i += 1) {
           const attribute = requiredAttributes[i];
-          console.log(attribute);
-          console.log(!attribute || typeof attribute === 'undefined' || attribute.length === 0);
           if (!attribute || typeof attribute === 'undefined' || attribute.length === 0) {
             return false;
           }

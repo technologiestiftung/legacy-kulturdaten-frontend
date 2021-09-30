@@ -388,7 +388,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const date = useMemo<OfferDate>(
     () => ({
       data: {
-        id: getPseudoUID(),
         attributes: {
           isAllDay,
           startsAt: fromDateTime?.toISOString(),

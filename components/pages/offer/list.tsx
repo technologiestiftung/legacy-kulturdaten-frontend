@@ -42,14 +42,6 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
   useEffect(() => {
     if (list) {
       if (isMidOrWider && list?.data?.length > 0) {
-        console.log('#####');
-        console.log(
-          routes.offer({
-            locale,
-            query: { organizer: organizerId, id: lastEntryId || list.data[0].id, sub: 'info' },
-          })
-        );
-        console.log('#####');
         router.replace(
           routes.offer({
             locale,

@@ -131,7 +131,6 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
           size={SelectSize.big}
           value={frequency ? frequency.toString() : undefined}
           onChange={(e) => {
-            console.log(e.target.value);
             setFrequency(e.target.value !== 'undefined' ? parseInt(e.target.value, 10) : undefined);
           }}
         >

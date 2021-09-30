@@ -112,7 +112,6 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
       <div>
         {React.cloneElement(list, {
           customEntryOnClick: (category: Categories, id: string) => {
-            console.log(category, id);
             onChange(id);
             setIsOpen(false);
           },

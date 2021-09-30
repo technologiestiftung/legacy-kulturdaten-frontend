@@ -59,6 +59,7 @@ export enum ApiRoutes {
   offerCreate = 'offerCreate',
   offerUpdate = 'offerUpdate',
   offerTranslationCreate = 'offerTranslationCreate',
+  offerDateCreate = 'offerDateCreate',
   offerDelete = 'offerDelete',
   offerDateUpdate = 'offerDateUpdate',
   offerDateTranslationCreate = 'offerDateTranslationCreate',
@@ -110,6 +111,7 @@ export const apiRoutes: {
   offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
   offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
+  offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
     `/${apiVersion}/offer/${offerId}/date/${dateId}?include=translations,dates,media`,
   offerDateTranslationCreate: ({ offerId, dateId }) =>

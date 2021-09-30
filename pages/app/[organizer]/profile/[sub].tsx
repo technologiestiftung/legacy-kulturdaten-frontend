@@ -11,8 +11,6 @@ const EntrySubPage: NextPage = () => {
 
   const subPath = router?.query.sub as string;
 
-  console.log(router);
-
   if (category) {
     return (
       <AppWrapper subMenuKey={category.subMenuKey}>

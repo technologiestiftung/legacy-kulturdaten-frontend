@@ -212,7 +212,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
                   !normalized
                 ) {
-                  console.log(ref);
                   e.preventDefault();
                   normalizeStrings();
 

@@ -50,7 +50,5 @@ export const useOrganizer = (): Organizer => {
     organizer: organizerId,
   });
 
-  console.log(entry);
-
   return entry;
 };

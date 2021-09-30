@@ -5,6 +5,7 @@ import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { dummyArchivedDates, dummyDates } from '../../../dummy-data/dates';
 import { useApiCall } from '../../../lib/api';
+import { OfferDateCreate, offerDateCreateFactory } from '../../../lib/api/routes/offer/date/create';
 import {
   OfferDateTranslationCreate,
   offerDateTranslationCreateFactory,
@@ -45,7 +46,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const t = useT();
   const [value, setValue] = useState<OfferMode>(OfferMode.scheduled);
   const uid = usePseudoUID();
-  const { entry } = useEntry<Offer, OfferShow>(category, query);
+  const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const formattedDate = useSaveDate(entry);
 
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
@@ -213,16 +214,28 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
                   <DateCreate
-                    onSubmit={(date) => {
+                    onSubmit={async (date) => {
                       console.log(date);
-                      setDates(
-                        [date, ...dates].sort((firstDate, secondDate) =>
-                          compareAsc(
-                            new Date(firstDate.attributes.startsAt),
-                            new Date(secondDate.attributes.startsAt)
-                          )
-                        )
-                      );
+
+                      try {
+                        const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
+                          offerId: entry.data.id,
+                          date: {
+                            ...date,
+                            attributes: {
+                              ...date.attributes,
+                              name: 'test',
+                            },
+                          },
+                        });
+
+                        if (resp.status === 200) {
+                          console.log('success');
+                          mutate();
+                        }
+                      } catch (e) {
+                        console.error(e);
+                      }
                     }}
                     offerTitles={offerTitles}
                   />
