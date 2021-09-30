@@ -8,8 +8,6 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useMediaForm } from '../helpers/media';
-import { Location } from '../../../lib/api/types/location';
-import { LocationShow } from '../../../lib/api/routes/location/show';
 
 export const LocationMediaPage: React.FC<CategoryEntryPage> = <
   T extends CategoryEntry,
@@ -24,11 +22,7 @@ export const LocationMediaPage: React.FC<CategoryEntryPage> = <
   const { rendered } = useContext(WindowContext);
   const [loaded, setLoaded] = useState(false);
 
-  const { renderedForm, submit, pristine } = useMediaForm<Location, LocationShow>(
-    { category, query },
-    loaded,
-    false
-  );
+  const { renderedForm, submit, pristine } = useMediaForm({ category, query }, loaded, false);
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {

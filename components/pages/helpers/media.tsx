@@ -87,12 +87,9 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   };
 };
 
-export const useMediaForm: EntryFormHook = <T extends CategoryEntry, C extends ApiCall>({
-  category,
-  query,
-}) => {
+export const useMediaForm: EntryFormHook = ({ category, query }) => {
   const [valid, setValid] = useState(false);
-  const { entry } = useEntry<T, C>(category, query);
+  const { entry } = useEntry(category, query);
   const call = useApiCall();
   const t = useT();
 

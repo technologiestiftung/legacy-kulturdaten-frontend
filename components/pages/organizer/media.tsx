@@ -8,8 +8,6 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useMediaForm } from '../helpers/media';
-import { Organizer } from '../../../lib/api/types/organizer';
-import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { useT } from '../../../lib/i18n';
 
 export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
@@ -30,11 +28,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
   const { rendered } = useContext(WindowContext);
   const [loaded, setLoaded] = useState(false);
 
-  const { renderedForm, submit, pristine } = useMediaForm<Organizer, OrganizerShow>(
-    { category, query },
-    loaded,
-    false
-  );
+  const { renderedForm, submit, pristine } = useMediaForm({ category, query }, loaded, false);
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
