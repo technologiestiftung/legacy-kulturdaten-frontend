@@ -223,6 +223,13 @@ export const enDE: Localization = {
     loading: () => 'loading',
     max: () => 'max.',
   },
+  tags: {
+    boxLabel: () => 'Already added topics',
+    delete: () => 'delete topic',
+    add: () => 'add topic',
+    placeholder: () => 'No topic has been added yet',
+    autocompleteLabel: () => 'add new topic',
+  },
   tooltip: {
     open: () => 'open tooltip',
     close: () => 'close tooltip',

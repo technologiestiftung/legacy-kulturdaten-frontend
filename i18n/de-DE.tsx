@@ -222,6 +222,13 @@ export const deDE: Localization = {
     loading: () => 'lädt',
     max: () => 'max.',
   },
+  tags: {
+    boxLabel: () => 'Bereits hinzugefügte Themen',
+    delete: () => 'Thema löschen',
+    add: () => 'Thema hinzufügen',
+    placeholder: () => 'Noch kein Thema hinzugefügt',
+    autocompleteLabel: () => 'Neues Thema hinzufügen',
+  },
   tooltip: {
     open: () => 'Tooltip anzeigen',
     close: () => 'Tooltip schließen',
