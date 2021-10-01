@@ -228,6 +228,7 @@ export const deDE: Localization = {
     add: () => 'Thema hinzufügen',
     placeholder: () => 'Noch kein Thema hinzugefügt',
     autocompleteLabel: () => 'Neues Thema hinzufügen',
+    noOptions: () => 'Kein passendes Thema gefunden',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',

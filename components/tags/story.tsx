@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import { useEffect, useState } from 'react';
 import { Tags } from '.';
+import { Language } from '../../config/locale';
 
 export default {
   title: 'Tags',
@@ -26,7 +27,60 @@ const TagsExample: React.FC = () => {
 
   return (
     <StyledTestWrapper>
-      <Tags value={value} onChange={setValue} options={['These', 'Are', 'Options']} />
+      <Tags
+        value={value}
+        onChange={setValue}
+        options={[
+          {
+            id: 1,
+            type: 'tag',
+            relations: {
+              translations: [
+                {
+                  id: 1,
+                  type: 'TagTranslation',
+                  attributes: {
+                    language: Language.de,
+                    name: 'These',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            id: 2,
+            type: 'tag',
+            relations: {
+              translations: [
+                {
+                  id: 1,
+                  type: 'TagTranslation',
+                  attributes: {
+                    language: Language.de,
+                    name: 'are some',
+                  },
+                },
+              ],
+            },
+          },
+          {
+            id: 3,
+            type: 'tag',
+            relations: {
+              translations: [
+                {
+                  id: 1,
+                  type: 'TagTranslation',
+                  attributes: {
+                    language: Language.de,
+                    name: 'fancy tags',
+                  },
+                },
+              ],
+            },
+          },
+        ]}
+      />
     </StyledTestWrapper>
   );
 };

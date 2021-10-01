@@ -26,6 +26,7 @@
   "dependencies": {
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
+    "@mui/material": "^5.0.2",
     "date-fns": "2.23.0",
     "dompurify": "2.3.1",
     "markdown-to-jsx": "7.1.3",

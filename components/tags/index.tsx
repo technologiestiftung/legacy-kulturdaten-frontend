@@ -1,7 +1,6 @@
-import { Autocomplete } from '@material-ui/lab';
-import { TextField } from '@material-ui/core';
+import { Autocomplete, TextField } from '@mui/material';
 
-import React, { Reducer, useEffect, useReducer, useState } from 'react';
+import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
 import { Button, ButtonColor, ButtonType } from '../button';
 import styled from '@emotion/styled';
 import { useT } from '../../lib/i18n';
@@ -10,6 +9,9 @@ import { Label } from '../label';
 import { inputStyles } from '../input';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
+import { Tag } from '../../lib/api/types/tag';
+import { getTranslation } from '../../lib/translations';
+import { useLanguage } from '../../lib/routing';
 
 const StyledTextField = styled(TextField)`
   flex-grow: 1;
@@ -124,32 +126,32 @@ enum TagsActions {
   init = 'init',
 }
 
-type TagsState = string[];
+type TagsState = Tag['id'][];
 
 type TagsAction = {
   type: TagsActions;
   payload: {
-    tag?: string;
-    tags?: string[];
+    tagId?: Tag['id'];
+    tagIds?: Tag['id'][];
   };
 };
 
 const tagsReducer: Reducer<TagsState, TagsAction> = (state, action) => {
   switch (action.type) {
     case TagsActions.add: {
-      if (action.payload.tag.length < 1 || state.includes(action.payload.tag)) {
+      if (!action.payload.tagId || state.includes(action.payload.tagId)) {
         return state;
       }
 
-      return [...state, action.payload.tag];
+      return [...state, action.payload.tagId];
     }
 
     case TagsActions.delete: {
-      return state.filter((tag) => tag !== action.payload.tag);
+      return state.filter((tagId) => tagId !== action.payload.tagId);
     }
 
     case TagsActions.init: {
-      return action.payload.tags;
+      return action.payload.tagIds;
     }
 
     default: {
@@ -159,16 +161,30 @@ const tagsReducer: Reducer<TagsState, TagsAction> = (state, action) => {
 };
 
 interface TagsProps {
-  options: string[];
-  value?: string[];
-  onChange?: (newValue: string[]) => void;
+  options: Tag[];
+  value?: Tag['id'][];
+  onChange?: (newValue: Tag['id'][]) => void;
 }
 
 export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProps) => {
   const [tags, dispatchTags] = useReducer(tagsReducer, value || []);
   const [inputValue, setInputValue] = useState<string>('');
-  const [autocompleteValue, setAutocompleteValue] = useState<string>('');
+  const [autocompleteValue, setAutocompleteValue] = useState<{ label: string; id: number }>(null);
   const t = useT();
+  const language = useLanguage();
+
+  const autocompleteOptions = useMemo(
+    () =>
+      options.map((option) => {
+        const translation = getTranslation(language, option.relations.translations);
+
+        return {
+          label: translation.attributes.name,
+          id: option.id,
+        };
+      }),
+    [options, language]
+  );
 
   const [pristine, setPristine] = useState(true);
 
@@ -186,7 +202,7 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
       value.length > 0
     ) {
       setPristine(false);
-      dispatchTags({ type: TagsActions.init, payload: { tags: value } });
+      dispatchTags({ type: TagsActions.init, payload: { tagIds: value } });
     }
   }, [tags, value, pristine]);
 
@@ -197,25 +213,31 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
       </StyledTagsLabel>
       <StyledTagsBox>
         {tags && tags.length > 0 ? (
-          tags.map((tag, index) => (
-            <StyledTagsTag key={index}>
-              <StyledTagsTagText>{tag} </StyledTagsTagText>
-              <StyledTagsTagX
-                aria-label={t('tags.delete') as string}
-                type="button"
-                onClick={() =>
-                  dispatchTags({
-                    type: TagsActions.delete,
-                    payload: {
-                      tag,
-                    },
-                  })
-                }
-              >
-                <XCircle color="var(--black)" />
-              </StyledTagsTagX>
-            </StyledTagsTag>
-          ))
+          options
+            .filter((option) => tags.includes(option.id))
+            .map((option, index) => {
+              const translation = getTranslation(language, option.relations.translations);
+
+              return (
+                <StyledTagsTag key={index}>
+                  <StyledTagsTagText>{translation.attributes.name}</StyledTagsTagText>
+                  <StyledTagsTagX
+                    aria-label={t('tags.delete') as string}
+                    type="button"
+                    onClick={() =>
+                      dispatchTags({
+                        type: TagsActions.delete,
+                        payload: {
+                          tagId: option.id,
+                        },
+                      })
+                    }
+                  >
+                    <XCircle color="var(--black)" />
+                  </StyledTagsTagX>
+                </StyledTagsTag>
+              );
+            })
         ) : (
           <StyledTagsBoxPlaceholder>{t('tags.placeholder')}</StyledTagsBoxPlaceholder>
         )}
@@ -224,9 +246,11 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            dispatchTags({ type: TagsActions.add, payload: { tag: inputValue } });
-            setAutocompleteValue('');
-            setInputValue('');
+            if (autocompleteValue?.id) {
+              dispatchTags({ type: TagsActions.add, payload: { tagId: autocompleteValue.id } });
+              setAutocompleteValue(null);
+              setInputValue('');
+            }
           }}
         >
           <StyledTagsLabel>
@@ -235,19 +259,21 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
           <StyledTagsAutocompleteContainer>
             <StyledAutocomplete
               id="tags-f"
-              freeSolo
-              options={options}
+              options={autocompleteOptions}
               value={autocompleteValue}
               onChange={(e, newValue) => {
-                setAutocompleteValue(newValue as string);
-                setInputValue(newValue as string);
+                setAutocompleteValue(newValue as { label: string; id: number });
+                setInputValue((newValue as { label: string; id: number }).label);
               }}
+              noOptionsText={t('tags.noOptions')}
               renderInput={(params) => (
                 <StyledTextField
                   {...params}
                   type="text"
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={(e) => {
+                    setInputValue(e.target.value);
+                  }}
                   variant="outlined"
                   autoComplete="off"
                 />

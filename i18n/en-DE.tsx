@@ -229,6 +229,7 @@ export const enDE: Localization = {
     add: () => 'add topic',
     placeholder: () => 'No topic has been added yet',
     autocompleteLabel: () => 'add new topic',
+    noOptions: () => 'No topics found',
   },
   tooltip: {
     open: () => 'open tooltip',
