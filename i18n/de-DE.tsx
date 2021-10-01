@@ -127,6 +127,17 @@ export const deDE: Localization = {
       'Damit das Bild öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
     dropZoneLabel: () => 'Neue Bilder hochladen',
   },
+  logo: {
+    title: () => 'Logo',
+    imageProcessing: () => 'Das Logo wird verarbeitet und geladen',
+    openImage: () => 'Original Logo in neuem Tab öffnen',
+    delete: () => 'Logo löschen',
+    deleteConfirm: () =>
+      'Willst du das Logo wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
+    hint: () =>
+      'Damit das Logo öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
+    dropZoneLabel: () => 'Neues Logo hochladen',
+  },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
     uploading: ({ progress }) => `Dateien laden hoch: ${progress} geschafft`,

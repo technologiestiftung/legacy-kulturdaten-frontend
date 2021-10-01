@@ -81,16 +81,16 @@ export const apiRoutes: {
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
   organizerList: (query) =>
-    `/${apiVersion}/organizer?include=types,subjects,translations${
+    `/${apiVersion}/organizer?include=types,subjects,translations,logo${
       query?.page ? `&page=${query.page}` : ''
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
   organizerShow: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,logo,media`,
   organizerTranslationCreate: ({ organizer }) => `/${apiVersion}/organizer/${organizer}/translate`,
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
@@ -205,21 +205,27 @@ export const useMediaUpload = (
   upload: <T extends ApiCall>(
     files: FileList | File[],
     factory: ApiCallFactory,
-    query?: unknown
+    query?: unknown,
+    fileAttribute?: string
   ) => Promise<T['response']>;
 } => {
   const authToken = useAuthToken();
   const [progress, setProgress] = useState<number>(0);
 
   const cb = useCallback(
-    <T extends ApiCall>(files: FileList, factory: ApiCallFactory, query?: unknown) => {
+    <T extends ApiCall>(
+      files: FileList,
+      factory: ApiCallFactory,
+      query?: unknown,
+      fileAttribute = 'media[]'
+    ) => {
       const { request, response } = factory(overrideAuthToken || authToken, query);
       const route = request.route;
       const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
 
       const formData = new FormData();
       if (files) {
-        [...files].forEach((file: File) => formData.append('media[]', file));
+        [...files].forEach((file: File) => formData.append(fileAttribute, file));
       }
 
       const re = new Promise<T['response']>((resolve, reject) => {

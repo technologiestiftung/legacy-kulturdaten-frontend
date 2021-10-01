@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useCategories } from '../../../config/categories';
 import { OrganizerList } from '../../../lib/api';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { useList } from '../../../lib/categories';
+import { Order, useList } from '../../../lib/categories';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
@@ -37,7 +37,10 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   onClick,
 }: OrganizerBandProps) => {
   const categories = useCategories();
-  const organizers = useList<OrganizerList, Organizer>(categories?.organizer, 1, 3);
+  const organizers = useList<OrganizerList, Organizer>(categories?.organizer, 1, 3, undefined, {
+    key: 'updatedAt',
+    order: Order.DESC,
+  });
   const language = useLanguage();
   const locale = useLocale();
   const router = useRouter();
@@ -58,6 +61,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
             <OrganizerBandItem
               active={router?.query?.organizer === organizer.id}
               layout={layout}
+              logo={organizer.relations?.logo}
               onClick={(e) => {
                 setOrganizerId(organizer.id);
 

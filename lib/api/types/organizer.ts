@@ -57,6 +57,7 @@ export type Organizer = {
       translations?: OrganizerTranslation[];
       types?: OrganizerType[];
       media?: Media['data'][];
+      logo?: Media['data'];
       tags?: Tag[];
     };
   };

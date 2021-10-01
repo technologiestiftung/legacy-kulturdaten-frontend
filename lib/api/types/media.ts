@@ -7,6 +7,7 @@ export type RenditionAttributes = {
   filesize: string | null;
   format: string;
   url: string;
+  base: number;
 };
 
 export type MediaTranslation = {
@@ -29,13 +30,11 @@ export type Media = {
     } & RenditionAttributes;
     relations: {
       translations: MediaTranslation[];
-      renditions?: [
-        {
-          id: number;
-          type: 'rendition';
-          attributes: RenditionAttributes;
-        }
-      ];
+      renditions?: {
+        id: number;
+        type: 'rendition';
+        attributes: RenditionAttributes;
+      }[];
     };
   };
 } & CategoryEntry;

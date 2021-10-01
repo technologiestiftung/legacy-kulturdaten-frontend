@@ -124,8 +124,19 @@ export const enDE: Localization = {
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
     ariaLabel: () => 'Upload files',
     hint: () =>
-      'In order for the image to be publicly available, the mandatory fields must be filled out. ',
+      'In order for the image to be publicly available, the mandatory fields must be filled out.',
     dropZoneLabel: () => 'Upload new images',
+  },
+  logo: {
+    title: () => 'Logo',
+    imageProcessing: () => 'The logo is being processed and loaded',
+    openImage: () => 'Open original logo in new tab',
+    delete: () => 'delete logo',
+    deleteConfirm: () => 'Do you really want to delete the logo? This cannot be undone.',
+    ariaLabel: () => 'Upload logo',
+    hint: () =>
+      'In order for the logo to be publicly available, the mandatory fields must be filled out.',
+    dropZoneLabel: () => 'Upload new logo',
   },
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',

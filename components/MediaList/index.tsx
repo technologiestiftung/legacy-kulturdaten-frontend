@@ -52,8 +52,10 @@ const StyledMediaListItemThumbnail = styled.div`
   grid-column: span 1;
   height: 100%;
   border-bottom: 1px solid var(--grey-400);
+  padding-bottom: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
+    padding-bottom: 1.5rem;
     border-bottom: none;
   }
 `;
@@ -263,12 +265,14 @@ interface MediaListItemProps {
   mediaItem: Media['data'];
   onChange: (mediaItem: Media['data']) => void;
   valid: boolean;
+  onDelete?: (mediaItemId: number) => void;
 }
 
 const MediaListItem: React.FC<MediaListItemProps> = ({
   mediaItem,
   onChange,
   valid,
+  onDelete,
 }: MediaListItemProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
@@ -458,18 +462,13 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
             </>
           )}
         </StyledMediaListItemInfo>
-        <StyledMediaListItemDelete>
-          <Button
-            color={ButtonColor.white}
-            onClick={() => {
-              if (window.confirm(t('media.deleteConfirm') as string)) {
-                () => call<MediaDelete>(mediaDeleteFactory, { id: mediaItem.id });
-              }
-            }}
-          >
-            {t('media.delete')}
-          </Button>
-        </StyledMediaListItemDelete>
+        {onDelete && (
+          <StyledMediaListItemDelete>
+            <Button color={ButtonColor.white} onClick={() => onDelete(mediaItem.id)}>
+              {t('media.delete')}
+            </Button>
+          </StyledMediaListItemDelete>
+        )}
       </StyledMediaListItemSub>
     </StyledMediaListItem>
   );
@@ -479,12 +478,14 @@ interface MediaListProps {
   media: Media['data'][];
   onChange: (media: Media['data'][], changesMediaItemId: number) => void;
   setValid: (valid: boolean) => void;
+  onDelete?: (mediaItemId: number) => void;
 }
 
 export const MediaList: React.FC<MediaListProps> = ({
   media,
   onChange,
   setValid,
+  onDelete,
 }: MediaListProps) => {
   const itemsValidList = useMemo(
     () =>
@@ -524,6 +525,7 @@ export const MediaList: React.FC<MediaListProps> = ({
               mediaItem.id
             );
           }}
+          onDelete={onDelete}
         />
       ))}
     </StyledMediaList>

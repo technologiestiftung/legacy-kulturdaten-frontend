@@ -68,6 +68,7 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
             { mimeType: 'image/jpeg', name: 'JPG/JPEG' },
             { mimeType: 'image/png', name: 'PNG' },
             { mimeType: 'image/webp', name: 'WEBP' },
+            { mimeType: 'image/gif', name: 'GIF' },
           ]}
           label={t('media.dropZoneLabel') as string}
           isUploading={isUploading}

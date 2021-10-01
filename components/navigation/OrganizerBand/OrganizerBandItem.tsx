@@ -1,8 +1,10 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as feather from 'react-feather';
-import React, { RefObject } from 'react';
+import Image from 'next/image';
+import React, { RefObject, useMemo } from 'react';
 import { OrganizerBandLayout } from '.';
+import { Media, RenditionAttributes } from '../../../lib/api/types/media';
 
 const StyledOrganizerBandItem = styled.a<{
   active: boolean;
@@ -17,7 +19,7 @@ const StyledOrganizerBandItem = styled.a<{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  padding: calc(0.75rem - 1px) 0;
+
   background: var(--grey-200);
   border-radius: 0.75rem;
   color: var(--grey-600);
@@ -85,6 +87,18 @@ const StyledOrganizerBandItem = styled.a<{
   }
 `;
 
+const StyledOrganizerBandItemText = styled.div`
+  padding: calc(0.75rem - 1px) 0;
+`;
+
+const StyledOrganizerBandItemLogo = styled.div`
+  width: 100%;
+  height: calc(3rem - 2px);
+  position: relative;
+  border-radius: calc(0.75rem - 1px);
+  overflow: hidden;
+`;
+
 interface OrganizerBandItemProps {
   children: string;
   active: boolean;
@@ -93,12 +107,28 @@ interface OrganizerBandItemProps {
   icon?: string;
   href?: string;
   onClick?: React.MouseEventHandler;
+  logo?: Media['data'];
 }
 
 const OrganizerBandItemForwarded = (
-  { children, active, href, onClick, layout, icon, noBorder }: OrganizerBandItemProps,
+  { children, active, href, onClick, layout, icon, noBorder, logo }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
+  const logoRenditions = useMemo<Media['data']['relations']['renditions']>(
+    () => logo?.relations?.renditions?.filter((rendition) => rendition.attributes.base === 96),
+    [logo?.relations?.renditions]
+  );
+
+  const logoRendition = useMemo(
+    () =>
+      logoRenditions?.length > 0
+        ? logoRenditions[0]?.attributes
+        : logo
+        ? logo.attributes
+        : undefined,
+    [logoRenditions, logo]
+  );
+
   return (
     <StyledOrganizerBandItem
       active={active}
@@ -117,12 +147,33 @@ const OrganizerBandItemForwarded = (
       {layout === OrganizerBandLayout.wide ? (
         <>
           {icon && feather[icon] && React.createElement(feather[icon])}
-          <span>{children}</span>
+          {logoRendition && (
+            <StyledOrganizerBandItemLogo>
+              <Image
+                src={logoRendition.url}
+                layout={'fill'}
+                width={logoRendition.width}
+                height={logoRendition.height}
+                objectFit="contain"
+              />
+            </StyledOrganizerBandItemLogo>
+          )}
+          <StyledOrganizerBandItemText>{children}</StyledOrganizerBandItemText>
         </>
       ) : icon && feather[icon] ? (
         React.createElement(feather[icon])
+      ) : logoRendition ? (
+        <StyledOrganizerBandItemLogo>
+          <Image
+            src={logoRendition.url}
+            layout={'fill'}
+            width={logoRendition.width}
+            height={logoRendition.height}
+            objectFit="contain"
+          />
+        </StyledOrganizerBandItemLogo>
       ) : (
-        children.slice(0, 1)
+        <StyledOrganizerBandItemText>{children.slice(0, 1)}</StyledOrganizerBandItemText>
       )}
     </StyledOrganizerBandItem>
   );

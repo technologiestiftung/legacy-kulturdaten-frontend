@@ -12,6 +12,7 @@ import { Breakpoint } from '../../lib/WindowService';
 import { Tag } from '../../lib/api/types/tag';
 import { getTranslation } from '../../lib/translations';
 import { useLanguage } from '../../lib/routing';
+import { usePseudoUID } from '../../lib/uid';
 
 const StyledTextField = styled(TextField)`
   flex-grow: 1;
@@ -172,6 +173,7 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
   const [autocompleteValue, setAutocompleteValue] = useState<{ label: string; id: number }>(null);
   const t = useT();
   const language = useLanguage();
+  const uid = usePseudoUID();
 
   const autocompleteOptions = useMemo(
     () =>
@@ -254,11 +256,11 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
           }}
         >
           <StyledTagsLabel>
-            <Label htmlFor="tags-f">{t('tags.autocompleteLabel')}</Label>
+            <Label htmlFor={`tags-${uid}`}>{t('tags.autocompleteLabel')}</Label>
           </StyledTagsLabel>
           <StyledTagsAutocompleteContainer>
             <StyledAutocomplete
-              id="tags-f"
+              id={`tags-${uid}`}
               options={autocompleteOptions}
               value={autocompleteValue}
               onChange={(e, newValue) => {
@@ -280,7 +282,7 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
               )}
             />
             <StyledTagsAutocompleteButton>
-              <Button type={ButtonType.submit} color={ButtonColor.green}>
+              <Button type={ButtonType.submit} color={ButtonColor.black}>
                 {t('tags.add')}
               </Button>
             </StyledTagsAutocompleteButton>
