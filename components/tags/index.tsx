@@ -62,7 +62,7 @@ const StyledTagsTag = styled.div`
   display: flex;
   border: 1px solid var(--grey-400);
   border-radius: 0.375rem;
-  padding: 0 0.75rem;
+  padding: 0 0.375rem 0 0.75rem;
   margin-right: 0.75rem;
   margin-bottom: 0.75rem;
   align-items: flex-start;
@@ -81,7 +81,7 @@ const StyledTagsTagX = styled.button`
   background: none;
   padding: 0.375rem 0;
   cursor: pointer;
-  margin: 0 0 0 0.75rem;
+  margin: 0 0 0 0.375rem;
 
   svg {
     width: 1.125rem;
@@ -175,7 +175,7 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
 
   const autocompleteOptions = useMemo(
     () =>
-      options.map((option) => {
+      options?.map((option) => {
         const translation = getTranslation(language, option.relations.translations);
 
         return {
@@ -214,7 +214,7 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
       <StyledTagsBox>
         {tags && tags.length > 0 ? (
           options
-            .filter((option) => tags.includes(option.id))
+            ?.filter((option) => tags.includes(option.id))
             .map((option, index) => {
               const translation = getTranslation(language, option.relations.translations);
 

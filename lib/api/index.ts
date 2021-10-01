@@ -67,6 +67,7 @@ export enum ApiRoutes {
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
   mediaTranslationCreate = 'mediaTranslationCreate',
+  tagList = 'tagList',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -86,7 +87,7 @@ export const apiRoutes: {
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
   organizerShow: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
     `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links`,
@@ -97,7 +98,7 @@ export const apiRoutes: {
     `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations,media`,
+  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations,media,tags`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
   locationTranslationCreate: ({ id }) => `/${apiVersion}/location/${id}/translate`,
@@ -106,7 +107,7 @@ export const apiRoutes: {
     `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
+  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media,tags`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
   offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
@@ -120,6 +121,7 @@ export const apiRoutes: {
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaTranslationCreate: ({ id }) => `/${apiVersion}/media/${id}/translate`,
+  tagList: () => `/${apiVersion}/tag?include=translations`,
 };
 
 const addUrlParam = (url: string, param: string): string =>

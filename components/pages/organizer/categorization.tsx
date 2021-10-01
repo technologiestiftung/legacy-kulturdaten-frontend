@@ -3,6 +3,7 @@ import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
+import { Tag } from '../../../lib/api/types/tag';
 import {
   CategoryEntryPage,
   useMutateList,
@@ -11,10 +12,12 @@ import {
 } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { useTags } from '../../../lib/useTags';
 import { WindowContext } from '../../../lib/WindowService';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { Tags } from '../../tags';
 import { TypesSubjects } from '../../TypesSubjects';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -183,6 +186,76 @@ const useClassificationForm: EntryFormHook = ({ category, query }, loaded) => {
   };
 };
 
+const useOrganizerTags: EntryFormHook = ({ category, query }) => {
+  const tagOptions = useTags();
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const call = useApiCall();
+  const [selectedTags, setSelectedTags] = useState<Tag['id'][]>();
+  const t = useT();
+
+  const initialTags = useMemo(
+    () => entry?.data?.relations?.tags?.map((tag) => tag.id),
+    [entry?.data?.relations?.tags]
+  );
+
+  const pristine = useMemo(() => {
+    if (selectedTags?.length !== initialTags?.length) {
+      return false;
+    }
+
+    if (selectedTags && initialTags) {
+      for (let i = 0; i < selectedTags.length; i += 1) {
+        if (selectedTags[i] !== initialTags[i]) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [initialTags, selectedTags]);
+
+  return {
+    renderedForm: (
+      <div>
+        <EntryFormHead title={t('general.topics') as string} />
+        <FormGrid>
+          <FormItem width={FormItemWidth.full}>
+            {tagOptions && (
+              <Tags
+                options={tagOptions}
+                value={selectedTags || initialTags}
+                onChange={(newValue) => setSelectedTags(newValue)}
+              />
+            )}
+          </FormItem>
+        </FormGrid>
+      </div>
+    ),
+    pristine,
+    valid: true,
+    hint: false,
+    reset: () => undefined,
+    submit: async () => {
+      try {
+        const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+          id: entry.data.id,
+          organizer: {
+            relations: {
+              tags: selectedTags,
+            },
+          },
+        });
+
+        if (resp.status === 200) {
+          mutate();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  };
+};
+
 export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
@@ -208,15 +281,23 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
     };
   }, [rendered, entry]);
 
-  const { renderedForm, submit, pristine, reset, valid } = useClassificationForm(
-    { category, query },
-    loaded,
-    false
-  );
+  const {
+    renderedForm,
+    submit,
+    pristine: pristineClassification,
+    reset,
+    valid,
+  } = useClassificationForm({ category, query }, loaded, false);
+
+  const {
+    renderedForm: renderedTagsForm,
+    submit: submitTags,
+    pristine: pristineTags,
+  } = useOrganizerTags({ category, query }, loaded, false);
 
   const shouldWarn = useMemo(
-    () => !pristine && typeof entry?.data !== 'undefined',
-    [pristine, entry?.data]
+    () => !pristineClassification && typeof entry?.data !== 'undefined',
+    [pristineClassification, entry?.data]
   );
 
   useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
@@ -227,13 +308,19 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
       <div role="form">
         <Save
           onClick={async () => {
-            submit();
+            if (!pristineClassification) {
+              submit();
+            }
+            if (!pristineTags) {
+              submitTags();
+            }
           }}
-          active={!pristine}
+          active={!pristineTags || !pristineClassification}
           date={formattedDate}
           valid={loaded !== true || valid}
         />
         <EntryFormWrapper>
+          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
           <EntryFormContainer>{renderedForm}</EntryFormContainer>
         </EntryFormWrapper>
       </div>

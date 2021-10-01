@@ -221,6 +221,7 @@ export const deDE: Localization = {
     saved: () => 'gespeichert',
     loading: () => 'lädt',
     max: () => 'max.',
+    topics: () => 'Themen',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Themen',

@@ -222,13 +222,14 @@ export const enDE: Localization = {
     saved: () => 'saved',
     loading: () => 'loading',
     max: () => 'max.',
+    topics: () => 'Topics',
   },
   tags: {
     boxLabel: () => 'Already added topics',
     delete: () => 'delete topic',
     add: () => 'add topic',
     placeholder: () => 'No topic has been added yet',
-    autocompleteLabel: () => 'add new topic',
+    autocompleteLabel: () => 'Add new topic',
     noOptions: () => 'No topics found',
   },
   tooltip: {
