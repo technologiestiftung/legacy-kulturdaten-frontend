@@ -212,7 +212,7 @@ const StyledHeaderOrganizerMenuList = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 0 0 0.75rem;
+  padding: 0;
 `;
 
 interface HeaderOrganizerMenuProps {
