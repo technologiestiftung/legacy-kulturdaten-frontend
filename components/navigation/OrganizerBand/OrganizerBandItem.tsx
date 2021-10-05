@@ -4,7 +4,7 @@ import * as feather from 'react-feather';
 import Image from 'next/image';
 import React, { RefObject, useMemo } from 'react';
 import { OrganizerBandLayout } from '.';
-import { Media, RenditionAttributes } from '../../../lib/api/types/media';
+import { Media } from '../../../lib/api/types/media';
 
 const StyledOrganizerBandItemLogo = styled.div<{
   active: boolean;
@@ -19,7 +19,6 @@ const StyledOrganizerBandItemLogo = styled.div<{
   height: calc(3rem - 2px);
   position: relative;
   overflow: hidden;
-  background: var(--white);
   transition: border-color var(--transition-duration-fast);
 
   ${({ layout, active, noBorder }) =>
