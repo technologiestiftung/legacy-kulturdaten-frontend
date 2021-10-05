@@ -32,6 +32,8 @@ export type WrappedUser = {
 
 export const useUser = (): WrappedUser => {
   const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
+  const activeOrganizerCookieName =
+    publicRuntimeConfig?.activeOrganizerCookieName || 'ACTIVE_ORGANIZER_ID';
 
   const {
     authToken,
@@ -76,12 +78,14 @@ export const useUser = (): WrappedUser => {
       call<AuthLogout>(authLogoutFactory).catch((e) => console.error(e));
     }
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
+    deleteCookie({ name: activeOrganizerCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate(undefined);
     setUserTokenIsValid(false);
     invalidateUser();
   }, [
     authTokenFromStateOrCookie,
     authTokenCookieName,
+    activeOrganizerCookieName,
     locale,
     mutateValidate,
     invalidateUser,
