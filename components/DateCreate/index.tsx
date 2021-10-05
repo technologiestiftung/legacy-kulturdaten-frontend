@@ -3,7 +3,7 @@ import { useCallback, useState, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
-import { getPseudoUID, usePseudoUID } from '../../lib/uid';
+import { usePseudoUID } from '../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { Checkbox } from '../checkbox';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
@@ -330,7 +330,7 @@ const StyledDateCreateBottomBar = styled.div`
 `;
 
 interface DateCreateProps {
-  onSubmit: (date: OfferDate['data']) => void;
+  onSubmit: (date: OfferDate['data'], recurrence?: string) => void;
   offerTitles: { [key in Language]: string };
 }
 
@@ -394,7 +394,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           endsAt: toDateTime?.toISOString(),
           status: OfferDateStatus.scheduled,
           ticketLink: ticketUrl,
-          recurrence,
         },
         relations: {
           translations: [
@@ -421,7 +420,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     [
       isAllDay,
       fromDateTime,
-      recurrence,
       roomEnglish,
       roomGerman,
       ticketUrl,
@@ -477,7 +475,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   );
 
   const submitHandler = useCallback(() => {
-    onSubmit(date?.data);
+    onSubmit(date?.data, recurrence);
     setIsOpen(false);
     setTicketUrl('');
     setTitleGerman('');
@@ -491,6 +489,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     setToTimeISOString(startPlusOneHourTimeISOString);
     setRecurrence(undefined);
   }, [
+    recurrence,
     date,
     onSubmit,
     setIsOpen,

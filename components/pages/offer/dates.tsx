@@ -198,32 +198,40 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
                   <DateCreate
-                    onSubmit={async (date) => {
+                    onSubmit={async (date, recurrence) => {
                       console.log(date);
 
-                      try {
-                        const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
-                          offerId: entry.data.id,
-                          date: {
-                            ...date,
-                            attributes: {
-                              ...date.attributes,
-                            },
-                            relations: {
-                              ...date.relations,
-                              translations: date.relations?.translations?.map(
-                                (translation) => translation.attributes
-                              ),
-                            },
-                          },
-                        });
-
-                        if (resp.status === 200) {
-                          console.log('success');
-                          mutate();
+                      if (recurrence) {
+                        try {
+                          alert('Not implemented yet');
+                        } catch (e) {
+                          console.error(e);
                         }
-                      } catch (e) {
-                        console.error(e);
+                      } else {
+                        try {
+                          const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
+                            offerId: entry.data.id,
+                            date: {
+                              ...date,
+                              attributes: {
+                                ...date.attributes,
+                              },
+                              relations: {
+                                ...date.relations,
+                                translations: date.relations?.translations?.map(
+                                  (translation) => translation.attributes
+                                ),
+                              },
+                            },
+                          });
+
+                          if (resp.status === 200) {
+                            console.log('success');
+                            mutate();
+                          }
+                        } catch (e) {
+                          console.error(e);
+                        }
                       }
                     }}
                     offerTitles={offerTitles}
