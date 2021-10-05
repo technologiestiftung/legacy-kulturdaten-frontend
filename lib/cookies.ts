@@ -35,7 +35,7 @@ export const getCookie = (name: string): Cookie => {
 export const setCookie = ({ name, value, path, domain, 'max-age': maxAge }: Cookie): void => {
   document.cookie = `${name}=${value};${maxAge ? `max-age=${maxAge};` : ''}${
     domain ? `domain=${domain};` : ''
-  }${path ? `path=${path};` : ''}samesite=strict`;
+  }${path ? `path=${path};` : ''}samesite=Strict`;
 };
 
 /**
