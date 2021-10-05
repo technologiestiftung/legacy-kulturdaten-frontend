@@ -81,7 +81,8 @@ export const deDE: Localization = {
     email: () => 'E-Mail',
     password: () => 'Passwort',
     remember: () => 'Eingeloggt bleiben',
-    submit: () => 'Anmelden',
+    submit: () => 'einloggen',
+    headline: () => 'Logge dich jetzt bei Kulturdaten.Berlin ein.',
   },
   register: {
     email: () => 'E-Mail',

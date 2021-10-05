@@ -36,10 +36,12 @@ export const inputStyles = ({
   pristine,
   valid,
   hint,
+  hideError = false,
 }: {
   pristine?: boolean;
   valid?: boolean;
   hint?: boolean;
+  hideError?: boolean;
 }): SerializedStyles => css`
   appearance: none;
   border: none;
@@ -68,14 +70,17 @@ export const inputStyles = ({
 
   ${hint ? hintStyle : ''}
 
-  &:invalid {
-    ${errorStyle}
-  }
+  ${!hideError &&
+  css`
+    &:invalid {
+      ${errorStyle}
+    }
+  `}
 
   ${valid === false && !pristine && errorStyle}
 `;
 
-const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
+const StyledInput = styled.input<{ pristine: boolean; valid?: boolean; hideError?: boolean }>`
   ${(props) => inputStyles(props)}
 `;
 
@@ -113,6 +118,7 @@ interface InputProps {
   step?: number | string;
   valid?: boolean;
   value?: string | number;
+  hideError?: boolean;
 }
 
 // eslint-disable-next-line react/display-name

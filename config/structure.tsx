@@ -14,6 +14,7 @@ import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 import { OfferList } from '../components/EntryList/OfferList';
 import { useRouter } from 'next/router';
 import { useOrganizerId } from '../lib/useOrganizer';
+import { MenuLinkType } from '../components/navigation/header/HeaderMenuLink';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -52,8 +53,9 @@ export const useMenuStructure = (): NavigationStructure => {
           {
             type: MenuItemType.link,
             action: {
+              type: MenuLinkType.external,
               title: t('menu.start.items.info') as string,
-              href: routes.index({ locale }),
+              href: 'https://kulturdaten.berlin',
             },
           },
         ],

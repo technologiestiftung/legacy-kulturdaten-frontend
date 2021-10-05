@@ -167,7 +167,7 @@ const ContentSlot = styled.div<{ locked: boolean; hasSidebar: boolean }>`
   margin-bottom: calc(var(--header-height) + env(safe-area-inset-bottom));
 
   ${mq(Breakpoint.mid)} {
-    min-height: var(--app-height);
+    min-height: calc(var(--app-height) - var(--header-height));
     margin-top: var(--header-height);
     margin-bottom: 0;
     grid-column: ${({ hasSidebar }) => (hasSidebar ? '4 / -1' : '1/-1')};

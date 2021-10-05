@@ -82,6 +82,7 @@ export const enDE: Localization = {
     password: () => 'Password',
     remember: () => 'Stay logged in',
     submit: () => 'Login',
+    headline: () => 'Log in to Kulturdaten.Berlin now.',
   },
   register: {
     email: () => 'Email',
