@@ -267,7 +267,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   <option value={OfferDateStatus.scheduled}>
                     {t(editable ? 'date.scheduled' : 'date.scheduledArchived')}
                   </option>
-                  <option value={OfferDateStatus.cancelled}>{t('date.cancelled')}</option>
+                  <option value={OfferDateStatus.canceled}>{t('date.canceled')}</option>
                 </Select>
               </FormItem>
             </FormGrid>

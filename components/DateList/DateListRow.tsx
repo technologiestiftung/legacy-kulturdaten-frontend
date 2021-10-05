@@ -197,7 +197,7 @@ const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus
   editable
 ) => ({
   [OfferDateStatus.scheduled]: editable ? 'date.scheduled' : 'date.scheduledArchived',
-  [OfferDateStatus.cancelled]: 'date.cancelled',
+  [OfferDateStatus.canceled]: 'date.canceled',
 });
 
 export const DateListRow: React.FC<DateListRowProps> = ({

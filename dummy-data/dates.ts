@@ -41,7 +41,7 @@ export const dummyDates: OfferDate[] = [
         startsAt: '2021-09-14T00:00:00',
         endsAt: '2021-09-14T00:00:00',
         isAllDay: true,
-        status: OfferDateStatus.cancelled,
+        status: OfferDateStatus.canceled,
         ticketUrl: 'https://ticket.link',
       },
       relations: {
@@ -169,7 +169,7 @@ export const dummyDates: OfferDate[] = [
         startsAt: '2021-09-24T12:00:00',
         endsAt: '2021-09-24T15:30:00',
         isAllDay: false,
-        status: OfferDateStatus.cancelled,
+        status: OfferDateStatus.canceled,
         ticketUrl: 'https://ticket.link',
       },
       relations: {
@@ -201,7 +201,7 @@ export const dummyDates: OfferDate[] = [
         startsAt: '2021-09-25T00:00:00',
         endsAt: '2021-10-01T00:00:00',
         isAllDay: true,
-        status: OfferDateStatus.cancelled,
+        status: OfferDateStatus.canceled,
         ticketUrl: 'https://ticket.link',
       },
       relations: {
@@ -300,7 +300,7 @@ export const dummyArchivedDates: OfferDate[] = [
         startsAt: '2021-08-31T00:00:00',
         endsAt: '2021-09-01T00:00:00',
         isAllDay: true,
-        status: OfferDateStatus.cancelled,
+        status: OfferDateStatus.canceled,
         ticketUrl: 'https://ticket.link',
       },
       relations: {
@@ -428,7 +428,7 @@ export const dummyArchivedDates: OfferDate[] = [
         startsAt: '2021-09-05T12:00:00',
         endsAt: '2021-09-05T15:30:00',
         isAllDay: false,
-        status: OfferDateStatus.cancelled,
+        status: OfferDateStatus.canceled,
         ticketUrl: 'https://ticket.link',
       },
       relations: {
