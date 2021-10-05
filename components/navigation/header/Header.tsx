@@ -13,6 +13,8 @@ import { OrganizerBand, OrganizerBandLayout } from '../OrganizerBand';
 import { useT } from '../../../lib/i18n';
 import { NavigationContext } from '../NavigationContext';
 import { useRouter } from 'next/router';
+import { appLayouts, Layouts } from '../../layouts/AppLayout';
+import { useAppTitle } from '../../../config/structure';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -64,6 +66,13 @@ const StyledHeaderTitle = styled.div`
   }
 `;
 
+const StyledHeaderTitleText = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+  padding: 0.75rem;
+`;
+
 const StyledHeaderMenuItems = styled.div`
   display: flex;
   padding: 0.75rem 0.375rem;
@@ -106,6 +115,7 @@ interface HeaderProps {
   Link: React.FC<{ children: React.ReactElement<HTMLAnchorElement> }>;
   menuItems: MenuItem[];
   user: WrappedUser;
+  layout: Layouts;
   customLink?: React.ReactElement;
 }
 
@@ -151,19 +161,15 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   return isMidOrWider ? (
     <StyledHeader>
       <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
+      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
       {user?.isLoggedIn && (
-        <>
-          <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
-          <StyledHeaderUserMenu>
-            <UserMenu user={user} />
-          </StyledHeaderUserMenu>
-        </>
+        <StyledHeaderUserMenu>
+          <UserMenu user={user} />
+        </StyledHeaderUserMenu>
       )}
     </StyledHeader>
   ) : (
-    user?.isLoggedIn && (
-      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
-    )
+    <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
   );
 };
 
@@ -271,13 +277,22 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
   title,
   customLink,
   user,
+  layout,
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
+  const activeLayout = appLayouts[layout];
+  const appTitle = useAppTitle();
 
-  const renderedLink = customLink ? (
-    <StyledHeaderTitle>{customLink}</StyledHeaderTitle>
+  const renderedLink = activeLayout?.hasOrganizerBand ? (
+    customLink ? (
+      <StyledHeaderTitle>{customLink}</StyledHeaderTitle>
+    ) : (
+      <HeaderOrganizerMenu title={title} />
+    )
   ) : (
-    <HeaderOrganizerMenu title={title} />
+    <StyledHeaderTitle>
+      <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
+    </StyledHeaderTitle>
   );
 
   return (

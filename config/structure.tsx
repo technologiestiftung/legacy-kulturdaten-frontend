@@ -30,58 +30,88 @@ export const useMenuStructure = (): NavigationStructure => {
 
   return {
     header: {
-      menuItems: [
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.start.items.dashboard') as string,
-            href: routes.dashboard({ locale, query: { organizer: organizerId } }),
+      loggedOut: {
+        menuItems: [
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.login') as string,
+              href: routes.login({ locale }),
+            },
           },
-        },
-        {
-          type: MenuItemType.divider,
-        },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.offer.title') as string,
-            href: routes.offer({ query: { organizer: organizerId }, locale }),
-            active: router.asPath.includes(
-              routes.offer({ query: { organizer: organizerId }, locale })
-            ),
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.registration') as string,
+              href: routes.register({ locale }),
+            },
           },
-        },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.location.title') as string,
-            href: routes.location({ query: { organizer: organizerId }, locale }),
-            active: router.asPath.includes(
-              routes.location({ query: { organizer: organizerId }, locale })
-            ),
+          {
+            type: MenuItemType.divider,
           },
-        },
-        {
-          type: MenuItemType.divider,
-        },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.start.items.team') as string,
-            href: routes.team({ locale, query: { organizer: organizerId } }),
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.info') as string,
+              href: routes.index({ locale }),
+            },
           },
-        },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.start.items.profile') as string,
-            href: routes.organizer({ locale, query: { organizer: organizerId, sub: 'info' } }),
-            active: router.asPath.includes(
-              routes.organizer({ query: { organizer: organizerId }, locale })
-            ),
+        ],
+      },
+      loggedIn: {
+        menuItems: [
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.dashboard') as string,
+              href: routes.dashboard({ locale, query: { organizer: organizerId } }),
+            },
           },
-        },
-      ],
+          {
+            type: MenuItemType.divider,
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.offer.title') as string,
+              href: routes.offer({ query: { organizer: organizerId }, locale }),
+              active: router.asPath.includes(
+                routes.offer({ query: { organizer: organizerId }, locale })
+              ),
+            },
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.location.title') as string,
+              href: routes.location({ query: { organizer: organizerId }, locale }),
+              active: router.asPath.includes(
+                routes.location({ query: { organizer: organizerId }, locale })
+              ),
+            },
+          },
+          {
+            type: MenuItemType.divider,
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.team') as string,
+              href: routes.team({ locale, query: { organizer: organizerId } }),
+            },
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.profile') as string,
+              href: routes.organizer({ locale, query: { organizer: organizerId, sub: 'info' } }),
+              active: router.asPath.includes(
+                routes.organizer({ query: { organizer: organizerId }, locale })
+              ),
+            },
+          },
+        ],
+      },
     },
     menus: [
       {

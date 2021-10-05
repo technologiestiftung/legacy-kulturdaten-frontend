@@ -5,6 +5,7 @@ import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Layouts } from '../layouts/AppLayout';
 import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
 import { HeaderBackLink } from './header/HeaderBackLink';
@@ -27,10 +28,18 @@ export interface NavigationProps {
 
 export type NavigationStructure = {
   header: {
-    menuItems: {
-      type: MenuItemType;
-      action?: MenuItemLink | MenuItemButton | MenuItemFolder;
-    }[];
+    loggedIn: {
+      menuItems: {
+        type: MenuItemType;
+        action?: MenuItemLink | MenuItemButton | MenuItemFolder;
+      }[];
+    };
+    loggedOut: {
+      menuItems: {
+        type: MenuItemType;
+        action?: MenuItemLink | MenuItemButton | MenuItemFolder;
+      }[];
+    };
   };
   menus: MenuData[];
 };
@@ -38,7 +47,8 @@ export type NavigationStructure = {
 export const useNavigation = (
   structure: NavigationStructure,
   title: string,
-  Link: React.FC<HeaderLinkProps>
+  Link: React.FC<HeaderLinkProps>,
+  layout: Layouts
 ): {
   header: { main: React.ReactElement; secondary: React.ReactElement };
   sidebar: React.ReactElement;
@@ -49,6 +59,11 @@ export const useNavigation = (
   const locale = useLocale();
   const router = useRouter();
   const language = useLanguage();
+
+  const activeHeader = useMemo(
+    () => (user?.isLoggedIn ? structure?.header?.loggedIn : structure?.header?.loggedOut),
+    [user?.isLoggedIn, structure?.header]
+  );
 
   const isEntryPage = useMemo(
     () => router?.pathname === '/app/[organizer]/[category]/[id]/[sub]',
@@ -95,7 +110,8 @@ export const useNavigation = (
       user={user}
       title={headerTitle}
       Link={Link}
-      menuItems={structure.header.menuItems}
+      menuItems={activeHeader.menuItems}
+      layout={layout}
     />
   );
 
@@ -104,8 +120,9 @@ export const useNavigation = (
       user={user}
       title={headerTitle}
       Link={Link}
-      menuItems={structure.header.menuItems}
+      menuItems={activeHeader.menuItems}
       customLink={customHeaderLink}
+      layout={layout}
     />
   );
 

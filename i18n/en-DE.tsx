@@ -465,6 +465,9 @@ export const enDE: Localization = {
         notifications: () => 'Notifications',
         profile: () => 'Profile',
         team: () => 'Team',
+        login: () => 'Login',
+        registration: () => 'Registration',
+        info: () => 'Info',
       },
     },
     organizer: {

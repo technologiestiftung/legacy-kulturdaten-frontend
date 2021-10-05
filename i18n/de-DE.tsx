@@ -464,6 +464,9 @@ export const deDE: Localization = {
         notifications: () => 'Benachrichtigungen',
         profile: () => 'Profil',
         team: () => 'Team',
+        login: () => 'Login',
+        registration: () => 'Registrierung',
+        info: () => 'Info',
       },
     },
     organizer: {

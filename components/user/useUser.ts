@@ -16,13 +16,14 @@ import {
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
-import { routes, useLocale } from '../../lib/routing';
+import { routes, useActiveRoute, useLocale } from '../../lib/routing';
 import { User } from '../../lib/api/types/user';
+import { internalRoutes } from '../../config/routes';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
 export type WrappedUser = {
-  user: User['data'];
+  user: User;
   authToken: string;
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
@@ -50,6 +51,7 @@ export const useUser = (): WrappedUser => {
   const router = useRouter();
   const locale = useLocale();
   const call = useApiCall(authTokenFromStateOrCookie);
+  const activeRoute = useActiveRoute();
 
   const { data, mutate: mutateValidate } = useSWR(
     [getApiUrlString(ApiRoutes.authValidate), authTokenFromStateOrCookie],
@@ -104,7 +106,7 @@ export const useUser = (): WrappedUser => {
       console.log('no token present, log out!');
       logoutUser();
     } else {
-      if (locale && router.asPath !== routes.login({ locale })) {
+      if (locale && internalRoutes.includes(activeRoute)) {
         router.replace(routes.login({ locale }));
       }
     }
@@ -120,10 +122,11 @@ export const useUser = (): WrappedUser => {
     authTokenFromStateOrCookie,
     setAuthToken,
     mutateValidate,
+    activeRoute,
   ]);
 
   return {
-    user,
+    user: user,
     authToken: authTokenFromStateOrCookie,
     isLoggedIn: isAuthenticated,
     login: (cookie: Cookie, redirectRoute: string) => {
