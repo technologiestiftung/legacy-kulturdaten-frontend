@@ -13,6 +13,7 @@ import { useOrganizerId } from '../../lib/useOrganizer';
 import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
 import { Button, ButtonSize, ButtonColor, ButtonType } from '../button';
+import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -25,24 +26,11 @@ const authCookie = (value: string, remember: boolean, locale: Locale): Cookie =>
   'max-age': remember ? 1209600 : undefined,
 });
 
-export const AuthFormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 1.5rem;
-`;
-
-export const AuthFormItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  column-gap: 1.5rem;
-`;
-
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<Error>();
-  const [remember, setRemember] = useState<boolean>(false);
+  const [remember, setRemember] = useState<boolean>(true);
   const { isLoggedIn, login } = useUser();
   const router = useRouter();
   const locale = useLocale();

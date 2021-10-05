@@ -88,7 +88,9 @@ export const deDE: Localization = {
     email: () => 'E-Mail',
     password: () => 'Passwort',
     confirmPassword: () => 'Passwort bestätigen',
-    submit: () => 'Registrieren',
+    submit: () => 'registrieren',
+    headline: () => 'Registriere dich jetzt kostenlos für Kulturdaten.Berlin.',
+    subline: () => 'Die Nutzung bleibt immer kostenlos.',
   },
   statusBar: {
     status: () => 'Status',

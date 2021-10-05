@@ -27,10 +27,48 @@ const StyledAuthWrapperImage = styled.div`
   }
 `;
 
+export const AuthFormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+`;
+
+export const AuthFormItem = styled.div<{
+  justifyContent?:
+    | 'center'
+    | 'start'
+    | 'end'
+    | 'left'
+    | 'right'
+    | 'normal'
+    | 'flex-start'
+    | 'flex-end'
+    | 'space-around'
+    | 'space-between'
+    | 'space-evenly'
+    | 'stretch';
+}>`
+  display: flex;
+  flex-direction: row;
+  justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
+  column-gap: 1.5rem;
+`;
+
+export const AuthHead = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+`;
+
 export const AuthHeadline = styled.h1`
   font-size: var(--font-size-700);
   line-height: var(--line-height-700);
   font-weight: 700;
+`;
+
+export const AuthSubline = styled.h2`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
 `;
 
 export const AuthContent = styled.div`
@@ -44,7 +82,7 @@ export const AuthContent = styled.div`
   }
 
   ${mq(Breakpoint.mid)} {
-    padding: 3rem 0;
+    padding: 4.5rem 0;
     justify-items: center;
     ${contentGrid(6)}
     row-gap: 3rem;
@@ -56,15 +94,15 @@ export const AuthContent = styled.div`
   }
 
   ${mq(Breakpoint.widish)} {
-    padding: 5rem 0;
+    padding: 6rem 0;
   }
 
   ${mq(Breakpoint.wide)} {
-    padding: 7rem 0;
+    padding: 9rem 0;
   }
 
   ${mq(Breakpoint.ultra)} {
-    padding: 10rem 0;
+    padding: 11.25rem 0;
   }
 `;
 

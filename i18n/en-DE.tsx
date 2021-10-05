@@ -89,6 +89,8 @@ export const enDE: Localization = {
     password: () => 'Password',
     confirmPassword: () => 'Confirm password',
     submit: () => 'Register',
+    headline: () => 'Register now for free for Kulturdaten.Berlin. ',
+    subline: () => 'Use will always be free of charge.',
   },
   statusBar: {
     status: () => 'Status',
