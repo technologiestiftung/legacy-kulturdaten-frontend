@@ -13,18 +13,15 @@ import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
-import { organizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
 import { LocationInfoPage } from '../components/pages/location/info';
 import { locationCreateFactory } from '../lib/api/routes/location/create';
 import { locationUpdateFactory } from '../lib/api/routes/location/update';
-import { locationTranslationCreateFactory } from '../lib/api/routes/location/translation/create';
 import { locationDeleteFactory } from '../lib/api/routes/location/delete';
 import { locationShowFactory } from '../lib/api/routes/location/show';
 import { offerListFactory } from '../lib/api/routes/offer/list';
 import { offerShowFactory } from '../lib/api/routes/offer/show';
 import { offerCreateFactory } from '../lib/api/routes/offer/create';
 import { offerUpdateFactory } from '../lib/api/routes/offer/update';
-import { offerTranslationCreateFactory } from '../lib/api/routes/offer/translation/create';
 import { offerDeleteFactory } from '../lib/api/routes/offer/delete';
 import { OfferInfoPage } from '../components/pages/offer/info';
 import { LocationCreatePage } from '../components/pages/location/create';
@@ -101,10 +98,6 @@ export const useCategories: () => {
         update: {
           route: ApiRoutes.organizerUpdate,
           factory: organizerUpdateFactory,
-        },
-        translationCreate: {
-          route: ApiRoutes.organizerTranslationCreate,
-          factory: organizerTranslationCreateFactory,
         },
         delete: {
           route: ApiRoutes.organizerDelete,
@@ -186,10 +179,6 @@ export const useCategories: () => {
           route: ApiRoutes.offerUpdate,
           factory: offerUpdateFactory,
         },
-        translationCreate: {
-          route: ApiRoutes.offerTranslationCreate,
-          factory: offerTranslationCreateFactory,
-        },
         delete: {
           route: ApiRoutes.offerDelete,
           factory: offerDeleteFactory,
@@ -235,10 +224,6 @@ export const useCategories: () => {
         update: {
           route: ApiRoutes.locationUpdate,
           factory: locationUpdateFactory,
-        },
-        translationCreate: {
-          route: ApiRoutes.locationTranslationCreate,
-          factory: locationTranslationCreateFactory,
         },
         delete: {
           route: ApiRoutes.locationDelete,

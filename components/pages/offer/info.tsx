@@ -12,7 +12,6 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { EntryFormProps } from '../helpers/form';
 import { Offer, OfferTranslation } from '../../../lib/api/types/offer';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
-import { OfferTranslationCreate } from '../../../lib/api/routes/offer/translation/create';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { EntryPicker } from '../../EntryPicker';
 import { OrganizerList } from '../../EntryList/OrganizerList';
@@ -31,7 +30,7 @@ const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps)
     onSubmit: onSubmitGerman,
     pristine: pristineGerman,
     reset: resetGerman,
-  } = useName<Offer, OfferShow, OfferTranslation, OfferTranslationCreate>({
+  } = useName<Offer, OfferShow, OfferTranslation>({
     category,
     query,
     language: Language.de,
@@ -45,7 +44,7 @@ const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps)
     onSubmit: onSubmitEnglish,
     pristine: pristineEnglish,
     reset: resetEnglish,
-  } = useName<Offer, OfferShow, OfferTranslation, OfferTranslationCreate>({
+  } = useName<Offer, OfferShow, OfferTranslation>({
     category,
     query,
     language: Language.en,

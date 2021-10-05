@@ -1,10 +1,6 @@
 import { ParsedUrlQuery } from 'querystring';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApiCall, useApiCall, useMediaUpload } from '../../../lib/api';
-import {
-  MediaTranslationCreate,
-  mediaTranslationCreateFactory,
-} from '../../../lib/api/routes/media/translation/create';
 import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
 import { CategoryEntry } from '../../../lib/api/types/general';
 import { Media } from '../../../lib/api/types/media';
@@ -146,30 +142,19 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
       if (mediaNotPristineList.includes(id)) {
         const resp = await call<MediaUpdate>(mediaUpdateFactory, {
           id,
-          media: mediaItem,
+          media: {
+            ...mediaItem,
+            relations: {
+              ...mediaItem.relations,
+              translations: mediaItem.relations?.translations?.map(
+                (translation) => translation.attributes
+              ),
+            },
+          },
         });
 
         if (resp.status !== 200) {
           console.error(resp);
-        }
-
-        const translations = mediaItem.relations?.translations;
-
-        if (translations && translations.length > 0) {
-          for (let j = 0; j < translations.length; j += 1) {
-            const translation = translations[j];
-            const translationResp = await call<MediaTranslationCreate>(
-              mediaTranslationCreateFactory,
-              {
-                id,
-                translation,
-              }
-            );
-
-            if (translationResp.status !== 200) {
-              console.error(resp);
-            }
-          }
         }
       }
     }

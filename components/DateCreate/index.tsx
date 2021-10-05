@@ -403,7 +403,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.de,
                 name: titleGerman,
-                room: roomGerman,
+                roomDescription: roomGerman,
               },
             },
             {
@@ -411,7 +411,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.en,
                 name: titleEnglish,
-                room: roomEnglish,
+                roomDescription: roomEnglish,
               },
             },
           ],

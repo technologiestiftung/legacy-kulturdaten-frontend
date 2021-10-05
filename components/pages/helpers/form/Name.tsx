@@ -58,8 +58,7 @@ const Name: React.FC<SetNameProps> = ({
 export const useName = <
   EntryType extends CategoryEntry,
   EntryShowCallType extends ApiCall,
-  TranslationType extends Translation,
-  TranslationCreateCallType extends ApiCall
+  TranslationType extends Translation
 >(props: {
   category: Category;
   query: ParsedUrlQuery;
@@ -107,15 +106,17 @@ export const useName = <
 
     if (valid && !pristine) {
       try {
-        const resp = await call<TranslationCreateCallType>(category.api.translationCreate.factory, {
-          translation: {
-            ...entryTranslation,
-            attributes: {
-              name: value,
-              language,
+        const resp = await call(category.api.update.factory, {
+          organizer: {
+            relations: {
+              translations: [
+                {
+                  name: value,
+                  language,
+                },
+              ],
             },
           },
-          translationId: entryTranslation?.id,
           id: entry?.data?.id,
         });
 

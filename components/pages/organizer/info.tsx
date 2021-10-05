@@ -4,7 +4,6 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { OrganizerTranslationCreate } from '../../../lib/api/routes/organizer/translation/create';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
 import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
@@ -49,7 +48,7 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
     reset: resetGerman,
     valid: validGerman,
     value: valueGerman,
-  } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
+  } = useName<Organizer, OrganizerShow, OrganizerTranslation>({
     category,
     query,
     language: Language.de,
@@ -65,7 +64,7 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
     reset: resetEnglish,
     valid: validEnglish,
     value: valueEnglish,
-  } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
+  } = useName<Organizer, OrganizerShow, OrganizerTranslation>({
     category,
     query,
     language: Language.en,

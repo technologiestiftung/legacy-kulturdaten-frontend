@@ -1,15 +1,11 @@
 import { css } from '@emotion/react';
-import { compareAsc, compareDesc } from 'date-fns';
+import { compareDesc } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
-import { dummyArchivedDates, dummyDates } from '../../../dummy-data/dates';
+import { dummyArchivedDates } from '../../../dummy-data/dates';
 import { useApiCall } from '../../../lib/api';
 import { OfferDateCreate, offerDateCreateFactory } from '../../../lib/api/routes/offer/date/create';
-import {
-  OfferDateTranslationCreate,
-  offerDateTranslationCreateFactory,
-} from '../../../lib/api/routes/offer/date/translation/create';
 import { OfferDateUpdate, offerDateUpdateFactory } from '../../../lib/api/routes/offer/date/update';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { Offer, OfferDate, OfferMode } from '../../../lib/api/types/offer';
@@ -122,31 +118,19 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         const resp = await call<OfferDateUpdate>(offerDateUpdateFactory, {
           offerId: entry.data.id,
           dateId: id,
-          offerDate: date,
+          offerDate: {
+            ...date,
+            relations: {
+              ...date.relations,
+              translations: date.relations?.translations?.map(
+                (translation) => translation.attributes
+              ),
+            },
+          },
         });
 
         if (resp.status !== 200) {
           console.error(resp);
-        }
-
-        const translations = date.relations?.translations;
-
-        if (translations && translations.length > 0) {
-          for (let j = 0; j < translations.length; j += 1) {
-            const translation = translations[j];
-            const translationResp = await call<OfferDateTranslationCreate>(
-              offerDateTranslationCreateFactory,
-              {
-                offerId: entry.data.id,
-                dateId: id,
-                translation,
-              }
-            );
-
-            if (translationResp.status !== 200) {
-              console.error(resp);
-            }
-          }
         }
       }
     }
@@ -224,7 +208,12 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                             ...date,
                             attributes: {
                               ...date.attributes,
-                              name: 'test',
+                            },
+                            relations: {
+                              ...date.relations,
+                              translations: date.relations?.translations?.map(
+                                (translation) => translation.attributes
+                              ),
                             },
                           },
                         });

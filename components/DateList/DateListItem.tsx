@@ -372,14 +372,14 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Input
                       type={InputType.text}
                       label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
-                      value={currentTranslation?.attributes?.room || ''}
+                      value={currentTranslation?.attributes?.roomDescription || ''}
                       onChange={(e) => {
                         const updatedTranslation = {
                           ...currentTranslation,
                           attributes: {
                             ...currentTranslation?.attributes,
                             language,
-                            room: e.target.value,
+                            roomDescription: e.target.value,
                           },
                         };
 

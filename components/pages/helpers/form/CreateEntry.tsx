@@ -10,6 +10,7 @@ import { useLocale } from '../../../../lib/routing';
 import { Breakpoint } from '../../../../lib/WindowService';
 import { contentGrid, mq } from '../../../globals/Constants';
 import { useOrganizerId } from '../../../../lib/useOrganizer';
+import { Language } from '../../../../config/locale';
 
 const CreateWrapper = styled.div`
   padding: 0 0.75rem;
@@ -85,7 +86,9 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
           try {
             const resp = await call<ApiCall>(category.api.create.factory, {
               entry: {
-                attributes: { name: formState.name },
+                relations: {
+                  translations: [{ language: Language.de, name: formState.name }],
+                },
               },
             });
 

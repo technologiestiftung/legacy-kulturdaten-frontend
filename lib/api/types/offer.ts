@@ -16,7 +16,8 @@ export type OfferDateTranslation = {
   attributes: {
     language: Language;
     name?: string;
-    room?: string;
+    description?: string;
+    roomDescription?: string;
   };
 } & Translation;
 

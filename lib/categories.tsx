@@ -58,7 +58,6 @@ export type Category = {
     show: categoryApi;
     create: categoryApi;
     update: categoryApi;
-    translationCreate: categoryApi;
     delete: categoryApi;
     media?: categoryApi;
   };

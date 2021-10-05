@@ -45,28 +45,23 @@ export enum ApiRoutes {
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
-  organizerTranslationCreate = 'organizerTranslationCreate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
   locationList = 'locationList',
   locationShow = 'locationShow',
   locationCreate = 'locationCreate',
   locationUpdate = 'locationUpdate',
-  locationTranslationCreate = 'locationTranslationCreate',
   locationDelete = 'locationDelete',
   offerList = 'offerList',
   offerShow = 'offerShow',
   offerCreate = 'offerCreate',
   offerUpdate = 'offerUpdate',
-  offerTranslationCreate = 'offerTranslationCreate',
   offerDateCreate = 'offerDateCreate',
   offerDelete = 'offerDelete',
   offerDateUpdate = 'offerDateUpdate',
-  offerDateTranslationCreate = 'offerDateTranslationCreate',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
-  mediaTranslationCreate = 'mediaTranslationCreate',
   tagList = 'tagList',
 }
 
@@ -90,8 +85,7 @@ export const apiRoutes: {
     `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,logo,media`,
-  organizerTranslationCreate: ({ organizer }) => `/${apiVersion}/organizer/${organizer}/translate`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo`,
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   locationList: (query) =>
@@ -101,7 +95,6 @@ export const apiRoutes: {
   locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations,media,tags`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
-  locationTranslationCreate: ({ id }) => `/${apiVersion}/location/${id}/translate`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
@@ -110,17 +103,13 @@ export const apiRoutes: {
   offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media,tags`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
-  offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
     `/${apiVersion}/offer/${offerId}/date/${dateId}?include=translations,dates,media`,
-  offerDateTranslationCreate: ({ offerId, dateId }) =>
-    `/${apiVersion}/offer/${offerId}/date/${dateId}/translate`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
-  mediaTranslationCreate: ({ id }) => `/${apiVersion}/media/${id}/translate`,
   tagList: () => `/${apiVersion}/tag?include=translations`,
 };
 
