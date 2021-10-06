@@ -223,6 +223,12 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                         }
                       } else {
                         try {
+                          const filteredTranslations = date.relations?.translations?.filter(
+                            (translation) =>
+                              translation?.attributes.name?.length > 0 ||
+                              translation?.attributes.roomDescription?.length > 0
+                          );
+
                           const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
                             offerId: entry.data.id,
                             date: {
@@ -232,9 +238,12 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                               },
                               relations: {
                                 ...date.relations,
-                                translations: date.relations?.translations?.map(
-                                  (translation) => translation.attributes
-                                ),
+                                translations:
+                                  filteredTranslations.length > 0
+                                    ? filteredTranslations.map(
+                                        (translation) => translation.attributes
+                                      )
+                                    : undefined,
                               },
                             },
                           });
