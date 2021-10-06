@@ -36,6 +36,7 @@
     "react-dom": "17.0.2",
     "react-feather": "2.0.9",
     "rrule": "2.6.8",
+    "sharp": "^0.29.1",
     "slate": "0.65.3",
     "slate-history": "0.65.3",
     "slate-hyperscript": "0.62.0",
