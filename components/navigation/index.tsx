@@ -5,7 +5,7 @@ import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { Layouts } from '../layouts/AppLayout';
+import { appLayouts, Layouts } from '../layouts/AppLayout';
 import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
 import { HeaderBackLink } from './header/HeaderBackLink';
@@ -101,9 +101,10 @@ export const useNavigation = (
 
   const organizer = useOrganizer();
 
-  const headerTitle = organizer
-    ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name
-    : title;
+  const headerTitle =
+    appLayouts[layout].hasOrganizerBand && organizer
+      ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name
+      : title;
 
   const renderedHeaderMain = (
     <HeaderMain
