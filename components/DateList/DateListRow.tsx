@@ -182,7 +182,6 @@ const StyledDateListItemBodyInner = styled.div<{ lastRow: boolean }>`
 interface DateListRowProps {
   from: string;
   status: OfferDateStatus;
-  isAllDay: boolean;
   lastRow: boolean;
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -203,7 +202,6 @@ const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus
 export const DateListRow: React.FC<DateListRowProps> = ({
   from,
   to,
-  isAllDay,
   lastRow,
   title,
   status,
@@ -221,12 +219,10 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const fromDate = from && new Date(from);
   const toDate = to && new Date(to);
 
-  const dateFormat = isAllDay ? DateFormat.date : DateFormat.dateTime;
+  const dateFormat = DateFormat.dateTime;
 
   const formattedFrom = formatDate(fromDate, dateFormat);
   const formattedTo = toDate && formatDate(toDate, dateFormat);
-
-  const longerThanOneDay = differenceInSeconds(toDate, fromDate) > 86400;
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <StyledDateListItemBodyInner lastRow={lastRow}>{body}</StyledDateListItemBodyInner>
@@ -280,9 +276,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
         </StyledDateListItemText>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {to && (!isAllDay || longerThanOneDay) && (
-          <StyledDateListItemText>{formattedTo}</StyledDateListItemText>
-        )}
+        {to && <StyledDateListItemText>{formattedTo}</StyledDateListItemText>}
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText>{title}</StyledDateListItemText>
@@ -305,7 +299,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
           <StyledDateListRowMidInner>
             <StyledDateListItemTime noPaddingLeft={editable} doublePaddingLeft={!editable}>
               <span>{formattedFrom}</span>
-              {to && (!isAllDay || longerThanOneDay) && (
+              {to && (
                 <>
                   <ArrowRight />
                   <span>{formattedTo}</span>

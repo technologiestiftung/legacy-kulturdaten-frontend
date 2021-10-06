@@ -70,7 +70,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
 
   const attributes = date?.attributes;
 
-  const isAllDay = attributes?.isAllDay;
   const fromDate = useMemo(
     () => (attributes.startsAt ? new Date(attributes.startsAt) : undefined),
     [attributes.startsAt]
@@ -100,13 +99,13 @@ export const DateListItem: React.FC<DateListItemProps> = ({
   const toTimeISOString = useMemo(() => (toDate ? format(toDate, 'HH:mm') : ''), [toDate]);
 
   const fromDateTime = useMemo(
-    () => parseISO(`${fromDateISOString}T${!isAllDay ? fromTimeISOString : '00:00'}`),
-    [isAllDay, fromDateISOString, fromTimeISOString]
+    () => parseISO(`${fromDateISOString}T${fromTimeISOString}`),
+    [fromDateISOString, fromTimeISOString]
   );
 
   const toDateTime = useMemo(
-    () => parseISO(`${toDateISOString}T${!isAllDay ? toTimeISOString : '00:00'}`),
-    [isAllDay, toDateISOString, toTimeISOString]
+    () => parseISO(`${toDateISOString}T${toTimeISOString}`),
+    [toDateISOString, toTimeISOString]
   );
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
@@ -120,7 +119,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
     <DateListRow
       from={attributes.startsAt}
       to={attributes.endsAt}
-      isAllDay={attributes.isAllDay}
       status={attributes.status}
       title={currentTranslation?.attributes?.name}
       lastRow={lastRow}
@@ -136,23 +134,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
           <StyledDateListItemContainer columns={isUltraOrWider ? 2 : 3}>
             <EntryFormHead title={t('date.time') as string} size={EntryFormHeadSize.small} />
             <FormGrid>
-              <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
-                <Checkbox
-                  id={`checkbox-${uid}`}
-                  label={t('date.allDay') as string}
-                  checked={attributes.isAllDay}
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        isAllDay: e.target.checked,
-                      },
-                    })
-                  }
-                  disabled={!editable}
-                />
-              </FormItem>
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.date}
@@ -171,25 +152,24 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   max={formatISO9075(add(today, { years: 1 }), { representation: 'date' })}
                   disabled={!editable}
                 />
-                {!attributes.isAllDay && (
-                  <Input
-                    type={InputType.time}
-                    label={t('date.clock') as string}
-                    value={format(fromDate, 'HH:mm')}
-                    onChange={(e) =>
-                      onChange({
-                        ...date,
-                        attributes: {
-                          ...date.attributes,
-                          startsAt: `${formatISO9075(fromDate, { representation: 'date' })}T${
-                            e.target.value
-                          }`,
-                        },
-                      })
-                    }
-                    disabled={!editable}
-                  />
-                )}
+
+                <Input
+                  type={InputType.time}
+                  label={t('date.clock') as string}
+                  value={format(fromDate, 'HH:mm')}
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        startsAt: `${formatISO9075(fromDate, { representation: 'date' })}T${
+                          e.target.value
+                        }`,
+                      },
+                    })
+                  }
+                  disabled={!editable}
+                />
               </FormItem>
               <FormItem width={FormItemWidth.half}>
                 <Input
@@ -211,32 +191,31 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
                   disabled={!editable}
                 />
-                {!isAllDay && (
-                  <Input
-                    type={InputType.time}
-                    label={t('date.clock') as string}
-                    value={toTimeISOString}
-                    onChange={(e) =>
-                      onChange({
-                        ...date,
-                        attributes: {
-                          ...date.attributes,
-                          endsAt: `${formatISO9075(toDate, { representation: 'date' })}T${
-                            e.target.value
-                          }`,
-                        },
-                      })
-                    }
-                    min={
-                      compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
-                        ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
-                        : undefined
-                    }
-                    valid={toTimeValid}
-                    error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
-                    disabled={!editable}
-                  />
-                )}
+
+                <Input
+                  type={InputType.time}
+                  label={t('date.clock') as string}
+                  value={toTimeISOString}
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        endsAt: `${formatISO9075(toDate, { representation: 'date' })}T${
+                          e.target.value
+                        }`,
+                      },
+                    })
+                  }
+                  min={
+                    compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
+                      ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
+                      : undefined
+                  }
+                  valid={toTimeValid}
+                  error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
+                  disabled={!editable}
+                />
               </FormItem>
             </FormGrid>
           </StyledDateListItemContainer>

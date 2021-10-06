@@ -28,7 +28,6 @@ export type OfferDate = {
     attributes?: {
       startsAt: string;
       endsAt: string;
-      isAllDay: boolean;
       status: OfferDateStatus;
       ticketUrl?: string;
     };

@@ -22,8 +22,6 @@ import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 
 interface DateFormTimeProps {
-  isAllDay: boolean;
-  setIsAllDay: (isAllDay: boolean) => void;
   earliestDate: Date;
   latestDate: Date;
   fromDateISOString: string;
@@ -41,8 +39,6 @@ interface DateFormTimeProps {
 }
 
 export const DateFormTime: React.FC<DateFormTimeProps> = ({
-  isAllDay,
-  setIsAllDay,
   earliestDate,
   latestDate,
   fromDateISOString,
@@ -58,7 +54,6 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
   toDateValid,
   toTimeValid,
 }: DateFormTimeProps) => {
-  const uid = usePseudoUID();
   const t = useT();
 
   const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
@@ -68,14 +63,6 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
     <>
       <EntryFormHead title={t('date.time') as string} />
       <FormGrid>
-        <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
-          <Checkbox
-            id={`checkbox-${uid}`}
-            label={t('date.allDay') as string}
-            checked={isAllDay}
-            onChange={(e) => setIsAllDay(e.target.checked)}
-          />
-        </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
@@ -85,7 +72,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
             min={earliestDateISOString}
             max={latestDateISOString}
           />
-          {!isAllDay && (
+          {
             <Input
               type={InputType.time}
               label={t('date.clock') as string}
@@ -96,7 +83,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
                 }
               }}
             />
-          )}
+          }
         </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
@@ -109,7 +96,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
             valid={toDateValid}
             error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
           />
-          {!isAllDay && (
+          {
             <Input
               type={InputType.time}
               label={t('date.clock') as string}
@@ -123,7 +110,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
               valid={toTimeValid}
               error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
             />
-          )}
+          }
         </FormItem>
       </FormGrid>
     </>
@@ -140,8 +127,6 @@ const StyledDateCreateFormWrapper = styled.div`
 
 interface DateCreateFormProps {
   offerTitles: { [key in Language]: string };
-  isAllDay: boolean;
-  setIsAllDay: (isAllDay: boolean) => void;
   ticketUrl: string;
   setTicketUrl: (ticketUrl: string) => void;
   titleGerman: string;
@@ -172,8 +157,6 @@ interface DateCreateFormProps {
 
 const DateCreateForm: React.FC<DateCreateFormProps> = ({
   offerTitles,
-  isAllDay,
-  setIsAllDay,
   ticketUrl,
   setTicketUrl,
   titleGerman,
@@ -202,7 +185,6 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   toTimeValid,
 }: DateCreateFormProps) => {
   const t = useT();
-  const uid = usePseudoUID();
 
   const { renderedDateRecurrence } = useDateRecurrence({
     startDate: fromDate,
@@ -217,8 +199,6 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
         <EntryFormContainer noPadding fullWidth>
           <DateFormTime
             {...{
-              isAllDay,
-              setIsAllDay,
               earliestDate,
               latestDate,
               fromDateISOString,
@@ -349,7 +329,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const startTimeISOString = format(earliestDate, 'HH:mm');
   const startPlusOneHourTimeISOString = format(add(earliestDate, { hours: 1 }), 'HH:mm');
 
-  const [isAllDay, setIsAllDay] = useState(false);
   const [ticketUrl, setTicketUrl] = useState('');
   const [titleGerman, setTitleGerman] = useState('');
   const [titleEnglish, setTitleEnglish] = useState('');
@@ -362,13 +341,13 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const [toTimeISOString, setToTimeISOString] = useState<string>(startPlusOneHourTimeISOString);
 
   const fromDateTime = useMemo(
-    () => parseISO(`${fromDateISOString}T${!isAllDay ? fromTimeISOString : '00:00'}`),
-    [isAllDay, fromDateISOString, fromTimeISOString]
+    () => parseISO(`${fromDateISOString}T${fromTimeISOString}`),
+    [fromDateISOString, fromTimeISOString]
   );
 
   const toDateTime = useMemo(
-    () => parseISO(`${toDateISOString}T${!isAllDay ? toTimeISOString : '00:00'}`),
-    [isAllDay, toDateISOString, toTimeISOString]
+    () => parseISO(`${toDateISOString}T${toTimeISOString}`),
+    [toDateISOString, toTimeISOString]
   );
 
   const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
@@ -385,7 +364,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     () => ({
       data: {
         attributes: {
-          isAllDay,
           startsAt: fromDateTime?.toISOString(),
           endsAt: toDateTime?.toISOString(),
           status: OfferDateStatus.scheduled,
@@ -413,16 +391,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
         },
       },
     }),
-    [
-      isAllDay,
-      fromDateTime,
-      roomEnglish,
-      roomGerman,
-      ticketUrl,
-      titleEnglish,
-      titleGerman,
-      toDateTime,
-    ]
+    [fromDateTime, roomEnglish, roomGerman, ticketUrl, titleEnglish, titleGerman, toDateTime]
   );
 
   const { renderedOverlay, setIsOpen } = useOverlay(
@@ -444,8 +413,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           setRoomGerman,
           roomEnglish,
           setRoomEnglish,
-          isAllDay,
-          setIsAllDay,
           fromDateISOString,
           setFromDateISOString,
           fromTimeISOString,
@@ -476,7 +443,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     setTicketUrl('');
     setTitleGerman('');
     setTitleEnglish('');
-    setIsAllDay(false);
     setRoomGerman('');
     setRoomEnglish('');
     setFromDateISOString(earliestDateISOString);
