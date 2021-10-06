@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { differenceInSeconds } from 'date-fns';
+import { getDay } from 'date-fns';
 import { ArrowRight, ChevronDown } from 'react-feather';
 import { OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
@@ -8,6 +8,7 @@ import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Checkbox } from '../checkbox';
 import { useCollapsable } from '../collapsable';
+import { weekdays } from '../DayPicker';
 import { mq } from '../globals/Constants';
 
 const StyledDateListRowCell = styled.div<{ lastRow: boolean; expanded: boolean }>`
@@ -272,11 +273,21 @@ export const DateListRow: React.FC<DateListRowProps> = ({
 
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText noPaddingLeft={editable} doublePaddingLeft={!editable}>
-          <StyledDateListItemTimeFrom>{formattedFrom}</StyledDateListItemTimeFrom>
+          <StyledDateListItemTimeFrom>
+            {fromDate && t(weekdays[getDay(fromDate)].name.short)}
+            {'. '}
+            {formattedFrom}
+          </StyledDateListItemTimeFrom>
         </StyledDateListItemText>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {to && <StyledDateListItemText>{formattedTo}</StyledDateListItemText>}
+        {to && (
+          <StyledDateListItemText>
+            {toDate && t(weekdays[getDay(toDate)].name.short)}
+            {'. '}
+            {formattedTo}
+          </StyledDateListItemText>
+        )}
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText>{title}</StyledDateListItemText>
