@@ -218,45 +218,44 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 <FormItem width={FormItemWidth.full}>
                   <DateCreate
                     onSubmit={async (date, recurrence) => {
-                      if (recurrence) {
-                        try {
-                          alert('Not implemented yet');
-                        } catch (e) {
-                          console.error(e);
-                        }
-                      } else {
-                        try {
-                          const filteredTranslations = date.relations?.translations?.filter(
-                            (translation) =>
-                              translation?.attributes.name?.length > 0 ||
-                              translation?.attributes.roomDescription?.length > 0
-                          );
+                      try {
+                        const filteredTranslations = date.relations?.translations?.filter(
+                          (translation) =>
+                            translation?.attributes.name?.length > 0 ||
+                            translation?.attributes.roomDescription?.length > 0
+                        );
 
-                          const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
-                            offerId: entry.data.id,
-                            date: {
-                              ...date,
-                              attributes: {
-                                ...date.attributes,
-                              },
-                              relations: {
-                                ...date.relations,
-                                translations:
-                                  filteredTranslations.length > 0
-                                    ? filteredTranslations.map(
-                                        (translation) => translation.attributes
-                                      )
-                                    : undefined,
-                              },
+                        const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
+                          offerId: entry.data.id,
+                          date: {
+                            ...date,
+                            attributes: {
+                              ...date.attributes,
                             },
-                          });
+                            relations: {
+                              ...date.relations,
+                              translations:
+                                filteredTranslations.length > 0
+                                  ? filteredTranslations.map(
+                                      (translation) => translation.attributes
+                                    )
+                                  : undefined,
+                            },
+                            meta: recurrence
+                              ? {
+                                  recurrenceRule: recurrence,
+                                  startsAt: date?.attributes?.startsAt,
+                                  endsAt: date?.attributes?.endsAt,
+                                }
+                              : undefined,
+                          },
+                        });
 
-                          if (resp.status === 200) {
-                            mutateDateList();
-                          }
-                        } catch (e) {
-                          console.error(e);
+                        if (resp.status === 200) {
+                          mutateDateList();
                         }
+                      } catch (e) {
+                        console.error(e);
                       }
                     }}
                     offerTitles={offerTitles}

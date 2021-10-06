@@ -35,6 +35,11 @@ export type OfferDate = {
     relations?: {
       translations: OfferDateTranslation[];
     };
+    meta?: {
+      recurrenceRule: string;
+      startsAt: string;
+      endsAt: string;
+    };
   };
 };
 
