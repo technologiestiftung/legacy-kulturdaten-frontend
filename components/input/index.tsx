@@ -192,10 +192,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <StyledInput
               {...props}
               onChange={(e) => {
-                if (typeof props?.onChange === 'function') {
-                  props?.onChange(e);
+                if (props?.type !== InputType.date || e.target.value) {
+                  if (typeof props?.onChange === 'function') {
+                    props?.onChange(e);
+                  }
+                  setNormalized(false);
                 }
-                setNormalized(false);
               }}
               ref={ref}
               pristine={pristine}

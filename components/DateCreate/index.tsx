@@ -81,11 +81,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
             type={InputType.date}
             label={t('date.from') as string}
             value={fromDateISOString}
-            onChange={(e) => {
-              if (e.target.value) {
-                setFromDateISOString(e.target.value);
-              }
-            }}
+            onChange={(e) => setFromDateISOString(e.target.value)}
             min={earliestDateISOString}
             max={latestDateISOString}
           />
