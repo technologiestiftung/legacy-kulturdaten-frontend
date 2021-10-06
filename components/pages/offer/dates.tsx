@@ -3,13 +3,12 @@ import { compareDesc } from 'date-fns';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
-import { dummyArchivedDates } from '../../../dummy-data/dates';
 import { useApiCall } from '../../../lib/api';
 import { OfferDateCreate, offerDateCreateFactory } from '../../../lib/api/routes/offer/date/create';
 import { OfferDateUpdate, offerDateUpdateFactory } from '../../../lib/api/routes/offer/date/update';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { Offer, OfferDate, OfferMode } from '../../../lib/api/types/offer';
-import { CategoryEntryPage, useEntry } from '../../../lib/categories';
+import { CategoryEntryPage, useEntry, useOfferDateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
@@ -20,6 +19,7 @@ import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
@@ -34,6 +34,8 @@ const customFormItemCss = css`
   }
 `;
 
+const entriesPerPage = 25;
+
 export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
@@ -42,19 +44,23 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const t = useT();
   const [value, setValue] = useState<OfferMode>(OfferMode.scheduled);
   const uid = usePseudoUID();
-  const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
+  const { entry } = useEntry<Offer, OfferShow>(category, query);
   const formattedDate = useSaveDate(entry);
+  const call = useApiCall();
+  const [currentPage, setCurrentPage] = useState(0);
 
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
   const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
 
-  const datesFromApi = useMemo(
-    () => entry?.data?.relations?.dates,
-    [entry?.data?.relations?.dates]
-  );
-  const [archivedDates, setArchivedDates] = useState<OfferDate['data'][]>(
-    dummyArchivedDates?.map((date) => date?.data)
-  );
+  const {
+    data: datesFromApi,
+    mutate: mutateDateList,
+    meta: metaDateList,
+  } = useOfferDateList(entry?.data?.id, currentPage, entriesPerPage, [['past', 'false']]);
+
+  const { data: archivedDates } = useOfferDateList(entry?.data?.id, currentPage, 25, [
+    ['past', 'true'],
+  ]);
 
   const translations = entry?.data?.relations?.translations;
 
@@ -86,7 +92,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   });
 
   const { renderedDateList: renderedArchivedDateList } = useDateList({
-    dates: archivedDates.sort((firstDate, secondDate) =>
+    dates: archivedDates?.sort((firstDate, secondDate) =>
       compareDesc(new Date(firstDate.attributes.startsAt), new Date(secondDate.attributes.startsAt))
     ),
     editable: false,
@@ -104,8 +110,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     true
   );
 
-  const call = useApiCall();
-
   const pristine = useMemo(() => datesNotPristineList.length === 0, [datesNotPristineList]);
 
   const submitDateList = useCallback(async () => {
@@ -115,27 +119,33 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
       const id = date.id;
 
       if (datesNotPristineList.includes(id)) {
-        const resp = await call<OfferDateUpdate>(offerDateUpdateFactory, {
-          offerId: entry.data.id,
-          dateId: id,
-          offerDate: {
-            ...date,
-            relations: {
-              ...date.relations,
-              translations: date.relations?.translations?.map(
-                (translation) => translation.attributes
-              ),
+        try {
+          const resp = await call<OfferDateUpdate>(offerDateUpdateFactory, {
+            offerId: entry.data.id,
+            dateId: id,
+            offerDate: {
+              ...date,
+              relations: {
+                ...date.relations,
+                translations: date.relations?.translations?.map(
+                  (translation) => translation.attributes
+                ),
+              },
             },
-          },
-        });
+          });
 
-        if (resp.status !== 200) {
-          console.error(resp);
+          if (resp.status === 200) {
+            mutateDateList();
+          } else {
+            console.error(resp);
+          }
+        } catch (e) {
+          console.error(e);
         }
       }
     }
     setDatesNotPristineList([]);
-  }, [call, dates, datesNotPristineList, entry?.data?.id]);
+  }, [call, dates, datesNotPristineList, entry?.data?.id, mutateDateList]);
 
   return (
     <>
@@ -199,8 +209,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 <FormItem width={FormItemWidth.full}>
                   <DateCreate
                     onSubmit={async (date, recurrence) => {
-                      console.log(date);
-
                       if (recurrence) {
                         try {
                           alert('Not implemented yet');
@@ -226,8 +234,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                           });
 
                           if (resp.status === 200) {
-                            console.log('success');
-                            mutate();
+                            mutateDateList();
                           }
                         } catch (e) {
                           console.error(e);
@@ -239,6 +246,29 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 </FormItem>
                 <FormItem width={FormItemWidth.full} css={customFormItemCss}>
                   {renderedDateList}
+                </FormItem>
+                <FormItem width={FormItemWidth.full}>
+                  {metaDateList?.pages.lastPage > 1 && (
+                    <EntryListPagination
+                      currentPage={currentPage}
+                      lastPage={metaDateList?.pages.lastPage}
+                      totalEntries={metaDateList?.pages.total}
+                      entriesPerPage={entriesPerPage}
+                      nextPage={() =>
+                        currentPage < metaDateList?.pages.lastPage
+                          ? setCurrentPage(currentPage + 1)
+                          : undefined
+                      }
+                      previousPage={() =>
+                        currentPage > 1 ? setCurrentPage(currentPage - 1) : undefined
+                      }
+                      goToPage={(index: number) =>
+                        index <= metaDateList?.pages.lastPage ? setCurrentPage(index) : undefined
+                      }
+                      expanded={true}
+                      noHorizontalPadding
+                    />
+                  )}
                 </FormItem>
               </FormGrid>
             </EntryFormContainer>

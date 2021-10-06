@@ -59,6 +59,7 @@ export enum ApiRoutes {
   offerDateCreate = 'offerDateCreate',
   offerDelete = 'offerDelete',
   offerDateUpdate = 'offerDateUpdate',
+  offerDateList = 'offerDateList',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
@@ -100,13 +101,19 @@ export const apiRoutes: {
     `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media,tags`,
+  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
   offerCreate: () => `/${apiVersion}/offer`,
-  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,dates,media`,
+  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
     `/${apiVersion}/offer/${offerId}/date/${dateId}?include=translations,dates,media`,
+  offerDateList: (query) =>
+    `/${apiVersion}/offer/${query.offerId}/date?include=translations,dates,media${
+      query?.page ? `&page=${query.page}` : ''
+    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
+      query?.sort ? `&sort=${query.sort}` : ''
+    }`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
@@ -208,7 +215,7 @@ export const useMediaUpload = (
       query?: unknown,
       fileAttribute = 'media[]'
     ) => {
-      const { request, response } = factory(overrideAuthToken || authToken, query);
+      const { request } = factory(overrideAuthToken || authToken, query);
       const route = request.route;
       const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
 
@@ -273,7 +280,7 @@ export const upload = async <T extends ApiCall>(
 
   const formData = new FormData();
 
-  [...files].forEach(<T extends ApiCall>(file: File) => formData.append('media', file));
+  [...files].forEach((file: File) => formData.append('media', file));
 
   const req = new XMLHttpRequest();
 

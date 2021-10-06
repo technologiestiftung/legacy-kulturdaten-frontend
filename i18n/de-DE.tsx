@@ -173,6 +173,7 @@ export const deDE: Localization = {
     ticketLink: () => 'Ticketlink',
     currentDates: () => 'Aktuelle Termine',
     archivedDates: () => 'Vergangene Termine',
+    listPlaceholder: () => 'Noch keine Termine vorhanden',
     mode: {
       title: () => 'Modus des Angebots',
       permanent: {

@@ -67,11 +67,10 @@ const StyledDateListItemTextBold = styled(StyledDateListItemText)`
   font-weight: 700;
 `;
 
-enum DateListActions {
-  init = 'init',
-  edit = 'edit',
-  delete = 'delete',
-}
+const StyledDateListPlaceholder = styled.div`
+  padding: 0.75rem;
+  grid-column: 1 / -1;
+`;
 
 interface DateListProps {
   dates: OfferDate['data'][];
@@ -119,7 +118,7 @@ const DateList: React.FC<DateListProps> = ({
                 <StyledDateListItemCheckbox>
                   <Checkbox
                     id={`${uid}-checkbox`}
-                    checked={allCheckboxesChecked}
+                    checked={dates?.length > 0 && allCheckboxesChecked}
                     onChange={(e) =>
                       e?.target.checked
                         ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
@@ -152,7 +151,7 @@ const DateList: React.FC<DateListProps> = ({
                 <Checkbox
                   id={`${uid}-checkbox`}
                   ariaLabel={t('date.allCheckboxAriaLabel') as string}
-                  checked={allCheckboxesChecked}
+                  checked={dates?.length > 0 && allCheckboxesChecked}
                   onChange={(e) =>
                     e?.target.checked
                       ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
@@ -166,35 +165,43 @@ const DateList: React.FC<DateListProps> = ({
             </StyledDateListItemTextBold>
           </StyledDateListTitleRow>
         )}
-        {dates?.map((date, index) => {
-          const dateId = date?.id;
-          return (
-            <DateListItem
-              key={index}
-              date={date}
-              onChange={(changedDate) =>
-                onChange(
-                  [...dates.slice(0, index), changedDate, ...dates.slice(index + 1, dates.length)],
-                  date.id
-                )
-              }
-              checked={checkedDateIds?.includes(String(dateId))}
-              setChecked={(checked) => {
-                if (checked) {
-                  setCheckedDateIds([
-                    ...checkedDateIds.filter((id) => id !== String(dateId)),
-                    String(dateId),
-                  ]);
-                } else {
-                  setCheckedDateIds(checkedDateIds.filter((id) => id !== String(dateId)));
+        {dates && dates.length > 0 ? (
+          dates.map((date, index) => {
+            const dateId = date?.id;
+            return (
+              <DateListItem
+                key={index}
+                date={date}
+                onChange={(changedDate) =>
+                  onChange(
+                    [
+                      ...dates.slice(0, index),
+                      changedDate,
+                      ...dates.slice(index + 1, dates.length),
+                    ],
+                    date.id
+                  )
                 }
-              }}
-              editable={editable}
-              lastRow={index === rowCount - 1}
-              offerTitles={offerTitles}
-            />
-          );
-        })}
+                checked={checkedDateIds?.includes(String(dateId))}
+                setChecked={(checked) => {
+                  if (checked) {
+                    setCheckedDateIds([
+                      ...checkedDateIds.filter((id) => id !== String(dateId)),
+                      String(dateId),
+                    ]);
+                  } else {
+                    setCheckedDateIds(checkedDateIds.filter((id) => id !== String(dateId)));
+                  }
+                }}
+                editable={editable}
+                lastRow={index === rowCount - 1}
+                offerTitles={offerTitles}
+              />
+            );
+          })
+        ) : (
+          <StyledDateListPlaceholder>{t('date.listPlaceholder')}</StyledDateListPlaceholder>
+        )}
       </StyledDateListBody>
     </StyledDateList>
   );

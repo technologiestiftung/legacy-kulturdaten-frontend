@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
@@ -6,14 +7,17 @@ import { Button, ButtonVariant, IconPosition } from '../button';
 import { mq } from '../globals/Constants';
 import { Select, SelectVariant } from '../select';
 
-const StyledEntryListPagination = styled.div`
+const StyledEntryListPagination = styled.div<{ noHorizontalPadding?: boolean }>`
   display: flex;
   flex-direction: column;
-  padding: 0.75rem;
 
-  ${mq(Breakpoint.wide)} {
-    padding: 0.75rem 1.5rem;
-  }
+  ${({ noHorizontalPadding }) => css`
+    padding: ${noHorizontalPadding ? '0.75rem 0' : '0.75rem'};
+
+    ${mq(Breakpoint.wide)} {
+      padding: ${noHorizontalPadding ? '0.75rem 0' : '0.75rem 1.5rem'};
+    }
+  `}
 `;
 
 const StyledEntryListPaginationInteractive = styled.div`
@@ -43,6 +47,7 @@ interface EntryListPaginationProps {
   previousPage: () => void;
   goToPage: (index: number) => void;
   expanded: boolean;
+  noHorizontalPadding?: boolean;
 }
 
 export const EntryListPagination: React.FC<EntryListPaginationProps> = ({
@@ -54,9 +59,9 @@ export const EntryListPagination: React.FC<EntryListPaginationProps> = ({
   previousPage,
   goToPage,
   expanded,
+  noHorizontalPadding,
 }: EntryListPaginationProps) => {
   const t = useT();
-
   const pseudoUID = usePseudoUID();
 
   const renderedPageSelect = totalEntries && entriesPerPage && (
@@ -78,7 +83,7 @@ export const EntryListPagination: React.FC<EntryListPaginationProps> = ({
   );
 
   return (
-    <StyledEntryListPagination>
+    <StyledEntryListPagination noHorizontalPadding={noHorizontalPadding}>
       <StyledEntryListPaginationInteractive>
         {!expanded && (
           <StyledEntryListPaginationSelect>{renderedPageSelect}</StyledEntryListPaginationSelect>

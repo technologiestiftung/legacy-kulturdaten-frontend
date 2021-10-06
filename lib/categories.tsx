@@ -9,8 +9,10 @@ import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
 import { CategoryEntry } from './api/types/general';
+import { OfferDate } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
 import { Route, useLocale } from './routing';
 
@@ -98,6 +100,58 @@ const makeListQuery = (
           .join(',')
       : undefined,
     sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
+  };
+};
+
+export const useOfferDateList = (
+  offerId: number | string,
+  page?: number,
+  perPage?: number,
+  filter?: [string, string][],
+  sort?: { key: string; order: Order },
+  load = true
+): {
+  data: OfferDate['data'][];
+  meta: {
+    language: Language;
+    pages: {
+      total: number;
+      perPage: number;
+      currentPage: number;
+      lastPage: number;
+    };
+  };
+  mutate: (
+    data?: OfferDateList['response'],
+    shouldRevalidate?: boolean
+  ) => Promise<OfferDateList['response'] | undefined>;
+} => {
+  const call = useApiCall();
+  const query = makeListQuery(page, perPage, filter, sort);
+
+  const { data, mutate } = useSWR(
+    load && offerId
+      ? getApiUrlString(ApiRoutes.offerDateList, { ...query, offerId: String(offerId) })
+      : undefined,
+    () =>
+      load && offerId
+        ? call<OfferDateList>(offerDateListFactory, { ...query, offerId: String(offerId) })
+        : undefined
+  );
+
+  return {
+    data: (data as unknown as OfferDateList['response'])?.body
+      ?.data as unknown as OfferDate['data'][],
+    meta: (data as unknown as OfferDateList['response'])?.body?.meta as {
+      language: Language;
+      pages: {
+        total: number;
+        perPage: number;
+        currentPage: number;
+        lastPage: number;
+      };
+    },
+    mutate,
   };
 };
 

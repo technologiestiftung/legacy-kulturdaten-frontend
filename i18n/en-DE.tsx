@@ -173,6 +173,7 @@ export const enDE: Localization = {
     ticketLink: () => 'Ticket link',
     currentDates: () => 'Current dates',
     archivedDates: () => 'Past dates',
+    listPlaceholder: () => 'There are no dates yet.',
     mode: {
       title: () => 'Offer mode',
       permanent: {
