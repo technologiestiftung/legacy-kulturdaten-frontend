@@ -10,7 +10,7 @@ import { NavigationContextProvider } from '../components/navigation/NavigationCo
 import { useContext } from 'react';
 import { EntryListContextProvider } from '../components/EntryList/EntryListContext';
 import { Categories } from '../config/categories';
-import { AppLayout } from '../components/layouts/AppLayout';
+import { AppLayout, useLayout } from '../components/layouts/AppLayout';
 import { useNavigation } from '../components/navigation';
 import { useAppTitle, useMenuStructure } from '../config/structure';
 import { HeaderLink } from '../components/navigation/header/HeaderLink';
@@ -22,11 +22,13 @@ const EmbeddedAppLayout: React.FC<{ content: React.ReactElement }> = ({
 }) => {
   const NavigationStructure = useMenuStructure();
   const appTitle = useAppTitle();
-
   const { rendered } = useContext(WindowContext);
-  const { header, sidebar } = useNavigation(NavigationStructure, appTitle, HeaderLink);
+  const layout = useLayout();
+  const { header, sidebar } = useNavigation(NavigationStructure, appTitle, HeaderLink, layout);
 
-  return rendered ? <AppLayout header={header} sidebar={sidebar} content={content} /> : null;
+  return rendered ? (
+    <AppLayout header={header} sidebar={sidebar} content={content} layout={layout} />
+  ) : null;
 };
 
 function App({ Component, pageProps }: AppProps): React.ReactElement {

@@ -10,6 +10,10 @@ import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { useOrganizerId } from '../../lib/useOrganizer';
+import { Input, InputType } from '../input';
+import { Checkbox } from '../checkbox';
+import { Button, ButtonSize, ButtonColor, ButtonType } from '../button';
+import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -22,22 +26,11 @@ const authCookie = (value: string, remember: boolean, locale: Locale): Cookie =>
   'max-age': remember ? 1209600 : undefined,
 });
 
-export const StyledTestFormContainer = styled.div`
-  margin: 1.5rem 0;
-`;
-
-export const StyledTestInput = styled.input`
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-  margin-bottom: 0.75rem;
-  width: 100%;
-`;
-
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<Error>();
-  const [remember, setRemember] = useState<boolean>(false);
+  const [remember, setRemember] = useState<boolean>(true);
   const { isLoggedIn, login } = useUser();
   const router = useRouter();
   const locale = useLocale();
@@ -72,45 +65,44 @@ export const LoginForm: React.FC = () => {
   };
 
   const form = (
-    <StyledTestFormContainer>
-      <form onSubmit={submitHandler}>
+    <form onSubmit={submitHandler}>
+      <AuthFormContainer>
         <div>
-          <label htmlFor="login-email">{t('login.email')}</label>
-          <br />
-          <StyledTestInput
-            type="email"
+          <Input
+            type={InputType.text}
             value={email}
+            label={t('login.email') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             id="login-email"
             required
+            hideError
           />
         </div>
         <div>
-          <label htmlFor="login-password">{t('login.password')}</label>
-          <br />
-          <StyledTestInput
-            type="password"
+          <Input
+            type={InputType.password}
             value={password}
+            label={t('login.password') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             id="login-password"
             required
+            hideError
           />
         </div>
-        <div>
-          <input
+        <AuthFormItem>
+          <Checkbox
             id="login-remember"
-            type="checkbox"
             checked={remember}
+            label={t('login.remember') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setRemember(e.target.checked)}
           />
-          <label htmlFor="login-remember">{t('login.remember')}</label>
-        </div>
-        <div>
-          <input type="submit" value={t('login.submit') as string} />
-        </div>
-      </form>
-      {error ? <div>{error.message}</div> : ''}
-    </StyledTestFormContainer>
+          <Button size={ButtonSize.big} color={ButtonColor.black} type={ButtonType.submit}>
+            {t('login.submit')}
+          </Button>
+        </AuthFormItem>
+        {error ? <div>{error.message}</div> : ''}
+      </AuthFormContainer>
+    </form>
   );
 
   return <div>{form}</div>;

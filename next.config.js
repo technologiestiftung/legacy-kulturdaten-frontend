@@ -28,6 +28,11 @@ module.exports = {
         permanent: false,
       },
       {
+        source: '/',
+        destination: '/app/auth/login/',
+        permanent: false,
+      },
+      {
         source: '/app/:organizer/',
         destination: '/app/:organizer/dashboard/',
         permanent: true,

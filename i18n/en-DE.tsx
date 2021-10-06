@@ -81,13 +81,16 @@ export const enDE: Localization = {
     email: () => 'Email',
     password: () => 'Password',
     remember: () => 'Stay logged in',
-    submit: () => 'Login',
+    submit: () => 'login',
+    headline: () => 'Log in to Kulturdaten.Berlin now.',
   },
   register: {
     email: () => 'Email',
     password: () => 'Password',
     confirmPassword: () => 'Confirm password',
-    submit: () => 'Register',
+    submit: () => 'register',
+    headline: () => 'Register now for free for Kulturdaten.Berlin. ',
+    subline: () => 'Use will always be free of charge.',
   },
   statusBar: {
     status: () => 'Status',
@@ -465,6 +468,9 @@ export const enDE: Localization = {
         notifications: () => 'Notifications',
         profile: () => 'Profile',
         team: () => 'Team',
+        login: () => 'Login',
+        registration: () => 'Registration',
+        info: () => 'Info',
       },
     },
     organizer: {

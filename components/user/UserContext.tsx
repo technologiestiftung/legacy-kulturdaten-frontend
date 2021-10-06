@@ -9,8 +9,8 @@ const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undef
 type UserContext = {
   authToken: string;
   setAuthToken: (authToken: string) => void;
-  user: User;
-  setUser: (user: User) => void;
+  user: User['data'];
+  setUser: (user: User['data']) => void;
   isAuthenticated: boolean;
   authenticateUser: () => void;
   invalidateUser: () => void;
@@ -45,7 +45,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 }: UserContextProviderProps) => {
   const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
   const [authToken, setAuthToken] = useState<string>();
-  const [stateUser, setStateUser] = useState<User>();
+  const [stateUser, setStateUser] = useState<User['data']>();
   const [userIsAuthenticated, setUserIsAuthenticated] = useState<boolean>(false);
   const [rand] = useState<number>(Math.random() * 100);
 
@@ -59,7 +59,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
         authToken,
         setAuthToken,
         user: stateUser,
-        setUser: (initialUser: User) => setStateUser(initialUser),
+        setUser: (initialUser: User['data']) => setStateUser(initialUser),
         isAuthenticated: userIsAuthenticated,
         authenticateUser: () => {
           setUserIsAuthenticated(true);

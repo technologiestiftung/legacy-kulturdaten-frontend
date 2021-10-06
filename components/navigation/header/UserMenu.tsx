@@ -162,7 +162,7 @@ export const UserMenu: React.FC<UserMenuProps> = () => {
       <StyledUserMenuDropdown visible={visible} animating={animating}>
         <StyledUserMenuDropdownContent>
           <StyledUserMenuDropdownText>
-            {t('userMenu.loggedIn')}: <b>{user.email}</b>
+            {t('userMenu.loggedIn')}: <b>{user?.attributes?.email}</b>
           </StyledUserMenuDropdownText>
           <HeaderMenuLink
             href={routes.userSettings({ locale })}

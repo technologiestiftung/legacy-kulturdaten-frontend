@@ -1,3 +1,4 @@
+import { Layouts } from '../components/layouts/AppLayout';
 import { Route } from '../lib/routing';
 
 import { Locale } from './locales';
@@ -59,6 +60,20 @@ export const routes: { [key in Routes]: Route } = {
     `/app/${query.organizer}/${localizedRoutes[Routes.createLocation][locale]}/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
+
+export const internalRoutes = [
+  Routes.dashboard,
+  Routes.team,
+  Routes.userProfile,
+  Routes.userNotifications,
+  Routes.userSettings,
+  Routes.organizer,
+  Routes.offer,
+  Routes.location,
+  Routes.createLocation,
+  Routes.createOffer,
+  Routes.createOrganizer,
+];
 
 /**
  * Localized parts for all routes paths
@@ -124,4 +139,22 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'impressum',
     'en-DE': 'imprint',
   },
+};
+
+export const routesLayouts: { [key in Routes]: Layouts } = {
+  index: Layouts.loggedOut,
+  createLocation: Layouts.loggedIn,
+  createOffer: Layouts.loggedIn,
+  createOrganizer: Layouts.loggedIn,
+  dashboard: Layouts.loggedIn,
+  imprint: undefined,
+  location: Layouts.loggedIn,
+  login: Layouts.loggedOut,
+  offer: Layouts.loggedIn,
+  organizer: Layouts.loggedIn,
+  register: Layouts.loggedOut,
+  team: Layouts.loggedIn,
+  userNotifications: Layouts.loggedIn,
+  userProfile: Layouts.loggedIn,
+  userSettings: Layouts.loggedIn,
 };

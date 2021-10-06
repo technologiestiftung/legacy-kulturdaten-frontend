@@ -30,7 +30,7 @@ const StoryContainer = styled.div`
 
 const EmbeddedStory: React.FC = () => {
   const { renderedDateList } = useDateList({
-    dates: dummyDates,
+    dates: dummyDates.map((date) => date.data),
     offerTitles: {
       [Language.de]: 'Angebotstitel',
       [Language.en]: 'Offer title',

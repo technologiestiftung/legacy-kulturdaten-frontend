@@ -16,8 +16,9 @@ import {
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
-import { routes, useLocale } from '../../lib/routing';
+import { routes, useActiveRoute, useLocale } from '../../lib/routing';
 import { User } from '../../lib/api/types/user';
+import { internalRoutes } from '../../config/routes';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -31,6 +32,8 @@ export type WrappedUser = {
 
 export const useUser = (): WrappedUser => {
   const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
+  const activeOrganizerCookieName =
+    publicRuntimeConfig?.activeOrganizerCookieName || 'ACTIVE_ORGANIZER_ID';
 
   const {
     authToken,
@@ -50,6 +53,7 @@ export const useUser = (): WrappedUser => {
   const router = useRouter();
   const locale = useLocale();
   const call = useApiCall(authTokenFromStateOrCookie);
+  const activeRoute = useActiveRoute();
 
   const { data, mutate: mutateValidate } = useSWR(
     [getApiUrlString(ApiRoutes.authValidate), authTokenFromStateOrCookie],
@@ -74,12 +78,14 @@ export const useUser = (): WrappedUser => {
       call<AuthLogout>(authLogoutFactory).catch((e) => console.error(e));
     }
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
+    deleteCookie({ name: activeOrganizerCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate(undefined);
     setUserTokenIsValid(false);
     invalidateUser();
   }, [
     authTokenFromStateOrCookie,
     authTokenCookieName,
+    activeOrganizerCookieName,
     locale,
     mutateValidate,
     invalidateUser,
@@ -87,7 +93,7 @@ export const useUser = (): WrappedUser => {
   ]);
 
   useEffect(() => {
-    const userData = userResponse?.body.data.attributes as unknown as User;
+    const userData = userResponse?.body.data as unknown as User['data'];
 
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
@@ -104,7 +110,7 @@ export const useUser = (): WrappedUser => {
       console.log('no token present, log out!');
       logoutUser();
     } else {
-      if (locale && router.asPath !== routes.login({ locale })) {
+      if (locale && internalRoutes.includes(activeRoute)) {
         router.replace(routes.login({ locale }));
       }
     }
@@ -120,10 +126,11 @@ export const useUser = (): WrappedUser => {
     authTokenFromStateOrCookie,
     setAuthToken,
     mutateValidate,
+    activeRoute,
   ]);
 
   return {
-    user,
+    user: user,
     authToken: authTokenFromStateOrCookie,
     isLoggedIn: isAuthenticated,
     login: (cookie: Cookie, redirectRoute: string) => {
