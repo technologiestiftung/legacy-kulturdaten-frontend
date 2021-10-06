@@ -174,6 +174,10 @@ export const deDE: Localization = {
     currentDates: () => 'Aktuelle Termine',
     archivedDates: () => 'Vergangene Termine',
     listPlaceholder: () => 'Noch keine Termine vorhanden',
+    sort: {
+      startsAt: () => 'Startzeit',
+      endsAt: () => 'Endzeit',
+    },
     mode: {
       title: () => 'Modus des Angebots',
       permanent: {

@@ -8,7 +8,7 @@ import { OfferDateCreate, offerDateCreateFactory } from '../../../lib/api/routes
 import { OfferDateUpdate, offerDateUpdateFactory } from '../../../lib/api/routes/offer/date/update';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { Offer, OfferDate, OfferMode } from '../../../lib/api/types/offer';
-import { CategoryEntryPage, useEntry, useOfferDateList } from '../../../lib/categories';
+import { CategoryEntryPage, Order, useEntry, useOfferDateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
@@ -21,7 +21,9 @@ import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
+import { RadioSwitch } from '../../RadioSwitch';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
+import { Select } from '../../select';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
@@ -47,20 +49,24 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const { entry } = useEntry<Offer, OfferShow>(category, query);
   const formattedDate = useSaveDate(entry);
   const call = useApiCall();
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pseudoUID = usePseudoUID();
 
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
   const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
+  const [sortKey, setSortKey] = useState('startsAt');
+  const [order, setOrder] = useState(Order.ASC);
 
   const {
     data: datesFromApi,
     mutate: mutateDateList,
     meta: metaDateList,
-  } = useOfferDateList(entry?.data?.id, currentPage, entriesPerPage, [['past', 'false']]);
+  } = useOfferDateList(entry?.data?.id, currentPage, entriesPerPage, [['past', 'false']], {
+    key: sortKey,
+    order,
+  });
 
-  const { data: archivedDates } = useOfferDateList(entry?.data?.id, currentPage, 25, [
-    ['past', 'true'],
-  ]);
+  const { data: archivedDates } = useOfferDateList(entry?.data?.id, 0, 1000, [['past', 'true']]);
 
   const translations = entry?.data?.relations?.translations;
 
@@ -242,6 +248,47 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                       }
                     }}
                     offerTitles={offerTitles}
+                  />
+                </FormItem>
+                <FormItem
+                  width={FormItemWidth.full}
+                  css={css`
+                    align-items: flex-end;
+                  `}
+                >
+                  <Select
+                    id={`entry-sort-${pseudoUID}`}
+                    label={t('general.sort') as string}
+                    onChange={(e) => {
+                      setCurrentPage(1);
+                      setSortKey(e.target.value);
+                    }}
+                    value={sortKey}
+                  >
+                    <option value="startsAt">{t('date.sort.startsAt')}</option>
+                    <option value="endsAt">{t('date.sort.endsAt')}</option>
+                  </Select>
+                  <RadioSwitch
+                    value={order}
+                    name={`entry-order-${pseudoUID}`}
+                    onChange={(value) => {
+                      setCurrentPage(1);
+                      setOrder(value as Order);
+                    }}
+                    options={[
+                      {
+                        value: Order.ASC,
+                        label: t('general.ascending') as string,
+                        ariaLabel: t('general.ascendingAriaLabel') as string,
+                        icon: 'ArrowUp',
+                      },
+                      {
+                        value: Order.DESC,
+                        label: t('general.descending') as string,
+                        ariaLabel: t('general.descendingAriaLabel') as string,
+                        icon: 'ArrowDown',
+                      },
+                    ]}
                   />
                 </FormItem>
                 <FormItem width={FormItemWidth.full} css={customFormItemCss}>

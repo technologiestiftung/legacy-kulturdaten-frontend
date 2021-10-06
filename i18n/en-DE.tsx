@@ -174,6 +174,10 @@ export const enDE: Localization = {
     currentDates: () => 'Current dates',
     archivedDates: () => 'Past dates',
     listPlaceholder: () => 'There are no dates yet.',
+    sort: {
+      startsAt: () => 'Start time',
+      endsAt: () => 'End time',
+    },
     mode: {
       title: () => 'Offer mode',
       permanent: {
