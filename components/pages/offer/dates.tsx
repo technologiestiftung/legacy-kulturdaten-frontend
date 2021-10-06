@@ -66,7 +66,10 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     order,
   });
 
-  const { data: archivedDates } = useOfferDateList(entry?.data?.id, 0, 1000, [['past', 'true']]);
+  const { data: archivedDates } = useOfferDateList(entry?.data?.id, 0, 1000, [['past', 'true']], {
+    key: 'startsAt',
+    order: Order.DESC,
+  });
 
   const translations = entry?.data?.relations?.translations;
 
