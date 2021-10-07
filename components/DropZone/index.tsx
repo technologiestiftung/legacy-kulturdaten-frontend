@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { DragEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n';
+import { Info } from '../info';
 
 const StyledDropZone = styled.div``;
 
@@ -366,10 +367,12 @@ export const DropZone: React.FC<DropZoneProps> = ({
       </StyledDropZoneLabel>
       {!fileSizeValid && (
         <StlyedDropZoneSuccess>
-          {t('dropZone.maxFileSizeExceeded', {
-            fileSize: dropFileSizeString,
-            maxFileSize: maxFileSizeString,
-          })}
+          <Info>
+            {t('dropZone.maxFileSizeExceeded', {
+              fileSize: dropFileSizeString,
+              maxFileSize: maxFileSizeString,
+            })}
+          </Info>
         </StlyedDropZoneSuccess>
       )}
       {success && (
