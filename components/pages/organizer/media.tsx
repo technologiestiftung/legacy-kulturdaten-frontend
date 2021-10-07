@@ -14,17 +14,18 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { DropZone } from '../../DropZone';
 import { Media } from '../../../lib/api/types/media';
 import { EntryFormHook } from './info';
-import { MediaUpdate } from '../../../lib/api/routes/media/update';
-import { OrganizerUpdate, organizerUpdateFactory } from '../../../lib/api/routes/organizer/update';
+import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { MediaList } from '../../MediaList';
 
+const maxFileSize = 10240;
+
 const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   { category, query }: { category: Category; query: ParsedUrlQuery },
   disabled: boolean,
-  maxFiles: number
+  maxFiles = 1
 ) => {
   const t = useT();
   const [files, setFiles] = useState<FileList | File[]>();
@@ -84,7 +85,8 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
           progress={progress}
           success={uploadSuccess}
           disabled={disabled}
-          max={1}
+          max={maxFiles}
+          maxFileSizeInKb={maxFileSize}
         />
       </FormItem>
     ),
@@ -123,19 +125,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
     }
   }, [initialLogo, logo, logoFromApi]);
 
-  // useEffect(() => {
-  //   if (logo && logoFromApi) {
-  //     const mediaFromApiIds = logoFromApi.map((mediaItem) => mediaItem.id);
-  //     const mediaIds = media.map((mediaItem) => mediaItem.id);
-
-  //     setMedia([
-  //       ...logoFromApi.filter((mediaItem) => !mediaIds.includes(mediaItem.id)),
-  //       ...media.filter((mediaItem) => mediaFromApiIds.includes(mediaItem.id)),
-  //     ]);
-  //   }
-  // }, [media, logoFromApi]);
-
-  const { renderedForm: renderedLogoUploadForm } = useLogoUploadForm({ category, query }, false, 1);
+  const { renderedForm: renderedLogoUploadForm } = useLogoUploadForm({ category, query }, false);
 
   const submitLogo = useCallback(async () => {
     try {
