@@ -9,6 +9,7 @@ export enum OfferMode {
 export enum OfferDateStatus {
   scheduled = 'scheduled',
   canceled = 'canceled',
+  past = 'past',
 }
 
 export type OfferDateTranslation = {
