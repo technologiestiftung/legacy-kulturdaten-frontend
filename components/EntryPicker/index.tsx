@@ -98,7 +98,7 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
   const category = useMemo(() => categories[categoryName], [categories, categoryName]);
   const t = useT();
 
-  const { entry } = useEntry(category, { id: value });
+  const { entry } = useEntry(category, { id: value, organizer: value });
 
   const translation = useMemo(
     () => getTranslation(language, entry?.data?.relations?.translations, true),
