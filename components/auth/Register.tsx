@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
@@ -6,13 +5,6 @@ import { useT } from '../../lib/i18n';
 import { Button, ButtonColor, ButtonSize, ButtonType } from '../button';
 import { Input, InputType } from '../input';
 import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
-
-const StyledTestInput = styled.input`
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-  margin-bottom: 0.75rem;
-  width: 100%;
-`;
 
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');

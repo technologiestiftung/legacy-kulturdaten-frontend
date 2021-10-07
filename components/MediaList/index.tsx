@@ -14,10 +14,10 @@ import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
 import { Button, ButtonColor } from '../button';
 import { useApiCall } from '../../lib/api';
-import { MediaDelete, mediaDeleteFactory } from '../../lib/api/routes/media/delete';
 import { useFormatNumber } from '../../lib/number';
 import { useEffect, useMemo } from 'react';
 import { AlertSymbol } from '../assets/AlertSymbol';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -277,7 +277,6 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
   const t = useT();
-  const call = useApiCall();
   const formatNumber = useFormatNumber();
 
   const smallestRendition =
@@ -344,6 +343,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
                   id={`${uid}-copyright`}
                   value={currentTranslation?.attributes?.alternativeText || ''}
+                  required={language === defaultLanguage}
                   onChange={(e) => {
                     const updatedTranslation = {
                       ...currentTranslation,

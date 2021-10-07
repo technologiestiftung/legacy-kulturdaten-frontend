@@ -13,11 +13,13 @@ import { EntryFormHook } from '../organizer/info';
 import { FormGrid, FormItem, FormItemWidth } from './formComponents';
 
 const imagesMax = 5;
+const maxFileSize = 10240;
 
 const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   { category, query }: { category: Category; query: ParsedUrlQuery },
   disabled: boolean,
-  maxFiles: number
+  maxFiles: number,
+  maxFileSizeInKb?: number
 ) => {
   const t = useT();
   const [files, setFiles] = useState<FileList | File[]>();
@@ -27,7 +29,7 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number }>();
 
   useEffect(() => {
-    const x = async () => {
+    const uploadFiles = async () => {
       if (!isUploading && files && files.length > 0) {
         setIsUploading(true);
 
@@ -50,7 +52,7 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
       }
     };
 
-    x();
+    uploadFiles();
   }, [category?.api?.update?.factory, entry?.data?.id, files, isUploading, mutate, query, upload]);
 
   return {
@@ -73,6 +75,7 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
           disabled={disabled}
           disabledMessage={t('media.maxReached', { count: imagesMax }) as string}
           max={maxFiles}
+          maxFileSizeInKb={maxFileSizeInKb}
         />
       </FormItem>
     ),
@@ -130,7 +133,8 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
   const { renderedForm: renderedMediaUploadForm } = useMediaUploadForm(
     { category, query },
     uploadDisabled,
-    media?.length >= imagesMax ? 0 : imagesMax - media?.length
+    media?.length >= imagesMax ? 0 : imagesMax - media?.length,
+    maxFileSize
   );
 
   const submitMediaList = useCallback(async () => {
@@ -178,6 +182,7 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
                 ]);
               }}
               setValid={(valid) => setValid(valid)}
+              onDelete={() => console.log('tbd')}
             />
           </FormItem>
         </FormGrid>

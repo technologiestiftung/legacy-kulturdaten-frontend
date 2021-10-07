@@ -147,6 +147,9 @@ export const enDE: Localization = {
     success: ({ count }) => `Successfully uploaded ${count} ${count === 1 ? 'file' : 'files'}`,
     pending: () => `Upload done. Files are being processed.`,
     ariaLabel: () => 'Upload files',
+    maxFileSize: () => 'Max allowed file size per upload',
+    maxFileSizeExceeded: ({ fileSize, maxFileSize }) =>
+      `The selected files are too big for uploading - ${fileSize}, max. ${maxFileSize} allowed. Select less or smaller files.`,
   },
   date: {
     time: () => 'Time',

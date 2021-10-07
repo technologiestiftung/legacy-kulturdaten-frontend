@@ -147,6 +147,9 @@ export const deDE: Localization = {
     success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
     pending: () => `Hochladen abgeschlossen. Dateien werden verarbeitet.`,
     ariaLabel: () => 'Dateien hochladen',
+    maxFileSize: () => 'Maximale Dateigröße pro Upload',
+    maxFileSizeExceeded: ({ fileSize, maxFileSize }) =>
+      `Die ausgewählten Dateien sind zu groß für den Upload - ${fileSize}, max. ${maxFileSize} erlaubt. Bitte wähle weniger oder kleinere Dateien.`,
   },
   date: {
     from: () => 'von',
