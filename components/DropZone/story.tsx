@@ -12,7 +12,7 @@ const StoryWrapper = styled.div`
 `;
 
 export const DropZoneDefaultStory: Story = () => {
-  const [files, setFiles] = useState<FileList | File[]>();
+  const [, setFiles] = useState<FileList | File[]>();
 
   return (
     <StoryWrapper>

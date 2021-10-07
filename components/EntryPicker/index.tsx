@@ -92,7 +92,6 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
   list,
   onChange,
   showHint,
-  error,
 }: EntryPickerProps) => {
   const categories = useCategories();
   const language = useLanguage();

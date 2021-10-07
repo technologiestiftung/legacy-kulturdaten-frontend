@@ -9,7 +9,6 @@ import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { Checkbox } from '../checkbox';
 import { EntryFormHead, EntryFormHeadSize } from '../EntryForm/EntryFormHead';
 import { mq } from '../globals/Constants';
 import { Info, InfoColor } from '../info';
@@ -66,7 +65,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
 
   const translations = date?.relations?.translations;
   const currentTranslation = translations ? getTranslation(language, translations) : undefined;
-  const dateId = date?.id;
 
   const attributes = date?.attributes;
 
@@ -84,7 +82,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
     [attributes.endsAt, fromDate]
   );
   const today = new Date();
-  const earliestDate = today;
   const latestDate = add(today, { years: 1 });
 
   const fromDateISOString = useMemo(

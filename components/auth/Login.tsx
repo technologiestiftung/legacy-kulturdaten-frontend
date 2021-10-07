@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import getConfig from 'next/config';
-import styled from '@emotion/styled';
 
 import { AuthLogin, authLoginFactory, useApiCall } from '../../lib/api';
 import { Cookie } from '../../lib/cookies';

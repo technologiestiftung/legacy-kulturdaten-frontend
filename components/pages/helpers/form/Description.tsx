@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { EntryFormProps } from '.';
-import { defaultLanguage, Language } from '../../../../config/locale';
+import { Language } from '../../../../config/locale';
 import { useApiCall } from '../../../../lib/api';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../../lib/api/routes/organizer/update';

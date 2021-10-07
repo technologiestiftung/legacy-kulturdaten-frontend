@@ -13,7 +13,6 @@ import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
 import { Button, ButtonColor } from '../button';
-import { useApiCall } from '../../lib/api';
 import { useFormatNumber } from '../../lib/number';
 import { useEffect, useMemo } from 'react';
 import { AlertSymbol } from '../assets/AlertSymbol';
