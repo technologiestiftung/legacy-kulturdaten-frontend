@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCategories } from '../../../config/categories';
-import { OrganizerList } from '../../../lib/api';
+import { ApiCall, OrganizerList, useApiCall } from '../../../lib/api';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { Order, useList } from '../../../lib/categories';
 import { useLanguage, useLocale } from '../../../lib/routing';
@@ -12,6 +12,7 @@ import React from 'react';
 import { useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
+import { Language } from '../../../config/locale';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
@@ -46,6 +47,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   const router = useRouter();
   const setOrganizerId = useSetOrganizerId();
   const t = useT();
+  const call = useApiCall();
 
   return (
     <StyledOrganizerBand layout={layout}>
@@ -75,16 +77,36 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
           </Link>
         );
       })}
-      <Link href={routes.createOrganizer({ locale })} passHref>
-        <OrganizerBandItem
-          active={router?.asPath === routes.createOrganizer({ locale })}
-          layout={layout}
-          icon="Plus"
-          noBorder
-        >
-          {t('menu.createOrganizer') as string}
-        </OrganizerBandItem>
-      </Link>
+      <OrganizerBandItem
+        active={router?.asPath === routes.createOrganizer({ locale })}
+        layout={layout}
+        icon="Plus"
+        noBorder
+        asButton
+        onClick={async () => {
+          const category = categories.organizer;
+
+          try {
+            const resp = await call<ApiCall>(category.api.create.factory, {
+              entry: {
+                relations: {
+                  translations: [{ language: Language.de, name: 'Neue Anbieter:inn' }],
+                },
+              },
+            });
+
+            if (resp.status === 200) {
+              const id = resp.body.data.id;
+
+              router.push(category.routes.list({ locale, query: { sub: 'info', organizer: id } }));
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+      >
+        {t('menu.createOrganizer') as string}
+      </OrganizerBandItem>
     </StyledOrganizerBand>
   );
 };

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as feather from 'react-feather';
 import Image from 'next/image';
-import React, { RefObject, useMemo, useRef } from 'react';
+import React, { MouseEventHandler, RefObject, useMemo, useRef } from 'react';
 import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
 import { MouseTooltip } from '../../MouseTooltip';
@@ -38,7 +38,9 @@ const StyledOrganizerBandItem = styled.a<{
   noBorder?: boolean;
 }>`
   text-decoration: none;
-
+  width: 100%;
+  display: block;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -141,10 +143,21 @@ interface OrganizerBandItemProps {
   href?: string;
   onClick?: React.MouseEventHandler;
   logo?: Media['data'];
+  asButton?: boolean;
 }
 
 const OrganizerBandItemForwarded = (
-  { children, active, href, onClick, layout, icon, noBorder, logo }: OrganizerBandItemProps,
+  {
+    children,
+    active,
+    href,
+    onClick,
+    layout,
+    icon,
+    noBorder,
+    logo,
+    asButton,
+  }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
   const selfRef = useRef<HTMLDivElement>(null);
@@ -177,6 +190,7 @@ const OrganizerBandItemForwarded = (
             onClick(e);
           }
         }}
+        as={asButton ? 'button' : undefined}
       >
         {layout === OrganizerBandLayout.wide ? (
           <>

@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { OfferList as OfferListCall } from '../../lib/api';
+import { ApiCall, OfferList as OfferListCall, useApiCall } from '../../lib/api';
 import { Offer, OfferTranslation } from '../../lib/api/types/offer';
-import { Order, useList } from '../../lib/categories';
+import { Order, useList, useMutateList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -22,11 +22,12 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import { ButtonColor, ButtonSize } from '../button';
+import { Button, ButtonColor, ButtonSize } from '../button';
 import { ButtonLink } from '../button/ButtonLink';
 import Link from 'next/link';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
+import { Language } from '../../config/locale';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -84,7 +85,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     setLastEntryId,
   } = useContext(EntryListContext);
   const pseudoUID = usePseudoUID();
-
+  const call = useApiCall();
   const listName = Categories.offer;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
@@ -108,6 +109,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     Object.entries(filters),
     { key: sortKey, order }
   );
+  const mutateList = useMutateList(categories.offer);
 
   const activeFiltersCount = useMemo(
     () =>
@@ -260,16 +262,42 @@ export const OfferList: React.FC<OfferListProps> = ({
         setExpanded={setMenuExpanded}
         expandable={expandable}
         actionButton={
-          <Link href={routes.createOffer({ locale, query: { organizer: organizerId } })} passHref>
-            <ButtonLink
-              size={ButtonSize.big}
-              color={ButtonColor.white}
-              icon="Plus"
-              onClick={() => setMenuExpanded(false)}
-            >
-              {t('categories.offer.form.create')}
-            </ButtonLink>
-          </Link>
+          <Button
+            size={ButtonSize.big}
+            color={ButtonColor.white}
+            icon="Plus"
+            onClick={async () => {
+              setMenuExpanded(false);
+              const category = categories.offer;
+
+              try {
+                const resp = await call<ApiCall>(category.api.create.factory, {
+                  entry: {
+                    relations: {
+                      translations: [{ language: Language.de, name: 'Neues Angebot' }],
+                    },
+                  },
+                });
+
+                if (resp.status === 200) {
+                  const id = resp.body.data.id;
+
+                  router.push(
+                    category.routes.list({
+                      locale,
+                      query: { id, sub: 'info', organizer: organizerId },
+                    })
+                  );
+
+                  mutateList();
+                }
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+          >
+            {t('categories.offer.form.create')}
+          </Button>
         }
       />
       <EntryListFiltersBox
