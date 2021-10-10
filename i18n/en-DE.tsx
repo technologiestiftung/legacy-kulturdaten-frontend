@@ -245,6 +245,9 @@ export const enDE: Localization = {
     loading: () => 'loading',
     max: () => 'max.',
     topics: () => 'Topics',
+    takeAFewSeconds: () => 'This can take a few seconds.',
+    serverProblem: () =>
+      'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
   },
   tags: {
     boxLabel: () => 'Already added topics',

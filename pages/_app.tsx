@@ -14,6 +14,7 @@ import { AppLayout, useLayout } from '../components/layouts/AppLayout';
 import { useNavigation } from '../components/navigation';
 import { useAppTitle, useMenuStructure } from '../config/structure';
 import { HeaderLink } from '../components/navigation/header/HeaderLink';
+import { LoadingContextProvider } from '../components/Loading/LoadingContext';
 
 const EmbeddedAppLayout: React.FC<{ content: React.ReactElement }> = ({
   content,
@@ -35,18 +36,20 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
   return (
     <WindowContextProvider>
       <NavigationContextProvider>
-        <EntryListContextProvider
-          listNames={[Categories.organizer, Categories.location, Categories.offer]}
-        >
-          <UserContextProvider>
-            <Reset />
-            <CSSVars />
-            <Global />
-            <Typography />
+        <LoadingContextProvider>
+          <EntryListContextProvider
+            listNames={[Categories.organizer, Categories.location, Categories.offer]}
+          >
+            <UserContextProvider>
+              <Reset />
+              <CSSVars />
+              <Global />
+              <Typography />
 
-            <EmbeddedAppLayout content={<Component {...pageProps} />} />
-          </UserContextProvider>
-        </EntryListContextProvider>
+              <EmbeddedAppLayout content={<Component {...pageProps} />} />
+            </UserContextProvider>
+          </EntryListContextProvider>
+        </LoadingContextProvider>
       </NavigationContextProvider>
     </WindowContextProvider>
   );

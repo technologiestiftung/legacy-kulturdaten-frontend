@@ -244,6 +244,9 @@ export const deDE: Localization = {
     loading: () => 'lädt',
     max: () => 'max.',
     topics: () => 'Themen',
+    takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
+    serverProblem: () =>
+      'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Themen',

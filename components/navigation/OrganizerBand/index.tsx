@@ -13,6 +13,7 @@ import { useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
 import { Language } from '../../../config/locale';
+import { useLoadingScreen } from '../../Loading/LoadingScreen';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
@@ -48,6 +49,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   const setOrganizerId = useSetOrganizerId();
   const t = useT();
   const call = useApiCall();
+  const loadingScreen = useLoadingScreen();
 
   return (
     <StyledOrganizerBand layout={layout}>
@@ -86,23 +88,36 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
         onClick={async () => {
           const category = categories.organizer;
 
-          try {
-            const resp = await call<ApiCall>(category.api.create.factory, {
-              entry: {
-                relations: {
-                  translations: [{ language: Language.de, name: 'Neue Anbieter:inn' }],
-                },
-              },
-            });
+          loadingScreen(
+            t('menu.createOrganizer'),
+            async () => {
+              try {
+                const resp = await call<ApiCall>(category.api.create.factory, {
+                  entry: {
+                    relations: {
+                      translations: [{ language: Language.de, name: 'Neue Anbieter:inn' }],
+                    },
+                  },
+                });
 
-            if (resp.status === 200) {
-              const id = resp.body.data.id;
+                if (resp.status === 200) {
+                  const id = resp.body.data.id;
 
-              router.push(category.routes.list({ locale, query: { sub: 'info', organizer: id } }));
-            }
-          } catch (e) {
-            console.error(e);
-          }
+                  router.push(
+                    category.routes.list({ locale, query: { sub: 'info', organizer: id } })
+                  );
+
+                  setOrganizerId(id);
+
+                  return { success: true };
+                }
+              } catch (e) {
+                console.error(e);
+                return { success: false, error: t('general.serverProblem') };
+              }
+            },
+            t('general.takeAFewSeconds')
+          );
         }}
       >
         {t('menu.createOrganizer') as string}

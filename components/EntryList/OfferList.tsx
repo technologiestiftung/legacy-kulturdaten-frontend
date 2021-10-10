@@ -28,6 +28,7 @@ import Link from 'next/link';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { Language } from '../../config/locale';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -101,6 +102,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     () => getDispatchFilters(listName),
     [getDispatchFilters, listName]
   );
+  const loadingScreen = useLoadingScreen();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -270,30 +272,39 @@ export const OfferList: React.FC<OfferListProps> = ({
               setMenuExpanded(false);
               const category = categories.offer;
 
-              try {
-                const resp = await call<ApiCall>(category.api.create.factory, {
-                  entry: {
-                    relations: {
-                      translations: [{ language: Language.de, name: 'Neues Angebot' }],
-                    },
-                  },
-                });
+              loadingScreen(
+                t('categories.offer.form.create'),
+                async () => {
+                  try {
+                    const resp = await call<ApiCall>(category.api.create.factory, {
+                      entry: {
+                        relations: {
+                          translations: [{ language: Language.de, name: 'Neues Angebot' }],
+                        },
+                      },
+                    });
 
-                if (resp.status === 200) {
-                  const id = resp.body.data.id;
+                    if (resp.status === 200) {
+                      const id = resp.body.data.id;
 
-                  router.push(
-                    category.routes.list({
-                      locale,
-                      query: { id, sub: 'info', organizer: organizerId },
-                    })
-                  );
+                      router.push(
+                        category.routes.list({
+                          locale,
+                          query: { id, sub: 'info', organizer: organizerId },
+                        })
+                      );
 
-                  mutateList();
-                }
-              } catch (e) {
-                console.error(e);
-              }
+                      mutateList();
+
+                      return { success: true };
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    return { success: false, error: t('general.serverProblem') };
+                  }
+                },
+                t('general.takeAFewSeconds')
+              );
             }}
           >
             {t('categories.offer.form.create')}
