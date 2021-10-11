@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import getConfig from 'next/config';
 
 import { AuthLogin, authLoginFactory, useApiCall } from '../../lib/api';
@@ -13,6 +13,8 @@ import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
 import { Button, ButtonSize, ButtonColor, ButtonType } from '../button';
 import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { Info } from '../info';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -36,6 +38,8 @@ export const LoginForm: React.FC = () => {
   const t = useT();
   const call = useApiCall();
   const organizerId = useOrganizerId();
+  const loadingScreen = useLoadingScreen();
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -47,24 +51,33 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    try {
-      const resp = await call<AuthLogin>(authLoginFactory, { body: { email, password } });
+    if (formRef.current?.checkValidity()) {
+      loadingScreen(t('login.loading'), async () => {
+        try {
+          const resp = await call<AuthLogin>(authLoginFactory, { body: { email, password } });
 
-      if (resp.status === 200) {
-        const token = resp.body.meta.token.token;
+          if (resp.status === 200) {
+            const token = resp.body.meta.token.token;
 
-        login(
-          authCookie(token, remember, locale),
-          routes.dashboard({ locale, query: { organizer: organizerId } })
-        );
-      }
-    } catch (e) {
-      setError(e);
+            login(
+              authCookie(token, remember, locale),
+              routes.dashboard({ locale, query: { organizer: organizerId } })
+            );
+
+            return { success: true };
+          }
+        } catch (e) {
+          setError(e);
+          return { success: false, error: <Info>{t('login.error')}</Info> };
+        }
+      });
+    } else {
+      console.log('ejo');
     }
   };
 
   const form = (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={submitHandler} ref={formRef}>
       <AuthFormContainer>
         <div>
           <Input
@@ -74,7 +87,6 @@ export const LoginForm: React.FC = () => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             id="login-email"
             required
-            hideError
           />
         </div>
         <div>
@@ -85,7 +97,6 @@ export const LoginForm: React.FC = () => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             id="login-password"
             required
-            hideError
           />
         </div>
         <AuthFormItem>
@@ -99,7 +110,7 @@ export const LoginForm: React.FC = () => {
             {t('login.submit')}
           </Button>
         </AuthFormItem>
-        {error ? <div>{error.message}</div> : ''}
+        {error ? <Info>{t('login.error')}</Info> : ''}
       </AuthFormContainer>
     </form>
   );

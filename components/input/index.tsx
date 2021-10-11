@@ -71,6 +71,7 @@ export const inputStyles = ({
   ${hint ? hintStyle : ''}
 
   ${!hideError &&
+  !pristine &&
   css`
     &:invalid {
       ${errorStyle}
@@ -105,6 +106,7 @@ interface InputProps {
   error?: string;
   id?: string;
   hint?: boolean;
+  onBlur?: ChangeEventHandler<HTMLInputElement>;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   label?: string;
   min?: number | string;

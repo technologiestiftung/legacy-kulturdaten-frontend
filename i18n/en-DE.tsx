@@ -84,6 +84,12 @@ export const enDE: Localization = {
     remember: () => 'Stay logged in',
     submit: () => 'login',
     headline: () => 'Log in to Kulturdaten.Berlin now.',
+    loading: () => 'Logging you in',
+    error: () => 'The provided login credentials are not valid.',
+  },
+  logout: {
+    loading: () => 'Logging you out',
+    loadingMessage: () => 'Bye!',
   },
   register: {
     email: () => 'Email',

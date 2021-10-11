@@ -89,7 +89,7 @@ const StyledLoadingScreenTitle = styled.h2`
   font-weight: 700;
 `;
 
-const StyledLoadingScreenMessage = styled.p`
+const StyledLoadingScreenMessage = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: 400;
