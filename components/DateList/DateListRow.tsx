@@ -147,6 +147,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
   align-items: center;
   column-gap: 0.375rem;
   cursor: pointer;
+  color: inherit;
 
   @media (pointer: fine) {
     transition: background var(--transition-duration-fast);
@@ -198,6 +199,7 @@ const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus
 ) => ({
   [OfferDateStatus.scheduled]: editable ? 'date.scheduled' : 'date.scheduledArchived',
   [OfferDateStatus.canceled]: 'date.canceled',
+  [OfferDateStatus.past]: 'date.past',
 });
 
 export const DateListRow: React.FC<DateListRowProps> = ({
@@ -222,8 +224,13 @@ export const DateListRow: React.FC<DateListRowProps> = ({
 
   const dateFormat = DateFormat.dateTime;
 
-  const formattedFrom = formatDate(fromDate, dateFormat);
-  const formattedTo = toDate && formatDate(toDate, dateFormat);
+  const formattedFrom = `${fromDate && t(weekdays[getDay(fromDate)].name.short)} ${formatDate(
+    fromDate,
+    dateFormat
+  )}`;
+  const formattedTo = `${toDate && t(weekdays[getDay(toDate)].name.short)} ${
+    toDate && formatDate(toDate, dateFormat)
+  }`;
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <StyledDateListItemBodyInner lastRow={lastRow}>{body}</StyledDateListItemBodyInner>
@@ -273,21 +280,11 @@ export const DateListRow: React.FC<DateListRowProps> = ({
 
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText noPaddingLeft={editable} doublePaddingLeft={!editable}>
-          <StyledDateListItemTimeFrom>
-            {fromDate && t(weekdays[getDay(fromDate)].name.short)}
-            {'. '}
-            {formattedFrom}
-          </StyledDateListItemTimeFrom>
+          <StyledDateListItemTimeFrom>{formattedFrom}</StyledDateListItemTimeFrom>
         </StyledDateListItemText>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {to && (
-          <StyledDateListItemText>
-            {toDate && t(weekdays[getDay(toDate)].name.short)}
-            {'. '}
-            {formattedTo}
-          </StyledDateListItemText>
-        )}
+        {to && <StyledDateListItemText>{formattedTo}</StyledDateListItemText>}
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText>{title}</StyledDateListItemText>
