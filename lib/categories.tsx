@@ -10,10 +10,12 @@ import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
+import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
 import { CategoryEntry } from './api/types/general';
-import { OfferDate } from './api/types/offer';
+import { OfferDate, OfferType } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
+import { EntryType } from './api/types/typeSubject';
 import { Route, useLocale } from './routing';
 
 export type categoryApi = {
@@ -279,14 +281,34 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
   return metaLinks;
 };
 
-export const useOrganizerTypeList = (): OrganizerType[] => {
+const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
+  route: ApiRoutes,
+  factory: ApiCallFactory
+): C[] => {
   const call = useApiCall();
 
-  const { data } = useSWR(
-    getApiUrlString(ApiRoutes.organizerTypeList, undefined),
-    () => call<OrganizerTypeList>(organizerTypeListFactory, undefined),
-    { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
+  const { data } = useSWR(getApiUrlString(route, undefined), () => call<T>(factory, undefined), {
+    revalidateOnFocus: false,
+    focusThrottleInterval: 1000 * 60 * 5,
+  });
+
+  return data?.body?.data as unknown as C[];
+};
+
+export const useOrganizerTypeList = (): OrganizerType[] => {
+  const data = useEntryTypeList<OrganizerTypeList, OrganizerType>(
+    ApiRoutes.organizerTypeList,
+    organizerTypeListFactory
   );
 
-  return data?.body?.data;
+  return data;
+};
+
+export const useOfferTypeList = (): OfferType[] => {
+  const data = useEntryTypeList<OfferTypeList, OfferType>(
+    ApiRoutes.offerTypeList,
+    offerTypeListFactory
+  );
+
+  return data;
 };

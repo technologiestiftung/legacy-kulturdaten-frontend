@@ -60,6 +60,7 @@ export enum ApiRoutes {
   offerDelete = 'offerDelete',
   offerDateUpdate = 'offerDateUpdate',
   offerDateList = 'offerDateList',
+  offerTypeList = 'offerTypeList',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
@@ -114,6 +115,7 @@ export const apiRoutes: {
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
+  offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,

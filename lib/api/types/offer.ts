@@ -1,5 +1,16 @@
 import { Language } from '../../../config/locale';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
+import {
+  EntrySubject,
+  EntrySubjectTranslation,
+  EntryType,
+  EntryTypeTranslation,
+} from './typeSubject';
+
+export type OfferType = EntryType;
+export type OfferSubject = EntrySubject;
+export type OfferTypeTranslation = EntryTypeTranslation;
+export type OfferSubjectTranslation = EntrySubjectTranslation;
 
 export enum OfferMode {
   permanent = 'permanent',
@@ -62,6 +73,8 @@ export type Offer = {
     relations?: {
       translations: OfferTranslation[];
       dates?: OfferDate['data'][];
+      subjects?: OfferSubject[];
+      types?: OfferType[];
     };
   };
   meta?: {
