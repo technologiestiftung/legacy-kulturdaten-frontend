@@ -23,7 +23,7 @@ import { internalRoutes } from '../../config/routes';
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
 export type WrappedUser = {
-  user: User['data'];
+  user: User;
   authToken: string;
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
@@ -93,15 +93,15 @@ export const useUser = (): WrappedUser => {
   ]);
 
   useEffect(() => {
-    const userData = userResponse?.body.data as unknown as User['data'];
+    const userObject = userResponse?.body as unknown as AuthInfo['response']['body'];
 
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
         console.log('userTokenIsValid = false, log out!');
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
-        if (userData) {
-          setUser(userData);
+        if (userObject) {
+          setUser(userObject.data);
           setAuthToken(authTokenFromStateOrCookie);
           authenticateUser();
         }

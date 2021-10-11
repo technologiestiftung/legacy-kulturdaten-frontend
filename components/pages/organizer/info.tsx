@@ -717,11 +717,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
   );
 
-  // const valid = useMemo(
-  //   () => ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false),
-  //   [addressValid, contactValid, descriptionValid, nameValid, linksValid]
-  // );
-
   useEffect(() => {
     setValid(
       ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false)

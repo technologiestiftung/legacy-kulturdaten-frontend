@@ -23,7 +23,7 @@ export interface ApiCall {
     };
     body?: { [key: string]: StructuredData | FormData | { [key: string]: FormData } } | FormData;
   };
-  response: { status: number; body: { [key: string]: StructuredData & { id?: string } } };
+  response: { status: number; body: { [key: string]: unknown } };
 }
 
 export type ApiCallFactory = (
@@ -157,7 +157,7 @@ export const call = async <T extends ApiCall>(
         return {
           status: response.status,
           body,
-        };
+        } as T['response'];
       }
       case 422: {
         const regError = new Error(JSON.stringify(body));

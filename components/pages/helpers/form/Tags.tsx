@@ -61,7 +61,7 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
     reset: () => undefined,
     submit: async () => {
       try {
-        const resp = await call<ApiCall>(category.api.update.factory, {
+        const resp = await call(category.api.update.factory, {
           id: entry.data.id,
           entry: {
             relations: {

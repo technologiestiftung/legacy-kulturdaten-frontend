@@ -167,6 +167,7 @@ export const enDE: Localization = {
     scheduled: () => 'scheduled',
     scheduledArchived: () => 'scheduled',
     canceled: () => 'canceled',
+    past: () => 'past',
     allDay: () => 'is all day',
     clock: () => 'time',
     toDateInvalid: () => 'The date needs to end at a later day that it starts.',

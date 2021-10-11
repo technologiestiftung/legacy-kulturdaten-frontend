@@ -50,6 +50,12 @@ export enum Categories {
   location = 'location',
 }
 
+export enum CategoriesPlural {
+  organizers = 'organizers',
+  offers = 'offers',
+  locations = 'locations',
+}
+
 export const useCategories: () => {
   [key in Categories]: Category;
 } = () => {
@@ -194,6 +200,21 @@ export const useCategories: () => {
           factory: offerTypeListFactory,
         },
       },
+      requirements: [
+        {
+          translationKey: 'categories.organizer.requirements.name',
+          publishableKeys: ['attributes.name'],
+        },
+
+        {
+          translationKey: 'categories.organizer.requirements.description',
+          publishableKeys: ['attributes.description'],
+        },
+        {
+          translationKey: 'categories.organizer.requirements.categorization',
+          publishableKeys: ['relations.types', 'relations.subjects'],
+        },
+      ],
     },
     location: {
       name: Categories.location,

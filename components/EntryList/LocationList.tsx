@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { ApiCall, LocationList as LocationListCall, useApiCall } from '../../lib/api';
+import { LocationList as LocationListCall, useApiCall } from '../../lib/api';
 import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
 import { Order, useList, useMutateList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
@@ -22,8 +22,6 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import Link from 'next/link';
-import { ButtonLink } from '../button/ButtonLink';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
@@ -295,10 +293,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                   try {
                     const resp = await call<LocationCreate>(category.api.create.factory, {
                       entry: {
-                        type: LocationType.virtuallocation,
-                        attributes: {
-                          url: 'some.url',
-                        },
+                        type: LocationType.physicallocation,
                         relations: {
                           translations: [{ language: Language.de, name: 'Neuer Ort' }],
                         },

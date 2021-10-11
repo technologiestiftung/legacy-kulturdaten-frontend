@@ -1,4 +1,5 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
+import { User } from '../../types/user';
 
 /**
  * /auth/info
@@ -16,16 +17,7 @@ export interface AuthInfo extends ApiCall {
   response: {
     status: 200;
     body: {
-      data: {
-        type: 'user';
-        attributes: {
-          id: number;
-          email: string;
-          rememberMeToken?: null;
-          createdAt: string;
-          updatedAt: string;
-        };
-      };
+      data: User;
     };
   };
 }

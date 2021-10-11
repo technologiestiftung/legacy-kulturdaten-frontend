@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { ApiCall, OfferList as OfferListCall, useApiCall } from '../../lib/api';
+import { OfferList as OfferListCall, useApiCall } from '../../lib/api';
 import { Offer, OfferTranslation } from '../../lib/api/types/offer';
 import { Order, useList, useMutateList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
@@ -23,12 +23,11 @@ import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize } from '../button';
-import { ButtonLink } from '../button/ButtonLink';
-import Link from 'next/link';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { Language } from '../../config/locale';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { OfferCreate } from '../../lib/api/routes/offer/create';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -276,7 +275,7 @@ export const OfferList: React.FC<OfferListProps> = ({
                 t('categories.offer.form.create'),
                 async () => {
                   try {
-                    const resp = await call<ApiCall>(category.api.create.factory, {
+                    const resp = await call<OfferCreate>(category.api.create.factory, {
                       entry: {
                         relations: {
                           translations: [{ language: Language.de, name: 'Neues Angebot' }],

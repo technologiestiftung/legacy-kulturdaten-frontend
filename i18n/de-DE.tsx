@@ -167,6 +167,7 @@ export const deDE: Localization = {
     scheduled: () => 'findet statt',
     scheduledArchived: () => 'fand statt',
     canceled: () => 'abgesagt',
+    past: () => 'vergangen',
     allDay: () => 'ist ganztätig',
     clock: () => 'Uhrzeit',
     toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',

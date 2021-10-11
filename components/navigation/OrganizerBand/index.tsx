@@ -2,18 +2,21 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCategories } from '../../../config/categories';
-import { ApiCall, OrganizerList, useApiCall } from '../../../lib/api';
+import { OrganizerList, useApiCall } from '../../../lib/api';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { Order, useList } from '../../../lib/categories';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
 import { Language } from '../../../config/locale';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { useUser } from '../../user/useUser';
+import { RoleName } from '../../../lib/api/types/role';
+import { OrganizerCreate } from '../../../lib/api/routes/organizer/create';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
@@ -43,6 +46,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
     key: 'updatedAt',
     order: Order.DESC,
   });
+  const { user } = useUser();
   const language = useLanguage();
   const locale = useLocale();
   const router = useRouter();
@@ -51,9 +55,17 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   const call = useApiCall();
   const loadingScreen = useLoadingScreen();
 
+  const organizerOwnerList = useMemo(
+    () =>
+      user?.relations?.organizers
+        ?.filter((role) => role.attributes?.role === RoleName.owner)
+        ?.map((role) => role.relations?.organizer as Organizer['data']),
+    [user?.relations?.organizers]
+  );
+
   return (
     <StyledOrganizerBand layout={layout}>
-      {organizers?.data?.map((organizer, index) => {
+      {organizerOwnerList?.map((organizer, index) => {
         const translation = getTranslation(language, organizer.relations?.translations);
 
         return (
@@ -92,7 +104,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
             t('menu.createOrganizer'),
             async () => {
               try {
-                const resp = await call<ApiCall>(category.api.create.factory, {
+                const resp = await call<OrganizerCreate>(category.api.create.factory, {
                   entry: {
                     relations: {
                       translations: [{ language: Language.de, name: 'Neue Anbieter:inn' }],
