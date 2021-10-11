@@ -17,27 +17,15 @@ const StyledLoadingScreen = styled.div<{ visible: boolean; direction: AnimationD
   left: 0;
   z-index: 10003;
   background: rgba(0, 0, 0, 1);
-  /* background: var(--black); */
   width: var(--app-width);
   height: var(--app-height);
   color: var(--black);
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
   align-items: center;
   opacity: 0.85;
   overflow-y: auto;
   overflow-x: hidden;
-
-  @supports (backdrop-filter: blur(32px)) {
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(32px);
-  }
-
-  @supports (-webkit-backdrop-filter: blur(32px)) {
-    background: rgba(0, 0, 0, 0.85);
-    -webkit-backdrop-filter: blur(32px);
-  }
 
   transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
   transform: ${({ direction }) =>
