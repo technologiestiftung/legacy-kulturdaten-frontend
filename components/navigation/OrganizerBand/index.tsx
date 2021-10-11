@@ -2,9 +2,8 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCategories } from '../../../config/categories';
-import { OrganizerList, useApiCall } from '../../../lib/api';
+import { useApiCall } from '../../../lib/api';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { Order, useList } from '../../../lib/categories';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
@@ -42,10 +41,6 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   onClick,
 }: OrganizerBandProps) => {
   const categories = useCategories();
-  const organizers = useList<OrganizerList, Organizer>(categories?.organizer, 1, 3, undefined, {
-    key: 'updatedAt',
-    order: Order.DESC,
-  });
   const { user } = useUser();
   const language = useLanguage();
   const locale = useLocale();
@@ -59,13 +54,21 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
     () =>
       user?.relations?.organizers
         ?.filter((role) => role.attributes?.role === RoleName.owner)
-        ?.map((role) => role.relations?.organizer as Organizer['data']),
+        ?.map((role) => role.relations?.organizer as Organizer['data']) || [],
+    [user?.relations?.organizers]
+  );
+
+  const organizerContributorList = useMemo(
+    () =>
+      user?.relations?.organizers
+        ?.filter((role) => role.attributes?.role !== RoleName.owner)
+        ?.map((role) => role.relations?.organizer as Organizer['data']) || [],
     [user?.relations?.organizers]
   );
 
   return (
     <StyledOrganizerBand layout={layout}>
-      {organizerOwnerList?.map((organizer, index) => {
+      {[...organizerOwnerList, ...organizerContributorList]?.map((organizer, index) => {
         const translation = getTranslation(language, organizer.relations?.translations);
 
         return (
