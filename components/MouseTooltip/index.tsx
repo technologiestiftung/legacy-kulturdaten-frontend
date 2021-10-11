@@ -31,6 +31,7 @@ export const MouseTooltip: React.FC<MouseTooltipProps> = ({
   hoverElement,
 }: MouseTooltipProps) => {
   const [show, setShow] = useState(false);
+  const [isTouchEvent, setIsTouchEvent] = useState(false);
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
 
@@ -43,6 +44,7 @@ export const MouseTooltip: React.FC<MouseTooltipProps> = ({
 
     const mouseLeaveHandler = () => {
       setShow(false);
+      setIsTouchEvent(false);
     };
 
     const mouseMoveHandler = (e: MouseEvent) => {
@@ -50,18 +52,25 @@ export const MouseTooltip: React.FC<MouseTooltipProps> = ({
       setMouseY(e.pageY);
     };
 
+    // Prevent rendering on touch events
+    const touchHandler = () => {
+      setIsTouchEvent(true);
+    };
+
     element?.addEventListener('mouseenter', mouseEnterHandler);
     element?.addEventListener('mouseleave', mouseLeaveHandler);
+    element?.addEventListener('touchstart', touchHandler);
     window?.addEventListener('mousemove', mouseMoveHandler);
 
     return () => {
       element?.removeEventListener('mouseenter', mouseEnterHandler);
       element?.removeEventListener('mouseleave', mouseLeaveHandler);
+      element?.removeEventListener('touchstart', touchHandler);
       window?.removeEventListener('mousemove', mouseMoveHandler);
     };
   }, [hoverElement, show]);
 
-  return show && mouseX !== 0 && mouseY !== 0 ? (
+  return !isTouchEvent && show && mouseX !== 0 && mouseY !== 0 ? (
     <StyledMouseTooltip x={mouseX} y={mouseY}>
       {children}
     </StyledMouseTooltip>
