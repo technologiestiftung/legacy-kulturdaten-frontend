@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { useContext, useEffect } from 'react';
+import Head from 'next/head';
+
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
@@ -127,6 +129,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const appTitle = useAppTitle();
 
   const renderedLink = (
     <Link>
@@ -160,6 +163,9 @@ export const HeaderMain: React.FC<HeaderProps> = ({
 
   return isMidOrWider ? (
     <StyledHeader>
+      <Head>
+        <title>{title !== appTitle ? `${title} – ${appTitle}` : appTitle}</title>
+      </Head>
       <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
       <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
       {user?.isLoggedIn && (
