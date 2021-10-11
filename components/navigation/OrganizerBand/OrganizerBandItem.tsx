@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as feather from 'react-feather';
 import Image from 'next/image';
-import React, { MouseEventHandler, RefObject, useMemo, useRef } from 'react';
+import React, { RefObject, useMemo, useRef } from 'react';
 import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
 import { MouseTooltip } from '../../MouseTooltip';
@@ -21,6 +21,10 @@ const StyledOrganizerBandItemLogo = styled.div<{
   position: relative;
   overflow: hidden;
   transition: border-color var(--transition-duration-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   ${({ layout, active, noBorder }) =>
     layout === OrganizerBandLayout.wide &&
@@ -30,6 +34,10 @@ const StyledOrganizerBandItemLogo = styled.div<{
       border-right: 1px solid
         ${noBorder ? 'transparent' : active ? 'var(--black)' : 'var(--grey-400)'};
     `}
+
+  > svg {
+    display: block;
+  }
 `;
 
 const StyledOrganizerBandItem = styled.a<{
@@ -47,22 +55,17 @@ const StyledOrganizerBandItem = styled.a<{
   column-gap: 0.75rem;
   background: var(--grey-200);
   border-radius: 0.75rem;
+  padding: 0;
+  margin: 0;
+  appearance: none;
   color: var(--grey-600);
   transition: background var(--transition-duration-fast), color var(--transition-duration-fast),
     border-color var(--transition-duration-fast), box-shadow var(--transition-duration-fast);
-
-  > svg {
-    display: block;
-    padding: calc(0.75rem - 1px) 0;
-  }
 
   ${({ layout }) =>
     layout === OrganizerBandLayout.wide &&
     css`
       justify-content: flex-start;
-      > svg {
-        padding: calc(0.75rem - 1px) 0 calc(0.75rem - 1px) 0.75rem;
-      }
     `}
 
   ${({ noBorder, active }) =>
@@ -192,38 +195,22 @@ const OrganizerBandItemForwarded = (
         }}
         as={asButton ? 'button' : undefined}
       >
-        {layout === OrganizerBandLayout.wide ? (
-          <>
-            {icon && feather[icon] ? (
-              React.createElement(feather[icon])
-            ) : (
-              <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
-                {logoRendition ? (
-                  <Image src={logoRendition.url} layout={'fill'} objectFit="contain" />
-                ) : (
-                  <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
-                    {children.slice(0, 1)}
-                  </StyledOrganizerBandItemText>
-                )}
-              </StyledOrganizerBandItemLogo>
-            )}
-            <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
-          </>
-        ) : icon && feather[icon] ? (
-          React.createElement(feather[icon])
-        ) : (
-          <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
-            {logoRendition ? (
-              <Image src={logoRendition.url} layout={'fill'} objectFit="contain" />
-            ) : (
-              <StyledOrganizerBandItemText layout={layout}>
-                {children.slice(0, 1)}
-              </StyledOrganizerBandItemText>
-            )}
-          </StyledOrganizerBandItemLogo>
-        )}
-        {layout === OrganizerBandLayout.narrow && (
+        <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
+          {icon && feather[icon] ? (
+            React.createElement(feather[icon])
+          ) : logoRendition ? (
+            <Image src={logoRendition.url} layout={'fill'} objectFit="contain" />
+          ) : (
+            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
+              {children.slice(0, 1)}
+            </StyledOrganizerBandItemText>
+          )}
+        </StyledOrganizerBandItemLogo>
+
+        {layout === OrganizerBandLayout.narrow ? (
           <MouseTooltip hoverElement={selfRef.current}>{children}</MouseTooltip>
+        ) : (
+          <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
         )}
       </StyledOrganizerBandItem>
     </div>
