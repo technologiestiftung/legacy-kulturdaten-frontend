@@ -104,7 +104,7 @@ export const apiRoutes: {
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
   offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
   offerCreate: () => `/${apiVersion}/offer`,
-  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media`,
+  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>

@@ -36,6 +36,8 @@ import { organizerMediaFactory } from '../lib/api/routes/organizer/media';
 import { OrganizerMediaPage } from '../components/pages/organizer/media';
 import { OfferMediaPage } from '../components/pages/offer/media';
 import { LocationMediaPage } from '../components/pages/location/media';
+import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
+import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 
 export type Requirement = {
   translationKey: string;
@@ -102,6 +104,10 @@ export const useCategories: () => {
         delete: {
           route: ApiRoutes.organizerDelete,
           factory: organizerDeleteFactory,
+        },
+        typeList: {
+          route: ApiRoutes.organizerTypeList,
+          factory: organizerTypeListFactory,
         },
         media: {
           route: ApiRoutes.organizerUpdate,
@@ -182,6 +188,10 @@ export const useCategories: () => {
         delete: {
           route: ApiRoutes.offerDelete,
           factory: offerDeleteFactory,
+        },
+        typeList: {
+          route: ApiRoutes.offerTypeList,
+          factory: offerTypeListFactory,
         },
       },
     },

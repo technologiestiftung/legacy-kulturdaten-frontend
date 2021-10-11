@@ -64,6 +64,7 @@ export type Category = {
     update: categoryApi;
     delete: categoryApi;
     media?: categoryApi;
+    typeList?: categoryApi;
   };
   requirements?: Requirement[];
 };
@@ -281,7 +282,7 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
   return metaLinks;
 };
 
-const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
+export const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
   route: ApiRoutes,
   factory: ApiCallFactory
 ): C[] => {

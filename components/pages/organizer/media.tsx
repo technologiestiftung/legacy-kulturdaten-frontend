@@ -13,7 +13,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { DropZone } from '../../DropZone';
 import { Media } from '../../../lib/api/types/media';
-import { EntryFormHook } from './info';
+import { EntryFormHook } from '../helpers/form';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
@@ -131,7 +131,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
     try {
       const resp = await call<OrganizerUpdate>(category.api.update.factory, {
         id: entry.data.id,
-        organizer: {
+        entry: {
           relations: {
             logo,
           },
@@ -170,7 +170,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                   try {
                     const resp = await call<OrganizerUpdate>(category.api.update.factory, {
                       id: entry.data.id,
-                      organizer: {
+                      entry: {
                         relations: {
                           logo: undefined,
                         },

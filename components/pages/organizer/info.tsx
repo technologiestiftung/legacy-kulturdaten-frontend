@@ -17,26 +17,12 @@ import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { useLinkList } from '../../linklist';
-import { EntryFormProps } from '../helpers/form';
+import { EntryFormHook } from '../helpers/form';
 import { useDescription } from '../helpers/form/Description';
 import { useName } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-
-export type EntryFormHook = (
-  props: EntryFormProps,
-  loaded: boolean,
-  showHint: boolean,
-  ...parameters: unknown[]
-) => {
-  renderedForm: React.ReactElement;
-  submit: () => Promise<void>;
-  pristine: boolean;
-  reset: () => void;
-  valid: boolean;
-  hint: boolean;
-};
 
 const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const t = useT();
@@ -264,7 +250,7 @@ const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            organizer: {
+            entry: {
               relations: {
                 links,
               },
@@ -455,7 +441,7 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) =>
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            organizer: {
+            entry: {
               relations: {
                 address,
               },
@@ -590,7 +576,7 @@ const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            organizer: {
+            entry: {
               attributes: {
                 email: attributes?.email,
                 homepage: attributes?.homepage,

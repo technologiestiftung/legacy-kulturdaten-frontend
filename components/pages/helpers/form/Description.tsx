@@ -171,7 +171,7 @@ export const useDescription = ({
       if (valid && !pristine) {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            organizer: {
+            entry: {
               relations: {
                 translations: [
                   {

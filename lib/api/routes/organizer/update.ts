@@ -30,7 +30,7 @@ export const organizerUpdateFactory = (
   token: OrganizerUpdate['request']['headers']['Authorization'],
   query: {
     id: string;
-    organizer: Organizer;
+    entry: Organizer;
   }
 ): OrganizerUpdate => ({
   request: {
@@ -40,7 +40,7 @@ export const organizerUpdateFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.organizer,
+    body: query.entry,
   },
   response: {
     status: 200,

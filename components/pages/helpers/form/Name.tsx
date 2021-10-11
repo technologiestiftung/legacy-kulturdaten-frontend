@@ -107,7 +107,7 @@ export const useName = <
     if (valid && !pristine) {
       try {
         const resp = await call(category.api.update.factory, {
-          organizer: {
+          entry: {
             relations: {
               translations: [
                 {

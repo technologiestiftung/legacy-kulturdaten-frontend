@@ -9,7 +9,7 @@ import { useT } from '../../../lib/i18n';
 import { DropZone } from '../../DropZone';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { MediaList } from '../../MediaList';
-import { EntryFormHook } from '../organizer/info';
+import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from './formComponents';
 
 const imagesMax = 5;

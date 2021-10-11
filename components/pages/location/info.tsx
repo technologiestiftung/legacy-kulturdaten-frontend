@@ -121,7 +121,7 @@ const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
         try {
           const resp = await call<LocationUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            location: {
+            entry: {
               relations: {
                 address,
               },
