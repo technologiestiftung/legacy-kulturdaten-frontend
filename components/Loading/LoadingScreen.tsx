@@ -166,6 +166,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
       <StyledLoadingScreenContent
         visible={visible}
         direction={!loading ? AnimationDirection.out : AnimationDirection.in}
+        role="alert"
       >
         <StyledLoadingScreenHead>
           <StyledLoadingScreenTitle>{title}</StyledLoadingScreenTitle>
