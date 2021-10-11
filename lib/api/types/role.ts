@@ -13,6 +13,6 @@ export type Role = {
     role: RoleName;
   };
   relations: {
-    [key in Categories]?: CategoryEntry;
+    [key in Categories]?: CategoryEntry['data'];
   };
 };

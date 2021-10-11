@@ -19,6 +19,7 @@ import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { routes, useActiveRoute, useLocale } from '../../lib/routing';
 import { User } from '../../lib/api/types/user';
 import { internalRoutes } from '../../config/routes';
+import { useOrganizerId, useSetOrganizerId } from '../../lib/useOrganizer';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -54,6 +55,9 @@ export const useUser = (): WrappedUser => {
   const locale = useLocale();
   const call = useApiCall(authTokenFromStateOrCookie);
   const activeRoute = useActiveRoute();
+
+  const activeOrganizerId = useOrganizerId();
+  const setActiveOrganizerId = useSetOrganizerId();
 
   const { data, mutate: mutateValidate } = useSWR(
     [getApiUrlString(ApiRoutes.authValidate), authTokenFromStateOrCookie],
@@ -104,6 +108,14 @@ export const useUser = (): WrappedUser => {
           setUser(userObject.data);
           setAuthToken(authTokenFromStateOrCookie);
           authenticateUser();
+
+          const userOrganizerIds = userObject.data?.relations?.organizers?.map(
+            (role) => role.relations?.organizer?.id
+          );
+
+          if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
+            setActiveOrganizerId(userOrganizerIds[0]);
+          }
         }
       }
     } else if (isAuthenticated) {
@@ -127,6 +139,8 @@ export const useUser = (): WrappedUser => {
     setAuthToken,
     mutateValidate,
     activeRoute,
+    activeOrganizerId,
+    setActiveOrganizerId,
   ]);
 
   return {
