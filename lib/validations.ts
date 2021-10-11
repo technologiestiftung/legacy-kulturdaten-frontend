@@ -1,5 +1,5 @@
 export const urlRegExpString =
-  '^(https?:\\/\\/)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,}(\\/[a-zA-Z0-9\\-]*)*(\\?([a-zA-Z0-9\\-]+([=&][a-zA-Z0-9:\\-]*)*))?(#[a-zA-Z0-9\\-]*)?$';
+  '^(https?:\\/\\/)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,}(\\/[a-zA-Z0-9\\-]*)*(\\?([a-zA-Z0-9\\-]+([=&][a-zA-Z0-9:\\-]*)*))?(#[a-zA-Z0-9\\-]*)?(.[a-zA-Z]*)?$';
 
 export const urlRegExp = new RegExp(urlRegExpString);
 
