@@ -23,7 +23,7 @@ export interface ApiCall {
     };
     body?: { [key: string]: StructuredData | FormData | { [key: string]: FormData } } | FormData;
   };
-  response: { status: number; body: { [key: string]: StructuredData & { id?: string } } };
+  response: { status: number; body: { [key: string]: unknown } };
 }
 
 export type ApiCallFactory = (
@@ -45,25 +45,26 @@ export enum ApiRoutes {
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
   organizerUpdate = 'organizerUpdate',
-  organizerTranslationCreate = 'organizerTranslationCreate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
   locationList = 'locationList',
   locationShow = 'locationShow',
   locationCreate = 'locationCreate',
   locationUpdate = 'locationUpdate',
-  locationTranslationCreate = 'locationTranslationCreate',
   locationDelete = 'locationDelete',
   offerList = 'offerList',
   offerShow = 'offerShow',
   offerCreate = 'offerCreate',
   offerUpdate = 'offerUpdate',
-  offerTranslationCreate = 'offerTranslationCreate',
+  offerDateCreate = 'offerDateCreate',
   offerDelete = 'offerDelete',
+  offerDateUpdate = 'offerDateUpdate',
+  offerDateList = 'offerDateList',
+  offerTypeList = 'offerTypeList',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
-  mediaTranslationCreate = 'mediaTranslationCreate',
+  tagList = 'tagList',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -77,41 +78,48 @@ export const apiRoutes: {
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
   organizerList: (query) =>
-    `/${apiVersion}/organizer?include=types,subjects,translations${
-      query?.page && `&page=${query.page}`
-    }${query?.size && `&size=${query.size}`}${query?.filter && `&filter=${query.filter}`}${
-      query?.sort && `&sort=${query.sort}`
+    `/${apiVersion}/organizer?include=types,subjects,translations,logo${
+      query?.page ? `&page=${query.page}` : ''
+    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
+      query?.sort ? `&sort=${query.sort}` : ''
     }`,
-  organizerShow: ({ id }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,media`,
+  organizerShow: ({ organizer }) =>
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo`,
   organizerCreate: () => `/${apiVersion}/organizer`,
-  organizerUpdate: ({ id }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links`,
-  organizerTranslationCreate: ({ id }) => `/${apiVersion}/organizer/${id}/translate`,
-  organizerDelete: ({ id }) => `/${apiVersion}/organizer/${id}`,
+  organizerUpdate: ({ organizer }) =>
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo`,
+  organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   locationList: (query) =>
     `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
+  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations,media,tags`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
-  locationTranslationCreate: ({ id }) => `/${apiVersion}/location/${id}/translate`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
+  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
   offerCreate: () => `/${apiVersion}/offer`,
-  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations`,
-  offerTranslationCreate: ({ id }) => `/${apiVersion}/offer/${id}/translate`,
+  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
+  offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
+  offerDateUpdate: ({ offerId, dateId }) =>
+    `/${apiVersion}/offer/${offerId}/date/${dateId}?include=translations,dates,media`,
+  offerDateList: (query) =>
+    `/${apiVersion}/offer/${query.offerId}/date?include=translations,dates,media${
+      query?.page ? `&page=${query.page}` : ''
+    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
+      query?.sort ? `&sort=${query.sort}` : ''
+    }`,
+  offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
-  mediaTranslationCreate: ({ id }) => `/${apiVersion}/media/${id}/translate`,
+  tagList: () => `/${apiVersion}/tag?include=translations`,
 };
 
 const addUrlParam = (url: string, param: string): string =>
@@ -149,7 +157,7 @@ export const call = async <T extends ApiCall>(
         return {
           status: response.status,
           body,
-        };
+        } as T['response'];
       }
       case 422: {
         const regError = new Error(JSON.stringify(body));
@@ -195,21 +203,27 @@ export const useMediaUpload = (
   upload: <T extends ApiCall>(
     files: FileList | File[],
     factory: ApiCallFactory,
-    query?: unknown
+    query?: unknown,
+    fileAttribute?: string
   ) => Promise<T['response']>;
 } => {
   const authToken = useAuthToken();
   const [progress, setProgress] = useState<number>(0);
 
   const cb = useCallback(
-    <T extends ApiCall>(files: FileList, factory: ApiCallFactory, query?: unknown) => {
-      const { request, response } = factory(overrideAuthToken || authToken, query);
+    <T extends ApiCall>(
+      files: FileList,
+      factory: ApiCallFactory,
+      query?: unknown,
+      fileAttribute = 'media[]'
+    ) => {
+      const { request } = factory(overrideAuthToken || authToken, query);
       const route = request.route;
       const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
 
       const formData = new FormData();
       if (files) {
-        [...files].forEach((file: File) => formData.append('media[]', file));
+        [...files].forEach((file: File) => formData.append(fileAttribute, file));
       }
 
       const re = new Promise<T['response']>((resolve, reject) => {
@@ -218,25 +232,21 @@ export const useMediaUpload = (
           setProgress(e.loaded / e.total);
         });
 
-        req.addEventListener('load', (e) => {
+        req.addEventListener('load', () => {
           resolve({
             status: req.status,
             body: req.responseText ? JSON.parse(req.responseText) : undefined,
           } as T['response']);
         });
 
-        req.addEventListener('error', (e) => {
-          console.error('error');
-          console.log(e);
+        req.addEventListener('error', () => {
           reject({
             status: req.status,
             body: req.responseText ? JSON.parse(req.responseText) : undefined,
           } as T['response']);
         });
 
-        req.addEventListener('abort', (e) => {
-          console.log('aborted');
-          console.log(e);
+        req.addEventListener('abort', () => {
           reject({
             status: req.status,
             body: req.responseText ? JSON.parse(req.responseText) : undefined,
@@ -272,7 +282,7 @@ export const upload = async <T extends ApiCall>(
 
   const formData = new FormData();
 
-  [...files].forEach(<T extends ApiCall>(file: File) => formData.append('media', file));
+  [...files].forEach((file: File) => formData.append('media', file));
 
   const req = new XMLHttpRequest();
 
@@ -337,11 +347,13 @@ export const getApiUrl = (
     : route;
   return new URL(routeWithIncludes, api);
 };
+
 export const getApiUrlString = (
   apiRoute: ApiRoutes,
   query?: ParsedUrlQuery,
   includes?: string[]
 ): string => getApiUrl(apiRoute, query, includes).toString();
+
 export const makeBearer = (token: string): string => `Bearer ${token}`;
 
 /**

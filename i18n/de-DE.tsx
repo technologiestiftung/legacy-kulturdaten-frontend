@@ -9,6 +9,12 @@ export const deDE: Localization = {
     de: () => 'Deutsch',
     en: () => 'Englisch',
   },
+  greetings: {
+    welcome: () => 'Willkommen.',
+    hello: () => 'Hallo.',
+    hey: () => 'Hey.',
+    heyhey: () => 'Hey hey.',
+  },
   dayPicker: {
     ariaLabel: () => 'Wochentage auswählen',
     minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
@@ -46,6 +52,7 @@ export const deDE: Localization = {
   dateCreate: {
     overlayTitle: ({ offerTitle }) => `Termin für ‚${offerTitle}‘ erstellen`,
     create: () => 'Termin erstellen',
+    loading: () => ' Erstelle Termin',
   },
   accordion: {
     open: () => 'anzeigen',
@@ -75,13 +82,22 @@ export const deDE: Localization = {
     email: () => 'E-Mail',
     password: () => 'Passwort',
     remember: () => 'Eingeloggt bleiben',
-    submit: () => 'Anmelden',
+    submit: () => 'einloggen',
+    headline: () => 'Logge dich jetzt bei Kulturdaten.Berlin ein.',
+    loading: () => 'Anmeldung läuft',
+    error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
+  },
+  logout: {
+    loading: () => 'Abmeldung läuft',
+    loadingMessage: () => 'Tschüss!',
   },
   register: {
     email: () => 'E-Mail',
     password: () => 'Passwort',
     confirmPassword: () => 'Passwort bestätigen',
-    submit: () => 'Registrieren',
+    submit: () => 'registrieren',
+    headline: () => 'Registriere dich jetzt kostenlos für Kulturdaten.Berlin.',
+    subline: () => 'Die Nutzung bleibt immer kostenlos.',
   },
   statusBar: {
     status: () => 'Status',
@@ -119,6 +135,18 @@ export const deDE: Localization = {
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
     hint: () =>
       'Damit das Bild öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
+    dropZoneLabel: () => 'Neue Bilder hochladen',
+  },
+  logo: {
+    title: () => 'Logo',
+    imageProcessing: () => 'Das Logo wird verarbeitet und geladen',
+    openImage: () => 'Original Logo in neuem Tab öffnen',
+    delete: () => 'Logo löschen',
+    deleteConfirm: () =>
+      'Willst du das Logo wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
+    hint: () =>
+      'Damit das Logo öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
+    dropZoneLabel: () => 'Neues Logo hochladen',
   },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
@@ -126,6 +154,9 @@ export const deDE: Localization = {
     success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
     pending: () => `Hochladen abgeschlossen. Dateien werden verarbeitet.`,
     ariaLabel: () => 'Dateien hochladen',
+    maxFileSize: () => 'Maximale Dateigröße pro Upload',
+    maxFileSizeExceeded: ({ fileSize, maxFileSize }) =>
+      `Die ausgewählten Dateien sind zu groß für den Upload - ${fileSize}, max. ${maxFileSize} erlaubt. Bitte wähle weniger oder kleinere Dateien.`,
   },
   date: {
     from: () => 'von',
@@ -139,9 +170,10 @@ export const deDE: Localization = {
     details: () => 'Details',
     detailsShowAriaLabel: () => 'Details anzeigen',
     detailsHideAriaLabel: () => 'Details ausblenden',
-    confirmed: () => 'findet statt',
-    confirmedArchived: () => 'fand statt',
-    cancelled: () => 'abgesagt',
+    scheduled: () => 'findet statt',
+    scheduledArchived: () => 'fand statt',
+    canceled: () => 'abgesagt',
+    past: () => 'vergangen',
     allDay: () => 'ist ganztätig',
     clock: () => 'Uhrzeit',
     toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',
@@ -152,6 +184,11 @@ export const deDE: Localization = {
     ticketLink: () => 'Ticketlink',
     currentDates: () => 'Aktuelle Termine',
     archivedDates: () => 'Vergangene Termine',
+    listPlaceholder: () => 'Noch keine Termine vorhanden',
+    sort: {
+      startsAt: () => 'Startzeit',
+      endsAt: () => 'Endzeit',
+    },
     mode: {
       title: () => 'Modus des Angebots',
       permanent: {
@@ -214,6 +251,18 @@ export const deDE: Localization = {
     saved: () => 'gespeichert',
     loading: () => 'lädt',
     max: () => 'max.',
+    topics: () => 'Themen',
+    takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
+    serverProblem: () =>
+      'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
+  },
+  tags: {
+    boxLabel: () => 'Bereits hinzugefügte Themen',
+    delete: () => 'Thema löschen',
+    add: () => 'Thema hinzufügen',
+    placeholder: () => 'Noch kein Thema hinzugefügt',
+    autocompleteLabel: () => 'Neues Thema hinzufügen',
+    noOptions: () => 'Kein passendes Thema gefunden',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -435,6 +484,11 @@ export const deDE: Localization = {
       items: {
         dashboard: () => 'Dashboard',
         notifications: () => 'Benachrichtigungen',
+        profile: () => 'Profil',
+        team: () => 'Team',
+        login: () => 'Login',
+        registration: () => 'Registrierung',
+        info: () => 'Info',
       },
     },
     organizer: {
@@ -470,5 +524,8 @@ export const deDE: Localization = {
       label: () => 'Sprache / Language',
       description: () => 'Sprache wählen, choose Language',
     },
+    organizerBandShowAriaLabel: () => 'Liste meiner Anbieter:innen ausklappen',
+    organizerBandCollapseAriaLabel: () => 'Liste meiner Anbieter:innen einklappen',
+    createOrganizer: () => 'Neue Anbieter:in erstellen',
   },
 };

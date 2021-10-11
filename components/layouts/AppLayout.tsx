@@ -1,26 +1,39 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { routesLayouts } from '../../config/routes';
 import { useBodyLock } from '../../lib/BodyLock';
+import { useActiveRoute } from '../../lib/routing';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
 import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
+import { OrganizerBand, OrganizerBandLayout } from '../navigation/OrganizerBand';
 
 const StyledAppLayout = styled.div``;
 
-const Container = styled.div`
+const Container = styled.div<{ hasOrganizerBand: boolean }>`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 100%;
   position: relative;
+  grid-template-columns: repeat(3, 5.5625rem) repeat(11, 1fr);
 
   ${mq(Breakpoint.mid)} {
-    grid-template-columns: repeat(3, 5.5625rem) repeat(11, 1fr);
+    ${({ hasOrganizerBand }) =>
+      hasOrganizerBand
+        ? css`
+            margin-left: var(--organizer-band-width);
+            width: calc(100% - var(--organizer-band-width));
+          `
+        : css`
+            margin-left: 0;
+            width: 100%;
+          `}
   }
 
-  @media screen and (min-width: 61.1875rem) {
+  @media screen and (min-width: 67.1875rem) {
     grid-template-columns: repeat(11, 1fr);
   }
 
@@ -29,7 +42,20 @@ const Container = styled.div`
   }
 `;
 
-const HeaderSlot = styled.div<{ locked: boolean }>`
+const OrganizerSlot = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--organizer-band-width);
+  height: var(--app-height);
+  background: var(--grey-200);
+  z-index: 1002;
+  box-shadow: inset -1.75rem 0 0.75rem -2rem var(--black-o25);
+  overflow-x: hidden;
+  overflow-y: auto;
+`;
+
+const HeaderSlot = styled.div<{ locked: boolean; hasOrganizerBand: boolean }>`
   position: fixed;
   width: 100%;
   z-index: 1001;
@@ -47,14 +73,30 @@ const HeaderSlot = styled.div<{ locked: boolean }>`
     box-shadow: 0 0.125rem 0.625rem -0.125rem rgba(0, 0, 0, 0.25);
     top: 0;
     bottom: auto;
+
+    ${({ hasOrganizerBand }) =>
+      hasOrganizerBand
+        ? css`
+            width: calc(100% - var(--organizer-band-width));
+            left: var(--organizer-band-width);
+          `
+        : css`
+            width: 100%;
+            left: 0;
+          `}
   }
 `;
 
-const HeaderSlotSecondary = styled.div`
-  border-bottom: 1px solid var(--grey-400);
+const HeaderSlotSecondary = styled.div<{ hasOrganizerBand: boolean }>`
+  ${({ hasOrganizerBand }) => css`
+    background: ${hasOrganizerBand ? 'var(--grey-200)' : 'var(--white)'};
+    box-shadow: ${hasOrganizerBand
+      ? 'inset 0 -1.75rem 0.75rem -2rem var(--black-o25)'
+      : 'inset 0 -1px 0 var(--grey-400)'};
+  `}
 `;
 
-const MenuSlot = styled.div<{ expanded?: boolean }>`
+const MenuSlot = styled.div<{ expanded?: boolean; hasOrganizerBand: boolean }>`
   position: fixed;
   top: 3rem;
   left: 0;
@@ -69,58 +111,66 @@ const MenuSlot = styled.div<{ expanded?: boolean }>`
     filter: grayscale(0);
   }
 
-  ${mq(Breakpoint.mid)} {
-    top: 3.75rem;
-    border-right: 1px solid var(--grey-400);
-    grid-row: 1;
-    height: calc(var(--app-height) - 3.75rem);
-    min-height: calc(var(--app-height) - 3.75rem);
-    overflow-y: auto;
+  ${({ hasOrganizerBand, expanded }) => {
+    const width = hasOrganizerBand ? '100% - var(--organizer-band-width)' : '100%';
 
-    width: 16.6875rem;
+    return css`
+      ${mq(Breakpoint.mid)} {
+        top: 3.75rem;
+        border-right: 1px solid var(--grey-400);
+        grid-row: 1;
+        height: calc(var(--app-height) - 3.75rem);
+        min-height: calc(var(--app-height) - 3.75rem);
+        overflow-y: auto;
+        left: ${hasOrganizerBand ? 'var(--organizer-band-width)' : '0'};
 
-    transition: width 0.083333s, filter 0.2s;
+        width: 16.6875rem;
 
-    @media screen and (min-width: 61.1875rem) {
-      width: calc(100% / 11 * 3);
-    }
+        transition: width 0.083333s, filter 0.2s;
 
-    ${mq(Breakpoint.ultra)} {
-      width: 27.375rem;
-    }
-  }
+        @media screen and (min-width: 67.1875rem) {
+          width: ${`calc((${width}) / 11 * 3)`};
+        }
 
-  ${({ expanded }) =>
-    expanded
-      ? css`
-          filter: grayscale(0);
+        ${mq(Breakpoint.ultra)} {
+          width: 27.375rem;
+        }
+      }
 
-          ${mq(Breakpoint.mid)} {
-            width: 100%;
-          }
+      ${expanded
+        ? css`
+            filter: grayscale(0);
 
-          ${mq(Breakpoint.widish)} {
-            width: calc(100% / 11 * 10);
-          }
+            ${mq(Breakpoint.mid)} {
+              width: ${`calc(${width})`};
+              border-right: none;
+            }
 
-          ${mq(Breakpoint.ultra)} {
-            width: calc(100% / 11 * 9);
-          }
-        `
-      : ''}
+            ${mq(Breakpoint.widish)} {
+              border-right: 1px solid var(--grey-400);
+              width: ${`calc((${width}) / 11 * 10)`};
+            }
+
+            ${mq(Breakpoint.ultra)} {
+              width: ${`calc((${width}) / 11 * 9)`};
+            }
+          `
+        : ''}
+    `;
+  }}
 `;
 
-const ContentSlot = styled.div<{ locked: boolean }>`
+const ContentSlot = styled.div<{ locked: boolean; hasSidebar: boolean }>`
   position: relative;
   grid-column: 1 / -1;
   min-height: calc(var(--app-height) - var(--header-height));
   margin-bottom: calc(var(--header-height) + env(safe-area-inset-bottom));
 
   ${mq(Breakpoint.mid)} {
-    min-height: var(--app-height);
+    min-height: calc(var(--app-height) - var(--header-height));
     margin-top: var(--header-height);
     margin-bottom: 0;
-    grid-column: 4 / -1;
+    grid-column: ${({ hasSidebar }) => (hasSidebar ? '4 / -1' : '1/-1')};
     grid-row: 1;
   }
 `;
@@ -137,16 +187,44 @@ const StyledMainMenuOverlay = styled.div`
   ${overlayStyles}
 `;
 
+export enum Layouts {
+  loggedIn = 'loggedIn',
+  loggedOut = 'loggedOut',
+}
+
+type Layout = {
+  hasOrganizerBand: boolean;
+};
+
+export const appLayouts: {
+  [key in Layouts]: Layout;
+} = {
+  loggedIn: {
+    hasOrganizerBand: true,
+  },
+  loggedOut: {
+    hasOrganizerBand: false,
+  },
+};
+
+export const useLayout: () => Layouts = () => {
+  const activeRoute = useActiveRoute();
+
+  return routesLayouts[activeRoute] || Layouts.loggedOut;
+};
+
 interface AppLayoutProps {
   header: { main: React.ReactElement<NavigationProps>; secondary: React.ReactElement };
-  sidebar: React.ReactElement;
   content: React.ReactNode;
+  layout: Layouts;
+  sidebar?: React.ReactElement;
 }
 
 export const AppLayout: React.FC<AppLayoutProps> = ({
   header,
   sidebar,
   content,
+  layout,
 }: AppLayoutProps) => {
   const headerMain = header?.main;
   const headerSecondary = header?.secondary;
@@ -161,6 +239,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     [enableMenuExpanded, menuExpanded, overlayOpen]
   );
   const { bodyLock, locked } = useBodyLock(bodyLockConditions);
+
+  const hasSidebar = useMemo(() => typeof sidebar !== 'undefined', [sidebar]);
+
+  const activeLayout = appLayouts[layout];
 
   useEffect(() => {
     if (!isMidOrWider) {
@@ -181,7 +263,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   }, [isMainMenuOverlayVisible, enableMenuExpanded]);
 
   const renderedContentSlot = (
-    <ContentSlot ref={contentSlotRef} locked={locked}>
+    <ContentSlot ref={contentSlotRef} locked={locked} hasSidebar={hasSidebar}>
       {content}
     </ContentSlot>
   );
@@ -197,19 +279,36 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       {bodyLock}
 
       {headerMain && (
-        <HeaderSlot locked={locked} role="navigation">
+        <HeaderSlot
+          locked={locked}
+          role="navigation"
+          hasOrganizerBand={activeLayout?.hasOrganizerBand}
+        >
           {headerMain}
         </HeaderSlot>
       )}
       {headerSecondary && (
-        <HeaderSlotSecondary role="navigation">{headerSecondary}</HeaderSlotSecondary>
+        <HeaderSlotSecondary role="navigation" hasOrganizerBand={activeLayout?.hasOrganizerBand}>
+          {headerSecondary}
+        </HeaderSlotSecondary>
+      )}
+      {activeLayout?.hasOrganizerBand && isMidOrWider && (
+        <OrganizerSlot>
+          <OrganizerBand layout={OrganizerBandLayout.narrow} />
+        </OrganizerSlot>
       )}
       {isMidOrWider && sidebar && (
-        <MenuSlot expanded={menuExpanded} role="navigation">
+        <MenuSlot
+          expanded={menuExpanded}
+          role="navigation"
+          hasOrganizerBand={activeLayout?.hasOrganizerBand}
+        >
           {sidebar}
         </MenuSlot>
       )}
-      <Container role="main">{rendered && renderedContentSlot}</Container>
+      <Container role="main" hasOrganizerBand={activeLayout?.hasOrganizerBand}>
+        {rendered && renderedContentSlot}
+      </Container>
       {enableMenuExpanded && isMainMenuOverlayVisible && (
         <StyledMainMenuOverlay
           onClick={() => {

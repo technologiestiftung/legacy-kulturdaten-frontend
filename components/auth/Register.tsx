@@ -1,8 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 
-import { StyledTestFormContainer, StyledTestInput } from './Login';
 import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
 import { useT } from '../../lib/i18n';
+import { Button, ButtonColor, ButtonSize, ButtonType } from '../button';
+import { Input, InputType } from '../input';
+import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
 
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -35,61 +37,67 @@ export const RegisterForm: React.FC = () => {
   };
 
   return (
-    <StyledTestFormContainer>
+    <>
       {!submitted || error ? (
         <form onSubmit={submitHandler}>
-          <div>
-            <label htmlFor="register-email">{t('register.email')}</label>
-            <br />
-            <StyledTestInput
-              value={email}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-              type="email"
-              id="register-email"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="register-password">{t('register.password')}</label>
-            <br />
-            <StyledTestInput
-              value={password}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-              type="password"
-              id="register-password"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="register-password-confirmation">{t('register.confirmPassword')}</label>
-            <br />
-            <StyledTestInput
-              value={passwordConfirmation}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setPasswordConfirmation(e.target.value)
-              }
-              type="password"
-              id="register-password-confirmation"
-              required
-            />
-          </div>
-          <div>
-            <input type="submit" value={t('register.submit') as string} />
-          </div>
+          <AuthFormContainer>
+            <div>
+              <Input
+                value={email}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                label={t('register.email') as string}
+                type={InputType.email}
+                id="register-email"
+                required
+                hideError
+              />
+            </div>
+            <div>
+              <Input
+                value={password}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                label={t('register.password') as string}
+                type={InputType.password}
+                id="register-password"
+                required
+                hideError
+              />
+            </div>
+            <div>
+              <Input
+                value={passwordConfirmation}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setPasswordConfirmation(e.target.value)
+                }
+                label={t('register.confirmPassword') as string}
+                type={InputType.password}
+                id="register-password-confirmation"
+                required
+                hideError
+              />
+            </div>
+            <AuthFormItem justifyContent="flex-end">
+              <Button type={ButtonType.submit} size={ButtonSize.big} color={ButtonColor.black}>
+                {t('register.submit')}
+              </Button>
+            </AuthFormItem>
+          </AuthFormContainer>
         </form>
       ) : (
         ''
       )}
       {error ? (
-        <div>
+        <AuthFormContainer>
           <h3>{error.name}</h3>
           <pre>{error.message}</pre>
-        </div>
+        </AuthFormContainer>
       ) : submitted ? (
-        <div>Form submitted. Please confirm your email address via the email we just sent you.</div>
+        <AuthFormContainer>
+          Form submitted. Please confirm your email address via the email we just sent you.
+        </AuthFormContainer>
       ) : (
         ''
       )}
-    </StyledTestFormContainer>
+    </>
   );
 };

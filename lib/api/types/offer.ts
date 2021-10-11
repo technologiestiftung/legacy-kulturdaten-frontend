@@ -1,5 +1,16 @@
 import { Language } from '../../../config/locale';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
+import {
+  EntrySubject,
+  EntrySubjectTranslation,
+  EntryType,
+  EntryTypeTranslation,
+} from './typeSubject';
+
+export type OfferType = EntryType;
+export type OfferSubject = EntrySubject;
+export type OfferTypeTranslation = EntryTypeTranslation;
+export type OfferSubjectTranslation = EntrySubjectTranslation;
 
 export enum OfferMode {
   permanent = 'permanent',
@@ -7,8 +18,9 @@ export enum OfferMode {
 }
 
 export enum OfferDateStatus {
-  confirmed = 'confirmed',
-  cancelled = 'cancelled',
+  scheduled = 'scheduled',
+  canceled = 'canceled',
+  past = 'past',
 }
 
 export type OfferDateTranslation = {
@@ -16,24 +28,28 @@ export type OfferDateTranslation = {
   attributes: {
     language: Language;
     name?: string;
-    room?: string;
+    description?: string;
+    roomDescription?: string;
   };
 } & Translation;
 
 export type OfferDate = {
   data: {
-    id?: string;
+    id?: number;
     type?: 'offerdate';
     attributes?: {
-      from: string;
-      to: string;
-      allDay: boolean;
+      startsAt: string;
+      endsAt: string;
       status: OfferDateStatus;
-      ticketLink?: string;
-      recurrence?: string;
+      ticketUrl?: string;
     };
     relations?: {
       translations: OfferDateTranslation[];
+    };
+    meta?: {
+      recurrenceRule: string;
+      startsAt: string;
+      endsAt: string;
     };
   };
 };
@@ -56,6 +72,9 @@ export type Offer = {
     } & DefaultAttributes;
     relations?: {
       translations: OfferTranslation[];
+      dates?: OfferDate['data'][];
+      subjects?: OfferSubject[];
+      types?: OfferType[];
     };
   };
   meta?: {

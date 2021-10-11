@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { LocationList as LocationListCall } from '../../lib/api';
-import { Location, LocationTranslation } from '../../lib/api/types/location';
-import { Order, useList } from '../../lib/categories';
+import { LocationList as LocationListCall, useApiCall } from '../../lib/api';
+import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
+import { Order, useList, useMutateList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -22,15 +22,17 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import Link from 'next/link';
-import { ButtonLink } from '../button/ButtonLink';
-import { ButtonColor, ButtonSize } from '../button';
+import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
+import { useOrganizerId } from '../../lib/useOrganizer';
+import { Language } from '../../config/locale';
+import { LocationCreate } from '../../lib/api/routes/location/create';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
   min-height: 100%;
-  background: var(--grey-200);
+  background: var(--white);
 `;
 
 const viewEntriesPerPageMap = {
@@ -87,7 +89,8 @@ export const LocationList: React.FC<LocationListProps> = ({
     setLastEntryId,
   } = useContext(EntryListContext);
   const pseudoUID = usePseudoUID();
-
+  const call = useApiCall();
+  const mutateList = useMutateList(categories.location);
   const listName = Categories.location;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
@@ -103,6 +106,7 @@ export const LocationList: React.FC<LocationListProps> = ({
     () => getDispatchFilters(listName),
     [getDispatchFilters, listName]
   );
+  const loadingScreen = useLoadingScreen();
 
   const list = useList<LocationListCall, Location>(
     categories.location,
@@ -145,6 +149,8 @@ export const LocationList: React.FC<LocationListProps> = ({
 
   const date = useDate();
 
+  const organizerId = useOrganizerId();
+
   const cards = useMemo(
     () =>
       list?.data
@@ -153,7 +159,7 @@ export const LocationList: React.FC<LocationListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.location]({
                   locale,
-                  query: { id, sub },
+                  query: { id, sub, organizer: organizerId },
                 });
 
               const translations = relations?.translations;
@@ -185,15 +191,16 @@ export const LocationList: React.FC<LocationListProps> = ({
           )
         : undefined,
     [
-      expanded,
-      language,
       list.data,
-      locale,
+      language,
+      customEntryOnClick,
+      expanded,
       router.asPath,
+      activeEntryId,
+      locale,
+      organizerId,
       setMenuExpanded,
       setLastEntryId,
-      customEntryOnClick,
-      activeEntryId,
     ]
   );
 
@@ -211,7 +218,7 @@ export const LocationList: React.FC<LocationListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.location]({
                   locale,
-                  query: { id, sub },
+                  query: { id, sub, organizer: organizerId },
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
@@ -260,6 +267,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       router.asPath,
       setMenuExpanded,
       setLastEntryId,
+      organizerId,
     ]
   );
 
@@ -271,16 +279,51 @@ export const LocationList: React.FC<LocationListProps> = ({
         setExpanded={setMenuExpanded}
         expandable={expandable}
         actionButton={
-          <Link href={routes.createLocation({ locale })} passHref>
-            <ButtonLink
-              size={ButtonSize.big}
-              color={ButtonColor.white}
-              icon="Plus"
-              onClick={() => setMenuExpanded(false)}
-            >
-              {t('categories.location.form.create')}
-            </ButtonLink>
-          </Link>
+          <Button
+            size={ButtonSize.big}
+            color={ButtonColor.white}
+            icon="Plus"
+            onClick={async () => {
+              setMenuExpanded(false);
+              const category = categories.location;
+
+              loadingScreen(
+                t('categories.location.form.create'),
+                async () => {
+                  try {
+                    const resp = await call<LocationCreate>(category.api.create.factory, {
+                      entry: {
+                        type: LocationType.physicallocation,
+                        relations: {
+                          translations: [{ language: Language.de, name: 'Neuer Ort' }],
+                        },
+                      },
+                    });
+
+                    if (resp.status === 200) {
+                      const id = resp.body.data.id;
+
+                      router.push(
+                        category.routes.list({
+                          locale,
+                          query: { id, sub: 'info', organizer: organizerId },
+                        })
+                      );
+                      mutateList();
+
+                      return { success: true };
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    return { success: false, error: t('general.serverProblem') };
+                  }
+                },
+                t('general.takeAFewSeconds')
+              );
+            }}
+          >
+            {t('categories.location.form.create')}
+          </Button>
         }
       />
 

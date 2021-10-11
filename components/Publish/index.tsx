@@ -73,9 +73,10 @@ export const Publish: React.FC<PublishProps> = ({
 
   const t = useT();
 
-  const isPublishable = useMemo(() => entry?.meta?.publishable === true, [
-    entry?.meta?.publishable,
-  ]);
+  const isPublishable = useMemo(
+    () => entry?.meta?.publishable === true,
+    [entry?.meta?.publishable]
+  );
 
   const failedPublishedRequirements =
     typeof entry?.meta?.publishable === 'object' &&
@@ -125,7 +126,7 @@ export const Publish: React.FC<PublishProps> = ({
             try {
               const resp = await call<OrganizerUpdate>(category.api.update.factory, {
                 id: entry.data.id,
-                organizer: {
+                entry: {
                   attributes: {
                     status: PublishedStatus.published,
                   },

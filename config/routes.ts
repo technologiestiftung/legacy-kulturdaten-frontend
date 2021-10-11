@@ -1,3 +1,4 @@
+import { Layouts } from '../components/layouts/AppLayout';
 import { Route } from '../lib/routing';
 
 import { Locale } from './locales';
@@ -8,6 +9,7 @@ import { Locale } from './locales';
 export enum Routes {
   index = 'index',
   dashboard = 'dashboard',
+  team = 'team',
   login = 'login',
   register = 'register',
   userProfile = 'userProfile',
@@ -27,45 +29,51 @@ export enum Routes {
  */
 export const routes: { [key in Routes]: Route } = {
   index: ({ locale }) => `/${localizedRoutes[Routes.index][locale]}`,
-  dashboard: ({ locale }) => `/${localizedRoutes[Routes.dashboard][locale]}/`,
-  userProfile: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.userProfile][locale]}/`,
-  userSettings: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${
-      localizedRoutes[Routes.userSettings][locale]
-    }/`,
-  userNotifications: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${
-      localizedRoutes[Routes.userNotifications][locale]
-    }/`,
-  login: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.login][locale]}/`,
-  register: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.register][locale]}/`,
+  dashboard: ({ query, locale }) =>
+    `/app/${query?.organizer}/${localizedRoutes[Routes.dashboard][locale]}/`,
+  team: ({ query, locale }) => `/app/${query?.organizer}/${localizedRoutes[Routes.team][locale]}/`,
+  userProfile: ({ locale }) => `/app/${localizedRoutes[Routes.userProfile][locale]}/`,
+  userSettings: ({ locale }) => `/app/${localizedRoutes[Routes.userSettings][locale]}/`,
+  userNotifications: ({ locale }) => `/app/${localizedRoutes[Routes.userNotifications][locale]}/`,
+  login: ({ locale }) => `/app/${localizedRoutes[Routes.login][locale]}/`,
+  register: ({ locale }) => `/app/${localizedRoutes[Routes.register][locale]}/`,
   organizer: ({ query, locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.organizer][locale]}/${
-      query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
+    `/app/${
+      query?.organizer
+        ? `${query?.organizer}/${localizedRoutes[Routes.organizer][locale]}/${
+            query?.sub ? `${query.sub}/` : ''
+          }`
+        : ''
     }`,
-  createOrganizer: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${
-      localizedRoutes[Routes.createOrganizer][locale]
-    }/`,
+  createOrganizer: ({ locale }) => `/app/${localizedRoutes[Routes.createOrganizer][locale]}/`,
   offer: ({ query, locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.offer][locale]}/${
+    `/app/${query.organizer}/${localizedRoutes[Routes.offer][locale]}/${
       query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
-  createOffer: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.createOffer][locale]}/`,
+  createOffer: ({ query, locale }) =>
+    `/app/${query.organizer}/${localizedRoutes[Routes.createOffer][locale]}/`,
   location: ({ query, locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${localizedRoutes[Routes.location][locale]}/${
+    `/app/${query.organizer}/${localizedRoutes[Routes.location][locale]}/${
       query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
-  createLocation: ({ locale }) =>
-    `/${localizedRoutes[Routes.dashboard][locale]}/${
-      localizedRoutes[Routes.createLocation][locale]
-    }/`,
+  createLocation: ({ query, locale }) =>
+    `/app/${query.organizer}/${localizedRoutes[Routes.createLocation][locale]}/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
+
+export const internalRoutes = [
+  Routes.dashboard,
+  Routes.team,
+  Routes.userProfile,
+  Routes.userNotifications,
+  Routes.userSettings,
+  Routes.organizer,
+  Routes.offer,
+  Routes.location,
+  Routes.createLocation,
+  Routes.createOffer,
+  Routes.createOrganizer,
+];
 
 /**
  * Localized parts for all routes paths
@@ -76,8 +84,12 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'en-DE': '',
   },
   dashboard: {
-    'de-DE': 'app',
-    'en-DE': 'app',
+    'de-DE': 'dashboard',
+    'en-DE': 'dashboard',
+  },
+  team: {
+    'de-DE': 'team',
+    'en-DE': 'team',
   },
   userProfile: {
     'de-DE': 'user/profile',
@@ -100,12 +112,12 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'en-DE': 'auth/register',
   },
   organizer: {
-    'de-DE': 'organizer',
-    'en-DE': 'organizer',
+    'de-DE': 'profile',
+    'en-DE': 'profile',
   },
   createOrganizer: {
-    'de-DE': 'organizer/create',
-    'en-DE': 'organizer/create',
+    'de-DE': 'create-organizer',
+    'en-DE': 'create-organizer',
   },
   offer: {
     'de-DE': 'offer',
@@ -127,4 +139,22 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'impressum',
     'en-DE': 'imprint',
   },
+};
+
+export const routesLayouts: { [key in Routes]: Layouts } = {
+  index: Layouts.loggedOut,
+  createLocation: Layouts.loggedIn,
+  createOffer: Layouts.loggedIn,
+  createOrganizer: Layouts.loggedIn,
+  dashboard: Layouts.loggedIn,
+  imprint: undefined,
+  location: Layouts.loggedIn,
+  login: Layouts.loggedOut,
+  offer: Layouts.loggedIn,
+  organizer: Layouts.loggedIn,
+  register: Layouts.loggedOut,
+  team: Layouts.loggedIn,
+  userNotifications: Layouts.loggedIn,
+  userProfile: Layouts.loggedIn,
+  userSettings: Layouts.loggedIn,
 };

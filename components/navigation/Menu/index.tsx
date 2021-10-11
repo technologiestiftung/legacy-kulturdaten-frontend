@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import React, { useContext } from 'react';
 import { Button, ButtonSize, ButtonVariant, IconPosition } from '../../button';
+import { MenuLinkType } from '../header/HeaderMenuLink';
 import { NavigationContext } from '../NavigationContext';
 import { MenuIcon, MenuIconName } from './MenuIcon';
 import { MenuLink, MenuLinkProps } from './MenuLink';
@@ -17,6 +18,7 @@ export enum MenuItemType {
 export type MenuItemLink = {
   title: string;
   href: string;
+  type?: MenuLinkType;
   active?: boolean;
 };
 
@@ -74,7 +76,7 @@ const StyledMenu = styled.div`
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--grey-200);
+  background: var(--white);
 `;
 
 interface MenuProps {

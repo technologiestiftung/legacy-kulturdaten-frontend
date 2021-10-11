@@ -6,7 +6,6 @@ import { PublishedStatus } from '../../../lib/api/types/general';
 import { Location, LocationTranslation } from '../../../lib/api/types/location';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
-import { Button, ButtonColor, ButtonType } from '../../button';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
@@ -14,9 +13,8 @@ import { useName } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { LocationShow } from '../../../lib/api/routes/location/show';
 import { EntryFormProps } from '../helpers/form';
-import { LocationTranslationCreate } from '../../../lib/api/routes/location/translation/create';
 import { LocationUpdate } from '../../../lib/api/routes/location/update';
-import { Select } from '../../select';
+import { Select, SelectSize } from '../../select';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 
 const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps) => {
@@ -27,7 +25,7 @@ const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps)
     onSubmit: onSubmitGerman,
     pristine: pristineGerman,
     reset: resetGerman,
-  } = useName<Location, LocationShow, LocationTranslation, LocationTranslationCreate>({
+  } = useName<Location, LocationShow, LocationTranslation>({
     category,
     query,
     language: Language.de,
@@ -41,7 +39,7 @@ const NameForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormProps)
     onSubmit: onSubmitEnglish,
     pristine: pristineEnglish,
     reset: resetEnglish,
-  } = useName<Location, LocationShow, LocationTranslation, LocationTranslationCreate>({
+  } = useName<Location, LocationShow, LocationTranslation>({
     category,
     query,
     language: Language.en,
@@ -123,7 +121,7 @@ const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
         try {
           const resp = await call<LocationUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            location: {
+            entry: {
               relations: {
                 address,
               },
@@ -240,11 +238,12 @@ const AddressForm: React.FC<EntryFormProps> = ({ category, query }: EntryFormPro
             required={required}
           />
         </FormItem>
-        <FormItem width={FormItemWidth.half}>
+        <FormItem width={FormItemWidth.half} alignSelf="flex-end">
           <Select
             disabled
             label={t('categories.location.form.district') as string}
             id="tbd-district"
+            size={SelectSize.big}
           >
             <option>tbd</option>
           </Select>

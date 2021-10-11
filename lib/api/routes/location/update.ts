@@ -30,7 +30,7 @@ export const locationUpdateFactory = (
   token: LocationUpdate['request']['headers']['Authorization'],
   query: {
     id: string;
-    location: Location;
+    entry: Location;
   }
 ): LocationUpdate => ({
   request: {
@@ -40,7 +40,7 @@ export const locationUpdateFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.location,
+    body: query.entry,
   },
   response: {
     status: 200,

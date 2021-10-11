@@ -9,9 +9,13 @@ import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
+import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
-import { DefaultAttributes, Translation } from './api/types/general';
+import { CategoryEntry } from './api/types/general';
+import { OfferDate, OfferType } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
+import { EntryType } from './api/types/typeSubject';
 import { Route, useLocale } from './routing';
 
 export type categoryApi = {
@@ -25,19 +29,6 @@ export interface CategoryPage {
 
 export interface CategoryEntryPage extends CategoryPage {
   query: ParsedUrlQuery;
-}
-
-export interface CategoryEntry {
-  data: {
-    attributes?: DefaultAttributes;
-    relations?: {
-      translations?: Translation[];
-    };
-  };
-  meta?: {
-    publishable: boolean | { [key: string]: string[] };
-    language?: Language;
-  };
 }
 
 export type Category = {
@@ -71,9 +62,9 @@ export type Category = {
     show: categoryApi;
     create: categoryApi;
     update: categoryApi;
-    translationCreate: categoryApi;
     delete: categoryApi;
     media?: categoryApi;
+    typeList?: categoryApi;
   };
   requirements?: Requirement[];
 };
@@ -82,9 +73,13 @@ export const useCategory = (): Category => {
   const router = useRouter();
   const categories = useCategories();
   const categoryName = router?.query?.category as Categories;
-  const category = categories[categoryName];
 
-  return category;
+  if (categoryName && categoryName.length > 0) {
+    const category = categories[categoryName];
+    return category;
+  } else {
+    return categories['organizer'];
+  }
 };
 
 export enum Order {
@@ -94,13 +89,13 @@ export enum Order {
 
 const makeListQuery = (
   page?: number,
-  size?: number,
+  perPage?: number,
   filter?: [string, string][],
   sort?: { key: string; order: Order }
 ) => {
   return {
     page: page ? String(page) : undefined,
-    size: size ? String(size) : undefined,
+    size: perPage ? String(perPage) : undefined,
     filter: filter
       ? filter
           .filter((currentFilter) => currentFilter[1] !== undefined && currentFilter.length > 0)
@@ -111,10 +106,62 @@ const makeListQuery = (
   };
 };
 
+export const useOfferDateList = (
+  offerId: number | string,
+  page?: number,
+  perPage?: number,
+  filter?: [string, string][],
+  sort?: { key: string; order: Order },
+  load = true
+): {
+  data: OfferDate['data'][];
+  meta: {
+    language: Language;
+    pages: {
+      total: number;
+      perPage: number;
+      currentPage: number;
+      lastPage: number;
+    };
+  };
+  mutate: (
+    data?: OfferDateList['response'],
+    shouldRevalidate?: boolean
+  ) => Promise<OfferDateList['response'] | undefined>;
+} => {
+  const call = useApiCall();
+  const query = makeListQuery(page, perPage, filter, sort);
+
+  const { data, mutate } = useSWR(
+    load && offerId
+      ? getApiUrlString(ApiRoutes.offerDateList, { ...query, offerId: String(offerId) })
+      : undefined,
+    () =>
+      load && offerId
+        ? call<OfferDateList>(offerDateListFactory, { ...query, offerId: String(offerId) })
+        : undefined
+  );
+
+  return {
+    data: (data as unknown as OfferDateList['response'])?.body
+      ?.data as unknown as OfferDate['data'][],
+    meta: (data as unknown as OfferDateList['response'])?.body?.meta as {
+      language: Language;
+      pages: {
+        total: number;
+        perPage: number;
+        currentPage: number;
+        lastPage: number;
+      };
+    },
+    mutate,
+  };
+};
+
 export const useList = <C extends ApiCall, T extends CategoryEntry>(
   category: Category,
   page?: number,
-  size?: number,
+  perPage?: number,
   filter?: [string, string][],
   sort?: { key: string; order: Order },
   load = true
@@ -133,8 +180,7 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const call = useApiCall();
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
-
-  const query = makeListQuery(page, size, filter, sort);
+  const query = makeListQuery(page, perPage, filter, sort);
 
   const { data } = useSWR(
     load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,
@@ -187,7 +233,9 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const apiCallRoute = category?.api.show.route;
 
   const { data, mutate } = useSWR<C['response']>(
-    apiCallRoute && query && query.id ? getApiUrlString(apiCallRoute, query) : undefined,
+    apiCallRoute && query && (query.id || (query.organizer && query.organizer !== 'default'))
+      ? getApiUrlString(apiCallRoute, query)
+      : undefined,
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
@@ -234,14 +282,34 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
   return metaLinks;
 };
 
-export const useOrganizerTypeList = (): OrganizerType[] => {
+export const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
+  route: ApiRoutes,
+  factory: ApiCallFactory
+): C[] => {
   const call = useApiCall();
 
-  const { data } = useSWR(
-    getApiUrlString(ApiRoutes.organizerTypeList, undefined),
-    () => call<OrganizerTypeList>(organizerTypeListFactory, undefined),
-    { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
+  const { data } = useSWR(getApiUrlString(route, undefined), () => call<T>(factory, undefined), {
+    revalidateOnFocus: false,
+    focusThrottleInterval: 1000 * 60 * 5,
+  });
+
+  return data?.body?.data as unknown as C[];
+};
+
+export const useOrganizerTypeList = (): OrganizerType[] => {
+  const data = useEntryTypeList<OrganizerTypeList, OrganizerType>(
+    ApiRoutes.organizerTypeList,
+    organizerTypeListFactory
   );
 
-  return data?.body?.data;
+  return data;
+};
+
+export const useOfferTypeList = (): OfferType[] => {
+  const data = useEntryTypeList<OfferTypeList, OfferType>(
+    ApiRoutes.offerTypeList,
+    offerTypeListFactory
+  );
+
+  return data;
 };

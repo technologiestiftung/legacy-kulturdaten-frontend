@@ -17,6 +17,7 @@ const StyledEntryFormHead = styled.div<{ isExpander?: boolean; addPadding?: bool
   flex-wrap: wrap;
   z-index: 1;
   padding: 0;
+  color: inherit;
 
   ${({ addPadding }) =>
     addPadding

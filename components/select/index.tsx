@@ -36,7 +36,7 @@ const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>
           flex-direction: column;
 
           ${StyledLabel} {
-            padding-bottom: 0.75rem;
+            padding-bottom: 0.375rem;
           }
         `}
 `;
@@ -68,6 +68,7 @@ const selectVariants: {
     transition: box-shadow var(--transition-duration);
     box-shadow: var(--shadow), inset 0px 0px 0px 1px var(--black);
     border: none;
+    color: var(--black);
 
     &:hover {
       box-shadow: var(--shadow-hover), inset 0px 0px 0px 2px var(--black);

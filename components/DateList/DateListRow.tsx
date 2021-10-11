@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { differenceInSeconds } from 'date-fns';
+import { getDay } from 'date-fns';
 import { ArrowRight, ChevronDown } from 'react-feather';
 import { OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
@@ -8,6 +8,7 @@ import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Checkbox } from '../checkbox';
 import { useCollapsable } from '../collapsable';
+import { weekdays } from '../DayPicker';
 import { mq } from '../globals/Constants';
 
 const StyledDateListRowCell = styled.div<{ lastRow: boolean; expanded: boolean }>`
@@ -128,7 +129,7 @@ const StyledDateListItemStatusFlag = styled.div<{ status: OfferDateStatus; disab
   background: ${({ status, disabled }) =>
     disabled
       ? 'var(--grey-350)'
-      : status === OfferDateStatus.confirmed
+      : status === OfferDateStatus.scheduled
       ? 'var(--green-light)'
       : 'var(--error-light)'};
 `;
@@ -146,6 +147,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
   align-items: center;
   column-gap: 0.375rem;
   cursor: pointer;
+  color: inherit;
 
   @media (pointer: fine) {
     transition: background var(--transition-duration-fast);
@@ -182,7 +184,6 @@ const StyledDateListItemBodyInner = styled.div<{ lastRow: boolean }>`
 interface DateListRowProps {
   from: string;
   status: OfferDateStatus;
-  allDay: boolean;
   lastRow: boolean;
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -196,14 +197,14 @@ interface DateListRowProps {
 const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus]: string } = (
   editable
 ) => ({
-  [OfferDateStatus.confirmed]: editable ? 'date.confirmed' : 'date.confirmedArchived',
-  [OfferDateStatus.cancelled]: 'date.cancelled',
+  [OfferDateStatus.scheduled]: editable ? 'date.scheduled' : 'date.scheduledArchived',
+  [OfferDateStatus.canceled]: 'date.canceled',
+  [OfferDateStatus.past]: 'date.past',
 });
 
 export const DateListRow: React.FC<DateListRowProps> = ({
   from,
   to,
-  allDay,
   lastRow,
   title,
   status,
@@ -221,12 +222,15 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const fromDate = from && new Date(from);
   const toDate = to && new Date(to);
 
-  const dateFormat = allDay ? DateFormat.date : DateFormat.dateTime;
+  const dateFormat = DateFormat.dateTime;
 
-  const formattedFrom = formatDate(fromDate, dateFormat);
-  const formattedTo = toDate && formatDate(toDate, dateFormat);
-
-  const longerThanOneDay = differenceInSeconds(toDate, fromDate) > 86400;
+  const formattedFrom = `${fromDate && t(weekdays[getDay(fromDate)].name.short)} ${formatDate(
+    fromDate,
+    dateFormat
+  )}`;
+  const formattedTo = `${toDate && t(weekdays[getDay(toDate)].name.short)} ${
+    toDate && formatDate(toDate, dateFormat)
+  }`;
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <StyledDateListItemBodyInner lastRow={lastRow}>{body}</StyledDateListItemBodyInner>
@@ -252,7 +256,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const renderedStatus = (
     <StyledDateListItemStatus>
       <StyledDateListItemStatusFlag status={status} disabled={disabled}>
-        {t(OfferDateStatusToL10nMap(editable)[status])}
+        {status ? t(OfferDateStatusToL10nMap(editable)[status]) : ''}
       </StyledDateListItemStatusFlag>
     </StyledDateListItemStatus>
   );
@@ -280,9 +284,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
         </StyledDateListItemText>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {to && (!allDay || longerThanOneDay) && (
-          <StyledDateListItemText>{formattedTo}</StyledDateListItemText>
-        )}
+        {to && <StyledDateListItemText>{formattedTo}</StyledDateListItemText>}
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText>{title}</StyledDateListItemText>
@@ -305,7 +307,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
           <StyledDateListRowMidInner>
             <StyledDateListItemTime noPaddingLeft={editable} doublePaddingLeft={!editable}>
               <span>{formattedFrom}</span>
-              {to && (!allDay || longerThanOneDay) && (
+              {to && (
                 <>
                   <ArrowRight />
                   <span>{formattedTo}</span>

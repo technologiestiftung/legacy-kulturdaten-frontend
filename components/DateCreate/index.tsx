@@ -3,9 +3,7 @@ import { useCallback, useState, useMemo } from 'react';
 import styled from '@emotion/styled';
 import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
-import { getPseudoUID, usePseudoUID } from '../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../button';
-import { Checkbox } from '../checkbox';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
 import { EntryFormContainer, EntryFormWrapper } from '../EntryForm/wrappers';
 import { Input, InputType } from '../input';
@@ -22,8 +20,6 @@ import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 
 interface DateFormTimeProps {
-  allDay: boolean;
-  setAllDay: (allDay: boolean) => void;
   earliestDate: Date;
   latestDate: Date;
   fromDateISOString: string;
@@ -41,8 +37,6 @@ interface DateFormTimeProps {
 }
 
 export const DateFormTime: React.FC<DateFormTimeProps> = ({
-  allDay,
-  setAllDay,
   earliestDate,
   latestDate,
   fromDateISOString,
@@ -58,7 +52,6 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
   toDateValid,
   toTimeValid,
 }: DateFormTimeProps) => {
-  const uid = usePseudoUID();
   const t = useT();
 
   const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
@@ -68,28 +61,16 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
     <>
       <EntryFormHead title={t('date.time') as string} />
       <FormGrid>
-        <FormItem width={FormItemWidth.full} alignSelf="flex-start" childrenFlexGrow="0">
-          <Checkbox
-            id={`checkbox-${uid}`}
-            label={t('date.allDay') as string}
-            checked={allDay}
-            onChange={(e) => setAllDay(e.target.checked)}
-          />
-        </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
             label={t('date.from') as string}
             value={fromDateISOString}
-            onChange={(e) => {
-              if (e.target.value) {
-                setFromDateISOString(e.target.value);
-              }
-            }}
+            onChange={(e) => setFromDateISOString(e.target.value)}
             min={earliestDateISOString}
             max={latestDateISOString}
           />
-          {!allDay && (
+          {
             <Input
               type={InputType.time}
               label={t('date.clock') as string}
@@ -100,7 +81,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
                 }
               }}
             />
-          )}
+          }
         </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
@@ -113,7 +94,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
             valid={toDateValid}
             error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
           />
-          {!allDay && (
+          {
             <Input
               type={InputType.time}
               label={t('date.clock') as string}
@@ -127,7 +108,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
               valid={toTimeValid}
               error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
             />
-          )}
+          }
         </FormItem>
       </FormGrid>
     </>
@@ -144,8 +125,6 @@ const StyledDateCreateFormWrapper = styled.div`
 
 interface DateCreateFormProps {
   offerTitles: { [key in Language]: string };
-  allDay: boolean;
-  setAllDay: (allDay: boolean) => void;
   ticketUrl: string;
   setTicketUrl: (ticketUrl: string) => void;
   titleGerman: string;
@@ -176,8 +155,6 @@ interface DateCreateFormProps {
 
 const DateCreateForm: React.FC<DateCreateFormProps> = ({
   offerTitles,
-  allDay,
-  setAllDay,
   ticketUrl,
   setTicketUrl,
   titleGerman,
@@ -206,7 +183,6 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   toTimeValid,
 }: DateCreateFormProps) => {
   const t = useT();
-  const uid = usePseudoUID();
 
   const { renderedDateRecurrence } = useDateRecurrence({
     startDate: fromDate,
@@ -221,8 +197,6 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
         <EntryFormContainer noPadding fullWidth>
           <DateFormTime
             {...{
-              allDay,
-              setAllDay,
               earliestDate,
               latestDate,
               fromDateISOString,
@@ -330,13 +304,15 @@ const StyledDateCreateBottomBar = styled.div`
 `;
 
 interface DateCreateProps {
-  onSubmit: (date: OfferDate) => void;
+  onSubmit: (date: OfferDate['data'], recurrence?: string) => void;
   offerTitles: { [key in Language]: string };
+  submitDelay?: number;
 }
 
 export const DateCreate: React.FC<DateCreateProps> = ({
   onSubmit,
   offerTitles,
+  submitDelay = 0,
 }: DateCreateProps) => {
   const t = useT();
   const language = useLanguage();
@@ -353,7 +329,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const startTimeISOString = format(earliestDate, 'HH:mm');
   const startPlusOneHourTimeISOString = format(add(earliestDate, { hours: 1 }), 'HH:mm');
 
-  const [allDay, setAllDay] = useState(false);
   const [ticketUrl, setTicketUrl] = useState('');
   const [titleGerman, setTitleGerman] = useState('');
   const [titleEnglish, setTitleEnglish] = useState('');
@@ -366,13 +341,13 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const [toTimeISOString, setToTimeISOString] = useState<string>(startPlusOneHourTimeISOString);
 
   const fromDateTime = useMemo(
-    () => parseISO(`${fromDateISOString}T${!allDay ? fromTimeISOString : '00:00'}`),
-    [allDay, fromDateISOString, fromTimeISOString]
+    () => parseISO(`${fromDateISOString}T${fromTimeISOString}`),
+    [fromDateISOString, fromTimeISOString]
   );
 
   const toDateTime = useMemo(
-    () => parseISO(`${toDateISOString}T${!allDay ? toTimeISOString : '00:00'}`),
-    [allDay, toDateISOString, toTimeISOString]
+    () => parseISO(`${toDateISOString}T${toTimeISOString}`),
+    [toDateISOString, toTimeISOString]
   );
 
   const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
@@ -388,14 +363,11 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const date = useMemo<OfferDate>(
     () => ({
       data: {
-        id: getPseudoUID(),
         attributes: {
-          allDay,
-          from: fromDateTime?.toISOString(),
-          to: toDateTime?.toISOString(),
-          status: OfferDateStatus.confirmed,
+          startsAt: fromDateTime?.toISOString(),
+          endsAt: toDateTime?.toISOString(),
+          status: OfferDateStatus.scheduled,
           ticketLink: ticketUrl,
-          recurrence,
         },
         relations: {
           translations: [
@@ -404,7 +376,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.de,
                 name: titleGerman,
-                room: roomGerman,
+                roomDescription: roomGerman,
               },
             },
             {
@@ -412,24 +384,14 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.en,
                 name: titleEnglish,
-                room: roomEnglish,
+                roomDescription: roomEnglish,
               },
             },
           ],
         },
       },
     }),
-    [
-      allDay,
-      fromDateTime,
-      recurrence,
-      roomEnglish,
-      roomGerman,
-      ticketUrl,
-      titleEnglish,
-      titleGerman,
-      toDateTime,
-    ]
+    [fromDateTime, roomEnglish, roomGerman, ticketUrl, titleEnglish, titleGerman, toDateTime]
   );
 
   const { renderedOverlay, setIsOpen } = useOverlay(
@@ -451,8 +413,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           setRoomGerman,
           roomEnglish,
           setRoomEnglish,
-          allDay,
-          setAllDay,
           fromDateISOString,
           setFromDateISOString,
           fromTimeISOString,
@@ -478,26 +438,30 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   );
 
   const submitHandler = useCallback(() => {
-    onSubmit(date);
-    setIsOpen(false);
-    setTicketUrl('');
-    setTitleGerman('');
-    setTitleEnglish('');
-    setAllDay(false);
-    setRoomGerman('');
-    setRoomEnglish('');
-    setFromDateISOString(earliestDateISOString);
-    setFromTimeISOString(startTimeISOString);
-    setToDateISOString(earliestDateISOString);
-    setToTimeISOString(startPlusOneHourTimeISOString);
-    setRecurrence(undefined);
+    onSubmit(date?.data, recurrence);
+
+    setTimeout(() => {
+      setIsOpen(false);
+      setTicketUrl('');
+      setTitleGerman('');
+      setTitleEnglish('');
+      setRoomGerman('');
+      setRoomEnglish('');
+      setFromDateISOString(earliestDateISOString);
+      setFromTimeISOString(startTimeISOString);
+      setToDateISOString(earliestDateISOString);
+      setToTimeISOString(startPlusOneHourTimeISOString);
+      setRecurrence(undefined);
+    }, submitDelay);
   }, [
+    recurrence,
     date,
     onSubmit,
     setIsOpen,
     earliestDateISOString,
     startTimeISOString,
     startPlusOneHourTimeISOString,
+    submitDelay,
   ]);
 
   return (

@@ -1,11 +1,22 @@
 import styled from '@emotion/styled';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import Head from 'next/head';
+
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
 import { HeaderMenuLink } from './HeaderMenuLink';
 import { WrappedUser } from '../../user/useUser';
 import { UserMenu } from './UserMenu';
+import { css } from '@emotion/react';
+import { useCollapsable } from '../../collapsable';
+import { ChevronDown } from 'react-feather';
+import { OrganizerBand, OrganizerBandLayout } from '../OrganizerBand';
+import { useT } from '../../../lib/i18n';
+import { NavigationContext } from '../NavigationContext';
+import { useRouter } from 'next/router';
+import { appLayouts, Layouts } from '../../layouts/AppLayout';
+import { useAppTitle } from '../../../config/structure';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -18,8 +29,14 @@ const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   ${mq(Breakpoint.mid)} {
     box-shadow: none;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   }
+
+  ${({ isSecondary }) =>
+    isSecondary &&
+    css`
+      background: transparent;
+    `}
 `;
 
 const StyledLink = styled.a`
@@ -29,17 +46,33 @@ const StyledLink = styled.a`
   text-decoration: none;
   color: inherit;
   padding: 0.75rem;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
 
   ${mq(Breakpoint.mid)} {
-    padding: 1.125rem 0.75rem;
+    padding: 1.125rem 0.375rem 1.125rem 0.75rem;
   }
   ${mq(Breakpoint.wide)} {
-    padding: 1.125rem 1.5rem;
+    padding: 1.125rem 0.75rem 1.125rem 1.5rem;
   }
 `;
 
 const StyledHeaderTitle = styled.div`
   display: flex;
+
+  > a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
+
+const StyledHeaderTitleText = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+  padding: 0.75rem;
 `;
 
 const StyledHeaderMenuItems = styled.div`
@@ -69,6 +102,8 @@ const StyledHeaderUserMenu = styled.div`
   top: 0.375rem;
   right: 0;
   z-index: 999;
+  flex-basis: 0;
+  flex-grow: 1;
 
   ${mq(Breakpoint.mid)} {
     top: 0.75rem;
@@ -82,6 +117,7 @@ interface HeaderProps {
   Link: React.FC<{ children: React.ReactElement<HTMLAnchorElement> }>;
   menuItems: MenuItem[];
   user: WrappedUser;
+  layout: Layouts;
   customLink?: React.ReactElement;
 }
 
@@ -93,6 +129,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const appTitle = useAppTitle();
 
   const renderedLink = (
     <Link>
@@ -126,40 +163,147 @@ export const HeaderMain: React.FC<HeaderProps> = ({
 
   return isMidOrWider ? (
     <StyledHeader>
+      <Head>
+        <title>{title !== appTitle ? `${title} – ${appTitle}` : appTitle}</title>
+      </Head>
       <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
+      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
       {user?.isLoggedIn && (
-        <>
-          <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
-          <StyledHeaderUserMenu>
-            <UserMenu user={user} />
-          </StyledHeaderUserMenu>
-        </>
+        <StyledHeaderUserMenu>
+          <UserMenu user={user} />
+        </StyledHeaderUserMenu>
       )}
     </StyledHeader>
   ) : (
-    user?.isLoggedIn && (
-      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
-    )
+    <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+  );
+};
+
+const StyledHeaderOrganizerMenu = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  white-space: nowrap;
+`;
+
+const StyledHeaderOrganizerMenuButton = styled.button<{ isCollapsed: boolean }>`
+  appearance: none;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+  background: transparent;
+  border: none;
+  padding: 0.75rem;
+  margin: 0;
+  display: flex;
+  flex-grow: 1;
+  color: var(--black);
+  max-width: calc(100% - 0.75rem - 2.25rem);
+  justify-content: flex-start;
+  text-align: left;
+
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  > svg {
+    flex-shrink: 0;
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding-right: 0.375rem;
+    transition: transform var(--transition-duration);
+    transform: ${({ isCollapsed }) => (isCollapsed ? 'rotateX(0deg)' : 'rotateX(-180deg)')};
+    transform-origin: 50% 50%;
+  }
+`;
+
+const StyledHeaderOrganizerMenuList = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+`;
+
+interface HeaderOrganizerMenuProps {
+  title: string;
+}
+
+const HeaderOrganizerMenu: React.FC<HeaderOrganizerMenuProps> = ({
+  title,
+}: HeaderOrganizerMenuProps) => {
+  const t = useT();
+  const router = useRouter();
+
+  const renderedOrganizerList = (
+    <StyledHeaderOrganizerMenuList>
+      <OrganizerBand layout={OrganizerBandLayout.wide} />
+    </StyledHeaderOrganizerMenuList>
+  );
+
+  const { headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed } =
+    useContext(NavigationContext);
+
+  const { renderedCollapsable } = useCollapsable(
+    renderedOrganizerList,
+    headerOrganizerBandCollapsed,
+    setHeaderOrganizerBandCollapsed
+  );
+
+  useEffect(() => {
+    if (router.asPath) {
+      setHeaderOrganizerBandCollapsed(true);
+    }
+  }, [router?.asPath, setHeaderOrganizerBandCollapsed]);
+
+  return (
+    <StyledHeaderOrganizerMenu>
+      <StyledHeaderOrganizerMenuButton
+        onClick={() => setHeaderOrganizerBandCollapsed(!headerOrganizerBandCollapsed)}
+        isCollapsed={headerOrganizerBandCollapsed}
+        aria-label={
+          t(
+            headerOrganizerBandCollapsed
+              ? 'menu.organizerBandShowAriaLabel'
+              : 'menu.organizerBandCollapseAriaLabel'
+          ) as string
+        }
+      >
+        <ChevronDown />
+        <span>{title}</span>
+      </StyledHeaderOrganizerMenuButton>
+      <div>{renderedCollapsable}</div>
+    </StyledHeaderOrganizerMenu>
   );
 };
 
 export const HeaderSecondary: React.FC<HeaderProps> = ({
   title,
-  Link,
   customLink,
   user,
+  layout,
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
+  const activeLayout = appLayouts[layout];
+  const appTitle = useAppTitle();
 
-  const renderedLink = customLink || (
-    <Link>
-      <StyledLink>{title}</StyledLink>
-    </Link>
+  const renderedLink = activeLayout?.hasOrganizerBand ? (
+    customLink ? (
+      <StyledHeaderTitle>{customLink}</StyledHeaderTitle>
+    ) : (
+      <HeaderOrganizerMenu title={title} />
+    )
+  ) : (
+    <StyledHeaderTitle>
+      <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
+    </StyledHeaderTitle>
   );
 
   return (
     <StyledHeader isSecondary>
-      <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
+      {rendered && renderedLink}
       {user?.isLoggedIn && (
         <StyledHeaderUserMenu>
           <UserMenu user={user} />

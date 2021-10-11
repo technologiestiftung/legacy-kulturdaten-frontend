@@ -27,10 +27,10 @@ export interface OrganizerDelete extends ApiCall {
 
 export const organizerDeleteFactory = (
   token: OrganizerDelete['request']['headers']['Authorization'],
-  query: { id: string }
+  query: { organizer: string }
 ): OrganizerDelete => ({
   request: {
-    route: apiRoutes.organizerDelete({ id: query.id }),
+    route: apiRoutes.organizerDelete({ organizer: query.organizer }),
     method: 'DELETE',
     headers: {
       'Authorization': makeBearer(token),

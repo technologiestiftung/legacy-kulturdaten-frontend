@@ -2,34 +2,19 @@ import { Language } from '../../../config/locale';
 import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { Media } from './media';
+import { Tag } from './tag';
+import {
+  EntrySubject,
+  EntrySubjectTranslation,
+  EntryType,
+  EntryTypeTranslation,
+} from './typeSubject';
 import { WebLink } from './webLink';
 
-export type OrganizerTypeTranslation = {
-  attributes: {
-    language: Language;
-    name: string;
-  };
-} & Translation;
-
-export type OrganizerSubjectTranslation = OrganizerTypeTranslation;
-
-export type OrganizerSubject = {
-  type: 'organizersubject';
-  id: number;
-  relations?: {
-    translations: OrganizerSubjectTranslation[];
-  };
-};
-
-export type OrganizerType = {
-  type: 'organizertype';
-  id: number;
-  attributes: DefaultAttributes;
-  relations?: {
-    translations: OrganizerTypeTranslation[];
-    subjects?: OrganizerSubject[];
-  };
-};
+export type OrganizerType = EntryType;
+export type OrganizerSubject = EntrySubject;
+export type OrganizerTypeTranslation = EntryTypeTranslation;
+export type OrganizerSubjectTranslation = EntrySubjectTranslation;
 
 export type OrganizerTranslation = {
   type: 'organizertranslation';
@@ -56,6 +41,8 @@ export type Organizer = {
       translations?: OrganizerTranslation[];
       types?: OrganizerType[];
       media?: Media['data'][];
+      logo?: Media['data'];
+      tags?: Tag[];
     };
   };
   meta?: {

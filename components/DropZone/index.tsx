@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { DragEventHandler, useEffect, useMemo, useRef, useState } from 'react';
+import { DragEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n';
+import { Info } from '../info';
 
 const StyledDropZone = styled.div``;
 
@@ -172,6 +173,7 @@ interface DropZoneProps {
   disabled?: boolean;
   disabledMessage?: string;
   max?: number;
+  maxFileSizeInKb?: number;
 }
 
 export const DropZone: React.FC<DropZoneProps> = ({
@@ -186,23 +188,65 @@ export const DropZone: React.FC<DropZoneProps> = ({
   disabled = false,
   disabledMessage,
   max,
+  maxFileSizeInKb,
 }: DropZoneProps) => {
   const pending = useMemo(() => isUploading && progress === 1, [isUploading, progress]);
   const t = useT();
   const [isDropOver, setIsDropOver] = useState(false);
   const [isValidFiles, setIsValidFiles] = useState(true);
+  const [fileSizeValid, setFileSizeValid] = useState(true);
+  const [dropFileSize, setDropFileSize] = useState(0);
   const hasFileRestrictions = useMemo(
     () => typeof acceptedFileTypes === 'object',
     [acceptedFileTypes]
   );
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const maxFileSizeString = useMemo(
+    () =>
+      maxFileSizeInKb
+        ? `${Math.floor((maxFileSizeInKb / 1024) * 100) / 100} ${t('media.mb')}`
+        : undefined,
+    [t, maxFileSizeInKb]
+  );
+
+  const dropFileSizeString = useMemo(
+    () =>
+      dropFileSize
+        ? `${Math.floor((dropFileSize / 1024) * 100) / 100} ${t('media.mb')}`
+        : undefined,
+    [t, dropFileSize]
+  );
+
+  const wrappedOnDrop = useCallback(
+    (files: FileList | File[]) => {
+      const fileSize =
+        maxFileSizeInKb && files
+          ? [...files].reduce<number>((combinedFileSize, fileItem) => {
+              console.log(fileItem);
+              return combinedFileSize + fileItem?.size;
+            }, 0)
+          : undefined;
+
+      setDropFileSize(fileSize ? fileSize / 1024 : undefined);
+
+      const fileSizeValid = fileSize ? fileSize <= maxFileSizeInKb * 1024 : true;
+
+      setFileSizeValid(fileSizeValid);
+
+      if (fileSizeValid && onDrop) {
+        onDrop(files);
+      }
+    },
+    [maxFileSizeInKb, onDrop]
+  );
+
   useEffect(() => {
     const current = inputRef.current;
 
     const inputChangeHandler = () => {
-      onDrop(undefined);
-      onDrop(current?.files);
+      wrappedOnDrop(undefined);
+      wrappedOnDrop(current?.files);
     };
 
     current?.addEventListener('change', inputChangeHandler);
@@ -210,7 +254,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
     return () => {
       current?.removeEventListener('change', inputChangeHandler);
     };
-  }, [onDrop]);
+  }, [wrappedOnDrop]);
 
   return (
     <StyledDropZone>
@@ -227,6 +271,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
           e.preventDefault();
 
           if (!disabled && !isUploading) {
+            setFileSizeValid(true);
             setIsDropOver(true);
 
             const fileItems = e.dataTransfer.items;
@@ -274,7 +319,7 @@ export const DropZone: React.FC<DropZoneProps> = ({
               const filesForUpload = max
                 ? [...e.dataTransfer.files].slice(0, max)
                 : e.dataTransfer.files;
-              onDrop(filesForUpload);
+              wrappedOnDrop(filesForUpload);
             }
           }
         }}
@@ -285,6 +330,12 @@ export const DropZone: React.FC<DropZoneProps> = ({
         {!disabled && acceptedFileTypes && (
           <StyledDropZoneLabelSubText isUploading={isUploading}>
             {t('dropZone.allowedFileTypes')}: {acceptedFileTypes.map(({ name }) => name).join(', ')}
+          </StyledDropZoneLabelSubText>
+        )}
+        {!disabled && maxFileSizeInKb && (
+          <StyledDropZoneLabelSubText isUploading={isUploading}>
+            {t('dropZone.maxFileSize')}: {Math.floor((maxFileSizeInKb / 1024) * 100) / 100}{' '}
+            {t('media.mb')}
           </StyledDropZoneLabelSubText>
         )}
         <StyledDropZoneInput
@@ -314,6 +365,16 @@ export const DropZone: React.FC<DropZoneProps> = ({
           )}
         </StyledDropZoneMessage>
       </StyledDropZoneLabel>
+      {!fileSizeValid && (
+        <StlyedDropZoneSuccess>
+          <Info>
+            {t('dropZone.maxFileSizeExceeded', {
+              fileSize: dropFileSizeString,
+              maxFileSize: maxFileSizeString,
+            })}
+          </Info>
+        </StlyedDropZoneSuccess>
+      )}
       {success && (
         <StlyedDropZoneSuccess>
           {t('dropZone.success', { count: success.count })}

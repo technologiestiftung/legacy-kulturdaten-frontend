@@ -26,6 +26,7 @@
   "dependencies": {
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
+    "@mui/material": "^5.0.2",
     "date-fns": "2.23.0",
     "dompurify": "2.3.1",
     "markdown-to-jsx": "7.1.3",
@@ -35,6 +36,7 @@
     "react-dom": "17.0.2",
     "react-feather": "2.0.9",
     "rrule": "2.6.8",
+    "sharp": "^0.29.1",
     "slate": "0.65.3",
     "slate-history": "0.65.3",
     "slate-hyperscript": "0.62.0",

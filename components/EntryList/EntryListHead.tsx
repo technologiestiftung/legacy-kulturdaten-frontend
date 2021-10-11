@@ -8,7 +8,7 @@ import { mq } from '../globals/Constants';
 const StyledEntryListHead = styled.div`
   position: relative;
   z-index: 1;
-  background: var(--grey-200);
+  background: var(--white);
 `;
 
 const StyledEntryListHeadTop = styled.div``;
@@ -34,10 +34,6 @@ const StyledEntryListHeadTitleRowRight = styled.div`
 
 const StyledEntryListHeadTitle = styled.div`
   margin: 0 0.75rem;
-
-  span {
-    border-bottom: 0.125rem solid currentColor;
-  }
 
   ${mq(Breakpoint.wide)} {
     margin: 0 1.5rem;

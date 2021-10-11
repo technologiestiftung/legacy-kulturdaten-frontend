@@ -13,6 +13,8 @@ import { LocationList } from '../components/EntryList/LocationList';
 import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 import { OfferList } from '../components/EntryList/OfferList';
 import { useRouter } from 'next/router';
+import { useOrganizerId } from '../lib/useOrganizer';
+import { MenuLinkType } from '../components/navigation/header/HeaderMenuLink';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -25,45 +27,93 @@ export const useMenuStructure = (): NavigationStructure => {
   const locale = useLocale();
   const { logout } = useUser();
   const router = useRouter();
+  const organizerId = useOrganizerId();
 
   return {
     header: {
-      menuItems: [
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.start.items.dashboard') as string,
-            href: routes.dashboard({ locale }),
+      loggedOut: {
+        menuItems: [
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.login') as string,
+              href: routes.login({ locale }),
+            },
           },
-        },
-        {
-          type: MenuItemType.divider,
-        },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.offer.title') as string,
-            href: routes.offer({ locale }),
-            active: router.asPath.includes(routes.offer({ locale })),
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.registration') as string,
+              href: routes.register({ locale }),
+            },
           },
-        },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.organizer.title') as string,
-            href: routes.organizer({ locale }),
-            active: router.asPath.includes(routes.organizer({ locale })),
+          {
+            type: MenuItemType.divider,
           },
-        },
-        {
-          type: MenuItemType.link,
-          action: {
-            title: t('menu.location.title') as string,
-            href: routes.location({ locale }),
-            active: router.asPath.includes(routes.location({ locale })),
+          {
+            type: MenuItemType.link,
+            action: {
+              type: MenuLinkType.external,
+              title: t('menu.start.items.info') as string,
+              href: 'https://kulturdaten.berlin',
+            },
           },
-        },
-      ],
+        ],
+      },
+      loggedIn: {
+        menuItems: [
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.dashboard') as string,
+              href: routes.dashboard({ locale, query: { organizer: organizerId } }),
+            },
+          },
+          {
+            type: MenuItemType.divider,
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.offer.title') as string,
+              href: routes.offer({ query: { organizer: organizerId }, locale }),
+              active: router.asPath.includes(
+                routes.offer({ query: { organizer: organizerId }, locale })
+              ),
+            },
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.location.title') as string,
+              href: routes.location({ query: { organizer: organizerId }, locale }),
+              active: router.asPath.includes(
+                routes.location({ query: { organizer: organizerId }, locale })
+              ),
+            },
+          },
+          {
+            type: MenuItemType.divider,
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.team') as string,
+              href: routes.team({ locale, query: { organizer: organizerId } }),
+            },
+          },
+          {
+            type: MenuItemType.link,
+            action: {
+              title: t('menu.start.items.profile') as string,
+              href: routes.organizer({ locale, query: { organizer: organizerId, sub: 'info' } }),
+              active: router.asPath.includes(
+                routes.organizer({ query: { organizer: organizerId }, locale })
+              ),
+            },
+          },
+        ],
+      },
     },
     menus: [
       {
@@ -79,7 +129,7 @@ export const useMenuStructure = (): NavigationStructure => {
                 type: MenuItemType.link,
                 action: {
                   title: t('menu.start.items.dashboard') as string,
-                  href: routes.dashboard({ locale }),
+                  href: routes.dashboard({ locale, query: { organizer: organizerId } }),
                 },
               },
               {
@@ -99,7 +149,7 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createOffer({ locale })}>
+              <Link href={routes.createOffer({ query: { organizer: organizerId }, locale })}>
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.offer.items.create')}
                 </ButtonLink>
@@ -123,7 +173,7 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createOrganizer({ locale })}>
+              <Link href={routes.createOrganizer({ query: { organizer: organizerId }, locale })}>
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.organizer.items.create')}
                 </ButtonLink>
@@ -147,7 +197,7 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createLocation({ locale })}>
+              <Link href={routes.createLocation({ query: { organizer: organizerId }, locale })}>
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.location.items.create')}
                 </ButtonLink>

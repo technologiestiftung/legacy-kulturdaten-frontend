@@ -35,7 +35,7 @@ import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
   min-height: 100%;
-  background: var(--grey-200);
+  background: var(--white);
 `;
 
 const viewEntriesPerPageMap = {
@@ -160,7 +160,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.organizer]({
                   locale,
-                  query: { id, sub },
+                  query: { organizer: id, sub },
                 });
 
               const translations = relations?.translations;
@@ -242,7 +242,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               const href = (sub?: string) =>
                 routes[Routes.organizer]({
                   locale,
-                  query: { id, sub },
+                  query: { organizer: id, sub },
                 });
 
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (

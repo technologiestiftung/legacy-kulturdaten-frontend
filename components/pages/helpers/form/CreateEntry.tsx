@@ -9,6 +9,8 @@ import { useT } from '../../../../lib/i18n';
 import { useLocale } from '../../../../lib/routing';
 import { Breakpoint } from '../../../../lib/WindowService';
 import { contentGrid, mq } from '../../../globals/Constants';
+import { useOrganizerId } from '../../../../lib/useOrganizer';
+import { Language } from '../../../../config/locale';
 
 const CreateWrapper = styled.div`
   padding: 0 0.75rem;
@@ -68,6 +70,7 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
   const t = useT();
   const call = useApiCall();
   const mutateList = useMutateList(category);
+  const organizerId = useOrganizerId();
 
   const [formState, setFormState] = useState<{
     name: string;
@@ -81,17 +84,24 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
           e.stopPropagation();
 
           try {
-            const resp = await call<ApiCall>(category.api.create.factory, {
-              entry: {
-                attributes: { name: formState.name },
-              },
-            });
+            const resp = await call<{ response: { body: { data: { id: string } } } } & ApiCall>(
+              category.api.create.factory,
+              {
+                entry: {
+                  relations: {
+                    translations: [{ language: Language.de, name: formState.name }],
+                  },
+                },
+              }
+            );
 
             if (resp.status === 200) {
               const id = resp.body.data.id;
 
               mutateList();
-              router.push(category.routes.list({ locale, query: { id, sub: 'info' } }));
+              router.push(
+                category.routes.list({ locale, query: { id, sub: 'info', organizer: organizerId } })
+              );
             }
           } catch (e) {
             console.error(e);

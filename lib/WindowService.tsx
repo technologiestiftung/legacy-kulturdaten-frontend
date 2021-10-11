@@ -78,7 +78,7 @@ export enum Breakpoint {
 
 export const breakpoints: { [key in Breakpoint]: number } = {
   default: 0,
-  mid: 768,
+  mid: 840,
   widish: 1024,
   wide: 1200,
   ultra: 1600,

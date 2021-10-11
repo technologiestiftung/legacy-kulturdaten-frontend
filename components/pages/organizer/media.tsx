@@ -1,40 +1,35 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { useApiCall, useMediaUpload } from '../../../lib/api';
-import {
-  MediaTranslationCreate,
-  mediaTranslationCreateFactory,
-} from '../../../lib/api/routes/media/translation/create';
-import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
-import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { organizerUpdateFactory } from '../../../lib/api/routes/organizer/update';
-import { Media } from '../../../lib/api/types/media';
-import { Organizer } from '../../../lib/api/types/organizer';
-import { CategoryEntryPage, useEntry } from '../../../lib/categories';
-import { useT } from '../../../lib/i18n';
+import { ApiCall, useApiCall, useMediaUpload } from '../../../lib/api';
+import { CategoryEntry } from '../../../lib/api/types/general';
+import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { WindowContext } from '../../../lib/WindowService';
-import { DropZone } from '../../DropZone';
-import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
-import { MediaList } from '../../MediaList';
-import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-import { EntryFormHook } from './info';
+import { useMediaForm } from '../helpers/media';
+import { useT } from '../../../lib/i18n';
+import { ParsedUrlQuery } from 'querystring';
+import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { DropZone } from '../../DropZone';
+import { Media } from '../../../lib/api/types/media';
+import { EntryFormHook } from '../helpers/form';
+import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
+import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
+import { Organizer } from '../../../lib/api/types/organizer';
+import { EntryFormHead } from '../../EntryForm/EntryFormHead';
+import { MediaList } from '../../MediaList';
 
-const imagesMax = 5;
+const maxFileSize = 10240;
 
-const useMediaUploadForm: EntryFormHook = (
-  { category, query },
-  loaded,
-  showHint,
-  ...parameters: [boolean, number]
+const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
+  { category, query }: { category: Category; query: ParsedUrlQuery },
+  disabled: boolean,
+  maxFiles = 1
 ) => {
-  const [disabled, maxFiles] = parameters;
   const t = useT();
-  const [pristine, setPristine] = useState(true);
   const [files, setFiles] = useState<FileList | File[]>();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const { entry, mutate } = useEntry<T, C>(category, query);
   const [isUploading, setIsUploading] = useState(false);
   const { progress, upload } = useMediaUpload();
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number }>();
@@ -45,10 +40,17 @@ const useMediaUploadForm: EntryFormHook = (
         setIsUploading(true);
 
         try {
-          const resp = await upload<OrganizerShow>(files, organizerUpdateFactory, query);
+          const resp = await upload<C>(
+            files,
+            category.api.update.factory,
+            {
+              id: entry.data.id,
+            },
+            'logo'
+          );
 
           if (resp.status === 200) {
-            mutate(resp.body.data);
+            mutate(resp.body.data as T);
             setUploadSuccess({ count: files.length });
             setFiles(undefined);
             // mutateList();
@@ -62,7 +64,7 @@ const useMediaUploadForm: EntryFormHook = (
     };
 
     x();
-  }, [files, isUploading, mutate, query, upload]);
+  }, [category?.api?.update?.factory, entry?.data?.id, files, isUploading, mutate, query, upload]);
 
   return {
     renderedForm: (
@@ -72,75 +74,159 @@ const useMediaUploadForm: EntryFormHook = (
             setFiles(newFiles);
           }}
           acceptedFileTypes={[
+            { mimeType: 'image/svg+xml', name: 'SVG' },
             { mimeType: 'image/jpeg', name: 'JPG/JPEG' },
             { mimeType: 'image/png', name: 'PNG' },
             { mimeType: 'image/webp', name: 'WEBP' },
+            { mimeType: 'image/gif', name: 'GIF' },
           ]}
-          label="Neue Bilder hochladen"
+          label={t('logo.dropZoneLabel') as string}
           isUploading={isUploading}
           progress={progress}
           success={uploadSuccess}
           disabled={disabled}
-          disabledMessage={t('media.maxReached', { count: imagesMax }) as string}
           max={maxFiles}
+          maxFileSizeInKb={maxFileSize}
         />
       </FormItem>
     ),
     hint: false,
     valid: true,
-    pristine,
+    pristine: true,
     reset: () => undefined,
     submit: undefined,
   };
 };
 
-export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
-  category,
-  query,
-}: CategoryEntryPage) => {
-  const [showHint, setShowHint] = useState(false);
-  const renderedEntryHeader = useEntryHeader({ category, query });
-  const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
-  const formattedDate = useSaveDate(entry);
-  const { rendered } = useContext(WindowContext);
-  const [loaded, setLoaded] = useState(false);
+export const useLogoForm: EntryFormHook = ({ category, query }) => {
+  const [valid, setValid] = useState(false);
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const t = useT();
 
-  const initialMedia = useMemo<Media['data'][]>(
-    () => (entry?.data?.relations?.media ? [...entry.data.relations.media].reverse() : undefined),
-    [entry?.data?.relations?.media]
+  const initialLogo = useMemo<Media['data']>(
+    () => entry?.data?.relations?.logo,
+    [entry?.data?.relations?.logo]
   );
 
-  const [media, setMedia] = useState<Media['data'][]>();
-  const [mediaFromApi, setMediaFromApi] = useState<Media['data'][]>();
-  const [mediaNotPristineList, setMediaNotPristineList] = useState<number[]>([]);
-
-  const uploadDisabled = useMemo(() => media?.length >= imagesMax, [media]);
+  const [logo, setLogo] = useState<Media['data']>();
+  const [logoFromApi, setLogoFromApi] = useState<Media['data']>();
+  const [pristine, setPristine] = useState(true);
 
   useEffect(() => {
-    if (initialMedia) {
-      if (!media) {
-        setMedia(initialMedia);
+    if (initialLogo) {
+      if (logo === undefined) {
+        setLogo(initialLogo);
       }
 
-      if (!mediaFromApi || initialMedia !== mediaFromApi) {
-        setMediaFromApi(initialMedia);
+      if (!logoFromApi || initialLogo !== logoFromApi) {
+        setLogoFromApi(initialLogo);
       }
     }
-  }, [initialMedia, media, mediaFromApi]);
+  }, [initialLogo, logo, logoFromApi]);
 
-  useEffect(() => {
-    if (media && mediaFromApi && media.length !== mediaFromApi.length) {
-      const mediaFromApiIds = mediaFromApi.map((mediaItem) => mediaItem.id);
-      const mediaIds = media.map((mediaItem) => mediaItem.id);
+  const { renderedForm: renderedLogoUploadForm } = useLogoUploadForm({ category, query }, false);
 
-      setMedia([
-        ...mediaFromApi.filter((mediaItem) => !mediaIds.includes(mediaItem.id)),
-        ...media.filter((mediaItem) => mediaFromApiIds.includes(mediaItem.id)),
-      ]);
+  const submitLogo = useCallback(async () => {
+    try {
+      const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+        id: entry.data.id,
+        entry: {
+          relations: {
+            logo,
+          },
+        },
+      });
+
+      if (resp.status === 200) {
+        setLogo(resp.body.data.data.relations.logo);
+        setLogoFromApi(resp.body.data.data.relations.logo);
+        mutate(resp.body.data);
+        setPristine(true);
+      }
+    } catch (e) {
+      console.error(e);
     }
-  }, [media, mediaFromApi]);
+  }, [call, category?.api?.update?.factory, entry?.data?.id, logo, mutate]);
+
+  return {
+    renderedForm: (
+      <div>
+        <EntryFormHead title={`${t('logo.title')}`} />
+        <FormGrid>
+          {!logo && !logoFromApi && renderedLogoUploadForm}
+          <FormItem width={FormItemWidth.full}>
+            <MediaList
+              media={logo ? [logo] : logoFromApi ? [logoFromApi] : undefined}
+              onChange={(newLogo) => {
+                setLogo(newLogo[0]);
+                setPristine(false);
+              }}
+              setValid={(valid) => setValid(valid)}
+              onDelete={async () => {
+                if (window.confirm(t('logo.deleteConfirm') as string)) {
+                  setLogo(null);
+
+                  try {
+                    const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+                      id: entry.data.id,
+                      entry: {
+                        relations: {
+                          logo: undefined,
+                        },
+                      },
+                    });
+
+                    if (resp.status === 200) {
+                      setLogo(resp.body.data.data.relations.logo);
+                      setLogoFromApi(resp.body.data.data.relations.logo);
+                      mutate(resp.body.data);
+                      setPristine(true);
+                    }
+                  } catch (e) {
+                    console.error(e);
+                  }
+                }
+              }}
+            />
+          </FormItem>
+        </FormGrid>
+      </div>
+    ),
+    hint: false,
+    pristine,
+    submit: async () => {
+      submitLogo();
+    },
+    reset: () => undefined,
+    valid,
+  };
+};
+
+export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
+  T extends CategoryEntry,
+  C extends ApiCall
+>({
+  category,
+  query,
+}: CategoryEntryPage) => {
+  const t = useT();
+  const renderedEntryHeader = useEntryHeader(
+    { category, query },
+    t('menu.start.items.profile') as string,
+    true
+  );
+  const { entry } = useEntry<T, C>(category, query);
+  const formattedDate = useSaveDate(entry);
+  const { rendered } = useContext(WindowContext);
+  const [loaded, setLoaded] = useState(false);
+
+  const { renderedForm, submit, pristine } = useMediaForm({ category, query }, loaded, false);
+  const {
+    renderedForm: renderedLogoForm,
+    submit: submitLogo,
+    pristine: pristineLogo,
+  } = useLogoForm({ category, query }, loaded, false);
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -152,90 +238,27 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = ({
     };
   }, [rendered, entry]);
 
-  const pristine = useMemo(() => mediaNotPristineList.length === 0, [mediaNotPristineList]);
-
-  const { renderedForm: renderedMediaUploadForm } = useMediaUploadForm(
-    { category, query },
-    loaded,
-    false,
-    uploadDisabled,
-    media?.length >= imagesMax ? 0 : imagesMax - media?.length
-  );
-
-  const submitMediaList = useCallback(async () => {
-    for (let i = 0; i < media.length; i += 1) {
-      const mediaItem = media[i];
-
-      const id = mediaItem.id;
-
-      if (mediaNotPristineList.includes(id)) {
-        const resp = await call<MediaUpdate>(mediaUpdateFactory, {
-          id,
-          media: mediaItem,
-        });
-
-        if (resp.status !== 200) {
-          console.error(resp);
-        }
-
-        const translations = mediaItem.relations?.translations;
-
-        if (translations && translations.length > 0) {
-          for (let j = 0; j < translations.length; j += 1) {
-            const translation = translations[j];
-            const translationResp = await call<MediaTranslationCreate>(
-              mediaTranslationCreateFactory,
-              {
-                id,
-                translation,
-              }
-            );
-
-            if (translationResp.status !== 200) {
-              console.error(resp);
-            }
-          }
-        }
-      }
-    }
-    setMediaNotPristineList([]);
-  }, [call, media, mediaNotPristineList]);
-
   return (
     <>
       {renderedEntryHeader}
       <div>
         <Save
           onClick={async () => {
-            console.log('ejo');
-            submitMediaList();
-            // submit();
+            if (!pristine) {
+              submit();
+            }
+            if (!pristineLogo) {
+              submitLogo();
+            }
           }}
           active={!pristine}
           date={formattedDate}
           valid={true}
-          hint={showHint}
+          hint={false}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>
-            <EntryFormHead title={`${t('media.title')} (${t('general.max')} ${imagesMax})`} />
-            <FormGrid>
-              {renderedMediaUploadForm}
-              <FormItem width={FormItemWidth.full}>
-                <MediaList
-                  media={media}
-                  onChange={(newMedia, changedMediaItemId) => {
-                    setMedia(newMedia);
-                    setMediaNotPristineList([
-                      ...mediaNotPristineList.filter((id) => id !== changedMediaItemId),
-                      changedMediaItemId,
-                    ]);
-                  }}
-                  setValid={(valid) => setShowHint(!valid)}
-                />
-              </FormItem>
-            </FormGrid>
-          </EntryFormContainer>
+          <EntryFormContainer>{renderedLogoForm}</EntryFormContainer>
+          <EntryFormContainer>{renderedForm}</EntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

@@ -3,6 +3,7 @@ module.exports = {
     defaultLocale: 'catchAll',
     api: 'https://beta.api.kulturdaten.berlin',
     authTokenCookieName: 'AUTH_TOKEN',
+    activeOrganizerCookieName: 'ACTIVE_ORGANIZER_ID',
   },
   trailingSlash: true,
   i18n: {
@@ -25,6 +26,26 @@ module.exports = {
         destination: '/de-DE/:slug*/',
         locale: false,
         permanent: false,
+      },
+      {
+        source: '/',
+        destination: '/app/auth/login/',
+        permanent: false,
+      },
+      {
+        source: '/app/:organizer/',
+        destination: '/app/:organizer/dashboard/',
+        permanent: true,
+      },
+      {
+        source: '/app/:organizer/profile/',
+        destination: '/app/:organizer/profile/info/',
+        permanent: true,
+      },
+      {
+        source: '/app/',
+        destination: '/app/default/dashboard/',
+        permanent: true,
       },
     ];
   },

@@ -6,6 +6,7 @@ import { OfferList as OfferListCall } from '../../../lib/api';
 import { Offer } from '../../../lib/api/types/offer';
 import { CategoryPage, useList } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
+import { useOrganizerId } from '../../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
 import { OfferList } from '../../EntryList/OfferList';
@@ -18,14 +19,8 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const [listEvaluated, setListEvaluated] = useState(false);
 
-  const {
-    getCurrentPage,
-    getEntriesPerPage,
-    getSortKey,
-    getOrder,
-    getFilters,
-    getLastEntryId,
-  } = useContext(EntryListContext);
+  const { getCurrentPage, getEntriesPerPage, getSortKey, getOrder, getFilters, getLastEntryId } =
+    useContext(EntryListContext);
 
   const listName = Categories.offer;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
@@ -34,6 +29,7 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const lastEntryId = useMemo(() => getLastEntryId(listName), [getLastEntryId, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
+  const organizerId = useOrganizerId();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -47,12 +43,15 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
     if (list) {
       if (isMidOrWider && list?.data?.length > 0) {
         router.replace(
-          routes.offer({ locale, query: { id: lastEntryId || list.data[0].id, sub: 'info' } })
+          routes.offer({
+            locale,
+            query: { organizer: organizerId, id: lastEntryId || list.data[0].id, sub: 'info' },
+          })
         );
       }
       setListEvaluated(true);
     }
-  }, [list, list.data, locale, router, isMidOrWider, lastEntryId]);
+  }, [list, list.data, locale, router, isMidOrWider, lastEntryId, organizerId]);
 
   return listEvaluated ? (
     <AppWrapper>{!isMidOrWider ? <OfferList expanded={false} /> : ''}</AppWrapper>

@@ -18,7 +18,7 @@ export const useConfirmExit = (
     let warned = false;
 
     const beforeUnload = (e: BeforeUnloadEvent) => {
-      if (isAuthenticated && !warned && shouldWarn) {
+      if (rendered && isAuthenticated && !warned && shouldWarn) {
         const event = e || window.event;
         event.returnValue = message;
         return message;
@@ -57,7 +57,13 @@ export const useConfirmExit = (
     router.events.on('routeChangeStart', routeChangeHandler);
 
     router.beforePopState(({ url }) => {
-      if (isAuthenticated && `/${locale}${router.asPath}` !== url && shouldWarn && !warned) {
+      if (
+        rendered &&
+        isAuthenticated &&
+        `/${locale}${router.asPath}` !== url &&
+        shouldWarn &&
+        !warned
+      ) {
         warned = true;
         if (window.confirm(message)) {
           if (typeof onAbort === 'function') {

@@ -36,10 +36,12 @@ export const inputStyles = ({
   pristine,
   valid,
   hint,
+  hideError = false,
 }: {
   pristine?: boolean;
   valid?: boolean;
   hint?: boolean;
+  hideError?: boolean;
 }): SerializedStyles => css`
   appearance: none;
   border: none;
@@ -68,14 +70,18 @@ export const inputStyles = ({
 
   ${hint ? hintStyle : ''}
 
-  &:invalid {
-    ${errorStyle}
-  }
+  ${!hideError &&
+  !pristine &&
+  css`
+    &:invalid {
+      ${errorStyle}
+    }
+  `}
 
   ${valid === false && !pristine && errorStyle}
 `;
 
-const StyledInput = styled.input<{ pristine: boolean; valid?: boolean }>`
+const StyledInput = styled.input<{ pristine: boolean; valid?: boolean; hideError?: boolean }>`
   ${(props) => inputStyles(props)}
 `;
 
@@ -100,6 +106,7 @@ interface InputProps {
   error?: string;
   id?: string;
   hint?: boolean;
+  onBlur?: ChangeEventHandler<HTMLInputElement>;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   label?: string;
   min?: number | string;
@@ -113,6 +120,7 @@ interface InputProps {
   step?: number | string;
   valid?: boolean;
   value?: string | number;
+  hideError?: boolean;
 }
 
 // eslint-disable-next-line react/display-name
@@ -186,10 +194,12 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <StyledInput
               {...props}
               onChange={(e) => {
-                if (typeof props?.onChange === 'function') {
-                  props?.onChange(e);
+                if (props?.type !== InputType.date || e.target.value) {
+                  if (typeof props?.onChange === 'function') {
+                    props?.onChange(e);
+                  }
+                  setNormalized(false);
                 }
-                setNormalized(false);
               }}
               ref={ref}
               pristine={pristine}
@@ -212,8 +222,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
                   !normalized
                 ) {
-                  console.log(ref);
-                  e.preventDefault();
                   normalizeStrings();
 
                   return true;

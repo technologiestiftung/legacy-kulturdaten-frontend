@@ -7,7 +7,7 @@ import { contentGrid, insetBorder, mq } from '../globals/Constants';
 import { TabsProps } from '../navigation/tabs';
 
 const StyledEntryHeader = styled.div`
-  background: var(--grey-200);
+  background: var(--white);
   box-shadow: ${insetBorder(false, false, true)};
   grid-row-gap: 1.5rem;
   position: relative;
@@ -17,38 +17,40 @@ const StyledEntryHeader = styled.div`
 
   ${mq(Breakpoint.mid)} {
     grid-row-gap: 2.25rem;
-    background: var(--white);
 
     ${contentGrid(8)}
   }
 
   ${mq(Breakpoint.widish)} {
     padding: 0;
+    justify-items: center;
   }
 `;
 
-const StyledEntryHeaderHead = styled.div`
+const StyledEntryHeaderHead = styled.div<{ minimalVariant?: boolean }>`
   display: flex;
   flex-direction: column;
+  width: 100%;
   margin-top: 2.25rem;
-
+  margin-bottom: ${({ minimalVariant }) => (minimalVariant ? '2.25rem' : '0')};
   padding: 0 0.75rem;
 
   ${mq(Breakpoint.mid)} {
     align-items: flex-start;
     margin-top: 3rem;
+    margin-bottom: ${({ minimalVariant }) => (minimalVariant ? '3rem' : '0.75rem')};
     padding: 0 1.5rem;
     flex-direction: row;
     justify-content: space-between;
     grid-column: 1 / -1;
-    margin-bottom: 0.75rem;
   }
 
   ${mq(Breakpoint.widish)} {
     margin-top: 4.5rem;
-    margin-bottom: 2.25rem;
+    margin-bottom: ${({ minimalVariant }) => (minimalVariant ? '4.5rem' : '2.25rem')};
     padding: 0;
     grid-column: 2 / -2;
+    max-width: var(--max-content-width);
   }
 `;
 
@@ -86,26 +88,38 @@ const StyledEntryHeaderAction = styled.div`
   }
 `;
 
-const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
-  font-size: var(--font-size-700);
-  line-height: var(--line-height-700);
-  font-weight: 700;
+const StyledEntryHeaderTitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
   padding-right: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
-    font-size: var(--font-size-600);
-    line-height: var(--line-height-600);
   }
 
   ${mq(Breakpoint.widish)} {
     padding-right: 1.5rem;
     grid-column: 2 / -2;
+    max-width: var(--max-content-width);
   }
+`;
 
-  span {
-    border-bottom: 0.125rem solid currentColor;
+const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
+  font-size: var(--font-size-700);
+  line-height: var(--line-height-700);
+  font-weight: 700;
+
+  ${mq(Breakpoint.mid)} {
+    font-size: var(--font-size-600);
+    line-height: var(--line-height-600);
   }
+`;
+
+const StyledEntryHeaderSubTitle = styled.h2<{ skeleton: boolean }>`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+  font-weight: 400;
 
   ${({ skeleton }) =>
     skeleton
@@ -128,6 +142,7 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
 
 const StyledEntryHeaderPublishSlot = styled.div`
   padding: 0 0.75rem;
+  width: 100%;
 
   ${mq(Breakpoint.mid)} {
     padding: 0 1.5rem;
@@ -138,35 +153,54 @@ const StyledEntryHeaderPublishSlot = styled.div`
   ${mq(Breakpoint.widish)} {
     grid-column: 2 / -2;
     padding: 0;
+    max-width: var(--max-content-width);
   }
 `;
 
 const StyledEntryHeaderTabsSlot = styled.div`
+  width: 100%;
+
   ${mq(Breakpoint.mid)} {
     grid-column: 1 / -1;
   }
 
   ${contentGrid(8)}
+
+  justify-items: center;
 `;
 
-const StyledEntryHeaderTabsSlotContainer = styled.div`
+const tabsSlotWideLayout = css`
+  grid-column: 2 / -2;
+  padding: 0;
+`;
+
+const StyledEntryHeaderTabsSlotContainer = styled.div<{ wideLayout?: boolean }>`
   min-width: 0;
   grid-column: 1 / -1;
   padding: 0;
+  width: 100%;
+  max-width: var(--max-content-width);
 
   ${mq(Breakpoint.widish)} {
     grid-column: 1 / -1;
     padding: 0 1.5rem;
   }
 
-  @media screen and (min-width: 78.125rem) {
-    grid-column: 2 / -2;
-    padding: 0;
-  }
+  ${({ wideLayout }) =>
+    wideLayout
+      ? css`
+          ${mq(Breakpoint.widish)} {
+            ${tabsSlotWideLayout}
+          }
+        `
+      : css`
+          @media screen and (min-width: calc(78.125rem + var(--organizer-band-width))) {
+            ${tabsSlotWideLayout}
+          }
+        `}
 
   ${mq(Breakpoint.ultra)} {
-    grid-column: 2 / -2;
-    padding: 0;
+    ${tabsSlotWideLayout}
   }
 `;
 
@@ -177,14 +211,13 @@ const StyledEntryHeaderStatus = styled.div`
   font-weight: 700;
   border-radius: 0.75rem;
   overflow: hidden;
-  background: var(--white);
+  background: var(--grey-200);
   flex-basis: 0;
   flex-grow: 1;
 
   ${mq(Breakpoint.mid)} {
     flex-basis: initial;
     flex-grow: initial;
-    background: var(--grey-200);
   }
 `;
 
@@ -227,19 +260,24 @@ const useStatusBarFlag = (status = PublishedStatus.draft): React.ReactElement =>
 interface EntryHeaderProps {
   title: string;
   status: PublishedStatus;
+  subTitle?: string;
   backButton?: React.ReactElement;
   actions?: React.ReactElement[];
-  statusBar?: React.ReactElement;
   publish?: React.ReactElement;
   tabs?: React.ReactElement<TabsProps>;
+  wideLayout?: boolean;
+  minimalVariant?: boolean;
 }
 
 export const EntryHeader: React.FC<EntryHeaderProps> = ({
   title,
+  subTitle,
   actions,
   publish,
   tabs,
   status,
+  wideLayout,
+  minimalVariant,
 }: EntryHeaderProps) => {
   const t = useT();
 
@@ -247,25 +285,38 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
 
   return (
     <StyledEntryHeader>
-      <StyledEntryHeaderHead>
-        <StyledEntryHeaderTitle skeleton={typeof title === 'undefined'}>
-          <span>{title}</span>
-        </StyledEntryHeaderTitle>
-        <StyledEntryHeaderActions>
-          {actions?.map((action, index) => (
-            <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
-          ))}
-          <StyledEntryHeaderStatus>
-            <StyledEntryHeaderStatusLabel>{t('statusBar.status')}</StyledEntryHeaderStatusLabel>
+      <StyledEntryHeaderHead minimalVariant={minimalVariant}>
+        <StyledEntryHeaderTitleWrapper>
+          <StyledEntryHeaderTitle skeleton={typeof subTitle === 'undefined'}>
+            {title}
+          </StyledEntryHeaderTitle>
+          {subTitle && (
+            <StyledEntryHeaderSubTitle skeleton={typeof subTitle === 'undefined'}>
+              <span>{subTitle}</span>
+            </StyledEntryHeaderSubTitle>
+          )}
+        </StyledEntryHeaderTitleWrapper>
+        {!minimalVariant && (
+          <StyledEntryHeaderActions>
+            {actions?.map((action, index) => (
+              <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
+            ))}
+            <StyledEntryHeaderStatus>
+              <StyledEntryHeaderStatusLabel>{t('statusBar.status')}</StyledEntryHeaderStatusLabel>
 
-            {statusFlag}
-          </StyledEntryHeaderStatus>
-        </StyledEntryHeaderActions>
+              {statusFlag}
+            </StyledEntryHeaderStatus>
+          </StyledEntryHeaderActions>
+        )}
       </StyledEntryHeaderHead>
-      {publish && <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>}
-      {tabs && (
+      {!minimalVariant && publish && (
+        <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>
+      )}
+      {!minimalVariant && tabs && (
         <StyledEntryHeaderTabsSlot>
-          <StyledEntryHeaderTabsSlotContainer>{tabs}</StyledEntryHeaderTabsSlotContainer>
+          <StyledEntryHeaderTabsSlotContainer wideLayout={wideLayout}>
+            {tabs}
+          </StyledEntryHeaderTabsSlotContainer>
         </StyledEntryHeaderTabsSlot>
       )}
     </StyledEntryHeader>

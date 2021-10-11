@@ -14,7 +14,7 @@ const StyledA = styled.a`
   line-height: var(--line-height-300);
   font-weight: 700;
   border-radius: 0.75rem;
-  background: var(--white);
+  background: transparent;
 
   &:hover {
     background: var(--grey-400);

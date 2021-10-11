@@ -77,7 +77,7 @@ interface StatusBarProps {
   date?: string;
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({ date, status }: StatusBarProps) => {
+export const StatusBar: React.FC<StatusBarProps> = ({ status }: StatusBarProps) => {
   const flag = useStatusBarFlag(status);
   const t = useT();
 

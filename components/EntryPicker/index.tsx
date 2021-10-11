@@ -92,14 +92,13 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
   list,
   onChange,
   showHint,
-  error,
 }: EntryPickerProps) => {
   const categories = useCategories();
   const language = useLanguage();
   const category = useMemo(() => categories[categoryName], [categories, categoryName]);
   const t = useT();
 
-  const { entry } = useEntry(category, { id: value });
+  const { entry } = useEntry(category, { id: value, organizer: value });
 
   const translation = useMemo(
     () => getTranslation(language, entry?.data?.relations?.translations, true),
@@ -112,7 +111,6 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
       <div>
         {React.cloneElement(list, {
           customEntryOnClick: (category: Categories, id: string) => {
-            console.log(category, id);
             onChange(id);
             setIsOpen(false);
           },

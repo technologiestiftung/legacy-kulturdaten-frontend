@@ -4,7 +4,6 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { OrganizerTranslationCreate } from '../../../lib/api/routes/organizer/translation/create';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
 import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
@@ -18,26 +17,12 @@ import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { useLinkList } from '../../linklist';
-import { EntryFormProps } from '../helpers/form';
+import { EntryFormHook } from '../helpers/form';
 import { useDescription } from '../helpers/form/Description';
 import { useName } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-
-export type EntryFormHook = (
-  props: EntryFormProps,
-  loaded: boolean,
-  showHint: boolean,
-  ...parameters: unknown[]
-) => {
-  renderedForm: React.ReactElement;
-  submit: () => Promise<void>;
-  pristine: boolean;
-  reset: () => void;
-  valid: boolean;
-  hint: boolean;
-};
 
 const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const t = useT();
@@ -49,7 +34,7 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
     reset: resetGerman,
     valid: validGerman,
     value: valueGerman,
-  } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
+  } = useName<Organizer, OrganizerShow, OrganizerTranslation>({
     category,
     query,
     language: Language.de,
@@ -65,7 +50,7 @@ const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
     reset: resetEnglish,
     valid: validEnglish,
     value: valueEnglish,
-  } = useName<Organizer, OrganizerShow, OrganizerTranslation, OrganizerTranslationCreate>({
+  } = useName<Organizer, OrganizerShow, OrganizerTranslation>({
     category,
     query,
     language: Language.en,
@@ -265,7 +250,7 @@ const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            organizer: {
+            entry: {
               relations: {
                 links,
               },
@@ -456,7 +441,7 @@ const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) =>
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            organizer: {
+            entry: {
               relations: {
                 address,
               },
@@ -591,7 +576,7 @@ const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
         try {
           const resp = await call<OrganizerUpdate>(category.api.update.factory, {
             id: entry.data.id,
-            organizer: {
+            entry: {
               attributes: {
                 email: attributes?.email,
                 homepage: attributes?.homepage,
@@ -712,7 +697,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     valid
   );
 
-  const renderedEntryHeader = useEntryHeader({ category, query });
+  const renderedEntryHeader = useEntryHeader(
+    { category, query },
+    t('menu.start.items.profile') as string,
+    true
+  );
 
   const formattedDate = useSaveDate(entry);
 
@@ -728,11 +717,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
   );
 
-  // const valid = useMemo(
-  //   () => ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false),
-  //   [addressValid, contactValid, descriptionValid, nameValid, linksValid]
-  // );
-
   useEffect(() => {
     setValid(
       ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false)
@@ -746,7 +730,12 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const message = t('save.confirmExit') as string;
 
-  useConfirmExit(!pristine, message, () => {
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
     nameReset();
     addressReset();
     descriptionReset();

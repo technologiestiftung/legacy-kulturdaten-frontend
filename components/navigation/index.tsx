@@ -1,8 +1,11 @@
 import { useRouter } from 'next/router';
 import { useContext, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
-import { useLocale } from '../../lib/routing';
+import { useLanguage, useLocale } from '../../lib/routing';
+import { getTranslation } from '../../lib/translations';
+import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { appLayouts, Layouts } from '../layouts/AppLayout';
 import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
 import { HeaderBackLink } from './header/HeaderBackLink';
@@ -25,10 +28,18 @@ export interface NavigationProps {
 
 export type NavigationStructure = {
   header: {
-    menuItems: {
-      type: MenuItemType;
-      action?: MenuItemLink | MenuItemButton | MenuItemFolder;
-    }[];
+    loggedIn: {
+      menuItems: {
+        type: MenuItemType;
+        action?: MenuItemLink | MenuItemButton | MenuItemFolder;
+      }[];
+    };
+    loggedOut: {
+      menuItems: {
+        type: MenuItemType;
+        action?: MenuItemLink | MenuItemButton | MenuItemFolder;
+      }[];
+    };
   };
   menus: MenuData[];
 };
@@ -36,7 +47,8 @@ export type NavigationStructure = {
 export const useNavigation = (
   structure: NavigationStructure,
   title: string,
-  Link: React.FC<HeaderLinkProps>
+  Link: React.FC<HeaderLinkProps>,
+  layout: Layouts
 ): {
   header: { main: React.ReactElement; secondary: React.ReactElement };
   sidebar: React.ReactElement;
@@ -46,10 +58,17 @@ export const useNavigation = (
   const user = useUser();
   const locale = useLocale();
   const router = useRouter();
+  const language = useLanguage();
 
-  const isEntryPage = useMemo(() => router?.pathname === '/app/[category]/[id]/[sub]', [
-    router?.pathname,
-  ]);
+  const activeHeader = useMemo(
+    () => (user?.isLoggedIn ? structure?.header?.loggedIn : structure?.header?.loggedOut),
+    [user?.isLoggedIn, structure?.header]
+  );
+
+  const isEntryPage = useMemo(
+    () => router?.pathname === '/app/[organizer]/[category]/[id]/[sub]',
+    [router?.pathname]
+  );
 
   const menus = structure.menus.map((menuData) => {
     const { key, expandable, title } = menuData;
@@ -67,25 +86,44 @@ export const useNavigation = (
     return menuKey ? menus?.filter(({ key }) => key === menuKey)[0] : undefined;
   }, [category?.subMenuKey, menus]);
 
+  const organizerId = useOrganizerId();
+
   const customHeaderLink = useMemo(
     () =>
       isEntryPage && !isMidOrWider && category ? (
-        <HeaderBackLink href={category.routes.list({ locale })} title={category.title.plural} />
+        <HeaderBackLink
+          href={category.routes.list({ locale, query: { organizer: organizerId } })}
+          title={category.title.plural}
+        />
       ) : undefined,
-    [isEntryPage, category, isMidOrWider, locale]
+    [isEntryPage, category, isMidOrWider, locale, organizerId]
   );
 
+  const organizer = useOrganizer();
+
+  const headerTitle =
+    appLayouts[layout].hasOrganizerBand && organizer
+      ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name
+      : title;
+
   const renderedHeaderMain = (
-    <HeaderMain user={user} title={title} Link={Link} menuItems={structure.header.menuItems} />
+    <HeaderMain
+      user={user}
+      title={headerTitle}
+      Link={Link}
+      menuItems={activeHeader.menuItems}
+      layout={layout}
+    />
   );
 
   const renderedHeaderSecondary = isMidOrWider ? undefined : (
     <HeaderSecondary
       user={user}
-      title={title}
+      title={headerTitle}
       Link={Link}
-      menuItems={structure.header.menuItems}
+      menuItems={activeHeader.menuItems}
       customLink={customHeaderLink}
+      layout={layout}
     />
   );
 

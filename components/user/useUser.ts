@@ -16,25 +16,27 @@ import {
 import { UserContext } from './UserContext';
 import { useRouter } from 'next/router';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
-import { routes, useLocale } from '../../lib/routing';
+import { routes, useActiveRoute, useLocale } from '../../lib/routing';
+import { User } from '../../lib/api/types/user';
+import { internalRoutes } from '../../config/routes';
+import { useOrganizerId, useSetOrganizerId } from '../../lib/useOrganizer';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useT } from '../../lib/i18n';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
-
-export interface User {
-  authToken: string;
-  email: string;
-}
 
 export type WrappedUser = {
   user: User;
   authToken: string;
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 };
 
 export const useUser = (): WrappedUser => {
   const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
+  const activeOrganizerCookieName =
+    publicRuntimeConfig?.activeOrganizerCookieName || 'ACTIVE_ORGANIZER_ID';
 
   const {
     authToken,
@@ -54,6 +56,11 @@ export const useUser = (): WrappedUser => {
   const router = useRouter();
   const locale = useLocale();
   const call = useApiCall(authTokenFromStateOrCookie);
+  const activeRoute = useActiveRoute();
+  const loadingScreen = useLoadingScreen();
+  const activeOrganizerId = useOrganizerId();
+  const setActiveOrganizerId = useSetOrganizerId();
+  const t = useT();
 
   const { data, mutate: mutateValidate } = useSWR(
     [getApiUrlString(ApiRoutes.authValidate), authTokenFromStateOrCookie],
@@ -78,12 +85,14 @@ export const useUser = (): WrappedUser => {
       call<AuthLogout>(authLogoutFactory).catch((e) => console.error(e));
     }
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
+    deleteCookie({ name: activeOrganizerCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate(undefined);
     setUserTokenIsValid(false);
     invalidateUser();
   }, [
     authTokenFromStateOrCookie,
     authTokenCookieName,
+    activeOrganizerCookieName,
     locale,
     mutateValidate,
     invalidateUser,
@@ -91,24 +100,32 @@ export const useUser = (): WrappedUser => {
   ]);
 
   useEffect(() => {
-    const userData = userResponse?.body.data.attributes as unknown as User;
+    const userObject = userResponse?.body as unknown as AuthInfo['response']['body'];
 
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
         console.log('userTokenIsValid = false, log out!');
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
-        if (userData) {
-          setUser(userData);
+        if (userObject) {
+          setUser(userObject.data);
           setAuthToken(authTokenFromStateOrCookie);
           authenticateUser();
+
+          const userOrganizerIds = userObject.data?.relations?.organizers?.map(
+            (role) => role.relations?.organizer?.id
+          );
+
+          if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
+            setActiveOrganizerId(userOrganizerIds[0]);
+          }
         }
       }
     } else if (isAuthenticated) {
       console.log('no token present, log out!');
       logoutUser();
     } else {
-      if (locale && router.asPath !== routes.login({ locale })) {
+      if (locale && internalRoutes.includes(activeRoute)) {
         router.replace(routes.login({ locale }));
       }
     }
@@ -124,10 +141,13 @@ export const useUser = (): WrappedUser => {
     authTokenFromStateOrCookie,
     setAuthToken,
     mutateValidate,
+    activeRoute,
+    activeOrganizerId,
+    setActiveOrganizerId,
   ]);
 
   return {
-    user,
+    user: user,
     authToken: authTokenFromStateOrCookie,
     isLoggedIn: isAuthenticated,
     login: (cookie: Cookie, redirectRoute: string) => {
@@ -138,10 +158,19 @@ export const useUser = (): WrappedUser => {
       router.replace(redirectRoute);
     },
     logout: async () => {
-      logoutUser();
-      setTimeout(() => {
-        router.push(routes.index({ locale }));
-      }, 500);
+      loadingScreen(
+        t('logout.loading'),
+        async () => {
+          logoutUser();
+
+          setTimeout(() => {
+            router.push(routes.login({ locale }));
+          }, 500);
+
+          return { success: true };
+        },
+        t('logout.loadingMessage')
+      );
     },
   };
 };

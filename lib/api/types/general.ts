@@ -1,4 +1,8 @@
 import { Language } from '../../../config/locale';
+import { Media } from './media';
+import { OfferSubject } from './offer';
+import { Tag } from './tag';
+import { EntrySubject } from './typeSubject';
 
 export type Translation = {
   id?: number;
@@ -27,6 +31,14 @@ export type CategoryEntry = {
     attributes?: DefaultAttributes;
     relations?: {
       translations?: Translation[];
+      media?: Media['data'][];
+      subjects?: EntrySubject[];
+      types?: OfferSubject[];
+      tags?: Tag[];
     };
+  };
+  meta?: {
+    publishable: boolean | { [key: string]: string[] };
+    language?: Language;
   };
 };

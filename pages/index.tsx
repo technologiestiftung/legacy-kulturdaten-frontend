@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { routes, useLocale } from '../lib/routing';
 import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 import { useT } from '../lib/i18n';
+import { useOrganizerId } from '../lib/useOrganizer';
 
 const StyledUl = styled.ul`
   list-style: disc inside;
@@ -25,6 +26,7 @@ export const StyledTestContainer = styled.div`
 const IndexPage: NextPage = () => {
   const locale = useLocale();
   const t = useT();
+  const organizerId = useOrganizerId();
 
   return (
     <StyledTestContainer>
@@ -41,7 +43,7 @@ const IndexPage: NextPage = () => {
           </Link>
         </StyledLi>
         <StyledLi>
-          <Link href={routes.dashboard({ locale })}>
+          <Link href={routes.dashboard({ locale, query: { organizer: organizerId } })}>
             <a>{t('start.dashboard')}</a>
           </Link>
         </StyledLi>

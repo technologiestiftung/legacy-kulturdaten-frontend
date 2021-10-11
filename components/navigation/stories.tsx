@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { HeaderMain } from './header/Header';
 import { NavigationStructure, useNavigation } from '.';
 import { MenuIconName } from './Menu/MenuIcon';
-import { AppLayout } from '../layouts/AppLayout';
+import { AppLayout, Layouts } from '../layouts/AppLayout';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Button, ButtonColor, ButtonVariant } from '../button';
 import { MenuItemType } from './Menu';
@@ -39,15 +39,28 @@ const StyledTestContentBox = styled.div`
 
 const testMenuStructure: NavigationStructure = {
   header: {
-    menuItems: [
-      {
-        type: MenuItemType.link,
-        action: {
-          href: '#',
-          title: 'Dashboard',
+    loggedIn: {
+      menuItems: [
+        {
+          type: MenuItemType.link,
+          action: {
+            href: '#',
+            title: 'Dashboard',
+          },
         },
-      },
-    ],
+      ],
+    },
+    loggedOut: {
+      menuItems: [
+        {
+          type: MenuItemType.link,
+          action: {
+            href: '#',
+            title: 'Dashboard',
+          },
+        },
+      ],
+    },
   },
   menus: [
     {
@@ -257,12 +270,18 @@ const testMenuStructure: NavigationStructure = {
 };
 
 const X: React.FC = () => {
-  const { header, sidebar } = useNavigation(testMenuStructure, 'Kulturdaten.Berlin', TestLink);
+  const { header, sidebar } = useNavigation(
+    testMenuStructure,
+    'Kulturdaten.Berlin',
+    TestLink,
+    Layouts.loggedIn
+  );
 
   return (
     <AppLayout
       header={{ main: header?.main, secondary: header?.secondary }}
       sidebar={sidebar}
+      layout={Layouts.loggedIn}
       content={
         <StyledTestContent>
           {[...Array(10)].map((i, index) => (
@@ -279,7 +298,8 @@ NavigationStory.storyName = 'Navigation complete';
 
 export const HeaderStory: Story = () => (
   <HeaderMain
-    menuItems={testMenuStructure.header.menuItems}
+    menuItems={testMenuStructure.header.loggedIn.menuItems}
+    layout={Layouts.loggedIn}
     title="Kulturdaten.Berlin"
     Link={TestLink}
     user={{ isLoggedIn: true } as WrappedUser}

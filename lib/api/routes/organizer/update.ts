@@ -30,17 +30,17 @@ export const organizerUpdateFactory = (
   token: OrganizerUpdate['request']['headers']['Authorization'],
   query: {
     id: string;
-    organizer: Organizer;
+    entry: Organizer;
   }
 ): OrganizerUpdate => ({
   request: {
-    route: apiRoutes.organizerUpdate({ id: query.id }),
+    route: apiRoutes.organizerUpdate({ organizer: query.id }),
     method: 'PATCH',
     headers: {
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.organizer,
+    body: query.entry,
   },
   response: {
     status: 200,

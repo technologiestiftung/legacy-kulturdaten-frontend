@@ -8,28 +8,22 @@ import { Routes, routes } from '../lib/routing';
 import { Category } from '../lib/categories';
 import { OrganizerCreatePage } from '../components/pages/organizer/create';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
-import { OrganizerMediaPage } from '../components/pages/organizer/media';
 import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
 import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
 import { OrganizerRightsPage } from '../components/pages/organizer/rights';
 import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
-import { organizerTranslationCreateFactory } from '../lib/api/routes/organizer/translation/create';
 import { LocationInfoPage } from '../components/pages/location/info';
 import { locationCreateFactory } from '../lib/api/routes/location/create';
 import { locationUpdateFactory } from '../lib/api/routes/location/update';
-import { locationTranslationCreateFactory } from '../lib/api/routes/location/translation/create';
 import { locationDeleteFactory } from '../lib/api/routes/location/delete';
 import { locationShowFactory } from '../lib/api/routes/location/show';
-import { LocationMediaPage } from '../components/pages/location/media';
 import { offerListFactory } from '../lib/api/routes/offer/list';
 import { offerShowFactory } from '../lib/api/routes/offer/show';
 import { offerCreateFactory } from '../lib/api/routes/offer/create';
 import { offerUpdateFactory } from '../lib/api/routes/offer/update';
-import { offerTranslationCreateFactory } from '../lib/api/routes/offer/translation/create';
 import { offerDeleteFactory } from '../lib/api/routes/offer/delete';
 import { OfferInfoPage } from '../components/pages/offer/info';
-import { OfferMediaPage } from '../components/pages/offer/media';
 import { LocationCreatePage } from '../components/pages/location/create';
 import { OfferCreatePage } from '../components/pages/offer/create';
 import { OrganizerListPage } from '../components/pages/organizer/list';
@@ -39,6 +33,11 @@ import { OfferCategorizationPage } from '../components/pages/offer/categorizatio
 import { OfferAccessibilityPage } from '../components/pages/offer/accessibility';
 import { OfferDatesPage } from '../components/pages/offer/dates';
 import { organizerMediaFactory } from '../lib/api/routes/organizer/media';
+import { OrganizerMediaPage } from '../components/pages/organizer/media';
+import { OfferMediaPage } from '../components/pages/offer/media';
+import { LocationMediaPage } from '../components/pages/location/media';
+import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
+import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 
 export type Requirement = {
   translationKey: string;
@@ -49,6 +48,12 @@ export enum Categories {
   organizer = 'organizer',
   offer = 'offer',
   location = 'location',
+}
+
+export enum CategoriesPlural {
+  organizers = 'organizers',
+  offers = 'offers',
+  locations = 'locations',
 }
 
 export const useCategories: () => {
@@ -68,7 +73,7 @@ export const useCategories: () => {
         list: routes[Routes.organizer],
         create: routes[Routes.createOrganizer],
       },
-      subMenuKey: 'organizer',
+      // subMenuKey: 'organizer',
       pages: {
         create: OrganizerCreatePage,
         preview: OrganizerPreviewPage,
@@ -102,13 +107,13 @@ export const useCategories: () => {
           route: ApiRoutes.organizerUpdate,
           factory: organizerUpdateFactory,
         },
-        translationCreate: {
-          route: ApiRoutes.organizerTranslationCreate,
-          factory: organizerTranslationCreateFactory,
-        },
         delete: {
           route: ApiRoutes.organizerDelete,
           factory: organizerDeleteFactory,
+        },
+        typeList: {
+          route: ApiRoutes.organizerTypeList,
+          factory: organizerTypeListFactory,
         },
         media: {
           route: ApiRoutes.organizerUpdate,
@@ -186,15 +191,30 @@ export const useCategories: () => {
           route: ApiRoutes.offerUpdate,
           factory: offerUpdateFactory,
         },
-        translationCreate: {
-          route: ApiRoutes.offerTranslationCreate,
-          factory: offerTranslationCreateFactory,
-        },
         delete: {
           route: ApiRoutes.offerDelete,
           factory: offerDeleteFactory,
         },
+        typeList: {
+          route: ApiRoutes.offerTypeList,
+          factory: offerTypeListFactory,
+        },
       },
+      requirements: [
+        {
+          translationKey: 'categories.organizer.requirements.name',
+          publishableKeys: ['attributes.name'],
+        },
+
+        {
+          translationKey: 'categories.organizer.requirements.description',
+          publishableKeys: ['attributes.description'],
+        },
+        {
+          translationKey: 'categories.organizer.requirements.categorization',
+          publishableKeys: ['relations.types', 'relations.subjects'],
+        },
+      ],
     },
     location: {
       name: Categories.location,
@@ -235,10 +255,6 @@ export const useCategories: () => {
         update: {
           route: ApiRoutes.locationUpdate,
           factory: locationUpdateFactory,
-        },
-        translationCreate: {
-          route: ApiRoutes.locationTranslationCreate,
-          factory: locationTranslationCreateFactory,
         },
         delete: {
           route: ApiRoutes.locationDelete,

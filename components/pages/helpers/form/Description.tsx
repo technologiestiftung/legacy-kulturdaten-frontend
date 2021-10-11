@@ -2,10 +2,10 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { EntryFormProps } from '.';
-import { defaultLanguage, Language } from '../../../../config/locale';
+import { Language } from '../../../../config/locale';
 import { useApiCall } from '../../../../lib/api';
 import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
-import { OrganizerTranslationCreate } from '../../../../lib/api/routes/organizer/translation/create';
+import { OrganizerUpdate } from '../../../../lib/api/routes/organizer/update';
 import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
 import { useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
@@ -102,12 +102,6 @@ export const useDescription = ({
     false
   );
 
-  const defaultTranslation = getTranslation<OrganizerTranslation>(
-    defaultLanguage,
-    entry?.data?.relations?.translations,
-    false
-  );
-
   const textFromApi = useMemo(() => {
     return entryTranslation?.attributes?.description || '';
   }, [entryTranslation]);
@@ -176,25 +170,19 @@ export const useDescription = ({
     submit: async () => {
       if (valid && !pristine) {
         try {
-          const resp = await call<OrganizerTranslationCreate>(
-            category.api.translationCreate.factory,
-            {
-              translation: {
-                ...entryTranslation,
-                attributes: {
-                  description: serializedMarkdown,
-                  // set translation name in case it is not present. Necessary for API validation
-                  name:
-                    typeof entryTranslation?.attributes?.name === 'undefined'
-                      ? defaultTranslation?.attributes?.name
-                      : undefined,
-                  language,
-                },
+          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+            entry: {
+              relations: {
+                translations: [
+                  {
+                    description: serializedMarkdown,
+                    language,
+                  },
+                ],
               },
-              translationId: entryTranslation?.id,
-              id: entry?.data?.id,
-            }
-          );
+            },
+            id: entry?.data?.id,
+          });
 
           if (resp.status === 200) {
             mutate();

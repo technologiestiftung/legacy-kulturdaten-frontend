@@ -2,7 +2,7 @@ import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 
 import { getCookie } from '../../lib/cookies';
-import { User } from './useUser';
+import { User } from '../../lib/api/types/user';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 

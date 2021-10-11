@@ -13,11 +13,10 @@ import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
 import { Button, ButtonColor } from '../button';
-import { useApiCall } from '../../lib/api';
-import { MediaDelete, mediaDeleteFactory } from '../../lib/api/routes/media/delete';
 import { useFormatNumber } from '../../lib/number';
 import { useEffect, useMemo } from 'react';
 import { AlertSymbol } from '../assets/AlertSymbol';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -52,8 +51,10 @@ const StyledMediaListItemThumbnail = styled.div`
   grid-column: span 1;
   height: 100%;
   border-bottom: 1px solid var(--grey-400);
+  padding-bottom: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
+    padding-bottom: 1.5rem;
     border-bottom: none;
   }
 `;
@@ -263,17 +264,18 @@ interface MediaListItemProps {
   mediaItem: Media['data'];
   onChange: (mediaItem: Media['data']) => void;
   valid: boolean;
+  onDelete?: (mediaItemId: number) => void;
 }
 
 const MediaListItem: React.FC<MediaListItemProps> = ({
   mediaItem,
   onChange,
   valid,
+  onDelete,
 }: MediaListItemProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
   const t = useT();
-  const call = useApiCall();
   const formatNumber = useFormatNumber();
 
   const smallestRendition =
@@ -340,6 +342,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
                   id={`${uid}-copyright`}
                   value={currentTranslation?.attributes?.alternativeText || ''}
+                  required={language === defaultLanguage}
                   onChange={(e) => {
                     const updatedTranslation = {
                       ...currentTranslation,
@@ -350,17 +353,19 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                       },
                     };
 
+                    const filteredTranslations =
+                      mediaItem?.relations?.translations?.filter(
+                        (translation) => translation.attributes?.language !== language
+                      ) || [];
+
                     onChange({
-                      ...mediaItem,
-                      relations: mediaItem.relations
+                      attributes: mediaItem?.attributes,
+                      id: mediaItem?.id,
+                      type: mediaItem?.type,
+                      relations: mediaItem?.relations
                         ? {
                             ...mediaItem.relations,
-                            translations: [
-                              ...mediaItem.relations.translations?.filter(
-                                (translation) => translation.attributes?.language !== language
-                              ),
-                              updatedTranslation,
-                            ],
+                            translations: [...filteredTranslations, updatedTranslation],
                           }
                         : {
                             translations: [updatedTranslation],
@@ -456,18 +461,13 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
             </>
           )}
         </StyledMediaListItemInfo>
-        <StyledMediaListItemDelete>
-          <Button
-            color={ButtonColor.white}
-            onClick={() => {
-              if (window.confirm(t('media.deleteConfirm') as string)) {
-                () => call<MediaDelete>(mediaDeleteFactory, { id: mediaItem.id });
-              }
-            }}
-          >
-            {t('media.delete')}
-          </Button>
-        </StyledMediaListItemDelete>
+        {onDelete && (
+          <StyledMediaListItemDelete>
+            <Button color={ButtonColor.white} onClick={() => onDelete(mediaItem.id)}>
+              {t('media.delete')}
+            </Button>
+          </StyledMediaListItemDelete>
+        )}
       </StyledMediaListItemSub>
     </StyledMediaListItem>
   );
@@ -477,12 +477,14 @@ interface MediaListProps {
   media: Media['data'][];
   onChange: (media: Media['data'][], changesMediaItemId: number) => void;
   setValid: (valid: boolean) => void;
+  onDelete?: (mediaItemId: number) => void;
 }
 
 export const MediaList: React.FC<MediaListProps> = ({
   media,
   onChange,
   setValid,
+  onDelete,
 }: MediaListProps) => {
   const itemsValidList = useMemo(
     () =>
@@ -495,8 +497,6 @@ export const MediaList: React.FC<MediaListProps> = ({
 
         for (let i = 0; i < requiredAttributes.length; i += 1) {
           const attribute = requiredAttributes[i];
-          console.log(attribute);
-          console.log(!attribute || typeof attribute === 'undefined' || attribute.length === 0);
           if (!attribute || typeof attribute === 'undefined' || attribute.length === 0) {
             return false;
           }
@@ -524,6 +524,7 @@ export const MediaList: React.FC<MediaListProps> = ({
               mediaItem.id
             );
           }}
+          onDelete={onDelete}
         />
       ))}
     </StyledMediaList>
