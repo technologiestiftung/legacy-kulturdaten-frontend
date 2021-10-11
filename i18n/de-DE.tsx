@@ -52,6 +52,7 @@ export const deDE: Localization = {
   dateCreate: {
     overlayTitle: ({ offerTitle }) => `Termin für ‚${offerTitle}‘ erstellen`,
     create: () => 'Termin erstellen',
+    loading: () => ' Erstelle Termin',
   },
   accordion: {
     open: () => 'anzeigen',
