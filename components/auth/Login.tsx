@@ -49,7 +49,6 @@ export const LoginForm: React.FC = () => {
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
-    e.stopPropagation();
 
     if (formRef.current?.checkValidity()) {
       loadingScreen(t('login.loading'), async () => {
