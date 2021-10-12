@@ -116,9 +116,9 @@ export const useUser = (): WrappedUser => {
             (role) => role.relations?.organizer?.id
           );
 
-          // if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
-          //   setActiveOrganizerId(userOrganizerIds[0]);
-          // }
+          if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
+            setActiveOrganizerId(userOrganizerIds[0]);
+          }
         }
       }
     } else if (isAuthenticated) {
