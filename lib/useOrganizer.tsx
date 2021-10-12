@@ -12,6 +12,8 @@ const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undef
 const activeOrganizerCookieName =
   (publicRuntimeConfig?.activeOrganizerCookieName as string) || 'ACTIVE_ORGANIZER_ID';
 
+export const defaultOrganizerId = 'default';
+
 export const useOrganizerId = (): string => {
   const { activeOrganizerId, setActiveOrganizerId } = useContext(NavigationContext);
   const locale = useLocale();
@@ -19,7 +21,7 @@ export const useOrganizerId = (): string => {
   useEffect(() => {
     const organizerIdFromCookie = getCookie(activeOrganizerCookieName)?.value;
 
-    if (organizerIdFromCookie && activeOrganizerId === 'default') {
+    if (organizerIdFromCookie && activeOrganizerId === defaultOrganizerId) {
       setActiveOrganizerId(organizerIdFromCookie);
     }
   }, [activeOrganizerId, locale, setActiveOrganizerId]);

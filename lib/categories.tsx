@@ -17,6 +17,7 @@ import { OfferDate, OfferType } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
 import { EntryType } from './api/types/typeSubject';
 import { Route, useLocale } from './routing';
+import { defaultOrganizerId } from './useOrganizer';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -233,7 +234,9 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const apiCallRoute = category?.api.show.route;
 
   const { data, mutate } = useSWR<C['response']>(
-    apiCallRoute && query && (query.id || (query.organizer && query.organizer !== 'default'))
+    apiCallRoute &&
+      query &&
+      (query.id || (query.organizer && query.organizer !== defaultOrganizerId))
       ? getApiUrlString(apiCallRoute, query)
       : undefined,
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)

@@ -4,9 +4,9 @@ import * as feather from 'react-feather';
 
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { css } from '@emotion/react';
-import React from 'react';
+import React, { useMemo } from 'react';
 
-const StyledA = styled.a<{ active?: boolean }>`
+const StyledA = styled.a<{ active?: boolean; disabled?: boolean }>`
   color: inherit;
   text-decoration: none;
   display: flex;
@@ -25,6 +25,17 @@ const StyledA = styled.a<{ active?: boolean }>`
   &:hover {
     background: var(--grey-400);
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: not-allowed;
+      opacity: 0.3;
+
+      &:hover {
+        background: var(--white);
+      }
+    `}
 
   ${({ active }) =>
     active
@@ -60,6 +71,7 @@ interface InternalMenuLinkProps {
   active?: boolean;
   icon?: string;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 export interface HeaderMenuLinkProps extends InternalMenuLinkProps {
@@ -72,19 +84,33 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   active,
   icon,
   onClick,
+  disabled = false,
 }: InternalMenuLinkProps) => {
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active !== undefined ? active : isRouteActive;
+  const isDisabled = useMemo(() => disabled && !linkIsActive, [disabled, linkIsActive]);
 
-  return (
+  const renderedStyledLink = (
+    <StyledA
+      title={title}
+      active={linkIsActive}
+      onClick={onClick}
+      as={isDisabled ? 'div' : undefined}
+      disabled={isDisabled}
+    >
+      <span>{title}</span>
+      {icon && (
+        <StyledHeaderMenuLinkIcon>{React.createElement(feather[icon])}</StyledHeaderMenuLinkIcon>
+      )}
+    </StyledA>
+  );
+
+  return !isDisabled ? (
     <Link href={href} passHref>
-      <StyledA title={title} active={linkIsActive} onClick={onClick}>
-        <span>{title}</span>
-        {icon && (
-          <StyledHeaderMenuLinkIcon>{React.createElement(feather[icon])}</StyledHeaderMenuLinkIcon>
-        )}
-      </StyledA>
+      {renderedStyledLink}
     </Link>
+  ) : (
+    renderedStyledLink
   );
 };
 

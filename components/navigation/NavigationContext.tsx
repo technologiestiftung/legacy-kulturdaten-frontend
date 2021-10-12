@@ -1,5 +1,6 @@
 import React, { ReactNode, Reducer, useCallback, useMemo, useReducer, useState } from 'react';
 import { getPseudoUID } from '../../lib/uid';
+import { defaultOrganizerId } from '../../lib/useOrganizer';
 
 type NavigationContext = {
   registerOverlay: (open?: boolean) => { id: string };
@@ -21,7 +22,7 @@ export const NavigationContext = React.createContext<NavigationContext>({
   overlayOpen: false,
   menuExpanded: false,
   setMenuExpanded: () => undefined,
-  activeOrganizerId: 'default',
+  activeOrganizerId: defaultOrganizerId,
   setActiveOrganizerId: () => undefined,
   headerOrganizerBandCollapsed: true,
   setHeaderOrganizerBandCollapsed: () => undefined,
@@ -79,7 +80,7 @@ export const NavigationContextProvider: React.FC<NavigationContextProviderProps>
   children,
 }: NavigationContextProviderProps) => {
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
-  const [activeOrganizerId, setActiveOrganizerId] = useState('default');
+  const [activeOrganizerId, setActiveOrganizerId] = useState(defaultOrganizerId);
   const [overlays, dispatchOverlayAction] = useReducer(linksReducer, {});
   const [headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed] = useState(true);
 
