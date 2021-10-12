@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 
-const StyledDashboardGreeting = styled.h2`
+const StyledDashboardGreeting = styled.h1`
   font-size: var(--font-size-1000);
   line-height: var(--line-height-1000);
   font-weight: 700;

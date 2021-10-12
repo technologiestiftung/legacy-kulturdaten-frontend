@@ -42,6 +42,49 @@ export const deDE: Localization = {
           link: () => 'Jetzt API Token erstellen',
         },
       },
+      linkList: {
+        help: {
+          title: () => 'Hilfe',
+          text: () =>
+            'Du benötigst Hilfe oder Erklärungen zu Funktionen der Plattform? Du möchtest mehr über das Projekt Kulturdaten.Berlin lesen? Hier findest du alle Infos:',
+          links: {
+            '1': {
+              title: () => 'Hilfebereich',
+              href: () => 'http://kulturdaten.berlin',
+            },
+            '2': {
+              title: () => 'Das Projekt',
+              href: () => 'http://kulturdaten.berlin',
+            },
+          },
+        },
+        openSource: {
+          title: () => 'Open Source',
+          text: () =>
+            'Kulturdaten.Berlin wird komplett Open Source, also quelloffen, entwickelt. Du möchtest mithelfen? Hier findest du den Quellcode:',
+          links: {
+            '1': {
+              title: () => 'Interface Code auf GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-frontend',
+            },
+            '2': {
+              title: () => 'Server Code auf GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-api',
+            },
+          },
+        },
+        contact: {
+          title: () => 'Kontakt',
+          text: () =>
+            'Du hast Fragen, Vorschläge oder Anmerkungen zur Kultudatenplattform? Melde dich gerne bei uns unter:',
+          links: {
+            '1': {
+              title: () => 'support@kulturdaten.berlin',
+              href: () => 'mailto:support@kulturdaten.berlin',
+            },
+          },
+        },
+      },
     },
   },
   language: {

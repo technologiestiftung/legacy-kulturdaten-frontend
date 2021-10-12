@@ -12,10 +12,9 @@ import { DashbaordGreeting } from '../../../components/Dasboard';
 import { useRandomInt } from '../../../lib/random';
 import { DashboardRow } from '../../../components/Dasboard/DashboardRow';
 import { DashboardTile } from '../../../components/Dasboard/DashboardTile';
-import {
-  DashboardTileLink,
-  DashboardTileLinkType,
-} from '../../../components/Dasboard/DashboardTileLink';
+import { DashboardTileLink } from '../../../components/Dasboard/DashboardTileLink';
+import { StandardLinkType } from '../../../lib/generalTypes';
+import { DashboardLinkList } from '../../../components/Dasboard/DashboardLinkList';
 
 const greetings: {
   [key: string]: string[];
@@ -62,15 +61,58 @@ const DashboardPage: NextPage = () => {
               link={
                 <DashboardTileLink
                   href={routes.userSettings({ locale })}
-                  type={DashboardTileLinkType.internal}
+                  type={StandardLinkType.internal}
                   title={t('dashboard.info.data.api.link') as string}
-                >
-                  {t('dashboard.info.data.api.link')}
-                </DashboardTileLink>
+                />
               }
             >
               {t('dashboard.info.data.api.content')}
             </DashboardTile>
+          </DashboardRow>
+          <DashboardRow>
+            <DashboardLinkList
+              title={t('dashboard.info.linkList.help.title') as string}
+              text={<p>{t('dashboard.info.linkList.help.text') as string}</p>}
+              links={[
+                {
+                  title: t('dashboard.info.linkList.help.links.1.title') as string,
+                  href: t('dashboard.info.linkList.help.links.1.href') as string,
+                  type: StandardLinkType.external,
+                },
+                {
+                  title: t('dashboard.info.linkList.help.links.2.title') as string,
+                  href: t('dashboard.info.linkList.help.links.2.href') as string,
+                  type: StandardLinkType.external,
+                },
+              ]}
+            />
+            <DashboardLinkList
+              title={t('dashboard.info.linkList.openSource.title') as string}
+              text={<p>{t('dashboard.info.linkList.openSource.text') as string}</p>}
+              links={[
+                {
+                  title: t('dashboard.info.linkList.openSource.links.1.title') as string,
+                  href: t('dashboard.info.linkList.openSource.links.1.href') as string,
+                  type: StandardLinkType.external,
+                },
+                {
+                  title: t('dashboard.info.linkList.openSource.links.2.title') as string,
+                  href: t('dashboard.info.linkList.openSource.links.2.href') as string,
+                  type: StandardLinkType.external,
+                },
+              ]}
+            />
+            <DashboardLinkList
+              title={t('dashboard.info.linkList.contact.title') as string}
+              text={<p>{t('dashboard.info.linkList.contact.text') as string}</p>}
+              links={[
+                {
+                  title: t('dashboard.info.linkList.contact.links.1.title') as string,
+                  href: t('dashboard.info.linkList.contact.links.1.href') as string,
+                  type: StandardLinkType.external,
+                },
+              ]}
+            />
           </DashboardRow>
         </ContentContainer>
       </ContentWrapper>

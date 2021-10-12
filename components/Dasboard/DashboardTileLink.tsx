@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { ArrowRight, ArrowUpRight } from 'react-feather';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
+import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
 
 const StyledDashboardTileLink = styled.a<{ active?: boolean }>`
   color: inherit;
@@ -38,25 +39,10 @@ const StyledDashboardTileLink = styled.a<{ active?: boolean }>`
   }
 `;
 
-export enum DashboardTileLinkType {
-  internal = 'internal',
-  external = 'external',
-}
-
-interface InternalDashboardTileLinkProps {
-  title: string;
-  href: string;
-  active?: boolean;
-}
-
-export interface DashboardTileLinkProps extends InternalDashboardTileLinkProps {
-  type?: DashboardTileLinkType;
-}
-
-const InternalDashboardTileLink: React.FC<DashboardTileLinkProps> = ({
+const InternalDashboardTileLink: React.FC<StandardLinkInternal> = ({
   title,
   href,
-}: DashboardTileLinkProps) => {
+}: StandardLinkInternal) => {
   return (
     <Link href={href} passHref>
       <StyledDashboardTileLink title={title}>
@@ -67,17 +53,15 @@ const InternalDashboardTileLink: React.FC<DashboardTileLinkProps> = ({
   );
 };
 
-export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
-  props: DashboardTileLinkProps
-) => {
-  const { type = DashboardTileLinkType.internal } = props;
+export const DashboardTileLink: React.FC<StandardLink> = (props: StandardLink) => {
+  const { type = StandardLinkType.internal } = props;
 
   switch (type) {
-    case DashboardTileLinkType.internal: {
+    case StandardLinkType.internal: {
       return <InternalDashboardTileLink {...props} />;
     }
 
-    case DashboardTileLinkType.external: {
+    case StandardLinkType.external: {
       const { title, href } = props;
       return (
         <StyledDashboardTileLink href={href} rel="noopener noreferrer" target="_blank">

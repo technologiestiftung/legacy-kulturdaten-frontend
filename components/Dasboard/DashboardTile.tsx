@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
+import { StandardLink } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
-import { DashboardTileLinkProps } from './DashboardTileLink';
 
 const StyledDashboardTile = styled.div`
   box-shadow: 0.75rem 0.75rem 3rem rgba(0, 0, 0, 0.08);
@@ -70,7 +70,7 @@ export const DashboardTileTextP = styled.p`
 interface DashboardTileProps {
   title: string;
   children: React.ReactNode;
-  link?: React.ReactElement<DashboardTileLinkProps>;
+  link?: React.ReactElement<StandardLink>;
 }
 
 export const DashboardTile: React.FC<DashboardTileProps> = ({
