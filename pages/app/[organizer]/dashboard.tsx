@@ -11,11 +11,7 @@ import { ContentContainer, ContentWrapper } from '../../../components/wrappers/C
 import { DashbaordGreeting } from '../../../components/Dasboard';
 import { useRandomInt } from '../../../lib/random';
 import { DashboardRow } from '../../../components/Dasboard/DashboardRow';
-import {
-  DashboardTile,
-  DashboardTileText,
-  DashboardTileTextP,
-} from '../../../components/Dasboard/DashboardTile';
+import { DashboardTile } from '../../../components/Dasboard/DashboardTile';
 import {
   DashboardTileLink,
   DashboardTileLinkType,
@@ -57,41 +53,23 @@ const DashboardPage: NextPage = () => {
           <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
         </ContentContainer>
         <ContentContainer>
-          <DashboardRow title="Die Kulturdaten (weiter-)verwenden">
-            <DashboardTile title="Daten Export">
-              <DashboardTileText>
-                <DashboardTileTextP>
-                  Alle Daten, die du auf Kulturdaten.Berlin bereitstellst, kannst du auch wieder in
-                  Standardformaten exportieren.
-                </DashboardTileTextP>
-                <DashboardTileTextP>
-                  Dazu kannst du in den entsprechenden Listen oder Einträgen die Export-Funktion
-                  nutzen.
-                </DashboardTileTextP>
-              </DashboardTileText>
+          <DashboardRow title={t('dashboard.info.data.title') as string}>
+            <DashboardTile title={t('dashboard.info.data.export.title') as string}>
+              {t('dashboard.info.data.export.content')}
             </DashboardTile>
             <DashboardTile
-              title="API Nutzung für Entwickler:innen"
+              title={t('dashboard.info.data.api.title') as string}
               link={
                 <DashboardTileLink
-                  href="http://kulturdaten.berlin"
-                  type={DashboardTileLinkType.external}
-                  title="Jetzt API Token erstellen"
+                  href={routes.userSettings({ locale })}
+                  type={DashboardTileLinkType.internal}
+                  title={t('dashboard.info.data.api.link') as string}
                 >
-                  Jetzt API Token erstellen
+                  {t('dashboard.info.data.api.link')}
                 </DashboardTileLink>
               }
             >
-              <DashboardTileText>
-                <DashboardTileTextP>
-                  Alle Daten, die auf Kulturdaten.Berlin bereitgestellt werden, können frei
-                  verwendet werden.
-                </DashboardTileTextP>
-                <DashboardTileTextP>
-                  Für die programmatische Nutzung benötigst du ein API Token, welches du in deinen
-                  Einstellungen erstellen kannst.
-                </DashboardTileTextP>
-              </DashboardTileText>
+              {t('dashboard.info.data.api.content')}
             </DashboardTile>
           </DashboardRow>
         </ContentContainer>

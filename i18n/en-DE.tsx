@@ -1,9 +1,45 @@
 /* eslint-disable react/display-name */
+import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
+  },
+  dashboard: {
+    data: {
+      info: {
+        title: () => 'Use the culture data (further) ',
+        export: {
+          title: () => 'Data export',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                You can also export all data that you provide on Kulturdaten.Berlin in standard
+                formats.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                To do this, you can use the export function in the corresponding lists or entries.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+        },
+        api: {
+          title: () => 'API usage for developers',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                All data provided on Kulturdaten.Berlin can be used free of charge.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                For programmatic use you need an API token, which you can create in your settings.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Create API token now',
+        },
+      },
+    },
   },
   language: {
     de: () => 'German',
