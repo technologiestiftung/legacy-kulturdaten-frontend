@@ -24,7 +24,7 @@ export const ContentContainer = styled.div`
   }
 
   ${mq(Breakpoint.ultra)} {
-    row-gap: 11.25rem;
+    row-gap: 10.5rem;
     grid-column: 3 / -3;
 
     max-width: var(--max-content-width);

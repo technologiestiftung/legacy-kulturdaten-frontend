@@ -13,7 +13,7 @@ const StyledDashboardGreeting = styled.h1`
   }
 
   ${mq(Breakpoint.ultra)} {
-    padding: 6rem 0;
+    padding: 6.75rem 0;
   }
 `;
 

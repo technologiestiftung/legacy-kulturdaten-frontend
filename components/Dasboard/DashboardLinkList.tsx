@@ -57,14 +57,39 @@ const StyledDashboardLinkListLink = styled.a`
   color: inherit;
   text-decoration: none;
   display: flex;
-  column-gap: 0.75rem;
+  column-gap: 0.375rem;
   flex-grow: 0;
+  position: relative;
+
+  @media screen and (pointer: fine) {
+    &:hover {
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &::before {
+      content: '';
+      opacity: 0;
+      transition: opacity var(--transition-duration-fast);
+      background: var(--grey-200);
+      position: absolute;
+      left: -0.375rem;
+      top: -0.1875rem;
+      width: calc(100% + 0.75rem);
+      height: calc(100% + 0.375rem);
+      border-radius: 0.375rem;
+      pointer-events: none;
+    }
+  }
 
   > span {
     text-decoration: underline;
+    position: relative;
   }
 
   > svg {
+    position: relative;
     padding: 0.1875rem 0;
     width: 1.125rem;
     height: 1.125rem;
