@@ -5,7 +5,7 @@ import { mq } from '../globals/Constants';
 const StyledDashboardRow = styled.div`
   display: grid;
   grid-column: 1 / -1;
-  row-gap: 1.5rem;
+  row-gap: 2.25rem;
 
   ${mq(Breakpoint.mid)} {
     row-gap: 2.25rem;
@@ -21,7 +21,7 @@ const StyledDashboardRowTitle = styled.h2`
 const StyledDashboardRowContent = styled.div`
   display: grid;
   grid-template-columns: 100%;
-  row-gap: 1.5rem;
+  row-gap: 2.25rem;
 
   ${mq(Breakpoint.mid)} {
     grid-template-columns: repeat(12, 1fr);
