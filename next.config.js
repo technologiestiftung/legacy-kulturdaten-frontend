@@ -47,6 +47,46 @@ module.exports = {
         destination: '/app/default/dashboard/',
         permanent: true,
       },
+      {
+        source: '/app/default/profile/:sub*',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
+      {
+        source: '/app/default/offer/',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
+      {
+        source: '/app/default/location/',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
+      {
+        source: '/app/default/location/:id*/',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
+      {
+        source: '/app/default/offer/:id*/',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
+      {
+        source: '/app/default/:category*/:id*/create',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
+      {
+        source: '/app/default/location/:id*/:sub*',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
+      {
+        source: '/app/default/offer/:id*/:sub*',
+        destination: '/app/default/dashboard/',
+        permanent: false,
+      },
     ];
   },
 };
