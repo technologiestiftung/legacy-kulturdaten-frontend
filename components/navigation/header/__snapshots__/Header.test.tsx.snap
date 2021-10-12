@@ -22,7 +22,7 @@ exports[`Header renders 1`] = `
         class="css-1vj9olq-StyledHeaderMenuItem e1sn27875"
       >
         <a
-          class="css-1v57dok-StyledA eigjpzq1"
+          class="css-lrlsnm-StyledA eigjpzq1"
           href="/#"
           title="Test"
         >
@@ -35,7 +35,7 @@ exports[`Header renders 1`] = `
         class="css-1vj9olq-StyledHeaderMenuItem e1sn27875"
       >
         <div
-          class="css-az566g-HeaderMenuDivider e1sn27874"
+          class="css-108t9yl-HeaderMenuDivider e1sn27874"
         />
       </div>
     </div>
