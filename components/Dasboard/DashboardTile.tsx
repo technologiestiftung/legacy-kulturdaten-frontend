@@ -26,15 +26,17 @@ const StyledDashboardTileContainer = styled.div`
 `;
 
 const StyledDashboardTileTitle = styled.h3`
-  background: var(--black);
-  font-size: var(--font-size-500);
-  line-height: var(--line-height-500);
+  background: var(--grey-200);
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
   font-weight: 700;
-  padding: 1.125rem 1.5rem;
-  color: var(--white);
+  padding: 0.75rem 1.125rem;
+  color: var(--black);
 
   ${mq(Breakpoint.mid)} {
-    padding: 1.5rem;
+    font-size: var(--font-size-500);
+    line-height: var(--line-height-500);
+    padding: 1.125rem 1.5rem;
   }
 `;
 
@@ -47,17 +49,22 @@ export const DashboardTileText = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: calc(var(--line-height-400) / 2);
-  padding: 1.125rem 1.5rem;
+  padding: 0.75rem 1.125rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: 1.5rem;
+    padding: 1.125rem 1.5rem;
   }
 `;
 
 export const DashboardTileTextP = styled.p`
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
   font-weight: 400;
+
+  ${mq(Breakpoint.mid)} {
+    font-size: var(--font-size-400);
+    line-height: var(--line-height-400);
+  }
 `;
 
 interface DashboardTileProps {

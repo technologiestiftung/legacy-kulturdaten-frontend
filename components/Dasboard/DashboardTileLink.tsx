@@ -8,12 +8,12 @@ const StyledDashboardTileLink = styled.a<{ active?: boolean }>`
   color: inherit;
   text-decoration: none;
   display: flex;
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
   font-weight: 700;
   column-gap: 0.75rem;
   border-top: 1px solid var(--grey-400);
-  padding: 1.125rem 1.5rem;
+  padding: 0.75rem 1.125rem;
   display: flex;
   justify-content: flex-end;
   transition: background var(--transition-duration-fast);
@@ -23,7 +23,9 @@ const StyledDashboardTileLink = styled.a<{ active?: boolean }>`
   }
 
   ${mq(Breakpoint.mid)} {
-    padding: 1.5rem;
+    padding: 1.125rem 1.5rem;
+    font-size: var(--font-size-400);
+    line-height: var(--line-height-400);
   }
 
   svg {
