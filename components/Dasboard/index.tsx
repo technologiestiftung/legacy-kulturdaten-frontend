@@ -6,14 +6,14 @@ const StyledDashboardGreeting = styled.h2`
   font-size: var(--font-size-1000);
   line-height: var(--line-height-1000);
   font-weight: 700;
-  padding-top: 1.5rem;
+  padding: 1.5rem 0;
 
   ${mq(Breakpoint.mid)} {
-    padding-top: 4.5rem;
+    padding: 4.5rem 0;
   }
 
   ${mq(Breakpoint.ultra)} {
-    padding-top: 6rem;
+    padding: 6rem 0;
   }
 `;
 
