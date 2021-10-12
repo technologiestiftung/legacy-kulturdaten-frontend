@@ -268,7 +268,6 @@ export const OfferList: React.FC<OfferListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              setMenuExpanded(false);
               const category = categories.offer;
 
               loadingScreen(
@@ -294,6 +293,7 @@ export const OfferList: React.FC<OfferListProps> = ({
                       );
 
                       mutateList();
+                      setMenuExpanded(false);
 
                       return { success: true };
                     }

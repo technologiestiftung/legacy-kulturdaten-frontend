@@ -1,9 +1,91 @@
 /* eslint-disable react/display-name */
+import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
+  },
+  dashboard: {
+    info: {
+      data: {
+        title: () => 'Die Kulturdaten (weiter-)verwenden',
+        export: {
+          title: () => 'Daten Export',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Alle Daten, die du auf Kulturdaten.Berlin bereitstellst, kannst du auch wieder in
+                Standardformaten exportieren.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Dazu kannst du in den entsprechenden Listen oder Einträgen die Export-Funktion
+                nutzen.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+        },
+        api: {
+          title: () => 'API Nutzung für Entwickler:innen',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Alle Daten, die auf Kulturdaten.Berlin bereitgestellt werden, können frei verwendet
+                werden.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Für die programmatische Nutzung benötigst du ein API Token, welches du in deinen
+                Einstellungen erstellen kannst.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Jetzt API Token erstellen',
+        },
+      },
+      linkList: {
+        help: {
+          title: () => 'Hilfe',
+          text: () =>
+            'Du benötigst Hilfe oder Erklärungen zu Funktionen der Plattform? Du möchtest mehr über das Projekt Kulturdaten.Berlin lesen? Hier findest du alle Infos:',
+          links: {
+            '1': {
+              title: () => 'Hilfebereich',
+              href: () => 'http://kulturdaten.berlin',
+            },
+            '2': {
+              title: () => 'Das Projekt',
+              href: () => 'http://kulturdaten.berlin',
+            },
+          },
+        },
+        openSource: {
+          title: () => 'Open Source',
+          text: () =>
+            'Kulturdaten.Berlin wird komplett Open Source, also quelloffen, entwickelt. Du möchtest mithelfen? Hier findest du den Quellcode:',
+          links: {
+            '1': {
+              title: () => 'Interface Code auf GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-frontend',
+            },
+            '2': {
+              title: () => 'Server Code auf GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-api',
+            },
+          },
+        },
+        contact: {
+          title: () => 'Kontakt',
+          text: () =>
+            'Du hast Fragen, Vorschläge oder Anmerkungen zur Kultudatenplattform? Melde dich gerne bei uns unter:',
+          links: {
+            '1': {
+              title: () => 'support@kulturdaten.berlin',
+              href: () => 'mailto:support@kulturdaten.berlin',
+            },
+          },
+        },
+      },
+    },
   },
   language: {
     de: () => 'Deutsch',

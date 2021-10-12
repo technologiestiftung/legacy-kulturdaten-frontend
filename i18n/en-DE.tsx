@@ -1,9 +1,88 @@
 /* eslint-disable react/display-name */
+import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
+  },
+  dashboard: {
+    info: {
+      data: {
+        title: () => 'Use the culture data (further) ',
+        export: {
+          title: () => 'Data export',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                You can also export all data that you provide on Kulturdaten.Berlin in standard
+                formats.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                To do this, you can use the export function in the corresponding lists or entries.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+        },
+        api: {
+          title: () => 'API usage for developers',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                All data provided on Kulturdaten.Berlin can be used free of charge.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                For programmatic use you need an API token, which you can create in your settings.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Create API token now',
+        },
+      },
+      linkList: {
+        help: {
+          title: () => 'Help',
+          text: () =>
+            'Do you need help or explanations about the functions of the platform? Would you like to read more about the Kulturdaten.Berlin project? You can find all the information here:',
+          links: {
+            '1': {
+              title: () => 'Support area',
+              href: () => 'http://kulturdaten.berlin',
+            },
+            '2': {
+              title: () => 'The project',
+              href: () => 'http://kulturdaten.berlin',
+            },
+          },
+        },
+        openSource: {
+          title: () => 'Open Source',
+          text: () =>
+            'Kulturdaten.Berlin is being developed completely open source. Would you like to help? You can find the source code here:',
+          links: {
+            '1': {
+              title: () => 'Interface code on GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-frontend',
+            },
+            '2': {
+              title: () => 'Server code on GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-api',
+            },
+          },
+        },
+        contact: {
+          title: () => 'Contact',
+          text: () =>
+            'Do you have any questions, suggestions or comments about the data platform? Please contact us at:',
+          links: {
+            '1': {
+              title: () => 'support@kulturdaten.berlin',
+              href: () => 'mailto:support@kulturdaten.berlin',
+            },
+          },
+        },
+      },
+    },
   },
   language: {
     de: () => 'German',

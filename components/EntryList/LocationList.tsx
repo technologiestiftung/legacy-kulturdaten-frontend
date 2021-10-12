@@ -284,7 +284,6 @@ export const LocationList: React.FC<LocationListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              setMenuExpanded(false);
               const category = categories.location;
 
               loadingScreen(
@@ -310,6 +309,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                         })
                       );
                       mutateList();
+                      setMenuExpanded(false);
 
                       return { success: true };
                     }

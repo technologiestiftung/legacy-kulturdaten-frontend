@@ -8,7 +8,7 @@ import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
 import { useT } from '../../lib/i18n';
-import { useOrganizerId } from '../../lib/useOrganizer';
+import { defaultOrganizerId } from '../../lib/useOrganizer';
 import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
 import { Button, ButtonSize, ButtonColor, ButtonType } from '../button';
@@ -37,15 +37,14 @@ export const LoginForm: React.FC = () => {
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
-  const organizerId = useOrganizerId();
   const loadingScreen = useLoadingScreen();
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
+      router.replace(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
     }
-  }, [isLoggedIn, router, locale, organizerId]);
+  }, [isLoggedIn, router, locale]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
@@ -60,7 +59,7 @@ export const LoginForm: React.FC = () => {
 
             login(
               authCookie(token, remember, locale),
-              routes.dashboard({ locale, query: { organizer: organizerId } })
+              routes.dashboard({ locale, query: { organizer: defaultOrganizerId } })
             );
 
             return { success: true };

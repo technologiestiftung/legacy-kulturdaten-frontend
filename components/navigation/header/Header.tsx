@@ -85,13 +85,15 @@ const StyledHeaderMenuItem = styled.div`
   padding: 0 0.375rem;
 `;
 
-const HeaderMenuDivider = styled.div`
+const HeaderMenuDivider = styled.div<{ disabled?: boolean }>`
   display: block;
   background: var(--grey-400);
   height: 100%;
   border-top: 0.375rem solid var(--white);
   border-bottom: 0.375rem solid var(--white);
   width: 1px;
+
+  ${({ disabled }) => disabled && 'opacity: 0.3;'}
 `;
 
 const StyledHeaderUserMenu = styled.div`
@@ -119,6 +121,7 @@ interface HeaderProps {
   user: WrappedUser;
   layout: Layouts;
   customLink?: React.ReactElement;
+  disabled?: boolean;
 }
 
 export const HeaderMain: React.FC<HeaderProps> = ({
@@ -126,6 +129,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   Link,
   menuItems,
   user,
+  disabled = false,
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
@@ -142,7 +146,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
       case MenuItemType.link: {
         return (
           <StyledHeaderMenuItem key={index}>
-            <HeaderMenuLink {...(action as MenuItemLink)} />
+            <HeaderMenuLink {...(action as MenuItemLink)} disabled={disabled} />
           </StyledHeaderMenuItem>
         );
       }
@@ -150,7 +154,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
       case MenuItemType.divider: {
         return (
           <StyledHeaderMenuItem key={index}>
-            <HeaderMenuDivider />
+            <HeaderMenuDivider disabled={disabled} />
           </StyledHeaderMenuItem>
         );
       }
