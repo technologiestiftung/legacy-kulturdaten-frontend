@@ -1,6 +1,7 @@
 import { Language } from '../../../config/locale';
 import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
+import { OpeningHours } from './openingHours';
 import { Organizer } from './organizer';
 
 export type LocationTranslation = {
@@ -28,6 +29,7 @@ export type Location = {
       translations: LocationTranslation[];
       organizer?: Organizer;
       address?: Address;
+      openingHours?: OpeningHours[];
     } & CategoryEntry['data']['relations'];
   };
   meta?: {

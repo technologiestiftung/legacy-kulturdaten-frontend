@@ -19,6 +19,97 @@ import { useApiCall } from '../../../lib/api';
 import { useT } from '../../../lib/i18n';
 import { LocationUpdate } from '../../../lib/api/routes/location/update';
 import { Input, InputType } from '../../input';
+import { OpeningHours } from '../../../lib/api/types/openingHours';
+import { OpeningHoursField } from '../../OpeningHoursField';
+import { LocationDelete } from '../../../lib/api/routes/location/delete';
+
+const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
+  const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
+  const [openingHours, setOpeningHours] = useState<OpeningHours[]>();
+  const call = useApiCall();
+  const t = useT();
+
+  const [openingHoursFromApi, setOpeningHoursFromApi] = useState<OpeningHours[]>();
+
+  const initialOpeningHours = useMemo(
+    () => entry?.data?.relations?.openingHours,
+    [entry?.data?.relations?.openingHours]
+  );
+
+  const pristine = useMemo(
+    () => JSON.stringify(openingHours) === JSON.stringify(openingHoursFromApi),
+    [openingHours, openingHoursFromApi]
+  );
+
+  useEffect(() => {
+    if (JSON.stringify(initialOpeningHours) !== JSON.stringify(openingHoursFromApi)) {
+      setOpeningHoursFromApi(initialOpeningHours);
+      setOpeningHours(initialOpeningHours);
+    }
+  }, [initialOpeningHours, openingHoursFromApi]);
+
+  const renderedForm = (
+    <div>
+      <EntryFormHead title={t('categories.location.form.openingHours') as string} />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          <OpeningHoursField
+            openingHours={openingHours || []}
+            onChange={(updatedOpeningHours) => setOpeningHours(updatedOpeningHours)}
+          />
+        </FormItem>
+      </FormGrid>
+    </div>
+  );
+
+  return {
+    renderedForm,
+    submit: async () => {
+      if (!pristine) {
+        const openingHoursIds = openingHours.map((openingHour) => openingHour.id);
+        const deletedOpeningHours = openingHoursFromApi
+          .filter((openingHour) => !openingHoursIds.includes(openingHour.id))
+          .map((openingHour) => openingHour.id);
+
+        if (deletedOpeningHours.length > 0) {
+          try {
+            await call<LocationDelete>(category.api.delete.factory, {
+              id: entry.data.id,
+              entry: {
+                relations: {
+                  openingHours: deletedOpeningHours,
+                },
+              },
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        try {
+          const resp = await call<LocationUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                openingHours: openingHours,
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+    reset: () => undefined,
+    valid: true,
+    hint: false,
+  };
+};
 
 const useUrlForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
@@ -251,6 +342,22 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
   );
 
   const {
+    renderedForm: openingHoursForm,
+    submit: openingHoursSubmit,
+    pristine: openingHoursPristine,
+    valid: openingHoursValid,
+    hint: openingHoursHint,
+  } = useOpeningHoursForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid,
+    false
+  );
+
+  const {
     renderedForm: urlForm,
     submit: urlSubmit,
     pristine: urlPristine,
@@ -267,20 +374,36 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
   );
 
   useEffect(() => {
-    setValid(![nameValid, addressValid, descriptionValid, typeValid, urlValid].includes(false));
-  }, [addressValid, descriptionValid, nameValid, typeValid, urlValid]);
+    setValid(
+      ![nameValid, addressValid, descriptionValid, typeValid, urlValid, openingHoursValid].includes(
+        false
+      )
+    );
+  }, [addressValid, descriptionValid, nameValid, typeValid, urlValid, openingHoursValid]);
 
   const pristine = useMemo(
     () =>
-      ![namePristine, descriptionPristine, addressPristine, typePristine, urlPristine].includes(
-        false
-      ),
-    [namePristine, descriptionPristine, addressPristine, typePristine, urlPristine]
+      ![
+        namePristine,
+        descriptionPristine,
+        addressPristine,
+        typePristine,
+        urlPristine,
+        openingHoursPristine,
+      ].includes(false),
+    [
+      namePristine,
+      descriptionPristine,
+      addressPristine,
+      typePristine,
+      urlPristine,
+      openingHoursPristine,
+    ]
   );
 
   const hint = useMemo(
-    () => nameHint || descriptionHint || addressHint || typeHint || urlHint,
-    [nameHint, descriptionHint, addressHint, typeHint, urlHint]
+    () => nameHint || descriptionHint || addressHint || typeHint || urlHint || openingHoursHint,
+    [nameHint, descriptionHint, addressHint, typeHint, urlHint, openingHoursHint]
   );
 
   return (
@@ -295,6 +418,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               descriptionSubmit();
               addressSubmit();
               urlSubmit();
+              openingHoursSubmit();
             }}
             date={formattedDate}
             active={!pristine}
@@ -305,7 +429,10 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{typeForm}</EntryFormContainer>
             {typeValue === LocationType.physicallocation ? (
-              <EntryFormContainer>{addressForm}</EntryFormContainer>
+              <>
+                <EntryFormContainer>{addressForm}</EntryFormContainer>
+                <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
+              </>
             ) : (
               <EntryFormContainer>{urlForm}</EntryFormContainer>
             )}
