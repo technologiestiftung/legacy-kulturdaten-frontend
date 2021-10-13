@@ -21,7 +21,9 @@ export type Location = {
   data: {
     type: LocationType;
     id?: string;
-    attributes?: DefaultAttributes;
+    attributes?: {
+      url?: string;
+    } & DefaultAttributes;
     relations?: {
       translations: LocationTranslation[];
       organizer?: Organizer;

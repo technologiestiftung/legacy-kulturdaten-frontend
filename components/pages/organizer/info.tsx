@@ -3,8 +3,7 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
-import { Address } from '../../../lib/api/types/address';
-import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
+import { CategoryEntry } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -15,203 +14,13 @@ import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { EntryFormHook } from '../helpers/form';
+import { useAddressForm } from '../helpers/form/Address';
 import { useDescriptionForm } from '../helpers/form/Description';
 import { useLinksForm } from '../helpers/form/Links';
 import { useNameForm } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-
-const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const call = useApiCall();
-  const mutateList = useMutateList(category);
-
-  const initialAddress = useMemo(
-    () => entry?.data?.relations?.address,
-    [entry?.data?.relations?.address]
-  );
-
-  const [address, setAddress] = useState<Address>(initialAddress);
-  const [pristine, setPristine] = useState(true);
-
-  const required = useMemo(
-    () => entry?.data?.attributes?.status === PublishedStatus.published,
-    [entry?.data?.attributes?.status]
-  );
-
-  useEffect(() => {
-    if (pristine) {
-      setAddress(initialAddress);
-    }
-  }, [pristine, initialAddress]);
-
-  const t = useT();
-
-  const valid = useMemo(
-    () =>
-      !loaded ||
-      !required ||
-      (address?.attributes?.street1?.length > 0 &&
-        address?.attributes?.zipCode?.length > 0 &&
-        address?.attributes?.city?.length > 0),
-    [
-      loaded,
-      address?.attributes?.city?.length,
-      address?.attributes?.street1?.length,
-      address?.attributes?.zipCode?.length,
-      required,
-    ]
-  );
-
-  const hint = useMemo(
-    () =>
-      showHint &&
-      loaded &&
-      (!address?.attributes?.street1 ||
-        address.attributes.street1.length < 1 ||
-        !address?.attributes?.zipCode ||
-        address.attributes.zipCode?.length < 1 ||
-        !address?.attributes?.city ||
-        address.attributes.city?.length < 1),
-    [
-      showHint,
-      loaded,
-      address?.attributes?.street1,
-      address?.attributes?.zipCode,
-      address?.attributes?.city,
-    ]
-  );
-
-  return {
-    renderedForm: (
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-        }}
-      >
-        <EntryFormHead
-          title={`${t('categories.organizer.form.address') as string}`}
-          valid={valid}
-          hint={hint}
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.half}>
-            <Input
-              label={t('categories.organizer.form.street1') as string}
-              type={InputType.text}
-              value={address?.attributes?.street1 || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    street1: e.target.value,
-                  },
-                });
-              }}
-              required={required}
-              hint={
-                showHint &&
-                (!address?.attributes?.street1 || address?.attributes?.street1.length < 1)
-              }
-            />
-          </FormItem>
-          <FormItem width={FormItemWidth.half}>
-            <Input
-              label={t('categories.organizer.form.street2') as string}
-              type={InputType.text}
-              value={address?.attributes?.street2 || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    street2: e.target.value,
-                  },
-                });
-              }}
-            />
-          </FormItem>
-          <FormItem width={FormItemWidth.quarter}>
-            <Input
-              label={t('categories.organizer.form.zipCode') as string}
-              type={InputType.text}
-              value={address?.attributes?.zipCode || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    zipCode: e.target.value,
-                  },
-                });
-              }}
-              required={required}
-              hint={
-                showHint &&
-                (!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1)
-              }
-            />
-          </FormItem>
-          <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
-            <Input
-              label={t('categories.organizer.form.city') as string}
-              type={InputType.text}
-              value={address?.attributes?.city || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    city: e.target.value,
-                  },
-                });
-              }}
-              required={required}
-              hint={
-                showHint && (!address?.attributes?.city || address?.attributes?.city.length < 1)
-              }
-            />
-          </FormItem>
-        </FormGrid>
-      </form>
-    ),
-    submit: async () => {
-      if (valid && !pristine) {
-        try {
-          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            id: entry.data.id,
-            entry: {
-              relations: {
-                address,
-              },
-            },
-          });
-
-          if (resp.status === 200) {
-            mutate();
-            mutateList();
-            setTimeout(() => setPristine(true), 500);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    },
-    pristine,
-    reset: () => {
-      setAddress(initialAddress);
-      setPristine(true);
-    },
-    valid,
-    hint,
-  };
-};
 
 const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -396,7 +205,16 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     reset: addressReset,
     valid: addressValid,
     hint: addressHint,
-  } = useAddressForm({ category, query }, loaded, valid);
+  } = useAddressForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid,
+    true,
+    t('categories.organizer.form.address')
+  );
 
   const {
     renderedForm: linksForm,

@@ -261,6 +261,12 @@ export const useCategories: () => {
           factory: locationDeleteFactory,
         },
       },
+      requirements: [
+        {
+          translationKey: 'categories.organizer.requirements.name',
+          publishableKeys: ['attributes.name'],
+        },
+      ],
     },
   };
 };
