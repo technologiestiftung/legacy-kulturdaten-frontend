@@ -18,4 +18,5 @@ export type EntryFormHook = (
   reset: () => void;
   valid: boolean;
   hint: boolean;
+  [key: string]: unknown;
 };

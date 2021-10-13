@@ -599,6 +599,13 @@ export const deDE: Localization = {
         contact: () => 'Kontaktdaten',
         tel: () => 'Telefon',
         district: () => 'Bezirk',
+        type: {
+          title: () => 'Typ des Ortes',
+          physicalLabel: () => 'Physischer Ort',
+          physicalText: () => 'Ein physisch existierender Ort mit Adresse, z.B. ein Gebäude.',
+          virtualLabel: () => 'Virtueller Ort',
+          virtualText: () => 'Ein virtueller Ort mit URL, z.B. ein YouTube oder Twitch Kanal.',
+        },
       },
     },
   },

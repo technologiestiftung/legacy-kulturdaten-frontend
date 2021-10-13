@@ -597,6 +597,14 @@ export const enDE: Localization = {
         contact: () => 'Contact data',
         tel: () => 'Phone',
         district: () => 'District',
+        type: {
+          title: () => 'Type of the Location',
+          physicalLabel: () => 'Physical Location',
+          physicalText: () => 'A physically existing location with an address, e.g. a building.',
+          virtualLabel: () => 'Virtual Location',
+          virtualText: () =>
+            'A virtually existing location with an URL, e.g. a YouTube or Twitch channel.',
+        },
       },
     },
   },
