@@ -597,6 +597,7 @@ export const enDE: Localization = {
         contact: () => 'Contact data',
         tel: () => 'Phone',
         district: () => 'District',
+        url: () => 'URL of the Virtual Location',
         type: {
           title: () => 'Type of the Location',
           physicalLabel: () => 'Physical Location',

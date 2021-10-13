@@ -18,6 +18,70 @@ import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { useT } from '../../../lib/i18n';
 import { LocationUpdate } from '../../../lib/api/routes/location/update';
+import { Input, InputType } from '../../input';
+
+const useUrlForm: EntryFormHook = ({ category, query }) => {
+  const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
+  const [url, setUrl] = useState<string>();
+  const call = useApiCall();
+  const t = useT();
+
+  const [urlFromApi, setUrlFromApi] = useState<string>();
+
+  const initialUrl = useMemo(() => entry?.data?.attributes?.url, [entry?.data?.attributes?.url]);
+
+  const pristine = useMemo(() => url === urlFromApi, [url, urlFromApi]);
+
+  useEffect(() => {
+    if (initialUrl !== urlFromApi) {
+      setUrlFromApi(initialUrl);
+      setUrl(initialUrl);
+    }
+  }, [initialUrl, urlFromApi]);
+
+  const renderedForm = (
+    <div>
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          <Input
+            label={t('categories.location.form.url') as string}
+            type={InputType.url}
+            value={url || ''}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+        </FormItem>
+      </FormGrid>
+    </div>
+  );
+
+  return {
+    renderedForm,
+    submit: async () => {
+      if (!pristine) {
+        try {
+          const resp = await call<LocationUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              attributes: {
+                url,
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+    reset: () => undefined,
+    valid: true,
+    hint: false,
+  };
+};
 
 const useTypeForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
@@ -186,18 +250,37 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     false
   );
 
+  const {
+    renderedForm: urlForm,
+    submit: urlSubmit,
+    pristine: urlPristine,
+    valid: urlValid,
+    hint: urlHint,
+  } = useUrlForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid,
+    false
+  );
+
   useEffect(() => {
-    setValid(![nameValid, addressValid, descriptionValid, typeValid].includes(false));
-  }, [addressValid, descriptionValid, nameValid, typeValid]);
+    setValid(![nameValid, addressValid, descriptionValid, typeValid, urlValid].includes(false));
+  }, [addressValid, descriptionValid, nameValid, typeValid, urlValid]);
 
   const pristine = useMemo(
-    () => ![namePristine, descriptionPristine, addressPristine, typePristine].includes(false),
-    [namePristine, descriptionPristine, addressPristine, typePristine]
+    () =>
+      ![namePristine, descriptionPristine, addressPristine, typePristine, urlPristine].includes(
+        false
+      ),
+    [namePristine, descriptionPristine, addressPristine, typePristine, urlPristine]
   );
 
   const hint = useMemo(
-    () => nameHint || descriptionHint || addressHint || typeHint,
-    [nameHint, descriptionHint, addressHint, typeHint]
+    () => nameHint || descriptionHint || addressHint || typeHint || urlHint,
+    [nameHint, descriptionHint, addressHint, typeHint, urlHint]
   );
 
   return (
@@ -211,6 +294,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               nameSubmit();
               descriptionSubmit();
               addressSubmit();
+              urlSubmit();
             }}
             date={formattedDate}
             active={!pristine}
@@ -220,8 +304,10 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{typeForm}</EntryFormContainer>
-            {typeValue === LocationType.physicallocation && (
+            {typeValue === LocationType.physicallocation ? (
               <EntryFormContainer>{addressForm}</EntryFormContainer>
+            ) : (
+              <EntryFormContainer>{urlForm}</EntryFormContainer>
             )}
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
           </EntryFormWrapper>
