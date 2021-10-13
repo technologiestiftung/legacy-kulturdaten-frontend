@@ -375,7 +375,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     renderedForm: organizerLocationForm,
     submit: organizerLocationSubmit,
     pristine: organizerLocationPristine,
-    reset: organizerLocationReset,
     valid: organizerLocationValid,
     hint: organizerLocationHint,
   } = useOrganizerLocationForm(
@@ -391,7 +390,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     renderedForm: nameForm,
     submit: nameSubmit,
     pristine: namePristine,
-    reset: nameReset,
     valid: nameValid,
     hint: nameHint,
   } = useNameForm(
@@ -407,7 +405,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     renderedForm: descriptionForm,
     submit: descriptionSubmit,
     pristine: descriptionPristine,
-    reset: descriptionReset,
     valid: descriptionValid,
     hint: descriptionHint,
   } = useDescriptionForm(
@@ -423,7 +420,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     renderedForm: pricingForm,
     submit: pricingSubmit,
     pristine: pricingPristine,
-    reset: pricingReset,
     valid: pricingValid,
     hint: pricingHint,
   } = usePricingForm(
@@ -439,7 +435,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     renderedForm: roomForm,
     submit: roomSubmit,
     pristine: roomPristine,
-    reset: roomReset,
     valid: roomValid,
     hint: roomHint,
   } = useRoomForm(
@@ -455,7 +450,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     renderedForm: linksForm,
     submit: linksSubmit,
     pristine: linksPristine,
-    reset: linksReset,
     valid: linksValid,
     hint: linksHint,
   } = useLinksForm(
@@ -467,14 +461,24 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     valid
   );
 
+  useEffect(() => {
+    setValid(
+      ![
+        nameValid,
+        pricingValid,
+        roomValid,
+        descriptionValid,
+        linksValid,
+        organizerLocationValid,
+      ].includes(false)
+    );
+  }, [pricingValid, roomValid, descriptionValid, linksValid, nameValid, organizerLocationValid]);
+
   const pristine = useMemo(
     () =>
       ![
         namePristine,
         organizerLocationPristine,
-        // addressPristine,
-        // linksPristine,
-        // contactPristine,
         descriptionPristine,
         pricingPristine,
         roomPristine,
@@ -491,8 +495,9 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
   );
 
   const hint = useMemo(
-    () => nameHint || descriptionHint || organizerLocationHint,
-    [nameHint, descriptionHint, organizerLocationHint]
+    () =>
+      nameHint || descriptionHint || organizerLocationHint || pricingHint || roomHint || linksHint,
+    [nameHint, descriptionHint, organizerLocationHint, pricingHint, roomHint, linksHint]
   );
 
   return (
@@ -508,9 +513,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
               pricingSubmit();
               roomSubmit();
               linksSubmit();
-              // addressSubmit();
-              // linksSubmit();
-              // contactSubmit();
             }}
             date={formattedDate}
             active={!pristine}
@@ -524,7 +526,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
             <EntryFormContainer>{linksForm}</EntryFormContainer>
-            <EntryFormContainer></EntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

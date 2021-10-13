@@ -94,9 +94,11 @@ export const apiRoutes: {
     `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations,media,tags`,
+  locationShow: ({ id }) =>
+    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours`,
   locationCreate: () => `/${apiVersion}/location`,
-  locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
+  locationUpdate: ({ id }) =>
+    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
