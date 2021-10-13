@@ -1,19 +1,20 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { EntryFormProps } from '.';
+import { EntryFormHook, EntryFormProps } from '.';
 import { Language } from '../../../../config/locale';
-import { useApiCall } from '../../../../lib/api';
-import { OrganizerShow } from '../../../../lib/api/routes/organizer/show';
-import { OrganizerUpdate } from '../../../../lib/api/routes/organizer/update';
-import { Organizer, OrganizerTranslation } from '../../../../lib/api/types/organizer';
+import { ApiCall, useApiCall } from '../../../../lib/api';
+import { Translation } from '../../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus } from '../../../../lib/api/types/general';
 import { useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { WindowContext } from '../../../../lib/WindowService';
+import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
 import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
+import { FormContainer } from '../formComponents';
 
 const StyledDescription = styled.div`
   display: flex;
@@ -89,14 +90,21 @@ export const useDescription = ({
   valid: boolean;
   hint: boolean;
 } => {
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const { entry, mutate } = useEntry<
+    {
+      data: {
+        relations: { translations: [{ attributes: { description: string } } & Translation] };
+      };
+    } & CategoryEntry,
+    ApiCall
+  >(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
   const [cachedApiText, setCachedApiText] = useState<string>();
   const { rendered } = useContext(WindowContext);
   const t = useT();
 
-  const entryTranslation = getTranslation<OrganizerTranslation>(
+  const entryTranslation = getTranslation<{ attributes: { description: string } } & Translation>(
     language,
     entry?.data?.relations?.translations,
     false
@@ -170,7 +178,7 @@ export const useDescription = ({
     submit: async () => {
       if (valid && !pristine) {
         try {
-          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+          const resp = await call(category.api.update.factory, {
             entry: {
               relations: {
                 translations: [
@@ -194,6 +202,76 @@ export const useDescription = ({
       }
     },
     pristine,
+    valid,
+    hint,
+  };
+};
+
+export const useDescriptionForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
+  const t = useT();
+  const { entry } = useEntry(category, query);
+
+  const isPublished = entry?.data?.attributes?.status === PublishedStatus.published;
+
+  const {
+    renderedDescription: renderedDescriptionGerman,
+    submit: submitGerman,
+    pristine: pristineGerman,
+    valid: validGerman,
+    hint: hintGerman,
+  } = useDescription({
+    category,
+    query,
+    language: Language.de,
+    title: t('forms.descriptionGerman') as string,
+    required: isPublished,
+    showHint,
+  });
+
+  const {
+    renderedDescription: renderedDescriptionEnglish,
+    submit: submitEnglish,
+    pristine: pristineEnglish,
+    valid: validEnglish,
+    hint: hintEnglish,
+  } = useDescription({
+    category,
+    query,
+    language: Language.en,
+    title: t('forms.descriptionEnglish') as string,
+    required: false,
+    showHint,
+  });
+
+  const pristine = useMemo(
+    () => pristineEnglish && pristineGerman,
+    [pristineEnglish, pristineGerman]
+  );
+
+  const valid = useMemo(
+    () => !loaded || (validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
+
+  const hint = useMemo(
+    () => showHint && loaded && (hintGerman || hintEnglish),
+    [showHint, loaded, hintEnglish, hintGerman]
+  );
+
+  return {
+    renderedForm: (
+      <FormContainer>
+        <EntryFormHead title={`${t('forms.description') as string}`} valid={valid} hint={hint} />
+        {renderedDescriptionGerman}
+        {renderedDescriptionEnglish}
+      </FormContainer>
+    ),
+    submit: async () => {
+      submitGerman();
+      submitEnglish();
+    },
+    pristine,
+    reset: () => undefined,
     valid,
     hint,
   };

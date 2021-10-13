@@ -1,5 +1,8 @@
 import { Language } from '../../../config/locale';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
+import { Link } from './link';
+import { Location } from './location';
+import { Organizer } from './organizer';
 import {
   EntrySubject,
   EntrySubjectTranslation,
@@ -11,11 +14,6 @@ export type OfferType = EntryType;
 export type OfferSubject = EntrySubject;
 export type OfferTypeTranslation = EntryTypeTranslation;
 export type OfferSubjectTranslation = EntrySubjectTranslation;
-
-export enum OfferMode {
-  permanent = 'permanent',
-  scheduled = 'scheduled',
-}
 
 export enum OfferDateStatus {
   scheduled = 'scheduled',
@@ -60,6 +58,7 @@ export type OfferTranslation = {
     language: Language;
     name?: string;
     description?: string;
+    roomDescription?: string;
   };
 } & Translation;
 
@@ -68,14 +67,20 @@ export type Offer = {
     id?: string;
     type?: 'offer';
     attributes?: {
-      mode?: OfferMode;
+      hasFee?: boolean;
+      needsRegistration?: boolean;
+      ticketUrl?: string;
+      isPermanent?: boolean;
     } & DefaultAttributes;
     relations?: {
-      translations: OfferTranslation[];
       dates?: OfferDate['data'][];
+      links?: Link[];
+      location?: Location['data'] | string;
+      organizer?: Organizer['data'] | string;
       subjects?: OfferSubject[];
+      translations: OfferTranslation[];
       types?: OfferType[];
-    };
+    } & CategoryEntry['data']['relations'];
   };
   meta?: {
     publishable:

@@ -56,6 +56,10 @@ const StyledFormItem = styled.div<{
   ${({ customCss }) => customCss}
 `;
 
+export const FormContainer = styled.div`
+  padding: 0 0 1.5rem;
+`;
+
 const StyledFormItemChild = styled.div<{ flexGrow?: string }>`
   flex-grow: ${({ flexGrow }) => flexGrow || '1'};
 `;

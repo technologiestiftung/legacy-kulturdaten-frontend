@@ -26,7 +26,7 @@ export type Location = {
       translations: LocationTranslation[];
       organizer?: Organizer;
       address?: Address;
-    };
+    } & CategoryEntry['data']['relations'];
   };
   meta?: {
     publishable:

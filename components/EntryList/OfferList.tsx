@@ -401,9 +401,9 @@ export const OfferList: React.FC<OfferListProps> = ({
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
-              <div>{t('categories.organizer.list.nothing')}</div>
+              <div>{t('categories.offer.list.nothing')}</div>
             ) : (
-              <div>{t('categories.organizer.list.loading')}</div>
+              <div>{t('categories.offer.list.loading')}</div>
             )}
           </EntryCardGrid>
         ) : (
@@ -423,11 +423,11 @@ export const OfferList: React.FC<OfferListProps> = ({
               />
             ) : rows && rows.length === 0 ? (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.nothing')}</div>
+                <div>{t('categories.offer.list.nothing')}</div>
               </EntryCardGrid>
             ) : (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.loading')}</div>
+                <div>{t('categories.offer.list.loading')}</div>
               </EntryCardGrid>
             )}
           </StyledEntryListTable>
