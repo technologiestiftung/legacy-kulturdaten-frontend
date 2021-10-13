@@ -9,7 +9,8 @@ import {
 import { useNameForm } from '../helpers/form/Name';
 import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { Location } from '../../../lib/api/types/location';
-import { Offer } from '../../../lib/api/types/offer';
+import { Offer, OfferTranslation } from '../../../lib/api/types/offer';
+import { Language, languageTranslationKeys } from '../../../config/locales';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { EntryPicker } from '../../EntryPicker';
@@ -30,6 +31,102 @@ import { Organizer } from '../../../lib/api/types/organizer';
 import { Checkbox } from '../../checkbox';
 import { usePseudoUID } from '../../../lib/uid';
 import { Input, InputType } from '../../input';
+import { contentLanguages } from '../../../config/locales';
+import { useLinksForm } from '../helpers/form/Links';
+
+const useRoomForm: EntryFormHook = ({ category, query }) => {
+  const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
+  const [translations, setTranslations] = useState<OfferTranslation[]>();
+  const call = useApiCall();
+  const t = useT();
+
+  const [translationsFromApi, setTranslationsFromApi] = useState<OfferTranslation[]>();
+
+  const initialTranslations = useMemo(
+    () => entry?.data?.relations?.translations,
+    [entry?.data?.relations?.translations]
+  );
+
+  const pristine = useMemo(
+    () => JSON.stringify(translations) === JSON.stringify(translationsFromApi),
+    [translations, translationsFromApi]
+  );
+
+  useEffect(() => {
+    if (JSON.stringify(initialTranslations) !== JSON.stringify(translationsFromApi)) {
+      setTranslationsFromApi(initialTranslations);
+      setTranslations(initialTranslations);
+    }
+  }, [initialTranslations, translationsFromApi]);
+
+  const renderedForm = (
+    <FormContainer>
+      <EntryFormHead title={t('categories.offer.form.locationInfo') as string} />
+      <FormGrid>
+        {contentLanguages.map((language: Language, index) => {
+          const currentTranslation = translations
+            ? getTranslation<OfferTranslation>(language, translations, false)
+            : undefined;
+
+          return (
+            <FormItem width={FormItemWidth.half} key={index}>
+              <Input
+                label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
+                value={currentTranslation?.attributes?.roomDescription || ''}
+                type={InputType.text}
+                onChange={(e) => {
+                  const updatedTranslation = {
+                    ...currentTranslation,
+                    attributes: {
+                      ...currentTranslation?.attributes,
+                      language,
+                      roomDescription: e.target.value,
+                    },
+                  };
+
+                  const filteredTranslations =
+                    translations?.filter(
+                      (translation) => translation.attributes?.language !== language
+                    ) || [];
+
+                  setTranslations([...filteredTranslations, updatedTranslation]);
+                }}
+              />
+            </FormItem>
+          );
+        })}
+      </FormGrid>
+    </FormContainer>
+  );
+
+  return {
+    renderedForm,
+    submit: async () => {
+      if (!pristine) {
+        try {
+          const resp = await call<OfferUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                translations: translations.map((translation) => translation.attributes),
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+    reset: () => undefined,
+    valid: true,
+    hint: false,
+  };
+};
 
 const usePricingForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -158,7 +255,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }, loaded) =>
     <EntryFormContainerColumns>
       <div>
         <EntryFormHead
-          title={t('categories.offer.form.organizer.label') as string}
+          title={`${t('categories.offer.form.organizer.label')} (${t('forms.required')})`}
           hint={typeof organizerId === 'undefined'}
         />
         <FormGrid>
@@ -338,6 +435,38 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     valid
   );
 
+  const {
+    renderedForm: roomForm,
+    submit: roomSubmit,
+    pristine: roomPristine,
+    reset: roomReset,
+    valid: roomValid,
+    hint: roomHint,
+  } = useRoomForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
+
+  const {
+    renderedForm: linksForm,
+    submit: linksSubmit,
+    pristine: linksPristine,
+    reset: linksReset,
+    valid: linksValid,
+    hint: linksHint,
+  } = useLinksForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
+
   const pristine = useMemo(
     () =>
       ![
@@ -348,8 +477,17 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
         // contactPristine,
         descriptionPristine,
         pricingPristine,
+        roomPristine,
+        linksPristine,
       ].includes(false),
-    [namePristine, descriptionPristine, organizerLocationPristine, pricingPristine]
+    [
+      namePristine,
+      descriptionPristine,
+      organizerLocationPristine,
+      pricingPristine,
+      roomPristine,
+      linksPristine,
+    ]
   );
 
   const hint = useMemo(
@@ -368,6 +506,8 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
               descriptionSubmit();
               organizerLocationSubmit();
               pricingSubmit();
+              roomSubmit();
+              linksSubmit();
               // addressSubmit();
               // linksSubmit();
               // contactSubmit();
@@ -380,8 +520,10 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
+            <EntryFormContainer>{roomForm}</EntryFormContainer>
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
+            <EntryFormContainer>{linksForm}</EntryFormContainer>
             <EntryFormContainer></EntryFormContainer>
           </EntryFormWrapper>
         </div>

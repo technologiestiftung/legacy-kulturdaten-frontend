@@ -510,6 +510,10 @@ export const deDE: Localization = {
       },
     },
     offer: {
+      list: {
+        loading: () => 'Lade Angebote',
+        nothing: () => 'Keine Angebote für die aktive Filterung gefunden',
+      },
       title: {
         plural: () => 'Angebote',
         singular: () => 'Angebot',
@@ -532,6 +536,7 @@ export const deDE: Localization = {
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
+        locationInfo: () => 'Informationen zum Veranstaltungsort',
         pricing: {
           title: () => 'Preise & Eintritt',
           hasFee: () => 'Angebot ist kostenpflichtig',
@@ -560,6 +565,10 @@ export const deDE: Localization = {
       },
     },
     location: {
+      list: {
+        loading: () => 'Lade Orte',
+        nothing: () => 'Keine Orte für die aktive Filterung gefunden',
+      },
       title: {
         plural: () => 'Orte',
         singular: () => 'Ort',

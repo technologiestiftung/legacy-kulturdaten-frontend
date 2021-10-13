@@ -418,9 +418,9 @@ export const LocationList: React.FC<LocationListProps> = ({
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
-              <div>{t('categories.organizer.list.nothing')}</div>
+              <div>{t('categories.location.list.nothing')}</div>
             ) : (
-              <div>{t('categories.organizer.list.loading')}</div>
+              <div>{t('categories.location.list.loading')}</div>
             )}
           </EntryCardGrid>
         ) : (
@@ -440,11 +440,11 @@ export const LocationList: React.FC<LocationListProps> = ({
               />
             ) : rows && rows.length === 0 ? (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.nothing')}</div>
+                <div>{t('categories.location.list.nothing')}</div>
               </EntryCardGrid>
             ) : (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.loading')}</div>
+                <div>{t('categories.location.list.loading')}</div>
               </EntryCardGrid>
             )}
           </StyledEntryListTable>

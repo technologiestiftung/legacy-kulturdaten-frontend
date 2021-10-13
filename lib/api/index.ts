@@ -103,10 +103,10 @@ export const apiRoutes: {
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>

@@ -508,6 +508,10 @@ export const enDE: Localization = {
       },
     },
     offer: {
+      list: {
+        loading: () => 'Loading Offers',
+        nothing: () => 'No Offers found with current filters',
+      },
       title: {
         plural: () => 'Offers',
         singular: () => 'Offer',
@@ -530,6 +534,7 @@ export const enDE: Localization = {
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
+        locationInfo: () => 'Information about the offer location',
         pricing: {
           title: () => 'Pricing & admission',
           hasFee: () => 'Offer is chargeable',
@@ -558,6 +563,10 @@ export const enDE: Localization = {
       },
     },
     location: {
+      list: {
+        loading: () => 'Loading Locations',
+        nothing: () => 'No Locations found with current filters',
+      },
       title: {
         plural: () => 'Locations',
         singular: () => 'Location',

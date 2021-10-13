@@ -14,104 +14,13 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
-import { useLinkList } from '../../linklist';
 import { EntryFormHook } from '../helpers/form';
 import { useDescriptionForm } from '../helpers/form/Description';
+import { useLinksForm } from '../helpers/form/Links';
 import { useNameForm } from '../helpers/form/Name';
-import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-
-const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
-  const t = useT();
-  const call = useApiCall();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const mutateList = useMutateList(category);
-
-  const initialLinks = useMemo(
-    () => entry?.data?.relations?.links?.map((link) => link.attributes?.url),
-    [entry?.data?.relations?.links]
-  );
-
-  const [links, setLinks] = useState<string[]>(initialLinks);
-
-  const [linksFromApi, setLinksFromApi] = useState<string[]>();
-
-  const pristine = useMemo(
-    () =>
-      links === initialLinks ||
-      (Array.isArray(links) &&
-        Array.isArray(initialLinks) &&
-        links.length === initialLinks.length &&
-        links.reduce((allLinksEqual, link, index) => {
-          if (link !== initialLinks[index]) {
-            return false;
-          }
-          return allLinksEqual;
-        }, true)),
-    [links, initialLinks]
-  );
-
-  const { renderedLinkList, init, valid } = useLinkList({
-    links: links || [],
-    onChange: (updatedLinks) => {
-      setLinks(updatedLinks);
-    },
-    maxLinks: 3,
-    required: false,
-  });
-
-  useEffect(() => {
-    if (initialLinks !== linksFromApi) {
-      setLinksFromApi(initialLinks);
-      setLinks(initialLinks);
-      init(initialLinks);
-    }
-  }, [init, linksFromApi, initialLinks]);
-
-  return {
-    renderedForm: (
-      <FormContainer>
-        <EntryFormHead
-          title={`${t('categories.organizer.form.links') as string}`}
-          valid={!loaded || valid}
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
-        </FormGrid>
-      </FormContainer>
-    ),
-    submit: async () => {
-      if (valid && !pristine) {
-        try {
-          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-            id: entry.data.id,
-            entry: {
-              relations: {
-                links,
-              },
-            },
-          });
-
-          if (resp.status === 200) {
-            mutate();
-            mutateList();
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    },
-    pristine,
-    reset: () => {
-      setLinksFromApi(initialLinks);
-      setLinks(initialLinks);
-      init(initialLinks);
-    },
-    valid: !loaded || valid,
-    hint: false,
-  };
-};
 
 const useAddressForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
