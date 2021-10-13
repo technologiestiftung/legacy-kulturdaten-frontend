@@ -114,12 +114,6 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
     font-size: var(--font-size-600);
     line-height: var(--line-height-600);
   }
-`;
-
-const StyledEntryHeaderSubTitle = styled.h2<{ skeleton: boolean }>`
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-  font-weight: 400;
 
   ${({ skeleton }) =>
     skeleton
@@ -138,6 +132,12 @@ const StyledEntryHeaderSubTitle = styled.h2<{ skeleton: boolean }>`
           }
         `
       : ''}
+`;
+
+const StyledEntryHeaderSubTitle = styled.h2`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+  font-weight: 400;
 `;
 
 const StyledEntryHeaderPublishSlot = styled.div`
@@ -287,11 +287,11 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
     <StyledEntryHeader>
       <StyledEntryHeaderHead minimalVariant={minimalVariant}>
         <StyledEntryHeaderTitleWrapper>
-          <StyledEntryHeaderTitle skeleton={typeof subTitle === 'undefined'}>
+          <StyledEntryHeaderTitle skeleton={typeof title === 'undefined' || title.length === 0}>
             {title}
           </StyledEntryHeaderTitle>
           {subTitle && (
-            <StyledEntryHeaderSubTitle skeleton={typeof subTitle === 'undefined'}>
+            <StyledEntryHeaderSubTitle>
               <span>{subTitle}</span>
             </StyledEntryHeaderSubTitle>
           )}
