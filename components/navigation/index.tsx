@@ -113,7 +113,7 @@ export const useNavigation = (
       Link={Link}
       menuItems={activeHeader.menuItems}
       layout={layout}
-      disabled={organizerId === defaultOrganizerId}
+      disabled={user?.isLoggedIn && organizerId === defaultOrganizerId}
     />
   );
 
