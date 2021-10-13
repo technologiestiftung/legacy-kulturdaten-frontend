@@ -102,9 +102,11 @@ export const apiRoutes: {
     `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
       query?.size && `&size=${query.size}`
     }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
+  offerShow: ({ id }) =>
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer`,
   offerCreate: () => `/${apiVersion}/offer`,
-  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
+  offerUpdate: ({ id }) =>
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>

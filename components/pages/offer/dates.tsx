@@ -7,7 +7,7 @@ import { useApiCall } from '../../../lib/api';
 import { OfferDateCreate, offerDateCreateFactory } from '../../../lib/api/routes/offer/date/create';
 import { OfferDateUpdate, offerDateUpdateFactory } from '../../../lib/api/routes/offer/date/update';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
-import { Offer, OfferDate, OfferMode } from '../../../lib/api/types/offer';
+import { Offer, OfferDate } from '../../../lib/api/types/offer';
 import { CategoryEntryPage, Order, useEntry, useOfferDateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { getTranslation } from '../../../lib/translations';
@@ -45,7 +45,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 }: CategoryEntryPage) => {
   const renderedEntryHeader = useEntryHeader({ category, query });
   const t = useT();
-  const [value, setValue] = useState<OfferMode>(OfferMode.scheduled);
+  const [isPermanent, setIsPermanent] = useState<boolean>(false);
   const uid = usePseudoUID();
   const { entry } = useEntry<Offer, OfferShow>(category, query);
   const formattedDate = useSaveDate(entry);
@@ -176,14 +176,14 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
             <FormItem width={FormItemWidth.full}>
               <RadioVariant
                 labelledBy={`radio-${uid}`}
-                value={value}
+                value={String(isPermanent)}
                 name="test-radio-variant"
                 onChange={(value) => {
-                  setValue(value as OfferMode);
+                  setIsPermanent(Boolean(value === 'true'));
                 }}
                 options={[
                   {
-                    value: OfferMode.permanent,
+                    value: 'true',
                     label: t('date.mode.permanent.label') as string,
                     children: [
                       <RadioVariantOptionParagraph key={0}>
@@ -195,7 +195,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                     ],
                   },
                   {
-                    value: OfferMode.scheduled,
+                    value: 'false',
                     label: t('date.mode.scheduled.label') as string,
                     children: [
                       <RadioVariantOptionParagraph key={0}>
@@ -211,7 +211,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
             </FormItem>
           </FormGrid>
         </EntryFormContainer>
-        {value === OfferMode.scheduled && (
+        {!isPermanent && (
           <>
             <EntryFormContainer>
               <EntryFormHead title={t('date.currentDates') as string} />

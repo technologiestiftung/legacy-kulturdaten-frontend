@@ -1,13 +1,11 @@
-import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Language } from '../../../config/locale';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Address } from '../../../lib/api/types/address';
 import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
-import { Organizer, OrganizerTranslation } from '../../../lib/api/types/organizer';
+import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
@@ -18,173 +16,11 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { useLinkList } from '../../linklist';
 import { EntryFormHook } from '../helpers/form';
-import { useDescription } from '../helpers/form/Description';
-import { useName } from '../helpers/form/Name';
-import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { useDescriptionForm } from '../helpers/form/Description';
+import { useNameForm } from '../helpers/form/Name';
+import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-
-const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
-  const t = useT();
-
-  const {
-    form: setNameGerman,
-    onSubmit: onSubmitGerman,
-    pristine: pristineGerman,
-    reset: resetGerman,
-    valid: validGerman,
-    value: valueGerman,
-  } = useName<Organizer, OrganizerShow, OrganizerTranslation>({
-    category,
-    query,
-    language: Language.de,
-    label: t('categories.organizer.form.nameGerman') as string,
-    loaded,
-    showHint,
-  });
-
-  const {
-    form: setNameEnglish,
-    onSubmit: onSubmitEnglish,
-    pristine: pristineEnglish,
-    reset: resetEnglish,
-    valid: validEnglish,
-    value: valueEnglish,
-  } = useName<Organizer, OrganizerShow, OrganizerTranslation>({
-    category,
-    query,
-    language: Language.en,
-    label: t('categories.organizer.form.nameEnglish') as string,
-    loaded,
-    showHint,
-  });
-
-  const pristine = useMemo(
-    () => Boolean(pristineGerman && pristineEnglish),
-    [pristineEnglish, pristineGerman]
-  );
-
-  const valid = useMemo(
-    () => !loaded || Boolean(validGerman && validEnglish),
-    [loaded, validEnglish, validGerman]
-  );
-
-  const hint = useMemo(
-    () =>
-      showHint &&
-      loaded &&
-      (typeof valueEnglish === 'undefined' ||
-        typeof valueGerman === 'undefined' ||
-        valueEnglish.length < 1 ||
-        valueGerman.length < 1),
-    [showHint, loaded, valueEnglish, valueGerman]
-  );
-
-  return {
-    renderedForm: (
-      <div>
-        <EntryFormHead
-          title={`${t('categories.organizer.form.name') as string}`}
-          valid={valid}
-          hint={hint}
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
-          <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
-        </FormGrid>
-      </div>
-    ),
-    submit: async () => {
-      onSubmitEnglish();
-      onSubmitGerman();
-    },
-    pristine,
-    reset: () => {
-      resetGerman();
-      resetEnglish();
-    },
-    valid,
-    hint,
-  };
-};
-
-const StyledDescriptionForm = styled.div`
-  padding: 0 0 1.5rem;
-`;
-
-const useDescriptionForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
-  const t = useT();
-  const { entry } = useEntry(category, query);
-
-  const isPublished = entry?.data?.attributes?.status === PublishedStatus.published;
-
-  const {
-    renderedDescription: renderedDescriptionGerman,
-    submit: submitGerman,
-    pristine: pristineGerman,
-    valid: validGerman,
-    hint: hintGerman,
-  } = useDescription({
-    category,
-    query,
-    language: Language.de,
-    title: t('categories.organizer.form.descriptionGerman') as string,
-    required: isPublished,
-    showHint,
-  });
-
-  const {
-    renderedDescription: renderedDescriptionEnglish,
-    submit: submitEnglish,
-    pristine: pristineEnglish,
-    valid: validEnglish,
-    hint: hintEnglish,
-  } = useDescription({
-    category,
-    query,
-    language: Language.en,
-    title: t('categories.organizer.form.descriptionEnglish') as string,
-    required: false,
-    showHint,
-  });
-
-  const pristine = useMemo(
-    () => pristineEnglish && pristineGerman,
-    [pristineEnglish, pristineGerman]
-  );
-
-  const valid = useMemo(
-    () => !loaded || (validGerman && validEnglish),
-    [loaded, validEnglish, validGerman]
-  );
-
-  const hint = useMemo(
-    () => showHint && loaded && (hintGerman || hintEnglish),
-    [showHint, loaded, hintEnglish, hintGerman]
-  );
-
-  return {
-    renderedForm: (
-      <StyledDescriptionForm>
-        <EntryFormHead
-          title={`${t('categories.organizer.form.description') as string}`}
-          valid={valid}
-          hint={hint}
-        />
-        {renderedDescriptionGerman}
-        {renderedDescriptionEnglish}
-      </StyledDescriptionForm>
-    ),
-    submit: async () => {
-      submitGerman();
-      submitEnglish();
-    },
-    pristine,
-    reset: () => undefined,
-    valid,
-    hint,
-  };
-};
 
 const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
   const t = useT();
@@ -235,7 +71,7 @@ const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
 
   return {
     renderedForm: (
-      <StyledDescriptionForm>
+      <FormContainer>
         <EntryFormHead
           title={`${t('categories.organizer.form.links') as string}`}
           valid={!loaded || valid}
@@ -243,7 +79,7 @@ const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
         <FormGrid>
           <FormItem width={FormItemWidth.full}>{renderedLinkList}</FormItem>
         </FormGrid>
-      </StyledDescriptionForm>
+      </FormContainer>
     ),
     submit: async () => {
       if (valid && !pristine) {
@@ -643,6 +479,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     loaded,
     valid
   );
+
   const {
     renderedForm: addressForm,
     submit: addressSubmit,
@@ -651,6 +488,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     valid: addressValid,
     hint: addressHint,
   } = useAddressForm({ category, query }, loaded, valid);
+
   const {
     renderedForm: linksForm,
     submit: linksSubmit,
@@ -666,6 +504,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     loaded,
     valid
   );
+
   const {
     renderedForm: contactForm,
     submit: contactSubmit,
@@ -681,6 +520,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     loaded,
     valid
   );
+
   const {
     renderedForm: descriptionForm,
     submit: descriptionSubmit,
