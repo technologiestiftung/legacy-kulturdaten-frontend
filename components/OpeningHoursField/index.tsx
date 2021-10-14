@@ -4,49 +4,48 @@ import { OpeningHours, OpeningHoursWeekday } from '../../lib/api/types/openingHo
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
-import { Button, ButtonColor, ButtonSize } from '../button';
+import { Button, ButtonColor } from '../button';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
-import { Select, SelectSize } from '../select';
+import { Select } from '../select';
 
 const StyledOpeningHoursField = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 100%;
+  row-gap: 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
+    row-gap: 1.5rem;
+  }
 `;
 
 const StyledOpeningHoursFieldAdd = styled.div`
-  text-align: right;
-  padding: 1.5rem 0;
+  ${mq(Breakpoint.mid)} {
+    grid-column: span 2;
+  }
 `;
 
 const StyledOpeningHoursFieldItem = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
   row-gap: 0.75rem;
   align-items: flex-end;
-  border-bottom: 1px solid var(--grey-600);
-  padding: 0.375rem 0 0.75rem;
+  border: 1px solid var(--grey-400);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: 1.125rem 0 1.5rem;
-    column-gap: 1.5rem;
-    grid-template-columns: 1fr 1fr auto;
-    grid-column: span 1;
-  }
-
-  &:nth-of-type(1) {
-    padding-top: 0;
+    row-gap: 1.5rem;
+    padding: 1.5rem;
   }
 `;
 const StyledOpeningHoursFieldItemWeekday = styled.div`
-  grid-column: span 2;
-
-  ${mq(Breakpoint.mid)} {
-    grid-column: span 1;
-  }
+  align-self: stretch;
 `;
 const StyledOpeningHoursFieldItemTimes = styled.div`
+  align-self: stretch;
   display: flex;
   column-gap: 0.75rem;
 `;
@@ -94,7 +93,6 @@ export const OpeningHoursField: React.FC<OpeningHoursProps> = ({
                 ]);
               }}
               label={t('openingHours.weekday') as string}
-              size={SelectSize.big}
             >
               <option value={OpeningHoursWeekday.monday}>{t('days.monday.long')}</option>
               <option value={OpeningHoursWeekday.tuesday}>{t('days.tuesday.long')}</option>
@@ -149,7 +147,6 @@ export const OpeningHoursField: React.FC<OpeningHoursProps> = ({
           </StyledOpeningHoursFieldItemTimes>
           <StyledOpeningHoursFieldItemRemove>
             <Button
-              size={ButtonSize.big}
               onClick={() =>
                 onChange(
                   openingHours.filter((openingHour, openingHourIndex) => openingHourIndex !== index)
@@ -163,7 +160,6 @@ export const OpeningHoursField: React.FC<OpeningHoursProps> = ({
       ))}
       <StyledOpeningHoursFieldAdd>
         <Button
-          size={ButtonSize.big}
           color={ButtonColor.black}
           onClick={() =>
             onChange([
