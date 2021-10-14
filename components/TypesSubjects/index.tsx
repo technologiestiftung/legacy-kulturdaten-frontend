@@ -206,7 +206,7 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                 <CheckboxList
                   columns={3}
                   value={state.subjects}
-                  label={t('categories.organizer.form.subjects') as string}
+                  label={t('forms.subjects') as string}
                   onChange={(value) => {
                     setPristineState(false);
                     dispatch({

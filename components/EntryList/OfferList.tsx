@@ -413,9 +413,9 @@ export const OfferList: React.FC<OfferListProps> = ({
             {rows && rows.length > 0 ? (
               <Table
                 columns={[
-                  { title: t('categories.organizer.form.name') as string, bold: true, width: 5 },
-                  { title: t('categories.organizer.form.type') as string, width: 4 },
-                  { title: t('categories.organizer.form.subjects') as string, width: 4 },
+                  { title: t('forms.name') as string, bold: true, width: 5 },
+                  { title: t('forms.type') as string, width: 4 },
+                  { title: t('forms.subjects') as string, width: 4 },
                   { title: t('statusBar.status') as string, width: 3 },
                   { title: t('categories.organizer.table.updated') as string, width: 2 },
                   { title: t('categories.organizer.table.created') as string, width: 2 },
