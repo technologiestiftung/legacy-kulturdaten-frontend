@@ -222,8 +222,10 @@ export const deDE: Localization = {
     subline: () => 'Die Nutzung bleibt immer kostenlos.',
     passwordError: () => 'Die eingebeben Passwörter stimmen nicht überein.',
     loading: () => 'Deine Registrierung läuft',
-    error: () =>
+    requestError: () =>
       'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    uniqueEmailError: () =>
+      'Die angegebene E-Mail ist bereis registriert. Nutze bitte eine andere.',
     successHeadline: () => 'Super, das hat geklappt!',
     successSubline: () =>
       'Wir haben dir eine E-Mail zur Bestätigung deiner Registrierung gesendet. Schließe bitte über diese deine Registrierung ab.',
