@@ -1,5 +1,6 @@
 import { Language } from '../../../config/locale';
 import { Address } from './address';
+import { Contact } from './contact';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { Media } from './media';
 import { Tag } from './tag';
@@ -35,7 +36,7 @@ export type Organizer = {
       phone?: string;
     } & DefaultAttributes;
     relations?: {
-      links: WebLink[];
+      links?: WebLink[];
       address?: Address;
       subjects?: OrganizerSubject[];
       translations?: OrganizerTranslation[];
@@ -43,6 +44,7 @@ export type Organizer = {
       media?: Media['data'][];
       logo?: Media['data'];
       tags?: Tag[];
+      contacts?: Contact[];
     };
   };
   meta?: {

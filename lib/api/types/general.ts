@@ -6,7 +6,7 @@ import { EntrySubject } from './typeSubject';
 
 export type Translation = {
   id?: number;
-  type: string;
+  type?: string;
   attributes: {
     name: string;
     language: Language;

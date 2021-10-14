@@ -416,9 +416,13 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               typeSubmit();
               nameSubmit();
               descriptionSubmit();
-              addressSubmit();
-              urlSubmit();
-              openingHoursSubmit();
+
+              if (typeValue === LocationType.physicallocation) {
+                addressSubmit();
+                openingHoursSubmit();
+              } else {
+                urlSubmit();
+              }
             }}
             date={formattedDate}
             active={!pristine}
