@@ -213,9 +213,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   ? telRegExpString
                   : undefined
               }
-              onBlur={() => {
+              onBlur={(e) => {
                 setPristine(false);
                 normalizeStrings();
+
+                if (props?.onBlur) {
+                  props.onBlur(e);
+                }
               }}
               onKeyDown={(e) => {
                 if (
