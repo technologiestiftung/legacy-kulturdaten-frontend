@@ -1,14 +1,17 @@
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../lib/api';
+import { OrganizerDelete } from '../../../lib/api/routes/organizer/delete';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
+import { Contact } from '../../../lib/api/types/contact';
 import { CategoryEntry } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { WindowContext } from '../../../lib/WindowService';
+import { Contacts } from '../../Contacts';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -159,6 +162,96 @@ const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
   };
 };
 
+const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
+  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
+  const [contacts, setContacts] = useState<Contact[]>();
+  const call = useApiCall();
+  const t = useT();
+
+  const [contactsFromApi, setContactsFromApi] = useState<Contact[]>();
+
+  const initialContacts = useMemo(
+    () => entry?.data?.relations?.contacts,
+    [entry?.data?.relations?.contacts]
+  );
+
+  const pristine = useMemo(
+    () => JSON.stringify(contacts) === JSON.stringify(contactsFromApi),
+    [contacts, contactsFromApi]
+  );
+
+  useEffect(() => {
+    if (JSON.stringify(initialContacts) !== JSON.stringify(contactsFromApi)) {
+      setContactsFromApi(initialContacts);
+      setContacts(initialContacts);
+    }
+  }, [initialContacts, contactsFromApi]);
+
+  const renderedForm = (
+    <div>
+      <EntryFormHead title={t('categories.organizer.form.additionalContacts') as string} />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          <Contacts
+            contacts={contacts}
+            onChange={(updatedContacts) => setContacts(updatedContacts)}
+          />
+        </FormItem>
+      </FormGrid>
+    </div>
+  );
+
+  return {
+    renderedForm,
+    submit: async () => {
+      if (!pristine) {
+        const contactsIds = contacts.map((contact) => contact.id);
+        const deletedContacts = contactsFromApi
+          .filter((contact) => !contactsIds.includes(contact.id))
+          .map((contact) => contact.id);
+
+        if (deletedContacts.length > 0) {
+          try {
+            await call<OrganizerDelete>(category.api.delete.factory, {
+              id: entry.data.id,
+              entry: {
+                relations: {
+                  contacts: deletedContacts,
+                },
+              },
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        try {
+          const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                contacts: contacts,
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+    reset: () => {
+      setContacts(initialContacts);
+    },
+    valid: true,
+    hint: false,
+  };
+};
+
 export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
@@ -249,6 +342,22 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
   );
 
   const {
+    renderedForm: additionalContactsForm,
+    submit: additionalContactsSubmit,
+    pristine: additionalContactsPristine,
+    reset: additionalContactsReset,
+    valid: additionalContactsValid,
+    hint: additionalContactsHint,
+  } = useAdditionalContactsForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
+
+  const {
     renderedForm: descriptionForm,
     submit: descriptionSubmit,
     pristine: descriptionPristine,
@@ -280,19 +389,47 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
         linksPristine,
         contactPristine,
         descriptionPristine,
+        additionalContactsPristine,
       ].includes(false),
-    [addressPristine, contactPristine, descriptionPristine, linksPristine, namePristine]
+    [
+      addressPristine,
+      contactPristine,
+      descriptionPristine,
+      linksPristine,
+      namePristine,
+      additionalContactsPristine,
+    ]
   );
 
   useEffect(() => {
     setValid(
-      ![nameValid, addressValid, contactValid, descriptionValid, linksValid].includes(false)
+      ![
+        nameValid,
+        addressValid,
+        contactValid,
+        descriptionValid,
+        linksValid,
+        additionalContactsValid,
+      ].includes(false)
     );
-  }, [addressValid, contactValid, descriptionValid, linksValid, nameValid]);
+  }, [
+    addressValid,
+    contactValid,
+    descriptionValid,
+    linksValid,
+    nameValid,
+    additionalContactsValid,
+  ]);
 
   const hint = useMemo(
-    () => addressHint || contactHint || linksHint || nameHint || descriptionHint,
-    [addressHint, contactHint, descriptionHint, linksHint, nameHint]
+    () =>
+      addressHint ||
+      contactHint ||
+      linksHint ||
+      nameHint ||
+      descriptionHint ||
+      additionalContactsHint,
+    [addressHint, contactHint, descriptionHint, linksHint, nameHint, additionalContactsHint]
   );
 
   const message = t('save.confirmExit') as string;
@@ -307,6 +444,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     addressReset();
     descriptionReset();
     contactReset();
+    additionalContactsReset();
     linksReset();
   });
 
@@ -322,6 +460,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
               descriptionSubmit();
               linksSubmit();
               contactSubmit();
+              additionalContactsSubmit();
             }}
             date={formattedDate}
             active={!pristine}
@@ -332,6 +471,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{contactForm}</EntryFormContainer>
+            <EntryFormContainer>{additionalContactsForm}</EntryFormContainer>
             <EntryFormContainer>{linksForm}</EntryFormContainer>
             <EntryFormContainer>{addressForm}</EntryFormContainer>
           </EntryFormWrapper>

@@ -1,4 +1,5 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { Organizer } from '../../types/organizer';
 
 /**
  * /auth/info
@@ -12,7 +13,7 @@ export interface OrganizerDelete extends ApiCall {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: null;
+    body?: Organizer;
   };
   response: {
     status: 200;
@@ -27,16 +28,16 @@ export interface OrganizerDelete extends ApiCall {
 
 export const organizerDeleteFactory = (
   token: OrganizerDelete['request']['headers']['Authorization'],
-  query: { organizer: string }
+  query: { id: string; entry: Organizer }
 ): OrganizerDelete => ({
   request: {
-    route: apiRoutes.organizerDelete({ organizer: query.organizer }),
+    route: apiRoutes.organizerDelete({ organizer: query.id }),
     method: 'DELETE',
     headers: {
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: null,
+    body: query.entry,
   },
   response: {
     status: 200,
