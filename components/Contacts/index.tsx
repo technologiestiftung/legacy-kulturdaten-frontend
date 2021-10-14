@@ -6,7 +6,7 @@ import { useT } from '../../lib/i18n';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
-import { Button, ButtonColor, ButtonSize } from '../button';
+import { Button, ButtonColor } from '../button';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
 
@@ -74,15 +74,18 @@ export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: Contac
               <StyledContactsItemField key={`${index}-${languageIndex}`}>
                 <Input
                   type={InputType.text}
-                  value={translation.attributes.name || ''}
+                  value={translation?.attributes?.name || ''}
                   label={`${t('forms.name')} (${t(languageTranslationKeys[language])})`}
                   onChange={(e) => {
-                    const translations = contact.relations?.translations;
+                    const filteredTranslations = contact.relations?.translations?.filter(
+                      (transl) => transl.attributes.language !== language
+                    );
 
                     const newTranslation = {
                       ...translation,
                       attributes: {
-                        ...translation.attributes,
+                        ...translation?.attributes,
+                        language,
                         name: e.target.value,
                       },
                     };
@@ -94,9 +97,9 @@ export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: Contac
                         relations: {
                           ...contact.relations,
                           translations: [
-                            ...translations.slice(0, languageIndex),
+                            ...filteredTranslations?.slice(0, languageIndex),
                             newTranslation,
-                            ...translations.slice(languageIndex + 1),
+                            ...filteredTranslations?.slice(languageIndex),
                           ],
                         },
                       },
@@ -129,7 +132,7 @@ export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: Contac
           </StyledContactsItemField>
           <StyledContactsItemField>
             <Input
-              type={InputType.tel}
+              type={InputType.email}
               value={contact.attributes.email || ''}
               label={t('forms.email') as string}
               onChange={(e) =>

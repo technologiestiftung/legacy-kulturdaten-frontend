@@ -193,7 +193,7 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           <Contacts
-            contacts={contacts}
+            contacts={contacts || []}
             onChange={(updatedContacts) => setContacts(updatedContacts)}
           />
         </FormItem>
