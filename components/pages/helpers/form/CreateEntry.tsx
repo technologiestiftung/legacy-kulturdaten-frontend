@@ -89,7 +89,7 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
               {
                 entry: {
                   relations: {
-                    translations: [{ language: Language.de, name: formState.name }],
+                    translations: [{ attributes: { language: Language.de, name: formState.name } }],
                   },
                 },
               }

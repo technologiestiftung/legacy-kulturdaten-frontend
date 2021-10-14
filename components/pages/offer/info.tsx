@@ -108,7 +108,7 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
             id: entry.data.id,
             entry: {
               relations: {
-                translations: translations.map((translation) => translation.attributes),
+                translations: translations?.length > 0 ? translations : undefined,
               },
             },
           });

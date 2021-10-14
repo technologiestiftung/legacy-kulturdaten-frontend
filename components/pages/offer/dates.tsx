@@ -137,9 +137,10 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
               ...date,
               relations: {
                 ...date.relations,
-                translations: date.relations?.translations?.map(
-                  (translation) => translation.attributes
-                ),
+                translations:
+                  date.relations?.translations?.length > 0
+                    ? date.relations.translations
+                    : undefined,
               },
             },
           });
@@ -240,9 +241,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                                   ...date.relations,
                                   translations:
                                     filteredTranslations.length > 0
-                                      ? filteredTranslations.map(
-                                          (translation) => translation.attributes
-                                        )
+                                      ? filteredTranslations
                                       : undefined,
                                 },
                                 meta: recurrence

@@ -183,8 +183,10 @@ export const useDescription = ({
               relations: {
                 translations: [
                   {
-                    description: serializedMarkdown,
-                    language,
+                    attributes: {
+                      description: serializedMarkdown,
+                      language,
+                    },
                   },
                 ],
               },

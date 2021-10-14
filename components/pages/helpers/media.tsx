@@ -150,9 +150,7 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
             ...mediaItem,
             relations: {
               ...mediaItem.relations,
-              translations: mediaItem.relations?.translations?.map(
-                (translation) => translation.attributes
-              ),
+              translations: mediaItem.relations?.translations,
             },
           },
         });

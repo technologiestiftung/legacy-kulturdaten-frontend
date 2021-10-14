@@ -110,7 +110,9 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
                 const resp = await call<OrganizerCreate>(category.api.create.factory, {
                   entry: {
                     relations: {
-                      translations: [{ language: Language.de, name: 'Neue Anbieter:inn' }],
+                      translations: [
+                        { attributes: { language: Language.de, name: 'Neue Anbieter:inn' } },
+                      ],
                     },
                   },
                 });

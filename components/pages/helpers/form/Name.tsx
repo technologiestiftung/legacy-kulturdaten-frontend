@@ -115,8 +115,10 @@ export const useName = <
             relations: {
               translations: [
                 {
-                  name: value,
-                  language,
+                  attributes: {
+                    name: value,
+                    language,
+                  },
                 },
               ],
             },
