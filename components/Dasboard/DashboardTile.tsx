@@ -3,14 +3,17 @@ import { StandardLink } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 
-const StyledDashboardTile = styled.div`
+const StyledDashboardTile = styled.div<{ gridColumn?: string }>`
   box-shadow: 0.75rem 0.75rem 3rem rgba(0, 0, 0, 0.08);
   border-radius: 0.75rem;
   grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
   ${mq(Breakpoint.mid)} {
     border-radius: 1.5rem;
-    grid-column: span 6;
+    grid-column: ${({ gridColumn }) => gridColumn || 'span 6'};
   }
 `;
 
@@ -19,6 +22,7 @@ const StyledDashboardTileContainer = styled.div`
   flex-direction: column;
   border-radius: 0.75rem;
   overflow: hidden;
+  flex-grow: 1;
 
   ${mq(Breakpoint.mid)} {
     border-radius: 1.5rem;
@@ -32,6 +36,9 @@ const StyledDashboardTileTitle = styled.h3`
   font-weight: 700;
   padding: 0.75rem 1.125rem;
   color: var(--black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   ${mq(Breakpoint.mid)} {
     font-size: var(--font-size-500);
@@ -43,6 +50,7 @@ const StyledDashboardTileTitle = styled.h3`
 const StyledDashboardTileContent = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 `;
 
 export const DashboardTileText = styled.div`
@@ -71,15 +79,17 @@ interface DashboardTileProps {
   title: string;
   children: React.ReactNode;
   link?: React.ReactElement<StandardLink>;
+  gridColumn?: string;
 }
 
 export const DashboardTile: React.FC<DashboardTileProps> = ({
   title,
   children,
   link,
+  gridColumn,
 }: DashboardTileProps) => {
   return (
-    <StyledDashboardTile>
+    <StyledDashboardTile gridColumn={gridColumn}>
       <StyledDashboardTileContainer>
         <StyledDashboardTileTitle>{title}</StyledDashboardTileTitle>
         <StyledDashboardTileContent>{children}</StyledDashboardTileContent>

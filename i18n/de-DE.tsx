@@ -8,6 +8,10 @@ export const deDE: Localization = {
   },
   dashboard: {
     info: {
+      offers: {
+        title: () => 'Aktuelle Angebote',
+        link: () => 'Angebot anschauen',
+      },
       data: {
         title: () => 'Die Kulturdaten (weiter-)verwenden',
         export: {

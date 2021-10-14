@@ -1,20 +1,91 @@
 import { NextPage } from 'next';
+import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo } from 'react';
 
-import { routes, useLocale } from '../../../lib/routing';
+import { routes, useLanguage, useLocale } from '../../../lib/routing';
 import { useUser } from '../../../components/user/useUser';
 import { AppWrapper } from '../../../components/wrappers/AppWrapper';
 import { useT } from '../../../lib/i18n';
 import { defaultOrganizerId, useOrganizerId } from '../../../lib/useOrganizer';
-import { useRouter } from 'next/router';
-import { useEffect, useMemo } from 'react';
 import { ContentContainer, ContentWrapper } from '../../../components/wrappers/ContentWrappers';
 import { DashbaordGreeting, DashboardWrapper } from '../../../components/Dasboard';
 import { useRandomInt } from '../../../lib/random';
 import { DashboardRow } from '../../../components/Dasboard/DashboardRow';
-import { DashboardTile } from '../../../components/Dasboard/DashboardTile';
+import {
+  DashboardTile,
+  DashboardTileText,
+  DashboardTileTextP,
+} from '../../../components/Dasboard/DashboardTile';
 import { DashboardTileLink } from '../../../components/Dasboard/DashboardTileLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { DashboardLinkList } from '../../../components/Dasboard/DashboardLinkList';
+import { Order, useList, useOfferDateList } from '../../../lib/categories';
+import { Offer } from '../../../lib/api/types/offer';
+import { OfferList } from '../../../lib/api';
+import { useCategories } from '../../../config/categories';
+import { getTranslation } from '../../../lib/translations';
+import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { DateFormat, useDate } from '../../../lib/date';
+import { DateStatusFlag } from '../../../components/DateList/DateStatusFlag';
+
+const StyledDashboardTileDate = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+interface DashboardDateTileProps {
+  offer: Offer['data'];
+}
+
+const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
+  offer,
+}: DashboardDateTileProps) => {
+  const language = useLanguage();
+  const t = useT();
+  const organizerId = useOrganizerId();
+  const locale = useLocale();
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const formatDate = useDate();
+  const currentTranslation = getTranslation(language, offer.relations?.translations, true);
+
+  const { data: dates } = useOfferDateList(offer.id, 1, 4, [['past', 'false']], {
+    key: 'startsAt',
+    order: Order.ASC,
+  });
+
+  return (
+    <DashboardTile
+      title={currentTranslation?.attributes?.name}
+      gridColumn={isWideOrWider ? 'span 4' : undefined}
+      link={
+        <DashboardTileLink
+          type={StandardLinkType.internal}
+          href={routes.offer({
+            locale,
+            query: { id: offer.id, organizer: organizerId, sub: 'info' },
+          })}
+          title={t('dashboard.info.offers.link') as string}
+        />
+      }
+    >
+      <DashboardTileText>
+        {dates?.map((date, datesIndex) => {
+          return (
+            <StyledDashboardTileDate key={datesIndex}>
+              <DashboardTileTextP>
+                {date.attributes.startsAt
+                  ? formatDate(new Date(date.attributes.startsAt), DateFormat.dateTime)
+                  : ''}
+              </DashboardTileTextP>
+              <DateStatusFlag status={date.attributes.status} />
+            </StyledDashboardTileDate>
+          );
+        })}
+      </DashboardTileText>
+    </DashboardTile>
+  );
+};
 
 const greetings: {
   [key: string]: string[];
@@ -29,7 +100,7 @@ const DashboardPage: NextPage = () => {
   const t = useT();
   const organizerId = useOrganizerId();
   const router = useRouter();
-
+  const categories = useCategories();
   const userHasNoOrganizer = useMemo(() => organizerId === defaultOrganizerId, [organizerId]);
 
   const selectedGreetings = useMemo(
@@ -38,6 +109,7 @@ const DashboardPage: NextPage = () => {
   );
 
   const randomGreetingsIndex = useRandomInt(0, selectedGreetings.length);
+  const offers = useList<OfferList, Offer>(categories.offer, 1, 3);
 
   useEffect(() => {
     if (organizerId !== defaultOrganizerId && router?.query?.organizer !== organizerId) {
@@ -53,6 +125,11 @@ const DashboardPage: NextPage = () => {
             <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
           </ContentContainer>
           <ContentContainer>
+            <DashboardRow title={t('dashboard.info.offers.title') as string}>
+              {offers?.data?.map((offer, index) => (
+                <DashboardOfferTile offer={offer} key={index} />
+              ))}
+            </DashboardRow>
             <DashboardRow title={t('dashboard.info.data.title') as string}>
               <DashboardTile title={t('dashboard.info.data.export.title') as string}>
                 {t('dashboard.info.data.export.content')}
