@@ -1,4 +1,5 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { Location } from '../../types/location';
 
 /**
  * /auth/info
@@ -12,7 +13,7 @@ export interface LocationDelete extends ApiCall {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: null;
+    body: Location | null;
   };
   response: {
     status: 200;
@@ -27,7 +28,7 @@ export interface LocationDelete extends ApiCall {
 
 export const locationDeleteFactory = (
   token: LocationDelete['request']['headers']['Authorization'],
-  query: { id: string }
+  query: { id: string; entry: Location }
 ): LocationDelete => ({
   request: {
     route: apiRoutes.locationDelete({ id: query.id }),
@@ -36,7 +37,7 @@ export const locationDeleteFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: null,
+    body: query.entry,
   },
   response: {
     status: 200,

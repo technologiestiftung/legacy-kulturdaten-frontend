@@ -101,6 +101,13 @@ export const deDE: Localization = {
     ariaLabel: () => 'Wochentage auswählen',
     minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
   },
+  openingHours: {
+    weekday: () => 'Wochentag',
+    from: () => 'von',
+    to: () => 'bis',
+    add: () => 'Neue Öffnungszeit hinzufügen',
+    remove: () => 'entfernen',
+  },
   days: {
     monday: {
       long: () => 'Montag',
@@ -583,6 +590,7 @@ export const deDE: Localization = {
         singular: () => 'Ort',
       },
       form: {
+        openingHours: () => 'Öffnungszeiten',
         create: () => 'Neuen Ort anlegen',
         address: () => 'Adressdaten',
         name: () => 'Bezeichnung',

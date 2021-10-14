@@ -98,6 +98,13 @@ export const enDE: Localization = {
     ariaLabel: () => 'Choose',
     minError: ({ min }) => `Please choose at least ${min} ${min === 1 ? 'day' : 'days'}`,
   },
+  openingHours: {
+    weekday: () => 'Weekday',
+    from: () => 'von',
+    to: () => 'bis',
+    add: () => 'Add new opening hours',
+    remove: () => 'remove',
+  },
   days: {
     monday: {
       long: () => 'Monday',
@@ -579,6 +586,7 @@ export const enDE: Localization = {
         singular: () => 'Location',
       },
       form: {
+        openingHours: () => 'Opening hours',
         create: () => 'Create new Location',
         address: () => 'Address data',
         name: () => 'Name',
