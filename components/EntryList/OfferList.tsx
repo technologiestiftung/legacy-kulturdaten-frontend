@@ -277,7 +277,9 @@ export const OfferList: React.FC<OfferListProps> = ({
                     const resp = await call<OfferCreate>(category.api.create.factory, {
                       entry: {
                         relations: {
-                          translations: [{ language: Language.de, name: 'Neues Angebot' }],
+                          translations: [
+                            { attributes: { language: Language.de, name: 'Neues Angebot' } },
+                          ],
                         },
                       },
                     });

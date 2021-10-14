@@ -293,8 +293,14 @@ export const LocationList: React.FC<LocationListProps> = ({
                     const resp = await call<LocationCreate>(category.api.create.factory, {
                       entry: {
                         type: LocationType.physicallocation,
+                        attributes: {
+                          type: LocationType.physicallocation,
+                        },
                         relations: {
-                          translations: [{ language: Language.de, name: 'Neuer Ort' }],
+                          translations: [
+                            { attributes: { language: Language.de, name: 'Neuer Ort' } },
+                          ],
+                          organizer: organizerId,
                         },
                       },
                     });
