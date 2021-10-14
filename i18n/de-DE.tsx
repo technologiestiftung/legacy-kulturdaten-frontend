@@ -220,6 +220,13 @@ export const deDE: Localization = {
     submit: () => 'registrieren',
     headline: () => 'Registriere dich jetzt kostenlos für Kulturdaten.Berlin.',
     subline: () => 'Die Nutzung bleibt immer kostenlos.',
+    passwordError: () => 'Die eingebeben Passwörter stimmen nicht überein.',
+    loading: () => 'Deine Registrierung läuft',
+    error: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    successHeadline: () => 'Super, das hat geklappt!',
+    successSubline: () =>
+      'Wir haben dir eine E-Mail zur Bestätigung deiner Registrierung gesendet. Schließe bitte über diese deine Registrierung ab.',
   },
   statusBar: {
     status: () => 'Status',
