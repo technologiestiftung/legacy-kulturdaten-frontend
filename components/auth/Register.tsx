@@ -1,44 +1,83 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
 import { useT } from '../../lib/i18n';
 import { Button, ButtonColor, ButtonSize, ButtonType } from '../button';
+import { Info } from '../info';
 import { Input, InputType } from '../input';
-import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
+import {
+  AuthContent,
+  AuthFormContainer,
+  AuthFormItem,
+  AuthHead,
+  AuthHeadline,
+  AuthSubline,
+} from './AuthWrapper';
 
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
-  const [error, setError] = useState<Error>();
-  const [submitted, setSubmitted] = useState<boolean>(false);
+  const passwordsMatch = useMemo(
+    () => password === passwordConfirmation,
+    [password, passwordConfirmation]
+  );
+  const [passwordConfirmationBlurred, setPasswordConfirmationBlurred] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+  const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
+  const loadingScreen = useLoadingScreen();
+
+  useEffect(() => {
+    if (passwordsMatch) {
+      setError(undefined);
+    } else if (passwordConfirmationBlurred) {
+      setError(t('register.passwordError') as string);
+    }
+  }, [passwordsMatch, passwordConfirmationBlurred, t]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setError(undefined);
 
-    try {
-      const resp = await call<AuthRegister>(authRegisterFactory, {
-        body: {
-          email,
-          password,
-          passwordConfirmation: passwordConfirmation,
+    if (passwordsMatch) {
+      loadingScreen(
+        t('register.loading'),
+        async () => {
+          try {
+            const resp = await call<AuthRegister>(authRegisterFactory, {
+              body: {
+                email,
+                password,
+                passwordConfirmation: passwordConfirmation,
+              },
+            });
+            setSuccess(true);
+            console.log(resp);
+            return { success: true };
+          } catch (e) {
+            setError(e);
+            return { success: false, error: <Info>{t('register.error')}</Info> };
+          }
         },
-      });
-      setSubmitted(true);
-      console.log(resp);
-    } catch (e) {
-      setError(e);
-      return;
+        t('general.takeAFewSeconds')
+      );
+    } else {
+      setError(t('register.passwordError') as string);
     }
   };
 
   return (
-    <>
-      {!submitted || error ? (
+    <AuthContent>
+      <AuthHead>
+        <AuthHeadline>{t(success ? 'register.successHeadline' : 'register.headline')}</AuthHeadline>
+        <AuthSubline>{t(success ? 'register.successSubline' : 'register.subline')}</AuthSubline>
+      </AuthHead>
+
+      {!success ? (
         <form onSubmit={submitHandler}>
           <AuthFormContainer>
             <div>
@@ -49,7 +88,6 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.email}
                 id="register-email"
                 required
-                hideError
               />
             </div>
             <div>
@@ -60,7 +98,7 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.password}
                 id="register-password"
                 required
-                hideError
+                valid={Boolean(passwordsMatch || !error)}
               />
             </div>
             <div>
@@ -73,7 +111,8 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.password}
                 id="register-password-confirmation"
                 required
-                hideError
+                valid={Boolean(passwordsMatch || !error)}
+                onBlur={() => setPasswordConfirmationBlurred(true)}
               />
             </div>
             <AuthFormItem justifyContent="flex-end">
@@ -86,18 +125,11 @@ export const RegisterForm: React.FC = () => {
       ) : (
         ''
       )}
-      {error ? (
+      {error && (
         <AuthFormContainer>
-          <h3>{error.name}</h3>
-          <pre>{error.message}</pre>
+          <Info>{error}</Info>
         </AuthFormContainer>
-      ) : submitted ? (
-        <AuthFormContainer>
-          Form submitted. Please confirm your email address via the email we just sent you.
-        </AuthFormContainer>
-      ) : (
-        ''
       )}
-    </>
+    </AuthContent>
   );
 };

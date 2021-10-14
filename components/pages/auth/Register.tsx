@@ -14,13 +14,7 @@ export const RegisterPage: React.FC = () => {
 
   return (
     <AuthWrapper image={{ src: registerImage }}>
-      <AuthContent>
-        <AuthHead>
-          <AuthHeadline>{t('register.headline')}</AuthHeadline>
-          <AuthSubline>{t('register.subline')}</AuthSubline>
-        </AuthHead>
-        <RegisterForm />
-      </AuthContent>
+      <RegisterForm />
     </AuthWrapper>
   );
 };

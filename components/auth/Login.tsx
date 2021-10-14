@@ -79,7 +79,7 @@ export const LoginForm: React.FC = () => {
       <AuthFormContainer>
         <div>
           <Input
-            type={InputType.text}
+            type={InputType.email}
             value={email}
             label={t('login.email') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}

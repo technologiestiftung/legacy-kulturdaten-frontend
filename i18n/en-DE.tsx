@@ -210,6 +210,12 @@ export const enDE: Localization = {
     submit: () => 'register',
     headline: () => 'Register now for free for Kulturdaten.Berlin. ',
     subline: () => 'Use will always be free of charge.',
+    loading: () => 'Registering you',
+    passwordError: () => 'The entered passwords do not match.',
+    error: () => "Unfortunately ther's a problem with our server. Please try again later.",
+    successHeadline: () => 'Great, that worked!',
+    successSubline: () =>
+      'We have sent you an email to confirm your registration. Please complete your registration via that email.',
   },
   statusBar: {
     status: () => 'Status',
