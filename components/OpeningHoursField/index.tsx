@@ -3,19 +3,62 @@ import styled from '@emotion/styled';
 import { OpeningHours, OpeningHoursWeekday } from '../../lib/api/types/openingHours';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
+import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
+import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
-import { Select } from '../select';
+import { Select, SelectSize } from '../select';
 
-const StyledOpeningHoursField = styled.div``;
+const StyledOpeningHoursField = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
-const StyledOpeningHoursFieldAdd = styled.div``;
-const StyledOpeningHoursFieldItem = styled.div``;
-const StyledOpeningHoursFieldItemWeekday = styled.div``;
-const StyledOpeningHoursFieldItemTimes = styled.div``;
-const StyledOpeningHoursFieldItemTimesFrom = styled.div``;
-const StyledOpeningHoursFieldItemTimesTo = styled.div``;
-const StyledOpeningHoursFieldItemRemove = styled.div``;
+const StyledOpeningHoursFieldAdd = styled.div`
+  text-align: right;
+  padding: 1.5rem 0;
+`;
+
+const StyledOpeningHoursFieldItem = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 0.75rem;
+  row-gap: 0.75rem;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--grey-600);
+  padding: 0.375rem 0 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 1.125rem 0 1.5rem;
+    column-gap: 1.5rem;
+    grid-template-columns: 1fr 1fr auto;
+    grid-column: span 1;
+  }
+
+  &:nth-of-type(1) {
+    padding-top: 0;
+  }
+`;
+const StyledOpeningHoursFieldItemWeekday = styled.div`
+  grid-column: span 2;
+
+  ${mq(Breakpoint.mid)} {
+    grid-column: span 1;
+  }
+`;
+const StyledOpeningHoursFieldItemTimes = styled.div`
+  display: flex;
+  column-gap: 0.75rem;
+`;
+const StyledOpeningHoursFieldItemTimesFrom = styled.div`
+  flex-grow: 1;
+`;
+const StyledOpeningHoursFieldItemTimesTo = styled.div`
+  flex-grow: 1;
+`;
+const StyledOpeningHoursFieldItemRemove = styled.div`
+  text-align: right;
+`;
 
 interface OpeningHoursProps {
   openingHours: OpeningHours[];
@@ -50,6 +93,8 @@ export const OpeningHoursField: React.FC<OpeningHoursProps> = ({
                   ...openingHours.slice(index + 1),
                 ]);
               }}
+              label={t('openingHours.weekday') as string}
+              size={SelectSize.big}
             >
               <option value={OpeningHoursWeekday.monday}>{t('days.monday.long')}</option>
               <option value={OpeningHoursWeekday.tuesday}>{t('days.tuesday.long')}</option>
@@ -104,7 +149,7 @@ export const OpeningHoursField: React.FC<OpeningHoursProps> = ({
           </StyledOpeningHoursFieldItemTimes>
           <StyledOpeningHoursFieldItemRemove>
             <Button
-              size={ButtonSize.small}
+              size={ButtonSize.big}
               onClick={() =>
                 onChange(
                   openingHours.filter((openingHour, openingHourIndex) => openingHourIndex !== index)

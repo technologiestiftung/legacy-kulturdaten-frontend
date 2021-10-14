@@ -106,7 +106,7 @@ export const deDE: Localization = {
     from: () => 'von',
     to: () => 'bis',
     add: () => 'Neue Öffnungszeit hinzufügen',
-    remove: () => 'Öffnungszeit entfernen',
+    remove: () => 'entfernen',
   },
   days: {
     monday: {

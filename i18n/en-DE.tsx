@@ -103,7 +103,7 @@ export const enDE: Localization = {
     from: () => 'von',
     to: () => 'bis',
     add: () => 'Add new opening hours',
-    remove: () => 'Remove this opening hours',
+    remove: () => 'remove',
   },
   days: {
     monday: {
