@@ -105,10 +105,7 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query }, load
   return {
     renderedForm: (
       <div>
-        <EntryFormHead
-          title={t('categories.organizer.form.classification') as string}
-          valid={!loaded || valid}
-        />
+        <EntryFormHead title={t('forms.classification') as string} valid={!loaded || valid} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             <TypesSubjects
