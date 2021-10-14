@@ -212,7 +212,8 @@ export const enDE: Localization = {
     subline: () => 'Use will always be free of charge.',
     loading: () => 'Registering you',
     passwordError: () => 'The entered passwords do not match.',
-    error: () => "Unfortunately ther's a problem with our server. Please try again later.",
+    requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
+    uniqueEmailError: () => 'The entered email is already registered. Please use another email.',
     successHeadline: () => 'Great, that worked!',
     successSubline: () =>
       'We have sent you an email to confirm your registration. Please complete your registration via that email.',

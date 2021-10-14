@@ -15,6 +15,9 @@ import {
   AuthSubline,
 } from './AuthWrapper';
 
+const passwordErrorId = 0;
+const requestErrorId = 1;
+
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -24,24 +27,37 @@ export const RegisterForm: React.FC = () => {
     [password, passwordConfirmation]
   );
   const [passwordConfirmationBlurred, setPasswordConfirmationBlurred] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
+  const [errors, setErrors] = useState<{ id: number; message: string }[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
   const loadingScreen = useLoadingScreen();
 
   useEffect(() => {
-    if (passwordsMatch) {
-      setError(undefined);
-    } else if (passwordConfirmationBlurred) {
-      setError(t('register.passwordError') as string);
+    if (password.length > 0 && passwordConfirmation.length > 0) {
+      const filteredErrors = errors.filter(({ id }) => id !== passwordErrorId);
+      const passwordError = { id: passwordErrorId, message: t('register.passwordError') as string };
+      const passwordErrorPresent = errors.length !== filteredErrors.length;
+
+      if (passwordErrorPresent && passwordsMatch) {
+        setErrors(filteredErrors);
+      } else if (!passwordsMatch && !passwordErrorPresent && passwordConfirmationBlurred) {
+        setErrors([passwordError, ...filteredErrors]);
+      }
     }
-  }, [passwordsMatch, passwordConfirmationBlurred, t]);
+  }, [
+    passwordsMatch,
+    passwordConfirmationBlurred,
+    t,
+    errors,
+    password.length,
+    passwordConfirmation.length,
+  ]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setError(undefined);
+    setErrors([]);
 
     if (passwordsMatch) {
       loadingScreen(
@@ -59,14 +75,29 @@ export const RegisterForm: React.FC = () => {
             console.log(resp);
             return { success: true };
           } catch (e) {
-            setError(e);
-            return { success: false, error: <Info>{t('register.error')}</Info> };
+            const requestErrors = e.message
+              ? (JSON.parse(e.message)?.errors as {
+                  rule: string;
+                  field: string;
+                  message: string;
+                }[])
+              : undefined;
+
+            const visibleError = requestErrors?.find(
+              (error) => error.rule === 'unique' && error.field === 'email'
+            )
+              ? (t('register.uniqueEmailError') as string)
+              : (t('register.requestError') as string);
+
+            setErrors([
+              { id: requestErrorId, message: visibleError },
+              ...errors.filter(({ id }) => id !== requestErrorId),
+            ]);
+            return { success: false, error: <Info>{visibleError}</Info> };
           }
         },
         t('general.takeAFewSeconds')
       );
-    } else {
-      setError(t('register.passwordError') as string);
     }
   };
 
@@ -98,7 +129,7 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.password}
                 id="register-password"
                 required
-                valid={Boolean(passwordsMatch || !error)}
+                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
               />
             </div>
             <div>
@@ -111,7 +142,7 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.password}
                 id="register-password-confirmation"
                 required
-                valid={Boolean(passwordsMatch || !error)}
+                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
                 onBlur={() => setPasswordConfirmationBlurred(true)}
               />
             </div>
@@ -125,9 +156,11 @@ export const RegisterForm: React.FC = () => {
       ) : (
         ''
       )}
-      {error && (
+      {errors?.length > 0 && (
         <AuthFormContainer>
-          <Info>{error}</Info>
+          {errors.map(({ message }, index) => (
+            <Info key={index}>{message}</Info>
+          ))}
         </AuthFormContainer>
       )}
     </AuthContent>
