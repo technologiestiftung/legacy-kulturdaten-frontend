@@ -306,7 +306,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     loaded,
     valid,
     true,
-    t('categories.organizer.form.address')
+    t('forms.address')
   );
 
   const {
