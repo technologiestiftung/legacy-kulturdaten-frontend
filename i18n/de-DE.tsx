@@ -116,6 +116,9 @@ export const deDE: Localization = {
     add: () => 'Neue Öffnungszeit hinzufügen',
     remove: () => 'entfernen',
   },
+  publish: {
+    loadingTitle: ({ categoryName }) => `Veröffentliche ${categoryName}`,
+  },
   days: {
     monday: {
       long: () => 'Montag',

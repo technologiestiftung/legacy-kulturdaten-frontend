@@ -109,6 +109,9 @@ export const enDE: Localization = {
     add: () => 'Add new opening hours',
     remove: () => 'remove',
   },
+  publish: {
+    loadingTitle: ({ categoryName }) => `Publishing ${categoryName}`,
+  },
   days: {
     monday: {
       long: () => 'Monday',
