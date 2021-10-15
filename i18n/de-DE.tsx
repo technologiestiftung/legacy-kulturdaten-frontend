@@ -8,6 +8,11 @@ export const deDE: Localization = {
   },
   dashboard: {
     info: {
+      offers: {
+        title: () => 'Aktuelle Angebote',
+        link: () => 'Angebot anschauen',
+        datePlaceholder: () => 'Noch keine Termine vorhanden',
+      },
       data: {
         title: () => 'Die Kulturdaten (weiter-)verwenden',
         export: {
@@ -112,6 +117,9 @@ export const deDE: Localization = {
     add: () => 'Neue Öffnungszeit hinzufügen',
     remove: () => 'entfernen',
   },
+  publish: {
+    loadingTitle: ({ categoryName }) => `Veröffentliche ${categoryName}`,
+  },
   days: {
     monday: {
       long: () => 'Montag',
@@ -189,7 +197,7 @@ export const deDE: Localization = {
     save: () => 'speichern',
     edit: () => 'bearbeiten',
     editCancel: () => 'abbrechen',
-    contact: () => 'Kontaktdaten (öffentlich)',
+    contact: () => 'Kontaktdaten',
     tel: () => 'Telefon',
     email: () => 'E-Mail',
     website: () => 'Website',
@@ -479,7 +487,7 @@ export const deDE: Localization = {
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
-        contact: () => 'Kontaktdaten (öffentlich)',
+        contact: () => 'Kontaktdaten',
         tel: () => 'Telefon',
         email: () => 'E-Mail',
         website: () => 'Website',

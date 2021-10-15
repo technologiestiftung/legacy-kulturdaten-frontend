@@ -51,6 +51,10 @@ export const dateFormatPatternMap: { [key in DateFormat]: { [key in Locale]: str
     'de-DE': 'dd.MM.yyyy HH:mm',
     'en-DE': 'MM-dd-yyyy hh:mm aaa',
   },
+  dayDateTime: {
+    'de-DE': 'dd.MM.yyyy HH:mm',
+    'en-DE': 'MM-dd-yyyy hh:mm aaa',
+  },
 };
 
 export { Language, Locale };

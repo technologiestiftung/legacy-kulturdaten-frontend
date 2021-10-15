@@ -24,7 +24,7 @@ const StyledDashboardRowContent = styled.div`
   row-gap: 2.25rem;
 
   ${mq(Breakpoint.mid)} {
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: 1.5rem;
   }
 `;

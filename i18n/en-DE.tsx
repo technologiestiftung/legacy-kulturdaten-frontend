@@ -8,6 +8,11 @@ export const enDE: Localization = {
   },
   dashboard: {
     info: {
+      offers: {
+        title: () => 'Current Offers',
+        link: () => 'View Offer',
+        datePlaceholder: () => 'No dates available yet',
+      },
       data: {
         title: () => 'Use the culture data (further) ',
         export: {
@@ -109,6 +114,9 @@ export const enDE: Localization = {
     add: () => 'Add new opening hours',
     remove: () => 'remove',
   },
+  publish: {
+    loadingTitle: ({ categoryName }) => `Publishing ${categoryName}`,
+  },
   days: {
     monday: {
       long: () => 'Monday',
@@ -186,7 +194,7 @@ export const enDE: Localization = {
     save: () => 'save',
     edit: () => 'edit',
     editCancel: () => 'cancel',
-    contact: () => 'Contact data (public)',
+    contact: () => 'Contact data',
     tel: () => 'Phone',
     email: () => 'Email',
     website: () => 'Website',
@@ -474,7 +482,7 @@ export const enDE: Localization = {
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
-        contact: () => 'Contact data (public)',
+        contact: () => 'Contact data',
         tel: () => 'Phone',
         email: () => 'Email',
         website: () => 'Website',
