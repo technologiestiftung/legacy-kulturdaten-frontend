@@ -538,6 +538,10 @@ export const deDE: Localization = {
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
         locationInfo: () => 'Informationen zum Veranstaltungsort',
+        mainType: {
+          title: () => 'Angebotstyp',
+          choose: () => 'Angebotstyp auswählen',
+        },
         pricing: {
           title: () => 'Preise & Eintritt',
           hasFee: () => 'Angebot ist kostenpflichtig',

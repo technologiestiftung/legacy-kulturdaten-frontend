@@ -15,10 +15,11 @@ import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
-import { Select } from '../../select';
+import { Select, SelectSize } from '../../select';
 import { usePseudoUID } from '../../../lib/uid';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
+import { sortByTranslation } from '../../../lib/sortTranslations';
 
 const useOfferMainTypeForm: EntryFormHook = ({ category, query }, loaded) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -33,7 +34,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query }, loaded) => {
 
   // Valid if types and subjects are defined
   const valid = useMemo(() => {
-    return !loaded || (types && types.length > 0);
+    return !loaded || (types?.length > 0 && types[0] !== 'undefined');
   }, [loaded, types]);
 
   const initialTypes = useMemo(
@@ -52,34 +53,54 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query }, loaded) => {
     }
   }, [pristine, initialTypes]);
 
+  useEffect(() => {
+    if (initialTypes) {
+      if (!types || types.length === 0) {
+        setTypes(initialTypes);
+      }
+
+      if (!typesFromApi || initialTypes !== typesFromApi) {
+        setTypesFromApi(initialTypes);
+      }
+    }
+  }, [types, initialTypes, typesFromApi]);
+
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={t('forms.classification') as string} valid={!loaded || valid} />
+        <EntryFormHead
+          title={`${t('categories.offer.form.mainType.title')} (${t('forms.required')})`}
+          valid={valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             {typeOptions?.length > 0 && (
               <Select
-                value={types[0] || initialTypes[0] || ''}
+                value={
+                  types?.length > 0 ? types[0] : initialTypes?.length > 0 ? initialTypes[0] : ''
+                }
                 id={`${uid}-select`}
                 onChange={(e) => setTypes([e.target.value])}
+                size={SelectSize.big}
               >
                 <option key={'-1'} value="undefined">
-                  auswählen
+                  {t('categories.offer.form.mainType.choose')}
                 </option>
-                {typeOptions.map((typeOption, typeOptionIndex) => {
-                  const currentTranslation = getTranslation(
-                    language,
-                    typeOption.relations.translations,
-                    true
-                  );
+                {sortByTranslation<OfferMainType>(typeOptions, language).map(
+                  (typeOption, typeOptionIndex) => {
+                    const currentTranslation = getTranslation(
+                      language,
+                      typeOption.relations.translations,
+                      true
+                    );
 
-                  return (
-                    <option key={typeOptionIndex} value={String(typeOption.id)}>
-                      {currentTranslation.attributes.name}
-                    </option>
-                  );
-                })}
+                    return (
+                      <option key={typeOptionIndex} value={String(typeOption.id)}>
+                        {currentTranslation.attributes.name}
+                      </option>
+                    );
+                  }
+                )}
               </Select>
             )}
           </FormItem>
@@ -139,7 +160,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     submit,
     pristine: pristineClassification,
     reset,
-    valid,
+    valid: entryTypeSubjectValid,
   } = useEntryTypeSubjectForm({ category, query }, loaded, false);
 
   const {
@@ -152,6 +173,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     renderedForm: mainTypeForm,
     submit: mainTypeSubmit,
     pristine: mainTypePristine,
+    valid: mainTypeValid,
   } = useOfferMainTypeForm({ category, query }, loaded, false);
 
   const shouldWarn = useMemo(
@@ -179,7 +201,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
           }}
           active={!pristineTags || !pristineClassification || !mainTypePristine}
           date={formattedDate}
-          valid={loaded !== true || valid}
+          valid={loaded !== true || (entryTypeSubjectValid && mainTypeValid)}
         />
         <EntryFormWrapper>
           <EntryFormContainer>{mainTypeForm}</EntryFormContainer>
