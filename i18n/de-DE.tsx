@@ -11,6 +11,7 @@ export const deDE: Localization = {
       offers: {
         title: () => 'Aktuelle Angebote',
         link: () => 'Angebot anschauen',
+        datePlaceholder: () => 'Noch keine Termine vorhanden',
       },
       data: {
         title: () => 'Die Kulturdaten (weiter-)verwenden',

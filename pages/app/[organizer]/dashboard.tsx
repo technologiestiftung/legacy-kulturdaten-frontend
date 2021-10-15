@@ -45,7 +45,7 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
   const t = useT();
   const organizerId = useOrganizerId();
   const locale = useLocale();
-  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
   const formatDate = useDate();
   const currentTranslation = getTranslation(language, offer.relations?.translations, true);
 
@@ -57,7 +57,7 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
   return (
     <DashboardTile
       title={currentTranslation?.attributes?.name}
-      gridColumn={isWideOrWider ? 'span 4' : undefined}
+      gridColumn={isUltraOrWider ? 'span 4' : undefined}
       link={
         <DashboardTileLink
           type={StandardLinkType.internal}
@@ -75,13 +75,18 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
             <StyledDashboardTileDate key={datesIndex}>
               <DashboardTileTextP>
                 {date.attributes.startsAt
-                  ? formatDate(new Date(date.attributes.startsAt), DateFormat.dateTime)
+                  ? formatDate(new Date(date.attributes.startsAt), DateFormat.dayDateTime)
                   : ''}
               </DashboardTileTextP>
               <DateStatusFlag status={date.attributes.status} />
             </StyledDashboardTileDate>
           );
         })}
+        {!dates || dates.length === 0 ? (
+          <DashboardTileTextP>{t('dashboard.info.offers.datePlaceholder')}</DashboardTileTextP>
+        ) : (
+          ''
+        )}
       </DashboardTileText>
     </DashboardTile>
   );
@@ -102,6 +107,7 @@ const DashboardPage: NextPage = () => {
   const router = useRouter();
   const categories = useCategories();
   const userHasNoOrganizer = useMemo(() => organizerId === defaultOrganizerId, [organizerId]);
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
   const selectedGreetings = useMemo(
     () => (userHasNoOrganizer ? greetings.initial : greetings.default),
@@ -109,7 +115,7 @@ const DashboardPage: NextPage = () => {
   );
 
   const randomGreetingsIndex = useRandomInt(0, selectedGreetings.length);
-  const offers = useList<OfferList, Offer>(categories.offer, 1, 3);
+  const offers = useList<OfferList, Offer>(categories.offer, 1, isUltraOrWider ? 3 : 2);
 
   useEffect(() => {
     if (organizerId !== defaultOrganizerId && router?.query?.organizer !== organizerId) {

@@ -8,6 +8,11 @@ export const enDE: Localization = {
   },
   dashboard: {
     info: {
+      offers: {
+        title: () => 'Current Offers',
+        link: () => 'View Offer',
+        datePlaceholder: () => 'No dates available yet',
+      },
       data: {
         title: () => 'Use the culture data (further) ',
         export: {
