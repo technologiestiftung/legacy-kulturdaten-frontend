@@ -204,15 +204,10 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const fromDate = from && new Date(from);
   const toDate = to && new Date(to);
 
-  const dateFormat = DateFormat.dateTime;
+  const dateFormat = DateFormat.dayDateTime;
 
-  const formattedFrom = `${fromDate && t(weekdays[getDay(fromDate)].name.short)} ${formatDate(
-    fromDate,
-    dateFormat
-  )}`;
-  const formattedTo = `${toDate && t(weekdays[getDay(toDate)].name.short)} ${
-    toDate && formatDate(toDate, dateFormat)
-  }`;
+  const formattedFrom = `${formatDate(fromDate, dateFormat)}`;
+  const formattedTo = `${toDate && formatDate(toDate, dateFormat)}`;
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <StyledDateListItemBodyInner lastRow={lastRow}>{body}</StyledDateListItemBodyInner>
