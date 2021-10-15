@@ -210,7 +210,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
   };
 };
 
-const useOrganizerLocationForm: EntryFormHook = ({ category, query }, loaded) => {
+const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const [organizerId, setOrganizerId] = useState<string>();
   const [locationId, setLocationId] = useState<string>();

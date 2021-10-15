@@ -60,7 +60,6 @@ interface ContactsProps {
 }
 
 export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: ContactsProps) => {
-  const uid = usePseudoUID();
   const t = useT();
 
   return (
