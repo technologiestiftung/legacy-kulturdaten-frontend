@@ -533,6 +533,10 @@ export const enDE: Localization = {
         edit: () => 'edit',
         editCancel: () => 'cancel',
         locationInfo: () => 'Information about the offer location',
+        mainType: {
+          title: () => 'Event type',
+          choose: () => 'choose event type',
+        },
         pricing: {
           title: () => 'Pricing & admission',
           hasFee: () => 'Offer is chargeable',

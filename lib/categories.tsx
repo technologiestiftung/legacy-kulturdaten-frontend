@@ -10,10 +10,11 @@ import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
+import { OfferMainTypeList, offerMainTypeListFactory } from './api/routes/offerMainType/list';
 import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
 import { CategoryEntry } from './api/types/general';
-import { OfferDate, OfferType } from './api/types/offer';
+import { OfferDate, OfferType, OfferMainType } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
 import { EntryType } from './api/types/typeSubject';
 import { Route, useLocale } from './routing';
@@ -312,6 +313,15 @@ export const useOfferTypeList = (): OfferType[] => {
   const data = useEntryTypeList<OfferTypeList, OfferType>(
     ApiRoutes.offerTypeList,
     offerTypeListFactory
+  );
+
+  return data;
+};
+
+export const useOfferMainTypeList = (): OfferMainType[] => {
+  const data = useEntryTypeList<OfferMainTypeList, OfferMainType>(
+    ApiRoutes.offerMainTypeList,
+    offerMainTypeListFactory
   );
 
   return data;
