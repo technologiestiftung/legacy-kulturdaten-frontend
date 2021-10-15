@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { Tag } from '../../../../lib/api/types/tag';
 import { useEntry } from '../../../../lib/categories';
@@ -15,6 +15,7 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<CategoryEntry, ApiCall>(category, query);
   const call = useApiCall();
   const [selectedTags, setSelectedTags] = useState<Tag['id'][]>();
+  const [tagsFromApi, setTagsFromApi] = useState<Tag['id'][]>();
   const t = useT();
 
   const initialTags = useMemo(
@@ -22,21 +23,17 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
     [entry?.data?.relations?.tags]
   );
 
-  const pristine = useMemo(() => {
-    if (selectedTags?.length !== initialTags?.length) {
-      return false;
-    }
+  const pristine = useMemo(
+    () => JSON.stringify(tagsFromApi?.sort()) === JSON.stringify(selectedTags?.sort()),
+    [tagsFromApi, selectedTags]
+  );
 
-    if (selectedTags && initialTags) {
-      for (let i = 0; i < selectedTags.length; i += 1) {
-        if (selectedTags[i] !== initialTags[i]) {
-          return false;
-        }
-      }
+  useEffect(() => {
+    if (JSON.stringify(tagsFromApi) !== JSON.stringify(initialTags)) {
+      setSelectedTags(initialTags);
+      setTagsFromApi(initialTags);
     }
-
-    return true;
-  }, [initialTags, selectedTags]);
+  }, [initialTags, selectedTags, tagsFromApi]);
 
   return {
     renderedForm: (
@@ -47,7 +44,7 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
             {tagOptions && (
               <Tags
                 options={tagOptions}
-                value={selectedTags || initialTags}
+                value={selectedTags || []}
                 onChange={(newValue) => setSelectedTags(newValue)}
               />
             )}
