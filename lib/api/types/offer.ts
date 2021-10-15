@@ -12,6 +12,7 @@ import {
 
 export type OfferType = EntryType;
 export type OfferSubject = EntrySubject;
+export type OfferMainType = EntryType;
 export type OfferTypeTranslation = EntryTypeTranslation;
 export type OfferSubjectTranslation = EntrySubjectTranslation;
 
@@ -80,6 +81,7 @@ export type Offer = {
       subjects?: OfferSubject[];
       translations: OfferTranslation[];
       types?: OfferType[];
+      mainType?: OfferMainType[];
     } & CategoryEntry['data']['relations'];
   };
   meta?: {

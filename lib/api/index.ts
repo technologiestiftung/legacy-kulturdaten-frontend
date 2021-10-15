@@ -61,6 +61,7 @@ export enum ApiRoutes {
   offerDateUpdate = 'offerDateUpdate',
   offerDateList = 'offerDateList',
   offerTypeList = 'offerTypeList',
+  offerMainTypeList = 'offerMainTypeList',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
@@ -105,10 +106,10 @@ export const apiRoutes: {
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags,mainType`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags,mainType`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
@@ -120,6 +121,7 @@ export const apiRoutes: {
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
   offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
+  offerMainTypeList: () => `/${apiVersion}/offerMainType?include=translations`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
