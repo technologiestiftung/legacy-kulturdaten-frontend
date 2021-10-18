@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import { useState } from 'react';
 import { InputType } from '../input';
+import { FormListConditional } from './FormListConditional';
 import { FormListField, FormListFieldType } from './FormListField';
 import { FormListGroup } from './FormListGroup';
 
@@ -22,10 +23,11 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
 const EmbeddedFormListDefaultStory: React.FC = () => {
   const [radioValue, setRadioValue] = useState('yes');
   const [checkboxListValue, setCheckboxListValue] = useState(['1', '3']);
+  const [conditionalChecked, setConditionalChecked] = useState(false);
 
   return (
     <StyledTestWrapper>
-      <FormListGroup>
+      <FormListGroup title="This is a group of fields">
         <FormListField
           type={FormListFieldType.input}
           label="Test Input"
@@ -70,6 +72,56 @@ const EmbeddedFormListDefaultStory: React.FC = () => {
             ],
           }}
         />
+        <FormListConditional
+          label="Optional fields"
+          checked={conditionalChecked}
+          onChange={(checked) => setConditionalChecked(checked)}
+        >
+          <FormListField
+            type={FormListFieldType.input}
+            label="Test Input"
+            fieldProps={{
+              type: InputType.text,
+              id: 'id-1',
+              placeholder: 'Text placeholder',
+            }}
+          />
+          <FormListField
+            type={FormListFieldType.select}
+            label="Test Select"
+            fieldProps={{
+              id: 'id-2',
+              children: (
+                <>
+                  <option value="1">Option 1</option>
+                  <option value="2">Option 2</option>
+                </>
+              ),
+            }}
+          />
+          <FormListField
+            type={FormListFieldType.radioList}
+            label="Test Radio"
+            fieldProps={{
+              value: radioValue,
+              onChange: (newValue: string) => setRadioValue(newValue),
+              id: 'test-radio',
+              name: 'test-radio',
+              options: [
+                {
+                  id: 'test01',
+                  label: 'Yes',
+                  value: 'yes',
+                },
+                {
+                  id: 'test02',
+                  label: 'No',
+                  value: 'no',
+                },
+              ],
+            }}
+          />
+        </FormListConditional>
         <FormListField
           type={FormListFieldType.checkboxList}
           label="Test Checkboxes"

@@ -9,24 +9,20 @@ import { Input, InputProps } from '../input';
 import { RadioList, RadioListProps } from '../Radio/RadioList';
 import { Select, SelectProps, SelectVariant } from '../select';
 
-const StyledFormListField = styled.div`
+const StyledFormListField = styled.div<{ last?: boolean }>`
   display: grid;
   grid-template-columns: 100%;
-  border-bottom: 1px solid var(--grey-400);
+  border-bottom: ${({ last }) => (last ? 'none' : '1px solid var(--grey-400)')};
 
   ${mq(Breakpoint.mid)} {
     grid-template-columns: 50% 50%;
-  }
-
-  &:last-of-type {
-    border-bottom: none;
   }
 `;
 
 const StyledFormListFieldLabel = styled.label`
   border-bottom: 1px solid var(--grey-200);
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
   padding: 0.75rem 1.125rem;
 
   ${mq(Breakpoint.mid)} {
@@ -60,17 +56,19 @@ export interface FormListFieldProps {
   label: string;
   type: FormListFieldType;
   fieldProps: InputProps | SelectProps | RadioListProps | CheckboxListProps;
+  last?: boolean;
 }
 
 export const FormListField: React.FC<FormListFieldProps> = ({
   label,
   type,
   fieldProps,
+  last,
 }: FormListFieldProps) => {
   const uid = usePseudoUID();
 
   return (
-    <StyledFormListField>
+    <StyledFormListField last={last}>
       <StyledFormListFieldLabel htmlFor={fieldProps?.id || `${uid}-field`}>
         {label}
       </StyledFormListFieldLabel>
