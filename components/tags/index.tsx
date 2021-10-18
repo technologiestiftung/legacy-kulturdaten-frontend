@@ -264,8 +264,10 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
               options={autocompleteOptions}
               value={autocompleteValue}
               onChange={(e, newValue) => {
-                setAutocompleteValue(newValue as { label: string; id: number });
-                setInputValue((newValue as { label: string; id: number }).label);
+                setAutocompleteValue(
+                  newValue ? (newValue as { label: string; id: number }) : { label: '', id: null }
+                );
+                setInputValue(newValue ? (newValue as { label: string; id: number }).label : '');
               }}
               noOptionsText={t('tags.noOptions')}
               renderInput={(params) => (
