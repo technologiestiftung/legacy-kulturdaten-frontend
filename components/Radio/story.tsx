@@ -25,7 +25,6 @@ export const RadioListStory: Story = () => {
       <RadioList
         value={value}
         onChange={(newValue) => setValue(newValue)}
-        label="A list of radios"
         name="test-radio"
         options={[
           {
