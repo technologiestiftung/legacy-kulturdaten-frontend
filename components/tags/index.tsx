@@ -181,7 +181,7 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
         const translation = getTranslation(language, option.relations.translations);
 
         return {
-          label: translation.attributes.name,
+          label: translation?.attributes?.name,
           id: option.id,
         };
       }),
