@@ -1,7 +1,13 @@
 import styled from '@emotion/styled';
 import { Radio } from '.';
+import { useT } from '../../lib/i18n';
+import { Label } from '../label';
 
 const StyledRadioList = styled.div``;
+
+const StyedRadioListLabel = styled.div`
+  margin-bottom: 0.75rem;
+`;
 
 const StyledRadioListItems = styled.ul`
   display: grid;
@@ -18,7 +24,8 @@ export interface RadioListProps {
     id?: string;
   }[];
   name: string;
-  id?: string;
+  id: string;
+  label?: string;
   ariaLabel?: string;
   required?: boolean;
   value?: string;
@@ -29,13 +36,23 @@ export const RadioList: React.FC<RadioListProps> = ({
   options,
   name,
   id,
+  label,
   ariaLabel,
   value,
   onChange,
   required,
 }: RadioListProps) => {
+  const t = useT();
+
   return (
     <StyledRadioList>
+      {label && (
+        <StyedRadioListLabel>
+          <Label>
+            {label} {required ? ` (${t('forms.required')})` : ''}
+          </Label>
+        </StyedRadioListLabel>
+      )}
       <StyledRadioListItems aria-label={ariaLabel}>
         {options?.map((option, index) => (
           <StyledRadioListItem key={index}>
