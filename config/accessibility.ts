@@ -470,13 +470,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Service - Welche Unterstützung beim Besuch ermöglicht ihr?',
+                        name: 'Wie sind die Stufen beschaffen?',
                       },
                     },
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Service - Do you offer any additional support to ease the visit?',
+                        name: 'What are the stairs like?',
                       },
                     },
                   ],
