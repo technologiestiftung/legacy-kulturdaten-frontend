@@ -198,7 +198,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
           <Input
             type={InputType.url}
             label={t('categories.offer.form.pricing.ticketUrl') as string}
-            value={attributes?.ticketUrl}
+            value={attributes?.ticketUrl || ''}
             onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
           />
         </FormItem>
