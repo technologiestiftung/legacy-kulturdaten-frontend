@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { SerializedStyles } from '@emotion/utils';
 import React, { ChangeEvent, useState } from 'react';
 import * as feather from 'react-feather';
+import { ComponentVariant, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 
 import { Label, StyledLabel } from '../label';
@@ -15,6 +16,7 @@ export enum SelectSize {
 export enum SelectVariant {
   default = 'default',
   minimal = 'minimal',
+  formList = 'formList',
 }
 
 const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>`
@@ -115,11 +117,39 @@ const selectVariants: {
       }
     }
   `,
+  formList: css`
+    padding: 0.75rem 1.125rem;
+    background: var(--white);
+    transition: background var(--transition-duration), box-shadow var(--transition-duration);
+    border: none;
+    color: var(--black);
+    border-radius: 0;
+
+    &:hover {
+      background: var(--grey-200);
+    }
+
+    &:active {
+      box-shadow: inset 0px 0px 0px 1px var(--blue);
+    }
+
+    &:disabled {
+      background: var(--grey-350);
+      color: var(--black);
+      cursor: not-allowed;
+      border-color: var(--grey-350);
+      opacity: 1;
+
+      &:hover {
+        background: var(--grey-350);
+      }
+    }
+  `,
 };
 
 const StyledSelect = styled.select<{
   selectSize: SelectSize;
-  variant: SelectVariant;
+  variant: SelectVariant | ComponentVariant;
   withIcon: boolean;
 }>`
   margin: 0;
@@ -167,7 +197,7 @@ export enum SelectLabelPosition {
   top = 'top',
 }
 
-interface SelectProps {
+export interface SelectProps extends ComponentWithVariants {
   children: React.ReactNode;
   id: string;
   value?: string;
@@ -176,7 +206,7 @@ interface SelectProps {
   labelPosition?: SelectLabelPosition;
   defaultValue?: string;
   size?: SelectSize;
-  variant?: SelectVariant;
+  variant?: SelectVariant | ComponentVariant;
   icon?: string;
   ariaLabel?: string;
   disabled?: boolean;
@@ -205,6 +235,7 @@ export const Select: React.FC<SelectProps> = ({
   const internalState = useState<string>(defaultValue);
   const t = useT();
   const valueState = value || internalState[0];
+  const elementSize = variant === SelectVariant.formList ? SelectSize.big : size;
 
   return (
     <StyledSelectContainer labelPosition={labelPosition}>
@@ -217,7 +248,7 @@ export const Select: React.FC<SelectProps> = ({
         <StyledSelect
           aria-label={ariaLabel}
           variant={variant}
-          selectSize={size}
+          selectSize={elementSize}
           id={id}
           value={valueState || ''}
           onChange={
@@ -234,12 +265,12 @@ export const Select: React.FC<SelectProps> = ({
           {children}
         </StyledSelect>
         {icon && feather[icon] && (
-          <StyledSelectIcon size={size}>
-            {React.createElement(feather[icon], { size: selectSizeIconSizeMap[size] })}
+          <StyledSelectIcon size={elementSize}>
+            {React.createElement(feather[icon], { size: selectSizeIconSizeMap[elementSize] })}
           </StyledSelectIcon>
         )}
-        <StyledSelectChevron size={size}>
-          {React.createElement(feather.ChevronDown, { size: selectSizeIconSizeMap[size] })}
+        <StyledSelectChevron size={elementSize}>
+          {React.createElement(feather.ChevronDown, { size: selectSizeIconSizeMap[elementSize] })}
         </StyledSelectChevron>
       </StyledSelectAndChevron>
     </StyledSelectContainer>
