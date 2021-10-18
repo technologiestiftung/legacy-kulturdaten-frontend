@@ -1,9 +1,96 @@
 /* eslint-disable react/display-name */
+import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
+  },
+  dashboard: {
+    info: {
+      offers: {
+        title: () => 'Aktuelle Angebote',
+        link: () => 'Angebot anschauen',
+        datePlaceholder: () => 'Noch keine Termine vorhanden',
+      },
+      data: {
+        title: () => 'Die Kulturdaten (weiter-)verwenden',
+        export: {
+          title: () => 'Daten Export',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Alle Daten, die du auf Kulturdaten.Berlin bereitstellst, kannst du auch wieder in
+                Standardformaten exportieren.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Dazu kannst du in den entsprechenden Listen oder Einträgen die Export-Funktion
+                nutzen.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+        },
+        api: {
+          title: () => 'API Nutzung für Entwickler:innen',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Alle Daten, die auf Kulturdaten.Berlin bereitgestellt werden, können frei verwendet
+                werden.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Für die programmatische Nutzung benötigst du ein API Token, welches du in deinen
+                Einstellungen erstellen kannst.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Jetzt API Token erstellen',
+        },
+      },
+      linkList: {
+        help: {
+          title: () => 'Hilfe',
+          text: () =>
+            'Du benötigst Hilfe oder Erklärungen zu Funktionen der Plattform? Du möchtest mehr über das Projekt Kulturdaten.Berlin lesen? Hier findest du alle Infos:',
+          links: {
+            '1': {
+              title: () => 'Hilfebereich',
+              href: () => 'http://kulturdaten.berlin',
+            },
+            '2': {
+              title: () => 'Das Projekt',
+              href: () => 'http://kulturdaten.berlin',
+            },
+          },
+        },
+        openSource: {
+          title: () => 'Open Source',
+          text: () =>
+            'Kulturdaten.Berlin wird komplett Open Source, also quelloffen, entwickelt. Du möchtest mithelfen? Hier findest du den Quellcode:',
+          links: {
+            '1': {
+              title: () => 'Interface Code auf GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-frontend',
+            },
+            '2': {
+              title: () => 'Server Code auf GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-api',
+            },
+          },
+        },
+        contact: {
+          title: () => 'Kontakt',
+          text: () =>
+            'Du hast Fragen, Vorschläge oder Anmerkungen zur Kultudatenplattform? Melde dich gerne bei uns unter:',
+          links: {
+            '1': {
+              title: () => 'support@kulturdaten.berlin',
+              href: () => 'mailto:support@kulturdaten.berlin',
+            },
+          },
+        },
+      },
+    },
   },
   language: {
     de: () => 'Deutsch',
@@ -18,6 +105,20 @@ export const deDE: Localization = {
   dayPicker: {
     ariaLabel: () => 'Wochentage auswählen',
     minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
+  },
+  contacts: {
+    add: () => 'Neuen Kontakt hinzufügen',
+    remove: () => 'entfernen',
+  },
+  openingHours: {
+    weekday: () => 'Wochentag',
+    from: () => 'von',
+    to: () => 'bis',
+    add: () => 'Neue Öffnungszeit hinzufügen',
+    remove: () => 'entfernen',
+  },
+  publish: {
+    loadingTitle: ({ categoryName }) => `Veröffentliche ${categoryName}`,
   },
   days: {
     monday: {
@@ -52,6 +153,7 @@ export const deDE: Localization = {
   dateCreate: {
     overlayTitle: ({ offerTitle }) => `Termin für ‚${offerTitle}‘ erstellen`,
     create: () => 'Termin erstellen',
+    loading: () => ' Erstelle Termin',
   },
   accordion: {
     open: () => 'anzeigen',
@@ -67,6 +169,39 @@ export const deDE: Localization = {
   forms: {
     optional: () => 'optional',
     required: () => 'Pflichtfeld',
+    create: () => 'Neue Anbieter:in anlegen',
+    baseInfo: () => 'Grundlagen',
+    address: () => 'Adressdaten',
+    name: () => 'Bezeichnung',
+    nameGerman: () => 'Bezeichnung Deutsch',
+    nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
+    nameEnglish: () => 'Bezeichnung Englisch',
+    nameEnglishSimple: () => 'Bezeichnung Englisch: einfache Sprache',
+    description: () => 'Beschreibung',
+    descriptionExists: () => 'ausgefüllt',
+    descriptionExistsNot: () => 'nicht ausgefüllt',
+    descriptionGerman: () => 'Deutsch',
+    descriptionGermanSimple: () => 'Deutsch: einfache Sprache',
+    descriptionEnglish: () => 'Englisch',
+    descriptionEnglishSimple: () => 'Englisch: einfache Sprache',
+    classification: () => 'Art und Sparte (min. 1 Art notwendig)',
+    type: () => 'Typ(en)',
+    subjects: () => 'Sparte(n)',
+    chooseTypeFirst: () => 'Bitte zunächst Typ auswählen',
+    tags: () => 'Tags',
+    street1: () => 'Straße und Hausnummer',
+    street2: () => 'Adresszusatz',
+    zipCode: () => 'Postleitzahl',
+    city: () => 'Stadt',
+    submit: () => 'anlegen',
+    save: () => 'speichern',
+    edit: () => 'bearbeiten',
+    editCancel: () => 'abbrechen',
+    contact: () => 'Kontaktdaten',
+    tel: () => 'Telefon',
+    email: () => 'E-Mail',
+    website: () => 'Website',
+    links: () => 'Relevante Links',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
     },
@@ -83,6 +218,12 @@ export const deDE: Localization = {
     remember: () => 'Eingeloggt bleiben',
     submit: () => 'einloggen',
     headline: () => 'Logge dich jetzt bei Kulturdaten.Berlin ein.',
+    loading: () => 'Anmeldung läuft',
+    error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
+  },
+  logout: {
+    loading: () => 'Abmeldung läuft',
+    loadingMessage: () => 'Tschüss!',
   },
   register: {
     email: () => 'E-Mail',
@@ -91,6 +232,15 @@ export const deDE: Localization = {
     submit: () => 'registrieren',
     headline: () => 'Registriere dich jetzt kostenlos für Kulturdaten.Berlin.',
     subline: () => 'Die Nutzung bleibt immer kostenlos.',
+    passwordError: () => 'Die eingebeben Passwörter stimmen nicht überein.',
+    loading: () => 'Deine Registrierung läuft',
+    requestError: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    uniqueEmailError: () =>
+      'Die angegebene E-Mail ist bereis registriert. Nutze bitte eine andere.',
+    successHeadline: () => 'Super, das hat geklappt!',
+    successSubline: () =>
+      'Wir haben dir eine E-Mail zur Bestätigung deiner Registrierung gesendet. Schließe bitte über diese deine Registrierung ab.',
   },
   statusBar: {
     status: () => 'Status',
@@ -166,6 +316,7 @@ export const deDE: Localization = {
     scheduled: () => 'findet statt',
     scheduledArchived: () => 'fand statt',
     canceled: () => 'abgesagt',
+    past: () => 'vergangen',
     allDay: () => 'ist ganztätig',
     clock: () => 'Uhrzeit',
     toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',
@@ -244,6 +395,9 @@ export const deDE: Localization = {
     loading: () => 'lädt',
     max: () => 'max.',
     topics: () => 'Themen',
+    takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
+    serverProblem: () =>
+      'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Themen',
@@ -329,35 +483,16 @@ export const deDE: Localization = {
         baseInfo: () => 'Grundlagen',
         address: () => 'Adressdaten (nicht öffentlich)',
         name: () => 'Bezeichnung',
-        nameGerman: () => 'Bezeichnung Deutsch',
-        nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
-        nameEnglish: () => 'Bezeichnung Englisch',
-        nameEnglishSimple: () => 'Bezeichnung Englisch: einfache Sprache',
-        description: () => 'Beschreibung',
-        descriptionExists: () => 'ausgefüllt',
-        descriptionExistsNot: () => 'nicht ausgefüllt',
-        descriptionGerman: () => 'Deutsch',
-        descriptionGermanSimple: () => 'Deutsch: einfache Sprache',
-        descriptionEnglish: () => 'Englisch',
-        descriptionEnglishSimple: () => 'Englisch: einfache Sprache',
-        classification: () => 'Art und Sparte (min. 1 Art notwendig)',
-        type: () => 'Typ(en)',
-        subjects: () => 'Sparte(n)',
-        chooseTypeFirst: () => 'Bitte zunächst Typ auswählen',
-        tags: () => 'Tags',
-        street1: () => 'Straße und Hausnummer',
-        street2: () => 'Adresszusatz',
-        zipCode: () => 'Postleitzahl',
-        city: () => 'Stadt',
         submit: () => 'anlegen',
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
-        contact: () => 'Kontaktdaten (öffentlich)',
+        contact: () => 'Kontaktdaten',
         tel: () => 'Telefon',
         email: () => 'E-Mail',
         website: () => 'Website',
         links: () => 'Relevante Links',
+        additionalContacts: () => 'Weitere Kontakte',
       },
       tabs: {
         info: () => 'Informationen',
@@ -384,6 +519,10 @@ export const deDE: Localization = {
       },
     },
     offer: {
+      list: {
+        loading: () => 'Lade Angebote',
+        nothing: () => 'Keine Angebote für die aktive Filterung gefunden',
+      },
       title: {
         plural: () => 'Angebote',
         singular: () => 'Angebot',
@@ -406,6 +545,17 @@ export const deDE: Localization = {
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
+        locationInfo: () => 'Informationen zum Veranstaltungsort',
+        mainType: {
+          title: () => 'Angebotstyp',
+          choose: () => 'Angebotstyp auswählen',
+        },
+        pricing: {
+          title: () => 'Preise & Eintritt',
+          hasFee: () => 'Angebot ist kostenpflichtig',
+          needsRegistration: () => 'Angebot ist anmeldepflichtig',
+          ticketUrl: () => 'Ticketlink',
+        },
         organizer: {
           label: () => 'Angeboten von',
           choose: () => 'Anbieter:in auswählen',
@@ -428,11 +578,16 @@ export const deDE: Localization = {
       },
     },
     location: {
+      list: {
+        loading: () => 'Lade Orte',
+        nothing: () => 'Keine Orte für die aktive Filterung gefunden',
+      },
       title: {
         plural: () => 'Orte',
         singular: () => 'Ort',
       },
       form: {
+        openingHours: () => 'Öffnungszeiten',
         create: () => 'Neuen Ort anlegen',
         address: () => 'Adressdaten',
         name: () => 'Bezeichnung',
@@ -458,6 +613,14 @@ export const deDE: Localization = {
         contact: () => 'Kontaktdaten',
         tel: () => 'Telefon',
         district: () => 'Bezirk',
+        url: () => 'URL des virtuellen Ortes',
+        type: {
+          title: () => 'Typ des Ortes',
+          physicalLabel: () => 'Physischer Ort',
+          physicalText: () => 'Ein physisch existierender Ort mit Adresse, z.B. ein Gebäude.',
+          virtualLabel: () => 'Virtueller Ort',
+          virtualText: () => 'Ein virtueller Ort mit URL, z.B. ein YouTube oder Twitch Kanal.',
+        },
       },
     },
   },

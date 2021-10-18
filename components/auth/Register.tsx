@@ -1,44 +1,114 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
 import { useT } from '../../lib/i18n';
 import { Button, ButtonColor, ButtonSize, ButtonType } from '../button';
+import { Info } from '../info';
 import { Input, InputType } from '../input';
-import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
+import {
+  AuthContent,
+  AuthFormContainer,
+  AuthFormItem,
+  AuthHead,
+  AuthHeadline,
+  AuthSubline,
+} from './AuthWrapper';
+
+const passwordErrorId = 0;
+const requestErrorId = 1;
 
 export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
-  const [error, setError] = useState<Error>();
-  const [submitted, setSubmitted] = useState<boolean>(false);
+  const passwordsMatch = useMemo(
+    () => password === passwordConfirmation,
+    [password, passwordConfirmation]
+  );
+  const [passwordConfirmationBlurred, setPasswordConfirmationBlurred] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ id: number; message: string }[]>([]);
+  const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
+  const loadingScreen = useLoadingScreen();
+
+  useEffect(() => {
+    if (password.length > 0 && passwordConfirmation.length > 0) {
+      const filteredErrors = errors.filter(({ id }) => id !== passwordErrorId);
+      const passwordError = { id: passwordErrorId, message: t('register.passwordError') as string };
+      const passwordErrorPresent = errors.length !== filteredErrors.length;
+
+      if (passwordErrorPresent && passwordsMatch) {
+        setErrors(filteredErrors);
+      } else if (!passwordsMatch && !passwordErrorPresent && passwordConfirmationBlurred) {
+        setErrors([passwordError, ...filteredErrors]);
+      }
+    }
+  }, [
+    passwordsMatch,
+    passwordConfirmationBlurred,
+    t,
+    errors,
+    password.length,
+    passwordConfirmation.length,
+  ]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setError(undefined);
+    setErrors([]);
 
-    try {
-      const resp = await call<AuthRegister>(authRegisterFactory, {
-        body: {
-          email,
-          password,
-          passwordConfirmation: passwordConfirmation,
+    if (passwordsMatch) {
+      loadingScreen(
+        t('register.loading'),
+        async () => {
+          try {
+            const resp = await call<AuthRegister>(authRegisterFactory, {
+              body: {
+                email,
+                password,
+                passwordConfirmation: passwordConfirmation,
+              },
+            });
+            setSuccess(true);
+            console.log(resp);
+            return { success: true };
+          } catch (e) {
+            const requestErrors = e.message
+              ? (JSON.parse(e.message)?.errors as {
+                  rule: string;
+                  field: string;
+                  message: string;
+                }[])
+              : undefined;
+
+            const visibleError = requestErrors?.find(
+              (error) => error.rule === 'unique' && error.field === 'email'
+            )
+              ? (t('register.uniqueEmailError') as string)
+              : (t('register.requestError') as string);
+
+            setErrors([
+              { id: requestErrorId, message: visibleError },
+              ...errors.filter(({ id }) => id !== requestErrorId),
+            ]);
+            return { success: false, error: <Info>{visibleError}</Info> };
+          }
         },
-      });
-      setSubmitted(true);
-      console.log(resp);
-    } catch (e) {
-      setError(e);
-      return;
+        t('general.takeAFewSeconds')
+      );
     }
   };
 
   return (
-    <>
-      {!submitted || error ? (
+    <AuthContent>
+      <AuthHead>
+        <AuthHeadline>{t(success ? 'register.successHeadline' : 'register.headline')}</AuthHeadline>
+        <AuthSubline>{t(success ? 'register.successSubline' : 'register.subline')}</AuthSubline>
+      </AuthHead>
+
+      {!success ? (
         <form onSubmit={submitHandler}>
           <AuthFormContainer>
             <div>
@@ -49,7 +119,6 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.email}
                 id="register-email"
                 required
-                hideError
               />
             </div>
             <div>
@@ -60,7 +129,7 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.password}
                 id="register-password"
                 required
-                hideError
+                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
               />
             </div>
             <div>
@@ -73,7 +142,8 @@ export const RegisterForm: React.FC = () => {
                 type={InputType.password}
                 id="register-password-confirmation"
                 required
-                hideError
+                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
+                onBlur={() => setPasswordConfirmationBlurred(true)}
               />
             </div>
             <AuthFormItem justifyContent="flex-end">
@@ -86,18 +156,13 @@ export const RegisterForm: React.FC = () => {
       ) : (
         ''
       )}
-      {error ? (
+      {errors?.length > 0 && (
         <AuthFormContainer>
-          <h3>{error.name}</h3>
-          <pre>{error.message}</pre>
+          {errors.map(({ message }, index) => (
+            <Info key={index}>{message}</Info>
+          ))}
         </AuthFormContainer>
-      ) : submitted ? (
-        <AuthFormContainer>
-          Form submitted. Please confirm your email address via the email we just sent you.
-        </AuthFormContainer>
-      ) : (
-        ''
       )}
-    </>
+    </AuthContent>
   );
 };

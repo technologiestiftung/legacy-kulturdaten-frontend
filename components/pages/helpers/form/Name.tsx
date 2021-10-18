@@ -1,11 +1,15 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { EntryFormHook } from '.';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
+import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
+import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
+import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
 interface SetNameProps {
   label: string;
@@ -107,12 +111,14 @@ export const useName = <
     if (valid && !pristine) {
       try {
         const resp = await call(category.api.update.factory, {
-          organizer: {
+          entry: {
             relations: {
               translations: [
                 {
-                  name: value,
-                  language,
+                  attributes: {
+                    name: value,
+                    language,
+                  },
                 },
               ],
             },
@@ -161,5 +167,85 @@ export const useName = <
     },
     valid,
     value,
+  };
+};
+
+export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
+  const t = useT();
+
+  const {
+    form: setNameGerman,
+    onSubmit: onSubmitGerman,
+    pristine: pristineGerman,
+    reset: resetGerman,
+    valid: validGerman,
+    value: valueGerman,
+  } = useName({
+    category,
+    query,
+    language: Language.de,
+    label: t('forms.nameGerman') as string,
+    loaded,
+    showHint,
+  });
+
+  const {
+    form: setNameEnglish,
+    onSubmit: onSubmitEnglish,
+    pristine: pristineEnglish,
+    reset: resetEnglish,
+    valid: validEnglish,
+    value: valueEnglish,
+  } = useName({
+    category,
+    query,
+    language: Language.en,
+    label: t('forms.nameEnglish') as string,
+    loaded,
+    showHint,
+  });
+
+  const pristine = useMemo(
+    () => Boolean(pristineGerman && pristineEnglish),
+    [pristineEnglish, pristineGerman]
+  );
+
+  const valid = useMemo(
+    () => !loaded || Boolean(validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
+
+  const hint = useMemo(
+    () =>
+      showHint &&
+      loaded &&
+      (typeof valueEnglish === 'undefined' ||
+        typeof valueGerman === 'undefined' ||
+        valueEnglish.length < 1 ||
+        valueGerman.length < 1),
+    [showHint, loaded, valueEnglish, valueGerman]
+  );
+
+  return {
+    renderedForm: (
+      <div>
+        <EntryFormHead title={`${t('forms.name') as string}`} valid={valid} hint={hint} />
+        <FormGrid>
+          <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
+          <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
+        </FormGrid>
+      </div>
+    ),
+    submit: async () => {
+      onSubmitEnglish();
+      onSubmitGerman();
+    },
+    pristine,
+    reset: () => {
+      resetGerman();
+      resetEnglish();
+    },
+    valid,
+    hint,
   };
 };

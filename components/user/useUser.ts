@@ -19,15 +19,18 @@ import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { routes, useActiveRoute, useLocale } from '../../lib/routing';
 import { User } from '../../lib/api/types/user';
 import { internalRoutes } from '../../config/routes';
+import { useOrganizerId, useSetOrganizerId } from '../../lib/useOrganizer';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useT } from '../../lib/i18n';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
 export type WrappedUser = {
-  user: User['data'];
+  user: User;
   authToken: string;
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 };
 
 export const useUser = (): WrappedUser => {
@@ -54,6 +57,10 @@ export const useUser = (): WrappedUser => {
   const locale = useLocale();
   const call = useApiCall(authTokenFromStateOrCookie);
   const activeRoute = useActiveRoute();
+  const loadingScreen = useLoadingScreen();
+  const activeOrganizerId = useOrganizerId();
+  const setActiveOrganizerId = useSetOrganizerId();
+  const t = useT();
 
   const { data, mutate: mutateValidate } = useSWR(
     [getApiUrlString(ApiRoutes.authValidate), authTokenFromStateOrCookie],
@@ -93,17 +100,25 @@ export const useUser = (): WrappedUser => {
   ]);
 
   useEffect(() => {
-    const userData = userResponse?.body.data as unknown as User['data'];
+    const userObject = userResponse?.body as unknown as AuthInfo['response']['body'];
 
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
         console.log('userTokenIsValid = false, log out!');
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
-        if (userData) {
-          setUser(userData);
+        if (userObject) {
+          setUser(userObject.data);
           setAuthToken(authTokenFromStateOrCookie);
           authenticateUser();
+
+          const userOrganizerIds = userObject.data?.relations?.organizers?.map(
+            (role) => role.relations?.organizer?.id
+          );
+
+          if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
+            setActiveOrganizerId(userOrganizerIds[0]);
+          }
         }
       }
     } else if (isAuthenticated) {
@@ -127,6 +142,8 @@ export const useUser = (): WrappedUser => {
     setAuthToken,
     mutateValidate,
     activeRoute,
+    activeOrganizerId,
+    setActiveOrganizerId,
   ]);
 
   return {
@@ -141,10 +158,19 @@ export const useUser = (): WrappedUser => {
       router.replace(redirectRoute);
     },
     logout: async () => {
-      logoutUser();
-      setTimeout(() => {
-        router.push(routes.index({ locale }));
-      }, 500);
+      loadingScreen(
+        t('logout.loading'),
+        async () => {
+          logoutUser();
+
+          setTimeout(() => {
+            router.push(routes.login({ locale }));
+          }, 500);
+
+          return { success: true };
+        },
+        t('logout.loadingMessage')
+      );
     },
   };
 };

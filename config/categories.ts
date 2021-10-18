@@ -36,6 +36,8 @@ import { organizerMediaFactory } from '../lib/api/routes/organizer/media';
 import { OrganizerMediaPage } from '../components/pages/organizer/media';
 import { OfferMediaPage } from '../components/pages/offer/media';
 import { LocationMediaPage } from '../components/pages/location/media';
+import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
+import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 
 export type Requirement = {
   translationKey: string;
@@ -46,6 +48,12 @@ export enum Categories {
   organizer = 'organizer',
   offer = 'offer',
   location = 'location',
+}
+
+export enum CategoriesPlural {
+  organizers = 'organizers',
+  offers = 'offers',
+  locations = 'locations',
 }
 
 export const useCategories: () => {
@@ -102,6 +110,10 @@ export const useCategories: () => {
         delete: {
           route: ApiRoutes.organizerDelete,
           factory: organizerDeleteFactory,
+        },
+        typeList: {
+          route: ApiRoutes.organizerTypeList,
+          factory: organizerTypeListFactory,
         },
         media: {
           route: ApiRoutes.organizerUpdate,
@@ -183,7 +195,26 @@ export const useCategories: () => {
           route: ApiRoutes.offerDelete,
           factory: offerDeleteFactory,
         },
+        typeList: {
+          route: ApiRoutes.offerTypeList,
+          factory: offerTypeListFactory,
+        },
       },
+      requirements: [
+        {
+          translationKey: 'categories.organizer.requirements.name',
+          publishableKeys: ['attributes.name'],
+        },
+
+        {
+          translationKey: 'categories.organizer.requirements.description',
+          publishableKeys: ['attributes.description'],
+        },
+        {
+          translationKey: 'categories.organizer.requirements.categorization',
+          publishableKeys: ['relations.types', 'relations.subjects'],
+        },
+      ],
     },
     location: {
       name: Categories.location,
@@ -230,6 +261,12 @@ export const useCategories: () => {
           factory: locationDeleteFactory,
         },
       },
+      requirements: [
+        {
+          translationKey: 'categories.organizer.requirements.name',
+          publishableKeys: ['attributes.name'],
+        },
+      ],
     },
   };
 };

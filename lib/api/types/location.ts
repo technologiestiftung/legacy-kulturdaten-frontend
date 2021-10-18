@@ -1,6 +1,7 @@
 import { Language } from '../../../config/locale';
 import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
+import { OpeningHours } from './openingHours';
 import { Organizer } from './organizer';
 
 export type LocationTranslation = {
@@ -12,16 +13,24 @@ export type LocationTranslation = {
   };
 } & Translation;
 
+export enum LocationType {
+  virtuallocation = 'virtuallocation',
+  physicallocation = 'physicallocation',
+}
+
 export type Location = {
   data: {
+    type: LocationType;
     id?: string;
-    type?: 'location';
-    attributes?: DefaultAttributes;
+    attributes?: {
+      url?: string;
+    } & DefaultAttributes;
     relations?: {
       translations: LocationTranslation[];
       organizer?: Organizer;
       address?: Address;
-    };
+      openingHours?: OpeningHours[];
+    } & CategoryEntry['data']['relations'];
   };
   meta?: {
     publishable:

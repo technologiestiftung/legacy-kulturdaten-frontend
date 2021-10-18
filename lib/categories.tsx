@@ -10,11 +10,15 @@ import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
+import { OfferMainTypeList, offerMainTypeListFactory } from './api/routes/offerMainType/list';
+import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
 import { CategoryEntry } from './api/types/general';
-import { OfferDate } from './api/types/offer';
+import { OfferDate, OfferType, OfferMainType } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
+import { EntryType } from './api/types/typeSubject';
 import { Route, useLocale } from './routing';
+import { defaultOrganizerId } from './useOrganizer';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -62,6 +66,7 @@ export type Category = {
     update: categoryApi;
     delete: categoryApi;
     media?: categoryApi;
+    typeList?: categoryApi;
   };
   requirements?: Requirement[];
 };
@@ -230,7 +235,9 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const apiCallRoute = category?.api.show.route;
 
   const { data, mutate } = useSWR<C['response']>(
-    apiCallRoute && query && (query.id || (query.organizer && query.organizer !== 'default'))
+    apiCallRoute &&
+      query &&
+      (query.id || (query.organizer && query.organizer !== defaultOrganizerId))
       ? getApiUrlString(apiCallRoute, query)
       : undefined,
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
@@ -279,14 +286,43 @@ export const useMetaLinks = (category: Category): React.ReactElement[] => {
   return metaLinks;
 };
 
-export const useOrganizerTypeList = (): OrganizerType[] => {
+export const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
+  route: ApiRoutes,
+  factory: ApiCallFactory
+): C[] => {
   const call = useApiCall();
 
-  const { data } = useSWR(
-    getApiUrlString(ApiRoutes.organizerTypeList, undefined),
-    () => call<OrganizerTypeList>(organizerTypeListFactory, undefined),
-    { revalidateOnFocus: false, focusThrottleInterval: 1000 * 60 * 5 }
+  const { data } = useSWR(getApiUrlString(route, undefined), () => call<T>(factory, undefined), {
+    revalidateOnFocus: false,
+    focusThrottleInterval: 1000 * 60 * 5,
+  });
+
+  return data?.body?.data as unknown as C[];
+};
+
+export const useOrganizerTypeList = (): OrganizerType[] => {
+  const data = useEntryTypeList<OrganizerTypeList, OrganizerType>(
+    ApiRoutes.organizerTypeList,
+    organizerTypeListFactory
   );
 
-  return data?.body?.data;
+  return data;
+};
+
+export const useOfferTypeList = (): OfferType[] => {
+  const data = useEntryTypeList<OfferTypeList, OfferType>(
+    ApiRoutes.offerTypeList,
+    offerTypeListFactory
+  );
+
+  return data;
+};
+
+export const useOfferMainTypeList = (): OfferMainType[] => {
+  const data = useEntryTypeList<OfferMainTypeList, OfferMainType>(
+    ApiRoutes.offerMainTypeList,
+    offerMainTypeListFactory
+  );
+
+  return data;
 };

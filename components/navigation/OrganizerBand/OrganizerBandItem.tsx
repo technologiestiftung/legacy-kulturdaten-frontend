@@ -2,9 +2,10 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as feather from 'react-feather';
 import Image from 'next/image';
-import React, { RefObject, useMemo } from 'react';
+import React, { RefObject, useMemo, useRef } from 'react';
 import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
+import { MouseTooltip } from '../../MouseTooltip';
 
 const StyledOrganizerBandItemLogo = styled.div<{
   active: boolean;
@@ -20,6 +21,10 @@ const StyledOrganizerBandItemLogo = styled.div<{
   position: relative;
   overflow: hidden;
   transition: border-color var(--transition-duration-fast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
   ${({ layout, active, noBorder }) =>
     layout === OrganizerBandLayout.wide &&
@@ -29,6 +34,10 @@ const StyledOrganizerBandItemLogo = styled.div<{
       border-right: 1px solid
         ${noBorder ? 'transparent' : active ? 'var(--black)' : 'var(--grey-400)'};
     `}
+
+  > svg {
+    display: block;
+  }
 `;
 
 const StyledOrganizerBandItem = styled.a<{
@@ -37,29 +46,26 @@ const StyledOrganizerBandItem = styled.a<{
   noBorder?: boolean;
 }>`
   text-decoration: none;
-
+  width: 100%;
+  display: block;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   justify-content: center;
   column-gap: 0.75rem;
   background: var(--grey-200);
   border-radius: 0.75rem;
+  padding: 0;
+  margin: 0;
+  appearance: none;
   color: var(--grey-600);
   transition: background var(--transition-duration-fast), color var(--transition-duration-fast),
     border-color var(--transition-duration-fast), box-shadow var(--transition-duration-fast);
-
-  > svg {
-    display: block;
-    padding: calc(0.75rem - 1px) 0;
-  }
 
   ${({ layout }) =>
     layout === OrganizerBandLayout.wide &&
     css`
       justify-content: flex-start;
-      > svg {
-        padding: calc(0.75rem - 1px) 0 calc(0.75rem - 1px) 0.75rem;
-      }
     `}
 
   ${({ noBorder, active }) =>
@@ -140,12 +146,24 @@ interface OrganizerBandItemProps {
   href?: string;
   onClick?: React.MouseEventHandler;
   logo?: Media['data'];
+  asButton?: boolean;
 }
 
 const OrganizerBandItemForwarded = (
-  { children, active, href, onClick, layout, icon, noBorder, logo }: OrganizerBandItemProps,
+  {
+    children,
+    active,
+    href,
+    onClick,
+    layout,
+    icon,
+    noBorder,
+    logo,
+    asButton,
+  }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
+  const selfRef = useRef<HTMLDivElement>(null);
   const logoRenditions = useMemo<Media['data']['relations']['renditions']>(
     () => logo?.relations?.renditions?.filter((rendition) => rendition.attributes.base === 96),
     [logo?.relations?.renditions]
@@ -162,51 +180,40 @@ const OrganizerBandItemForwarded = (
   );
 
   return (
-    <StyledOrganizerBandItem
-      active={active}
-      ref={ref}
-      href={href}
-      layout={layout}
-      aria-label={children as string}
-      noBorder={noBorder}
-      title={children}
-      onClick={(e) => {
-        if (onClick) {
-          onClick(e);
-        }
-      }}
-    >
-      {layout === OrganizerBandLayout.wide ? (
-        <>
+    <div ref={selfRef}>
+      <StyledOrganizerBandItem
+        active={active}
+        ref={ref}
+        href={href}
+        layout={layout}
+        aria-label={children as string}
+        noBorder={noBorder}
+        onClick={(e) => {
+          if (onClick) {
+            onClick(e);
+          }
+        }}
+        as={asButton ? 'button' : undefined}
+      >
+        <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
           {icon && feather[icon] ? (
             React.createElement(feather[icon])
-          ) : (
-            <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
-              {logoRendition ? (
-                <Image src={logoRendition.url} layout={'fill'} objectFit="contain" />
-              ) : (
-                <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
-                  {children.slice(0, 1)}
-                </StyledOrganizerBandItemText>
-              )}
-            </StyledOrganizerBandItemLogo>
-          )}
-          <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
-        </>
-      ) : icon && feather[icon] ? (
-        React.createElement(feather[icon])
-      ) : (
-        <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
-          {logoRendition ? (
+          ) : logoRendition ? (
             <Image src={logoRendition.url} layout={'fill'} objectFit="contain" />
           ) : (
-            <StyledOrganizerBandItemText layout={layout}>
+            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
               {children.slice(0, 1)}
             </StyledOrganizerBandItemText>
           )}
         </StyledOrganizerBandItemLogo>
-      )}
-    </StyledOrganizerBandItem>
+
+        {layout === OrganizerBandLayout.narrow ? (
+          <MouseTooltip hoverElement={selfRef.current}>{children}</MouseTooltip>
+        ) : (
+          <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
+        )}
+      </StyledOrganizerBandItem>
+    </div>
   );
 };
 

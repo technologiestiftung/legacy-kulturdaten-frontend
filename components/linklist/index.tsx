@@ -32,19 +32,24 @@ const StyledLinkListList = styled.ul`
 `;
 
 const StyledLinkListListPlaceholder = styled.div`
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.5rem;
+  }
 `;
 
 const StyledLinkListListItem = styled.li`
   display: flex;
   align-items: stretch;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem;
   box-shadow: ${insetBorder(false, false, true)};
   flex-direction: column;
 
   ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.5rem;
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
@@ -82,11 +87,12 @@ const StyledLinkListAddNew = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem;
   box-shadow: ${insetBorder(false, true, true, true)};
   border-radius: 0 0 0.75rem 0.75rem;
 
   ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.5rem;
     justify-content: space-between;
     align-items: flex-end;
     flex-direction: row;
@@ -113,6 +119,10 @@ const StyledLinkListInputButton = styled.div`
 const StyledLinkListInfo = styled.div`
   padding: 0.75rem 0.75rem 0;
   box-shadow: ${insetBorder(false, true)};
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.5rem 0;
+  }
 `;
 
 enum LinksActions {
@@ -189,10 +199,10 @@ const LinkList: React.FC<LinkListProps> = ({
 
   const [inputState, setInputState] = useState<string>('');
 
-  const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState?.length >= maxLinks, [
-    linksState,
-    maxLinks,
-  ]);
+  const maxLinksReached = useMemo<boolean>(
+    () => maxLinks && linksState?.length >= maxLinks,
+    [linksState, maxLinks]
+  );
 
   useEffect(() => {
     if (!externalValueDefined && externalValue && externalValue.length > 0) {

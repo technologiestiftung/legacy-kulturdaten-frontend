@@ -1,9 +1,93 @@
 /* eslint-disable react/display-name */
+import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
+  },
+  dashboard: {
+    info: {
+      offers: {
+        title: () => 'Current Offers',
+        link: () => 'View Offer',
+        datePlaceholder: () => 'No dates available yet',
+      },
+      data: {
+        title: () => 'Use the culture data (further) ',
+        export: {
+          title: () => 'Data export',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                You can also export all data that you provide on Kulturdaten.Berlin in standard
+                formats.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                To do this, you can use the export function in the corresponding lists or entries.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+        },
+        api: {
+          title: () => 'API usage for developers',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                All data provided on Kulturdaten.Berlin can be used free of charge.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                For programmatic use you need an API token, which you can create in your settings.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Create API token now',
+        },
+      },
+      linkList: {
+        help: {
+          title: () => 'Help',
+          text: () =>
+            'Do you need help or explanations about the functions of the platform? Would you like to read more about the Kulturdaten.Berlin project? You can find all the information here:',
+          links: {
+            '1': {
+              title: () => 'Support area',
+              href: () => 'http://kulturdaten.berlin',
+            },
+            '2': {
+              title: () => 'The project',
+              href: () => 'http://kulturdaten.berlin',
+            },
+          },
+        },
+        openSource: {
+          title: () => 'Open Source',
+          text: () =>
+            'Kulturdaten.Berlin is being developed completely open source. Would you like to help? You can find the source code here:',
+          links: {
+            '1': {
+              title: () => 'Interface code on GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-frontend',
+            },
+            '2': {
+              title: () => 'Server code on GitHub',
+              href: () => 'https://github.com/technologiestiftung/kulturdaten-api',
+            },
+          },
+        },
+        contact: {
+          title: () => 'Contact',
+          text: () =>
+            'Do you have any questions, suggestions or comments about the data platform? Please contact us at:',
+          links: {
+            '1': {
+              title: () => 'support@kulturdaten.berlin',
+              href: () => 'mailto:support@kulturdaten.berlin',
+            },
+          },
+        },
+      },
+    },
   },
   language: {
     de: () => 'German',
@@ -18,6 +102,20 @@ export const enDE: Localization = {
   dayPicker: {
     ariaLabel: () => 'Choose',
     minError: ({ min }) => `Please choose at least ${min} ${min === 1 ? 'day' : 'days'}`,
+  },
+  contacts: {
+    add: () => 'Add new contact',
+    remove: () => 'remove',
+  },
+  openingHours: {
+    weekday: () => 'Weekday',
+    from: () => 'von',
+    to: () => 'bis',
+    add: () => 'Add new opening hours',
+    remove: () => 'remove',
+  },
+  publish: {
+    loadingTitle: ({ categoryName }) => `Publishing ${categoryName}`,
   },
   days: {
     monday: {
@@ -52,6 +150,7 @@ export const enDE: Localization = {
   dateCreate: {
     overlayTitle: ({ offerTitle }) => `Create date for ‘${offerTitle}’`,
     create: () => 'Create date',
+    loading: () => 'Creating date',
   },
   accordion: {
     open: () => 'show',
@@ -67,6 +166,39 @@ export const enDE: Localization = {
   forms: {
     optional: () => 'optional',
     required: () => 'required',
+    create: () => 'Create new Organizer',
+    baseInfo: () => 'Basic information',
+    address: () => 'Address data',
+    name: () => 'Name',
+    nameGerman: () => 'Name German',
+    nameGermanSimple: () => 'Name German: simple Language',
+    nameEnglish: () => 'Name English',
+    nameEnglishSimple: () => 'Name English: simple Language',
+    description: () => 'Description',
+    descriptionExists: () => 'filled out',
+    descriptionExistsNot: () => 'not filled out',
+    descriptionGerman: () => 'German',
+    descriptionGermanSimple: () => 'German: simple Language',
+    descriptionEnglish: () => 'English',
+    descriptionEnglishSimple: () => 'English: simple Language',
+    classification: () => 'Classification',
+    type: () => 'Type(s)',
+    subjects: () => 'Subject(s)',
+    chooseTypeFirst: () => 'Please choose type first',
+    tags: () => 'Tags',
+    street1: () => 'Street and house number',
+    street2: () => 'Additional address',
+    zipCode: () => 'Zip code',
+    city: () => 'City',
+    submit: () => 'create',
+    save: () => 'save',
+    edit: () => 'edit',
+    editCancel: () => 'cancel',
+    contact: () => 'Contact data',
+    tel: () => 'Phone',
+    email: () => 'Email',
+    website: () => 'Website',
+    links: () => 'Relevant links',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
     },
@@ -83,6 +215,12 @@ export const enDE: Localization = {
     remember: () => 'Stay logged in',
     submit: () => 'login',
     headline: () => 'Log in to Kulturdaten.Berlin now.',
+    loading: () => 'Logging you in',
+    error: () => 'The provided login credentials are not valid.',
+  },
+  logout: {
+    loading: () => 'Logging you out',
+    loadingMessage: () => 'Bye!',
   },
   register: {
     email: () => 'Email',
@@ -91,6 +229,13 @@ export const enDE: Localization = {
     submit: () => 'register',
     headline: () => 'Register now for free for Kulturdaten.Berlin. ',
     subline: () => 'Use will always be free of charge.',
+    loading: () => 'Registering you',
+    passwordError: () => 'The entered passwords do not match.',
+    requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
+    uniqueEmailError: () => 'The entered email is already registered. Please use another email.',
+    successHeadline: () => 'Great, that worked!',
+    successSubline: () =>
+      'We have sent you an email to confirm your registration. Please complete your registration via that email.',
   },
   statusBar: {
     status: () => 'Status',
@@ -166,6 +311,7 @@ export const enDE: Localization = {
     scheduled: () => 'scheduled',
     scheduledArchived: () => 'scheduled',
     canceled: () => 'canceled',
+    past: () => 'past',
     allDay: () => 'is all day',
     clock: () => 'time',
     toDateInvalid: () => 'The date needs to end at a later day that it starts.',
@@ -245,6 +391,9 @@ export const enDE: Localization = {
     loading: () => 'loading',
     max: () => 'max.',
     topics: () => 'Topics',
+    takeAFewSeconds: () => 'This can take a few seconds.',
+    serverProblem: () =>
+      'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
   },
   tags: {
     boxLabel: () => 'Already added topics',
@@ -329,36 +478,16 @@ export const enDE: Localization = {
         create: () => 'Create new Organizer',
         baseInfo: () => 'Basic information',
         address: () => 'Address data (not public)',
-        name: () => 'Name',
-        nameGerman: () => 'Name German',
-        nameGermanSimple: () => 'Name German: simple Language',
-        nameEnglish: () => 'Name English',
-        nameEnglishSimple: () => 'Name English: simple Language',
-        description: () => 'Description',
-        descriptionExists: () => 'filled out',
-        descriptionExistsNot: () => 'not filled out',
-        descriptionGerman: () => 'German',
-        descriptionGermanSimple: () => 'German: simple Language',
-        descriptionEnglish: () => 'English',
-        descriptionEnglishSimple: () => 'English: simple Language',
-        classification: () => 'Classification',
-        type: () => 'Type(s)',
-        subjects: () => 'Subject(s)',
-        chooseTypeFirst: () => 'Please choose type first',
-        tags: () => 'Tags',
-        street1: () => 'Street and house number',
-        street2: () => 'Additional address',
-        zipCode: () => 'Zip code',
-        city: () => 'City',
         submit: () => 'create',
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
-        contact: () => 'Contact data (public)',
+        contact: () => 'Contact data',
         tel: () => 'Phone',
         email: () => 'Email',
         website: () => 'Website',
         links: () => 'Relevant links',
+        additionalContacts: () => 'Additional contacts',
       },
       tabs: {
         info: () => 'Information',
@@ -385,6 +514,10 @@ export const enDE: Localization = {
       },
     },
     offer: {
+      list: {
+        loading: () => 'Loading Offers',
+        nothing: () => 'No Offers found with current filters',
+      },
       title: {
         plural: () => 'Offers',
         singular: () => 'Offer',
@@ -407,6 +540,17 @@ export const enDE: Localization = {
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
+        locationInfo: () => 'Information about the offer location',
+        mainType: {
+          title: () => 'Event type',
+          choose: () => 'choose event type',
+        },
+        pricing: {
+          title: () => 'Pricing & admission',
+          hasFee: () => 'Offer is chargeable',
+          needsRegistration: () => 'Offer is subject to registration',
+          ticketUrl: () => 'Ticket link',
+        },
         organizer: {
           label: () => 'Organized by',
           choose: () => 'Choose Organizer',
@@ -429,11 +573,16 @@ export const enDE: Localization = {
       },
     },
     location: {
+      list: {
+        loading: () => 'Loading Locations',
+        nothing: () => 'No Locations found with current filters',
+      },
       title: {
         plural: () => 'Locations',
         singular: () => 'Location',
       },
       form: {
+        openingHours: () => 'Opening hours',
         create: () => 'Create new Location',
         address: () => 'Address data',
         name: () => 'Name',
@@ -459,6 +608,15 @@ export const enDE: Localization = {
         contact: () => 'Contact data',
         tel: () => 'Phone',
         district: () => 'District',
+        url: () => 'URL of the Virtual Location',
+        type: {
+          title: () => 'Type of the Location',
+          physicalLabel: () => 'Physical Location',
+          physicalText: () => 'A physically existing location with an address, e.g. a building.',
+          virtualLabel: () => 'Virtual Location',
+          virtualText: () =>
+            'A virtually existing location with an URL, e.g. a YouTube or Twitch channel.',
+        },
       },
     },
   },

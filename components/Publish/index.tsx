@@ -14,6 +14,7 @@ import { Button, ButtonColor, ButtonSize } from '../button';
 import { contentGrid, mq } from '../globals/Constants';
 import { Label } from '../label';
 import { Requirement as RequirementType } from '../../config/categories';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
 
 const StyledPublish = styled.div`
   ${contentGrid(1)}
@@ -70,12 +71,14 @@ export const Publish: React.FC<PublishProps> = ({
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const mutateList = useMutateList(category);
+  const loadingScreen = useLoadingScreen();
 
   const t = useT();
 
-  const isPublishable = useMemo(() => entry?.meta?.publishable === true, [
-    entry?.meta?.publishable,
-  ]);
+  const isPublishable = useMemo(
+    () => entry?.meta?.publishable === true,
+    [entry?.meta?.publishable]
+  );
 
   const failedPublishedRequirements =
     typeof entry?.meta?.publishable === 'object' &&
@@ -121,25 +124,34 @@ export const Publish: React.FC<PublishProps> = ({
           color={ButtonColor.green}
           icon="Heart"
           disabled={!isPublishable}
-          onClick={async () => {
-            try {
-              const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                id: entry.data.id,
-                organizer: {
-                  attributes: {
-                    status: PublishedStatus.published,
-                  },
-                },
-              });
+          onClick={async () =>
+            loadingScreen(
+              t('publish.loadingTitle', { categoryName: category.title.singular }),
+              async () => {
+                try {
+                  const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+                    id: entry.data.id,
+                    entry: {
+                      attributes: {
+                        status: PublishedStatus.published,
+                      },
+                    },
+                  });
 
-              if (resp.status === 200) {
-                mutate();
-                mutateList();
-              }
-            } catch (e) {
-              console.error(e);
-            }
-          }}
+                  if (resp.status === 200) {
+                    mutate();
+                    mutateList();
+
+                    return { success: true };
+                  }
+                } catch (e) {
+                  console.error(e);
+                  return { success: false, error: t('general.serverProblem') };
+                }
+              },
+              t('general.takeAFewSeconds')
+            )
+          }
         >
           {t('general.publish')}
         </Button>

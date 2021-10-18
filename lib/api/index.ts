@@ -23,7 +23,7 @@ export interface ApiCall {
     };
     body?: { [key: string]: StructuredData | FormData | { [key: string]: FormData } } | FormData;
   };
-  response: { status: number; body: { [key: string]: StructuredData & { id?: string } } };
+  response: { status: number; body: { [key: string]: unknown } };
 }
 
 export type ApiCallFactory = (
@@ -60,6 +60,8 @@ export enum ApiRoutes {
   offerDelete = 'offerDelete',
   offerDateUpdate = 'offerDateUpdate',
   offerDateList = 'offerDateList',
+  offerTypeList = 'offerTypeList',
+  offerMainTypeList = 'offerMainTypeList',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
@@ -83,27 +85,31 @@ export const apiRoutes: {
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
   organizerShow: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts`,
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   locationList: (query) =>
-    `/${apiVersion}/location?include=translations${query?.page && `&page=${query.page}`}${
-      query?.size && `&size=${query.size}`
-    }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  locationShow: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations,media,tags`,
+    `/${apiVersion}/location?include=translations${query?.page ? `&page=${query.page}` : ''}${
+      query?.size ? `&size=${query.size}` : ''
+    }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
+  locationShow: ({ id }) =>
+    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizer`,
   locationCreate: () => `/${apiVersion}/location`,
-  locationUpdate: ({ id }) => `/${apiVersion}/location/${id}?include=links,translations`,
+  locationUpdate: ({ id }) =>
+    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizer`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
-    `/${apiVersion}/offer?include=translations${query?.page && `&page=${query.page}`}${
-      query?.size && `&size=${query.size}`
-    }${query?.filter && `&filter=${query.filter}`}${query?.sort && `&sort=${query.sort}`}`,
-  offerShow: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media,tags`,
+    `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${
+      query?.size ? `&size=${query.size}` : ''
+    }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
+  offerShow: ({ id }) =>
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags,mainType`,
   offerCreate: () => `/${apiVersion}/offer`,
-  offerUpdate: ({ id }) => `/${apiVersion}/offer/${id}?include=translations,media`,
+  offerUpdate: ({ id }) =>
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags,mainType`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
@@ -114,6 +120,8 @@ export const apiRoutes: {
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
+  offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
+  offerMainTypeList: () => `/${apiVersion}/offerMainType?include=translations`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
@@ -155,7 +163,7 @@ export const call = async <T extends ApiCall>(
         return {
           status: response.status,
           body,
-        };
+        } as T['response'];
       }
       case 422: {
         const regError = new Error(JSON.stringify(body));

@@ -1,260 +1,16 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useApiCall } from '../../../lib/api';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
-import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { Tag } from '../../../lib/api/types/tag';
-import {
-  CategoryEntryPage,
-  useMutateList,
-  useEntry,
-  useOrganizerTypeList,
-} from '../../../lib/categories';
+import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
-import { useTags } from '../../../lib/useTags';
 import { WindowContext } from '../../../lib/WindowService';
-import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
-import { Tags } from '../../tags';
-import { TypesSubjects } from '../../TypesSubjects';
-import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-import { EntryFormHook } from './info';
-
-const useClassificationForm: EntryFormHook = ({ category, query }, loaded) => {
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const t = useT();
-  const call = useApiCall();
-  const [types, setTypes] = useState<string[]>([]);
-  const [subjects, setSubjects] = useState<string[]>([]);
-  const [typesSubjectsPristine, setTypesSubjectsPristine] = useState(true);
-  const mutateList = useMutateList(category);
-
-  const typeOptions = useOrganizerTypeList();
-
-  const validTypeOptions = useMemo(
-    () => typeOptions?.filter((type) => types.includes(String(type.id))),
-    [typeOptions, types]
-  );
-
-  const validSubjectOptions = useMemo(
-    () =>
-      validTypeOptions?.reduce((combinedSubjects, typeOption) => {
-        return combinedSubjects.concat(
-          typeOption.relations.subjects.map((subjectOption) => subjectOption.id)
-        );
-      }, []),
-    [validTypeOptions]
-  );
-
-  const filteredSubjects = useMemo(
-    () =>
-      subjects?.filter((subject) => {
-        return validSubjectOptions?.includes(parseInt(subject, 10));
-      }),
-    [validSubjectOptions, subjects]
-  );
-
-  // Valid if types and subjects are defined
-  const valid = useMemo(() => {
-    return !loaded || (types && types.length > 0);
-  }, [loaded, types]);
-
-  const initialSubjects = useMemo(
-    () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),
-    [entry?.data?.relations?.subjects]
-  );
-
-  const initialTypes = useMemo(
-    () => entry?.data?.relations?.types?.map((type) => String(type.id)),
-    [entry?.data?.relations?.types]
-  );
-
-  const pristine = useMemo(() => {
-    const sortedInitialSubjects = initialSubjects ? [...initialSubjects].sort() : undefined;
-    const sortedCurrentSubjects = filteredSubjects ? [...filteredSubjects].sort() : undefined;
-
-    const subjectsEqual =
-      sortedInitialSubjects?.length === sortedCurrentSubjects?.length &&
-      sortedInitialSubjects?.reduce((equal, subject, index) => {
-        if (subject !== sortedCurrentSubjects[index]) {
-          return false;
-        }
-
-        return equal;
-      }, true);
-
-    const sortedInitialTypes = initialTypes ? [...initialTypes].sort() : undefined;
-    const sortedCurrentTypes = types ? [...types].sort() : undefined;
-
-    const typesEqual =
-      sortedInitialTypes?.length === sortedCurrentTypes?.length &&
-      sortedInitialTypes?.reduce((equal, subject, index) => {
-        if (subject !== sortedCurrentTypes[index]) {
-          return false;
-        }
-
-        return equal;
-      }, true);
-
-    return subjectsEqual && typesEqual;
-  }, [initialSubjects, initialTypes, filteredSubjects, types]);
-
-  useEffect(() => {
-    if (typesSubjectsPristine) {
-      setTypes(initialTypes);
-    }
-  }, [typesSubjectsPristine, initialTypes]);
-
-  useEffect(() => {
-    if (typesSubjectsPristine) {
-      setSubjects(initialSubjects);
-    }
-  }, [typesSubjectsPristine, initialSubjects]);
-
-  return {
-    renderedForm: (
-      <div>
-        <EntryFormHead
-          title={t('categories.organizer.form.classification') as string}
-          valid={!loaded || valid}
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.full}>
-            <TypesSubjects
-              options={typeOptions}
-              value={{ types, subjects }}
-              onChange={({ types, subjects }) => {
-                setTypes(types);
-                setSubjects(subjects);
-              }}
-              pristine={typesSubjectsPristine}
-              setPristine={setTypesSubjectsPristine}
-              required
-            />
-          </FormItem>
-        </FormGrid>
-      </div>
-    ),
-    submit: async () => {
-      try {
-        const validTypeOptions = typeOptions.filter((type) => types.includes(String(type.id)));
-
-        const subs = subjects.filter((subject) => {
-          for (let i = 0; i < validTypeOptions.length; i += 1) {
-            const validSubjects = validTypeOptions[i].relations.subjects.map(
-              (subject) => subject.id
-            );
-            if (validSubjects.includes(parseInt(subject, 10))) {
-              return true;
-            }
-          }
-
-          return false;
-        });
-
-        const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-          id: entry.data.id,
-          organizer: {
-            relations: {
-              types: types.map((type) => parseInt(type, 10)),
-              subjects: subs.map((subject) => parseInt(subject, 10)),
-              address: entry.data.relations.address,
-            },
-          },
-        });
-
-        if (resp.status === 200) {
-          mutate();
-          mutateList();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    pristine,
-    reset: () => {
-      setTypes(initialTypes);
-      setSubjects(initialSubjects);
-      setTypesSubjectsPristine(true);
-    },
-    valid,
-    hint: false,
-  };
-};
-
-const useOrganizerTags: EntryFormHook = ({ category, query }) => {
-  const tagOptions = useTags();
-  const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
-  const call = useApiCall();
-  const [selectedTags, setSelectedTags] = useState<Tag['id'][]>();
-  const t = useT();
-
-  const initialTags = useMemo(
-    () => entry?.data?.relations?.tags?.map((tag) => tag.id),
-    [entry?.data?.relations?.tags]
-  );
-
-  const pristine = useMemo(() => {
-    if (selectedTags?.length !== initialTags?.length) {
-      return false;
-    }
-
-    if (selectedTags && initialTags) {
-      for (let i = 0; i < selectedTags.length; i += 1) {
-        if (selectedTags[i] !== initialTags[i]) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }, [initialTags, selectedTags]);
-
-  return {
-    renderedForm: (
-      <div>
-        <EntryFormHead title={t('general.topics') as string} />
-        <FormGrid>
-          <FormItem width={FormItemWidth.full}>
-            {tagOptions && (
-              <Tags
-                options={tagOptions}
-                value={selectedTags || initialTags}
-                onChange={(newValue) => setSelectedTags(newValue)}
-              />
-            )}
-          </FormItem>
-        </FormGrid>
-      </div>
-    ),
-    pristine,
-    valid: true,
-    hint: false,
-    reset: () => undefined,
-    submit: async () => {
-      try {
-        const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-          id: entry.data.id,
-          organizer: {
-            relations: {
-              tags: selectedTags,
-            },
-          },
-        });
-
-        if (resp.status === 200) {
-          mutate();
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    },
-  };
-};
+import { useEntryTypeSubjectForm } from '../helpers/form/TypeSubject';
+import { useEntryTags } from '../helpers/form/Tags';
 
 export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   category,
@@ -287,13 +43,13 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
     pristine: pristineClassification,
     reset,
     valid,
-  } = useClassificationForm({ category, query }, loaded, false);
+  } = useEntryTypeSubjectForm({ category, query }, loaded, false);
 
   const {
     renderedForm: renderedTagsForm,
     submit: submitTags,
     pristine: pristineTags,
-  } = useOrganizerTags({ category, query }, loaded, false);
+  } = useEntryTags({ category, query }, loaded, false);
 
   const shouldWarn = useMemo(
     () => !pristineClassification && typeof entry?.data !== 'undefined',

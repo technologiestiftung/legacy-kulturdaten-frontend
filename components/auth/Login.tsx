@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
 import getConfig from 'next/config';
 
 import { AuthLogin, authLoginFactory, useApiCall } from '../../lib/api';
@@ -8,11 +8,13 @@ import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
 import { useT } from '../../lib/i18n';
-import { useOrganizerId } from '../../lib/useOrganizer';
+import { defaultOrganizerId } from '../../lib/useOrganizer';
 import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
 import { Button, ButtonSize, ButtonColor, ButtonType } from '../button';
 import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { Info } from '../info';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -35,46 +37,54 @@ export const LoginForm: React.FC = () => {
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
-  const organizerId = useOrganizerId();
+  const loadingScreen = useLoadingScreen();
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
+      router.replace(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
     }
-  }, [isLoggedIn, router, locale, organizerId]);
+  }, [isLoggedIn, router, locale]);
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
-    e.stopPropagation();
 
-    try {
-      const resp = await call<AuthLogin>(authLoginFactory, { body: { email, password } });
+    if (formRef.current?.checkValidity()) {
+      loadingScreen(t('login.loading'), async () => {
+        try {
+          const resp = await call<AuthLogin>(authLoginFactory, { body: { email, password } });
 
-      if (resp.status === 200) {
-        const token = resp.body.meta.token.token;
+          if (resp.status === 200) {
+            const token = resp.body.meta.token.token;
 
-        login(
-          authCookie(token, remember, locale),
-          routes.dashboard({ locale, query: { organizer: organizerId } })
-        );
-      }
-    } catch (e) {
-      setError(e);
+            login(
+              authCookie(token, remember, locale),
+              routes.dashboard({ locale, query: { organizer: defaultOrganizerId } })
+            );
+
+            return { success: true };
+          }
+        } catch (e) {
+          setError(e);
+          return { success: false, error: <Info>{t('login.error')}</Info> };
+        }
+      });
+    } else {
+      console.log('ejo');
     }
   };
 
   const form = (
-    <form onSubmit={submitHandler}>
+    <form onSubmit={submitHandler} ref={formRef}>
       <AuthFormContainer>
         <div>
           <Input
-            type={InputType.text}
+            type={InputType.email}
             value={email}
             label={t('login.email') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             id="login-email"
             required
-            hideError
           />
         </div>
         <div>
@@ -85,7 +95,6 @@ export const LoginForm: React.FC = () => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             id="login-password"
             required
-            hideError
           />
         </div>
         <AuthFormItem>
@@ -99,7 +108,7 @@ export const LoginForm: React.FC = () => {
             {t('login.submit')}
           </Button>
         </AuthFormItem>
-        {error ? <div>{error.message}</div> : ''}
+        {error ? <Info>{t('login.error')}</Info> : ''}
       </AuthFormContainer>
     </form>
   );

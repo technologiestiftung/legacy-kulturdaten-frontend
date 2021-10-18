@@ -84,13 +84,16 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
           e.stopPropagation();
 
           try {
-            const resp = await call<ApiCall>(category.api.create.factory, {
-              entry: {
-                relations: {
-                  translations: [{ language: Language.de, name: formState.name }],
+            const resp = await call<{ response: { body: { data: { id: string } } } } & ApiCall>(
+              category.api.create.factory,
+              {
+                entry: {
+                  relations: {
+                    translations: [{ attributes: { language: Language.de, name: formState.name } }],
+                  },
                 },
-              },
-            });
+              }
+            );
 
             if (resp.status === 200) {
               const id = resp.body.data.id;

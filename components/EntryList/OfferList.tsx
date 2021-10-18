@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { OfferList as OfferListCall } from '../../lib/api';
+import { OfferList as OfferListCall, useApiCall } from '../../lib/api';
 import { Offer, OfferTranslation } from '../../lib/api/types/offer';
-import { Order, useList } from '../../lib/categories';
+import { Order, useList, useMutateList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -22,11 +22,12 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import { ButtonColor, ButtonSize } from '../button';
-import { ButtonLink } from '../button/ButtonLink';
-import Link from 'next/link';
+import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
+import { Language } from '../../config/locale';
+import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { OfferCreate } from '../../lib/api/routes/offer/create';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -84,7 +85,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     setLastEntryId,
   } = useContext(EntryListContext);
   const pseudoUID = usePseudoUID();
-
+  const call = useApiCall();
   const listName = Categories.offer;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
@@ -100,6 +101,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     () => getDispatchFilters(listName),
     [getDispatchFilters, listName]
   );
+  const loadingScreen = useLoadingScreen();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -108,6 +110,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     Object.entries(filters),
     { key: sortKey, order }
   );
+  const mutateList = useMutateList(categories.offer);
 
   const activeFiltersCount = useMemo(
     () =>
@@ -260,16 +263,53 @@ export const OfferList: React.FC<OfferListProps> = ({
         setExpanded={setMenuExpanded}
         expandable={expandable}
         actionButton={
-          <Link href={routes.createOffer({ locale, query: { organizer: organizerId } })} passHref>
-            <ButtonLink
-              size={ButtonSize.big}
-              color={ButtonColor.white}
-              icon="Plus"
-              onClick={() => setMenuExpanded(false)}
-            >
-              {t('categories.offer.form.create')}
-            </ButtonLink>
-          </Link>
+          <Button
+            size={ButtonSize.big}
+            color={ButtonColor.white}
+            icon="Plus"
+            onClick={async () => {
+              const category = categories.offer;
+
+              loadingScreen(
+                t('categories.offer.form.create'),
+                async () => {
+                  try {
+                    const resp = await call<OfferCreate>(category.api.create.factory, {
+                      entry: {
+                        relations: {
+                          translations: [
+                            { attributes: { language: Language.de, name: 'Neues Angebot' } },
+                          ],
+                        },
+                      },
+                    });
+
+                    if (resp.status === 200) {
+                      const id = resp.body.data.id;
+
+                      router.push(
+                        category.routes.list({
+                          locale,
+                          query: { id, sub: 'info', organizer: organizerId },
+                        })
+                      );
+
+                      mutateList();
+                      setMenuExpanded(false);
+
+                      return { success: true };
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    return { success: false, error: t('general.serverProblem') };
+                  }
+                },
+                t('general.takeAFewSeconds')
+              );
+            }}
+          >
+            {t('categories.offer.form.create')}
+          </Button>
         }
       />
       <EntryListFiltersBox
@@ -363,9 +403,9 @@ export const OfferList: React.FC<OfferListProps> = ({
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
-              <div>{t('categories.organizer.list.nothing')}</div>
+              <div>{t('categories.offer.list.nothing')}</div>
             ) : (
-              <div>{t('categories.organizer.list.loading')}</div>
+              <div>{t('categories.offer.list.loading')}</div>
             )}
           </EntryCardGrid>
         ) : (
@@ -373,9 +413,9 @@ export const OfferList: React.FC<OfferListProps> = ({
             {rows && rows.length > 0 ? (
               <Table
                 columns={[
-                  { title: t('categories.organizer.form.name') as string, bold: true, width: 5 },
-                  { title: t('categories.organizer.form.type') as string, width: 4 },
-                  { title: t('categories.organizer.form.subjects') as string, width: 4 },
+                  { title: t('forms.name') as string, bold: true, width: 5 },
+                  { title: t('forms.type') as string, width: 4 },
+                  { title: t('forms.subjects') as string, width: 4 },
                   { title: t('statusBar.status') as string, width: 3 },
                   { title: t('categories.organizer.table.updated') as string, width: 2 },
                   { title: t('categories.organizer.table.created') as string, width: 2 },
@@ -385,11 +425,11 @@ export const OfferList: React.FC<OfferListProps> = ({
               />
             ) : rows && rows.length === 0 ? (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.nothing')}</div>
+                <div>{t('categories.offer.list.nothing')}</div>
               </EntryCardGrid>
             ) : (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.loading')}</div>
+                <div>{t('categories.offer.list.loading')}</div>
               </EntryCardGrid>
             )}
           </StyledEntryListTable>

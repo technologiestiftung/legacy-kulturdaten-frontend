@@ -1,4 +1,5 @@
-import { Language } from '../../../config/locale';
+import { CategoriesPlural } from '../../../config/categories';
+import { Role } from './role';
 
 export enum UserStatus {
   active = 'active',
@@ -6,18 +7,16 @@ export enum UserStatus {
 }
 
 export type User = {
-  data: {
-    id: number;
-    type: 'user';
-    attributes: {
-      email: string;
-      rememberMeToken: string;
-      status: UserStatus;
-      createdAt: string;
-      updatedAt: string;
-    };
+  id: number;
+  type: 'user';
+  attributes: {
+    email: string;
+    rememberMeToken: string;
+    status: UserStatus;
+    createdAt: string;
+    updatedAt: string;
   };
-  meta: {
-    language: Language;
+  relations?: {
+    [key in CategoriesPlural]?: Role[];
   };
 };

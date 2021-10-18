@@ -30,7 +30,7 @@ export const offerUpdateFactory = (
   token: OfferUpdate['request']['headers']['Authorization'],
   query: {
     id: string;
-    offer: Offer;
+    entry: Offer;
   }
 ): OfferUpdate => ({
   request: {
@@ -40,7 +40,7 @@ export const offerUpdateFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.offer,
+    body: query.entry,
   },
   response: {
     status: 200,

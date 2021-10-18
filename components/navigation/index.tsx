@@ -3,7 +3,7 @@ import { useContext, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
 import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
-import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
+import { defaultOrganizerId, useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { appLayouts, Layouts } from '../layouts/AppLayout';
 import { useUser } from '../user/useUser';
@@ -113,6 +113,7 @@ export const useNavigation = (
       Link={Link}
       menuItems={activeHeader.menuItems}
       layout={layout}
+      disabled={user?.isLoggedIn && organizerId === defaultOrganizerId}
     />
   );
 

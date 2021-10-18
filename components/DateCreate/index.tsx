@@ -306,11 +306,13 @@ const StyledDateCreateBottomBar = styled.div`
 interface DateCreateProps {
   onSubmit: (date: OfferDate['data'], recurrence?: string) => void;
   offerTitles: { [key in Language]: string };
+  submitDelay?: number;
 }
 
 export const DateCreate: React.FC<DateCreateProps> = ({
   onSubmit,
   offerTitles,
+  submitDelay = 0,
 }: DateCreateProps) => {
   const t = useT();
   const language = useLanguage();
@@ -437,17 +439,20 @@ export const DateCreate: React.FC<DateCreateProps> = ({
 
   const submitHandler = useCallback(() => {
     onSubmit(date?.data, recurrence);
-    setIsOpen(false);
-    setTicketUrl('');
-    setTitleGerman('');
-    setTitleEnglish('');
-    setRoomGerman('');
-    setRoomEnglish('');
-    setFromDateISOString(earliestDateISOString);
-    setFromTimeISOString(startTimeISOString);
-    setToDateISOString(earliestDateISOString);
-    setToTimeISOString(startPlusOneHourTimeISOString);
-    setRecurrence(undefined);
+
+    setTimeout(() => {
+      setIsOpen(false);
+      setTicketUrl('');
+      setTitleGerman('');
+      setTitleEnglish('');
+      setRoomGerman('');
+      setRoomEnglish('');
+      setFromDateISOString(earliestDateISOString);
+      setFromTimeISOString(startTimeISOString);
+      setToDateISOString(earliestDateISOString);
+      setToTimeISOString(startPlusOneHourTimeISOString);
+      setRecurrence(undefined);
+    }, submitDelay);
   }, [
     recurrence,
     date,
@@ -456,6 +461,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     earliestDateISOString,
     startTimeISOString,
     startPlusOneHourTimeISOString,
+    submitDelay,
   ]);
 
   return (

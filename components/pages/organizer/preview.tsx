@@ -393,9 +393,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
           </EntryTags>
           {hasContactInfo && (
             <EntryContact>
-              {homepage && (
-                <EntryMetadataKey>{t('categories.organizer.form.website')}</EntryMetadataKey>
-              )}
+              {homepage && <EntryMetadataKey>{t('forms.website')}</EntryMetadataKey>}
               {homepage && (
                 <EntryMetadataValue>
                   <a target="_blank" rel="noreferrer" href={homepage}>
@@ -403,7 +401,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
                   </a>
                 </EntryMetadataValue>
               )}
-              {email && <EntryMetadataKey>{t('categories.organizer.form.email')}</EntryMetadataKey>}
+              {email && <EntryMetadataKey>{t('forms.email')}</EntryMetadataKey>}
               {email && (
                 <EntryMetadataValue>
                   <a target="_blank" rel="noreferrer" href={'mailto:' + email}>
@@ -411,7 +409,7 @@ export const OrganizerPreviewPage: React.FC<CategoryEntryPage> = ({
                   </a>
                 </EntryMetadataValue>
               )}
-              {phone && <EntryMetadataKey>{t('categories.organizer.form.tel')}</EntryMetadataKey>}
+              {phone && <EntryMetadataKey>{t('forms.tel')}</EntryMetadataKey>}
               {phone && (
                 <EntryMetadataValue>
                   <a href={'tel:' + phone}>{phone}</a>

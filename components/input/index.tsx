@@ -71,6 +71,7 @@ export const inputStyles = ({
   ${hint ? hintStyle : ''}
 
   ${!hideError &&
+  !pristine &&
   css`
     &:invalid {
       ${errorStyle}
@@ -105,6 +106,7 @@ interface InputProps {
   error?: string;
   id?: string;
   hint?: boolean;
+  onBlur?: ChangeEventHandler<HTMLInputElement>;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   label?: string;
   min?: number | string;
@@ -211,16 +213,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   ? telRegExpString
                   : undefined
               }
-              onBlur={() => {
+              onBlur={(e) => {
                 setPristine(false);
                 normalizeStrings();
+
+                if (props?.onBlur) {
+                  props.onBlur(e);
+                }
               }}
               onKeyDown={(e) => {
                 if (
                   (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
                   !normalized
                 ) {
-                  e.preventDefault();
                   normalizeStrings();
 
                   return true;

@@ -10,6 +10,7 @@ import { Checkbox } from '../checkbox';
 import { useCollapsable } from '../collapsable';
 import { weekdays } from '../DayPicker';
 import { mq } from '../globals/Constants';
+import { DateStatusFlag } from './DateStatusFlag';
 
 const StyledDateListRowCell = styled.div<{ lastRow: boolean; expanded: boolean }>`
   flex-shrink: 0;
@@ -123,17 +124,6 @@ const StyledDateListItemStatus = styled.div`
   }
 `;
 
-const StyledDateListItemStatusFlag = styled.div<{ status: OfferDateStatus; disabled?: boolean }>`
-  padding: 0 0.375rem;
-  border-radius: 0.375rem;
-  background: ${({ status, disabled }) =>
-    disabled
-      ? 'var(--grey-350)'
-      : status === OfferDateStatus.scheduled
-      ? 'var(--green-light)'
-      : 'var(--error-light)'};
-`;
-
 const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
   appearance: none;
   font-size: var(--font-size-300);
@@ -147,6 +137,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
   align-items: center;
   column-gap: 0.375rem;
   cursor: pointer;
+  color: inherit;
 
   @media (pointer: fine) {
     transition: background var(--transition-duration-fast);
@@ -193,13 +184,6 @@ interface DateListRowProps {
   disabled?: boolean;
 }
 
-const OfferDateStatusToL10nMap: (editable: boolean) => { [key in OfferDateStatus]: string } = (
-  editable
-) => ({
-  [OfferDateStatus.scheduled]: editable ? 'date.scheduled' : 'date.scheduledArchived',
-  [OfferDateStatus.canceled]: 'date.canceled',
-});
-
 export const DateListRow: React.FC<DateListRowProps> = ({
   from,
   to,
@@ -220,10 +204,10 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const fromDate = from && new Date(from);
   const toDate = to && new Date(to);
 
-  const dateFormat = DateFormat.dateTime;
+  const dateFormat = DateFormat.dayDateTime;
 
-  const formattedFrom = formatDate(fromDate, dateFormat);
-  const formattedTo = toDate && formatDate(toDate, dateFormat);
+  const formattedFrom = `${formatDate(fromDate, dateFormat)}`;
+  const formattedTo = `${toDate && formatDate(toDate, dateFormat)}`;
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <StyledDateListItemBodyInner lastRow={lastRow}>{body}</StyledDateListItemBodyInner>
@@ -248,9 +232,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
 
   const renderedStatus = (
     <StyledDateListItemStatus>
-      <StyledDateListItemStatusFlag status={status} disabled={disabled}>
-        {status ? t(OfferDateStatusToL10nMap(editable)[status]) : ''}
-      </StyledDateListItemStatusFlag>
+      <DateStatusFlag status={status} disabled={disabled} editable={editable} />
     </StyledDateListItemStatus>
   );
 
@@ -273,21 +255,11 @@ export const DateListRow: React.FC<DateListRowProps> = ({
 
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText noPaddingLeft={editable} doublePaddingLeft={!editable}>
-          <StyledDateListItemTimeFrom>
-            {fromDate && t(weekdays[getDay(fromDate)].name.short)}
-            {'. '}
-            {formattedFrom}
-          </StyledDateListItemTimeFrom>
+          <StyledDateListItemTimeFrom>{formattedFrom}</StyledDateListItemTimeFrom>
         </StyledDateListItemText>
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {to && (
-          <StyledDateListItemText>
-            {toDate && t(weekdays[getDay(toDate)].name.short)}
-            {'. '}
-            {formattedTo}
-          </StyledDateListItemText>
-        )}
+        {to && <StyledDateListItemText>{formattedTo}</StyledDateListItemText>}
       </StyledDateListRowCell>
       <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
         <StyledDateListItemText>{title}</StyledDateListItemText>
