@@ -23,7 +23,7 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
 const EmbeddedFormListDefaultStory: React.FC = () => {
   const [radioValue, setRadioValue] = useState('yes');
   const [checkboxListValue, setCheckboxListValue] = useState(['1', '3']);
-  const [conditionalChecked, setConditionalChecked] = useState(false);
+  const [conditionalChecked, setConditionalChecked] = useState(true);
 
   return (
     <StyledTestWrapper>

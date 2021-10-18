@@ -23,9 +23,10 @@ const StyledFormListFieldLabel = styled.label`
   border-bottom: 1px solid var(--grey-200);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
-  padding: 0.75rem 1.125rem;
+  padding: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.125rem;
     border-bottom: none;
     border-right: 1px solid var(--grey-400);
   }

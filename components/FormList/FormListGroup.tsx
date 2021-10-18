@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { Breakpoint } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
 
 const StyledFormListGroup = styled.div`
   display: flex;
@@ -15,7 +17,11 @@ const StyledFormListGroupTitle = styled.h3`
   font-weight: 700;
   border-bottom: 1px solid var(--grey-400);
   background: var(--grey-200);
-  padding: 0.75rem 1.125rem;
+  padding: 0.75rem;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 0.75rem 1.125rem;
+  }
 `;
 
 const StyledFormListGroupChildren = styled.ul`
