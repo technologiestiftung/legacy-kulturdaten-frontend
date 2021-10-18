@@ -280,6 +280,7 @@ export const Tags: React.FC<TagsProps> = ({ value, onChange, options }: TagsProp
                   }}
                   variant="outlined"
                   autoComplete="off"
+                  placeholder={t('general.topicsPlaceholder') as string}
                 />
               )}
             />

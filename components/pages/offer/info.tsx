@@ -42,10 +42,9 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
 
   const [translationsFromApi, setTranslationsFromApi] = useState<OfferTranslation[]>();
 
-  const initialTranslations = useMemo(
-    () => entry?.data?.relations?.translations,
-    [entry?.data?.relations?.translations]
-  );
+  const initialTranslations = useMemo(() => entry?.data?.relations?.translations, [
+    entry?.data?.relations?.translations,
+  ]);
 
   const pristine = useMemo(
     () => JSON.stringify(translations) === JSON.stringify(translationsFromApi),
@@ -71,9 +70,12 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
           return (
             <FormItem width={FormItemWidth.half} key={index}>
               <Input
-                label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
+                label={t(languageTranslationKeys[language]) as string}
                 value={currentTranslation?.attributes?.roomDescription || ''}
                 type={InputType.text}
+                placeholder={`${t('categories.offer.form.locationInfoPlaceholder')} (${t(
+                  'general.english'
+                )})`}
                 onChange={(e) => {
                   const updatedTranslation = {
                     ...currentTranslation,
@@ -139,10 +141,10 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
-  const pristine = useMemo(
-    () => JSON.stringify(attributes) === JSON.stringify(attributesFromApi),
-    [attributes, attributesFromApi]
-  );
+  const pristine = useMemo(() => JSON.stringify(attributes) === JSON.stringify(attributesFromApi), [
+    attributes,
+    attributesFromApi,
+  ]);
 
   useEffect(() => {
     if (JSON.stringify(initialAttributes) !== JSON.stringify(attributesFromApi)) {
@@ -176,6 +178,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             type={InputType.url}
             label={t('categories.offer.form.pricing.ticketUrl') as string}
             value={attributes?.ticketUrl}
+            placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
             onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
           />
         </FormItem>
@@ -522,10 +525,10 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
+            <EntryFormContainer>{linksForm}</EntryFormContainer>
             <EntryFormContainer>{roomForm}</EntryFormContainer>
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
-            <EntryFormContainer>{linksForm}</EntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

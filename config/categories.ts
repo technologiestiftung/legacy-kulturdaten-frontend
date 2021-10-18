@@ -202,16 +202,16 @@ export const useCategories: () => {
       },
       requirements: [
         {
-          translationKey: 'categories.organizer.requirements.name',
+          translationKey: 'categories.offer.requirements.name',
           publishableKeys: ['attributes.name'],
         },
 
         {
-          translationKey: 'categories.organizer.requirements.description',
+          translationKey: 'categories.offer.requirements.description',
           publishableKeys: ['attributes.description'],
         },
         {
-          translationKey: 'categories.organizer.requirements.categorization',
+          translationKey: 'categories.offer.requirements.categorization',
           publishableKeys: ['relations.types', 'relations.subjects'],
         },
       ],
