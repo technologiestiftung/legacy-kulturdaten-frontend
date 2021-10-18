@@ -547,8 +547,12 @@ export const enDE: Localization = {
         },
         pricing: {
           title: () => 'Pricing & admission',
+          feeLabel: () => 'Cost',
+          registrationLabel: () => 'Admission',
           hasFee: () => 'Offer is chargeable',
+          noFee: () => 'Offer is free of charge',
           needsRegistration: () => 'Offer is subject to registration',
+          noRegistration: () => 'Offer is not subject to registration',
           ticketUrl: () => 'Ticket link',
         },
         organizer: {

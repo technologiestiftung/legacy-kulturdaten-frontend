@@ -552,8 +552,12 @@ export const deDE: Localization = {
         },
         pricing: {
           title: () => 'Preise & Eintritt',
+          feeLabel: () => 'Kosten',
+          registrationLabel: () => 'Anmeldung',
           hasFee: () => 'Angebot ist kostenpflichtig',
+          noFee: () => 'Angebot ist kostenfrei',
           needsRegistration: () => 'Angebot ist anmeldepflichtig',
+          noRegistration: () => 'Angebot ist nicht anmeldepflichtig',
           ticketUrl: () => 'Ticketlink',
         },
         organizer: {
