@@ -14,7 +14,11 @@ const StyledCheckboxList = styled.div<{ variant?: ComponentVariant }>`
   ${({ variant }) =>
     variant === ComponentVariants.formList &&
     css`
-      padding: 0.75rem 1.125rem;
+      padding: 0.75rem;
+
+      ${mq(Breakpoint.mid)} {
+        padding: 0.75rem 1.125rem;
+      }
     `}
 `;
 

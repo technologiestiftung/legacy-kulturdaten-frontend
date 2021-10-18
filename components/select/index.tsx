@@ -5,6 +5,8 @@ import React, { ChangeEvent, useState } from 'react';
 import * as feather from 'react-feather';
 import { ComponentVariant, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
+import { Breakpoint } from '../../lib/WindowService';
+import { mq } from '../globals/Constants';
 
 import { Label, StyledLabel } from '../label';
 
@@ -118,12 +120,17 @@ const selectVariants: {
     }
   `,
   formList: css`
-    padding: 0.75rem 1.125rem;
     background: var(--white);
     transition: background var(--transition-duration), box-shadow var(--transition-duration);
     border: none;
     color: var(--black);
     border-radius: 0;
+
+    padding: 0.75rem;
+
+    ${mq(Breakpoint.mid)} {
+      padding: 0.75rem 1.125rem;
+    }
 
     &:hover {
       background: var(--grey-200);

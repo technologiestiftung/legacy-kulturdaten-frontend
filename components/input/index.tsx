@@ -4,8 +4,10 @@ import React, { ChangeEvent, ChangeEventHandler, RefObject, useRef, useState } f
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/validations';
+import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
+import { mq } from '../globals/Constants';
 import { Label, StyledLabel } from '../label';
 
 const StyledInputContainer = styled.div`
@@ -88,6 +90,11 @@ export const inputStyles = ({
     border: none;
     box-shadow: var(--shadow-inset);
     border-radius: 0;
+    padding: 0.75rem;
+
+    ${mq(Breakpoint.mid)} {
+      padding: 0.75rem 1.125rem;
+    }
   `}
 `;
 

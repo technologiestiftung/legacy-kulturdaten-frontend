@@ -22,6 +22,7 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
 
 const EmbeddedFormListDefaultStory: React.FC = () => {
   const [radioValue, setRadioValue] = useState('yes');
+  const [radioValue2, setRadioValue2] = useState('yes');
   const [checkboxListValue, setCheckboxListValue] = useState(['1', '3']);
   const [conditionalChecked, setConditionalChecked] = useState(true);
 
@@ -82,7 +83,7 @@ const EmbeddedFormListDefaultStory: React.FC = () => {
             label="Test Input"
             fieldProps={{
               type: InputType.text,
-              id: 'id-1',
+              id: 'id-12',
               placeholder: 'Text placeholder',
             }}
           />
@@ -90,7 +91,7 @@ const EmbeddedFormListDefaultStory: React.FC = () => {
             type={FormListFieldType.select}
             label="Test Select"
             fieldProps={{
-              id: 'id-2',
+              id: 'id-22',
               children: (
                 <>
                   <option value="1">Option 1</option>
@@ -103,18 +104,18 @@ const EmbeddedFormListDefaultStory: React.FC = () => {
             type={FormListFieldType.radioList}
             label="Test Radio"
             fieldProps={{
-              value: radioValue,
-              onChange: (newValue: string) => setRadioValue(newValue),
-              id: 'test-radio',
-              name: 'test-radio',
+              value: radioValue2,
+              onChange: (newValue: string) => setRadioValue2(newValue),
+              id: 'test-radio2',
+              name: 'test-radio2',
               options: [
                 {
-                  id: 'test01',
+                  id: 'test012',
                   label: 'Yes',
                   value: 'yes',
                 },
                 {
-                  id: 'test02',
+                  id: 'test022',
                   label: 'No',
                   value: 'no',
                 },
