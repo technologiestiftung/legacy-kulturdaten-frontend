@@ -559,8 +559,12 @@ export const enDE: Localization = {
         },
         pricing: {
           title: () => 'Pricing & admission',
+          feeLabel: () => 'Cost',
+          registrationLabel: () => 'Admission',
           hasFee: () => 'Ticket required',
+          noFee: () => 'No ticket required',
           needsRegistration: () => 'Registration required',
+          noRegistration: () => 'No registration required',
           ticketUrl: () => 'Ticket link / ticket information',
           ticketUrlPlaceholder: () => 'https://example.com',
         },

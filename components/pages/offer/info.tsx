@@ -28,11 +28,11 @@ import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { Checkbox } from '../../checkbox';
 import { usePseudoUID } from '../../../lib/uid';
 import { Input, InputType } from '../../input';
 import { contentLanguages } from '../../../config/locales';
 import { useLinksForm } from '../helpers/form/Links';
+import { RadioList } from '../../Radio/RadioList';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -158,19 +158,42 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
       <EntryFormHead title={t('categories.offer.form.pricing.title') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.half}>
-          <Checkbox
-            label={t('categories.offer.form.pricing.hasFee') as string}
-            checked={attributes?.hasFee}
-            onChange={(e) => setAttributes({ ...attributes, hasFee: e.target.checked })}
-            id={`${uid}-hasfee`}
+          <RadioList
+            name={`${uid}-fee`}
+            id={`${uid}-fee`}
+            label={t('categories.offer.form.pricing.feeLabel') as string}
+            options={[
+              { label: t('categories.offer.form.pricing.hasFee') as string, value: 'has-fee' },
+              { label: t('categories.offer.form.pricing.noFee') as string, value: 'no-fee' },
+            ]}
+            value={attributes?.hasFee ? 'has-fee' : 'no-fee'}
+            onChange={(value) =>
+              setAttributes({ ...attributes, hasFee: value === 'has-fee' ? true : false })
+            }
           />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
-          <Checkbox
-            label={t('categories.offer.form.pricing.needsRegistration') as string}
-            checked={attributes?.needsRegistration}
-            onChange={(e) => setAttributes({ ...attributes, needsRegistration: e.target.checked })}
-            id={`${uid}-needsregistration`}
+          <RadioList
+            name={`${uid}-registration`}
+            id={`${uid}-registration`}
+            label={t('categories.offer.form.pricing.registrationLabel') as string}
+            options={[
+              {
+                label: t('categories.offer.form.pricing.needsRegistration') as string,
+                value: 'needs-registration',
+              },
+              {
+                label: t('categories.offer.form.pricing.noRegistration') as string,
+                value: 'no-registration',
+              },
+            ]}
+            value={attributes?.needsRegistration ? 'needs-registration' : 'no-registration'}
+            onChange={(value) =>
+              setAttributes({
+                ...attributes,
+                needsRegistration: value === 'needs-registration' ? true : false,
+              })
+            }
           />
         </FormItem>
         <FormItem width={FormItemWidth.full}>

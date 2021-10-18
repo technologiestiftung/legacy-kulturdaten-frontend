@@ -100,13 +100,13 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
 
   return (
     <StyledCheckboxList>
-      <StyedCheckboxListLabel>
-        {label && (
+      {label && (
+        <StyedCheckboxListLabel>
           <Label>
             {label} {required ? ` (${t('forms.required')})` : ''}
           </Label>
-        )}
-      </StyedCheckboxListLabel>
+        </StyedCheckboxListLabel>
+      )}
       <StyledCheckboxListItems columns={columns}>
         {checkboxes.map(({ id, label, value: checkboxValue }, index) => (
           <Checkbox
