@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { Address } from '../../../../lib/api/types/address';
 import { CategoryEntry, PublishedStatus } from '../../../../lib/api/types/general';
-import { useEntry, useMutateList } from '../../../../lib/categories';
+import { useEntry } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
@@ -27,7 +27,6 @@ export const useAddressForm: EntryFormHook = (
     ApiCall
   >(category, query);
   const call = useApiCall();
-  const mutateList = useMutateList(category);
 
   const initialAddress = useMemo(
     () => entry?.data?.relations?.address,
@@ -200,7 +199,6 @@ export const useAddressForm: EntryFormHook = (
 
           if (resp.status === 200) {
             mutate();
-            mutateList();
             setTimeout(() => setPristine(true), 500);
           }
         } catch (e) {

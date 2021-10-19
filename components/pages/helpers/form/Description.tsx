@@ -6,9 +6,10 @@ import { Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { Translation } from '../../../../lib/api/types/general';
 import { CategoryEntry, PublishedStatus } from '../../../../lib/api/types/general';
-import { useEntry, useMutateList } from '../../../../lib/categories';
+import { useEntry } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
+import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { WindowContext } from '../../../../lib/WindowService';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
@@ -99,7 +100,6 @@ export const useDescription = ({
     ApiCall
   >(category, query);
   const call = useApiCall();
-  const mutateList = useMutateList(category);
   const [cachedApiText, setCachedApiText] = useState<string>();
   const { rendered } = useContext(WindowContext);
   const t = useT();
@@ -196,7 +196,6 @@ export const useDescription = ({
 
           if (resp.status === 200) {
             mutate();
-            mutateList();
           }
         } catch (e) {
           console.error(e);

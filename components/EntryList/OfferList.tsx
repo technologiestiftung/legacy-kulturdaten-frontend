@@ -111,7 +111,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     [...Object.entries(filters), ['organizers', organizerId]],
     { key: sortKey, order }
   );
-  const mutateList = useMutateList(categories.offer);
+  const mutateList = useMutateList(categories.offer, [['organizers', organizerId]]);
 
   const activeFiltersCount = useMemo(
     () =>

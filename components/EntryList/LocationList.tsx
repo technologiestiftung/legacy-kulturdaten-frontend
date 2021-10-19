@@ -90,7 +90,6 @@ export const LocationList: React.FC<LocationListProps> = ({
   } = useContext(EntryListContext);
   const pseudoUID = usePseudoUID();
   const call = useApiCall();
-  const mutateList = useMutateList(categories.location);
   const listName = Categories.location;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
@@ -108,6 +107,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   );
   const loadingScreen = useLoadingScreen();
   const organizerId = useOrganizerId();
+  const mutateList = useMutateList(categories.location, [['organizer', organizerId]]);
 
   const list = useList<LocationListCall, Location>(
     categories.location,

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../../lib/api';
-import { useMutateList, useEntry, useEntryTypeList } from '../../../../lib/categories';
+import { useEntry, useEntryTypeList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { TypesSubjects } from '../../../TypesSubjects';
@@ -15,7 +15,6 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query }, load
   const [types, setTypes] = useState<string[]>([]);
   const [subjects, setSubjects] = useState<string[]>([]);
   const [typesSubjectsPristine, setTypesSubjectsPristine] = useState(true);
-  const mutateList = useMutateList(category);
 
   const typeOptions = useEntryTypeList(
     category.api.typeList?.route,
@@ -152,7 +151,6 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query }, load
 
         if (resp.status === 200) {
           mutate();
-          mutateList();
         }
       } catch (e) {
         console.error(e);
