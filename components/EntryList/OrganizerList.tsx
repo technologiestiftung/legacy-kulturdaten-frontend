@@ -27,9 +27,6 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import { ButtonLink } from '../button/ButtonLink';
-import { ButtonColor, ButtonSize } from '../button';
-import Link from 'next/link';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 
 const StyledOrganizerList = styled.div`
@@ -303,18 +300,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={expandable}
-        actionButton={
-          <Link href={routes.createOrganizer({ locale })} passHref>
-            <ButtonLink
-              size={ButtonSize.big}
-              color={ButtonColor.white}
-              icon="Plus"
-              onClick={() => setMenuExpanded(false)}
-            >
-              {t('categories.organizer.form.create')}
-            </ButtonLink>
-          </Link>
-        }
       />
 
       <EntryListFiltersBox
