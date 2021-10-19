@@ -449,7 +449,8 @@ export const enDE: Localization = {
     organizer: {
       list: {
         loading: () => 'Loading Organizers',
-        nothing: () => 'No Organizers found with current filters',
+        nothing: () => 'There are no Organizers yet. Feel free to create one.',
+        nothingFilter: () => 'No Organizers found with current filters.',
       },
       filters: {
         status: {
@@ -522,7 +523,8 @@ export const enDE: Localization = {
     offer: {
       list: {
         loading: () => 'Loading Offers',
-        nothing: () => 'No Offers found with current filters',
+        nothing: () => 'There are no Offers yet. Feel free to create one.',
+        nothingFilter: () => 'No Offers found with current filters.',
       },
       requirements: {
         name: () => 'Offer title added',
@@ -592,7 +594,8 @@ export const enDE: Localization = {
     location: {
       list: {
         loading: () => 'Loading Locations',
-        nothing: () => 'No Locations found with current filters',
+        nothing: () => 'There are no Locations yet. Feel free to create one.',
+        nothingFilter: () => 'No Locations found with current filters.',
       },
       title: {
         plural: () => 'Locations',

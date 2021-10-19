@@ -35,7 +35,7 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
     categories.offer,
     currentPage,
     entriesPerPage,
-    Object.entries(filters),
+    [...Object.entries(filters), ['organizer', organizerId]],
     { key: sortKey, order }
   );
 

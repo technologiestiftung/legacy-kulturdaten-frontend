@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { StyledEntryListBody } from '.';
+import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall, useApiCall } from '../../lib/api';
 import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
@@ -107,12 +107,13 @@ export const LocationList: React.FC<LocationListProps> = ({
     [getDispatchFilters, listName]
   );
   const loadingScreen = useLoadingScreen();
+  const organizerId = useOrganizerId();
 
   const list = useList<LocationListCall, Location>(
     categories.location,
     currentPage,
     entriesPerPage,
-    Object.entries(filters),
+    [...Object.entries(filters), ['organizer', organizerId]],
     { key: sortKey, order }
   );
 
@@ -148,8 +149,6 @@ export const LocationList: React.FC<LocationListProps> = ({
   }, [view, setEntriesPerPage, entriesPerPage, setCurrentPage, listName]);
 
   const date = useDate();
-
-  const organizerId = useOrganizerId();
 
   const cards = useMemo(
     () =>
@@ -292,9 +291,8 @@ export const LocationList: React.FC<LocationListProps> = ({
                   try {
                     const resp = await call<LocationCreate>(category.api.create.factory, {
                       entry: {
-                        type: LocationType.physicallocation,
                         attributes: {
-                          type: LocationType.physicallocation,
+                          type: LocationType.physical,
                         },
                         relations: {
                           translations: [
@@ -424,9 +422,13 @@ export const LocationList: React.FC<LocationListProps> = ({
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
-              <div>{t('categories.location.list.nothing')}</div>
+              <EntryListPlaceholder>
+                {activeFiltersCount === 0
+                  ? t('categories.location.list.nothing')
+                  : t('categories.location.list.nothingFilter')}
+              </EntryListPlaceholder>
             ) : (
-              <div>{t('categories.location.list.loading')}</div>
+              <EntryListPlaceholder>{t('categories.location.list.loading')}</EntryListPlaceholder>
             )}
           </EntryCardGrid>
         ) : (
@@ -446,11 +448,15 @@ export const LocationList: React.FC<LocationListProps> = ({
               />
             ) : rows && rows.length === 0 ? (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.location.list.nothing')}</div>
+                <EntryListPlaceholder>
+                  {activeFiltersCount === 0
+                    ? t('categories.location.list.nothing')
+                    : t('categories.location.list.nothingFilter')}
+                </EntryListPlaceholder>
               </EntryCardGrid>
             ) : (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.location.list.loading')}</div>
+                <EntryListPlaceholder>{t('categories.location.list.loading')}</EntryListPlaceholder>
               </EntryCardGrid>
             )}
           </StyledEntryListTable>

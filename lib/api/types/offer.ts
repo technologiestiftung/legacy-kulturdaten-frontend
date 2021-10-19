@@ -76,8 +76,8 @@ export type Offer = {
     relations?: {
       dates?: OfferDate['data'][];
       links?: Link[];
-      location?: Location['data'] | string;
-      organizer?: Organizer['data'] | string;
+      location?: Location['data'][] | string[];
+      organizers?: Organizer['data'][] | string[];
       subjects?: OfferSubject[];
       translations: OfferTranslation[];
       types?: OfferType[];

@@ -35,7 +35,7 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
     categories.location,
     currentPage,
     entriesPerPage,
-    Object.entries(filters),
+    [...Object.entries(filters), ['organizer', organizerId]],
     { key: sortKey, order }
   );
 

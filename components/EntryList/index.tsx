@@ -2,6 +2,11 @@ import styled from '@emotion/styled';
 import { Language } from '../../config/locale';
 import { CategoryEntry } from '../../lib/api/types/general';
 
+export const EntryListPlaceholder = styled.div`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+`;
+
 export const StyledEntryListBody = styled.div`
   background: var(--white);
   padding: 0 0 1.5rem;
