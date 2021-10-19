@@ -9,6 +9,7 @@ import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
+import { useUser } from '../../../user/useUser';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
 interface SetNameProps {
@@ -94,6 +95,7 @@ export const useName = <
   );
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
+  const { mutateUserInfo } = useUser();
 
   useEffect(() => {
     if (pristine && name !== value) {
@@ -129,6 +131,7 @@ export const useName = <
         if (resp.status === 200) {
           mutate();
           mutateList();
+          mutateUserInfo();
           setTimeout(() => setPristine(true), 500);
         }
       } catch (e) {

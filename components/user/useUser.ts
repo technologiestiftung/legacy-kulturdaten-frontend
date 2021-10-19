@@ -31,6 +31,7 @@ export type WrappedUser = {
   isLoggedIn: boolean;
   login: (cookie: Cookie, redirectRoute: string) => void;
   logout: () => Promise<void>;
+  mutateUserInfo: () => void;
 };
 
 export const useUser = (): WrappedUser => {
@@ -76,8 +77,9 @@ export const useUser = (): WrappedUser => {
     setUserTokenIsValid(data?.body?.meta?.valid);
   }, [data?.body?.meta?.valid]);
 
-  const { data: userResponse } = useSWR(getApiUrlString(ApiRoutes.authInfo), () =>
-    authTokenFromStateOrCookie ? call<AuthInfo>(authInfoFactory) : undefined
+  const { data: userResponse, mutate: mutateUserInfo } = useSWR(
+    getApiUrlString(ApiRoutes.authInfo),
+    () => (authTokenFromStateOrCookie ? call<AuthInfo>(authInfoFactory) : undefined)
   );
 
   const logoutUser = useCallback(() => {
@@ -119,6 +121,10 @@ export const useUser = (): WrappedUser => {
           if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
             setActiveOrganizerId(userOrganizerIds[0]);
           }
+        }
+      } else {
+        if (userObject) {
+          setUser(userObject.data);
         }
       }
     } else if (isAuthenticated) {
@@ -172,5 +178,6 @@ export const useUser = (): WrappedUser => {
         t('logout.loadingMessage')
       );
     },
+    mutateUserInfo,
   };
 };
