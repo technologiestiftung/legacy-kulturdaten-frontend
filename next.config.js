@@ -11,7 +11,7 @@ module.exports = {
     defaultLocale: 'catchAll',
   },
   images: {
-    domains: ['beta.api.kulturdaten.berlin', 'api.kulturdaten.berlin']
+    domains: ['beta.api.kulturdaten.berlin', 'api.kulturdaten.berlin'],
   },
   async redirects() {
     return [

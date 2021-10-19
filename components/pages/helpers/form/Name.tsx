@@ -88,9 +88,10 @@ export const useName = <
     entry?.data?.relations?.translations as TranslationType[],
     false
   );
-  const name = useMemo(() => entryTranslation?.attributes?.name, [
-    entryTranslation?.attributes?.name,
-  ]);
+  const name = useMemo(
+    () => entryTranslation?.attributes?.name,
+    [entryTranslation?.attributes?.name]
+  );
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
 
@@ -136,11 +137,10 @@ export const useName = <
     }
   };
 
-  const hint = useMemo(() => showHint && loaded && (!value || value?.length < 1), [
-    showHint,
-    loaded,
-    value,
-  ]);
+  const hint = useMemo(
+    () => showHint && loaded && (!value || value?.length < 1),
+    [showHint, loaded, value]
+  );
 
   return {
     form: (
@@ -205,16 +205,15 @@ export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint
     showHint,
   });
 
-  const pristine = useMemo(() => Boolean(pristineGerman && pristineEnglish), [
-    pristineEnglish,
-    pristineGerman,
-  ]);
+  const pristine = useMemo(
+    () => Boolean(pristineGerman && pristineEnglish),
+    [pristineEnglish, pristineGerman]
+  );
 
-  const valid = useMemo(() => !loaded || Boolean(validGerman && validEnglish), [
-    loaded,
-    validEnglish,
-    validGerman,
-  ]);
+  const valid = useMemo(
+    () => !loaded || Boolean(validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
 
   const hint = useMemo(
     () =>
