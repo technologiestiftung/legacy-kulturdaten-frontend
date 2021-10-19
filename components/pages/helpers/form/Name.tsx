@@ -170,7 +170,12 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
+export const useNameForm: EntryFormHook = (
+  { category, query },
+  loaded,
+  showHint,
+  title?: string
+) => {
   const t = useT();
 
   const {
@@ -229,7 +234,7 @@ export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={`${t('forms.name') as string}`} valid={valid} hint={hint} />
+        <EntryFormHead title={title || `${t('forms.name') as string}`} valid={valid} hint={hint} />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>

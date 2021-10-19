@@ -382,6 +382,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
 }: CategoryEntryPage) => {
   const renderedEntryHeader = useEntryHeader({ category, query });
   const { entry } = useEntry<Offer, OfferShow>(category, query);
+  const t = useT();
 
   const [loaded, setLoaded] = useState(false);
   const [valid, setValid] = useState(true);
@@ -425,7 +426,8 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    valid,
+    t('categories.offer.form.name') as string
   );
 
   const {
