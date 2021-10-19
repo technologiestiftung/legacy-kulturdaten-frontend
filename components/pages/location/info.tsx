@@ -183,7 +183,7 @@ const useTypeForm: EntryFormHook = ({ category, query }) => {
 
   const [typeFromApi, setTypeFromApi] = useState<LocationType>();
 
-  const initialType = useMemo(() => entry?.data?.type, [entry?.data?.type]);
+  const initialType = useMemo(() => entry?.data?.attributes?.type, [entry?.data?.attributes?.type]);
 
   const pristine = useMemo(() => type === typeFromApi, [type, typeFromApi]);
 
@@ -205,7 +205,7 @@ const useTypeForm: EntryFormHook = ({ category, query }) => {
             onChange={(value) => setType(value as LocationType)}
             options={[
               {
-                value: LocationType.physicallocation,
+                value: LocationType.physical,
                 label: t('categories.location.form.type.physicalLabel') as string,
                 children: [
                   <RadioVariantOptionParagraph key={0}>
@@ -214,7 +214,7 @@ const useTypeForm: EntryFormHook = ({ category, query }) => {
                 ],
               },
               {
-                value: LocationType.virtuallocation,
+                value: LocationType.virtual,
                 label: t('categories.location.form.type.virtualLabel') as string,
                 children: [
                   <RadioVariantOptionParagraph key={0}>
@@ -417,7 +417,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               nameSubmit();
               descriptionSubmit();
 
-              if (typeValue === LocationType.physicallocation) {
+              if (typeValue === LocationType.physical) {
                 addressSubmit();
                 openingHoursSubmit();
               } else {
@@ -432,7 +432,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{typeForm}</EntryFormContainer>
-            {typeValue === LocationType.physicallocation ? (
+            {typeValue === LocationType.physical ? (
               <>
                 <EntryFormContainer>{addressForm}</EntryFormContainer>
                 <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
