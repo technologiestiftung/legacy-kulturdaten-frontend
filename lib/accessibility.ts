@@ -2,6 +2,14 @@ import { InputType } from '../components/input';
 import { Language } from '../config/locale';
 import { Translation } from './api/types/general';
 
+export type AccessibilityFieldValue = boolean | string | number | string[];
+
+export type AccessibilityFieldCondition = {
+  key: string;
+  type: AccessibilityFieldConditionType;
+  value: AccessibilityFieldValue;
+};
+
 export type AccessibilityTranslation = {
   attributes: {
     language: Language;
@@ -18,17 +26,25 @@ export enum AccessibilityFieldType {
   conditional = 'conditional',
 }
 
+export enum AccessibilityFieldConditionType {
+  equal = 'equal',
+  unequal = 'unequal',
+  include = 'include',
+  exclude = 'exclude',
+}
+
 export interface AccessibilityField {
   type: AccessibilityFieldType;
   data: {
     key: string;
-    value?: boolean | string | number | string[];
+    value?: AccessibilityFieldValue;
     options?: unknown;
   };
   translations?: AccessibilityTranslation[];
   meta?: {
     hint?: AccessibilityTranslation[];
   };
+  condition?: AccessibilityFieldCondition;
 }
 
 export interface AccessibilityFieldSelect extends AccessibilityField {

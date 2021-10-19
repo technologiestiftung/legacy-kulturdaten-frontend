@@ -4,15 +4,47 @@ import { EntryFormHead } from '../EntryForm/EntryFormHead';
 import { AccessibilityFieldFactory } from './AccessibilityFieldFactory';
 import { FormListGroup } from '../FormList/FormListGroup';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
-import { AccessibilityFieldGroup } from '../../lib/accessibility';
+import {
+  AccessibilityFieldCondition,
+  AccessibilityFieldConditionType,
+  AccessibilityFieldGroup,
+} from '../../lib/accessibility';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
-import { A11yStateConsumer } from './useAccessibilityStructure';
+import { A11yState, A11yStateConsumer } from './useAccessibilityStructure';
 
 interface AccessibilityCategoryContainerProps extends A11yStateConsumer {
   title: string;
   fieldGroups: AccessibilityFieldGroup[];
 }
+
+const validateCondition = (state: A11yState, condition: AccessibilityFieldCondition): boolean => {
+  if (condition) {
+    switch (condition.type) {
+      case AccessibilityFieldConditionType.equal: {
+        return state[condition.key] === condition.value;
+      }
+
+      case AccessibilityFieldConditionType.unequal: {
+        return state[condition.key] !== condition.value;
+      }
+      case AccessibilityFieldConditionType.include: {
+        return (
+          Array.isArray(state[condition.key]) &&
+          (state[condition.key] as string[]).includes(condition.value as string)
+        );
+      }
+      case AccessibilityFieldConditionType.exclude: {
+        return (
+          !Array.isArray(state[condition.key]) ||
+          !(state[condition.key] as string[]).includes(condition.value as string)
+        );
+      }
+    }
+  }
+
+  return true;
+};
 
 export const AccessibilityCategoryFactory: React.FC<AccessibilityCategoryContainerProps> = ({
   title,
@@ -30,14 +62,16 @@ export const AccessibilityCategoryFactory: React.FC<AccessibilityCategoryContain
         return (
           <FormItem key={index} width={FormItemWidth.full}>
             <FormListGroup title={currentTranslation?.attributes?.name}>
-              {group.children.map((field, index) => (
-                <AccessibilityFieldFactory
-                  key={index}
-                  field={field}
-                  state={state}
-                  dispatch={dispatch}
-                />
-              ))}
+              {group.children.map((field, index) =>
+                validateCondition(state, field.condition) ? (
+                  <AccessibilityFieldFactory
+                    key={index}
+                    field={field}
+                    state={state}
+                    dispatch={dispatch}
+                  />
+                ) : null
+              )}
             </FormListGroup>
           </FormItem>
         );

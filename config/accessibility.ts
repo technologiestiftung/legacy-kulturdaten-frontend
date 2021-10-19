@@ -1,5 +1,9 @@
 import { InputType } from '../components/input';
-import { AccessibilityCategory, AccessibilityFieldType } from '../lib/accessibility';
+import {
+  AccessibilityCategory,
+  AccessibilityFieldConditionType,
+  AccessibilityFieldType,
+} from '../lib/accessibility';
 import { Language } from './locale';
 
 export const locationAccessibility: AccessibilityCategory[] = [
@@ -261,8 +265,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name:
-                          'Discounted admission for attendant accompanying a visitor with a disability / impairment',
+                        name: 'Discounted admission for attendant accompanying a visitor with a disability / impairment',
                       },
                     },
                   ],
@@ -297,8 +300,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name:
-                    'Details zu Eintritt / Tickets für Menschen mit Behinderung / Beeinträchtigung:',
+                  name: 'Details zu Eintritt / Tickets für Menschen mit Behinderung / Beeinträchtigung:',
                 },
               },
               {
@@ -319,15 +321,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name:
-                    'Anreise - Ob per ÖPNV, per Auto oder auf anderem Weg: Was muss man wissen, wenn man zu euch kommt?',
+                  name: 'Anreise - Ob per ÖPNV, per Auto oder auf anderem Weg: Was muss man wissen, wenn man zu euch kommt?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name:
-                    'Getting there - Whether by public transport, by car or by other means: What is there to know for people traveling to you?',
+                  name: 'Getting there - Whether by public transport, by car or by other means: What is there to know for people traveling to you?',
                 },
               },
             ],
@@ -415,15 +415,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name:
-                    'Was wäre der beste Weg von der Haltestelle zum Gebäude für Menschen mit Behinderung / Beeinträchtigung?',
+                  name: 'Was wäre der beste Weg von der Haltestelle zum Gebäude für Menschen mit Behinderung / Beeinträchtigung?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name:
-                    'What would be the best route from the public transport stop to the building for people with disabilities?',
+                  name: 'What would be the best route from the public transport stop to the building for people with disabilities?',
                 },
               },
             ],
@@ -440,8 +438,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.en,
-                  name:
-                    'Is there a possibility to stop close to the entrance, e.g. for taxi services?',
+                  name: 'Is there a possibility to stop close to the entrance, e.g. for taxi services?',
                 },
               },
             ],
@@ -486,20 +483,58 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
+            type: AccessibilityFieldType.input,
+            data: {
+              key: 'example.condition.input',
+              type: InputType.tel,
+            },
+            condition: {
+              key: 'planning.arrivalInfo.accessTaxi',
+              type: AccessibilityFieldConditionType.equal,
+              value: 'yes',
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Access Taxi equal yes',
+                },
+              },
+            ],
+          },
+          {
+            type: AccessibilityFieldType.input,
+            data: {
+              key: 'example.condition.input2',
+              type: InputType.tel,
+            },
+            condition: {
+              key: 'planning.arrivalInfo.accessTaxi',
+              type: AccessibilityFieldConditionType.unequal,
+              value: 'no',
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Access Taxi unequal no',
+                },
+              },
+            ],
+          },
+          {
             type: AccessibilityFieldType.radioList,
             translations: [
               {
                 attributes: {
                   language: Language.de,
-                  name:
-                    'Parken - Gibt es ausgewiesene Parkplätze für Menschen mit Behinderung / Beeinträchtigung?',
+                  name: 'Parken - Gibt es ausgewiesene Parkplätze für Menschen mit Behinderung / Beeinträchtigung?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name:
-                    'Parking - Are there dedicated parking spaces for people with disabilities?',
+                  name: 'Parking - Are there dedicated parking spaces for people with disabilities?',
                 },
               },
             ],
@@ -634,6 +669,46 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
+            type: AccessibilityFieldType.input,
+            data: {
+              key: 'example.condition.input3',
+              type: InputType.tel,
+            },
+            condition: {
+              key: 'planning.arrivalInfo.neededParkingPermits',
+              type: AccessibilityFieldConditionType.include,
+              value: 'reservation',
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Parking Permits includes reservation',
+                },
+              },
+            ],
+          },
+          {
+            type: AccessibilityFieldType.input,
+            data: {
+              key: 'example.condition.input4',
+              type: InputType.tel,
+            },
+            condition: {
+              key: 'planning.arrivalInfo.neededParkingPermits',
+              type: AccessibilityFieldConditionType.exclude,
+              value: 'blueCard',
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Parking Permits excludes blueCard',
+                },
+              },
+            ],
+          },
+          {
             type: AccessibilityFieldType.radioList,
             translations: [
               {
@@ -645,8 +720,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.en,
-                  name:
-                    'Do the regular parking spaces on site offer enough space for wheelchair users?',
+                  name: 'Do the regular parking spaces on site offer enough space for wheelchair users?',
                 },
               },
             ],
