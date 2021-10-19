@@ -19,6 +19,7 @@ import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { MediaList } from '../../MediaList';
+import { useUser } from '../../user/useUser';
 
 const maxFileSize = 10240;
 
@@ -33,6 +34,7 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   const [isUploading, setIsUploading] = useState(false);
   const { progress, upload } = useMediaUpload();
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number }>();
+  const { mutateUserInfo } = useUser();
 
   useEffect(() => {
     const x = async () => {
@@ -53,6 +55,7 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
             mutate(resp.body.data as T);
             setUploadSuccess({ count: files.length });
             setFiles(undefined);
+            setTimeout(() => mutateUserInfo(), 1000);
             // mutateList();
           }
 
@@ -64,7 +67,16 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
     };
 
     x();
-  }, [category?.api?.update?.factory, entry?.data?.id, files, isUploading, mutate, query, upload]);
+  }, [
+    category?.api?.update?.factory,
+    entry?.data?.id,
+    files,
+    isUploading,
+    mutate,
+    query,
+    upload,
+    mutateUserInfo,
+  ]);
 
   return {
     renderedForm: (
