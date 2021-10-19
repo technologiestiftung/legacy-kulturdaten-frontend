@@ -33,7 +33,7 @@ export const toggleBlock = (editor: BaseEditor, format: ElementType): void => {
   const newProperties = {
     type: isActive ? 'paragraph' : isList ? 'list_item' : format,
   };
-  Transforms.setNodes(editor, (newProperties as unknown) as SlateElement);
+  Transforms.setNodes(editor, newProperties as unknown as SlateElement);
 
   if (!isActive && isList) {
     const block = { type: format, children: [] };

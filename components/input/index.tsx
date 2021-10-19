@@ -99,6 +99,7 @@ export enum InputType {
 
 interface InputProps {
   type: InputType;
+  ariaLabel?: string;
   autoComplete?: string;
   autofocus?: boolean;
   color?: ButtonColor;
@@ -193,6 +194,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             <StyledInput
               {...props}
+              aria-label={props?.ariaLabel}
               onChange={(e) => {
                 if (props?.type !== InputType.date || e.target.value) {
                   if (typeof props?.onChange === 'function') {

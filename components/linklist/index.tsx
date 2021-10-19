@@ -296,6 +296,7 @@ const LinkList: React.FC<LinkListProps> = ({
               value={inputState}
               onChange={(e) => setInputState(e.target.value)}
               label={t('linkList.addNew') as string}
+              placeholder={t('linkList.inputPlaceholder') as string}
               disabled={maxLinksReached}
             />
           </StyledLinkListInput>

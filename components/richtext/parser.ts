@@ -82,7 +82,7 @@ export const htmlToMarkdown = (htmlElement: HTMLElement): string => {
       const parent = node.parentNode;
       if (parent.nodeName === 'OL') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const start = ((parent as unknown) as any).getAttribute('start');
+        const start = (parent as unknown as any).getAttribute('start');
         const index = Array.prototype.indexOf.call(parent.children, node);
         prefix = (start ? Number(start) + index : index + 1) + '. ';
       }

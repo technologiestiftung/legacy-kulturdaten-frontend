@@ -14,14 +14,13 @@ export const enDE: Localization = {
         datePlaceholder: () => 'No dates available yet',
       },
       data: {
-        title: () => 'Use the culture data (further) ',
+        title: () => 'Use the data (further)',
         export: {
           title: () => 'Data export',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                You can also export all data that you provide on Kulturdaten.Berlin in standard
-                formats.
+                You can export all data that you provide on kulturdaten.berlin in standard formats.
               </DashboardTileTextP>
               <DashboardTileTextP>
                 To do this, you can use the export function in the corresponding lists or entries.
@@ -34,21 +33,22 @@ export const enDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                All data provided on Kulturdaten.Berlin can be used free of charge.
+                Use our API to access the data on all offers and organizers on kulturdaten.berlin or
+                to connect you own data to your website.
               </DashboardTileTextP>
               <DashboardTileTextP>
-                For programmatic use you need an API token, which you can create in your settings.
+                To use our API you only need to create an API token.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Create API token now',
+          link: () => 'Create API token',
         },
       },
       linkList: {
         help: {
-          title: () => 'Help',
+          title: () => 'Get help',
           text: () =>
-            'Do you need help or explanations about the functions of the platform? Would you like to read more about the Kulturdaten.Berlin project? You can find all the information here:',
+            "You have questions or need support in using the platform? We're here to help.",
           links: {
             '1': {
               title: () => 'Support area',
@@ -61,9 +61,9 @@ export const enDE: Localization = {
           },
         },
         openSource: {
-          title: () => 'Open Source',
+          title: () => 'Get creative',
           text: () =>
-            'Kulturdaten.Berlin is being developed completely open source. Would you like to help? You can find the source code here:',
+            'kulturdaten.berlin is being developed completely open source. Would you like to help? You can find the source code here:',
           links: {
             '1': {
               title: () => 'Interface code on GitHub',
@@ -78,11 +78,11 @@ export const enDE: Localization = {
         contact: {
           title: () => 'Contact',
           text: () =>
-            'Do you have any questions, suggestions or comments about the data platform? Please contact us at:',
+            'Do you have any questions, suggestions or comments about the this platform? Get in touch at:',
           links: {
             '1': {
-              title: () => 'support@kulturdaten.berlin',
-              href: () => 'mailto:support@kulturdaten.berlin',
+              title: () => 'hallo@kulturdaten.berlin',
+              href: () => 'mailto:hallo@kulturdaten.berlin',
             },
           },
         },
@@ -170,10 +170,10 @@ export const enDE: Localization = {
     baseInfo: () => 'Basic information',
     address: () => 'Address data',
     name: () => 'Name',
-    nameGerman: () => 'Name German',
-    nameGermanSimple: () => 'Name German: simple Language',
-    nameEnglish: () => 'Name English',
-    nameEnglishSimple: () => 'Name English: simple Language',
+    nameGerman: () => 'German',
+    nameGermanSimple: () => 'German: simple Language',
+    nameEnglish: () => 'English',
+    nameEnglishSimple: () => 'English: simple Language',
     description: () => 'Description',
     descriptionExists: () => 'filled out',
     descriptionExistsNot: () => 'not filled out',
@@ -181,7 +181,7 @@ export const enDE: Localization = {
     descriptionGermanSimple: () => 'German: simple Language',
     descriptionEnglish: () => 'English',
     descriptionEnglishSimple: () => 'English: simple Language',
-    classification: () => 'Classification',
+    classification: () => 'Topic category (at least 1 main topic required)',
     type: () => 'Type(s)',
     subjects: () => 'Subject(s)',
     chooseTypeFirst: () => 'Please choose type first',
@@ -214,7 +214,7 @@ export const enDE: Localization = {
     password: () => 'Password',
     remember: () => 'Stay logged in',
     submit: () => 'login',
-    headline: () => 'Log in to Kulturdaten.Berlin now.',
+    headline: () => 'Log in to kulturdaten.berlin now!',
     loading: () => 'Logging you in',
     error: () => 'The provided login credentials are not valid.',
   },
@@ -227,8 +227,8 @@ export const enDE: Localization = {
     password: () => 'Password',
     confirmPassword: () => 'Confirm password',
     submit: () => 'register',
-    headline: () => 'Register now for free for Kulturdaten.Berlin. ',
-    subline: () => 'Use will always be free of charge.',
+    headline: () => 'Sign up now! ',
+    subline: () => 'Spread your information more convenient via kulturdaten.berlin - for free!',
     loading: () => 'Registering you',
     passwordError: () => 'The entered passwords do not match.',
     requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
@@ -299,8 +299,10 @@ export const enDE: Localization = {
   date: {
     time: () => 'Time',
     from: () => 'From',
-    to: () => 'To',
-    title: () => 'Title',
+    to: () => 'to',
+    title: () => 'Additional title',
+    titleTooltip: () =>
+      "You can add further title information to particular dates of this offer, e.g.  'vernissage ' or  'artist is present'",
     status: () => 'Status',
     info: () => 'Information',
     checkboxAriaLabel: () => 'Select date',
@@ -317,7 +319,8 @@ export const enDE: Localization = {
     toDateInvalid: () => 'The date needs to end at a later day that it starts.',
     toTimeInvalid: () => 'The date needs to end at a later time than it starts.',
     titleInfoTitle: () => 'The title of the date will be combined with the title of the offer.',
-    roomInfo: () => 'Room information',
+    roomInfo: () => 'Additional room information',
+    roomInfoPlaceholder: () => 'e.g. specific room',
     additionalLinks: () => 'Additional links',
     ticketLink: () => 'Ticket link',
     currentDates: () => 'Current dates',
@@ -328,18 +331,17 @@ export const enDE: Localization = {
       endsAt: () => 'End time',
     },
     mode: {
-      title: () => 'Offer mode',
+      title: () => 'Offer duration',
       permanent: {
         label: () => 'Permanent offer',
         description1: () =>
-          'Offers not limited in time, such as: permanent exhibitions, collections',
+          'Offers without a time-limit, e.g. permanent exhibitions, online research database',
         description2: () =>
           'Permanent offers take over the opening times of the assigned location.',
       },
       scheduled: {
         label: () => 'Offer with dates',
-        description1: () =>
-          'Time-limited offers, such as: performances, concerts, film screenings, courses',
+        description1: () => 'Time-limited offers, such as: concerts, guided tours, courses',
         description2: () =>
           'Offers with dates can contain any number of individual and series dates, each with individual times.',
       },
@@ -390,18 +392,21 @@ export const enDE: Localization = {
     saved: () => 'saved',
     loading: () => 'loading',
     max: () => 'max.',
-    topics: () => 'Topics',
+    topics: () => 'Keywords (optional)',
+    topicsTooltip: () =>
+      'With theme tags you can indicate more precisely what your offer is about, e.g. certain types of music or art epochs.\nThese terms are based on the GND (integrated authority file) of the German National Library. If there are any terms missing or some concepts seem out of place, please feel free to contact us at hallo@kulturdaten.berlin!',
+    topicsPlaceholder: () => 'Just type away, e.g. Bauhaus',
     takeAFewSeconds: () => 'This can take a few seconds.',
     serverProblem: () =>
       'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
   },
   tags: {
-    boxLabel: () => 'Already added topics',
-    delete: () => 'delete topic',
-    add: () => 'add topic',
-    placeholder: () => 'No topic has been added yet',
-    autocompleteLabel: () => 'Add new topic',
-    noOptions: () => 'No topics found',
+    boxLabel: () => 'Already added keywords',
+    delete: () => 'delete keyword',
+    add: () => 'add keyword',
+    placeholder: () => 'No keyword has been added yet',
+    autocompleteLabel: () => 'Add new keyword',
+    noOptions: () => 'No keywords found',
   },
   tooltip: {
     open: () => 'open tooltip',
@@ -409,6 +414,7 @@ export const enDE: Localization = {
   },
   linkList: {
     placeholder: () => 'No links added yet',
+    inputPlaceholder: () => 'https://example.com',
     addNew: () => 'Add new link',
     maxLinks: ({ amount }) => `maximum of ${amount} links`,
     maxReached: ({ amount }) =>
@@ -467,7 +473,7 @@ export const enDE: Localization = {
         label: () => 'Required for publishing',
         name: () => 'Name added',
         description: () => 'Description added',
-        categorization: () => 'Type(s) and subject(s) chosen',
+        categorization: () => 'Categories added',
         address: () => 'Address added',
       },
       title: {
@@ -518,54 +524,61 @@ export const enDE: Localization = {
         loading: () => 'Loading Offers',
         nothing: () => 'No Offers found with current filters',
       },
+      requirements: {
+        name: () => 'Offer title added',
+        description: () => 'Description added',
+        categorization: () => 'Categories added',
+      },
       title: {
         plural: () => 'Offers',
         singular: () => 'Offer',
       },
       form: {
         create: () => 'Create new Offer',
-        name: () => 'Name',
-        nameGerman: () => 'Name German',
-        nameGermanSimple: () => 'Name German: simple Language',
-        nameEnglish: () => 'Name English',
-        nameEnglishSimple: () => 'Name English: simple Language',
+        name: () => 'Offer title',
+        nameGerman: () => 'German',
+        nameGermanSimple: () => 'German: simple language',
+        nameEnglish: () => 'English',
+        nameEnglishSimple: () => 'English: simple language',
         description: () => 'Description',
         descriptionExists: () => 'filled out',
         descriptionExistsNot: () => 'not filled out',
         descriptionGerman: () => 'German',
-        descriptionGermanSimple: () => 'German: simple Language',
+        descriptionGermanSimple: () => 'German: simple language',
         descriptionEnglish: () => 'English',
-        descriptionEnglishSimple: () => 'English: simple Language',
+        descriptionEnglishSimple: () => 'English: simple language',
         submit: () => 'create',
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
-        locationInfo: () => 'Information about the offer location',
+        locationInfo: () => 'Note on the offer location',
+        locationInfoPlaceholder: () => 'e.g. specific room',
         mainType: {
           title: () => 'Event type',
-          choose: () => 'choose event type',
+          choose: () => 'What kind of offer is it? Poetry Slam, concert, ...',
         },
         pricing: {
           title: () => 'Pricing & admission',
           feeLabel: () => 'Cost',
           registrationLabel: () => 'Admission',
-          hasFee: () => 'Offer is chargeable',
-          noFee: () => 'Offer is free of charge',
-          needsRegistration: () => 'Offer is subject to registration',
-          noRegistration: () => 'Offer is not subject to registration',
-          ticketUrl: () => 'Ticket link',
+          hasFee: () => 'Ticket required',
+          noFee: () => 'No ticket required',
+          needsRegistration: () => 'Registration required',
+          noRegistration: () => 'No registration required',
+          ticketUrl: () => 'Ticket link / ticket information',
+          ticketUrlPlaceholder: () => 'https://example.com',
         },
         organizer: {
           label: () => 'Organized by',
-          choose: () => 'Choose Organizer',
-          edit: () => 'Change Organizer',
-          title: ({ name }) => `Choose Organizer for ‘${name}’`,
+          choose: () => 'Choose organizer',
+          edit: () => 'Change organizer',
+          title: ({ name }) => `Choose organizer for ‘${name}’`,
         },
         location: {
           label: () => 'Location',
-          choose: () => 'Choose Location',
-          edit: () => 'Change Location',
-          title: ({ name }) => `Choose Location for ‘${name}’`,
+          choose: () => 'Choose location',
+          edit: () => 'Change location',
+          title: ({ name }) => `Choose location for ‘${name}’`,
         },
       },
       tabs: {
