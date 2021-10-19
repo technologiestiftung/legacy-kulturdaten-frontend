@@ -55,9 +55,10 @@ export const useT = (): ((key: string, params?: LocalizationParams) => string | 
     [locale]
   );
 
-  const tCallback = useCallback((key, params) => t(correctedLocale, key, params), [
-    correctedLocale,
-  ]);
+  const tCallback = useCallback(
+    (key, params) => t(correctedLocale, key, params),
+    [correctedLocale]
+  );
 
   if (correctedLocale) {
     return tCallback;
