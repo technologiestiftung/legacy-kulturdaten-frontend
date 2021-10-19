@@ -69,6 +69,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
             value: (value as string) || '',
             id: `${uid}-input`,
             type: (field.data as unknown as AccessibilityFieldInput).type as unknown as InputType,
+            placeholder: currentTranslation?.attributes?.placeholder,
             onChange: (e) => dispatch(a11yActionSet(key, e.target.value)),
           }}
         />
@@ -88,7 +89,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
             children: (
               <>
                 <option value="undefined" key="-1">
-                  {t('general.choose')}
+                  {currentTranslation?.attributes?.placeholder || t('general.choose')}
                 </option>
                 {(field as AccessibilityFieldSelect).data?.options?.map((option, optionIndex) => {
                   const optionTranslation = getTranslation(language, option.translations);

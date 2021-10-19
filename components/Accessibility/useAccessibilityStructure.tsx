@@ -14,14 +14,14 @@ export enum A11yActions {
   set = 'set',
 }
 
-export type A11yState = { [key: string]: string | string[] | boolean };
+export type A11yState = { [key: string]: string | string[] | boolean | number };
 
 export type A11yAction = {
   type: A11yActions;
   payload?: {
     state?: A11yState;
     key?: string;
-    value?: string | string[] | boolean;
+    value?: string | string[] | boolean | number;
   };
 };
 
