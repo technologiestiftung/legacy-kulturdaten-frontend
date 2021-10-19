@@ -46,12 +46,14 @@ export const locationAccessibility: AccessibilityCategory[] = [
                 attributes: {
                   language: Language.de,
                   name: 'Name / Bezeichnung',
+                  placeholder: 'Hier ein Placeholder',
                 },
               },
               {
                 attributes: {
                   language: Language.de,
                   name: 'Name / title',
+                  placeholder: 'Here a placeholder',
                 },
               },
             ],
@@ -126,12 +128,14 @@ export const locationAccessibility: AccessibilityCategory[] = [
                 attributes: {
                   language: Language.de,
                   name: 'Buchungsoption',
+                  placeholder: 'Buchungsoption Placeholder',
                 },
               },
               {
                 attributes: {
                   language: Language.de,
                   name: 'Booking mode',
+                  placeholder: 'Booking mode placeholder',
                 },
               },
             ],

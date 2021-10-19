@@ -6,6 +6,7 @@ export type AccessibilityTranslation = {
   attributes: {
     language: Language;
     name: string;
+    placeholder?: string;
   };
 } & Translation;
 
