@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { StyledEntryListBody } from '.';
+import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall, useApiCall } from '../../lib/api';
 import { Offer, OfferTranslation } from '../../lib/api/types/offer';
@@ -102,15 +102,16 @@ export const OfferList: React.FC<OfferListProps> = ({
     [getDispatchFilters, listName]
   );
   const loadingScreen = useLoadingScreen();
+  const organizerId = useOrganizerId();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
     currentPage,
     entriesPerPage,
-    Object.entries(filters),
+    [...Object.entries(filters), ['organizers', organizerId]],
     { key: sortKey, order }
   );
-  const mutateList = useMutateList(categories.offer);
+  const mutateList = useMutateList(categories.offer, [['organizers', organizerId]]);
 
   const activeFiltersCount = useMemo(
     () =>
@@ -144,8 +145,6 @@ export const OfferList: React.FC<OfferListProps> = ({
   }, [view, setEntriesPerPage, entriesPerPage, setCurrentPage, listName]);
 
   const date = useDate();
-
-  const organizerId = useOrganizerId();
 
   const cards = useMemo(
     () =>
@@ -280,6 +279,8 @@ export const OfferList: React.FC<OfferListProps> = ({
                           translations: [
                             { attributes: { language: Language.de, name: 'Neues Angebot' } },
                           ],
+                          organizers: [organizerId],
+                          location: '',
                         },
                       },
                     });
@@ -403,9 +404,13 @@ export const OfferList: React.FC<OfferListProps> = ({
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
-              <div>{t('categories.offer.list.nothing')}</div>
+              <EntryListPlaceholder>
+                {activeFiltersCount === 0
+                  ? t('categories.offer.list.nothing')
+                  : t('categories.offer.list.nothingFilter')}
+              </EntryListPlaceholder>
             ) : (
-              <div>{t('categories.offer.list.loading')}</div>
+              <EntryListPlaceholder>{t('categories.offer.list.loading')}</EntryListPlaceholder>
             )}
           </EntryCardGrid>
         ) : (
@@ -425,11 +430,15 @@ export const OfferList: React.FC<OfferListProps> = ({
               />
             ) : rows && rows.length === 0 ? (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.offer.list.nothing')}</div>
+                <EntryListPlaceholder>
+                  {activeFiltersCount === 0
+                    ? t('categories.offer.list.nothing')
+                    : t('categories.offer.list.nothingFilter')}
+                </EntryListPlaceholder>
               </EntryCardGrid>
             ) : (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.offer.list.loading')}</div>
+                <EntryListPlaceholder>{t('categories.offer.list.loading')}</EntryListPlaceholder>
               </EntryCardGrid>
             )}
           </StyledEntryListTable>

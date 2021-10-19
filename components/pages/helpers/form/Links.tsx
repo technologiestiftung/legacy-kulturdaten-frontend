@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useApiCall } from '../../../../lib/api';
 import { CategoryEntry } from '../../../../lib/api/types/general';
 import { Link } from '../../../../lib/api/types/link';
-import { useEntry, useMutateList } from '../../../../lib/categories';
+import { useEntry } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { useLinkList } from '../../../linklist';
@@ -13,7 +13,6 @@ export const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry(category, query);
-  const mutateList = useMutateList(category);
 
   const initialLinks = useMemo(
     () =>
@@ -82,7 +81,6 @@ export const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
 
           if (resp.status === 200) {
             mutate();
-            mutateList();
           }
         } catch (e) {
           console.error(e);

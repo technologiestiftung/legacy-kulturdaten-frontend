@@ -455,7 +455,8 @@ export const deDE: Localization = {
     organizer: {
       list: {
         loading: () => 'Lade Anbieter:innen',
-        nothing: () => 'Keine Anbieter:innen für die aktive Filterung gefunden',
+        nothing: () => 'Es gibt noch keine Anbieter:innen. Lege gerne eine:n an.',
+        nothingFilter: () => 'Keine Anbieter:innen für die aktive Filterung gefunden.',
       },
       filters: {
         status: {
@@ -529,7 +530,8 @@ export const deDE: Localization = {
     offer: {
       list: {
         loading: () => 'Lade Angebote',
-        nothing: () => 'Keine Angebote für die aktive Filterung gefunden',
+        nothing: () => 'Es gibt noch keine Angebote. Lege gerne eines an.',
+        nothingFilter: () => 'Keine Angebote für die aktive Filterung gefunden.',
       },
       requirements: {
         name: () => 'Angebotstitel ausgefüllt',
@@ -599,7 +601,8 @@ export const deDE: Localization = {
     location: {
       list: {
         loading: () => 'Lade Orte',
-        nothing: () => 'Keine Orte für die aktive Filterung gefunden',
+        nothing: () => 'Es gibt noch keine Orte. Lege gerne einen an.',
+        nothingFilter: () => 'Keine Orte für die aktive Filterung gefunden.',
       },
       title: {
         plural: () => 'Orte',

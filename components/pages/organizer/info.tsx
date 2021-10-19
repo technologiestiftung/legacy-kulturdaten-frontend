@@ -7,7 +7,7 @@ import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Contact } from '../../../lib/api/types/contact';
 import { CategoryEntry } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
-import { CategoryEntryPage, useEntry, useMutateList } from '../../../lib/categories';
+import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { WindowContext } from '../../../lib/WindowService';
@@ -28,7 +28,6 @@ import { useSaveDate } from '../helpers/useSaveDate';
 const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
-  const mutateList = useMutateList(category);
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
@@ -144,7 +143,6 @@ const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
 
           if (resp.status === 200) {
             mutate();
-            mutateList();
             setTimeout(() => setPristine(true), 500);
           }
         } catch (e) {

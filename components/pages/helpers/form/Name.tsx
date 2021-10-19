@@ -1,12 +1,14 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { EntryFormHook } from '.';
+import { Categories } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
+import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
@@ -86,16 +88,25 @@ export const useName = <
   const { category, query, language, label, ariaLabel, loaded, showHint } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
-  const mutateList = useMutateList(category);
+  const organizerId = useOrganizerId();
+  const mutateList = useMutateList(
+    category,
+    category.name === Categories.location
+      ? [['organizer', organizerId]]
+      : category.name === Categories.offer
+      ? [['organizers', organizerId]]
+      : undefined
+  );
   const call = useApiCall();
   const entryTranslation = getTranslation<TranslationType>(
     language,
     entry?.data?.relations?.translations as TranslationType[],
     false
   );
-  const name = useMemo(() => entryTranslation?.attributes?.name, [
-    entryTranslation?.attributes?.name,
-  ]);
+  const name = useMemo(
+    () => entryTranslation?.attributes?.name,
+    [entryTranslation?.attributes?.name]
+  );
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
   const { mutateUserInfo } = useUser();
@@ -143,11 +154,10 @@ export const useName = <
     }
   };
 
-  const hint = useMemo(() => showHint && loaded && (!value || value?.length < 1), [
-    showHint,
-    loaded,
-    value,
-  ]);
+  const hint = useMemo(
+    () => showHint && loaded && (!value || value?.length < 1),
+    [showHint, loaded, value]
+  );
 
   return {
     form: (
@@ -224,16 +234,15 @@ export const useNameForm: EntryFormHook = (
     showHint,
   });
 
-  const pristine = useMemo(() => Boolean(pristineGerman && pristineEnglish), [
-    pristineEnglish,
-    pristineGerman,
-  ]);
+  const pristine = useMemo(
+    () => Boolean(pristineGerman && pristineEnglish),
+    [pristineEnglish, pristineGerman]
+  );
 
-  const valid = useMemo(() => !loaded || Boolean(validGerman && validEnglish), [
-    loaded,
-    validEnglish,
-    validGerman,
-  ]);
+  const valid = useMemo(
+    () => !loaded || Boolean(validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
 
   const hint = useMemo(
     () =>

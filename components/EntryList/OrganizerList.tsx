@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { StyledEntryListBody } from '.';
+import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { OrganizerList as OrganizerListCall } from '../../lib/api';
 import {
@@ -481,9 +481,13 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
-              <div>{t('categories.organizer.list.nothing')}</div>
+              <EntryListPlaceholder>
+                {activeFiltersCount === 0
+                  ? t('categories.organizer.list.nothing')
+                  : t('categories.organizer.list.nothingFilter')}
+              </EntryListPlaceholder>
             ) : (
-              <div>{t('categories.organizer.list.loading')}</div>
+              <EntryListPlaceholder>{t('categories.organizer.list.loading')}</EntryListPlaceholder>
             )}
           </EntryCardGrid>
         ) : (
@@ -503,11 +507,17 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               />
             ) : rows && rows.length === 0 ? (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.nothing')}</div>
+                <EntryListPlaceholder>
+                  {activeFiltersCount === 0
+                    ? t('categories.organizer.list.nothing')
+                    : t('categories.organizer.list.nothingFilter')}
+                </EntryListPlaceholder>
               </EntryCardGrid>
             ) : (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.loading')}</div>
+                <EntryListPlaceholder>
+                  {t('categories.organizer.list.loading')}
+                </EntryListPlaceholder>
               </EntryCardGrid>
             )}
           </StyledEntryListTable>

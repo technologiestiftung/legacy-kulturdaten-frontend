@@ -96,20 +96,20 @@ export const apiRoutes: {
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   locationShow: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizer`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizers`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizer`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizers`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags,mainType`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizer,links,types,subjects,tags,mainType`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>

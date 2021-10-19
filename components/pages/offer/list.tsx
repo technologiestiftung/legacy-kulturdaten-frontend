@@ -6,7 +6,7 @@ import { OfferList as OfferListCall } from '../../../lib/api';
 import { Offer } from '../../../lib/api/types/offer';
 import { CategoryPage, useList } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
-import { useOrganizerId } from '../../../lib/useOrganizer';
+import { defaultOrganizerId, useOrganizerId } from '../../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
 import { OfferList } from '../../EntryList/OfferList';
@@ -35,8 +35,9 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
     categories.offer,
     currentPage,
     entriesPerPage,
-    Object.entries(filters),
-    { key: sortKey, order }
+    [...Object.entries(filters), ['organizers', organizerId]],
+    { key: sortKey, order },
+    organizerId !== defaultOrganizerId
   );
 
   useEffect(() => {
@@ -45,7 +46,14 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
         router.replace(
           routes.offer({
             locale,
-            query: { organizer: organizerId, id: lastEntryId || list.data[0].id, sub: 'info' },
+            query: {
+              organizer: organizerId,
+              id:
+                lastEntryId && list.data.find((entry) => entry.id === lastEntryId)
+                  ? lastEntryId
+                  : list.data[0].id,
+              sub: 'info',
+            },
           })
         );
       }
