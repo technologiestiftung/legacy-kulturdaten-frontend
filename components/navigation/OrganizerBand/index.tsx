@@ -111,7 +111,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
                   entry: {
                     relations: {
                       translations: [
-                        { attributes: { language: Language.de, name: 'Neue Anbieter:inn' } },
+                        { attributes: { language: Language.de, name: 'Neue Anbieter:in' } },
                       ],
                     },
                   },
