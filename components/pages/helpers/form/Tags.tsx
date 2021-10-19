@@ -18,9 +18,10 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
   const [tagsFromApi, setTagsFromApi] = useState<Tag['id'][]>();
   const t = useT();
 
-  const initialTags = useMemo(() => entry?.data?.relations?.tags?.map((tag) => tag.id), [
-    entry?.data?.relations?.tags,
-  ]);
+  const initialTags = useMemo(
+    () => entry?.data?.relations?.tags?.map((tag) => tag.id),
+    [entry?.data?.relations?.tags]
+  );
 
   const pristine = useMemo(
     () => JSON.stringify(tagsFromApi?.sort()) === JSON.stringify(selectedTags?.sort()),

@@ -199,10 +199,10 @@ const LinkList: React.FC<LinkListProps> = ({
 
   const [inputState, setInputState] = useState<string>('');
 
-  const maxLinksReached = useMemo<boolean>(() => maxLinks && linksState?.length >= maxLinks, [
-    linksState,
-    maxLinks,
-  ]);
+  const maxLinksReached = useMemo<boolean>(
+    () => maxLinks && linksState?.length >= maxLinks,
+    [linksState, maxLinks]
+  );
 
   useEffect(() => {
     if (!externalValueDefined && externalValue && externalValue.length > 0) {
