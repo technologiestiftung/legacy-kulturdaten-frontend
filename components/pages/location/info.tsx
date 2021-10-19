@@ -237,7 +237,7 @@ const useTypeForm: EntryFormHook = ({ category, query }) => {
           const resp = await call<LocationUpdate>(category.api.update.factory, {
             id: entry.data.id,
             entry: {
-              type,
+              attributes: { type },
             },
           });
 
