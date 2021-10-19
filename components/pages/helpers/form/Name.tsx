@@ -13,6 +13,7 @@ import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
 interface SetNameProps {
   label: string;
+  ariaLabel?: string;
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
   setPristine: (pristine: boolean) => void;
@@ -26,6 +27,7 @@ interface SetNameProps {
 
 const Name: React.FC<SetNameProps> = ({
   label,
+  ariaLabel,
   onSubmit,
   pristine,
   setPristine,
@@ -46,6 +48,7 @@ const Name: React.FC<SetNameProps> = ({
     <form onSubmit={onSubmit}>
       <Input
         label={label}
+        ariaLabel={ariaLabel}
         type={InputType.text}
         value={value || ''}
         onChange={(e) => {
@@ -68,6 +71,7 @@ export const useName = <
   query: ParsedUrlQuery;
   language: Language;
   label: string;
+  ariaLabel?: string;
   loaded: boolean;
   showHint: boolean;
 }): {
@@ -78,7 +82,7 @@ export const useName = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, loaded, showHint } = props;
+  const { category, query, language, label, ariaLabel, loaded, showHint } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
   const mutateList = useMutateList(category);
@@ -88,10 +92,9 @@ export const useName = <
     entry?.data?.relations?.translations as TranslationType[],
     false
   );
-  const name = useMemo(
-    () => entryTranslation?.attributes?.name,
-    [entryTranslation?.attributes?.name]
-  );
+  const name = useMemo(() => entryTranslation?.attributes?.name, [
+    entryTranslation?.attributes?.name,
+  ]);
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
 
@@ -137,10 +140,11 @@ export const useName = <
     }
   };
 
-  const hint = useMemo(
-    () => showHint && loaded && (!value || value?.length < 1),
-    [showHint, loaded, value]
-  );
+  const hint = useMemo(() => showHint && loaded && (!value || value?.length < 1), [
+    showHint,
+    loaded,
+    value,
+  ]);
 
   return {
     form: (
@@ -151,6 +155,7 @@ export const useName = <
           value,
           setValue,
           label,
+          ariaLabel,
           onSubmit,
           name,
           required,
@@ -190,6 +195,9 @@ export const useNameForm: EntryFormHook = (
     query,
     language: Language.de,
     label: t('forms.nameGerman') as string,
+    ariaLabel: title
+      ? `${title} ${t('forms.nameGerman')}`
+      : `${t('forms.name')} ${t('forms.nameGerman')}`,
     loaded,
     showHint,
   });
@@ -206,19 +214,23 @@ export const useNameForm: EntryFormHook = (
     query,
     language: Language.en,
     label: t('forms.nameEnglish') as string,
+    ariaLabel: title
+      ? `${title} ${t('forms.nameEnglish')}`
+      : `${t('forms.name')} ${t('forms.nameEnglish')}`,
     loaded,
     showHint,
   });
 
-  const pristine = useMemo(
-    () => Boolean(pristineGerman && pristineEnglish),
-    [pristineEnglish, pristineGerman]
-  );
+  const pristine = useMemo(() => Boolean(pristineGerman && pristineEnglish), [
+    pristineEnglish,
+    pristineGerman,
+  ]);
 
-  const valid = useMemo(
-    () => !loaded || Boolean(validGerman && validEnglish),
-    [loaded, validEnglish, validGerman]
-  );
+  const valid = useMemo(() => !loaded || Boolean(validGerman && validEnglish), [
+    loaded,
+    validEnglish,
+    validGerman,
+  ]);
 
   const hint = useMemo(
     () =>
