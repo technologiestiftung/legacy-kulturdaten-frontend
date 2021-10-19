@@ -21,6 +21,7 @@ export type AccessibilityTranslation = {
 export enum AccessibilityFieldType {
   select = 'select',
   input = 'input',
+  textarea = 'textarea',
   radioList = 'radioList',
   checkboxList = 'checkboxList',
   conditional = 'conditional',
@@ -68,6 +69,15 @@ export interface AccessibilityFieldInput extends AccessibilityField {
   };
 }
 
+export interface AccessibilityFieldTextarea extends AccessibilityField {
+  type: AccessibilityFieldType.textarea;
+  data: {
+    key: string;
+    rows?: number;
+    value?: string | number;
+  };
+}
+
 export interface AccessibilityFieldRadioList extends AccessibilityField {
   type: AccessibilityFieldType.radioList;
   data: {
@@ -95,6 +105,7 @@ export interface AccessibilityFieldCheckboxList extends AccessibilityField {
 export interface AccessibilityFieldGroup {
   children: (
     | AccessibilityFieldInput
+    | AccessibilityFieldTextarea
     | AccessibilityFieldSelect
     | AccessibilityFieldRadioList
     | AccessibilityFieldCheckboxList
@@ -109,6 +120,7 @@ export interface AccessibilityFieldConditional extends AccessibilityField {
     key: string;
     fields: (
       | AccessibilityFieldInput
+      | AccessibilityFieldTextarea
       | AccessibilityFieldSelect
       | AccessibilityFieldRadioList
       | AccessibilityFieldCheckboxList

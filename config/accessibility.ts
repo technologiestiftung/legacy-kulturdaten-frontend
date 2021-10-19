@@ -40,6 +40,22 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
+            type: AccessibilityFieldType.textarea,
+            data: {
+              key: 'example.textarea',
+              rows: 6,
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Textarea',
+                  placeholder: 'Hier ein Placeholder',
+                },
+              },
+            ],
+          },
+          {
             type: AccessibilityFieldType.input,
             data: {
               key: 'planning.serviceAddress.serviceContact',

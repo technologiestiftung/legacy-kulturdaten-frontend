@@ -8,6 +8,7 @@ import { mq } from '../globals/Constants';
 import { Input, InputProps } from '../input';
 import { RadioList, RadioListProps } from '../Radio/RadioList';
 import { Select, SelectProps, SelectVariant } from '../select';
+import { Textarea, TextareaProps } from '../textarea';
 
 const StyledFormListField = styled.div<{ last?: boolean }>`
   display: grid;
@@ -32,10 +33,20 @@ const StyledFormListFieldLabel = styled.label`
   }
 `;
 
-const StyledFormListFieldField = styled.div``;
+const StyledFormListFieldField = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+
+  > * {
+    flex-grow: 1;
+  }
+`;
 
 export enum FormListFieldType {
   input = 'input',
+  textarea = 'textarea',
   select = 'select',
   radioList = 'radioList',
   checkboxList = 'checkboxList',
@@ -43,11 +54,14 @@ export enum FormListFieldType {
 
 const formListFieldTypeComponentMap: {
   [key in FormListFieldType]: {
-    component: React.FC<InputProps | SelectProps | RadioListProps | CheckboxListProps>;
+    component: React.FC<
+      InputProps | SelectProps | RadioListProps | CheckboxListProps | TextareaProps
+    >;
     variant: ComponentVariant;
   };
 } = {
   input: { component: Input, variant: ComponentVariants.formList },
+  textarea: { component: Textarea, variant: ComponentVariants.formList },
   select: { component: Select, variant: SelectVariant.formList },
   radioList: { component: RadioList, variant: ComponentVariants.formList },
   checkboxList: { component: CheckboxList, variant: ComponentVariants.formList },
@@ -56,7 +70,7 @@ const formListFieldTypeComponentMap: {
 export interface FormListFieldProps {
   label: string;
   type: FormListFieldType;
-  fieldProps: InputProps | SelectProps | RadioListProps | CheckboxListProps;
+  fieldProps: InputProps | SelectProps | RadioListProps | CheckboxListProps | TextareaProps;
   last?: boolean;
 }
 

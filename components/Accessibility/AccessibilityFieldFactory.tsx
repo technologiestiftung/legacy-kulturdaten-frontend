@@ -8,6 +8,7 @@ import {
   AccessibilityFieldInput,
   AccessibilityFieldRadioList,
   AccessibilityFieldSelect,
+  AccessibilityFieldTextarea,
   AccessibilityFieldType,
 } from '../../lib/accessibility';
 import { useLanguage } from '../../lib/routing';
@@ -68,8 +69,25 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
           fieldProps={{
             value: (value as string) || '',
             id: `${uid}-input`,
-            type: (field.data as unknown as AccessibilityFieldInput).type as unknown as InputType,
+            type: (field as unknown as AccessibilityFieldInput).data.type as InputType,
             placeholder: currentTranslation?.attributes?.placeholder,
+            onChange: (e) => dispatch(a11yActionSet(key, e.target.value)),
+          }}
+        />
+      );
+    }
+
+    case AccessibilityFieldType.textarea: {
+      return (
+        <FormListField
+          last={last}
+          type={FormListFieldType.textarea}
+          label={label}
+          fieldProps={{
+            value: (value as string) || '',
+            id: `${uid}-textarea`,
+            placeholder: currentTranslation?.attributes?.placeholder,
+            rows: (field as unknown as AccessibilityFieldTextarea)?.data?.rows,
             onChange: (e) => dispatch(a11yActionSet(key, e.target.value)),
           }}
         />

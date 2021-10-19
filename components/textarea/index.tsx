@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { ChangeEventHandler, useState } from 'react';
+import { ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { inputStyles } from '../input';
 import { Label, StyledLabel } from '../label';
@@ -18,10 +19,11 @@ const StyledTextarea = styled.textarea<{ pristine?: boolean; valid?: boolean }>`
   ${(props) => inputStyles(props)}
 `;
 
-interface TextareaProps {
+export interface TextareaProps extends ComponentWithVariants {
   id: string;
+  value: string;
+  onChange: ChangeEventHandler<HTMLTextAreaElement>;
   label?: string;
-  onChange?: ChangeEventHandler<HTMLTextAreaElement>;
   autoComplete?: string;
   autofocus?: boolean;
   name?: string;
@@ -52,6 +54,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         {...props}
         valid={props.valid}
         pristine={pristine}
+        onChange={props?.onChange}
         onBlur={() => setPristine(false)}
       />
     </StyledTextareaContainer>
