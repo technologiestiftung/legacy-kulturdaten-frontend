@@ -37,10 +37,7 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
   return {
     renderedForm: (
       <div>
-        <EntryFormHead
-          title={t('general.topics') as string}
-          tooltip={t('general.topicsTooltip') as string}
-        />
+        <EntryFormHead title={t('general.topics') as string} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             {tagOptions && (
