@@ -1,18 +1,19 @@
 import { css } from '@emotion/react';
 import { compareDesc } from 'date-fns';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { useApiCall } from '../../../lib/api';
 import { OfferDateCreate, offerDateCreateFactory } from '../../../lib/api/routes/offer/date/create';
 import { OfferDateUpdate, offerDateUpdateFactory } from '../../../lib/api/routes/offer/date/update';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
+import { OfferUpdate } from '../../../lib/api/routes/offer/update';
 import { Offer, OfferDate } from '../../../lib/api/types/offer';
 import { CategoryEntryPage, Order, useEntry, useOfferDateList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
-import { Breakpoint } from '../../../lib/WindowService';
+import { Breakpoint, WindowContext } from '../../../lib/WindowService';
 import { useCollapsable } from '../../collapsable';
 import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
@@ -25,6 +26,7 @@ import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { RadioSwitch } from '../../RadioSwitch';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { Select } from '../../select';
+import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
@@ -39,14 +41,107 @@ const customFormItemCss = css`
 
 const entriesPerPage = 25;
 
+const useIsPermanentForm: EntryFormHook = ({ category, query }) => {
+  const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
+  const call = useApiCall();
+  const t = useT();
+  const uid = usePseudoUID();
+
+  const [isPermanent, setIsPermanent] = useState<boolean>();
+  const initialIsPermanent = useMemo(
+    () => entry?.data?.attributes?.isPermanent,
+    [entry?.data?.attributes?.isPermanent]
+  );
+
+  const pristine = useMemo(
+    () => isPermanent === initialIsPermanent,
+    [isPermanent, initialIsPermanent]
+  );
+
+  useEffect(() => {
+    if (typeof initialIsPermanent === 'boolean' && typeof isPermanent === 'undefined') {
+      setIsPermanent(initialIsPermanent);
+    }
+  }, [initialIsPermanent, isPermanent]);
+
+  const renderedForm = (
+    <div>
+      <EntryFormHead title={t('date.mode.title') as string} id={`radio-${uid}`} />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          <RadioVariant
+            labelledBy={`radio-${uid}`}
+            value={String(isPermanent)}
+            name="test-radio-variant"
+            onChange={(value) => {
+              setIsPermanent(Boolean(value === 'true'));
+            }}
+            options={[
+              {
+                value: 'true',
+                label: t('date.mode.permanent.label') as string,
+                children: [
+                  <RadioVariantOptionParagraph key={0}>
+                    {t('date.mode.permanent.description1')}
+                  </RadioVariantOptionParagraph>,
+                  <RadioVariantOptionParagraph key={1}>
+                    {t('date.mode.permanent.description2')}
+                  </RadioVariantOptionParagraph>,
+                ],
+              },
+              {
+                value: 'false',
+                label: t('date.mode.scheduled.label') as string,
+                children: [
+                  <RadioVariantOptionParagraph key={0}>
+                    {t('date.mode.scheduled.description1')}
+                  </RadioVariantOptionParagraph>,
+                  <RadioVariantOptionParagraph key={1}>
+                    {t('date.mode.scheduled.description2')}
+                  </RadioVariantOptionParagraph>,
+                ],
+              },
+            ]}
+          />
+        </FormItem>
+      </FormGrid>
+    </div>
+  );
+
+  return {
+    renderedForm,
+    submit: async () => {
+      if (!pristine) {
+        try {
+          const resp = await call<OfferUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              attributes: { isPermanent },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+    reset: () => undefined,
+    valid: true,
+    hint: false,
+    value: isPermanent,
+  };
+};
+
 export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
   const renderedEntryHeader = useEntryHeader({ category, query });
   const t = useT();
-  const [isPermanent, setIsPermanent] = useState<boolean>(false);
-  const uid = usePseudoUID();
   const { entry } = useEntry<Offer, OfferShow>(category, query);
   const formattedDate = useSaveDate(entry);
   const call = useApiCall();
@@ -57,6 +152,33 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
   const [sortKey, setSortKey] = useState('startsAt');
   const [order, setOrder] = useState(Order.ASC);
+  const [loaded, setLoaded] = useState(false);
+  const { rendered } = useContext(WindowContext);
+
+  useEffect(() => {
+    if (rendered && typeof entry !== 'undefined') {
+      setTimeout(() => setLoaded(true), 150);
+    }
+
+    return () => {
+      setLoaded(false);
+    };
+  }, [rendered, entry]);
+
+  const {
+    renderedForm: isPermanentForm,
+    submit: isPermanentSubmit,
+    pristine: isPermanentPristine,
+    value: isPermanentValue,
+  } = useIsPermanentForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    true,
+    false
+  );
 
   const {
     data: datesFromApi,
@@ -163,56 +285,17 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
       {renderedEntryHeader}
       <Save
         onClick={async () => {
+          isPermanentSubmit();
           submitDateList();
         }}
-        active={!pristine}
+        active={!pristine || !isPermanentPristine}
         date={formattedDate}
         valid={true}
         hint={false}
       />
       <EntryFormWrapper>
-        <EntryFormContainer>
-          <EntryFormHead title={t('date.mode.title') as string} id={`radio-${uid}`} />
-          <FormGrid>
-            <FormItem width={FormItemWidth.full}>
-              <RadioVariant
-                labelledBy={`radio-${uid}`}
-                value={String(isPermanent)}
-                name="test-radio-variant"
-                onChange={(value) => {
-                  setIsPermanent(Boolean(value === 'true'));
-                }}
-                options={[
-                  {
-                    value: 'true',
-                    label: t('date.mode.permanent.label') as string,
-                    children: [
-                      <RadioVariantOptionParagraph key={0}>
-                        {t('date.mode.permanent.description1')}
-                      </RadioVariantOptionParagraph>,
-                      <RadioVariantOptionParagraph key={1}>
-                        {t('date.mode.permanent.description2')}
-                      </RadioVariantOptionParagraph>,
-                    ],
-                  },
-                  {
-                    value: 'false',
-                    label: t('date.mode.scheduled.label') as string,
-                    children: [
-                      <RadioVariantOptionParagraph key={0}>
-                        {t('date.mode.scheduled.description1')}
-                      </RadioVariantOptionParagraph>,
-                      <RadioVariantOptionParagraph key={1}>
-                        {t('date.mode.scheduled.description2')}
-                      </RadioVariantOptionParagraph>,
-                    ],
-                  },
-                ]}
-              />
-            </FormItem>
-          </FormGrid>
-        </EntryFormContainer>
-        {!isPermanent && (
+        <EntryFormContainer>{isPermanentForm}</EntryFormContainer>
+        {!isPermanentValue && (
           <>
             <EntryFormContainer>
               <EntryFormHead title={t('date.currentDates') as string} />
