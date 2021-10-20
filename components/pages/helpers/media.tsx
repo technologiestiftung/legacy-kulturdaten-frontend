@@ -8,6 +8,7 @@ import { useEntry, Category } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { DropZone } from '../../DropZone';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
+import { Info, InfoColor } from '../../info';
 import { MediaList } from '../../MediaList';
 import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from './formComponents';
@@ -169,6 +170,11 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
         <EntryFormHead title={`${t('media.title')} (${t('general.max')} ${imagesMax})`} />
         <FormGrid>
           {renderedMediaUploadForm}
+          <FormItem width={FormItemWidth.full}>
+            <Info color={InfoColor.white} noMaxWidth>
+              {t('media.usageInfo')}
+            </Info>
+          </FormItem>
           <FormItem width={FormItemWidth.full}>
             <MediaList
               media={media}

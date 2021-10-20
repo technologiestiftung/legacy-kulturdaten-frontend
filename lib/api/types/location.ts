@@ -23,6 +23,7 @@ export type Location = {
     id?: string;
     attributes?: {
       url?: string;
+      rentUrl?: string;
       type?: LocationType;
     } & DefaultAttributes;
     relations?: {

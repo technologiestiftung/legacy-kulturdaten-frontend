@@ -23,7 +23,7 @@ import { Categories } from '../../../config/categories';
 import { LocationList } from '../../EntryList/LocationList';
 import { Save } from '../../EntryForm/Save';
 import { useSaveDate } from '../helpers/useSaveDate';
-import { useDescriptionForm } from '../helpers/form/Description';
+import { useDescriptionForm, useTeaserForm } from '../helpers/form/Description';
 import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
@@ -205,6 +205,15 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             value={attributes?.ticketUrl || ''}
             placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
             onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
+          />
+        </FormItem>
+        <FormItem width={FormItemWidth.full}>
+          <Input
+            type={InputType.url}
+            label={t('categories.offer.form.pricing.registrationUrl') as string}
+            value={attributes?.registrationUrl || ''}
+            placeholder={t('categories.offer.form.pricing.registrationUrlPlaceholder') as string}
+            onChange={(e) => setAttributes({ ...attributes, registrationUrl: e.target.value })}
           />
         </FormItem>
       </FormGrid>
@@ -447,6 +456,21 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
   );
 
   const {
+    renderedForm: teaserForm,
+    submit: teaserSubmit,
+    pristine: teaserPristine,
+    valid: teaserValid,
+    hint: teaserHint,
+  } = useTeaserForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid
+  );
+
+  const {
     renderedForm: pricingForm,
     submit: pricingSubmit,
     pristine: pricingPristine,
@@ -498,11 +522,20 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
         pricingValid,
         roomValid,
         descriptionValid,
+        teaserValid,
         linksValid,
         organizerLocationValid,
       ].includes(false)
     );
-  }, [pricingValid, roomValid, descriptionValid, linksValid, nameValid, organizerLocationValid]);
+  }, [
+    pricingValid,
+    roomValid,
+    descriptionValid,
+    teaserValid,
+    linksValid,
+    nameValid,
+    organizerLocationValid,
+  ]);
 
   const pristine = useMemo(
     () =>
@@ -510,6 +543,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
         namePristine,
         organizerLocationPristine,
         descriptionPristine,
+        teaserPristine,
         pricingPristine,
         roomPristine,
         linksPristine,
@@ -517,6 +551,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     [
       namePristine,
       descriptionPristine,
+      teaserPristine,
       organizerLocationPristine,
       pricingPristine,
       roomPristine,
@@ -526,8 +561,14 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
 
   const hint = useMemo(
     () =>
-      nameHint || descriptionHint || organizerLocationHint || pricingHint || roomHint || linksHint,
-    [nameHint, descriptionHint, organizerLocationHint, pricingHint, roomHint, linksHint]
+      nameHint ||
+      descriptionHint ||
+      teaserHint ||
+      organizerLocationHint ||
+      pricingHint ||
+      roomHint ||
+      linksHint,
+    [nameHint, descriptionHint, teaserHint, organizerLocationHint, pricingHint, roomHint, linksHint]
   );
 
   return (
@@ -539,6 +580,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             onClick={async () => {
               nameSubmit();
               descriptionSubmit();
+              teaserSubmit();
               organizerLocationSubmit();
               pricingSubmit();
               roomSubmit();
@@ -555,6 +597,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             <EntryFormContainer>{linksForm}</EntryFormContainer>
             <EntryFormContainer>{roomForm}</EntryFormContainer>
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
+            <EntryFormContainer>{teaserForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
           </EntryFormWrapper>
         </div>
