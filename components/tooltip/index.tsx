@@ -101,7 +101,7 @@ const StyledTooltipOverlay = styled.div<{
   height: auto;
   position: absolute;
   display: flex;
-
+  z-index: 100;
   background: var(--white);
   border-radius: 0.75rem;
   box-shadow: 0.125rem 0.125rem 3rem -0.25rem rgba(0, 0, 0, 0.5);
