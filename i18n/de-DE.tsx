@@ -565,6 +565,8 @@ export const deDE: Localization = {
           noRegistration: () => 'Nicht anmeldepflichtig',
           ticketUrl: () => 'Ticketlink / Ticketinformation',
           ticketUrlPlaceholder: () => 'https://example.com',
+          registrationUrl: () => 'Anmeldungslink / Anmeldungsinformation',
+          registrationUrlPlaceholder: () => 'https://example.com',
         },
         organizer: {
           label: () => 'Angeboten von',

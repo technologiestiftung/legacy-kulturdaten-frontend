@@ -396,12 +396,33 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   type={InputType.url}
                   label={t('date.ticketLink') as string}
                   value={date?.attributes?.ticketUrl || ''}
+                  placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
                   onChange={(e) =>
                     onChange({
                       ...date,
                       attributes: {
                         ...date.attributes,
                         ticketUrl: e.target.value,
+                      },
+                    })
+                  }
+                  disabled={!editable}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Input
+                  type={InputType.url}
+                  label={t('categories.offer.form.pricing.registrationUrl') as string}
+                  value={date?.attributes?.registrationUrl || ''}
+                  placeholder={
+                    t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
+                  }
+                  onChange={(e) =>
+                    onChange({
+                      ...date,
+                      attributes: {
+                        ...date.attributes,
+                        registrationUrl: e.target.value,
                       },
                     })
                   }

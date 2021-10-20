@@ -557,6 +557,8 @@ export const enDE: Localization = {
           noRegistration: () => 'No registration required',
           ticketUrl: () => 'Ticket link / ticket information',
           ticketUrlPlaceholder: () => 'https://example.com',
+          registrationUrl: () => 'Registration link / registration information',
+          registrationUrlPlaceholder: () => 'https://example.com',
         },
         organizer: {
           label: () => 'Organized by',

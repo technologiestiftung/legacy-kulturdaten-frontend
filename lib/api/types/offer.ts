@@ -42,6 +42,7 @@ export type OfferDate = {
       endsAt: string;
       status: OfferDateStatus;
       ticketUrl?: string;
+      registrationUrl?: string;
     };
     relations?: {
       translations: OfferDateTranslation[];
@@ -72,6 +73,7 @@ export type Offer = {
       hasFee?: boolean;
       needsRegistration?: boolean;
       ticketUrl?: string;
+      registrationUrl?: string;
       isPermanent?: boolean;
     } & DefaultAttributes;
     relations?: {

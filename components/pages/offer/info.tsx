@@ -207,6 +207,15 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
           />
         </FormItem>
+        <FormItem width={FormItemWidth.full}>
+          <Input
+            type={InputType.url}
+            label={t('categories.offer.form.pricing.registrationUrl') as string}
+            value={attributes?.registrationUrl || ''}
+            placeholder={t('categories.offer.form.pricing.registrationUrlPlaceholder') as string}
+            onChange={(e) => setAttributes({ ...attributes, registrationUrl: e.target.value })}
+          />
+        </FormItem>
       </FormGrid>
     </FormContainer>
   );
