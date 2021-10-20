@@ -360,6 +360,35 @@ export const enDE: Localization = {
   general: {
     german: () => 'German',
     english: () => 'English',
+    deleting: {
+      confirm: ({ name }) =>
+        `Are you sure, that you want to delete ${name}? This can not be undone.`,
+      loading: () => 'Deleting',
+      organizer: {
+        singular: () => 'this Organizer',
+        plural: () => 'these Organizers',
+      },
+      offer: {
+        singular: () => 'this Offer',
+        plural: () => 'these Offers',
+      },
+      location: {
+        singular: () => 'this Location',
+        plural: () => 'these Locations',
+      },
+      media: {
+        singular: () => 'this image',
+        plural: () => 'these images',
+      },
+      logo: {
+        singular: () => 'this logo',
+        plural: () => 'these logos',
+      },
+      date: {
+        singular: () => 'this date',
+        plural: () => 'these dates',
+      },
+    },
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',

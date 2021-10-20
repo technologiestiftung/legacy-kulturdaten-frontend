@@ -10,8 +10,10 @@ import { DropZone } from '../../DropZone';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Info, InfoColor } from '../../info';
 import { MediaList } from '../../MediaList';
+import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
 import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from './formComponents';
+import { useLoadingScreen } from '../../Loading/LoadingScreen';
 
 const imagesMax = 5;
 const maxFileSize = 10240;
@@ -93,6 +95,7 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
   const { entry } = useEntry(category, query);
   const call = useApiCall();
   const t = useT();
+  const loadingScreen = useLoadingScreen();
 
   const initialMedia = useMemo<Media['data'][]>(
     () => (entry?.data?.relations?.media ? [...entry.data.relations.media].reverse() : undefined),
@@ -186,7 +189,37 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
                 ]);
               }}
               setValid={(valid) => setValid(valid)}
-              onDelete={() => console.log('tbd')}
+              onDelete={async (mediaItemId) => {
+                if (
+                  confirm(
+                    t('general.deleting.confirm', {
+                      name: t('general.deleting.media.singular') as string,
+                    }) as string
+                  )
+                ) {
+                  loadingScreen(
+                    t('general.deleting.loading'),
+                    async () => {
+                      try {
+                        const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                          id: mediaItemId,
+                        });
+
+                        if (resp.status === 200) {
+                          return { success: true };
+                        }
+
+                        return { success: false, error: t('general.serverProblem') };
+                      } catch (e) {
+                        console.error(e);
+
+                        return { success: false, error: t('general.serverProblem') };
+                      }
+                    },
+                    t('general.takeAFewSeconds')
+                  );
+                }
+              }}
             />
           </FormItem>
         </FormGrid>
