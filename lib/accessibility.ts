@@ -2,42 +2,66 @@ import { InputType } from '../components/input';
 import { Language } from '../config/locale';
 import { Translation } from './api/types/general';
 
+export type AccessibilityFieldValue = boolean | string | number | string[];
+
+export type AccessibilityFieldCondition = {
+  key: string;
+  type: AccessibilityFieldConditionType;
+  value: AccessibilityFieldValue;
+};
+
+export type AccessibilityFieldTooltip = {
+  content: string[];
+};
+
 export type AccessibilityTranslation = {
   attributes: {
     language: Language;
     name: string;
+    placeholder?: string;
+    tooltip?: AccessibilityFieldTooltip;
   };
 } & Translation;
 
 export enum AccessibilityFieldType {
   select = 'select',
   input = 'input',
-  boolean = 'boolean',
-  group = 'group',
+  textarea = 'textarea',
+  radioList = 'radioList',
+  checkboxList = 'checkboxList',
+  conditional = 'conditional',
+}
+
+export enum AccessibilityFieldConditionType {
+  equal = 'equal',
+  unequal = 'unequal',
+  include = 'include',
+  exclude = 'exclude',
 }
 
 export interface AccessibilityField {
   type: AccessibilityFieldType;
   data: {
     key: string;
-    value: boolean | string | number;
+    value?: AccessibilityFieldValue;
+    options?: unknown;
   };
-  translations: AccessibilityTranslation[];
+  translations?: AccessibilityTranslation[];
   meta?: {
     hint?: AccessibilityTranslation[];
   };
+  condition?: AccessibilityFieldCondition;
 }
 
 export interface AccessibilityFieldSelect extends AccessibilityField {
   type: AccessibilityFieldType.select;
   data: {
     key: string;
-    value: string;
-    options: {
-      key: string;
+    value?: string;
+    options?: {
+      value: string;
       translations: AccessibilityTranslation[];
     }[];
-    multiple: boolean;
   };
 }
 
@@ -46,28 +70,71 @@ export interface AccessibilityFieldInput extends AccessibilityField {
   data: {
     key: string;
     type: InputType.url | InputType.number | InputType.email | InputType.text | InputType.tel;
-    value: string | number;
+    value?: string | number;
   };
 }
 
-export interface AccessibilityFieldBoolean extends AccessibilityField {
-  type: AccessibilityFieldType.boolean;
+export interface AccessibilityFieldTextarea extends AccessibilityField {
+  type: AccessibilityFieldType.textarea;
   data: {
     key: string;
-    value: boolean;
+    rows?: number;
+    value?: string | number;
   };
 }
 
-export interface AccessibilityFieldGroup extends AccessibilityField {
-  type: AccessibilityFieldType.group;
+export interface AccessibilityFieldRadioList extends AccessibilityField {
+  type: AccessibilityFieldType.radioList;
   data: {
     key: string;
-    value: boolean;
-    fields: AccessibilityField[];
+    value?: boolean;
+    options: {
+      value: string;
+      translations: AccessibilityTranslation[];
+    }[];
+  };
+}
+
+export interface AccessibilityFieldCheckboxList extends AccessibilityField {
+  type: AccessibilityFieldType.checkboxList;
+  data: {
+    key: string;
+    value?: string[];
+    options: {
+      value: string;
+      translations: AccessibilityTranslation[];
+    }[];
+  };
+}
+
+export interface AccessibilityFieldGroup {
+  children: (
+    | AccessibilityFieldInput
+    | AccessibilityFieldTextarea
+    | AccessibilityFieldSelect
+    | AccessibilityFieldRadioList
+    | AccessibilityFieldCheckboxList
+    | AccessibilityFieldConditional
+  )[];
+  translations?: AccessibilityTranslation[];
+}
+
+export interface AccessibilityFieldConditional extends AccessibilityField {
+  type: AccessibilityFieldType.conditional;
+  data: {
+    key: string;
+    fields: (
+      | AccessibilityFieldInput
+      | AccessibilityFieldTextarea
+      | AccessibilityFieldSelect
+      | AccessibilityFieldRadioList
+      | AccessibilityFieldCheckboxList
+    )[];
+    value?: boolean;
   };
 }
 
 export interface AccessibilityCategory {
-  children: [AccessibilityCategory | AccessibilityField];
+  children: AccessibilityFieldGroup[];
   translations: AccessibilityTranslation[];
 }

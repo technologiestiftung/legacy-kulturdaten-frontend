@@ -1,10 +1,13 @@
 import { css, SerializedStyles } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { ChangeEvent, ChangeEventHandler, RefObject, useRef, useState } from 'react';
+import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/validations';
+import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
+import { mq } from '../globals/Constants';
 import { Label, StyledLabel } from '../label';
 
 const StyledInputContainer = styled.div`
@@ -37,11 +40,13 @@ export const inputStyles = ({
   valid,
   hint,
   hideError = false,
+  variant = ComponentVariants.default,
 }: {
   pristine?: boolean;
   valid?: boolean;
   hint?: boolean;
   hideError?: boolean;
+  variant?: ComponentVariant;
 }): SerializedStyles => css`
   appearance: none;
   border: none;
@@ -79,9 +84,27 @@ export const inputStyles = ({
   `}
 
   ${valid === false && !pristine && errorStyle}
+
+  ${variant === ComponentVariants.formList &&
+  css`
+    border: none;
+    box-shadow: var(--shadow-inset);
+    border-radius: 0;
+    padding: 0.75rem;
+    flex-grow: 1;
+
+    ${mq(Breakpoint.mid)} {
+      padding: 0.75rem 1.125rem;
+    }
+  `}
 `;
 
-const StyledInput = styled.input<{ pristine: boolean; valid?: boolean; hideError?: boolean }>`
+const StyledInput = styled.input<{
+  pristine: boolean;
+  valid?: boolean;
+  hideError?: boolean;
+  variant?: ComponentVariant;
+}>`
   ${(props) => inputStyles(props)}
 `;
 
@@ -97,7 +120,7 @@ export enum InputType {
   url = 'url',
 }
 
-interface InputProps {
+export interface InputProps extends ComponentWithVariants {
   type: InputType;
   ariaLabel?: string;
   autoComplete?: string;
@@ -194,6 +217,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             <StyledInput
               {...props}
+              variant={props?.variant}
               aria-label={props?.ariaLabel}
               onChange={(e) => {
                 if (props?.type !== InputType.date || e.target.value) {

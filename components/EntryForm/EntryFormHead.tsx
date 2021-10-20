@@ -15,7 +15,6 @@ const StyledEntryFormHead = styled.div<{ isExpander?: boolean; addPadding?: bool
   position: relative;
   align-items: center;
   flex-wrap: wrap;
-  z-index: 1;
   padding: 0;
   color: inherit;
 
@@ -59,6 +58,7 @@ const StyledEntryFormHeadTitle = styled.h2<{ size: EntryFormHeadSize }>`
   margin-bottom: ${({ size }) => (size === EntryFormHeadSize.small ? '0.375rem' : '0.75rem')};
   flex-shrink: 0;
   position: relative;
+  display: inline-flex;
 `;
 
 const StyledEntryFormHeadChevron = styled.div<{ isExpanded: boolean }>`

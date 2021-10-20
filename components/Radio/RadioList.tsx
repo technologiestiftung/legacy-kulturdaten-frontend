@@ -1,9 +1,23 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { Radio } from '.';
+import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { Label } from '../label';
+import { mq } from '../globals/Constants';
+import { Breakpoint } from '../../lib/WindowService';
 
-const StyledRadioList = styled.div``;
+const StyledRadioList = styled.div<{ variant?: ComponentVariant }>`
+  ${({ variant }) =>
+    variant === ComponentVariants.formList &&
+    css`
+      padding: 0.75rem;
+
+      ${mq(Breakpoint.mid)} {
+        padding: 0.75rem 1.125rem;
+      }
+    `}
+`;
 
 const StyedRadioListLabel = styled.div`
   margin-bottom: 0.75rem;
@@ -17,7 +31,7 @@ const StyledRadioListItems = styled.ul`
 
 const StyledRadioListItem = styled.li``;
 
-export interface RadioListProps {
+export interface RadioListProps extends ComponentWithVariants {
   options: {
     label: string;
     value: string;
@@ -41,11 +55,12 @@ export const RadioList: React.FC<RadioListProps> = ({
   value,
   onChange,
   required,
+  variant,
 }: RadioListProps) => {
   const t = useT();
 
   return (
-    <StyledRadioList>
+    <StyledRadioList variant={variant}>
       {label && (
         <StyedRadioListLabel>
           <Label>

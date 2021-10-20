@@ -10,3 +10,14 @@ export type StandardLink = {
 };
 
 export type StandardLinkInternal = Exclude<StandardLink, ['type']>;
+
+export enum ComponentVariants {
+  default = 'default',
+  formList = 'formList',
+}
+
+export type ComponentVariant = ComponentVariants | string;
+
+export interface ComponentWithVariants {
+  variant?: ComponentVariant;
+}

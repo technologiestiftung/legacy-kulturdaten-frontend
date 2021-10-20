@@ -1,14 +1,25 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 import { Checkbox, CheckboxProps } from '.';
+import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { Label } from '../label';
 
-const StyledCheckboxList = styled.div`
+const StyledCheckboxList = styled.div<{ variant?: ComponentVariant }>`
   display: flex;
   flex-direction: column;
+  ${({ variant }) =>
+    variant === ComponentVariants.formList &&
+    css`
+      padding: 0.75rem;
+
+      ${mq(Breakpoint.mid)} {
+        padding: 0.75rem 1.125rem;
+      }
+    `}
 `;
 
 const StyedCheckboxListLabel = styled.div`
@@ -62,8 +73,9 @@ interface CheckboxListItemProps extends CheckboxProps {
   value: string;
 }
 
-interface CheckboxListProps {
+export interface CheckboxListProps extends ComponentWithVariants {
   checkboxes: CheckboxListItemProps[];
+  id?: string;
   label?: string;
   required?: boolean;
   value?: string[];
@@ -73,11 +85,13 @@ interface CheckboxListProps {
 
 export const CheckboxList: React.FC<CheckboxListProps> = ({
   label,
+  id,
   checkboxes,
   value,
   required,
   onChange,
   columns,
+  variant,
 }: CheckboxListProps) => {
   const t = useT();
   const [checkedState, setCheckedState] = useState<{
@@ -99,7 +113,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
   const selectRef = useRef<HTMLSelectElement>(null);
 
   return (
-    <StyledCheckboxList>
+    <StyledCheckboxList variant={variant}>
       {label && (
         <StyedCheckboxListLabel>
           <Label>
@@ -107,7 +121,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
           </Label>
         </StyedCheckboxListLabel>
       )}
-      <StyledCheckboxListItems columns={columns}>
+      <StyledCheckboxListItems columns={columns} id={id}>
         {checkboxes.map(({ id, label, value: checkboxValue }, index) => (
           <Checkbox
             id={id}
