@@ -20,6 +20,7 @@ import { Organizer } from '../../../lib/api/types/organizer';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { MediaList } from '../../MediaList';
 import { useUser } from '../../user/useUser';
+import { Info, InfoColor } from '../../info/';
 
 const maxFileSize = 10240;
 
@@ -167,6 +168,11 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
         <EntryFormHead title={`${t('logo.title')}`} />
         <FormGrid>
           {!logo && !logoFromApi && renderedLogoUploadForm}
+          <FormItem width={FormItemWidth.full}>
+            <Info color={InfoColor.white} noMaxWidth>
+              {t('media.usageInfo')}
+            </Info>
+          </FormItem>
           <FormItem width={FormItemWidth.full}>
             <MediaList
               media={logo ? [logo] : logoFromApi ? [logoFromApi] : undefined}
