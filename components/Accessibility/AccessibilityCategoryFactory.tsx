@@ -53,7 +53,7 @@ export const AccessibilityCategoryFactory: React.FC<AccessibilityCategoryContain
   dispatch,
 }: AccessibilityCategoryContainerProps) => {
   const language = useLanguage();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const renderedGroups = (
     <FormGrid>
