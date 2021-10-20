@@ -175,6 +175,7 @@ export const enDE: Localization = {
     labelEnglish: () => 'English',
     labelEnglishSimple: () => 'English: simple Language',
     description: () => 'Description',
+    teaser: () => 'Teaser',
     classification: () => 'Topic category (at least 1 main topic required)',
     type: () => 'Type(s)',
     subjects: () => 'Subject(s)',
@@ -322,6 +323,9 @@ export const enDE: Localization = {
     currentDates: () => 'Current dates',
     archivedDates: () => 'Past dates',
     listPlaceholder: () => 'There are no dates yet.',
+    delete: () => 'delete date',
+    selectedCount: ({ count }) => `${count} selected`,
+    selectedDelete: () => 'delete selected dates',
     sort: {
       startsAt: () => 'Start time',
       endsAt: () => 'End time',

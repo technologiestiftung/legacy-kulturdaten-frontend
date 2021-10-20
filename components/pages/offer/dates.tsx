@@ -6,6 +6,7 @@ import { languages } from '../../../config/locales';
 import { useApiCall } from '../../../lib/api';
 import { OfferDateCreate, offerDateCreateFactory } from '../../../lib/api/routes/offer/date/create';
 import { OfferDateUpdate, offerDateUpdateFactory } from '../../../lib/api/routes/offer/date/update';
+import { OfferDelete, offerDeleteFactory } from '../../../lib/api/routes/offer/delete';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
 import { Offer, OfferDate } from '../../../lib/api/types/offer';
@@ -211,7 +212,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     return Object.fromEntries(languageNamePairs) as { [key in Language]: string };
   }, [translations]);
 
-  const { renderedDateList } = useDateList({
+  const { renderedDateList, checkedDateIds, setCheckedDateIds } = useDateList({
     dates,
     offerTitles,
     onChange: (changedDates, changedDateId) => {
@@ -220,6 +221,50 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         ...datesNotPristineList.filter((id) => id !== changedDateId),
         changedDateId,
       ]);
+    },
+    onDelete: (dateIds) => {
+      if (
+        confirm(
+          t('general.deleting.confirm', {
+            name: t(
+              dateIds?.length > 1
+                ? 'general.deleting.date.plural'
+                : 'general.deleting.date.singular'
+            ) as string,
+          }) as string
+        )
+      ) {
+        loadingScreen(
+          t('general.deleting.loading'),
+          async () => {
+            try {
+              const resp = await call<OfferDelete>(offerDeleteFactory, {
+                id: entry.data.id,
+                entry: {
+                  relations: {
+                    dates: dateIds,
+                  },
+                },
+              });
+
+              if (resp.status === 200) {
+                setCheckedDateIds(
+                  checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
+                );
+                mutateDateList();
+                return { success: true };
+              }
+
+              return { success: false, error: t('general.serverProblem') };
+            } catch (e) {
+              console.error(e);
+
+              return { success: false, error: t('general.serverProblem') };
+            }
+          },
+          t('general.takeAFewSeconds')
+        );
+      }
     },
   });
 

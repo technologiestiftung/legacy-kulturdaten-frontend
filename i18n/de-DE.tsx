@@ -329,6 +329,9 @@ export const deDE: Localization = {
     currentDates: () => 'Aktuelle Termine',
     archivedDates: () => 'Vergangene Termine',
     listPlaceholder: () => 'Noch keine Termine vorhanden',
+    delete: () => 'Termin löschen',
+    selectedCount: ({ count }) => `${count} ausgewählt`,
+    selectedDelete: () => 'lösche ausgewählte Termine',
     sort: {
       startsAt: () => 'Startzeit',
       endsAt: () => 'Endzeit',
