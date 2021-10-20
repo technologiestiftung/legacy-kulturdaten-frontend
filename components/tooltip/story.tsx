@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import React, { useRef } from 'react';
 import { Tooltip } from '.';
+import { TooltipP } from './TooltipContent';
 
 export default {
   title: 'Tooltip',
@@ -55,7 +56,12 @@ export const TooltipStory: Story = () => {
       <div>
         <StyledH2>
           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy{' '}
-          <Tooltip>Hello, Tooltip!</Tooltip>
+          <Tooltip>
+            <TooltipP>Hello, Tooltip!</TooltipP>
+            <TooltipP>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy.
+            </TooltipP>
+          </Tooltip>
         </StyledH2>
       </div>
       <StyledTestContent>

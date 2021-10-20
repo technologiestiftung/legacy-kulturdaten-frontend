@@ -91,6 +91,7 @@ export const inputStyles = ({
     box-shadow: var(--shadow-inset);
     border-radius: 0;
     padding: 0.75rem;
+    flex-grow: 1;
 
     ${mq(Breakpoint.mid)} {
       padding: 0.75rem 1.125rem;

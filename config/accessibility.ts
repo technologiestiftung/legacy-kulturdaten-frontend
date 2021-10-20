@@ -1,5 +1,9 @@
 import { InputType } from '../components/input';
-import { AccessibilityCategory, AccessibilityFieldType } from '../lib/accessibility';
+import {
+  AccessibilityCategory,
+  AccessibilityFieldConditionType,
+  AccessibilityFieldType,
+} from '../lib/accessibility';
 import { Language } from './locale';
 
 export const locationAccessibility: AccessibilityCategory[] = [
@@ -42,6 +46,11 @@ export const locationAccessibility: AccessibilityCategory[] = [
                 attributes: {
                   language: Language.de,
                   name: 'Wurde der Ort bereits auf Barrierefreiheit geprüft?',
+                  tooltip: {
+                    content: [
+                      'Nicht die richtige Option dabei? Schreib uns unter hallo@kulturdaten.berlin!',
+                    ],
+                  },
                 },
               },
               {
@@ -282,10 +291,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'planning.serviceAddress.serviceHours',
-              type: InputType.text,
             },
             translations: [
               {
@@ -661,10 +669,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'planning.arrivalInfo.accessDirections',
-              type: InputType.text,
             },
             translations: [
               {
@@ -948,10 +955,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'planning.arrivalInfo.parkingInfo',
-              type: InputType.text,
             },
             translations: [
               {
@@ -1131,17 +1137,16 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'planning.entranceService.accessServiceInfo',
-              type: InputType.text,
             },
             translations: [
               {
                 attributes: {
                   language: Language.de,
                   name: 'Anmerkung',
-                  placeholder: 'Anmerkung, z.B. muss man Assistenzhunde vorher anmelden?',
+                  placeholder: 'z.B. muss man Assistenzhunde vorher anmelden?',
                 },
               },
               {
@@ -1884,7 +1889,10 @@ export const locationAccessibility: AccessibilityCategory[] = [
                             attributes: {
                               language: Language.de,
                               name:
-                                'fest installierte, rollstuhlgerechte Rampe [+Info: mind. 120cm Laufbreite, max. 6 Grad Neigung]',
+                                'fest installierte, rollstuhlgerechte Rampe (mind. 120cm Laufbreite, max. 6 Grad Neigung)',
+                              tooltip: {
+                                content: ['mind. 120cm Laufbreite, max. 6 Grad Neigung'],
+                              },
                             },
                           },
                           {
@@ -2106,10 +2114,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'planning.entry.entranceConstraints',
-              type: InputType.text,
             },
             translations: [
               {
@@ -2170,7 +2177,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             type: AccessibilityFieldType.input,
             data: {
               key: 'foyer.foyer.counters',
-              type: InputType.number,
+              type: InputType.text,
             },
             translations: [
               {
@@ -2598,10 +2605,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'foyer.restroom.restroomLocation',
-              type: InputType.url,
             },
             translations: [
               {
@@ -3030,10 +3036,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'foyer.toilet.restroomInfo',
-              type: InputType.text,
             },
             translations: [
               {
@@ -3458,10 +3463,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'orientation.lightInfo.lighting',
-              type: InputType.text,
             },
             translations: [
               {
@@ -3820,7 +3824,12 @@ export const locationAccessibility: AccessibilityCategory[] = [
             attributes: {
               language: Language.de,
               name:
-                'Gibt es vor Ort feste Services oder besondere Infrastrukturen, die das Kulturerlebnis unterstützen? (+Info: Eine Option nicht dabei? Meldet euch bei uns unter hallo@kulturdaten.berlin)',
+                'Gibt es vor Ort feste Services oder besondere Infrastrukturen, die das Kulturerlebnis unterstützen?',
+              tooltip: {
+                content: [
+                  'Eine Option nicht dabei? Meldet euch bei uns unter hallo@kulturdaten.berlin',
+                ],
+              },
             },
           },
           {
@@ -4264,10 +4273,9 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'offerArea.mediaAid.mediaInfo',
-              type: InputType.text,
             },
             translations: [
               {

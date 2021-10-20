@@ -13,6 +13,8 @@ const StyledFormListConditional = styled.div<{ last?: boolean; checked?: boolean
   flex-direction: column;
   border-bottom: ${({ last }) => (last ? 'none' : '1px solid var(--grey-400)')};
   background: ${({ checked }) => (checked ? 'var(--grey-200)' : 'var(--white)')};
+
+  ${({ last }) => last && 'border-radius: 0 0 calc(0.75rem - 1px) calc(0.75rem - 1px);'}
 `;
 
 const StyledFormListConditionalLabel = styled.div`

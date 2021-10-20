@@ -69,11 +69,11 @@ const StyledTooltipButton = styled.button`
   width: ${tooltipButtonHeight}px;
   padding: 1px;
   box-sizing: border-box;
-  background: var(--green-kelly);
+  background: var(--black);
+  border: none;
   border-radius: ${tooltipButtonHeight}px;
-  border: 1px solid var(--black);
   transition: box-shadow var(--transition-duration), transform var(--transition-duration);
-
+  color: var(--white);
   box-shadow: var(--shadow-light);
 
   &:hover {
@@ -101,11 +101,10 @@ const StyledTooltipOverlay = styled.div<{
   height: auto;
   position: absolute;
   display: flex;
-
-  background: var(--grey-350);
-  border: 1px solid var(--black);
+  z-index: 100;
+  background: var(--white);
   border-radius: 0.75rem;
-  box-shadow: var(--shadow-light);
+  box-shadow: 0.125rem 0.125rem 3rem -0.25rem rgba(0, 0, 0, 0.5);
   padding: 0.75rem;
 
   margin-left: calc(var(--margin-left) + 0.75rem);
@@ -123,7 +122,7 @@ const StyledTooltipOverlay = styled.div<{
   ${({ yPosition }) =>
     yPosition === YPosition.bottom
       ? css`
-          top: calc(${tooltipButtonHeight}px + 1px);
+          top: ${tooltipButtonHeight}px;
         `
       : css`
           bottom: ${tooltipButtonHeight}px;
@@ -147,22 +146,48 @@ const StyledTooltipOverlay = styled.div<{
 const StyledTooltipOverlayContent = styled.div`
   flex-grow: 1;
   padding-right: 1.375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  row-gap: calc(var(--line-height-400) / 2);
 `;
 
 const StyledTooltipOverlayClose = styled.button`
   margin: 0;
   appearance: none;
   position: absolute;
-  right: 0.75rem;
-  top: 0.75rem;
-  padding: 0;
+  right: 0.5625rem;
+  top: 0.5625rem;
+  padding: 0.375rem;
   cursor: pointer;
   border: 0 none;
   background: none;
+  line-height: 0;
 
   svg {
+    position: relative;
     height: 1.125rem;
     width: 1.125rem;
+    display: block;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: opacity var(--transition-duration-fast);
+    background: var(--grey-200);
+    border-radius: 0.375rem;
+  }
+
+  &:hover {
+    &::before {
+      opacity: 1;
+    }
   }
 `;
 
