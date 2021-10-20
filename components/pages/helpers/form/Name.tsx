@@ -207,10 +207,10 @@ export const useNameForm: EntryFormHook = (
     category,
     query,
     language: Language.de,
-    label: t('forms.nameGerman') as string,
+    label: t('forms.labelGerman') as string,
     ariaLabel: title
-      ? `${title} ${t('forms.nameGerman')}`
-      : `${t('forms.name')} ${t('forms.nameGerman')}`,
+      ? `${title} ${t('forms.labelGerman')}`
+      : `${t('forms.name')} ${t('forms.labelGerman')}`,
     loaded,
     showHint,
   });
@@ -226,10 +226,10 @@ export const useNameForm: EntryFormHook = (
     category,
     query,
     language: Language.en,
-    label: t('forms.nameEnglish') as string,
+    label: t('forms.labelEnglish') as string,
     ariaLabel: title
-      ? `${title} ${t('forms.nameEnglish')}`
-      : `${t('forms.name')} ${t('forms.nameEnglish')}`,
+      ? `${title} ${t('forms.labelEnglish')}`
+      : `${t('forms.name')} ${t('forms.labelEnglish')}`,
     loaded,
     showHint,
   });
