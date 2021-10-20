@@ -25,10 +25,11 @@ const StyledTooltip = styled.div<{
   yPosition: YPosition;
   isOpen: boolean;
 }>`
-  display: inline;
+  display: inline-block;
   overflow: visible;
   position: relative;
   height: ${tooltipButtonHeight}px;
+  margin-left: 0.75rem;
 
   &::before {
     content: '';
@@ -68,12 +69,12 @@ const StyledTooltipButton = styled.button`
   height: ${tooltipButtonHeight}px;
   width: ${tooltipButtonHeight}px;
   padding: 1px;
+  vertical-align: top;
   box-sizing: border-box;
   background: var(--green-kelly);
   border-radius: ${tooltipButtonHeight}px;
   border: 1px solid var(--black);
   transition: box-shadow var(--transition-duration), transform var(--transition-duration);
-
   box-shadow: var(--shadow-light);
 
   &:hover {
