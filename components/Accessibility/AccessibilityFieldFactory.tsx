@@ -21,11 +21,13 @@ import { useT } from '../../lib/i18n';
 interface AccessibilityFormListFieldContainerProps extends A11yStateConsumer {
   field: AccessibilityField;
   last?: boolean;
+  first?: boolean;
 }
 
 export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldContainerProps> = ({
   field,
   last,
+  first,
   state,
   dispatch,
 }: AccessibilityFormListFieldContainerProps) => {
@@ -64,8 +66,10 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       return (
         <FormListField
           last={last}
+          first={first}
           type={FormListFieldType.input}
           label={label}
+          tooltip={currentTranslation?.attributes?.tooltip}
           fieldProps={{
             value: (value as string) || '',
             id: `${uid}-input`,
@@ -81,8 +85,10 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       return (
         <FormListField
           last={last}
+          first={first}
           type={FormListFieldType.textarea}
           label={label}
+          tooltip={currentTranslation?.attributes?.tooltip}
           fieldProps={{
             value: (value as string) || '',
             id: `${uid}-textarea`,
@@ -98,8 +104,10 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       return (
         <FormListField
           last={last}
+          first={first}
           type={FormListFieldType.select}
           label={label}
+          tooltip={currentTranslation?.attributes?.tooltip}
           fieldProps={{
             value: (value as string) || 'undefined',
             id: `${uid}-select`,
@@ -129,8 +137,10 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       return (
         <FormListField
           last={last}
+          first={first}
           type={FormListFieldType.radioList}
           label={label}
+          tooltip={currentTranslation?.attributes?.tooltip}
           fieldProps={{
             id: `${uid}-radio-list`,
             name: `${uid}-radio-list`,
@@ -156,8 +166,10 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       return (
         <FormListField
           last={last}
+          first={first}
           type={FormListFieldType.checkboxList}
           label={label}
+          tooltip={currentTranslation?.attributes?.tooltip}
           fieldProps={{
             id: `${uid}-radio-list`,
             name: `${uid}-radio-list`,

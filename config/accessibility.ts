@@ -51,6 +51,14 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   language: Language.de,
                   name: 'Textarea',
                   placeholder: 'Hier ein Placeholder',
+                  tooltip: {
+                    content: [
+                      'This is a tooltip.',
+                      'This is a new line of text',
+                      'This is a new line of text',
+                      'This is a new line of text',
+                    ],
+                  },
                 },
               },
             ],

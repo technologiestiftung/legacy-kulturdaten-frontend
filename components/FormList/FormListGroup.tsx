@@ -8,7 +8,6 @@ const StyledFormListGroup = styled.div`
   flex-direction: column;
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
-  overflow: hidden;
 `;
 
 const StyledFormListGroupTitle = styled.h3`
@@ -18,6 +17,7 @@ const StyledFormListGroupTitle = styled.h3`
   border-bottom: 1px solid var(--grey-400);
   background: var(--grey-200);
   padding: 0.75rem;
+  border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
 
   ${mq(Breakpoint.mid)} {
     padding: 0.75rem 1.125rem;
@@ -50,6 +50,7 @@ export const FormListGroup: React.FC<FormListGroupProps> = ({
           <StyledFormListGroupItem key={index}>
             {React.cloneElement(child as React.ReactElement, {
               last: index === childrenArray.length - 1,
+              first: !title && index === 0,
             })}
           </StyledFormListGroupItem>
         ))}

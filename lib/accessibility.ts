@@ -10,11 +10,16 @@ export type AccessibilityFieldCondition = {
   value: AccessibilityFieldValue;
 };
 
+export type AccessibilityFieldTooltip = {
+  content: string[];
+};
+
 export type AccessibilityTranslation = {
   attributes: {
     language: Language;
     name: string;
     placeholder?: string;
+    tooltip?: AccessibilityFieldTooltip;
   };
 } & Translation;
 
@@ -111,7 +116,7 @@ export interface AccessibilityFieldGroup {
     | AccessibilityFieldCheckboxList
     | AccessibilityFieldConditional
   )[];
-  translations: AccessibilityTranslation[];
+  translations?: AccessibilityTranslation[];
 }
 
 export interface AccessibilityFieldConditional extends AccessibilityField {
