@@ -41,7 +41,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   onClick,
 }: OrganizerBandProps) => {
   const categories = useCategories();
-  const { user } = useUser();
+  const { user, mutateUserInfo } = useUser();
   const language = useLanguage();
   const locale = useLocale();
   const router = useRouter();
@@ -111,7 +111,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
                   entry: {
                     relations: {
                       translations: [
-                        { attributes: { language: Language.de, name: 'Neue Anbieter:inn' } },
+                        { attributes: { language: Language.de, name: 'Neue Anbieter:in' } },
                       ],
                     },
                   },
@@ -119,6 +119,8 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
 
                 if (resp.status === 200) {
                   const id = resp.body.data.id;
+
+                  mutateUserInfo();
 
                   router.push(
                     category.routes.list({ locale, query: { sub: 'info', organizer: id } })

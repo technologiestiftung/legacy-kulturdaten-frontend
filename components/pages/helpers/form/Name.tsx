@@ -1,18 +1,22 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { EntryFormHook } from '.';
+import { Categories } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
+import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
+import { useUser } from '../../../user/useUser';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
 interface SetNameProps {
   label: string;
+  ariaLabel?: string;
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
   setPristine: (pristine: boolean) => void;
@@ -26,6 +30,7 @@ interface SetNameProps {
 
 const Name: React.FC<SetNameProps> = ({
   label,
+  ariaLabel,
   onSubmit,
   pristine,
   setPristine,
@@ -46,6 +51,7 @@ const Name: React.FC<SetNameProps> = ({
     <form onSubmit={onSubmit}>
       <Input
         label={label}
+        ariaLabel={ariaLabel}
         type={InputType.text}
         value={value || ''}
         onChange={(e) => {
@@ -68,6 +74,7 @@ export const useName = <
   query: ParsedUrlQuery;
   language: Language;
   label: string;
+  ariaLabel?: string;
   loaded: boolean;
   showHint: boolean;
 }): {
@@ -78,10 +85,18 @@ export const useName = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, loaded, showHint } = props;
+  const { category, query, language, label, ariaLabel, loaded, showHint } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
-  const mutateList = useMutateList(category);
+  const organizerId = useOrganizerId();
+  const mutateList = useMutateList(
+    category,
+    category.name === Categories.location
+      ? [['organizer', organizerId]]
+      : category.name === Categories.offer
+      ? [['organizers', organizerId]]
+      : undefined
+  );
   const call = useApiCall();
   const entryTranslation = getTranslation<TranslationType>(
     language,
@@ -94,6 +109,7 @@ export const useName = <
   );
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
+  const { mutateUserInfo } = useUser();
 
   useEffect(() => {
     if (pristine && name !== value) {
@@ -129,6 +145,7 @@ export const useName = <
         if (resp.status === 200) {
           mutate();
           mutateList();
+          mutateUserInfo();
           setTimeout(() => setPristine(true), 500);
         }
       } catch (e) {
@@ -151,6 +168,7 @@ export const useName = <
           value,
           setValue,
           label,
+          ariaLabel,
           onSubmit,
           name,
           required,
@@ -170,7 +188,12 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
+export const useNameForm: EntryFormHook = (
+  { category, query },
+  loaded,
+  showHint,
+  title?: string
+) => {
   const t = useT();
 
   const {
@@ -185,6 +208,9 @@ export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint
     query,
     language: Language.de,
     label: t('forms.nameGerman') as string,
+    ariaLabel: title
+      ? `${title} ${t('forms.nameGerman')}`
+      : `${t('forms.name')} ${t('forms.nameGerman')}`,
     loaded,
     showHint,
   });
@@ -201,6 +227,9 @@ export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint
     query,
     language: Language.en,
     label: t('forms.nameEnglish') as string,
+    ariaLabel: title
+      ? `${title} ${t('forms.nameEnglish')}`
+      : `${t('forms.name')} ${t('forms.nameEnglish')}`,
     loaded,
     showHint,
   });
@@ -229,7 +258,7 @@ export const useNameForm: EntryFormHook = ({ category, query }, loaded, showHint
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={`${t('forms.name') as string}`} valid={valid} hint={hint} />
+        <EntryFormHead title={title || `${t('forms.name') as string}`} valid={valid} hint={hint} />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>

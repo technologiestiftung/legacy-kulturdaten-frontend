@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { StyledEntryListBody } from '.';
+import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { OrganizerList as OrganizerListCall } from '../../lib/api';
 import {
@@ -27,9 +27,6 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import { ButtonLink } from '../button/ButtonLink';
-import { ButtonColor, ButtonSize } from '../button';
-import Link from 'next/link';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 
 const StyledOrganizerList = styled.div`
@@ -303,18 +300,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={expandable}
-        actionButton={
-          <Link href={routes.createOrganizer({ locale })} passHref>
-            <ButtonLink
-              size={ButtonSize.big}
-              color={ButtonColor.white}
-              icon="Plus"
-              onClick={() => setMenuExpanded(false)}
-            >
-              {t('categories.organizer.form.create')}
-            </ButtonLink>
-          </Link>
-        }
       />
 
       <EntryListFiltersBox
@@ -481,9 +466,13 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             {cards && cards.length > 0 ? (
               cards
             ) : cards && cards.length === 0 ? (
-              <div>{t('categories.organizer.list.nothing')}</div>
+              <EntryListPlaceholder>
+                {activeFiltersCount === 0
+                  ? t('categories.organizer.list.nothing')
+                  : t('categories.organizer.list.nothingFilter')}
+              </EntryListPlaceholder>
             ) : (
-              <div>{t('categories.organizer.list.loading')}</div>
+              <EntryListPlaceholder>{t('categories.organizer.list.loading')}</EntryListPlaceholder>
             )}
           </EntryCardGrid>
         ) : (
@@ -503,11 +492,17 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               />
             ) : rows && rows.length === 0 ? (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.nothing')}</div>
+                <EntryListPlaceholder>
+                  {activeFiltersCount === 0
+                    ? t('categories.organizer.list.nothing')
+                    : t('categories.organizer.list.nothingFilter')}
+                </EntryListPlaceholder>
               </EntryCardGrid>
             ) : (
               <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <div>{t('categories.organizer.list.loading')}</div>
+                <EntryListPlaceholder>
+                  {t('categories.organizer.list.loading')}
+                </EntryListPlaceholder>
               </EntryCardGrid>
             )}
           </StyledEntryListTable>

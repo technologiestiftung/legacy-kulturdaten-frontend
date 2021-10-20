@@ -71,9 +71,13 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
           return (
             <FormItem width={FormItemWidth.half} key={index}>
               <Input
-                label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
+                label={t(languageTranslationKeys[language]) as string}
+                ariaLabel={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
                 value={currentTranslation?.attributes?.roomDescription || ''}
                 type={InputType.text}
+                placeholder={`${t('categories.offer.form.locationInfoPlaceholder')} (${t(
+                  'general.english'
+                )})`}
                 onChange={(e) => {
                   const updatedTranslation = {
                     ...currentTranslation,
@@ -199,6 +203,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             type={InputType.url}
             label={t('categories.offer.form.pricing.ticketUrl') as string}
             value={attributes?.ticketUrl || ''}
+            placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
             onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
           />
         </FormItem>
@@ -244,10 +249,10 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
   const translation = getTranslation(language, entry?.data?.relations?.translations, true);
 
   const [organizerIdFromApi, setOrganizerIdFromApi] = useState<string>();
-  const initialOrganizerId = useMemo(
-    () => (entry?.data?.relations?.organizer as Organizer['data'])?.id,
-    [entry?.data?.relations?.organizer]
-  );
+  const initialOrganizerId = useMemo(() => {
+    const organizers = entry?.data?.relations?.organizers as Organizer['data'][];
+    return organizers?.length > 0 ? organizers[0]?.id : undefined;
+  }, [entry?.data?.relations?.organizers]);
 
   const [locationIdFromApi, setLocationIdFromApi] = useState<string>();
   const initialLocationId = useMemo(
@@ -351,7 +356,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
             id: entry.data.id,
             entry: {
               relations: {
-                organizer: organizerId,
+                organizers: [organizerId],
                 location: locationId,
               },
             },
@@ -378,6 +383,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
 }: CategoryEntryPage) => {
   const renderedEntryHeader = useEntryHeader({ category, query });
   const { entry } = useEntry<Offer, OfferShow>(category, query);
+  const t = useT();
 
   const [loaded, setLoaded] = useState(false);
   const [valid, setValid] = useState(true);
@@ -421,7 +427,8 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    valid,
+    t('categories.offer.form.name') as string
   );
 
   const {
@@ -545,10 +552,10 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
+            <EntryFormContainer>{linksForm}</EntryFormContainer>
             <EntryFormContainer>{roomForm}</EntryFormContainer>
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
-            <EntryFormContainer>{linksForm}</EntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

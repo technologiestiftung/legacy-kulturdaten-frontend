@@ -203,7 +203,10 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   };
 };
 
-export const useMutateList = (category: Category): (() => void) => {
+export const useMutateList = (
+  category: Category,
+  additionalFilters?: [string, string][]
+): (() => void) => {
   const {
     getCurrentPage: getPage,
     getEntriesPerPage: getSize,
@@ -215,7 +218,9 @@ export const useMutateList = (category: Category): (() => void) => {
   const query = makeListQuery(
     getPage(category.name),
     getSize(category.name),
-    Object.entries(getFilters(category.name)),
+    additionalFilters
+      ? [...Object.entries(getFilters(category.name)), ...additionalFilters]
+      : Object.entries(getFilters(category.name)),
     { key: getSortKey(category.name), order: getOrder(category.name) }
   );
 

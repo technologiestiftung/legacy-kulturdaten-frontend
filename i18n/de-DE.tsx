@@ -14,13 +14,13 @@ export const deDE: Localization = {
         datePlaceholder: () => 'Noch keine Termine vorhanden',
       },
       data: {
-        title: () => 'Die Kulturdaten (weiter-)verwenden',
+        title: () => 'Daten (weiter-)nutzen',
         export: {
-          title: () => 'Daten Export',
+          title: () => 'Daten-Export',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Alle Daten, die du auf Kulturdaten.Berlin bereitstellst, kannst du auch wieder in
+                Alle Daten, die du auf kulturdaten.berlin bereitstellst, kannst du auch wieder in
                 Standardformaten exportieren.
               </DashboardTileTextP>
               <DashboardTileTextP>
@@ -31,27 +31,27 @@ export const deDE: Localization = {
           ),
         },
         api: {
-          title: () => 'API Nutzung für Entwickler:innen',
+          title: () => 'API-Nutzung für Entwickler:innen',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Alle Daten, die auf Kulturdaten.Berlin bereitgestellt werden, können frei verwendet
-                werden.
+                Nutze unsere API, um Zugang zu allen Angebots- und Anbieter:innen-Daten auf
+                kulturdaten.berlin zu erhalten oder um deine eigenen Daten in deine Website
+                einzubinden.
               </DashboardTileTextP>
               <DashboardTileTextP>
-                Für die programmatische Nutzung benötigst du ein API Token, welches du in deinen
-                Einstellungen erstellen kannst.
+                Für die Nutzung der Schnittstelle benötigst du nur ein API-Token.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Jetzt API Token erstellen',
+          link: () => 'API-Token erstellen',
         },
       },
       linkList: {
         help: {
           title: () => 'Hilfe',
           text: () =>
-            'Du benötigst Hilfe oder Erklärungen zu Funktionen der Plattform? Du möchtest mehr über das Projekt Kulturdaten.Berlin lesen? Hier findest du alle Infos:',
+            'Du hast Fragen oder benötigst Unterstützung bei der Nutzung der Plattform? Wir helfen dir gern:',
           links: {
             '1': {
               title: () => 'Hilfebereich',
@@ -64,9 +64,9 @@ export const deDE: Localization = {
           },
         },
         openSource: {
-          title: () => 'Open Source',
+          title: () => 'Werde kreativ',
           text: () =>
-            'Kulturdaten.Berlin wird komplett Open Source, also quelloffen, entwickelt. Du möchtest mithelfen? Hier findest du den Quellcode:',
+            'kulturdaten.berlin wird komplett Open Source, also quelloffen, entwickelt. Du hast Ideen für neue Funktionen? Hier findest du den Quellcode:',
           links: {
             '1': {
               title: () => 'Interface Code auf GitHub',
@@ -81,11 +81,11 @@ export const deDE: Localization = {
         contact: {
           title: () => 'Kontakt',
           text: () =>
-            'Du hast Fragen, Vorschläge oder Anmerkungen zur Kultudatenplattform? Melde dich gerne bei uns unter:',
+            'Du hast Fragen, Vorschläge oder Anmerkungen zur dieser Plattform? Melde dich bei uns via:',
           links: {
             '1': {
-              title: () => 'support@kulturdaten.berlin',
-              href: () => 'mailto:support@kulturdaten.berlin',
+              title: () => 'hallo@kulturdaten.berlin',
+              href: () => 'mailto:hallo@kulturdaten.berlin',
             },
           },
         },
@@ -173,10 +173,10 @@ export const deDE: Localization = {
     baseInfo: () => 'Grundlagen',
     address: () => 'Adressdaten',
     name: () => 'Bezeichnung',
-    nameGerman: () => 'Bezeichnung Deutsch',
-    nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
-    nameEnglish: () => 'Bezeichnung Englisch',
-    nameEnglishSimple: () => 'Bezeichnung Englisch: einfache Sprache',
+    nameGerman: () => 'Deutsch',
+    nameGermanSimple: () => 'Deutsch: einfache Sprache',
+    nameEnglish: () => 'Englisch',
+    nameEnglishSimple: () => 'Englisch: einfache Sprache',
     description: () => 'Beschreibung',
     descriptionExists: () => 'ausgefüllt',
     descriptionExistsNot: () => 'nicht ausgefüllt',
@@ -184,7 +184,7 @@ export const deDE: Localization = {
     descriptionGermanSimple: () => 'Deutsch: einfache Sprache',
     descriptionEnglish: () => 'Englisch',
     descriptionEnglishSimple: () => 'Englisch: einfache Sprache',
-    classification: () => 'Art und Sparte (min. 1 Art notwendig)',
+    classification: () => 'Themen-Kategorie (min. 1 Hauptkategorie notwendig)',
     type: () => 'Typ(en)',
     subjects: () => 'Sparte(n)',
     chooseTypeFirst: () => 'Bitte zunächst Typ auswählen',
@@ -217,7 +217,7 @@ export const deDE: Localization = {
     password: () => 'Passwort',
     remember: () => 'Eingeloggt bleiben',
     submit: () => 'einloggen',
-    headline: () => 'Logge dich jetzt bei Kulturdaten.Berlin ein.',
+    headline: () => 'Logge dich jetzt bei kulturdaten.berlin ein!',
     loading: () => 'Anmeldung läuft',
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
   },
@@ -230,8 +230,9 @@ export const deDE: Localization = {
     password: () => 'Passwort',
     confirmPassword: () => 'Passwort bestätigen',
     submit: () => 'registrieren',
-    headline: () => 'Registriere dich jetzt kostenlos für Kulturdaten.Berlin.',
-    subline: () => 'Die Nutzung bleibt immer kostenlos.',
+    headline: () => 'Registriere dich jetzt!',
+    subline: () =>
+      'kulturdaten.berlin ist kostenlos - und macht deine Programminfos einfacher zugänglich!',
     passwordError: () => 'Die eingebeben Passwörter stimmen nicht überein.',
     loading: () => 'Deine Registrierung läuft',
     requestError: () =>
@@ -302,10 +303,12 @@ export const deDE: Localization = {
       `Die ausgewählten Dateien sind zu groß für den Upload - ${fileSize}, max. ${maxFileSize} erlaubt. Bitte wähle weniger oder kleinere Dateien.`,
   },
   date: {
-    from: () => 'von',
+    from: () => 'Von',
     to: () => 'bis',
     time: () => 'Zeit',
-    title: () => 'Titel',
+    title: () => 'Titelzusatz',
+    titleTooltip: () =>
+      "Du kannst einzelnen Terminen dieses Angebots weitere Titelinformationen hinzufügen, z.B. 'Vernissage' oder 'Künstlerin ist anwesend'",
     status: () => 'Status',
     info: () => 'Informationen',
     checkboxAriaLabel: () => 'Termin auswählen',
@@ -322,7 +325,8 @@ export const deDE: Localization = {
     toDateInvalid: () => 'Das Enddatum muss später als das Startdatum sein.',
     toTimeInvalid: () => 'Die Endzeit muss später als die Startzeit sein.',
     titleInfoTitle: () => 'Der Titel des Termins wird mit dem Titel des Angebots kombiniert.',
-    roomInfo: () => 'Rauminformation',
+    roomInfo: () => 'Zusatzangabe zum Raum',
+    roomInfoPlaceholder: () => 'z.B. spezifischer Raum',
     additionalLinks: () => 'Weiterführende Links',
     ticketLink: () => 'Ticketlink',
     currentDates: () => 'Aktuelle Termine',
@@ -333,17 +337,17 @@ export const deDE: Localization = {
       endsAt: () => 'Endzeit',
     },
     mode: {
-      title: () => 'Modus des Angebots',
+      title: () => 'Zeitrahmen des Angebots',
       permanent: {
         label: () => 'Dauerangebot',
         description1: () =>
-          'Zeitlich nicht begrenzte Angebote, wie z.B.: Dauerausstellungen, Sammlungen',
-        description2: () => 'Dauerangebote übernehmen die Öffnungszeiten des zugewiesenen Ortes.',
+          'Angebote ohne Terminbindung, z.B. Dauerausstellung, Online-Recherche-Service',
+        description2: () =>
+          'Kulturangebote ohne Terminbegrenzung übernehmen die Öffnungszeiten des zugewiesenen Ortes.',
       },
       scheduled: {
         label: () => 'Angebot mit Terminen',
-        description1: () =>
-          'Zeitlich begrenzte Angebote, wie z.B.: Vorstellungen, Konzerte, Filmvorführungen, Kurse',
+        description1: () => 'Zeitlich begrenzte Angebote, z.B. Konzert, Führung, Kurse',
         description2: () =>
           'Angebote mit Terminen können beliebig viele Einzel- und Serientermine enthalten, mit jeweils individuellen Zeiten.',
       },
@@ -394,18 +398,21 @@ export const deDE: Localization = {
     saved: () => 'gespeichert',
     loading: () => 'lädt',
     max: () => 'max.',
-    topics: () => 'Themen',
+    topics: () => 'Stichworte (optional)',
+    topicsTooltip: () =>
+      'Mit Themen-tags kannst du noch genauer kennzeichnen, um was es in deinem Angebot geht, z.B. bestimmte Musikarten oder Kunstepochen.\nDiese Begriffe basieren auf der Gemeinsamen Normdatei (GND) der Deutschen Nationalbibliothek. Sollten Begriffe fehlen oder hier fehl am Platz sein, schreib uns unter hallo@kulturdaten.berlin!',
+    topicsPlaceholder: () => 'Tippe einfach drauflos, z.B. Bauhaus',
     takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
     serverProblem: () =>
       'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
   },
   tags: {
-    boxLabel: () => 'Bereits hinzugefügte Themen',
-    delete: () => 'Thema löschen',
-    add: () => 'Thema hinzufügen',
-    placeholder: () => 'Noch kein Thema hinzugefügt',
-    autocompleteLabel: () => 'Neues Thema hinzufügen',
-    noOptions: () => 'Kein passendes Thema gefunden',
+    boxLabel: () => 'Bereits hinzugefügte Stichworte',
+    delete: () => 'Stichwort löschen',
+    add: () => 'Stichwort hinzufügen',
+    placeholder: () => 'Noch kein Stichwort hinzugefügt',
+    autocompleteLabel: () => 'Neues Stichwort hinzufügen',
+    noOptions: () => 'Kein passendes Stichwort gefunden',
   },
   tooltip: {
     open: () => 'Tooltip anzeigen',
@@ -413,6 +420,7 @@ export const deDE: Localization = {
   },
   linkList: {
     placeholder: () => 'Noch keine Links hinzugefügt',
+    inputPlaceholder: () => 'https://example.com',
     addNew: () => 'Neuen Link hinzufügen',
     maxLinks: ({ amount }) => `maximal ${amount} Links`,
     maxReached: ({ amount }) =>
@@ -447,7 +455,8 @@ export const deDE: Localization = {
     organizer: {
       list: {
         loading: () => 'Lade Anbieter:innen',
-        nothing: () => 'Keine Anbieter:innen für die aktive Filterung gefunden',
+        nothing: () => 'Es gibt noch keine Anbieter:innen. Lege gerne eine:n an.',
+        nothingFilter: () => 'Keine Anbieter:innen für die aktive Filterung gefunden.',
       },
       filters: {
         status: {
@@ -471,7 +480,7 @@ export const deDE: Localization = {
         label: () => 'Für Veröffentlichung notwendig',
         name: () => 'Bezeichnung ausgefüllt',
         description: () => 'Beschreibung ausgefüllt',
-        categorization: () => 'Kategorisierung ausgefüllt',
+        categorization: () => 'Kategorien ausgefüllt',
         address: () => 'Adresse ausgefüllt',
       },
       title: {
@@ -521,7 +530,13 @@ export const deDE: Localization = {
     offer: {
       list: {
         loading: () => 'Lade Angebote',
-        nothing: () => 'Keine Angebote für die aktive Filterung gefunden',
+        nothing: () => 'Es gibt noch keine Angebote. Lege gerne eines an.',
+        nothingFilter: () => 'Keine Angebote für die aktive Filterung gefunden.',
+      },
+      requirements: {
+        name: () => 'Angebotstitel ausgefüllt',
+        description: () => 'Beschreibung ausgefüllt',
+        categorization: () => 'Kategorien ausgefüllt',
       },
       title: {
         plural: () => 'Angebote',
@@ -529,11 +544,11 @@ export const deDE: Localization = {
       },
       form: {
         create: () => 'Neues Angebot anlegen',
-        name: () => 'Bezeichnung',
-        nameGerman: () => 'Bezeichnung Deutsch',
-        nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
-        nameEnglish: () => 'Bezeichnung Englisch',
-        nameEnglishSimple: () => 'Bezeichnung Englisch: einfache Sprache',
+        name: () => 'Angebotstitel',
+        nameGerman: () => 'Deutsch',
+        nameGermanSimple: () => 'Deutsch: einfache Sprache',
+        nameEnglish: () => 'Englisch',
+        nameEnglishSimple: () => 'Englisch: einfache Sprache',
         description: () => 'Beschreibung',
         descriptionExists: () => 'ausgefüllt',
         descriptionExistsNot: () => 'nicht ausgefüllt',
@@ -545,20 +560,22 @@ export const deDE: Localization = {
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
-        locationInfo: () => 'Informationen zum Veranstaltungsort',
+        locationInfo: () => 'Hinweis zum Angebotsort',
+        locationInfoPlaceholder: () => 'z.B. spezifischer Raum',
         mainType: {
           title: () => 'Angebotstyp',
-          choose: () => 'Angebotstyp auswählen',
+          choose: () => 'Um was handelt es sich? z.B. Poetry Slam, Konzert, ...',
         },
         pricing: {
           title: () => 'Preise & Eintritt',
           feeLabel: () => 'Kosten',
           registrationLabel: () => 'Anmeldung',
-          hasFee: () => 'Angebot ist kostenpflichtig',
-          noFee: () => 'Angebot ist kostenfrei',
-          needsRegistration: () => 'Angebot ist anmeldepflichtig',
-          noRegistration: () => 'Angebot ist nicht anmeldepflichtig',
-          ticketUrl: () => 'Ticketlink',
+          hasFee: () => 'Kostenpflichtig',
+          noFee: () => 'Kostenfrei',
+          needsRegistration: () => 'Anmeldepflichtig',
+          noRegistration: () => 'Nicht anmeldepflichtig',
+          ticketUrl: () => 'Ticketlink / Ticketinformation',
+          ticketUrlPlaceholder: () => 'https://example.com',
         },
         organizer: {
           label: () => 'Angeboten von',
@@ -584,7 +601,8 @@ export const deDE: Localization = {
     location: {
       list: {
         loading: () => 'Lade Orte',
-        nothing: () => 'Keine Orte für die aktive Filterung gefunden',
+        nothing: () => 'Es gibt noch keine Orte. Lege gerne einen an.',
+        nothingFilter: () => 'Keine Orte für die aktive Filterung gefunden.',
       },
       title: {
         plural: () => 'Orte',

@@ -69,8 +69,8 @@ export const CreateEntryForm: React.FC<CreateEntryFormProps> = ({
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
-  const mutateList = useMutateList(category);
   const organizerId = useOrganizerId();
+  const mutateList = useMutateList(category);
 
   const [formState, setFormState] = useState<{
     name: string;

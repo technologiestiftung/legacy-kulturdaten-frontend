@@ -32,6 +32,7 @@ export const InputTextStory: Story = () => (
         placeholder="Text placeholder"
         label="Input Label"
         required
+        ariaLabel="Test aria label input"
       />
     </StyledCell>
   </StyledTestWrapper>

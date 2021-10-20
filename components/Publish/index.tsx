@@ -13,8 +13,9 @@ import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { contentGrid, mq } from '../globals/Constants';
 import { Label } from '../label';
-import { Requirement as RequirementType } from '../../config/categories';
+import { Categories, Requirement as RequirementType } from '../../config/categories';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useOrganizerId } from '../../lib/useOrganizer';
 
 const StyledPublish = styled.div`
   ${contentGrid(1)}
@@ -70,7 +71,15 @@ export const Publish: React.FC<PublishProps> = ({
 }: PublishProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
-  const mutateList = useMutateList(category);
+  const organizerId = useOrganizerId();
+  const mutateList = useMutateList(
+    category,
+    category.name === Categories.location
+      ? [['organizer', organizerId]]
+      : category.name === Categories.offer
+      ? [['organizers', organizerId]]
+      : undefined
+  );
   const loadingScreen = useLoadingScreen();
 
   const t = useT();

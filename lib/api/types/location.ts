@@ -14,16 +14,16 @@ export type LocationTranslation = {
 } & Translation;
 
 export enum LocationType {
-  virtuallocation = 'virtuallocation',
-  physicallocation = 'physicallocation',
+  virtual = 'virtual',
+  physical = 'physical',
 }
 
 export type Location = {
   data: {
-    type: LocationType;
     id?: string;
     attributes?: {
       url?: string;
+      type?: LocationType;
     } & DefaultAttributes;
     relations?: {
       translations: LocationTranslation[];

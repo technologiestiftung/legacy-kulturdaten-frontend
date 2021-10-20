@@ -115,7 +115,9 @@ const DashboardPage: NextPage = () => {
   );
 
   const randomGreetingsIndex = useRandomInt(0, selectedGreetings.length);
-  const offers = useList<OfferList, Offer>(categories.offer, 1, isUltraOrWider ? 3 : 2);
+  const offers = useList<OfferList, Offer>(categories.offer, 1, isUltraOrWider ? 3 : 2, [
+    ['organizers', organizerId],
+  ]);
 
   useEffect(() => {
     if (organizerId !== defaultOrganizerId && router?.query?.organizer !== organizerId) {
