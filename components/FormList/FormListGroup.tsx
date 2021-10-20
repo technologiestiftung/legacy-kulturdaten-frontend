@@ -8,6 +8,8 @@ const StyledFormListGroup = styled.div`
   flex-direction: column;
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
+  max-width: 100%;
+  min-width: 0;
 `;
 
 const StyledFormListGroupTitle = styled.h3`

@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import { locationAccessibility } from '../../config/accessibility';
+import { Breakpoint } from '../../lib/WindowService';
+import { EntryFormWrapper } from '../EntryForm/wrappers';
+import { mq } from '../globals/Constants';
 import { useAccessibilityStructure } from './useAccessibilityStructure';
 
 export default {
@@ -8,8 +11,9 @@ export default {
 };
 
 const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
-  display: grid;
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   row-gap: 1.5rem;
   grid-template-columns: auto;
 
@@ -22,7 +26,11 @@ const EmbeddedAccessibilityLocationStory: React.FC = () => {
     'planning.entry.stairs': true,
   });
 
-  return <StyledTestWrapper>{renderedForm}</StyledTestWrapper>;
+  return (
+    <StyledTestWrapper>
+      <EntryFormWrapper>{renderedForm}</EntryFormWrapper>
+    </StyledTestWrapper>
+  );
 };
 
 export const AccessibilityLocationStory: Story = () => <EmbeddedAccessibilityLocationStory />;

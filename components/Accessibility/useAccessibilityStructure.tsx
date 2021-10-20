@@ -2,6 +2,7 @@ import { Dispatch, Reducer, useReducer } from 'react';
 import { AccessibilityCategory, AccessibilityFieldValue } from '../../lib/accessibility';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
+import { EntryFormContainer } from '../EntryForm/wrappers';
 import { AccessibilityCategoryFactory } from './AccessibilityCategoryFactory';
 
 export interface A11yStateConsumer {
@@ -70,18 +71,19 @@ export const useAccessibilityStructure = (
   const renderedElements = structure?.map((category, index) => {
     const currentTranslation = getTranslation(language, category.translations, true);
     return (
-      <AccessibilityCategoryFactory
-        key={index}
-        title={currentTranslation?.attributes?.name}
-        fieldGroups={category.children}
-        state={state}
-        dispatch={dispatch}
-      />
+      <EntryFormContainer key={index}>
+        <AccessibilityCategoryFactory
+          title={currentTranslation?.attributes?.name}
+          fieldGroups={category.children}
+          state={state}
+          dispatch={dispatch}
+        />
+      </EntryFormContainer>
     );
   });
 
   return {
-    renderedForm: <div>{renderedElements}</div>,
+    renderedForm: <>{renderedElements}</>,
     state,
     dispatch,
   };
