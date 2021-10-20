@@ -175,6 +175,7 @@ export const enDE: Localization = {
     labelEnglish: () => 'English',
     labelEnglishSimple: () => 'English: simple Language',
     description: () => 'Description',
+    teaser: () => 'Teaser',
     classification: () => 'Topic category (at least 1 main topic required)',
     type: () => 'Type(s)',
     subjects: () => 'Subject(s)',
@@ -322,6 +323,9 @@ export const enDE: Localization = {
     currentDates: () => 'Current dates',
     archivedDates: () => 'Past dates',
     listPlaceholder: () => 'There are no dates yet.',
+    delete: () => 'delete date',
+    selectedCount: ({ count }) => `${count} selected`,
+    selectedDelete: () => 'delete selected dates',
     sort: {
       startsAt: () => 'Start time',
       endsAt: () => 'End time',
@@ -360,6 +364,35 @@ export const enDE: Localization = {
   general: {
     german: () => 'German',
     english: () => 'English',
+    deleting: {
+      confirm: ({ name }) =>
+        `Are you sure, that you want to delete ${name}? This can not be undone.`,
+      loading: () => 'Deleting',
+      organizer: {
+        singular: () => 'this Organizer',
+        plural: () => 'these Organizers',
+      },
+      offer: {
+        singular: () => 'this Offer',
+        plural: () => 'these Offers',
+      },
+      location: {
+        singular: () => 'this Location',
+        plural: () => 'these Locations',
+      },
+      media: {
+        singular: () => 'this image',
+        plural: () => 'these images',
+      },
+      logo: {
+        singular: () => 'this logo',
+        plural: () => 'these logos',
+      },
+      date: {
+        singular: () => 'this date',
+        plural: () => 'these dates',
+      },
+    },
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',

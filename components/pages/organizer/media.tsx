@@ -21,6 +21,8 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { MediaList } from '../../MediaList';
 import { useUser } from '../../user/useUser';
 import { Info, InfoColor } from '../../info/';
+import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
 
 const maxFileSize = 10240;
 
@@ -116,6 +118,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const t = useT();
+  const loadingScreen = useLoadingScreen();
 
   const initialLogo = useMemo<Media['data']>(
     () => entry?.data?.relations?.logo,
@@ -181,29 +184,35 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                 setPristine(false);
               }}
               setValid={(valid) => setValid(valid)}
-              onDelete={async () => {
-                if (window.confirm(t('logo.deleteConfirm') as string)) {
-                  setLogo(null);
+              onDelete={async (mediaItemId) => {
+                if (
+                  confirm(
+                    t('general.deleting.confirm', {
+                      name: t('general.deleting.logo.singular') as string,
+                    }) as string
+                  )
+                ) {
+                  loadingScreen(
+                    t('general.deleting.loading'),
+                    async () => {
+                      try {
+                        const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                          id: mediaItemId,
+                        });
 
-                  try {
-                    const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                      id: entry.data.id,
-                      entry: {
-                        relations: {
-                          logo: undefined,
-                        },
-                      },
-                    });
+                        if (resp.status === 200) {
+                          return { success: true };
+                        }
 
-                    if (resp.status === 200) {
-                      setLogo(resp.body.data.data.relations.logo);
-                      setLogoFromApi(resp.body.data.data.relations.logo);
-                      mutate(resp.body.data);
-                      setPristine(true);
-                    }
-                  } catch (e) {
-                    console.error(e);
-                  }
+                        return { success: false, error: t('general.serverProblem') };
+                      } catch (e) {
+                        console.error(e);
+
+                        return { success: false, error: t('general.serverProblem') };
+                      }
+                    },
+                    t('general.takeAFewSeconds')
+                  );
                 }
               }}
             />

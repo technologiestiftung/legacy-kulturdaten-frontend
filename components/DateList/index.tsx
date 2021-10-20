@@ -5,6 +5,7 @@ import { OfferDate } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Button, ButtonColor, ButtonVariant } from '../button';
 import { Checkbox } from '../checkbox';
 import { mq } from '../globals/Constants';
 import { DateListItem } from './DateListItem';
@@ -72,6 +73,29 @@ const StyledDateListPlaceholder = styled.div`
   grid-column: 1 / -1;
 `;
 
+const StyledDateListSelect = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.75rem;
+  row-gap: 0.75rem;
+  padding: 0.75rem;
+`;
+
+const StyledDateListSelectCount = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  padding: 0.375rem 0;
+`;
+
+const StyledDateListSelectActions = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.75rem;
+  row-gap: 0.75rem;
+`;
+
+const StyledDateListSelectAction = styled.div``;
+
 interface DateListProps {
   dates: OfferDate['data'][];
   editable?: boolean;
@@ -79,6 +103,7 @@ interface DateListProps {
   checkedDateIds?: string[];
   setCheckedDateIds?: Dispatch<SetStateAction<string[]>>;
   offerTitles: { [key in Language]: string };
+  onDelete?: (dateIds: OfferDate['data']['id'][]) => void;
 }
 
 const DateList: React.FC<DateListProps> = ({
@@ -88,6 +113,7 @@ const DateList: React.FC<DateListProps> = ({
   setCheckedDateIds,
   editable = true,
   offerTitles,
+  onDelete,
 }: DateListProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const rowCount = dates?.length;
@@ -110,6 +136,25 @@ const DateList: React.FC<DateListProps> = ({
 
   return (
     <StyledDateList>
+      {editable && (
+        <StyledDateListSelect>
+          <StyledDateListSelectCount>
+            {t('date.selectedCount', { count: checkedDateIds.length })}
+          </StyledDateListSelectCount>
+          <StyledDateListSelectActions>
+            <StyledDateListSelectAction>
+              <Button
+                onClick={() => onDelete(checkedDateIds.map((id) => parseInt(id, 10)))}
+                disabled={checkedDateIds.length === 0}
+                variant={ButtonVariant.minimal}
+                color={ButtonColor.white}
+              >
+                {t('date.selectedDelete')}
+              </Button>
+            </StyledDateListSelectAction>
+          </StyledDateListSelectActions>
+        </StyledDateListSelect>
+      )}
       <StyledDateListBody role="table">
         {isWideOrWider ? (
           <>
@@ -196,6 +241,7 @@ const DateList: React.FC<DateListProps> = ({
                 editable={editable}
                 lastRow={index === rowCount - 1}
                 offerTitles={offerTitles}
+                onDelete={editable && onDelete ? (dateId) => onDelete([dateId]) : undefined}
               />
             );
           })
@@ -212,6 +258,7 @@ export const useDateList = (
 ): {
   renderedDateList: React.ReactElement<DateListProps>;
   checkedDateIds: string[];
+  setCheckedDateIds: (checkedDateIds: string[]) => void;
 } => {
   const [checkedDateIds, setCheckedDateIds] = useState<string[]>([]);
 
@@ -220,5 +267,6 @@ export const useDateList = (
       <DateList checkedDateIds={checkedDateIds} setCheckedDateIds={setCheckedDateIds} {...props} />
     ),
     checkedDateIds,
+    setCheckedDateIds,
   };
 };

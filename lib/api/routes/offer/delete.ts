@@ -1,4 +1,5 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { Offer } from '../../types/offer';
 
 /**
  * /auth/info
@@ -12,7 +13,7 @@ export interface OfferDelete extends ApiCall {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: null;
+    body: Offer['data'];
   };
   response: {
     status: 200;
@@ -27,7 +28,7 @@ export interface OfferDelete extends ApiCall {
 
 export const offerDeleteFactory = (
   token: OfferDelete['request']['headers']['Authorization'],
-  query: { id: string }
+  query: { id: string; entry: Offer['data'] }
 ): OfferDelete => ({
   request: {
     route: apiRoutes.offerDelete({ id: query.id }),
@@ -36,7 +37,7 @@ export const offerDeleteFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: null,
+    body: query?.entry,
   },
   response: {
     status: 200,

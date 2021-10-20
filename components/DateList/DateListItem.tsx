@@ -9,6 +9,7 @@ import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Button, ButtonColor } from '../button';
 import { EntryFormHead, EntryFormHeadSize } from '../EntryForm/EntryFormHead';
 import { mq } from '../globals/Constants';
 import { Info, InfoColor } from '../info';
@@ -47,6 +48,7 @@ interface DateListItemProps {
   checked: boolean;
   setChecked: (checked: boolean) => void;
   offerTitles: { [key in Language]: string };
+  onDelete?: (dateId: OfferDate['data']['id']) => void;
 }
 
 export const DateListItem: React.FC<DateListItemProps> = ({
@@ -57,6 +59,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
   setChecked,
   editable,
   offerTitles,
+  onDelete,
 }: DateListItemProps) => {
   const uid = usePseudoUID();
   const language = useLanguage();
@@ -431,6 +434,17 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               </FormItem>
             </FormGrid>
           </StyledDateListItemContainer>
+          {editable && onDelete && (
+            <StyledDateListItemContainer columns={1}>
+              <FormGrid>
+                <FormItem width={FormItemWidth.full}>
+                  <Button color={ButtonColor.white} onClick={() => onDelete(date.id)}>
+                    {t('date.delete')}
+                  </Button>
+                </FormItem>
+              </FormGrid>
+            </StyledDateListItemContainer>
+          )}
         </StyledDateListItemBody>
       }
       editable={editable}

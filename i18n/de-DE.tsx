@@ -329,6 +329,9 @@ export const deDE: Localization = {
     currentDates: () => 'Aktuelle Termine',
     archivedDates: () => 'Vergangene Termine',
     listPlaceholder: () => 'Noch keine Termine vorhanden',
+    delete: () => 'Termin löschen',
+    selectedCount: ({ count }) => `${count} ausgewählt`,
+    selectedDelete: () => 'lösche ausgewählte Termine',
     sort: {
       startsAt: () => 'Startzeit',
       endsAt: () => 'Endzeit',
@@ -367,6 +370,35 @@ export const deDE: Localization = {
   general: {
     german: () => 'Deutsch',
     english: () => 'Englisch',
+    deleting: {
+      confirm: ({ name }) =>
+        `Bist du sicher, dass du ${name} löschen möchtest? Dies kann nicht rückgängig gemacht werden.`,
+      loading: () => 'Wird gelöscht',
+      organizer: {
+        singular: () => 'diese Anbieter:in',
+        plural: () => 'diese Anbieter:innen',
+      },
+      offer: {
+        singular: () => 'dieses Angebot',
+        plural: () => 'diese Angebote',
+      },
+      location: {
+        singular: () => 'diesen Ort',
+        plural: () => 'diese Orte',
+      },
+      media: {
+        singular: () => 'dieses Bild',
+        plural: () => 'diese Bilder',
+      },
+      logo: {
+        singular: () => 'dieses Logo',
+        plural: () => 'diese Logos',
+      },
+      date: {
+        singular: () => 'diesen Termin',
+        plural: () => 'diese Termine',
+      },
+    },
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
     created: () => 'erstellt',
