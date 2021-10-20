@@ -621,6 +621,11 @@ export const deDE: Localization = {
         tel: () => 'Telefon',
         district: () => 'Bezirk',
         url: () => 'URL des virtuellen Ortes',
+        rent: {
+          title: () => 'Vermietung',
+          url: () => 'Vermietungslinks / Vermietungsinformation',
+          urlPlaceholder: () => 'https://example.com',
+        },
         type: {
           title: () => 'Typ des Ortes',
           physicalLabel: () => 'Physischer Ort',

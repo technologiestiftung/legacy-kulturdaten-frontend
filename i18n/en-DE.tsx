@@ -614,6 +614,11 @@ export const enDE: Localization = {
         tel: () => 'Phone',
         district: () => 'District',
         url: () => 'URL of the Virtual Location',
+        rent: {
+          title: () => 'Rent',
+          url: () => 'Rent link / Rent information',
+          urlPlaceholder: () => 'https://example.com',
+        },
         type: {
           title: () => 'Type of the Location',
           physicalLabel: () => 'Physical Location',

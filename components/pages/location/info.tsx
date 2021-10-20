@@ -111,6 +111,71 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   };
 };
 
+const useRentForm: EntryFormHook = ({ category, query }) => {
+  const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
+  const [url, setUrl] = useState<string>();
+  const call = useApiCall();
+  const t = useT();
+
+  const [urlFromApi, setUrlFromApi] = useState<string>();
+
+  const initialUrl = useMemo(() => entry?.data?.attributes?.url, [entry?.data?.attributes?.url]);
+
+  const pristine = useMemo(() => url === urlFromApi, [url, urlFromApi]);
+
+  useEffect(() => {
+    if (initialUrl !== urlFromApi) {
+      setUrlFromApi(initialUrl);
+      setUrl(initialUrl);
+    }
+  }, [initialUrl, urlFromApi]);
+
+  const renderedForm = (
+    <div>
+      <EntryFormHead title={t('categories.location.form.rent.title') as string} />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          <Input
+            label={t('categories.location.form.rent.url') as string}
+            placeholder={t('categories.location.form.rent.urlPlaceholder') as string}
+            type={InputType.url}
+            value={url || ''}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+        </FormItem>
+      </FormGrid>
+    </div>
+  );
+
+  return {
+    renderedForm,
+    submit: async () => {
+      if (!pristine) {
+        try {
+          const resp = await call<LocationUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              attributes: {
+                url,
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+    reset: () => undefined,
+    valid: true,
+    hint: false,
+  };
+};
+
 const useUrlForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
   const [url, setUrl] = useState<string>();
@@ -373,37 +438,84 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     false
   );
 
+  const {
+    renderedForm: rentForm,
+    submit: rentSubmit,
+    pristine: rentPristine,
+    valid: rentValid,
+    hint: rentHint,
+  } = useRentForm(
+    {
+      category,
+      query,
+    },
+    loaded,
+    valid,
+    false
+  );
+
   useEffect(() => {
     setValid(
-      ![nameValid, addressValid, descriptionValid, typeValid, urlValid, openingHoursValid].includes(
-        false
-      )
+      ![
+        nameValid,
+        descriptionValid,
+        typeValid,
+        LocationType.physical ? addressValid : true,
+        LocationType.physical ? rentValid : true,
+        LocationType.virtual ? openingHoursValid : true,
+        LocationType.virtual ? urlValid : true,
+      ].includes(false)
     );
-  }, [addressValid, descriptionValid, nameValid, typeValid, urlValid, openingHoursValid]);
+  }, [
+    addressValid,
+    descriptionValid,
+    nameValid,
+    typeValid,
+    urlValid,
+    openingHoursValid,
+    rentValid,
+  ]);
 
   const pristine = useMemo(
     () =>
       ![
         namePristine,
         descriptionPristine,
-        addressPristine,
+
         typePristine,
-        urlPristine,
-        openingHoursPristine,
+        LocationType.physical ? addressPristine : true,
+        LocationType.physical ? rentPristine : true,
+        LocationType.virtual ? openingHoursPristine : true,
+        LocationType.virtual ? urlPristine : true,
       ].includes(false),
     [
       namePristine,
       descriptionPristine,
-      addressPristine,
       typePristine,
-      urlPristine,
+      addressPristine,
+      rentPristine,
       openingHoursPristine,
+      urlPristine,
     ]
   );
 
   const hint = useMemo(
-    () => nameHint || descriptionHint || addressHint || typeHint || urlHint || openingHoursHint,
-    [nameHint, descriptionHint, addressHint, typeHint, urlHint, openingHoursHint]
+    () =>
+      nameHint ||
+      descriptionHint ||
+      typeHint ||
+      (typeValue === LocationType.virtual && urlHint) ||
+      (typeValue === LocationType.physical && (openingHoursHint || addressHint || rentHint)),
+    [
+      nameHint,
+      descriptionHint,
+      typeHint,
+      typeValue,
+      urlHint,
+      openingHoursHint,
+      addressHint,
+      rentHint,
+    ]
   );
 
   return (
@@ -420,6 +532,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               if (typeValue === LocationType.physical) {
                 addressSubmit();
                 openingHoursSubmit();
+                rentSubmit();
               } else {
                 urlSubmit();
               }
@@ -436,6 +549,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               <>
                 <EntryFormContainer>{addressForm}</EntryFormContainer>
                 <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
+                <EntryFormContainer>{rentForm}</EntryFormContainer>
               </>
             ) : (
               <EntryFormContainer>{urlForm}</EntryFormContainer>
