@@ -18,7 +18,7 @@ const StyledFormListField = styled.div<{ last?: boolean }>`
   display: grid;
   grid-template-columns: 100%;
   border-bottom: ${({ last }) => (last ? 'none' : '1px solid var(--grey-400)')};
-
+  min-width: 0;
   ${({ last }) => last && 'border-radius: 0 0 calc(0.75rem - 1px) calc(0.75rem - 1px);'}
 
   ${mq(Breakpoint.mid)} {
@@ -28,13 +28,14 @@ const StyledFormListField = styled.div<{ last?: boolean }>`
 
 const StyledFormListFieldLabel = styled.label`
   position: relative;
-  display: inline-flex;
+  display: flex;
   column-gap: 0.75rem;
   justify-content: flex-start;
   border-bottom: 1px solid var(--grey-200);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0.75rem;
+  min-width: 0;
 
   ${mq(Breakpoint.mid)} {
     padding: 0.75rem 1.125rem;
@@ -48,6 +49,7 @@ const StyledFormListFieldField = styled.div<{ last?: boolean; first?: boolean }>
   flex-direction: column;
   align-items: stretch;
   justify-content: stretch;
+  min-width: 0;
 
   > * {
     flex-grow: 1;
