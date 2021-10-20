@@ -146,14 +146,18 @@ const StyledTooltipOverlay = styled.div<{
 const StyledTooltipOverlayContent = styled.div`
   flex-grow: 1;
   padding-right: 1.375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  row-gap: calc(var(--line-height-400) / 2);
 `;
 
 const StyledTooltipOverlayClose = styled.button`
   margin: 0;
   appearance: none;
   position: absolute;
-  right: 0.375rem;
-  top: 0.375rem;
+  right: 0.5625rem;
+  top: 0.5625rem;
   padding: 0.375rem;
   cursor: pointer;
   border: 0 none;
