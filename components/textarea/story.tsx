@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
+import { useState } from 'react';
 import { Textarea } from '.';
 
 export default {
@@ -21,15 +22,21 @@ const StyledCell = styled.div`
   width: 100%;
 `;
 
-export const TextareaDefaultStory: Story = () => (
-  <StyledTestWrapper>
-    <StyledCell>
-      <Textarea
-        id="test"
-        rows={8}
-        placeholder="Please enter some text"
-        label="An example textarea"
-      />
-    </StyledCell>
-  </StyledTestWrapper>
-);
+export const TextareaDefaultStory: Story = () => {
+  const [value, setValue] = useState('');
+
+  return (
+    <StyledTestWrapper>
+      <StyledCell>
+        <Textarea
+          id="test"
+          rows={8}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Please enter some text"
+          label="An example textarea"
+        />
+      </StyledCell>
+    </StyledTestWrapper>
+  );
+};
