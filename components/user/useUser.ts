@@ -19,7 +19,7 @@ import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { routes, useActiveRoute, useLocale } from '../../lib/routing';
 import { User } from '../../lib/api/types/user';
 import { internalRoutes } from '../../config/routes';
-import { useOrganizerId, useSetOrganizerId } from '../../lib/useOrganizer';
+import { useOrganizerId, useSetOrganizerId, defaultOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useT } from '../../lib/i18n';
 
@@ -120,6 +120,8 @@ export const useUser = (): WrappedUser => {
 
           if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
             setActiveOrganizerId(userOrganizerIds[0]);
+          } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
+            setActiveOrganizerId(defaultOrganizerId);
           }
         }
       } else {
