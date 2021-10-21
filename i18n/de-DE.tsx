@@ -66,6 +66,41 @@ export const deDE: Localization = {
         link: () => 'Angebot anschauen',
         datePlaceholder: () => 'Noch keine Termine vorhanden',
       },
+      organizer: {
+        title: () => 'Erwecke deine Anbieter:in zum Leben',
+        team: {
+          title: () => 'Teammitglieder einladen',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Du kannst anderen Nutzer:innen Zugriff auf deine Anbieter:innen geben. Diese können
+                dann die Daten der Anbieter:in einsehen und bearbeiten sowie Angebote und Orte für
+                sie anlegen.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Um den Zugriff zu erteilen, kannst du auf der Teamseite Nutzer:innen einladen.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Jetzt dein Team verwalten',
+        },
+        profile: {
+          title: () => 'Das Profil ausfüllen',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Je mehr Informationen du in das Profil deiner Anbieter:in einträgst, desto
+                aussagekräftiger und auffindbarer werden deine Daten.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Auf der Profilseite kannst du allgemeine Informationen angeben, deine Anbieter:in
+                kategorisieren und Bilder hochladen.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Jetzt das Profil ausfüllen',
+        },
+      },
       data: {
         title: () => 'Daten (weiter-)nutzen',
         export: {
