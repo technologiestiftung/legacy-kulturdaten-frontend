@@ -116,6 +116,7 @@ export const deDE: Localization = {
     to: () => 'bis',
     add: () => 'Neue Öffnungszeit hinzufügen',
     remove: () => 'entfernen',
+    note: () => 'Anmerkung zu Öffnungszeiten',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Veröffentliche ${categoryName}`,

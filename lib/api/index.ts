@@ -96,10 +96,10 @@ export const apiRoutes: {
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   locationShow: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizers`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openinghours,organizers`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${
