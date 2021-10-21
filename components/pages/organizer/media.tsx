@@ -198,6 +198,11 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                       try {
                         const resp = await call<MediaDelete>(mediaDeleteFactory, {
                           id: mediaItemId,
+                          entry: {
+                            attributes: {
+                              id: String(mediaItemId),
+                            },
+                          },
                         });
 
                         if (resp.status === 200) {

@@ -203,6 +203,11 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
                       try {
                         const resp = await call<MediaDelete>(mediaDeleteFactory, {
                           id: mediaItemId,
+                          entry: {
+                            attributes: {
+                              id: mediaItemId,
+                            },
+                          },
                         });
 
                         if (resp.status === 200) {
