@@ -48,8 +48,8 @@ export const MouseTooltip: React.FC<MouseTooltipProps> = ({
     };
 
     const mouseMoveHandler = (e: MouseEvent) => {
-      setMouseX(e.pageX);
-      setMouseY(e.pageY);
+      setMouseX(e.pageX - window.scrollX);
+      setMouseY(e.pageY - window.scrollY);
     };
 
     // Prevent rendering on touch events
