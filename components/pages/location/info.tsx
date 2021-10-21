@@ -201,6 +201,7 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
         <FormItem width={FormItemWidth.full}>
           <Input
             label={t('categories.location.form.url') as string}
+            placeholder={t('forms.urlPlaceholder') as string}
             type={InputType.url}
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
@@ -434,7 +435,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
+    false,
     false
   );
 
@@ -460,10 +461,10 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
         nameValid,
         descriptionValid,
         typeValid,
+        urlValid,
         LocationType.physical ? addressValid : true,
         LocationType.physical ? rentValid : true,
         LocationType.virtual ? openingHoursValid : true,
-        LocationType.virtual ? urlValid : true,
       ].includes(false)
     );
   }, [
@@ -481,12 +482,11 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       ![
         namePristine,
         descriptionPristine,
-
         typePristine,
+        urlPristine,
         LocationType.physical ? addressPristine : true,
         LocationType.physical ? rentPristine : true,
         LocationType.virtual ? openingHoursPristine : true,
-        LocationType.virtual ? urlPristine : true,
       ].includes(false),
     [
       namePristine,
@@ -528,13 +528,13 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               typeSubmit();
               nameSubmit();
               descriptionSubmit();
+              urlSubmit();
 
               if (typeValue === LocationType.physical) {
                 addressSubmit();
                 openingHoursSubmit();
                 rentSubmit();
               } else {
-                urlSubmit();
               }
             }}
             date={formattedDate}
@@ -548,6 +548,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
             {typeValue === LocationType.physical ? (
               <>
                 <EntryFormContainer>{addressForm}</EntryFormContainer>
+                <EntryFormContainer>{urlForm}</EntryFormContainer>
                 <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
                 <EntryFormContainer>{rentForm}</EntryFormContainer>
               </>

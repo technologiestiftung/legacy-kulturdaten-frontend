@@ -648,7 +648,7 @@ export const enDE: Localization = {
         contact: () => 'Contact data',
         tel: () => 'Phone',
         district: () => 'District',
-        url: () => 'URL of the Virtual Location',
+        url: () => 'URL of the Location',
         rent: {
           title: () => 'Rent',
           url: () => 'Rent link / Rent information',

@@ -62,6 +62,7 @@ export type OfferTranslation = {
     name?: string;
     description?: string;
     roomDescription?: string;
+    teaser?: string;
   };
 } & Translation;
 
