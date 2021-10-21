@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { ArrowRight, ArrowUpRight } from 'react-feather';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
 
-const StyledDashboardTileLink = styled.a<{ active?: boolean }>`
+const StyledDashboardTileLink = styled.a<{ disabled?: boolean }>`
   color: inherit;
   text-decoration: none;
   display: flex;
@@ -45,15 +46,27 @@ const StyledDashboardTileLink = styled.a<{ active?: boolean }>`
       height: 1.5rem;
     }
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      pointer-events: none;
+      opacity: 0.3;
+    `}
 `;
 
-const InternalDashboardTileLink: React.FC<StandardLinkInternal> = ({
+interface InternalDashboardTileLinkProps extends StandardLinkInternal {
+  disabled?: boolean;
+}
+
+const InternalDashboardTileLink: React.FC<InternalDashboardTileLinkProps> = ({
   title,
   href,
-}: StandardLinkInternal) => {
+  disabled,
+}: InternalDashboardTileLinkProps) => {
   return (
     <Link href={href} passHref>
-      <StyledDashboardTileLink title={title}>
+      <StyledDashboardTileLink title={title} disabled={disabled}>
         <span>{title}</span>
         <ArrowRight />
       </StyledDashboardTileLink>
@@ -61,7 +74,13 @@ const InternalDashboardTileLink: React.FC<StandardLinkInternal> = ({
   );
 };
 
-export const DashboardTileLink: React.FC<StandardLink> = (props: StandardLink) => {
+interface DashboardTileLinkProps extends StandardLink {
+  disabled?: boolean;
+}
+
+export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
+  props: DashboardTileLinkProps
+) => {
   const { type = StandardLinkType.internal } = props;
 
   switch (type) {

@@ -139,16 +139,18 @@ const DashboardPage: NextPage = () => {
               ))}
             </DashboardRow>
             <DashboardRow title={t('dashboard.info.data.title') as string}>
-              <DashboardTile title={t('dashboard.info.data.export.title') as string}>
+              <DashboardTile title={t('dashboard.info.data.export.title') as string} digit={1}>
                 {t('dashboard.info.data.export.content')}
               </DashboardTile>
               <DashboardTile
+                digit={2}
                 title={t('dashboard.info.data.api.title') as string}
                 link={
                   <DashboardTileLink
                     href={routes.userSettings({ locale })}
                     type={StandardLinkType.internal}
                     title={t('dashboard.info.data.api.link') as string}
+                    disabled
                   />
                 }
               >

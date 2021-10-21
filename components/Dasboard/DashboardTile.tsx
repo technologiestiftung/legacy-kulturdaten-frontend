@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { StandardLink } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
@@ -8,8 +9,6 @@ const StyledDashboardTile = styled.div<{ gridColumn?: string }>`
   border-radius: 0.75rem;
   grid-column: 1 / -1;
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
 
   ${mq(Breakpoint.mid)} {
     border-radius: 1.5rem;
@@ -19,7 +18,8 @@ const StyledDashboardTile = styled.div<{ gridColumn?: string }>`
 
 const StyledDashboardTileContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: stretch;
   border-radius: 0.75rem;
   overflow: hidden;
   flex-grow: 1;
@@ -29,8 +29,26 @@ const StyledDashboardTileContainer = styled.div`
   }
 `;
 
-const StyledDashboardTileTitle = styled.h3`
+const StyledDashboardTileDigit = styled.div`
+  flex-grow: 0;
+  flex-shrink: 0;
   background: var(--grey-200);
+  font-size: 3rem;
+  line-height: 3rem;
+  font-weight: 700;
+  padding: 1.125rem 0.75rem;
+  box-sizing: content-box;
+  min-width: 3rem;
+  text-align: center;
+`;
+
+const StyledDashboardTileContainerChildren = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+`;
+
+const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: 700;
@@ -45,6 +63,27 @@ const StyledDashboardTileTitle = styled.h3`
     line-height: var(--line-height-500);
     padding: 1.125rem 1.5rem;
   }
+
+  ${({ hasDigit }) =>
+    hasDigit
+      ? css`
+          background: var(--white);
+          font-size: var(--font-size-600);
+          line-height: var(--line-height-600);
+          white-space: inherit;
+          overflow: inherit;
+          text-overflow: inherit;
+          padding: 0.75rem 1.125rem 0;
+
+          ${mq(Breakpoint.mid)} {
+            font-size: var(--font-size-600);
+            line-height: var(--line-height-600);
+            padding: 1.125rem 1.5rem 0;
+          }
+        `
+      : css`
+          background: var(--grey-200);
+        `}
 `;
 
 const StyledDashboardTileContent = styled.div`
@@ -80,6 +119,7 @@ interface DashboardTileProps {
   children: React.ReactNode;
   link?: React.ReactElement<StandardLink>;
   gridColumn?: string;
+  digit?: number;
 }
 
 export const DashboardTile: React.FC<DashboardTileProps> = ({
@@ -87,13 +127,19 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
   children,
   link,
   gridColumn,
+  digit,
 }: DashboardTileProps) => {
   return (
     <StyledDashboardTile gridColumn={gridColumn}>
       <StyledDashboardTileContainer>
-        <StyledDashboardTileTitle>{title}</StyledDashboardTileTitle>
-        <StyledDashboardTileContent>{children}</StyledDashboardTileContent>
-        {link}
+        {digit && <StyledDashboardTileDigit>{digit}</StyledDashboardTileDigit>}
+        <StyledDashboardTileContainerChildren>
+          <StyledDashboardTileTitle hasDigit={typeof digit !== 'undefined'}>
+            {title}
+          </StyledDashboardTileTitle>
+          <StyledDashboardTileContent>{children}</StyledDashboardTileContent>
+          {link}
+        </StyledDashboardTileContainerChildren>
       </StyledDashboardTileContainer>
     </StyledDashboardTile>
   );
