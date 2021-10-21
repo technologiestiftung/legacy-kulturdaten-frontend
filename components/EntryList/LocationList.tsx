@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { LocationList as LocationListCall, useApiCall } from '../../lib/api';
-import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
-import { Order, useList, useMutateList } from '../../lib/categories';
+import { LocationList as LocationListCall } from '../../lib/api';
+import { Location, LocationTranslation } from '../../lib/api/types/location';
+import { Order, useCreateLocation, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -25,8 +25,6 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
-import { Language } from '../../config/locale';
-import { LocationCreate } from '../../lib/api/routes/location/create';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 
 const StyledOrganizerList = styled.div`
@@ -89,7 +87,6 @@ export const LocationList: React.FC<LocationListProps> = ({
     setLastEntryId,
   } = useContext(EntryListContext);
   const pseudoUID = usePseudoUID();
-  const call = useApiCall();
   const listName = Categories.location;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
@@ -106,8 +103,8 @@ export const LocationList: React.FC<LocationListProps> = ({
     [getDispatchFilters, listName]
   );
   const loadingScreen = useLoadingScreen();
+  const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
-  const mutateList = useMutateList(categories.location, [['organizer', organizerId]]);
 
   const list = useList<LocationListCall, Location>(
     categories.location,
@@ -283,45 +280,9 @@ export const LocationList: React.FC<LocationListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              const category = categories.location;
-
               loadingScreen(
                 t('categories.location.form.create'),
-                async () => {
-                  try {
-                    const resp = await call<LocationCreate>(category.api.create.factory, {
-                      entry: {
-                        attributes: {
-                          type: LocationType.physical,
-                        },
-                        relations: {
-                          translations: [
-                            { attributes: { language: Language.de, name: 'Neuer Ort' } },
-                          ],
-                          organizer: organizerId,
-                        },
-                      },
-                    });
-
-                    if (resp.status === 200) {
-                      const id = resp.body.data.id;
-
-                      router.push(
-                        category.routes.list({
-                          locale,
-                          query: { id, sub: 'info', organizer: organizerId },
-                        })
-                      );
-                      mutateList();
-                      setMenuExpanded(false);
-
-                      return { success: true };
-                    }
-                  } catch (e) {
-                    console.error(e);
-                    return { success: false, error: t('general.serverProblem') };
-                  }
-                },
+                async () => await createLocation(),
                 t('general.takeAFewSeconds')
               );
             }}

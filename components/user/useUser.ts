@@ -22,6 +22,8 @@ import { internalRoutes } from '../../config/routes';
 import { useOrganizerId, useSetOrganizerId, defaultOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useT } from '../../lib/i18n';
+import { Organizer } from '../../lib/api/types/organizer';
+import { RoleName } from '../../lib/api/types/role';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -181,5 +183,37 @@ export const useUser = (): WrappedUser => {
       );
     },
     mutateUserInfo,
+  };
+};
+
+export const useUserOrganizerLists = (): {
+  all: Organizer['data'][];
+  owner: Organizer['data'][];
+  contributor: Organizer['data'][];
+} => {
+  const { user } = useUser();
+
+  const organizerOwnerList = useMemo(
+    () =>
+      user?.relations?.organizers
+        ?.filter((role) => role.attributes?.role === RoleName.owner)
+        ?.map((role) => role.relations?.organizer as Organizer['data']) || [],
+    [user?.relations?.organizers]
+  );
+
+  const organizerContributorList = useMemo(
+    () =>
+      user?.relations?.organizers
+        ?.filter((role) => role.attributes?.role !== RoleName.owner)
+        ?.map((role) => role.relations?.organizer as Organizer['data']) || [],
+    [user?.relations?.organizers]
+  );
+
+  return {
+    all:
+      user?.relations?.organizers?.map((role) => role.relations?.organizer as Organizer['data']) ||
+      [],
+    owner: organizerOwnerList,
+    contributor: organizerContributorList,
   };
 };
