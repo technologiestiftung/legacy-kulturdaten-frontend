@@ -3,8 +3,13 @@ import { css } from '@emotion/react';
 import { StandardLink } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
+import { Check } from 'react-feather';
 
-const StyledDashboardTile = styled.div<{ gridColumn?: string }>`
+const StyledDashboardTile = styled.div<{
+  gridColumn?: string;
+  disabled?: boolean;
+  isDone?: boolean;
+}>`
   box-shadow: 0.75rem 0.75rem 3rem rgba(0, 0, 0, 0.08);
   border-radius: 0.75rem;
   grid-column: 1 / -1;
@@ -14,6 +19,19 @@ const StyledDashboardTile = styled.div<{ gridColumn?: string }>`
     border-radius: 1.5rem;
     grid-column: ${({ gridColumn }) => gridColumn || 'span 6'};
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      pointer-events: none;
+      opacity: 0.75;
+    `}
+
+  ${({ isDone }) =>
+    isDone &&
+    css`
+      pointer-events: none;
+    `}
 `;
 
 const StyledDashboardTileContainer = styled.div`
@@ -23,10 +41,54 @@ const StyledDashboardTileContainer = styled.div`
   border-radius: 0.75rem;
   overflow: hidden;
   flex-grow: 1;
+  position: relative;
 
   ${mq(Breakpoint.mid)} {
     border-radius: 1.5rem;
   }
+`;
+
+const StyledDashboardTileDone = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  color: var(--white);
+  display: flex;
+
+  @supports (backdrop-filter: blur(12px)) {
+    backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  @supports (-webkit-backdrop-filter: blur(12px)) {
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.7);
+  }
+`;
+
+const StyledDashboardTileDoneCheck = styled.div`
+  width: 2.25rem;
+  height: 2.25rem;
+  box-sizing: content-box;
+  padding: 1.125rem 0.75rem;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  ${mq(Breakpoint.mid)} {
+    width: 3rem;
+    height: 3rem;
+  }
+`;
+
+const StyledDashboardTileDoneText = styled.div`
+  font-size: var(--font-size-600);
+  line-height: var(--line-height-600);
+  font-weight: 700;
+  padding: 1.5rem 0.75rem;
 `;
 
 const StyledDashboardTileDigit = styled.div`
@@ -126,6 +188,10 @@ interface DashboardTileProps {
   link?: React.ReactElement<StandardLink>;
   gridColumn?: string;
   digit?: number;
+  disabled?: boolean;
+  done?: {
+    text: string;
+  };
 }
 
 export const DashboardTile: React.FC<DashboardTileProps> = ({
@@ -134,9 +200,13 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
   link,
   gridColumn,
   digit,
+  disabled,
+  done,
 }: DashboardTileProps) => {
+  const isDone = typeof done !== 'undefined';
+
   return (
-    <StyledDashboardTile gridColumn={gridColumn}>
+    <StyledDashboardTile gridColumn={gridColumn} disabled={disabled} isDone={isDone}>
       <StyledDashboardTileContainer>
         {digit && <StyledDashboardTileDigit>{digit}</StyledDashboardTileDigit>}
         <StyledDashboardTileContainerChildren>
@@ -146,6 +216,14 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
           <StyledDashboardTileContent>{children}</StyledDashboardTileContent>
           {link}
         </StyledDashboardTileContainerChildren>
+        {isDone && (
+          <StyledDashboardTileDone>
+            <StyledDashboardTileDoneCheck>
+              <Check />
+            </StyledDashboardTileDoneCheck>
+            <StyledDashboardTileDoneText>{done.text}</StyledDashboardTileDoneText>
+          </StyledDashboardTileDone>
+        )}
       </StyledDashboardTileContainer>
     </StyledDashboardTile>
   );

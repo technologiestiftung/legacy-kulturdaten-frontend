@@ -1,17 +1,15 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Organizer } from '../../../lib/api/types/organizer';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
-import { useUser } from '../../user/useUser';
-import { RoleName } from '../../../lib/api/types/role';
+import { useUserOrganizerLists } from '../../user/useUser';
 import { useCreateOrganizer } from '../../../lib/categories';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
@@ -37,7 +35,6 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   layout,
   onClick,
 }: OrganizerBandProps) => {
-  const { user } = useUser();
   const language = useLanguage();
   const locale = useLocale();
   const router = useRouter();
@@ -46,21 +43,8 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   const loadingScreen = useLoadingScreen();
   const createOrganizer = useCreateOrganizer();
 
-  const organizerOwnerList = useMemo(
-    () =>
-      user?.relations?.organizers
-        ?.filter((role) => role.attributes?.role === RoleName.owner)
-        ?.map((role) => role.relations?.organizer as Organizer['data']) || [],
-    [user?.relations?.organizers]
-  );
-
-  const organizerContributorList = useMemo(
-    () =>
-      user?.relations?.organizers
-        ?.filter((role) => role.attributes?.role !== RoleName.owner)
-        ?.map((role) => role.relations?.organizer as Organizer['data']) || [],
-    [user?.relations?.organizers]
-  );
+  const { owner: organizerOwnerList, contributor: organizerContributorList } =
+    useUserOrganizerLists();
 
   return (
     <StyledOrganizerBand layout={layout}>

@@ -110,78 +110,128 @@ const DashboardStartTileRow: React.FC = () => {
   const createOffer = useCreateOffer();
   const createLocation = useCreateLocation();
   const loadingScreen = useLoadingScreen();
+  const organizerId = useOrganizerId();
+  const categories = useCategories();
+
+  const offers = useList<OfferList, Offer>(
+    categories.offer,
+    1,
+    1,
+    [['organizers', organizerId]],
+    undefined,
+    organizerId !== defaultOrganizerId
+  );
+
+  const locations = useList<OfferList, Offer>(
+    categories.location,
+    1,
+    1,
+    [['organizer', organizerId]],
+    undefined,
+    organizerId !== defaultOrganizerId
+  );
+
+  const hasOffers = useMemo(() => offers?.data?.length > 0, [offers]);
+  const hasLocations = useMemo(() => locations?.data?.length > 0, [locations]);
 
   const tileSpan = isUltraOrWider ? 'span 4' : undefined;
 
   return (
-    <DashboardRow title={t('dashboard.info.start.title') as string}>
-      <DashboardTile
-        title={t('dashboard.info.start.organizer.title') as string}
-        gridColumn={tileSpan}
-        digit={1}
-        link={
-          <DashboardTileButton
-            title={t('dashboard.info.start.organizer.button') as string}
-            onClick={() => {
-              loadingScreen(
-                t('categories.organizer.form.create'),
-                async () => {
-                  const resp = await createOrganizer();
-                  return resp;
-                },
-                t('general.takeAFewSeconds')
-              );
-            }}
-          />
-        }
-      >
-        {t('dashboard.info.start.organizer.content')}
-      </DashboardTile>
-      <DashboardTile
-        title={t('dashboard.info.start.offer.title') as string}
-        gridColumn={tileSpan}
-        digit={2}
-        link={
-          <DashboardTileButton
-            title={t('dashboard.info.start.offer.button') as string}
-            onClick={() => {
-              loadingScreen(
-                t('categories.offer.form.create'),
-                async () => {
-                  const resp = await createOffer();
-                  return resp;
-                },
-                t('general.takeAFewSeconds')
-              );
-            }}
-          />
-        }
-      >
-        {t('dashboard.info.start.offer.content')}
-      </DashboardTile>
-      <DashboardTile
-        title={t('dashboard.info.start.location.title') as string}
-        gridColumn={tileSpan}
-        digit={3}
-        link={
-          <DashboardTileButton
-            title={t('dashboard.info.start.location.button') as string}
-            onClick={() => {
-              loadingScreen(
-                t('categories.location.form.create'),
-                async () => {
-                  const resp = await createLocation();
-                  return resp;
-                },
-                t('general.takeAFewSeconds')
-              );
-            }}
-          />
-        }
-      >
-        {t('dashboard.info.start.location.content')}
-      </DashboardTile>
-    </DashboardRow>
+    (!hasOffers || !hasLocations) && (
+      <DashboardRow title={t('dashboard.info.start.title') as string}>
+        <DashboardTile
+          title={t('dashboard.info.start.organizer.title') as string}
+          gridColumn={tileSpan}
+          digit={1}
+          done={
+            organizerId !== defaultOrganizerId
+              ? {
+                  text: t('dashboard.info.start.organizer.done') as string,
+                }
+              : undefined
+          }
+          link={
+            <DashboardTileButton
+              title={t('dashboard.info.start.organizer.button') as string}
+              onClick={() => {
+                loadingScreen(
+                  t('categories.organizer.form.create'),
+                  async () => {
+                    const resp = await createOrganizer();
+                    return resp;
+                  },
+                  t('general.takeAFewSeconds')
+                );
+              }}
+            />
+          }
+        >
+          {t('dashboard.info.start.organizer.content')}
+        </DashboardTile>
+        <DashboardTile
+          title={t('dashboard.info.start.offer.title') as string}
+          gridColumn={tileSpan}
+          digit={2}
+          disabled={organizerId === defaultOrganizerId}
+          done={
+            organizerId !== defaultOrganizerId && hasOffers
+              ? {
+                  text: t('dashboard.info.start.offer.done') as string,
+                }
+              : undefined
+          }
+          link={
+            <DashboardTileButton
+              title={t('dashboard.info.start.offer.button') as string}
+              disabled={organizerId === defaultOrganizerId}
+              onClick={() => {
+                loadingScreen(
+                  t('categories.offer.form.create'),
+                  async () => {
+                    const resp = await createOffer();
+                    return resp;
+                  },
+                  t('general.takeAFewSeconds')
+                );
+              }}
+            />
+          }
+        >
+          {t('dashboard.info.start.offer.content')}
+        </DashboardTile>
+        <DashboardTile
+          title={t('dashboard.info.start.location.title') as string}
+          gridColumn={tileSpan}
+          digit={3}
+          disabled={organizerId === defaultOrganizerId}
+          done={
+            organizerId !== defaultOrganizerId && hasLocations
+              ? {
+                  text: t('dashboard.info.start.location.done') as string,
+                }
+              : undefined
+          }
+          link={
+            <DashboardTileButton
+              title={t('dashboard.info.start.location.button') as string}
+              disabled={organizerId === defaultOrganizerId}
+              onClick={() => {
+                loadingScreen(
+                  t('categories.location.form.create'),
+                  async () => {
+                    const resp = await createLocation();
+                    return resp;
+                  },
+                  t('general.takeAFewSeconds')
+                );
+              }}
+            />
+          }
+        >
+          {t('dashboard.info.start.location.content')}
+        </DashboardTile>
+      </DashboardRow>
+    )
   );
 };
 
@@ -226,11 +276,13 @@ const DashboardPage: NextPage = () => {
             <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
           </ContentContainer>
           <ContentContainer>
-            <DashboardRow title={t('dashboard.info.offers.title') as string}>
-              {offers?.data?.map((offer, index) => (
-                <DashboardOfferTile offer={offer} key={index} />
-              ))}
-            </DashboardRow>
+            {organizerId !== defaultOrganizerId && offers?.data?.length > 0 && (
+              <DashboardRow title={t('dashboard.info.offers.title') as string}>
+                {offers?.data?.map((offer, index) => (
+                  <DashboardOfferTile offer={offer} key={index} />
+                ))}
+              </DashboardRow>
+            )}
             <DashboardStartTileRow />
             <DashboardRow title={t('dashboard.info.data.title') as string}>
               <DashboardTile title={t('dashboard.info.data.export.title') as string}>

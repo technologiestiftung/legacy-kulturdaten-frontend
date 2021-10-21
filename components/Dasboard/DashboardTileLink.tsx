@@ -112,14 +112,16 @@ export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
 interface DashboardTileButtonProps {
   title: string;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 export const DashboardTileButton: React.FC<DashboardTileButtonProps> = ({
   title,
   onClick,
+  disabled,
 }: DashboardTileButtonProps) => {
   return (
-    <StyledDashboardTileLink as="button" onClick={onClick}>
+    <StyledDashboardTileLink as="button" onClick={onClick} disabled={disabled}>
       <span>{title}</span>
       <Plus />
     </StyledDashboardTileLink>

@@ -25,7 +25,7 @@ export const deDE: Localization = {
             </DashboardTileText>
           ),
           button: () => 'Jetzt Anbieter:in erstellen',
-          done: () => 'Anbieter:in erstellt',
+          done: () => 'Anbieter:in wurde erstellt',
         },
         offer: {
           title: () => 'Angebot erstellen',
@@ -42,7 +42,7 @@ export const deDE: Localization = {
             </DashboardTileText>
           ),
           button: () => 'Jetzt Angebot erstellen',
-          done: () => 'Angebot erstellt',
+          done: () => 'Angebot wurde erstellt',
         },
         location: {
           title: () => 'Ort erstellen',
@@ -59,7 +59,7 @@ export const deDE: Localization = {
             </DashboardTileText>
           ),
           button: () => 'Jetzt Ort erstellen',
-          done: () => 'Ort erstellt',
+          done: () => 'Ort wurde erstellt',
         },
       },
       offers: {
