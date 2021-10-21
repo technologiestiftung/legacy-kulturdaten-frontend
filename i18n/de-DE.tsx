@@ -10,7 +10,6 @@ export const deDE: Localization = {
     info: {
       start: {
         title: () => 'So legst du los',
-        tileDone: () => 'Erledigt',
         organizer: {
           title: () => 'Anbieter:in erstellen',
           content: () => (

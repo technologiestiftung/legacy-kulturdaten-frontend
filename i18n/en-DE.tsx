@@ -8,6 +8,59 @@ export const enDE: Localization = {
   },
   dashboard: {
     info: {
+      start: {
+        title: () => 'How to start',
+        organizer: {
+          title: () => 'Create Organizer',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                An Organizer represents your public profile. It contains information about you or
+                your organization.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Everything you create in the culture data platform has an Organizer.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          button: () => 'Create Organizer now',
+          done: () => 'Organizer was created',
+        },
+        offer: {
+          title: () => 'Create Offer',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                An Offer can be an event, but also a course, a radio show, a film screening, or
+                something completely different.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                The Offer contains information about its content, place and time. Each Offer can
+                contain any number of dates.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          button: () => 'Create Offer now',
+          done: () => 'Offer was created',
+        },
+        location: {
+          title: () => 'Create Location',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Most offers take place at a Location - this can also be a virtual Location such as a
+                stream.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                You can enter all relevant information about an event location here, including
+                extensive information on accessibility.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          button: () => 'Create Location now',
+          done: () => 'Location was created',
+        },
+      },
       offers: {
         title: () => 'Current Offers',
         link: () => 'View Offer',
@@ -195,6 +248,7 @@ export const enDE: Localization = {
     email: () => 'Email',
     website: () => 'Website',
     links: () => 'Relevant links',
+    urlPlaceholder: () => 'https://example.com',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
     },
