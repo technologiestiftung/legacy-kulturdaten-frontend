@@ -10,7 +10,7 @@ exports[`Header renders 1`] = `
     >
       <a
         class="css-d2nb4b-StyledLink e1sn27879"
-        href="/app/default/dashboard"
+        href="/default/dashboard"
       >
         Test title
       </a>

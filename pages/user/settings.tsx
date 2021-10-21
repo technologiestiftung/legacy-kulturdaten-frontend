@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
-import { LocaleSwitch } from '../../../components/navigation/LocaleSwitch';
+import { LocaleSwitch } from '../../components/navigation/LocaleSwitch';
 
-import { AppWrapper } from '../../../components/wrappers/AppWrapper';
+import { AppWrapper } from '../../components/wrappers/AppWrapper';
 
 const SettingsPage: NextPage = () => {
   return (

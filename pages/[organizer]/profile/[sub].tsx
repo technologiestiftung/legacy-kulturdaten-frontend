@@ -1,8 +1,8 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { AppWrapper } from '../../../../components/wrappers/AppWrapper';
-import { useCategories } from '../../../../config/categories';
+import { AppWrapper } from '../../../components/wrappers/AppWrapper';
+import { useCategories } from '../../../config/categories';
 
 const EntrySubPage: NextPage = () => {
   const router = useRouter();

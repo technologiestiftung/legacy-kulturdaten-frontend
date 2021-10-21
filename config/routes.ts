@@ -30,34 +30,34 @@ export enum Routes {
 export const routes: { [key in Routes]: Route } = {
   index: ({ locale }) => `/${localizedRoutes[Routes.index][locale]}`,
   dashboard: ({ query, locale }) =>
-    `/app/${query?.organizer}/${localizedRoutes[Routes.dashboard][locale]}/`,
-  team: ({ query, locale }) => `/app/${query?.organizer}/${localizedRoutes[Routes.team][locale]}/`,
-  userProfile: ({ locale }) => `/app/${localizedRoutes[Routes.userProfile][locale]}/`,
-  userSettings: ({ locale }) => `/app/${localizedRoutes[Routes.userSettings][locale]}/`,
-  userNotifications: ({ locale }) => `/app/${localizedRoutes[Routes.userNotifications][locale]}/`,
-  login: ({ locale }) => `/app/${localizedRoutes[Routes.login][locale]}/`,
-  register: ({ locale }) => `/app/${localizedRoutes[Routes.register][locale]}/`,
+    `/${query?.organizer}/${localizedRoutes[Routes.dashboard][locale]}/`,
+  team: ({ query, locale }) => `/${query?.organizer}/${localizedRoutes[Routes.team][locale]}/`,
+  userProfile: ({ locale }) => `/${localizedRoutes[Routes.userProfile][locale]}/`,
+  userSettings: ({ locale }) => `/${localizedRoutes[Routes.userSettings][locale]}/`,
+  userNotifications: ({ locale }) => `/${localizedRoutes[Routes.userNotifications][locale]}/`,
+  login: ({ locale }) => `/${localizedRoutes[Routes.login][locale]}/`,
+  register: ({ locale }) => `/${localizedRoutes[Routes.register][locale]}/`,
   organizer: ({ query, locale }) =>
-    `/app/${
+    `/${
       query?.organizer
         ? `${query?.organizer}/${localizedRoutes[Routes.organizer][locale]}/${
             query?.sub ? `${query.sub}/` : ''
           }`
         : ''
     }`,
-  createOrganizer: ({ locale }) => `/app/${localizedRoutes[Routes.createOrganizer][locale]}/`,
+  createOrganizer: ({ locale }) => `/${localizedRoutes[Routes.createOrganizer][locale]}/`,
   offer: ({ query, locale }) =>
-    `/app/${query.organizer}/${localizedRoutes[Routes.offer][locale]}/${
+    `/${query.organizer}/${localizedRoutes[Routes.offer][locale]}/${
       query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
   createOffer: ({ query, locale }) =>
-    `/app/${query.organizer}/${localizedRoutes[Routes.createOffer][locale]}/`,
+    `/${query.organizer}/${localizedRoutes[Routes.createOffer][locale]}/`,
   location: ({ query, locale }) =>
-    `/app/${query.organizer}/${localizedRoutes[Routes.location][locale]}/${
+    `/${query.organizer}/${localizedRoutes[Routes.location][locale]}/${
       query?.id ? `${query?.id}/${query?.sub ? `${query.sub}/` : ''}` : ''
     }`,
   createLocation: ({ query, locale }) =>
-    `/app/${query.organizer}/${localizedRoutes[Routes.createLocation][locale]}/`,
+    `/${query.organizer}/${localizedRoutes[Routes.createLocation][locale]}/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
 };
 

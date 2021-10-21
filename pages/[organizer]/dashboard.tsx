@@ -3,26 +3,26 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo } from 'react';
 
-import { routes, useLanguage, useLocale } from '../../../lib/routing';
-import { useUser } from '../../../components/user/useUser';
-import { AppWrapper } from '../../../components/wrappers/AppWrapper';
-import { useT } from '../../../lib/i18n';
-import { defaultOrganizerId, useOrganizerId } from '../../../lib/useOrganizer';
-import { ContentContainer, ContentWrapper } from '../../../components/wrappers/ContentWrappers';
-import { DashbaordGreeting, DashboardWrapper } from '../../../components/Dasboard';
-import { useRandomInt } from '../../../lib/random';
-import { DashboardRow } from '../../../components/Dasboard/DashboardRow';
+import { routes, useLanguage, useLocale } from '../../lib/routing';
+import { useUser } from '../../components/user/useUser';
+import { AppWrapper } from '../../components/wrappers/AppWrapper';
+import { useT } from '../../lib/i18n';
+import { defaultOrganizerId, useOrganizerId } from '../../lib/useOrganizer';
+import { ContentContainer, ContentWrapper } from '../../components/wrappers/ContentWrappers';
+import { DashbaordGreeting, DashboardWrapper } from '../../components/Dasboard';
+import { useRandomInt } from '../../lib/random';
+import { DashboardRow } from '../../components/Dasboard/DashboardRow';
 import {
   DashboardTile,
   DashboardTileText,
   DashboardTileTextP,
-} from '../../../components/Dasboard/DashboardTile';
+} from '../../components/Dasboard/DashboardTile';
 import {
   DashboardTileButton,
   DashboardTileLink,
-} from '../../../components/Dasboard/DashboardTileLink';
-import { StandardLinkType } from '../../../lib/generalTypes';
-import { DashboardLinkList } from '../../../components/Dasboard/DashboardLinkList';
+} from '../../components/Dasboard/DashboardTileLink';
+import { StandardLinkType } from '../../lib/generalTypes';
+import { DashboardLinkList } from '../../components/Dasboard/DashboardLinkList';
 import {
   Order,
   useCreateLocation,
@@ -30,15 +30,15 @@ import {
   useCreateOrganizer,
   useList,
   useOfferDateList,
-} from '../../../lib/categories';
-import { Offer } from '../../../lib/api/types/offer';
-import { OfferList } from '../../../lib/api';
-import { useCategories } from '../../../config/categories';
-import { getTranslation } from '../../../lib/translations';
-import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
-import { DateFormat, useDate } from '../../../lib/date';
-import { DateStatusFlag } from '../../../components/DateList/DateStatusFlag';
-import { useLoadingScreen } from '../../../components/Loading/LoadingScreen';
+} from '../../lib/categories';
+import { Offer } from '../../lib/api/types/offer';
+import { OfferList } from '../../lib/api';
+import { useCategories } from '../../config/categories';
+import { getTranslation } from '../../lib/translations';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { DateFormat, useDate } from '../../lib/date';
+import { DateStatusFlag } from '../../components/DateList/DateStatusFlag';
+import { useLoadingScreen } from '../../components/Loading/LoadingScreen';
 
 const StyledDashboardTileDate = styled.div`
   display: flex;
