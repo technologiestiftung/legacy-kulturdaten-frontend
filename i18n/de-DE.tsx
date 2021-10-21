@@ -89,7 +89,7 @@ export const deDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Je mehr Informationen zu in das Profil deiner Anbieter:in einträgst, desto
+                Je mehr Informationen du in das Profil deiner Anbieter:in einträgst, desto
                 aussagekräftiger und auffindbarer werden deine Daten.
               </DashboardTileTextP>
               <DashboardTileTextP>
