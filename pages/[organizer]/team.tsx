@@ -1,9 +1,9 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { AppWrapper } from '../../../components/wrappers/AppWrapper';
-import { useCategories } from '../../../config/categories';
-import { OrganizerTeamPage } from '../../../components/pages/organizer/team';
+import { AppWrapper } from '../../components/wrappers/AppWrapper';
+import { useCategories } from '../../config/categories';
+import { OrganizerTeamPage } from '../../components/pages/organizer/team';
 
 const TeamPage: NextPage = () => {
   const router = useRouter();
