@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { Location, LocationType } from '../../../lib/api/types/location';
+import { Location, LocationTranslation, LocationType } from '../../../lib/api/types/location';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
@@ -22,23 +22,44 @@ import { Input, InputType } from '../../input';
 import { OpeningHours } from '../../../lib/api/types/openingHours';
 import { OpeningHoursField } from '../../OpeningHoursField';
 import { LocationDelete } from '../../../lib/api/routes/location/delete';
+import { contentLanguages, languageTranslationKeys } from '../../../config/locales';
+import { getTranslation } from '../../../lib/translations';
+import { Textarea } from '../../textarea';
 
 const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
+  const uid = usePseudoUID();
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
   const [openingHours, setOpeningHours] = useState<OpeningHours[]>();
+  const [openingHoursFromApi, setOpeningHoursFromApi] = useState<OpeningHours[]>();
+  const [openingHoursTranslations, setOpeningHoursTranslations] = useState<LocationTranslation[]>();
+  const [openingHoursTranslationsFromApi, setOpeningHoursTranslationsFromApi] =
+    useState<LocationTranslation[]>();
+
   const call = useApiCall();
   const t = useT();
-
-  const [openingHoursFromApi, setOpeningHoursFromApi] = useState<OpeningHours[]>();
 
   const initialOpeningHours = useMemo(
     () => entry?.data?.relations?.openingHours,
     [entry?.data?.relations?.openingHours]
   );
 
+  const initialOpeningHoursTranslations = useMemo(
+    () =>
+      entry?.data?.relations?.translations?.map((translation) => ({
+        ...translation,
+        attributes: {
+          language: translation.attributes.language,
+          openingHours: translation.attributes?.openingHours,
+        },
+      })),
+    [entry?.data?.relations?.translations]
+  );
+
   const pristine = useMemo(
-    () => JSON.stringify(openingHours) === JSON.stringify(openingHoursFromApi),
-    [openingHours, openingHoursFromApi]
+    () =>
+      JSON.stringify(openingHours) === JSON.stringify(openingHoursFromApi) &&
+      JSON.stringify(openingHoursTranslations) === JSON.stringify(initialOpeningHoursTranslations),
+    [initialOpeningHoursTranslations, openingHours, openingHoursFromApi, openingHoursTranslations]
   );
 
   useEffect(() => {
@@ -47,6 +68,16 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       setOpeningHours(initialOpeningHours);
     }
   }, [initialOpeningHours, openingHoursFromApi]);
+
+  useEffect(() => {
+    if (
+      JSON.stringify(initialOpeningHoursTranslations) !==
+      JSON.stringify(openingHoursTranslationsFromApi)
+    ) {
+      setOpeningHoursTranslationsFromApi(initialOpeningHoursTranslations);
+      setOpeningHoursTranslations(initialOpeningHoursTranslations);
+    }
+  }, [initialOpeningHoursTranslations, openingHoursTranslationsFromApi]);
 
   const renderedForm = (
     <div>
@@ -59,6 +90,44 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
           />
         </FormItem>
       </FormGrid>
+      <EntryFormHead title={t('openingHours.note') as string} />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          {contentLanguages.map((contentLanguage, index) => {
+            const currentTranslation = getTranslation(
+              contentLanguage,
+              openingHoursTranslations,
+              false
+            );
+
+            return (
+              <Textarea
+                key={index}
+                label={t(languageTranslationKeys[contentLanguage]) as string}
+                id={`${uid}-textarea-${index}`}
+                value={currentTranslation?.attributes?.openingHours || ''}
+                rows={4}
+                onChange={(e) => {
+                  const newTranslation = {
+                    ...currentTranslation,
+                    attributes: {
+                      ...currentTranslation?.attributes,
+                      language: contentLanguage,
+                      openingHours: e.target.value,
+                    },
+                  };
+
+                  setOpeningHoursTranslations([
+                    ...openingHoursTranslations.slice(0, index),
+                    newTranslation,
+                    ...openingHoursTranslations.slice(index + 1),
+                  ]);
+                }}
+              />
+            );
+          })}
+        </FormItem>
+      </FormGrid>
     </div>
   );
 
@@ -66,12 +135,12 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
     renderedForm,
     submit: async () => {
       if (!pristine) {
-        const openingHoursIds = openingHours.map((openingHour) => openingHour.id);
+        const openingHoursIds = openingHours?.map((openingHour) => openingHour.id);
         const deletedOpeningHours = openingHoursFromApi
-          .filter((openingHour) => !openingHoursIds.includes(openingHour.id))
+          ?.filter((openingHour) => !openingHoursIds.includes(openingHour.id))
           .map((openingHour) => openingHour.id);
 
-        if (deletedOpeningHours.length > 0) {
+        if (deletedOpeningHours?.length > 0) {
           try {
             await call<LocationDelete>(category.api.delete.factory, {
               id: entry.data.id,
@@ -92,6 +161,7 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
             entry: {
               relations: {
                 openingHours: openingHours,
+                translations: openingHoursTranslations,
               },
             },
           });

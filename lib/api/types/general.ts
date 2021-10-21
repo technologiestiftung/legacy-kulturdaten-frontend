@@ -8,8 +8,8 @@ export type Translation = {
   id?: number;
   type?: string;
   attributes: {
-    name: string;
     language: Language;
+    name?: string;
   };
 };
 

@@ -113,6 +113,7 @@ export const enDE: Localization = {
     to: () => 'bis',
     add: () => 'Add new opening hours',
     remove: () => 'remove',
+    note: () => 'Note on opening hours',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Publishing ${categoryName}`,
