@@ -512,6 +512,8 @@ export const deDE: Localization = {
     expandList: () => 'Listenansicht vergrößern',
     minimizeList: () => 'Listenansicht verkleinern',
     options: () => 'Optionen',
+    optionsOpen: () => 'Optionsmenü öffnen',
+    optionsClose: () => 'Optionsmenü schließen',
     save: () => 'speichern',
     saving: () => 'speichert',
     saved: () => 'gespeichert',
@@ -645,6 +647,14 @@ export const deDE: Localization = {
         created: () => 'erstellt',
         updated: () => 'geändert',
       },
+      options: {
+        exportCsv: () => 'Export als CSV',
+        exportXls: () => 'Export als Excel',
+        delete: () => 'Anbieter:in löschen',
+        deleteConfirm: () =>
+          'Bist du sicher, dass du diese Anbieter:in löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
+        deleting: () => 'Lösche Anbieter:in',
+      },
     },
     offer: {
       list: {
@@ -712,6 +722,14 @@ export const deDE: Localization = {
         accessibility: () => 'Barrierefreiheit',
         media: () => 'Bilder',
       },
+      options: {
+        exportCsv: () => 'Export als CSV',
+        exportXls: () => 'Export als Excel',
+        delete: () => 'Angebot löschen',
+        deleteConfirm: () =>
+          'Bist du sicher, dass du dieses Angebot löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
+        deleting: () => 'Lösche Angebot',
+      },
     },
     location: {
       list: {
@@ -757,6 +775,14 @@ export const deDE: Localization = {
           virtualLabel: () => 'Virtueller Ort',
           virtualText: () => 'Ein virtueller Ort mit URL, z.B. ein YouTube oder Twitch Kanal.',
         },
+      },
+      options: {
+        exportCsv: () => 'Export als CSV',
+        exportXls: () => 'Export als Excel',
+        delete: () => 'Ort löschen',
+        deleteConfirm: () =>
+          'Bist du sicher, dass du diesen Ort löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
+        deleting: () => 'Lösche Ort',
       },
     },
   },

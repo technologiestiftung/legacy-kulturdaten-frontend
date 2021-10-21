@@ -89,7 +89,6 @@ export const useCategories: () => {
         { title: t('categories.organizer.tabs.categorization') as string, sub: 'categorization' },
         { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
       ],
-      metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
         list: {
           route: ApiRoutes.organizerList,
@@ -119,6 +118,13 @@ export const useCategories: () => {
           route: ApiRoutes.organizerUpdate,
           factory: organizerMediaFactory,
         },
+      },
+      options: {
+        exportCsv: t('categories.organizer.options.exportCsv') as string,
+        exportXls: t('categories.organizer.options.exportXls') as string,
+        delete: t('categories.organizer.options.delete') as string,
+        deleteConfirm: t('categories.organizer.options.deleteConfirm') as string,
+        deleting: t('categories.organizer.options.deleting') as string,
       },
       requirements: [
         {
@@ -173,7 +179,6 @@ export const useCategories: () => {
         { title: t('categories.offer.tabs.accessibility') as string, sub: 'accessibility' },
         { title: t('categories.offer.tabs.media') as string, sub: 'media' },
       ],
-      metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
         list: {
           route: ApiRoutes.offerList,
@@ -199,6 +204,13 @@ export const useCategories: () => {
           route: ApiRoutes.offerTypeList,
           factory: offerTypeListFactory,
         },
+      },
+      options: {
+        exportCsv: t('categories.offer.options.exportCsv') as string,
+        exportXls: t('categories.offer.options.exportXls') as string,
+        delete: t('categories.offer.options.delete') as string,
+        deleteConfirm: t('categories.offer.options.deleteConfirm') as string,
+        deleting: t('categories.offer.options.deleting') as string,
       },
       requirements: [
         {
@@ -238,7 +250,6 @@ export const useCategories: () => {
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
         { title: t('categories.organizer.tabs.media') as string, sub: 'media' },
       ],
-      metaLinks: [{ title: t('general.options') as string, icon: 'Settings' }],
       api: {
         list: {
           route: ApiRoutes.locationList,
@@ -260,6 +271,13 @@ export const useCategories: () => {
           route: ApiRoutes.locationDelete,
           factory: locationDeleteFactory,
         },
+      },
+      options: {
+        exportCsv: t('categories.location.options.exportCsv') as string,
+        exportXls: t('categories.location.options.exportXls') as string,
+        delete: t('categories.location.options.delete') as string,
+        deleteConfirm: t('categories.location.options.deleteConfirm') as string,
+        deleting: t('categories.location.options.deleting') as string,
       },
       requirements: [
         {

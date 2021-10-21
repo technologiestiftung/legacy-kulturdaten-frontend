@@ -63,6 +63,7 @@ const StyledEntryHeaderActions = styled.div`
   padding-top: 2.25rem;
   flex-wrap: wrap;
   flex-direction: row-reverse;
+  position: relative;
 
   ${mq(Breakpoint.mid)} {
     align-items: flex-start;
@@ -73,18 +74,6 @@ const StyledEntryHeaderActions = styled.div`
 
   ${mq(Breakpoint.wide)} {
     flex-wrap: nowrap;
-  }
-`;
-
-const StyledEntryHeaderAction = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-basis: 0;
-  flex-grow: 1;
-
-  ${mq(Breakpoint.mid)} {
-    flex-basis: initial;
-    flex-grow: initial;
   }
 `;
 
@@ -262,7 +251,7 @@ interface EntryHeaderProps {
   status: PublishedStatus;
   subTitle?: string;
   backButton?: React.ReactElement;
-  actions?: React.ReactElement[];
+  actions?: React.ReactElement;
   publish?: React.ReactElement;
   tabs?: React.ReactElement<TabsProps>;
   wideLayout?: boolean;
@@ -298,9 +287,7 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
         </StyledEntryHeaderTitleWrapper>
         {!minimalVariant && (
           <StyledEntryHeaderActions>
-            {actions?.map((action, index) => (
-              <StyledEntryHeaderAction key={index}>{action}</StyledEntryHeaderAction>
-            ))}
+            {actions}
             <StyledEntryHeaderStatus>
               <StyledEntryHeaderStatusLabel>{t('statusBar.status')}</StyledEntryHeaderStatusLabel>
 

@@ -1,4 +1,5 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute } from '../..';
+import { Media } from '../../types/media';
 
 /**
  * /auth/info
@@ -12,7 +13,7 @@ export interface MediaDelete extends ApiCall {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: null;
+    body: Media['data'];
   };
   response: {
     status: 200;
@@ -27,7 +28,7 @@ export interface MediaDelete extends ApiCall {
 
 export const mediaDeleteFactory = (
   token: MediaDelete['request']['headers']['Authorization'],
-  query: { id: string }
+  query: { id: string; entry: Media['data'] }
 ): MediaDelete => ({
   request: {
     route: apiRoutes.mediaDelete({ id: query.id }),
@@ -36,7 +37,7 @@ export const mediaDeleteFactory = (
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: null,
+    body: query?.entry,
   },
   response: {
     status: 200,

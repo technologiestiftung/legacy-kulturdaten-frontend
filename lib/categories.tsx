@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
 import React, { useCallback, useContext, useMemo } from 'react';
 import useSWR, { mutate as mutateSwr } from 'swr';
-import { Button, ButtonVariant } from '../components/button';
 import { EntryListContext } from '../components/EntryList/EntryListContext';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
@@ -22,6 +21,7 @@ import { EntryType } from './api/types/typeSubject';
 import { useT } from './i18n';
 import { Route, useLocale } from './routing';
 import { defaultOrganizerId, useOrganizerId, useSetOrganizerId } from './useOrganizer';
+import { routes } from '../config/routes';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -58,10 +58,6 @@ export type Category = {
     title: string;
     sub?: string;
   }[];
-  metaLinks: {
-    title: string;
-    icon: string;
-  }[];
   api: {
     list: categoryApi;
     show: categoryApi;
@@ -70,6 +66,13 @@ export type Category = {
     delete: categoryApi;
     media?: categoryApi;
     typeList?: categoryApi;
+  };
+  options: {
+    exportCsv: string;
+    exportXls: string;
+    delete: string;
+    deleteConfirm: string;
+    deleting: string;
   };
   requirements?: Requirement[];
 };
@@ -282,18 +285,6 @@ export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
   return null;
 };
 
-export const useMetaLinks = (category: Category): React.ReactElement[] => {
-  const metaLinks = category?.metaLinks?.map(({ title, icon }, index) => {
-    return (
-      <Button key={index} icon={icon} variant={ButtonVariant.minimal}>
-        {title}
-      </Button>
-    );
-  });
-
-  return metaLinks;
-};
-
 export const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
   route: ApiRoutes,
   factory: ApiCallFactory
@@ -462,3 +453,88 @@ export const useCreateLocation = (): (() => Promise<{
   success: boolean;
   error?: React.ReactNode | string;
 }>) => useCreateEntry(Categories.location);
+
+export const useDeleteEntry = (
+  categoryName: Categories
+): ((id: string) => Promise<{
+  success: boolean;
+  error?: React.ReactNode | string;
+}>) => {
+  const t = useT();
+  const call = useApiCall();
+  const categories = useCategories();
+  const category = categories ? categories[categoryName] : undefined;
+  const router = useRouter();
+  const locale = useLocale();
+  const organizerId = useOrganizerId();
+  const setOrganizerId = useSetOrganizerId();
+  const { mutateUserInfo } = useUser();
+
+  const mutateList = useMutateList(
+    category,
+    categoryName === Categories.location
+      ? [['organizer', organizerId]]
+      : categoryName === Categories.offer
+      ? [['organizers', organizerId]]
+      : undefined
+  );
+
+  const deleteEntry = useCallback(
+    async (id: string) => {
+      try {
+        const resp = await call(category.api.delete.factory, {
+          id,
+          entry: {
+            attributes: { id },
+          },
+        });
+
+        if (resp.status === 200) {
+          if (categoryName === Categories.organizer) {
+            router.push(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
+          } else {
+            router.push(
+              category.routes.list({
+                locale,
+                query: {
+                  organizer: organizerId,
+                },
+              })
+            );
+          }
+
+          if (categoryName === Categories.organizer) {
+            mutateUserInfo();
+            setTimeout(() => setOrganizerId(id), 500);
+          } else {
+            mutateList();
+          }
+
+          return { success: true };
+        }
+      } catch (e) {
+        console.error(e);
+
+        return {
+          success: false,
+          error: t('general.serverProblem'),
+        };
+      }
+    },
+    [
+      call,
+      category?.api?.delete?.factory,
+      category?.routes,
+      categoryName,
+      locale,
+      mutateList,
+      mutateUserInfo,
+      organizerId,
+      router,
+      setOrganizerId,
+      t,
+    ]
+  );
+
+  return deleteEntry;
+};

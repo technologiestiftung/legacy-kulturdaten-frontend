@@ -36,14 +36,17 @@ export const EntryHeaderDefaultStory: Story = () => {
           zurück
         </Button>
       }
-      actions={[
-        <Button key={1} icon="Users" variant={ButtonVariant.minimal}>
-          Zugriffsrechte
-        </Button>,
-        <Button key={2} icon="Archive" variant={ButtonVariant.minimal}>
-          Export
-        </Button>,
-      ]}
+      actions={
+        <>
+          <Button key={1} icon="Users" variant={ButtonVariant.minimal}>
+            Zugriffsrechte
+          </Button>
+          ,
+          <Button key={2} icon="Archive" variant={ButtonVariant.minimal}>
+            Export
+          </Button>
+        </>
+      }
       title="This is a very long title"
       tabs={<Tabs links={testTabLinks} />}
       status={PublishedStatus.published}
