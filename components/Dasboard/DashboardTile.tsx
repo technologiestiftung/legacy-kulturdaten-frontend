@@ -33,13 +33,19 @@ const StyledDashboardTileDigit = styled.div`
   flex-grow: 0;
   flex-shrink: 0;
   background: var(--grey-200);
-  font-size: 3rem;
-  line-height: 3rem;
+  font-size: 2.25rem;
+  line-height: 2.25rem;
+  min-width: 2.25rem;
   font-weight: 700;
   padding: 1.125rem 0.75rem;
   box-sizing: content-box;
-  min-width: 3rem;
   text-align: center;
+
+  ${mq(Breakpoint.wide)} {
+    font-size: 3rem;
+    line-height: 3rem;
+    min-width: 3rem;
+  }
 `;
 
 const StyledDashboardTileContainerChildren = styled.div`

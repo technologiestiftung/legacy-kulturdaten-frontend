@@ -8,6 +8,60 @@ export const deDE: Localization = {
   },
   dashboard: {
     info: {
+      start: {
+        title: () => 'So legst du los',
+        tileDone: () => 'Erledigt',
+        organizer: {
+          title: () => 'Anbieter:in erstellen',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Eine Anbieter:in stellt dein öffentliches Profil dar. Es enthält Informationen zu
+                dir oder deiner Organisation.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Alles was du in der Kulturdatenplattform anlegst, hat eine Anbieter:in.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          button: () => 'Jetzt Anbieter:in erstellen',
+          done: () => 'Anbieter:in erstellt',
+        },
+        offer: {
+          title: () => 'Angebot erstellen',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Ein Angebot kann eine Veranstaltung sein, aber auch ein Kurs, eine Radiosendung,
+                eine Filmvorführung, oder etwas ganz anderes.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Das Angebot enthält Informationen über Inhalt, Ort und Zeit. Jedes Angebot kann
+                beliebig viele Termine enthalten.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          button: () => 'Jetzt Angebot erstellen',
+          done: () => 'Angebot erstellt',
+        },
+        location: {
+          title: () => 'Ort erstellen',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                Die meisten Angebote finden an einem Ort statt - dies kann auch ein virtueller Ort
+                wie ein Stream sein.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                Alle relevanten Informationen über einen Veranstaltungsort kannst du hier erfassen,
+                inklusive umfangreiche Angaben zur Barrierefreiheit.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          button: () => 'Jetzt Ort erstellen',
+          done: () => 'Ort erstellt',
+        },
+      },
       offers: {
         title: () => 'Aktuelle Angebote',
         link: () => 'Angebot anschauen',

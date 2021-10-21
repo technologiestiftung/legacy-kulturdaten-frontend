@@ -17,10 +17,20 @@ import {
   DashboardTileText,
   DashboardTileTextP,
 } from '../../../components/Dasboard/DashboardTile';
-import { DashboardTileLink } from '../../../components/Dasboard/DashboardTileLink';
+import {
+  DashboardTileButton,
+  DashboardTileLink,
+} from '../../../components/Dasboard/DashboardTileLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { DashboardLinkList } from '../../../components/Dasboard/DashboardLinkList';
-import { Order, useList, useOfferDateList } from '../../../lib/categories';
+import {
+  Order,
+  useCreateLocation,
+  useCreateOffer,
+  useCreateOrganizer,
+  useList,
+  useOfferDateList,
+} from '../../../lib/categories';
 import { Offer } from '../../../lib/api/types/offer';
 import { OfferList } from '../../../lib/api';
 import { useCategories } from '../../../config/categories';
@@ -28,6 +38,7 @@ import { getTranslation } from '../../../lib/translations';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { DateFormat, useDate } from '../../../lib/date';
 import { DateStatusFlag } from '../../../components/DateList/DateStatusFlag';
+import { useLoadingScreen } from '../../../components/Loading/LoadingScreen';
 
 const StyledDashboardTileDate = styled.div`
   display: flex;
@@ -92,6 +103,88 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
   );
 };
 
+const DashboardStartTileRow: React.FC = () => {
+  const t = useT();
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
+  const createOrganizer = useCreateOrganizer();
+  const createOffer = useCreateOffer();
+  const createLocation = useCreateLocation();
+  const loadingScreen = useLoadingScreen();
+
+  const tileSpan = isUltraOrWider ? 'span 4' : undefined;
+
+  return (
+    <DashboardRow title={t('dashboard.info.start.title') as string}>
+      <DashboardTile
+        title={t('dashboard.info.start.organizer.title') as string}
+        gridColumn={tileSpan}
+        digit={1}
+        link={
+          <DashboardTileButton
+            title={t('dashboard.info.start.organizer.button') as string}
+            onClick={() => {
+              loadingScreen(
+                t('categories.organizer.form.create'),
+                async () => {
+                  const resp = await createOrganizer();
+                  return resp;
+                },
+                t('general.takeAFewSeconds')
+              );
+            }}
+          />
+        }
+      >
+        {t('dashboard.info.start.organizer.content')}
+      </DashboardTile>
+      <DashboardTile
+        title={t('dashboard.info.start.offer.title') as string}
+        gridColumn={tileSpan}
+        digit={2}
+        link={
+          <DashboardTileButton
+            title={t('dashboard.info.start.offer.button') as string}
+            onClick={() => {
+              loadingScreen(
+                t('categories.offer.form.create'),
+                async () => {
+                  const resp = await createOffer();
+                  return resp;
+                },
+                t('general.takeAFewSeconds')
+              );
+            }}
+          />
+        }
+      >
+        {t('dashboard.info.start.offer.content')}
+      </DashboardTile>
+      <DashboardTile
+        title={t('dashboard.info.start.location.title') as string}
+        gridColumn={tileSpan}
+        digit={3}
+        link={
+          <DashboardTileButton
+            title={t('dashboard.info.start.location.button') as string}
+            onClick={() => {
+              loadingScreen(
+                t('categories.location.form.create'),
+                async () => {
+                  const resp = await createLocation();
+                  return resp;
+                },
+                t('general.takeAFewSeconds')
+              );
+            }}
+          />
+        }
+      >
+        {t('dashboard.info.start.location.content')}
+      </DashboardTile>
+    </DashboardRow>
+  );
+};
+
 const greetings: {
   [key: string]: string[];
 } = {
@@ -138,19 +231,18 @@ const DashboardPage: NextPage = () => {
                 <DashboardOfferTile offer={offer} key={index} />
               ))}
             </DashboardRow>
+            <DashboardStartTileRow />
             <DashboardRow title={t('dashboard.info.data.title') as string}>
-              <DashboardTile title={t('dashboard.info.data.export.title') as string} digit={1}>
+              <DashboardTile title={t('dashboard.info.data.export.title') as string}>
                 {t('dashboard.info.data.export.content')}
               </DashboardTile>
               <DashboardTile
-                digit={2}
                 title={t('dashboard.info.data.api.title') as string}
                 link={
                   <DashboardTileLink
                     href={routes.userSettings({ locale })}
                     type={StandardLinkType.internal}
                     title={t('dashboard.info.data.api.link') as string}
-                    disabled
                   />
                 }
               >

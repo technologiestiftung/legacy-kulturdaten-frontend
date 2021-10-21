@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { ArrowRight, ArrowUpRight } from 'react-feather';
+import { ArrowRight, ArrowUpRight, Plus } from 'react-feather';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
@@ -14,11 +14,16 @@ const StyledDashboardTileLink = styled.a<{ disabled?: boolean }>`
   line-height: var(--line-height-300);
   font-weight: 700;
   column-gap: 0.625rem;
+  border: none;
   border-top: 1px solid var(--grey-400);
   padding: 0.75rem 1.125rem;
   display: flex;
   justify-content: flex-end;
   transition: background var(--transition-duration-fast);
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+  background: var(--white);
 
   &:hover {
     background: var(--grey-200);
@@ -102,4 +107,21 @@ export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
       throw new Error(`DashboardTileLink type "${type}" is not valid`);
     }
   }
+};
+
+interface DashboardTileButtonProps {
+  title: string;
+  onClick: () => void;
+}
+
+export const DashboardTileButton: React.FC<DashboardTileButtonProps> = ({
+  title,
+  onClick,
+}: DashboardTileButtonProps) => {
+  return (
+    <StyledDashboardTileLink as="button" onClick={onClick}>
+      <span>{title}</span>
+      <Plus />
+    </StyledDashboardTileLink>
+  );
 };
