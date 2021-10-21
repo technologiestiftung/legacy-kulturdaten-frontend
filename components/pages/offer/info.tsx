@@ -467,7 +467,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -482,7 +482,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -497,7 +497,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -512,7 +512,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   useEffect(() => {
