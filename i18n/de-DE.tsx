@@ -116,6 +116,7 @@ export const deDE: Localization = {
     to: () => 'bis',
     add: () => 'Neue Öffnungszeit hinzufügen',
     remove: () => 'entfernen',
+    note: () => 'Anmerkung zu Öffnungszeiten',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Veröffentliche ${categoryName}`,
@@ -197,6 +198,7 @@ export const deDE: Localization = {
     email: () => 'E-Mail',
     website: () => 'Website',
     links: () => 'Relevante Links',
+    urlPlaceholder: () => 'https://example.com',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
     },
@@ -654,7 +656,7 @@ export const deDE: Localization = {
         contact: () => 'Kontaktdaten',
         tel: () => 'Telefon',
         district: () => 'Bezirk',
-        url: () => 'URL des virtuellen Ortes',
+        url: () => 'URL des Ortes',
         rent: {
           title: () => 'Vermietung',
           url: () => 'Vermietungslinks / Vermietungsinformation',

@@ -113,6 +113,7 @@ export const enDE: Localization = {
     to: () => 'bis',
     add: () => 'Add new opening hours',
     remove: () => 'remove',
+    note: () => 'Note on opening hours',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Publishing ${categoryName}`,
@@ -648,7 +649,7 @@ export const enDE: Localization = {
         contact: () => 'Contact data',
         tel: () => 'Phone',
         district: () => 'District',
-        url: () => 'URL of the Virtual Location',
+        url: () => 'URL of the Location',
         rent: {
           title: () => 'Rent',
           url: () => 'Rent link / Rent information',

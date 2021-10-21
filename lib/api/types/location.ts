@@ -10,6 +10,7 @@ export type LocationTranslation = {
     language: Language;
     name?: string;
     description?: string;
+    openingHours?: string;
   };
 } & Translation;
 

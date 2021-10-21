@@ -1,20 +1,19 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { EntryFormHook } from '.';
-import { Categories } from '../../../../config/categories';
-import { defaultLanguage, Language } from '../../../../config/locale';
+import { Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
-import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
-import { Category, useEntry, useMutateList } from '../../../../lib/categories';
+import { CategoryEntry } from '../../../../lib/api/types/general';
+import { OfferTranslation } from '../../../../lib/api/types/offer';
+import { Category, useEntry } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
-import { useOrganizerId } from '../../../../lib/useOrganizer';
+import { usePseudoUID } from '../../../../lib/uid';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
-import { Input, InputType } from '../../../input';
-import { useUser } from '../../../user/useUser';
+import { Textarea } from '../../../textarea';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
-interface SetNameProps {
+interface SetTeaserProps {
   label: string;
   ariaLabel?: string;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -22,53 +21,53 @@ interface SetNameProps {
   setPristine: (pristine: boolean) => void;
   value: string;
   setValue: (value: string) => void;
-  name: string;
+  teaser: string;
   required?: boolean;
   valid?: boolean;
   hint?: boolean;
 }
 
-const Name: React.FC<SetNameProps> = ({
+const Teaser: React.FC<SetTeaserProps> = ({
   label,
   ariaLabel,
   onSubmit,
   pristine,
   setPristine,
   setValue,
-  name,
+  teaser,
   value,
   required,
-  hint,
-}: SetNameProps) => {
+}: SetTeaserProps) => {
+  const uid = usePseudoUID();
   // set initial value
   useEffect(() => {
     if (pristine) {
-      setValue(name);
+      setValue(teaser);
     }
-  }, [pristine, name, setValue]);
+  }, [pristine, teaser, setValue]);
 
   return (
     <form onSubmit={onSubmit}>
-      <Input
+      <Textarea
+        id={`${uid}-textarea`}
         label={label}
         ariaLabel={ariaLabel}
-        type={InputType.text}
         value={value || ''}
         onChange={(e) => {
           setPristine(false);
           setValue(e.target.value);
         }}
         required={required}
-        hint={hint}
+        rows={5}
       />
     </form>
   );
 };
 
-export const useName = <
+export const useTeaser = <
   EntryType extends CategoryEntry,
   EntryShowCallType extends ApiCall,
-  TranslationType extends Translation
+  TranslationType extends OfferTranslation
 >(props: {
   category: Category;
   query: ParsedUrlQuery;
@@ -85,46 +84,33 @@ export const useName = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, ariaLabel, loaded, showHint } = props;
+  const { category, query, language, label, ariaLabel } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
-  const organizerId = useOrganizerId();
-  const mutateList = useMutateList(
-    category,
-    category.name === Categories.location
-      ? [['organizer', organizerId]]
-      : category.name === Categories.offer
-      ? [['organizers', organizerId]]
-      : undefined
-  );
+
   const call = useApiCall();
   const entryTranslation = getTranslation<TranslationType>(
     language,
     entry?.data?.relations?.translations as TranslationType[],
     false
   );
-  const name = useMemo(
-    () => entryTranslation?.attributes?.name,
-    [entryTranslation?.attributes?.name]
+  const teaser = useMemo(
+    () => entryTranslation?.attributes?.teaser,
+    [entryTranslation?.attributes?.teaser]
   );
-  const [value, setValue] = useState(name || '');
+  const [value, setValue] = useState(teaser || '');
   const [pristine, setPristine] = useState(true);
-  const { mutateUserInfo } = useUser();
 
   useEffect(() => {
-    if (pristine && name !== value) {
-      setValue(name);
+    if (pristine && teaser !== value) {
+      setValue(teaser);
     }
-  }, [pristine, name, value]);
-
-  const required = useMemo(() => language === defaultLanguage, [language]);
-
-  const valid = useMemo(() => required !== true || (value && value.length > 0), [required, value]);
+  }, [pristine, teaser, value]);
 
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
 
-    if (valid && !pristine) {
+    if (!pristine) {
       try {
         const resp = await call(category.api.update.factory, {
           entry: {
@@ -132,7 +118,7 @@ export const useName = <
               translations: [
                 {
                   attributes: {
-                    name: value,
+                    teaser: value,
                     language,
                   },
                 },
@@ -144,8 +130,6 @@ export const useName = <
 
         if (resp.status === 200) {
           mutate();
-          mutateList();
-          mutateUserInfo();
           setTimeout(() => setPristine(true), 500);
         }
       } catch (e) {
@@ -153,15 +137,9 @@ export const useName = <
       }
     }
   };
-
-  const hint = useMemo(
-    () => showHint && loaded && (!value || value?.length < 1),
-    [showHint, loaded, value]
-  );
-
   return {
     form: (
-      <Name
+      <Teaser
         {...{
           pristine,
           setPristine,
@@ -170,25 +148,22 @@ export const useName = <
           label,
           ariaLabel,
           onSubmit,
-          name,
-          required,
-          valid,
-          hint,
+          teaser,
         }}
       />
     ),
     onSubmit,
     pristine,
     reset: () => {
-      setValue(name);
+      setValue(teaser);
       setPristine(true);
     },
-    valid,
+    valid: true,
     value,
   };
 };
 
-export const useNameForm: EntryFormHook = (
+export const useTeaserForm: EntryFormHook = (
   { category, query },
   loaded,
   showHint,
@@ -197,39 +172,39 @@ export const useNameForm: EntryFormHook = (
   const t = useT();
 
   const {
-    form: setNameGerman,
+    form: setTeaserGerman,
     onSubmit: onSubmitGerman,
     pristine: pristineGerman,
     reset: resetGerman,
     valid: validGerman,
     value: valueGerman,
-  } = useName({
+  } = useTeaser({
     category,
     query,
     language: Language.de,
     label: t('forms.labelGerman') as string,
     ariaLabel: title
       ? `${title} ${t('forms.labelGerman')}`
-      : `${t('forms.name')} ${t('forms.labelGerman')}`,
+      : `${t('forms.teaser')} ${t('forms.labelGerman')}`,
     loaded,
     showHint,
   });
 
   const {
-    form: setNameEnglish,
+    form: setTeaserEnglish,
     onSubmit: onSubmitEnglish,
     pristine: pristineEnglish,
     reset: resetEnglish,
     valid: validEnglish,
     value: valueEnglish,
-  } = useName({
+  } = useTeaser({
     category,
     query,
     language: Language.en,
     label: t('forms.labelEnglish') as string,
     ariaLabel: title
       ? `${title} ${t('forms.labelEnglish')}`
-      : `${t('forms.name')} ${t('forms.labelEnglish')}`,
+      : `${t('forms.teaser')} ${t('forms.labelEnglish')}`,
     loaded,
     showHint,
   });
@@ -250,18 +225,22 @@ export const useNameForm: EntryFormHook = (
       loaded &&
       (typeof valueEnglish === 'undefined' ||
         typeof valueGerman === 'undefined' ||
-        valueEnglish?.length < 1 ||
-        valueGerman?.length < 1),
+        valueEnglish.length < 1 ||
+        valueGerman.length < 1),
     [showHint, loaded, valueEnglish, valueGerman]
   );
 
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={title || `${t('forms.name') as string}`} valid={valid} hint={hint} />
+        <EntryFormHead
+          title={title || `${t('forms.teaser') as string}`}
+          valid={valid}
+          hint={hint}
+        />
         <FormGrid>
-          <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
-          <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
+          <FormItem width={FormItemWidth.full}>{setTeaserGerman}</FormItem>
+          <FormItem width={FormItemWidth.full}>{setTeaserEnglish}</FormItem>
         </FormGrid>
       </div>
     ),

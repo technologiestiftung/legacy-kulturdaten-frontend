@@ -23,7 +23,7 @@ import { Categories } from '../../../config/categories';
 import { LocationList } from '../../EntryList/LocationList';
 import { Save } from '../../EntryForm/Save';
 import { useSaveDate } from '../helpers/useSaveDate';
-import { useDescriptionForm, useTeaserForm } from '../helpers/form/Description';
+import { useDescriptionForm } from '../helpers/form/Description';
 import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
@@ -33,6 +33,7 @@ import { Input, InputType } from '../../input';
 import { contentLanguages } from '../../../config/locales';
 import { useLinksForm } from '../helpers/form/Links';
 import { RadioList } from '../../Radio/RadioList';
+import { useTeaserForm } from '../helpers/form/Teaser';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -467,7 +468,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -482,7 +483,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -497,7 +498,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -512,7 +513,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   useEffect(() => {
