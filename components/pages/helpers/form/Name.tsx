@@ -250,8 +250,8 @@ export const useNameForm: EntryFormHook = (
       loaded &&
       (typeof valueEnglish === 'undefined' ||
         typeof valueGerman === 'undefined' ||
-        valueEnglish.length < 1 ||
-        valueGerman.length < 1),
+        valueEnglish?.length < 1 ||
+        valueGerman?.length < 1),
     [showHint, loaded, valueEnglish, valueGerman]
   );
 
