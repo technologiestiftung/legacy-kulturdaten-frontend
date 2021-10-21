@@ -61,6 +61,40 @@ export const enDE: Localization = {
           done: () => 'Location was created',
         },
       },
+      organizer: {
+        title: () => 'Bringing your Organizer to life',
+        team: {
+          title: () => 'Invite team members',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                You can give other users access to your Organizers. They can then view and edit the
+                data of the Organizers and create offers and locations for them.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                To grant access, you can invite users on the Team page.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Manage your team now',
+        },
+        profile: {
+          title: () => 'Fill out the profile',
+          content: () => (
+            <DashboardTileText>
+              <DashboardTileTextP>
+                The more information you enter in your Organizer{"'"}s profile, the more meaningful
+                and easy to find your data.
+              </DashboardTileTextP>
+              <DashboardTileTextP>
+                On the Profile page you can enter general information, categorize your Organizer and
+                upload pictures.
+              </DashboardTileTextP>
+            </DashboardTileText>
+          ),
+          link: () => 'Fill out the profile now',
+        },
+      },
       offers: {
         title: () => 'Current Offers',
         link: () => 'View Offer',

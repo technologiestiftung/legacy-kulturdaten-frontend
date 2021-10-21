@@ -283,6 +283,37 @@ const DashboardPage: NextPage = () => {
                 ))}
               </DashboardRow>
             )}
+            {organizerId !== defaultOrganizerId && (
+              <DashboardRow title={t('dashboard.info.organizer.title') as string}>
+                <DashboardTile
+                  title={t('dashboard.info.organizer.team.title') as string}
+                  link={
+                    <DashboardTileLink
+                      href={routes.team({ locale, query: { organizer: organizerId } })}
+                      type={StandardLinkType.internal}
+                      title={t('dashboard.info.organizer.team.link') as string}
+                    />
+                  }
+                >
+                  {t('dashboard.info.organizer.team.content')}
+                </DashboardTile>
+                <DashboardTile
+                  title={t('dashboard.info.organizer.profile.title') as string}
+                  link={
+                    <DashboardTileLink
+                      href={routes.organizer({
+                        locale,
+                        query: { organizer: organizerId, sub: 'info' },
+                      })}
+                      type={StandardLinkType.internal}
+                      title={t('dashboard.info.organizer.profile.link') as string}
+                    />
+                  }
+                >
+                  {t('dashboard.info.organizer.profile.content')}
+                </DashboardTile>
+              </DashboardRow>
+            )}
             <DashboardStartTileRow />
             <DashboardRow title={t('dashboard.info.data.title') as string}>
               <DashboardTile title={t('dashboard.info.data.export.title') as string}>
