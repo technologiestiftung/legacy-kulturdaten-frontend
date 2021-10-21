@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCategories } from '../../../config/categories';
-import { useApiCall } from '../../../lib/api';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
@@ -11,11 +9,10 @@ import React, { useMemo } from 'react';
 import { useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
-import { Language } from '../../../config/locale';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { useUser } from '../../user/useUser';
 import { RoleName } from '../../../lib/api/types/role';
-import { OrganizerCreate } from '../../../lib/api/routes/organizer/create';
+import { useCreateOrganizer } from '../../../lib/categories';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
@@ -40,15 +37,14 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   layout,
   onClick,
 }: OrganizerBandProps) => {
-  const categories = useCategories();
-  const { user, mutateUserInfo } = useUser();
+  const { user } = useUser();
   const language = useLanguage();
   const locale = useLocale();
   const router = useRouter();
   const setOrganizerId = useSetOrganizerId();
   const t = useT();
-  const call = useApiCall();
   const loadingScreen = useLoadingScreen();
+  const createOrganizer = useCreateOrganizer();
 
   const organizerOwnerList = useMemo(
     () =>
@@ -101,40 +97,9 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
         noBorder
         asButton
         onClick={async () => {
-          const category = categories.organizer;
-
           loadingScreen(
             t('menu.createOrganizer'),
-            async () => {
-              try {
-                const resp = await call<OrganizerCreate>(category.api.create.factory, {
-                  entry: {
-                    relations: {
-                      translations: [
-                        { attributes: { language: Language.de, name: 'Neue Anbieter:in' } },
-                      ],
-                    },
-                  },
-                });
-
-                if (resp.status === 200) {
-                  const id = resp.body.data.id;
-
-                  mutateUserInfo();
-
-                  router.push(
-                    category.routes.list({ locale, query: { sub: 'info', organizer: id } })
-                  );
-
-                  setOrganizerId(id);
-
-                  return { success: true };
-                }
-              } catch (e) {
-                console.error(e);
-                return { success: false, error: t('general.serverProblem') };
-              }
-            },
+            async () => await createOrganizer(),
             t('general.takeAFewSeconds')
           );
         }}

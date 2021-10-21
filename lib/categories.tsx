@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'node:querystring';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import useSWR, { mutate as mutateSwr } from 'swr';
 import { Button, ButtonVariant } from '../components/button';
 import { EntryListContext } from '../components/EntryList/EntryListContext';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
+import { useUser } from '../components/user/useUser';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
 import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
@@ -14,11 +15,13 @@ import { OfferMainTypeList, offerMainTypeListFactory } from './api/routes/offerM
 import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
 import { OrganizerTypeList, organizerTypeListFactory } from './api/routes/organizerType/list';
 import { CategoryEntry } from './api/types/general';
+import { LocationType } from './api/types/location';
 import { OfferDate, OfferType, OfferMainType } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
 import { EntryType } from './api/types/typeSubject';
+import { useT } from './i18n';
 import { Route, useLocale } from './routing';
-import { defaultOrganizerId } from './useOrganizer';
+import { defaultOrganizerId, useOrganizerId, useSetOrganizerId } from './useOrganizer';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -331,3 +334,131 @@ export const useOfferMainTypeList = (): OfferMainType[] => {
 
   return data;
 };
+
+export const useCreateEntry = (
+  categoryName: Categories
+): (() => Promise<{
+  success: boolean;
+  error?: React.ReactNode | string;
+}>) => {
+  const call = useApiCall();
+  const categories = useCategories();
+  const organizerId = useOrganizerId();
+  const setOrganizerId = useSetOrganizerId();
+  const router = useRouter();
+  const locale = useLocale();
+  const t = useT();
+  const { mutateUserInfo } = useUser();
+
+  const category = categories ? categories[categoryName] : undefined;
+  const mutateList = useMutateList(
+    category,
+    categoryName === Categories.location
+      ? [['organizer', organizerId]]
+      : categoryName === Categories.offer
+      ? [['organizers', organizerId]]
+      : undefined
+  );
+
+  const entry = useMemo(
+    () =>
+      categoryName === Categories.organizer
+        ? {
+            relations: {
+              translations: [{ attributes: { language: Language.de, name: 'Neue Anbieter:in' } }],
+            },
+          }
+        : categoryName === Categories.offer
+        ? {
+            relations: {
+              translations: [{ attributes: { language: Language.de, name: 'Neues Angebot' } }],
+              organizers: [organizerId],
+            },
+          }
+        : {
+            attributes: {
+              type: LocationType.physical,
+            },
+            relations: {
+              translations: [{ attributes: { language: Language.de, name: 'Neuer Ort' } }],
+              organizer: organizerId,
+            },
+          },
+    [categoryName, organizerId]
+  );
+
+  const createEntry = useCallback(async () => {
+    try {
+      const resp = await call<
+        {
+          response: {
+            body: {
+              data: {
+                id: string;
+              };
+            } & ApiCall['response']['body'];
+          } & ApiCall['response'];
+        } & ApiCall
+      >(category.api.create.factory, {
+        entry,
+      });
+
+      if (resp.status === 200) {
+        const id = resp.body.data.id;
+
+        router.push(
+          category.routes.list({
+            locale,
+            query: {
+              id,
+              sub: 'info',
+              organizer: categoryName === Categories.organizer ? id : organizerId,
+            },
+          })
+        );
+
+        if (categoryName === Categories.organizer) {
+          mutateUserInfo();
+          setTimeout(() => setOrganizerId(id), 500);
+        } else {
+          mutateList();
+        }
+
+        return { success: true };
+      }
+    } catch (e) {
+      console.error(e);
+      return { success: false, error: t('general.serverProblem') };
+    }
+  }, [
+    call,
+    category?.api?.create?.factory,
+    category?.routes,
+    locale,
+    mutateList,
+    organizerId,
+    entry,
+    router,
+    t,
+    categoryName,
+    setOrganizerId,
+    mutateUserInfo,
+  ]);
+
+  return createEntry;
+};
+
+export const useCreateOrganizer = (): (() => Promise<{
+  success: boolean;
+  error?: React.ReactNode | string;
+}>) => useCreateEntry(Categories.organizer);
+
+export const useCreateOffer = (): (() => Promise<{
+  success: boolean;
+  error?: React.ReactNode | string;
+}>) => useCreateEntry(Categories.offer);
+
+export const useCreateLocation = (): (() => Promise<{
+  success: boolean;
+  error?: React.ReactNode | string;
+}>) => useCreateEntry(Categories.location);
