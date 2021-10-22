@@ -25,11 +25,6 @@ jobs:
 
       - name: Installing Node.js packages
         run: npm ci
-
-      - name: Running tests
-        run: |
-          npm run test -- --passWithNoTests
-        # npm run lint
   deploy:
     needs: verify
     runs-on: ubuntu-latest
