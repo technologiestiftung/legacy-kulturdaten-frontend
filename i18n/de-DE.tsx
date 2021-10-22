@@ -190,6 +190,8 @@ export const deDE: Localization = {
       email: () => 'E-Mail',
       role: () => 'Rolle',
       pending: () => 'Einladung ausstehend',
+      info: () =>
+        'Es muss immer min. eine Besitzer:in geben. Es darf aber auch mehrere geben. Wenn du nicht mehr Besitzer:in sein möchtest, kannst du die Besitzer:innen Rolle jemand anderes zuweisen und dir eine andere Rolle zuweisen.',
     },
     roles: {
       owner: () => 'Besitzer:in',

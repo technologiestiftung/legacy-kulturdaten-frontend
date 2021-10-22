@@ -135,7 +135,7 @@ const useTeamForm: EntryFormHook = ({ category, query }) => {
     () =>
       rolesFromApi?.find(
         (role) =>
-          role.attributes.isActive && ((role as Role).relations.user as User)?.id === user.id
+          role.attributes.isActive && ((role as Role).relations.user as User)?.id === user?.id
       )?.attributes.role === RoleName.owner,
     [rolesFromApi, user?.id]
   );
@@ -231,7 +231,7 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
     () =>
       entry?.data?.relations?.roles?.find(
         (role) =>
-          role.attributes.isActive && ((role as Role).relations.user as User)?.id === user.id
+          role.attributes.isActive && ((role as Role).relations.user as User)?.id === user?.id
       )?.attributes.role === RoleName.owner,
     [entry?.data?.relations?.roles, user?.id]
   );

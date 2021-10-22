@@ -186,6 +186,8 @@ export const enDE: Localization = {
       email: () => 'Email',
       role: () => 'Role',
       pending: () => 'Invite pending',
+      info: () =>
+        "There always needs to be at least one Owner. There can be more though. If you don't want to be Owner anymore, you can assign the Owner role to someone else and assign yourself a different role.",
     },
     roles: {
       owner: () => 'Owner',

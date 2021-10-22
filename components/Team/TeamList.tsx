@@ -10,8 +10,14 @@ import { mq } from '../globals/Constants';
 import { Select } from '../select';
 import { useUser } from '../user/useUser';
 import { User } from '../../lib/api/types/user';
+import { useMemo } from 'react';
+import { Info, InfoColor } from '../info';
 
-const StyledTeamList = styled.div``;
+const StyledTeamList = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+`;
 
 const StyledTeamListList = styled.ul`
   border: 1px solid var(--grey-400);
@@ -74,6 +80,7 @@ const StyledTeamListItemTitle = styled.div`
 
 const StyledTeamListItemMail = styled.div`
   font-weight: 700;
+  word-break: break-all;
 `;
 
 const StyledTeamListItemStatus = styled.div``;
@@ -110,6 +117,11 @@ export const TeamList: React.FC<TeamListProps> = ({
   const { user: currentUser } = useUser();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
+  const ownersCount = useMemo(
+    () => roles?.filter((role) => role.attributes.role === RoleName.owner)?.length,
+    [roles]
+  );
+
   return (
     <StyledTeamList>
       <StyledTeamListList>
@@ -128,6 +140,9 @@ export const TeamList: React.FC<TeamListProps> = ({
 
           const isCurrentUser = currentUser?.attributes?.email === email;
           const showRemove = !isCurrentUser && userIsOwner;
+          const isOwnerRole = role.attributes?.role === RoleName.owner;
+
+          const canNotBeRemoved = isOwnerRole && ownersCount < 2;
 
           return (
             <StyledTeamListItem key={index} isCurrentUser={isCurrentUser}>
@@ -140,8 +155,8 @@ export const TeamList: React.FC<TeamListProps> = ({
               <StyledTeamListItemRole>
                 <Select
                   id={`${uid}-roles`}
-                  value={role.attributes?.role || ''}
-                  disabled={!userIsOwner}
+                  value={roles.length === 1 ? RoleName.owner : role.attributes?.role || ''}
+                  disabled={!userIsOwner || roles.length === 1 || canNotBeRemoved}
                   onChange={(e) => {
                     onChange([
                       ...roles.slice(0, index),
@@ -149,7 +164,7 @@ export const TeamList: React.FC<TeamListProps> = ({
                         ...role,
                         attributes: {
                           ...role.attributes,
-                          role: e.target.value as RoleName,
+                          role: canNotBeRemoved ? RoleName.owner : (e.target.value as RoleName),
                         },
                       } as OrganizerRole,
                       ...roles.slice(index + 1),
@@ -160,10 +175,10 @@ export const TeamList: React.FC<TeamListProps> = ({
                   <option value={RoleName.editor}>{t('team.roles.editor')}</option>
                 </Select>
               </StyledTeamListItemRole>
-              <StyledTeamListItemRemove hide={!showRemove}>
+              <StyledTeamListItemRemove hide={!showRemove || canNotBeRemoved}>
                 <Button
                   onClick={() =>
-                    showRemove
+                    showRemove && !canNotBeRemoved
                       ? onChange(roles.filter((role, roleIndex) => roleIndex !== index))
                       : undefined
                   }
@@ -175,6 +190,7 @@ export const TeamList: React.FC<TeamListProps> = ({
           );
         })}
       </StyledTeamListList>
+      {userIsOwner && <Info color={InfoColor.white}>{t('team.list.info')}</Info>}
     </StyledTeamList>
   );
 };
