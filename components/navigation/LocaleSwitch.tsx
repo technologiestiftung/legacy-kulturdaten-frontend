@@ -6,6 +6,8 @@ import { Locale, locales } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { useLocale, useSwitchLocale } from '../../lib/routing';
 import { Select, SelectLabelPosition, SelectVariant } from '../select';
+import { mq } from '../globals/Constants';
+import { Breakpoint } from '../../lib/WindowService';
 
 export enum LocaleSwitchVariant {
   default = 'default',
@@ -18,11 +20,15 @@ const StyledLocaleSwitch = styled.div<{ switchVariant: LocaleSwitchVariant }>`
   ${({ switchVariant }) =>
     switchVariant === LocaleSwitchVariant.minimal
       ? css`
-          padding: 0 1.5rem;
+          padding: 0 0.75rem;
           -webkit-box-pack: end;
           justify-content: flex-end;
           label {
             display: none;
+          }
+
+          ${mq(Breakpoint.wide)} {
+            padding: 0 1.5rem;
           }
         `
       : css`

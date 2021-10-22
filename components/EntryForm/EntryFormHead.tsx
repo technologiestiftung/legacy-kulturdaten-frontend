@@ -8,8 +8,12 @@ import { AlertSymbol } from '../assets/AlertSymbol';
 import { InfoSymbol } from '../assets/InfoSymbol';
 import { mq } from '../globals/Constants';
 import { Tooltip } from '../tooltip';
+import { TooltipP } from '../tooltip/TooltipContent';
 
-const StyledEntryFormHead = styled.div<{ isExpander?: boolean; addPadding?: boolean }>`
+const StyledEntryFormHead = styled.div<{
+  isExpander?: boolean;
+  addPadding?: boolean;
+}>`
   display: flex;
   border: none;
   background: transparent;
@@ -171,7 +175,9 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
         {title}
         {tooltip && (
           <StyledTooltip>
-            <Tooltip>{tooltip}</Tooltip>
+            <Tooltip>
+              <TooltipP>{tooltip}</TooltipP>
+            </Tooltip>
           </StyledTooltip>
         )}
       </StyledEntryFormHeadTitle>
