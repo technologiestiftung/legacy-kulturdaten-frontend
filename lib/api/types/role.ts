@@ -12,6 +12,7 @@ export type Role = {
   type?: 'organizerrole' | 'offerrole' | 'locationrole';
   attributes: {
     role: RoleName;
+    isActive?: boolean;
     status?: string;
     createdAt?: string;
     updatedAt?: string;

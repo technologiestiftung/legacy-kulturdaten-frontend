@@ -187,6 +187,22 @@ export const deDE: Localization = {
   team: {
     list: {
       title: () => 'Teammitglieder',
+      email: () => 'E-Mail',
+      role: () => 'Rolle',
+      pending: () => 'Einladung ausstehend',
+    },
+    roles: {
+      owner: () => 'Besitzer:in',
+      editor: () => 'Redakteur:in',
+    },
+    invite: {
+      label: () => 'E-Mails von neuen Mitgliedern, die du einladen möchtest',
+      title: () => 'Neue Teammitglieder einladen',
+      loading: () => 'Lade neue Teammitglieder ein',
+      button: () => 'Einladen',
+      hint: () =>
+        'Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mail, getrennt mit "," (Komma).',
+      placeholder: () => 'name@example.com, title@another-example.com',
     },
   },
   greetings: {

@@ -183,6 +183,21 @@ export const enDE: Localization = {
   team: {
     list: {
       title: () => 'Team members',
+      email: () => 'Email',
+      role: () => 'Role',
+      pending: () => 'Invite pending',
+    },
+    roles: {
+      owner: () => 'Owner',
+      editor: () => 'Editor',
+    },
+    invite: {
+      label: () => 'Emails of new members you want to invite',
+      title: () => 'Invite new team members',
+      loading: () => 'Inviting new team members',
+      button: () => 'Invite',
+      hint: () => 'You can add a single email, or a list of emails separated with "," (comma).',
+      placeholder: () => 'name@example.com, title@another-example.com',
     },
   },
   greetings: {

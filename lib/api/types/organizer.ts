@@ -3,7 +3,7 @@ import { Address } from './address';
 import { Contact } from './contact';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { Media } from './media';
-import { Role } from './role';
+import { Role, RoleName } from './role';
 import { Tag } from './tag';
 import {
   EntrySubject,
@@ -17,6 +17,18 @@ export type OrganizerType = EntryType;
 export type OrganizerSubject = EntrySubject;
 export type OrganizerTypeTranslation = EntryTypeTranslation;
 export type OrganizerSubjectTranslation = EntrySubjectTranslation;
+
+export type OrganizerRolePending = {
+  id: string;
+  attributes: {
+    role: RoleName;
+    email: string;
+    isActive?: boolean;
+    status?: string;
+  };
+};
+
+export type OrganizerRole = Role | OrganizerRolePending;
 
 export type OrganizerTranslation = {
   type: 'organizertranslation';
@@ -46,7 +58,7 @@ export type Organizer = {
       logo?: Media['data'];
       tags?: Tag[];
       contacts?: Contact[];
-      roles?: Role[];
+      roles?: OrganizerRole[];
     };
   };
   meta?: {
