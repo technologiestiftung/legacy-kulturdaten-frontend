@@ -85,10 +85,10 @@ export const apiRoutes: {
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
   organizerShow: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   locationList: (query) =>

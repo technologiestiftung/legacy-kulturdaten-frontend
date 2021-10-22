@@ -92,7 +92,7 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
 
 export const useMediaForm: EntryFormHook = ({ category, query }) => {
   const [valid, setValid] = useState(false);
-  const { entry } = useEntry(category, query);
+  const { entry, mutate: mutateEntry } = useEntry(category, query);
   const call = useApiCall();
   const t = useT();
   const loadingScreen = useLoadingScreen();
@@ -211,6 +211,7 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
                         });
 
                         if (resp.status === 200) {
+                          mutateEntry();
                           return { success: true };
                         }
 
