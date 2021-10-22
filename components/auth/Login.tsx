@@ -16,6 +16,7 @@ import { Button, ButtonSize, ButtonColor, ButtonType, ButtonContentPosition } fr
 import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { Info } from '../info';
+import { StandardLinkType } from '../../lib/generalTypes';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -53,14 +54,19 @@ export const LoginForm: React.FC = () => {
     if (formRef.current?.checkValidity()) {
       loadingScreen(t('login.loading'), async () => {
         try {
-          const resp = await call<AuthLogin>(authLoginFactory, { body: { email, password } });
+          const resp = await call<AuthLogin>(authLoginFactory, {
+            body: { email, password },
+          });
 
           if (resp.status === 200) {
             const token = resp.body.meta.token.token;
 
             login(
               authCookie(token, remember, locale),
-              routes.dashboard({ locale, query: { organizer: defaultOrganizerId } })
+              routes.dashboard({
+                locale,
+                query: { organizer: defaultOrganizerId },
+              })
             );
 
             return { success: true };
@@ -106,7 +112,11 @@ export const LoginForm: React.FC = () => {
             label={t('login.remember') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setRemember(e.target.checked)}
           />
-          <Anchor htmlHref={'#'}>{t('login.passwordReset')}</Anchor>
+          <Anchor
+            href={'#'}
+            type={StandardLinkType.internal}
+            title={t('login.passwordReset') as string}
+          />
         </AuthFormItem>
         <Button
           size={ButtonSize.big}
@@ -119,9 +129,11 @@ export const LoginForm: React.FC = () => {
         <AuthFormItem justifyContent="center">
           <span>
             {t('login.registerReference')}{' '}
-            <Anchor htmlHref={routes.register({ locale })}>
-              {t('login.registerReferenceLinkText')}
-            </Anchor>
+            <Anchor
+              href={routes.register({ locale })}
+              title={t('login.registerReferenceLinkText') as string}
+              type={StandardLinkType.internal}
+            />
           </span>
         </AuthFormItem>
         {error ? <Info>{t('login.error')}</Info> : ''}

@@ -17,6 +17,7 @@ import {
   AuthHeadline,
   AuthSubline,
 } from './AuthWrapper';
+import { StandardLinkType } from '../../lib/generalTypes';
 
 const passwordErrorId = 0;
 const requestErrorId = 1;
@@ -26,10 +27,10 @@ export const RegisterForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
-  const passwordsMatch = useMemo(() => password === passwordConfirmation, [
-    password,
-    passwordConfirmation,
-  ]);
+  const passwordsMatch = useMemo(
+    () => password === passwordConfirmation,
+    [password, passwordConfirmation]
+  );
   const [passwordConfirmationBlurred, setPasswordConfirmationBlurred] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ id: number; message: string }[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
@@ -40,7 +41,10 @@ export const RegisterForm: React.FC = () => {
   useEffect(() => {
     if (password.length > 0 && passwordConfirmation.length > 0) {
       const filteredErrors = errors.filter(({ id }) => id !== passwordErrorId);
-      const passwordError = { id: passwordErrorId, message: t('register.passwordError') as string };
+      const passwordError = {
+        id: passwordErrorId,
+        message: t('register.passwordError') as string,
+      };
       const passwordErrorPresent = errors.length !== filteredErrors.length;
 
       if (passwordErrorPresent && passwordsMatch) {
@@ -173,9 +177,11 @@ export const RegisterForm: React.FC = () => {
             <AuthFormItem justifyContent="center">
               <span>
                 {t('register.loginReference')}{' '}
-                <Anchor htmlHref={routes.login({ locale })}>
-                  {t('register.loginReferenceLinkText')}
-                </Anchor>
+                <Anchor
+                  href={routes.login({ locale })}
+                  title={t('register.loginReferenceLinkText') as string}
+                  type={StandardLinkType.internal}
+                />
               </span>
             </AuthFormItem>
           </AuthFormContainer>
