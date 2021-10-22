@@ -127,6 +127,7 @@ export const TeamList: React.FC<TeamListProps> = ({
                 <Select
                   id={`${uid}-roles`}
                   value={role.attributes?.role || ''}
+                  disabled={!userIsOwner}
                   onChange={(e) => {
                     onChange([
                       ...roles.slice(0, index),

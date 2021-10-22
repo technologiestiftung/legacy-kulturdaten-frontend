@@ -212,10 +212,7 @@ const useTeamForm: EntryFormHook = ({ category, query }) => {
   };
 };
 
-export const OrganizerTeamPage: React.FC<CategoryEntryPage> = <
-  T extends CategoryEntry,
-  C extends ApiCall
->({
+export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
@@ -226,8 +223,18 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = <
     true,
     true
   );
-  const { entry } = useEntry<T, C>(category, query);
+  const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const formattedDate = useSaveDate(entry);
+  const { user } = useUser();
+
+  const userIsOwner = useMemo(
+    () =>
+      entry?.data?.relations?.roles?.find(
+        (role) =>
+          role.attributes.isActive && ((role as Role).relations.user as User)?.id === user.id
+      )?.attributes.role === RoleName.owner,
+    [entry?.data?.relations?.roles, user?.id]
+  );
 
   const {
     renderedForm: teamForm,
@@ -243,17 +250,19 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = <
     <>
       {renderedEntryHeader}
       <div>
-        <Save
-          onClick={async () => {
-            teamSubmit();
-          }}
-          active={!pristine}
-          date={formattedDate}
-          valid={true}
-          hint={false}
-        />
+        {userIsOwner && (
+          <Save
+            onClick={async () => {
+              teamSubmit();
+            }}
+            active={!pristine}
+            date={formattedDate}
+            valid={true}
+            hint={false}
+          />
+        )}
         <EntryFormWrapper>
-          <EntryFormContainer>{inviteForm}</EntryFormContainer>
+          {userIsOwner && <EntryFormContainer>{inviteForm}</EntryFormContainer>}
           <EntryFormContainer>{teamForm}</EntryFormContainer>
         </EntryFormWrapper>
       </div>
