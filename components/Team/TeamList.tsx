@@ -20,9 +20,9 @@ const StyledTeamListList = styled.ul`
 
 const teamListRowGrid = css`
   display: grid;
-  grid-template-columns: 100%;
+  grid-template-columns: 1fr auto;
   column-gap: 0.75rem;
-  row-gap: 1.5rem;
+  row-gap: 0.375rem;
 
   ${mq(Breakpoint.mid)} {
     grid-template-columns: calc(50% - 1.5rem) 25% 25%;
@@ -31,7 +31,7 @@ const teamListRowGrid = css`
 
 const StyledTeamListItem = styled.li<{ isCurrentUser?: boolean }>`
   ${teamListRowGrid}
-  padding: 0.75rem 1.125rem;
+  padding: 0.75rem 1.125rem 1.125rem;
   border-bottom: 1px solid var(--grey-400);
   background: ${({ isCurrentUser }) => (isCurrentUser ? 'var(--grey-200)' : 'var(--white)')};
 
@@ -65,6 +65,11 @@ const StyledTeamListItemTitle = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0.375rem 0;
+  grid-column: span 2;
+
+  ${mq(Breakpoint.mid)} {
+    grid-column: span 1;
+  }
 `;
 
 const StyledTeamListItemMail = styled.div`
@@ -75,10 +80,18 @@ const StyledTeamListItemStatus = styled.div``;
 
 const StyledTeamListItemRole = styled.div``;
 
-const StyledTeamListItemRemove = styled.div`
+const StyledTeamListItemRemove = styled.div<{ hide: boolean }>`
   ${mq(Breakpoint.mid)} {
     justify-self: flex-end;
   }
+
+  ${({ hide }) =>
+    hide &&
+    css`
+      visibility: hidden;
+      pointer-events: none;
+      opacity: 0;
+    `}
 `;
 
 interface TeamListProps {
@@ -114,6 +127,7 @@ export const TeamList: React.FC<TeamListProps> = ({
             : ((role as Role).relations?.user as User)?.attributes.email;
 
           const isCurrentUser = currentUser?.attributes?.email === email;
+          const showRemove = !isCurrentUser && userIsOwner;
 
           return (
             <StyledTeamListItem key={index} isCurrentUser={isCurrentUser}>
@@ -146,15 +160,17 @@ export const TeamList: React.FC<TeamListProps> = ({
                   <option value={RoleName.editor}>{t('team.roles.editor')}</option>
                 </Select>
               </StyledTeamListItemRole>
-              {!isCurrentUser && userIsOwner && (
-                <StyledTeamListItemRemove>
-                  <Button
-                    onClick={() => onChange(roles.filter((role, roleIndex) => roleIndex !== index))}
-                  >
-                    {t('general.remove')}
-                  </Button>
-                </StyledTeamListItemRemove>
-              )}
+              <StyledTeamListItemRemove hide={!showRemove}>
+                <Button
+                  onClick={() =>
+                    showRemove
+                      ? onChange(roles.filter((role, roleIndex) => roleIndex !== index))
+                      : undefined
+                  }
+                >
+                  {t('general.remove')}
+                </Button>
+              </StyledTeamListItemRemove>
             </StyledTeamListItem>
           );
         })}
