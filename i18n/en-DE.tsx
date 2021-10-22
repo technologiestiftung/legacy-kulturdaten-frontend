@@ -639,6 +639,14 @@ export const enDE: Localization = {
         created: () => 'created',
         updated: () => 'updated',
       },
+      options: {
+        exportCsv: () => 'Export as CSV',
+        exportXls: () => 'Export as Excel',
+        delete: () => 'Delete organizer',
+        deleteConfirm: () =>
+          'Are you sure you want to delete this organizer? This cannot be undone.',
+        deleting: () => 'Deleting organizer',
+      },
     },
     offer: {
       list: {
@@ -706,6 +714,13 @@ export const enDE: Localization = {
         accessibility: () => 'Accessibility',
         media: () => 'Images',
       },
+      options: {
+        exportCsv: () => 'Export as CSV',
+        exportXls: () => 'Export as Excel',
+        delete: () => 'Delete offer',
+        deleteConfirm: () => 'Are you sure you want to delete this offer? This cannot be undone.',
+        deleting: () => 'Deleting offer',
+      },
     },
     location: {
       list: {
@@ -753,6 +768,14 @@ export const enDE: Localization = {
           virtualText: () =>
             'A virtually existing location with an URL, e.g. a YouTube or Twitch channel.',
         },
+      },
+      options: {
+        exportCsv: () => 'Export as CSV',
+        exportXls: () => 'Export as Excel',
+        delete: () => 'Delete location',
+        deleteConfirm: () =>
+          'Are you sure you want to delete this location? This cannot be undone.',
+        deleting: () => 'Deleting location',
       },
     },
   },
