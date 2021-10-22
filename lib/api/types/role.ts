@@ -13,7 +13,6 @@ export type Role = {
   attributes: {
     role: RoleName;
     isActive?: boolean;
-    status?: string;
     createdAt?: string;
     updatedAt?: string;
   };

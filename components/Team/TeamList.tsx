@@ -119,8 +119,8 @@ export const TeamList: React.FC<TeamListProps> = ({
             <StyledTeamListItem key={index} isCurrentUser={isCurrentUser}>
               <StyledTeamListItemTitle>
                 <StyledTeamListItemMail>{email}</StyledTeamListItemMail>
-                {role.attributes?.status && (
-                  <StyledTeamListItemStatus>{role.attributes?.status}</StyledTeamListItemStatus>
+                {isPendingUser && (
+                  <StyledTeamListItemStatus>({t('team.list.pending')})</StyledTeamListItemStatus>
                 )}
               </StyledTeamListItemTitle>
               <StyledTeamListItemRole>

@@ -24,7 +24,6 @@ export type OrganizerRolePending = {
     role: RoleName;
     email: string;
     isActive?: boolean;
-    status?: string;
   };
 };
 

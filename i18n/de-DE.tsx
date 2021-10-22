@@ -199,6 +199,7 @@ export const deDE: Localization = {
       label: () => 'E-Mails von neuen Mitgliedern, die du einladen möchtest',
       title: () => 'Neue Teammitglieder einladen',
       loading: () => 'Lade neue Teammitglieder ein',
+      pending: () => 'Einladung ausstehend',
       button: () => 'Einladen',
       hint: ({ max }) =>
         `Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mail (max. ${max}), getrennt mit "," (Komma).`,

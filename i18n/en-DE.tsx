@@ -196,6 +196,7 @@ export const enDE: Localization = {
       title: () => 'Invite new team members',
       loading: () => 'Inviting new team members',
       button: () => 'Invite',
+      pending: () => 'Invite pending',
       hint: ({ max }) =>
         `You can add a single email, or a list of emails (max. ${max}) separated with "," (comma).`,
       hint2: () => 'Example: name@example.com, title@another-example.com',
