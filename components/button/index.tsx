@@ -141,13 +141,15 @@ const StyledButton = styled.button<{
   variant: ButtonVariant;
   disabled?: boolean;
   customCss?: SerializedStyles;
+  contentPosition?: ButtonContentPosition;
 }>`
   margin: 0;
   appearance: none;
   display: inline-flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${({ contentPosition }) =>
+    contentPosition ? contentPosition : ButtonContentPosition.default};
   border: 1px solid var(--black);
   background: ${({ color }) => buttonColors[color].background};
   color: ${({ color }) => buttonColors[color].color};
@@ -167,6 +169,11 @@ const StyledButton = styled.button<{
     opacity: 0.25;
   }
 `;
+
+export enum ButtonContentPosition {
+  default = 'space-between',
+  center = 'center',
+}
 
 const StyledButtonSpan = styled.span``;
 
@@ -239,6 +246,7 @@ export interface ButtonProps {
   onMouseDown?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   disabled?: boolean;
   color?: ButtonColor;
+  contentPosition?: ButtonContentPosition;
   icon?: string;
   renderedIcon?: React.ReactElement;
   iconPosition?: IconPosition;
@@ -261,6 +269,7 @@ export const Button: React.FC<ButtonProps> = ({
   onMouseDown,
   disabled,
   color = ButtonColor.default,
+  contentPosition = ButtonContentPosition.default,
   size = ButtonSize.default,
   variant = ButtonVariant.default,
   asInput,
@@ -281,6 +290,7 @@ export const Button: React.FC<ButtonProps> = ({
       as="input"
       value={children as string}
       color={color}
+      contentPosition={contentPosition}
       size={size}
       variant={variant}
       id={id}
@@ -298,6 +308,7 @@ export const Button: React.FC<ButtonProps> = ({
       onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
       onMouseDown={onMouseDown ? (e: MouseEvent<HTMLButtonElement>) => onMouseDown(e) : undefined}
       color={color}
+      contentPosition={contentPosition}
       size={size}
       variant={variant}
       id={id}
