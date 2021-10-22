@@ -340,6 +340,7 @@ export const useCreateEntry = (
   const locale = useLocale();
   const t = useT();
   const { mutateUserInfo } = useUser();
+  const { setLastEntryId } = useContext(EntryListContext);
 
   const category = categories ? categories[categoryName] : undefined;
   const mutateList = useMutateList(
@@ -397,23 +398,28 @@ export const useCreateEntry = (
       if (resp.status === 200) {
         const id = resp.body.data.id;
 
-        router.push(
-          category.routes.list({
-            locale,
-            query: {
-              id,
-              sub: 'info',
-              organizer: categoryName === Categories.organizer ? id : organizerId,
-            },
-          })
-        );
-
         if (categoryName === Categories.organizer) {
           mutateUserInfo();
           setTimeout(() => setOrganizerId(id), 500);
         } else {
           mutateList();
+          setLastEntryId(categoryName, id);
         }
+
+        setTimeout(
+          () =>
+            router.push(
+              category.routes.list({
+                locale,
+                query: {
+                  id,
+                  sub: 'info',
+                  organizer: categoryName === Categories.organizer ? id : organizerId,
+                },
+              })
+            ),
+          250
+        );
 
         return { success: true };
       }
@@ -434,6 +440,7 @@ export const useCreateEntry = (
     categoryName,
     setOrganizerId,
     mutateUserInfo,
+    setLastEntryId,
   ]);
 
   return createEntry;
@@ -469,6 +476,7 @@ export const useDeleteEntry = (
   const organizerId = useOrganizerId();
   const setOrganizerId = useSetOrganizerId();
   const { mutateUserInfo } = useUser();
+  const { setLastEntryId } = useContext(EntryListContext);
 
   const mutateList = useMutateList(
     category,
@@ -491,24 +499,27 @@ export const useDeleteEntry = (
 
         if (resp.status === 200) {
           if (categoryName === Categories.organizer) {
-            router.push(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
-          } else {
-            router.push(
-              category.routes.list({
-                locale,
-                query: {
-                  organizer: organizerId,
-                },
-              })
-            );
-          }
-
-          if (categoryName === Categories.organizer) {
             mutateUserInfo();
             setTimeout(() => setOrganizerId(id), 500);
           } else {
             mutateList();
           }
+
+          setTimeout(() => {
+            if (categoryName === Categories.organizer) {
+              router.push(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
+            } else {
+              setLastEntryId(categoryName, undefined);
+              router.push(
+                category.routes.list({
+                  locale,
+                  query: {
+                    organizer: organizerId,
+                  },
+                })
+              );
+            }
+          }, 250);
 
           return { success: true };
         }
@@ -533,6 +544,7 @@ export const useDeleteEntry = (
       router,
       setOrganizerId,
       t,
+      setLastEntryId,
     ]
   );
 
