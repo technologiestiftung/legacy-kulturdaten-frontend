@@ -180,6 +180,11 @@ export const enDE: Localization = {
     de: () => 'German',
     en: () => 'English',
   },
+  team: {
+    list: {
+      title: () => 'Team members',
+    },
+  },
   greetings: {
     welcome: () => 'Welcome.',
     hello: () => 'Hello.',
@@ -519,6 +524,7 @@ export const enDE: Localization = {
     takeAFewSeconds: () => 'This can take a few seconds.',
     serverProblem: () =>
       'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
+    remove: () => 'remove',
   },
   tags: {
     boxLabel: () => 'Already added keywords',

@@ -184,6 +184,11 @@ export const deDE: Localization = {
     de: () => 'Deutsch',
     en: () => 'Englisch',
   },
+  team: {
+    list: {
+      title: () => 'Teammitglieder',
+    },
+  },
   greetings: {
     welcome: () => 'Willkommen.',
     hello: () => 'Hallo.',
@@ -526,6 +531,7 @@ export const deDE: Localization = {
     takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
     serverProblem: () =>
       'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
+    remove: () => 'entfernen',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',

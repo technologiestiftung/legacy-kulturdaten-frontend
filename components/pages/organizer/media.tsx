@@ -200,12 +200,13 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                           id: mediaItemId,
                           entry: {
                             attributes: {
-                              id: String(mediaItemId),
+                              id: mediaItemId,
                             },
                           },
                         });
 
                         if (resp.status === 200) {
+                          mutate();
                           return { success: true };
                         }
 

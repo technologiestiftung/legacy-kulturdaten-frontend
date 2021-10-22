@@ -3,6 +3,7 @@ import { Address } from './address';
 import { Contact } from './contact';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { Media } from './media';
+import { Role } from './role';
 import { Tag } from './tag';
 import {
   EntrySubject,
@@ -45,6 +46,7 @@ export type Organizer = {
       logo?: Media['data'];
       tags?: Tag[];
       contacts?: Contact[];
+      roles?: Role[];
     };
   };
   meta?: {
