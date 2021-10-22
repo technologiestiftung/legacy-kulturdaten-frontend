@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import React from 'react';
-import { AppWrapper } from '../../components/wrappers/AppWrapper';
-import { useCategories } from '../../config/categories';
+import { AppWrapper } from '../components/wrappers/AppWrapper';
+import { useCategories } from '../config/categories';
 
 const CreateOrganizerPage: NextPage = () => {
   const categories = useCategories();
