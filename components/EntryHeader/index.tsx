@@ -64,6 +64,7 @@ const StyledEntryHeaderActions = styled.div`
   flex-wrap: wrap;
   flex-direction: row-reverse;
   position: relative;
+  z-index: 10;
 
   ${mq(Breakpoint.mid)} {
     align-items: flex-start;
