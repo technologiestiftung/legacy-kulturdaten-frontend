@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
+import { TooltipP } from '../components/tooltip/TooltipContent';
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
@@ -11,19 +12,17 @@ export const deDE: Localization = {
       start: {
         title: () => 'So legst du los',
         organizer: {
-          title: () => 'Anbieter:in erstellen',
+          title: () => 'Anbieter:in-Profil erstellen',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Eine Anbieter:in stellt dein öffentliches Profil dar. Es enthält Informationen zu
-                dir oder deiner Organisation.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                Alles was du in der Kulturdatenplattform anlegst, hat eine Anbieter:in.
+                Du willst Daten zu einer Kultureinrichtung, deinem Kollektiv oder dir als
+                Solo-Künstler:in veröffentlichen? Leg dazu ein Anbieter:in-Profil an. Mit diesem
+                Profil verbindest du später Orte und Angebote.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          button: () => 'Jetzt Anbieter:in erstellen',
+          button: () => 'Jetzt Profil erstellen',
           done: () => 'Anbieter:in wurde erstellt',
         },
         offer: {
@@ -31,33 +30,26 @@ export const deDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Ein Angebot kann eine Veranstaltung sein, aber auch ein Kurs, eine Radiosendung,
-                eine Filmvorführung, oder etwas ganz anderes.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                Das Angebot enthält Informationen über Inhalt, Ort und Zeit. Jedes Angebot kann
-                beliebig viele Termine enthalten.
+                Ob Performance oder Tanzkurs, Online-Sammlung oder Recherche-Service - hier kannst
+                du dein Kulturangebot in seiner ganzen Vielfalt beschreiben.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          button: () => 'Jetzt Angebot erstellen',
+          button: () => 'Angebot erstellen',
           done: () => 'Angebot wurde erstellt',
         },
         location: {
-          title: () => 'Ort erstellen',
+          title: () => 'Orte anlegen',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Die meisten Angebote finden an einem Ort statt - dies kann auch ein virtueller Ort
-                wie ein Stream sein.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                Alle relevanten Informationen über einen Veranstaltungsort kannst du hier erfassen,
-                inklusive umfangreiche Angaben zur Barrierefreiheit.
+                Schluss mit Adressen-Copy-Paste! Gib Informationen zu deinem Veranstaltungsort nur
+                einmal an und nutze sie dann immer wieder für deine Angebote. Du kannst beliebig
+                viele Orte anlegen - oder auch einzelne Räume darstellen.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          button: () => 'Jetzt Ort erstellen',
+          button: () => 'Ort(e) erstellen',
           done: () => 'Ort wurde erstellt',
         },
       },
@@ -67,22 +59,19 @@ export const deDE: Localization = {
         datePlaceholder: () => 'Noch keine Termine vorhanden',
       },
       organizer: {
-        title: () => 'Erwecke deine Anbieter:in zum Leben',
+        title: () => 'Fülle deine Anbieter:in mit Leben',
         team: {
           title: () => 'Teammitglieder einladen',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Du kannst anderen Nutzer:innen Zugriff auf deine Anbieter:innen geben. Diese können
-                dann die Daten der Anbieter:in einsehen und bearbeiten sowie Angebote und Orte für
+                Du kannst anderen registrierten Nutzer:innen Zugriff auf deine Einträge geben. Diese
+                können dann die Daten der Anbieter:in einsehen und bearbeiten, Angebote und Orte für
                 sie anlegen.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                Um den Zugriff zu erteilen, kannst du auf der Teamseite Nutzer:innen einladen.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Jetzt dein Team verwalten',
+          link: () => 'Verwalte dein Team',
         },
         profile: {
           title: () => 'Das Profil ausfüllen',
@@ -108,12 +97,8 @@ export const deDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Alle Daten, die du auf kulturdaten.berlin bereitstellst, kannst du auch wieder in
-                Standardformaten exportieren.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                Dazu kannst du in den entsprechenden Listen oder Einträgen die Export-Funktion
-                nutzen.
+                Alle von dir bereitgestellten Daten kannst du über die entsprechenden
+                Optionen-Buttons in Standardformaten exportieren.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
@@ -123,7 +108,7 @@ export const deDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Nutze unsere API, um Zugang zu allen Angebots- und Anbieter:innen-Daten auf
+                Nutze unsere API, um Zugang zu allen Angebots-, Orts- und Anbieter:innen-Daten auf
                 kulturdaten.berlin zu erhalten oder um deine eigenen Daten in deine Website
                 einzubinden.
               </DashboardTileTextP>
@@ -288,16 +273,16 @@ export const deDE: Localization = {
     create: () => 'Neue Anbieter:in anlegen',
     baseInfo: () => 'Grundlagen',
     address: () => 'Adressdaten',
-    name: () => 'Bezeichnung',
+    name: () => 'Bezeichnung / Name',
     labelGerman: () => 'Deutsch',
     labelGermanSimple: () => 'Deutsch: einfache Sprache',
     labelEnglish: () => 'Englisch',
     labelEnglishSimple: () => 'Englisch: einfache Sprache',
     description: () => 'Beschreibung',
     teaser: () => 'Teaser',
-    classification: () => 'Themen-Kategorie (min. 1 Hauptkategorie notwendig)',
+    classification: () => ' Art der Anbieter:in / Arbeitsschwerpunkt (mind. 1)',
     type: () => 'Typ(en)',
-    subjects: () => 'Sparte(n)',
+    subjects: () => 'Eingrenzung (optional)',
     chooseTypeFirst: () => 'Bitte zunächst Typ auswählen',
     tags: () => 'Tags',
     street1: () => 'Straße und Hausnummer',
@@ -326,12 +311,16 @@ export const deDE: Localization = {
   },
   login: {
     email: () => 'E-Mail',
+    emailPlaceholder: () => 'z.B. email@example.com',
     password: () => 'Passwort',
+    passwordReset: () => 'Passwort vergessen?',
     remember: () => 'Eingeloggt bleiben',
     submit: () => 'einloggen',
     headline: () => 'Logge dich jetzt bei kulturdaten.berlin ein!',
     loading: () => 'Anmeldung läuft',
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
+    registerReference: () => 'Du bis neu hier?',
+    registerReferenceLinkText: () => 'Registriere dich jetzt.',
   },
   logout: {
     loading: () => 'Abmeldung läuft',
@@ -339,7 +328,9 @@ export const deDE: Localization = {
   },
   register: {
     email: () => 'E-Mail',
+    emailPlaceholder: () => 'z.B. email@example.com',
     password: () => 'Passwort',
+    passwordPlaceholder: () => 'mind. 8 Zeichen',
     confirmPassword: () => 'Passwort bestätigen',
     submit: () => 'registrieren',
     headline: () => 'Registriere dich jetzt!',
@@ -349,11 +340,25 @@ export const deDE: Localization = {
     loading: () => 'Deine Registrierung läuft',
     requestError: () =>
       'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
-    uniqueEmailError: () =>
-      'Die angegebene E-Mail ist bereis registriert. Nutze bitte eine andere.',
+    uniqueEmailError: () => 'Dieser Account existiert bereits.',
     successHeadline: () => 'Super, das hat geklappt!',
     successSubline: () =>
-      'Wir haben dir eine E-Mail zur Bestätigung deiner Registrierung gesendet. Schließe bitte über diese deine Registrierung ab.',
+      'Wir haben dir eine E-Mail geschickt. Bitte bestätige deine Anmeldung mit dem Link in der E-Mail.',
+    confirmationText: () => (
+      <>
+        Ich habe die{' '}
+        <a target="_blank" rel="noreferrer" href="http://kulturdaten.berlin/agb/">
+          Nutzungsbedingungen
+        </a>{' '}
+        und{' '}
+        <a target="_blank" rel="noreferrer" href="http://kulturdaten.berlin/datenschutzerklaerung/">
+          Datenschutzerklärung
+        </a>{' '}
+        von kulturdaten.berlin gelesen und stimme ihnen ausdrücklich zu.
+      </>
+    ),
+    loginReference: () => 'Du hast bereits einen Account?',
+    loginReferenceLinkText: () => 'Log dich hier ein.',
   },
   statusBar: {
     status: () => 'Status',
@@ -565,8 +570,20 @@ export const deDE: Localization = {
     loading: () => 'lädt',
     max: () => 'max.',
     topics: () => 'Stichworte (optional)',
-    topicsTooltip: () =>
-      'Mit Themen-tags kannst du noch genauer kennzeichnen, um was es in deinem Angebot geht, z.B. bestimmte Musikarten oder Kunstepochen.\nDiese Begriffe basieren auf der Gemeinsamen Normdatei (GND) der Deutschen Nationalbibliothek. Sollten Begriffe fehlen oder hier fehl am Platz sein, schreib uns unter hallo@kulturdaten.berlin!',
+    topicsTooltip: () => (
+      <>
+        <TooltipP>
+          Mit Stichworten kannst du diese:n Anbieter:in noch detaillierter beschreiben, z.B. über
+          Stichwort-tags zum Sammlungsschwerpunkt oder der Kunstrichtung, in der ihr euch zu Hause
+          fühlt.
+        </TooltipP>
+        <TooltipP>
+          Diese Begriffe basieren auf der Gemeinsamen Normdatei (GND) der Deutschen
+          Nationalbibliothek. Sollten Begriffe fehlen oder hier fehl am Platz sein, schreib uns
+          unter <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
+        </TooltipP>
+      </>
+    ),
     topicsPlaceholder: () => 'Tippe einfach drauflos, z.B. Bauhaus',
     takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
     serverProblem: () =>
@@ -657,18 +674,43 @@ export const deDE: Localization = {
       form: {
         create: () => 'Neue Anbieter:in anlegen',
         baseInfo: () => 'Grundlagen',
-        address: () => 'Adressdaten (nicht öffentlich)',
-        name: () => 'Bezeichnung',
+        address: () => 'Kontakt intern - für unsere Rückfragen zu diesem Anbieter:in-Profil',
+        addressTooltip: () =>
+          'Diese Angaben sind für unseren internen Gebrauch und werden nicht veröffentlicht. Bitte gib hier Kontakt- und Adressdaten an, über die wir deine Institution / Gruppe / dich bei internen Rückfragen oder Problemen erreichen können.',
+        name: () => 'Bezeichnung / Name',
+        nameTooltip: () =>
+          'Bitte gib hier den Namen deiner Institution, Gruppe oder auch die Bezeichnung ein, die du als Solo-Künstler:in nutzt. Die hier gewählte Bezeichnung erscheint dann automatisch als Veranstalter:/Anbieter:innen-Name, wenn du ein Angebot mit diesem Profil verknüpfst.',
+        description: () => 'Über euch / dich - Beschreibung (max. 1500 Zeichen)',
+        descriptionTooltip: () =>
+          'Was macht deine Institution / Gruppe / deine eigene künstlerische Arbeit aus? Hier gibst du einen kurzen Überblick für euer / dein Publikum.',
+
         submit: () => 'anlegen',
         save: () => 'speichern',
         edit: () => 'bearbeiten',
         editCancel: () => 'abbrechen',
-        contact: () => 'Kontaktdaten',
+        contact: () => 'Kontaktdaten für Publikumsanfragen',
         tel: () => 'Telefon',
         email: () => 'E-Mail',
         website: () => 'Website',
-        links: () => 'Relevante Links',
-        additionalContacts: () => 'Weitere Kontakte',
+        links: () => 'Weitere Links (z.B. Social Media Kanäle)',
+        additionalContacts: () => 'Weitere öffentliche Kontakte (z.B. für Presse)',
+        additionalContactsTooltip: () =>
+          'Hier ist Platz für weitere Ansprechpersonen oder Servicestellen. Kontakte, die nur für einzelne Events / Kulturangebote relevant sind, gibst du direkt via Angebote beim betreffenden Event ein.',
+        classification: () => 'Art der Anbieter:in / Arbeitsschwerpunkt (mind. 1)',
+        topicsTooltip: () => (
+          <>
+            <TooltipP>
+              Mit Stichworten kannst du diese:n Anbieter:in noch detaillierter beschreiben, z.B.
+              über Stichwort-tags zum Sammlungsschwerpunkt oder der Kunstrichtung, in der ihr euch
+              zu Hause fühlt.
+            </TooltipP>
+            <TooltipP>
+              Diese Begriffe basieren auf der Gemeinsamen Normdatei (GND) der Deutschen
+              Nationalbibliothek. Sollten Begriffe fehlen oder hier fehl am Platz sein, schreib uns
+              unter <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
+            </TooltipP>
+          </>
+        ),
       },
       tabs: {
         info: () => 'Informationen',
@@ -733,19 +775,19 @@ export const deDE: Localization = {
         locationInfoPlaceholder: () => 'z.B. spezifischer Raum',
         mainType: {
           title: () => 'Angebotstyp',
-          choose: () => 'Um was handelt es sich? z.B. Poetry Slam, Konzert, ...',
+          choose: () => 'Um was handelt es sich? z.B. Ausstellung, Konzert, Führung...',
         },
         pricing: {
           title: () => 'Preise & Eintritt',
           feeLabel: () => 'Kosten',
           registrationLabel: () => 'Anmeldung',
           hasFee: () => 'Kostenpflichtig',
-          noFee: () => 'Kostenfrei',
+          noFee: () => 'Kostenlos',
           needsRegistration: () => 'Anmeldepflichtig',
           noRegistration: () => 'Nicht anmeldepflichtig',
           ticketUrl: () => 'Ticketlink / Ticketinformation',
           ticketUrlPlaceholder: () => 'https://example.com',
-          registrationUrl: () => 'Anmeldungslink / Anmeldungsinformation',
+          registrationUrl: () => 'Anmeldelink / Anmeldungeinformation',
           registrationUrlPlaceholder: () => 'https://example.com',
         },
         organizer: {
@@ -760,6 +802,20 @@ export const deDE: Localization = {
           edit: () => 'Ort ändern',
           title: ({ name }) => `Ort für ‚${name}‘ wählen`,
         },
+        topics: () => 'Themen-Kategorie',
+        topicsTooltip: () => (
+          <>
+            <TooltipP>
+              Mit Themen-tags kannst du noch genauer kennzeichnen, um was es in deinem Angebot geht,
+              z.B. bestimmte Musikarten oder Kunstepochen.
+            </TooltipP>
+            <TooltipP>
+              Diese Begriffe basieren auf der Gemeinsamen Normdatei (GND) der Deutschen
+              Nationalbibliothek. Sollten Begriffe fehlen oder hier fehl am Platz sein, schreib uns
+              unter <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
+            </TooltipP>
+          </>
+        ),
       },
       tabs: {
         info: () => 'Informationen',
@@ -791,7 +847,8 @@ export const deDE: Localization = {
         openingHours: () => 'Öffnungszeiten',
         create: () => 'Neuen Ort anlegen',
         address: () => 'Adressdaten',
-        name: () => 'Bezeichnung',
+        name: () => 'Bezeichnung des Ortes',
+        namePlaceholder: () => "z.B. 'Kleines Theater' oder 'Galerie XY auf Youtube'",
         nameGerman: () => 'Bezeichnung Deutsch',
         nameGermanSimple: () => 'Bezeichnung Deutsch: einfache Sprache',
         nameEnglish: () => 'Bezeichnung Englisch',
@@ -809,6 +866,7 @@ export const deDE: Localization = {
         tel: () => 'Telefon',
         district: () => 'Bezirk',
         url: () => 'URL des Ortes',
+        urlPlaceholder: () => 'https://theaterberlin.de/virtualstage',
         rent: {
           title: () => 'Vermietung',
           url: () => 'Vermietungslinks / Vermietungsinformation',
@@ -819,7 +877,8 @@ export const deDE: Localization = {
           physicalLabel: () => 'Physischer Ort',
           physicalText: () => 'Ein physisch existierender Ort mit Adresse, z.B. ein Gebäude.',
           virtualLabel: () => 'Virtueller Ort',
-          virtualText: () => 'Ein virtueller Ort mit URL, z.B. ein YouTube oder Twitch Kanal.',
+          virtualText: () =>
+            'Du bietest Angebote auch online an - auf einer eigenen Plattform oder Social Media-Kanälen? Lege hier deine Webpräsenz einmal an und verknüpfe sie später bequem mit deinen Online-Angeboten.',
         },
       },
       options: {
@@ -833,7 +892,7 @@ export const deDE: Localization = {
     },
   },
   menu: {
-    title: () => 'Kulturdaten.Berlin',
+    title: () => 'kulturdaten.berlin',
     main: () => 'Hauptmenü',
     button: {
       open: () => 'Menü öffnen',

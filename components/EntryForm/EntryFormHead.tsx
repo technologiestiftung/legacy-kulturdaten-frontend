@@ -7,8 +7,13 @@ import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
 import { InfoSymbol } from '../assets/InfoSymbol';
 import { mq } from '../globals/Constants';
+import { Tooltip } from '../tooltip';
+import { TooltipP } from '../tooltip/TooltipContent';
 
-const StyledEntryFormHead = styled.div<{ isExpander?: boolean; addPadding?: boolean }>`
+const StyledEntryFormHead = styled.div<{
+  isExpander?: boolean;
+  addPadding?: boolean;
+}>`
   display: flex;
   border: none;
   background: transparent;
@@ -102,6 +107,10 @@ const StyledEntryFormHeadAlert = styled.div<{ showInline?: boolean }>`
         `}
 `;
 
+const StyledTooltip = styled.div`
+  margin-left: 0.5rem;
+`;
+
 export enum EntryFormHeadSize {
   default = 'default',
   small = 'small',
@@ -109,6 +118,7 @@ export enum EntryFormHeadSize {
 
 interface EntryFormHeadProps {
   title: string;
+  tooltip?: string;
   id?: string;
   valid?: boolean;
   hint?: boolean;
@@ -123,6 +133,7 @@ interface EntryFormHeadProps {
 
 export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   title,
+  tooltip,
   id,
   valid = true,
   hint = false,
@@ -162,6 +173,13 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       <StyledEntryFormHeadBorder />
       <StyledEntryFormHeadTitle id={id} size={size}>
         {title}
+        {tooltip && (
+          <StyledTooltip>
+            <Tooltip>
+              <TooltipP>{tooltip}</TooltipP>
+            </Tooltip>
+          </StyledTooltip>
+        )}
       </StyledEntryFormHeadTitle>
       {isExpander && (
         <StyledEntryFormHeadChevron isExpanded={expander.isExpanded}>

@@ -169,40 +169,9 @@ const DashboardStartTileRow: React.FC = () => {
           {t('dashboard.info.start.organizer.content')}
         </DashboardTile>
         <DashboardTile
-          title={t('dashboard.info.start.offer.title') as string}
-          gridColumn={tileSpan}
-          digit={2}
-          disabled={organizerId === defaultOrganizerId}
-          done={
-            organizerId !== defaultOrganizerId && hasOffers
-              ? {
-                  text: t('dashboard.info.start.offer.done') as string,
-                }
-              : undefined
-          }
-          link={
-            <DashboardTileButton
-              title={t('dashboard.info.start.offer.button') as string}
-              disabled={organizerId === defaultOrganizerId}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.offer.form.create'),
-                  async () => {
-                    const resp = await createOffer();
-                    return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
-              }}
-            />
-          }
-        >
-          {t('dashboard.info.start.offer.content')}
-        </DashboardTile>
-        <DashboardTile
           title={t('dashboard.info.start.location.title') as string}
           gridColumn={tileSpan}
-          digit={3}
+          digit={2}
           disabled={organizerId === defaultOrganizerId}
           done={
             organizerId !== defaultOrganizerId && hasLocations
@@ -229,6 +198,37 @@ const DashboardStartTileRow: React.FC = () => {
           }
         >
           {t('dashboard.info.start.location.content')}
+        </DashboardTile>
+        <DashboardTile
+          title={t('dashboard.info.start.offer.title') as string}
+          gridColumn={tileSpan}
+          digit={3}
+          disabled={organizerId === defaultOrganizerId}
+          done={
+            organizerId !== defaultOrganizerId && hasOffers
+              ? {
+                  text: t('dashboard.info.start.offer.done') as string,
+                }
+              : undefined
+          }
+          link={
+            <DashboardTileButton
+              title={t('dashboard.info.start.offer.button') as string}
+              disabled={organizerId === defaultOrganizerId}
+              onClick={() => {
+                loadingScreen(
+                  t('categories.offer.form.create'),
+                  async () => {
+                    const resp = await createOffer();
+                    return resp;
+                  },
+                  t('general.takeAFewSeconds')
+                );
+              }}
+            />
+          }
+        >
+          {t('dashboard.info.start.offer.content')}
         </DashboardTile>
       </DashboardRow>
     )

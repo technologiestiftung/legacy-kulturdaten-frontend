@@ -14,7 +14,8 @@ export const useAddressForm: EntryFormHook = (
   loaded,
   showHint,
   customRequired?: boolean,
-  customTitle?: string
+  customTitle?: string,
+  tooltip?: string
 ) => {
   const { entry, mutate } = useEntry<
     {
@@ -28,10 +29,9 @@ export const useAddressForm: EntryFormHook = (
   >(category, query);
   const call = useApiCall();
 
-  const initialAddress = useMemo(
-    () => entry?.data?.relations?.address,
-    [entry?.data?.relations?.address]
-  );
+  const initialAddress = useMemo(() => entry?.data?.relations?.address, [
+    entry?.data?.relations?.address,
+  ]);
 
   const [address, setAddress] = useState<Address>(initialAddress);
   const [pristine, setPristine] = useState(true);
@@ -98,6 +98,7 @@ export const useAddressForm: EntryFormHook = (
           title={`${customTitle || (t('forms.address') as string)}`}
           valid={valid}
           hint={hint}
+          tooltip={tooltip}
         />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>

@@ -8,7 +8,12 @@ import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 import { EntryFormHook } from '../form';
 import { CategoryEntry } from '../../../../lib/api/types/general';
 
-export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query }, loaded) => {
+export const useEntryTypeSubjectForm: EntryFormHook = (
+  { category, query },
+  loaded?,
+  showHint?,
+  title?: string
+) => {
   const { entry, mutate } = useEntry<CategoryEntry, ApiCall>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -104,7 +109,10 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query }, load
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={t('forms.classification') as string} valid={!loaded || valid} />
+        <EntryFormHead
+          title={title || `${t('forms.classification') as string}`}
+          valid={!loaded || valid}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             <TypesSubjects

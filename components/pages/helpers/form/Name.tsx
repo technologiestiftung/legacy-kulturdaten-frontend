@@ -103,10 +103,9 @@ export const useName = <
     entry?.data?.relations?.translations as TranslationType[],
     false
   );
-  const name = useMemo(
-    () => entryTranslation?.attributes?.name,
-    [entryTranslation?.attributes?.name]
-  );
+  const name = useMemo(() => entryTranslation?.attributes?.name, [
+    entryTranslation?.attributes?.name,
+  ]);
   const [value, setValue] = useState(name || '');
   const [pristine, setPristine] = useState(true);
   const { mutateUserInfo } = useUser();
@@ -154,10 +153,11 @@ export const useName = <
     }
   };
 
-  const hint = useMemo(
-    () => showHint && loaded && (!value || value?.length < 1),
-    [showHint, loaded, value]
-  );
+  const hint = useMemo(() => showHint && loaded && (!value || value?.length < 1), [
+    showHint,
+    loaded,
+    value,
+  ]);
 
   return {
     form: (
@@ -192,7 +192,8 @@ export const useNameForm: EntryFormHook = (
   { category, query },
   loaded,
   showHint,
-  title?: string
+  title?: string,
+  tooltip?: string
 ) => {
   const t = useT();
 
@@ -234,15 +235,16 @@ export const useNameForm: EntryFormHook = (
     showHint,
   });
 
-  const pristine = useMemo(
-    () => Boolean(pristineGerman && pristineEnglish),
-    [pristineEnglish, pristineGerman]
-  );
+  const pristine = useMemo(() => Boolean(pristineGerman && pristineEnglish), [
+    pristineEnglish,
+    pristineGerman,
+  ]);
 
-  const valid = useMemo(
-    () => !loaded || Boolean(validGerman && validEnglish),
-    [loaded, validEnglish, validGerman]
-  );
+  const valid = useMemo(() => !loaded || Boolean(validGerman && validEnglish), [
+    loaded,
+    validEnglish,
+    validGerman,
+  ]);
 
   const hint = useMemo(
     () =>
@@ -258,7 +260,12 @@ export const useNameForm: EntryFormHook = (
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={title || `${t('forms.name') as string}`} valid={valid} hint={hint} />
+        <EntryFormHead
+          title={title || `${t('forms.name') as string}`}
+          valid={valid}
+          hint={hint}
+          tooltip={tooltip}
+        />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>

@@ -10,7 +10,13 @@ import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 import { EntryFormHook } from '../form';
 import { CategoryEntry } from '../../../../lib/api/types/general';
 
-export const useEntryTags: EntryFormHook = ({ category, query }) => {
+export const useEntryTags: EntryFormHook = (
+  { category, query },
+  loaded?,
+  showHint?,
+  title?: string,
+  tooltip?: string
+) => {
   const tagOptions = useTags();
   const { entry, mutate } = useEntry<CategoryEntry, ApiCall>(category, query);
   const call = useApiCall();
@@ -18,10 +24,9 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
   const [tagsFromApi, setTagsFromApi] = useState<Tag['id'][]>();
   const t = useT();
 
-  const initialTags = useMemo(
-    () => entry?.data?.relations?.tags?.map((tag) => tag.id),
-    [entry?.data?.relations?.tags]
-  );
+  const initialTags = useMemo(() => entry?.data?.relations?.tags?.map((tag) => tag.id), [
+    entry?.data?.relations?.tags,
+  ]);
 
   const pristine = useMemo(
     () => JSON.stringify(tagsFromApi?.sort()) === JSON.stringify(selectedTags?.sort()),
@@ -38,7 +43,7 @@ export const useEntryTags: EntryFormHook = ({ category, query }) => {
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={t('general.topics') as string} />
+        <EntryFormHead title={t('general.topics') as string} tooltip={tooltip} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             {tagOptions && (

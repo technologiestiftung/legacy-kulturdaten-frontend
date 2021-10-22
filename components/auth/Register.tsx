@@ -1,8 +1,11 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
+import { routes, useLocale } from '../../lib/routing';
 import { useT } from '../../lib/i18n';
-import { Button, ButtonColor, ButtonSize, ButtonType } from '../button';
+import { Anchor } from '../anchor';
+import { Button, ButtonColor, ButtonContentPosition, ButtonSize, ButtonType } from '../button';
+import { Checkbox } from '../checkbox';
 import { Info } from '../info';
 import { Input, InputType } from '../input';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
@@ -14,11 +17,13 @@ import {
   AuthHeadline,
   AuthSubline,
 } from './AuthWrapper';
+import { StandardLinkType } from '../../lib/generalTypes';
 
 const passwordErrorId = 0;
 const requestErrorId = 1;
 
 export const RegisterForm: React.FC = () => {
+  const locale = useLocale();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
@@ -36,7 +41,10 @@ export const RegisterForm: React.FC = () => {
   useEffect(() => {
     if (password.length > 0 && passwordConfirmation.length > 0) {
       const filteredErrors = errors.filter(({ id }) => id !== passwordErrorId);
-      const passwordError = { id: passwordErrorId, message: t('register.passwordError') as string };
+      const passwordError = {
+        id: passwordErrorId,
+        message: t('register.passwordError') as string,
+      };
       const passwordErrorPresent = errors.length !== filteredErrors.length;
 
       if (passwordErrorPresent && passwordsMatch) {
@@ -116,6 +124,7 @@ export const RegisterForm: React.FC = () => {
                 value={email}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 label={t('register.email') as string}
+                placeholder={t('login.emailPlaceholder') as string}
                 type={InputType.email}
                 id="register-email"
                 required
@@ -126,8 +135,10 @@ export const RegisterForm: React.FC = () => {
                 value={password}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 label={t('register.password') as string}
+                placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
                 id="register-password"
+                minLength={8}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
               />
@@ -139,17 +150,39 @@ export const RegisterForm: React.FC = () => {
                   setPasswordConfirmation(e.target.value)
                 }
                 label={t('register.confirmPassword') as string}
+                placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
                 id="register-password-confirmation"
+                minLength={8}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
                 onBlur={() => setPasswordConfirmationBlurred(true)}
               />
             </div>
-            <AuthFormItem justifyContent="flex-end">
-              <Button type={ButtonType.submit} size={ButtonSize.big} color={ButtonColor.black}>
-                {t('register.submit')}
-              </Button>
+            <AuthFormItem>
+              <Checkbox
+                id="register-confirmation"
+                label={t('register.confirmationText') as string}
+                required
+              />
+            </AuthFormItem>
+            <Button
+              type={ButtonType.submit}
+              size={ButtonSize.big}
+              color={ButtonColor.black}
+              contentPosition={ButtonContentPosition.center}
+            >
+              {t('register.submit')}
+            </Button>
+            <AuthFormItem justifyContent="center">
+              <span>
+                {t('register.loginReference')}{' '}
+                <Anchor
+                  href={routes.login({ locale })}
+                  title={t('register.loginReferenceLinkText') as string}
+                  type={StandardLinkType.internal}
+                />
+              </span>
             </AuthFormItem>
           </AuthFormContainer>
         </form>
