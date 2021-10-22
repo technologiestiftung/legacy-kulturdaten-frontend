@@ -35,6 +35,7 @@ export type Media = {
       expiresAt: string;
       createdAt: string;
       updatedAt: string;
+      acceptedTermsAt: string;
       mediaLicenseId: number;
     } & RenditionAttributes;
     relations: {

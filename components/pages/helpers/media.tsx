@@ -175,11 +175,6 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
         <FormGrid>
           {renderedMediaUploadForm}
           <FormItem width={FormItemWidth.full}>
-            <Info color={InfoColor.white} noMaxWidth>
-              {t('media.usageInfo')}
-            </Info>
-          </FormItem>
-          <FormItem width={FormItemWidth.full}>
             <MediaList
               media={media}
               onChange={(newMedia, changedMediaItemId) => {

@@ -2,8 +2,11 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ChangeEvent, ChangeEventHandler, useState } from 'react';
 import { Check } from 'react-feather';
+import { useT } from '../../lib/i18n';
 
-const StyledCheckboxInput = styled.input`
+const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
+
+const StyledCheckboxInput = styled.input<{ valid?: boolean }>`
   display: block;
   margin: 0;
   appearance: none;
@@ -24,6 +27,13 @@ const StyledCheckboxInput = styled.input`
     box-shadow: none;
     background: var(--grey-350);
   }
+
+  ${({ valid }) =>
+    valid === false &&
+    css`
+      border-color: var(--error) !important;
+      box-shadow: 0.0625rem 0.0625rem 0.25rem var(--black-o25), ${errorShadow};
+    `}
 `;
 
 const StyledCheckbox = styled.div<{ disabled?: boolean }>`
@@ -96,6 +106,7 @@ export interface CheckboxProps {
   disabled?: boolean;
   required?: boolean;
   value?: string;
+  valid?: boolean;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -108,9 +119,11 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   disabled,
   required,
   value,
+  valid,
 }: CheckboxProps) => {
   const internalState = useState<boolean>(false);
   const checkedState = checked || internalState[0];
+  const t = useT();
 
   return (
     <StyledCheckbox disabled={disabled}>
@@ -131,6 +144,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           checked={checkedState}
           disabled={disabled}
           value={value}
+          valid={valid}
         />
         <StyledCheckboxInputCheck checked={checkedState}>
           <Check color="var(--black)" />
@@ -139,6 +153,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       {label && (
         <StyledCheckboxLabel htmlFor={id} disabled={disabled}>
           {label}
+          {required && ` (${t('forms.required')})`}
         </StyledCheckboxLabel>
       )}
     </StyledCheckbox>

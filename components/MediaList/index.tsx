@@ -24,6 +24,8 @@ import { AlertSymbol } from '../assets/AlertSymbol';
 import { defaultLanguage } from '../../config/locale';
 import { useMediaLicenseList } from '../../lib/categories';
 import { RadioList } from '../Radio/RadioList';
+import { Info, InfoColor } from '../info';
+import { Checkbox } from '../checkbox';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -456,6 +458,29 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
               />
             </div>
           )}
+          <div>
+            <Info color={InfoColor.grey} noMaxWidth>
+              {t('media.usageInfo')}
+            </Info>
+          </div>
+          <div>
+            <Checkbox
+              id={`${uid}-terms`}
+              checked={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
+              label={t('media.acknowledgedUsageInfo') as string}
+              onChange={(e) => {
+                onChange({
+                  ...mediaItem,
+                  attributes: {
+                    ...mediaItem.attributes,
+                    acceptedTermsAt: e.target.checked ? new Date().toISOString() : undefined,
+                  },
+                });
+              }}
+              valid={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
+              required
+            />
+          </div>
         </StyledMediaListItemForm>
         <StyledMediaListItemFunctions></StyledMediaListItemFunctions>
       </StyledMediaListItemMain>
@@ -515,7 +540,14 @@ export const MediaList: React.FC<MediaListProps> = ({
   const itemsValidList = useMemo(
     () =>
       media?.map((mediaItem) => {
-        const requiredAttributes = [mediaItem.attributes.copyright, mediaItem.relations.license];
+        const requiredAttributes = [
+          mediaItem.relations.translations?.find(
+            (translation) => translation.attributes?.language === defaultLanguage
+          )?.attributes?.alternativeText,
+          mediaItem.attributes.copyright,
+          mediaItem.attributes.mediaLicenseId,
+          mediaItem.attributes.acceptedTermsAt,
+        ];
 
         for (let i = 0; i < requiredAttributes.length; i += 1) {
           const attribute = requiredAttributes[i];
