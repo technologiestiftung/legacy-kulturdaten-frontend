@@ -42,6 +42,7 @@ const StyledDashboardTileContainer = styled.div`
   overflow: hidden;
   flex-grow: 1;
   position: relative;
+  mask-image: -webkit-radial-gradient(white, black);
 
   ${mq(Breakpoint.mid)} {
     border-radius: 1.5rem;
@@ -141,7 +142,7 @@ const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean }>`
           white-space: inherit;
           overflow: inherit;
           text-overflow: inherit;
-          padding: 0.75rem 1.125rem 0;
+          padding: 1.125rem 1.125rem 0;
 
           ${mq(Breakpoint.mid)} {
             font-size: var(--font-size-600);

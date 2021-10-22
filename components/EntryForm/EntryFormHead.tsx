@@ -56,7 +56,6 @@ const StyledEntryFormHeadTitle = styled.h2<{ size: EntryFormHeadSize }>`
   font-weight: 700;
   margin-top: ${({ size }) => (size === EntryFormHeadSize.small ? '0.375rem' : '0.75rem')};
   margin-bottom: ${({ size }) => (size === EntryFormHeadSize.small ? '0.375rem' : '0.75rem')};
-  flex-shrink: 0;
   position: relative;
   display: inline-flex;
 `;
