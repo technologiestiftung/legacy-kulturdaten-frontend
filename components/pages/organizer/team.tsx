@@ -11,7 +11,7 @@ import { EntryFormHook } from '../helpers/form';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { TeamList } from '../../Team/TeamList';
-import { Organizer, OrganizerRole } from '../../../lib/api/types/organizer';
+import { Organizer, OrganizerRole, OrganizerRolePending } from '../../../lib/api/types/organizer';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerDelete, organizerDeleteFactory } from '../../../lib/api/routes/organizer/delete';
 import { OrganizerUpdate, organizerUpdateFactory } from '../../../lib/api/routes/organizer/update';
@@ -183,7 +183,7 @@ const useTeamForm: EntryFormHook = ({ category, query }) => {
           .filter((roleId) => !roleIds.includes(roleId));
 
         if (deletedRoleIds?.length > 0) {
-          const deleteResp = await call<OrganizerDelete>(organizerDeleteFactory, {
+          await call<OrganizerDelete>(organizerDeleteFactory, {
             id: entry?.data.id,
             entry: {
               relations: {
@@ -197,7 +197,14 @@ const useTeamForm: EntryFormHook = ({ category, query }) => {
           id: entry?.data.id,
           entry: {
             relations: {
-              roles,
+              roles: roles.map((role) => ({
+                attributes: {
+                  email:
+                    (role as OrganizerRolePending).attributes?.email ||
+                    ((role as Role).relations.user as User).attributes?.email,
+                  role: role.attributes.role,
+                },
+              })),
             },
           },
         });
