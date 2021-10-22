@@ -197,7 +197,7 @@ export const useAddressForm: EntryFormHook = (
             <Select
               value={address?.attributes?.district || 'undefined'}
               id={`${uid}-district`}
-              label={t('categories.location.form.districtPlaceholder') as string}
+              label={t('categories.location.form.district') as string}
               size={SelectSize.big}
               required={required}
               onChange={(e) => {
