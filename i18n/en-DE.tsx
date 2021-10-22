@@ -196,8 +196,12 @@ export const enDE: Localization = {
       title: () => 'Invite new team members',
       loading: () => 'Inviting new team members',
       button: () => 'Invite',
-      hint: () => 'You can add a single email, or a list of emails separated with "," (comma).',
+      hint: ({ max }) =>
+        `You can add a single email, or a list of emails (max. ${max}) separated with "," (comma).`,
+      hint2: () => 'Example: name@example.com, title@another-example.com',
       placeholder: () => 'name@example.com, title@another-example.com',
+      invalid: () =>
+        'Your entered data is invalid. Please check that it follows the structure "name@example.com, title@another-example.com".',
     },
   },
   greetings: {

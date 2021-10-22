@@ -200,9 +200,12 @@ export const deDE: Localization = {
       title: () => 'Neue Teammitglieder einladen',
       loading: () => 'Lade neue Teammitglieder ein',
       button: () => 'Einladen',
-      hint: () =>
-        'Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mail, getrennt mit "," (Komma).',
+      hint: ({ max }) =>
+        `Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mail (max. ${max}), getrennt mit "," (Komma).`,
+      hint2: () => 'Bespiel: name@example.com, title@another-example.com',
       placeholder: () => 'name@example.com, title@another-example.com',
+      invalid: () =>
+        'Die Eingabe enthält Fehler. Prüfe bitte, dass du der Form "name@example.com, title@another-example.com" folgst.',
     },
   },
   greetings: {

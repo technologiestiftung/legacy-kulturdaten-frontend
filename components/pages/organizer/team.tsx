@@ -23,12 +23,16 @@ import { ParsedUrlQuery } from 'querystring';
 import { Role, RoleName } from '../../../lib/api/types/role';
 import { User } from '../../../lib/api/types/user';
 import { useUser } from '../../user/useUser';
+import { Info, InfoColor } from '../../info';
+
+const maxInvites = 50;
 
 const regex =
   /^[-!#-'*+\/-9=?^-~]+(?:\.[-!#-'*+\/-9=?^-~]+)*@[-!#-'*+\/-9=?^-~]+(?:\.[-!#-'*+\/-9=?^-~]+)+(?:\s*[,;\n]\s*(?:[-!#-'*+\/-9=?^-~]+(?:\.[-!#-'*+\/-9=?^-~]+)*@[-!#-'*+\/-9=?^-~]+(?:\.[-!#-'*+\/-9=?^-~]+)+)?)*$/;
 
 const useTeamAddForm = ({ category, query }: { category: Category; query: ParsedUrlQuery }) => {
   const [members, setMembers] = useState<string>('');
+  const [blurred, setBlurred] = useState(false);
   const uid = usePseudoUID();
   const loadingScreen = useLoadingScreen();
   const t = useT();
@@ -36,6 +40,14 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
   const { entry, mutate } = useEntry(category, query);
 
   const valid = useMemo(() => members.length === 0 || regex.test(members), [members]);
+  const empty = useMemo(() => members.length === 0, [members]);
+  const membersArray = useMemo(
+    () =>
+      valid && !empty
+        ? members.replace(' ', '').replace(';', ',').split(',').slice(0, maxInvites)
+        : [],
+    [members, valid, empty]
+  );
 
   return (
     <div>
@@ -50,16 +62,27 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
             rows={4}
             onChange={(e) => setMembers(e.target.value)}
             valid={valid}
+            onBlur={() => setBlurred(true)}
           />
         </FormItem>
+        <FormItem width={FormItemWidth.full}>
+          <Info color={InfoColor.white} noMaxWidth>
+            <p>{t('team.invite.hint', { max: maxInvites })}</p>
+            <p>{t('team.invite.hint2')}</p>
+          </Info>
+        </FormItem>
+        {blurred && !valid && (
+          <FormItem width={FormItemWidth.full}>
+            <Info noMaxWidth>{t('team.invite.invalid')}</Info>
+          </FormItem>
+        )}
         <FormItem width={FormItemWidth.full}>
           <Button
             size={ButtonSize.big}
             color={ButtonColor.black}
+            disabled={empty || !valid}
             onClick={async () => {
-              if (members?.length > 0 && valid) {
-                const membersArray = members.replace(' ', '').replace(';', ',').split(',');
-
+              if (membersArray.length > 0) {
                 loadingScreen(t('team.invite.loading'), async () => {
                   try {
                     const resp = await call<OrganizerUpdate>(organizerUpdateFactory, {
