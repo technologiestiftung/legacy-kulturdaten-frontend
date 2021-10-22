@@ -19,6 +19,7 @@ export enum SelectVariant {
   default = 'default',
   minimal = 'minimal',
   formList = 'formList',
+  header = 'header',
 }
 
 const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>`
@@ -46,7 +47,9 @@ const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>
 `;
 
 const selectSizes: {
-  [key in SelectSize]: (withIcon: boolean) => {
+  [key in SelectSize]: (
+    withIcon: boolean
+  ) => {
     fontSize: string;
     lineHeight: string;
     padding: string;
@@ -117,6 +120,17 @@ const selectVariants: {
       &:hover {
         box-shadow: none;
       }
+    }
+  `,
+  header: css`
+    background: inherit;
+    color: currentColor;
+    border: none;
+    box-shadow: inset 0px 0px 0px 1px var(--black);
+    transition: box-shadow var(--transition-duration);
+
+    &:hover {
+      box-shadow: inset 0px 0px 0px 2px currentColor;
     }
   `,
   formList: css`

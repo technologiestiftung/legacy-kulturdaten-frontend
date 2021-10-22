@@ -1,14 +1,44 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ChangeEvent } from 'react';
+import { ComponentVariant, ComponentWithVariants } from '../../lib/generalTypes';
 import { Locale, locales } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { useLocale, useSwitchLocale } from '../../lib/routing';
-import { Select, SelectVariant } from '../select';
-const StyledLocaleSwitch = styled.div`
-  padding: 1.5rem 1.5rem 2.25rem;
+import { Select, SelectLabelPosition, SelectVariant } from '../select';
+
+export enum LocaleSwitchVariant {
+  default = 'default',
+  minimal = 'minimal',
+}
+
+const StyledLocaleSwitch = styled.div<{ switchVariant: LocaleSwitchVariant }>`
+  display: flex;
+
+  ${({ switchVariant }) =>
+    switchVariant === LocaleSwitchVariant.minimal
+      ? css`
+          padding: 0 1.5rem;
+          -webkit-box-pack: end;
+          justify-content: flex-end;
+          label {
+            display: none;
+          }
+        `
+      : css`
+          padding: 1.5rem 1.5rem 2.25rem;
+          -webkit-box-pack: start;
+          justify-content: flex-start;
+        `}
 `;
 
-export const LocaleSwitch: React.FC = () => {
+export interface LocaleSwitchProps extends ComponentWithVariants {
+  switchVariant?: LocaleSwitchVariant | ComponentVariant;
+}
+
+export const LocaleSwitch: React.FC<LocaleSwitchProps> = ({
+  switchVariant = LocaleSwitchVariant.default,
+}: LocaleSwitchProps) => {
   const activeLocale = useLocale();
   const switchLocale = useSwitchLocale();
   const t = useT();
@@ -16,6 +46,7 @@ export const LocaleSwitch: React.FC = () => {
   const select = (
     <Select
       label={t('menu.localeSwitch.label') as string}
+      labelPosition={SelectLabelPosition.left}
       ariaLabel={t('menu.localeSwitch.description') as string}
       variant={SelectVariant.minimal}
       id="locale"
@@ -33,5 +64,9 @@ export const LocaleSwitch: React.FC = () => {
     </Select>
   );
 
-  return <StyledLocaleSwitch>{select}</StyledLocaleSwitch>;
+  return (
+    <StyledLocaleSwitch switchVariant={switchVariant as LocaleSwitchVariant}>
+      {select}
+    </StyledLocaleSwitch>
+  );
 };
