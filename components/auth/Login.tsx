@@ -9,9 +9,10 @@ import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { defaultOrganizerId } from '../../lib/useOrganizer';
+import { Anchor } from '../anchor';
 import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
-import { Button, ButtonSize, ButtonColor, ButtonType } from '../button';
+import { Button, ButtonSize, ButtonColor, ButtonType, ButtonContentPosition } from '../button';
 import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { Info } from '../info';
@@ -82,6 +83,7 @@ export const LoginForm: React.FC = () => {
             type={InputType.email}
             value={email}
             label={t('login.email') as string}
+            placeholder={t('login.emailPlaceholder') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             id="login-email"
             required
@@ -104,9 +106,23 @@ export const LoginForm: React.FC = () => {
             label={t('login.remember') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setRemember(e.target.checked)}
           />
-          <Button size={ButtonSize.big} color={ButtonColor.black} type={ButtonType.submit}>
-            {t('login.submit')}
-          </Button>
+          <Anchor htmlHref={'#'}>{t('login.passwordReset')}</Anchor>
+        </AuthFormItem>
+        <Button
+          size={ButtonSize.big}
+          color={ButtonColor.black}
+          type={ButtonType.submit}
+          contentPosition={ButtonContentPosition.center}
+        >
+          {t('login.submit')}
+        </Button>
+        <AuthFormItem justifyContent="center">
+          <span>
+            {t('login.registerReference')}{' '}
+            <Anchor htmlHref={routes.register({ locale })}>
+              {t('login.registerReferenceLinkText')}
+            </Anchor>
+          </span>
         </AuthFormItem>
         {error ? <Info>{t('login.error')}</Info> : ''}
       </AuthFormContainer>

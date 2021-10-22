@@ -1,8 +1,11 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
+import { routes, useLocale } from '../../lib/routing';
 import { useT } from '../../lib/i18n';
-import { Button, ButtonColor, ButtonSize, ButtonType } from '../button';
+import { Anchor } from '../anchor';
+import { Button, ButtonColor, ButtonContentPosition, ButtonSize, ButtonType } from '../button';
+import { Checkbox } from '../checkbox';
 import { Info } from '../info';
 import { Input, InputType } from '../input';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
@@ -19,13 +22,14 @@ const passwordErrorId = 0;
 const requestErrorId = 1;
 
 export const RegisterForm: React.FC = () => {
+  const locale = useLocale();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>('');
-  const passwordsMatch = useMemo(
-    () => password === passwordConfirmation,
-    [password, passwordConfirmation]
-  );
+  const passwordsMatch = useMemo(() => password === passwordConfirmation, [
+    password,
+    passwordConfirmation,
+  ]);
   const [passwordConfirmationBlurred, setPasswordConfirmationBlurred] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ id: number; message: string }[]>([]);
   const [success, setSuccess] = useState<boolean>(false);
@@ -116,6 +120,7 @@ export const RegisterForm: React.FC = () => {
                 value={email}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 label={t('register.email') as string}
+                placeholder={t('login.emailPlaceholder') as string}
                 type={InputType.email}
                 id="register-email"
                 required
@@ -126,8 +131,10 @@ export const RegisterForm: React.FC = () => {
                 value={password}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 label={t('register.password') as string}
+                placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
                 id="register-password"
+                minLength={8}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
               />
@@ -139,17 +146,37 @@ export const RegisterForm: React.FC = () => {
                   setPasswordConfirmation(e.target.value)
                 }
                 label={t('register.confirmPassword') as string}
+                placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
                 id="register-password-confirmation"
+                minLength={8}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
                 onBlur={() => setPasswordConfirmationBlurred(true)}
               />
             </div>
-            <AuthFormItem justifyContent="flex-end">
-              <Button type={ButtonType.submit} size={ButtonSize.big} color={ButtonColor.black}>
-                {t('register.submit')}
-              </Button>
+            <AuthFormItem>
+              <Checkbox
+                id="register-confirmation"
+                label={t('register.confirmationText') as string}
+                required
+              />
+            </AuthFormItem>
+            <Button
+              type={ButtonType.submit}
+              size={ButtonSize.big}
+              color={ButtonColor.black}
+              contentPosition={ButtonContentPosition.center}
+            >
+              {t('register.submit')}
+            </Button>
+            <AuthFormItem justifyContent="center">
+              <span>
+                {t('register.loginReference')}{' '}
+                <Anchor htmlHref={routes.login({ locale })}>
+                  {t('register.loginReferenceLinkText')}
+                </Anchor>
+              </span>
             </AuthFormItem>
           </AuthFormContainer>
         </form>
