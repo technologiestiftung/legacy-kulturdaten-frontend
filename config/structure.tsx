@@ -47,17 +47,6 @@ export const useMenuStructure = (): NavigationStructure => {
               href: routes.register({ locale }),
             },
           },
-          {
-            type: MenuItemType.divider,
-          },
-          {
-            type: MenuItemType.link,
-            action: {
-              type: MenuLinkType.external,
-              title: t('menu.start.items.info') as string,
-              href: 'https://kulturdaten.berlin',
-            },
-          },
         ],
       },
       loggedIn: {
