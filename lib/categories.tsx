@@ -8,7 +8,7 @@ import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { useUser } from '../components/user/useUser';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
-import { ApiCall, ApiCallFactory, apiRoutes, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
 import { OfferMainTypeList, offerMainTypeListFactory } from './api/routes/offerMainType/list';
 import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
@@ -24,6 +24,8 @@ import { defaultOrganizerId, useOrganizerId, useSetOrganizerId } from './useOrga
 import { routes } from '../config/routes';
 import { MediaLicense } from './api/types/media';
 import { MediaLicenseList, mediaLicenseListFactory } from './api/routes/mediaLicense/list';
+import { District } from './api/types/district';
+import { DistrictList, districtListFactory } from './api/routes/district/list';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -334,6 +336,21 @@ export const useMediaLicenseList = (): MediaLicense[] => {
   const { data } = useSWR(
     getApiUrlString(ApiRoutes.mediaLicenseList),
     () => call<MediaLicenseList>(mediaLicenseListFactory),
+    {
+      revalidateOnFocus: false,
+      focusThrottleInterval: 1000 * 60 * 5,
+    }
+  );
+
+  return data?.body?.data;
+};
+
+export const useDistrictList = (): District[] => {
+  const call = useApiCall();
+
+  const { data } = useSWR(
+    getApiUrlString(ApiRoutes.districtList),
+    () => call<DistrictList>(districtListFactory),
     {
       revalidateOnFocus: false,
       focusThrottleInterval: 1000 * 60 * 5,

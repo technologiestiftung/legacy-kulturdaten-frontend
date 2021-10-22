@@ -41,6 +41,7 @@ export enum ApiRoutes {
   authLogout = 'authLogout',
   authValidate = 'authValidate',
   authInfo = 'authInfo',
+  districtList = 'districtList',
   organizerList = 'organizerList',
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
@@ -79,6 +80,7 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
+  districtList: () => `/${apiVersion}/district`,
   organizerList: (query) =>
     `/${apiVersion}/organizer?include=types,subjects,translations,logo${
       query?.page ? `&page=${query.page}` : ''
@@ -97,10 +99,10 @@ export const apiRoutes: {
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   locationShow: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${

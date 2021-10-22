@@ -866,6 +866,7 @@ export const deDE: Localization = {
         contact: () => 'Kontaktdaten',
         tel: () => 'Telefon',
         district: () => 'Bezirk',
+        districtPlaceholder: () => 'Bezirk auswählen',
         url: () => 'URL des Ortes',
         urlPlaceholder: () => 'https://theaterberlin.de/virtualstage',
         rent: {
