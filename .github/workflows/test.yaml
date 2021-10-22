@@ -26,3 +26,7 @@ jobs:
 
       - name: Installing Node.js packages
         run: npm install
+
+      - name: Running tests
+        run: |
+          npm run test
