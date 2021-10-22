@@ -43,10 +43,9 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
 
   const [translationsFromApi, setTranslationsFromApi] = useState<OfferTranslation[]>();
 
-  const initialTranslations = useMemo(
-    () => entry?.data?.relations?.translations,
-    [entry?.data?.relations?.translations]
-  );
+  const initialTranslations = useMemo(() => entry?.data?.relations?.translations, [
+    entry?.data?.relations?.translations,
+  ]);
 
   const pristine = useMemo(
     () => JSON.stringify(translations) === JSON.stringify(translationsFromApi),
@@ -144,10 +143,10 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
-  const pristine = useMemo(
-    () => JSON.stringify(attributes) === JSON.stringify(attributesFromApi),
-    [attributes, attributesFromApi]
-  );
+  const pristine = useMemo(() => JSON.stringify(attributes) === JSON.stringify(attributesFromApi), [
+    attributes,
+    attributesFromApi,
+  ]);
 
   useEffect(() => {
     if (JSON.stringify(initialAttributes) !== JSON.stringify(attributesFromApi)) {
@@ -595,11 +594,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
-            <EntryFormContainer>{linksForm}</EntryFormContainer>
             <EntryFormContainer>{roomForm}</EntryFormContainer>
             <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{teaserForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
+            <EntryFormContainer>{linksForm}</EntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>
