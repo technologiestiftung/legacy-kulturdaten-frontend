@@ -119,12 +119,7 @@ export const useDescription = ({
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
 
-  const {
-    renderedRichText,
-    init: initRichText,
-    valid,
-    textLength,
-  } = useRichText({
+  const { renderedRichText, init: initRichText, valid, textLength } = useRichText({
     onChange: () => {
       if (richTextRef.current) {
         setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
@@ -209,7 +204,13 @@ export const useDescription = ({
   };
 };
 
-export const useDescriptionForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
+export const useDescriptionForm: EntryFormHook = (
+  { category, query },
+  loaded,
+  showHint,
+  title?: string,
+  tooltip?: string
+) => {
   const t = useT();
   const { entry } = useEntry(category, query);
 
@@ -245,25 +246,33 @@ export const useDescriptionForm: EntryFormHook = ({ category, query }, loaded, s
     showHint,
   });
 
-  const pristine = useMemo(
-    () => pristineEnglish && pristineGerman,
-    [pristineEnglish, pristineGerman]
-  );
+  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
+    pristineEnglish,
+    pristineGerman,
+  ]);
 
-  const valid = useMemo(
-    () => !loaded || (validGerman && validEnglish),
-    [loaded, validEnglish, validGerman]
-  );
+  const valid = useMemo(() => !loaded || (validGerman && validEnglish), [
+    loaded,
+    validEnglish,
+    validGerman,
+  ]);
 
-  const hint = useMemo(
-    () => showHint && loaded && (hintGerman || hintEnglish),
-    [showHint, loaded, hintEnglish, hintGerman]
-  );
+  const hint = useMemo(() => showHint && loaded && (hintGerman || hintEnglish), [
+    showHint,
+    loaded,
+    hintEnglish,
+    hintGerman,
+  ]);
 
   return {
     renderedForm: (
       <FormContainer>
-        <EntryFormHead title={`${t('forms.description') as string}`} valid={valid} hint={hint} />
+        <EntryFormHead
+          title={title || `${t('forms.description') as string}`}
+          valid={valid}
+          hint={hint}
+          tooltip={tooltip}
+        />
         {renderedDescriptionGerman}
         {renderedDescriptionEnglish}
       </FormContainer>
@@ -316,20 +325,23 @@ export const useTeaserForm: EntryFormHook = ({ category, query }, loaded, showHi
     key: 'teaser',
   });
 
-  const pristine = useMemo(
-    () => pristineEnglish && pristineGerman,
-    [pristineEnglish, pristineGerman]
-  );
+  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
+    pristineEnglish,
+    pristineGerman,
+  ]);
 
-  const valid = useMemo(
-    () => !loaded || (validGerman && validEnglish),
-    [loaded, validEnglish, validGerman]
-  );
+  const valid = useMemo(() => !loaded || (validGerman && validEnglish), [
+    loaded,
+    validEnglish,
+    validGerman,
+  ]);
 
-  const hint = useMemo(
-    () => showHint && loaded && (hintGerman || hintEnglish),
-    [showHint, loaded, hintEnglish, hintGerman]
-  );
+  const hint = useMemo(() => showHint && loaded && (hintGerman || hintEnglish), [
+    showHint,
+    loaded,
+    hintEnglish,
+    hintGerman,
+  ]);
 
   return {
     renderedForm: (

@@ -42,10 +42,10 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query }, loaded) => {
     [entry?.data?.relations?.mainType]
   );
 
-  const pristine = useMemo(
-    () => JSON.stringify(initialTypes) === JSON.stringify(types),
-    [initialTypes, types]
-  );
+  const pristine = useMemo(() => JSON.stringify(initialTypes) === JSON.stringify(types), [
+    initialTypes,
+    types,
+  ]);
 
   useEffect(() => {
     if (pristine) {
@@ -161,13 +161,24 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     pristine: pristineClassification,
     reset,
     valid: entryTypeSubjectValid,
-  } = useEntryTypeSubjectForm({ category, query }, loaded, false);
+  } = useEntryTypeSubjectForm(
+    { category, query },
+    loaded,
+    false,
+    t('categories.offer.form.topics')
+  );
 
   const {
     renderedForm: renderedTagsForm,
     submit: submitTags,
     pristine: pristineTags,
-  } = useEntryTags({ category, query }, loaded, false);
+  } = useEntryTags(
+    { category, query },
+    loaded,
+    entryTypeSubjectValid,
+    false,
+    t('categories.offer.form.topicsTooltip')
+  );
 
   const {
     renderedForm: mainTypeForm,
@@ -176,10 +187,10 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     valid: mainTypeValid,
   } = useOfferMainTypeForm({ category, query }, loaded, false);
 
-  const shouldWarn = useMemo(
-    () => !pristineClassification && typeof entry?.data !== 'undefined',
-    [pristineClassification, entry?.data]
-  );
+  const shouldWarn = useMemo(() => !pristineClassification && typeof entry?.data !== 'undefined', [
+    pristineClassification,
+    entry?.data,
+  ]);
 
   useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
 
@@ -205,8 +216,8 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
         />
         <EntryFormWrapper>
           <EntryFormContainer>{mainTypeForm}</EntryFormContainer>
-          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
           <EntryFormContainer>{renderedForm}</EntryFormContainer>
+          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

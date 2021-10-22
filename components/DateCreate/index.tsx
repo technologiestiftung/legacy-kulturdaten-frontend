@@ -221,7 +221,10 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
           </FormGrid>
         </EntryFormContainer>
         <EntryFormContainer noPadding fullWidth>
-          <EntryFormHead title={`${t('date.title')} (${t('forms.optional')})`} />
+          <EntryFormHead
+            title={`${t('date.title')} (${t('forms.optional')})`}
+            tooltip={t('date.titleTooltip') as string}
+          />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
               <Input
