@@ -6,6 +6,7 @@ import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/Wi
 import { mq } from '../../globals/Constants';
 import { MenuItem, MenuItemLink, MenuItemType } from '../Menu';
 import { HeaderMenuLink } from './HeaderMenuLink';
+import { LocaleSwitch, LocaleSwitchVariant } from '../../navigation/LocaleSwitch';
 import { WrappedUser } from '../../user/useUser';
 import { UserMenu } from './UserMenu';
 import { css } from '@emotion/react';
@@ -177,6 +178,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
           <UserMenu user={user} />
         </StyledHeaderUserMenu>
       )}
+      {!user?.isLoggedIn && <LocaleSwitch switchVariant={LocaleSwitchVariant.minimal} />}
     </StyledHeader>
   ) : (
     <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
@@ -247,8 +249,9 @@ const HeaderOrganizerMenu: React.FC<HeaderOrganizerMenuProps> = ({
     </StyledHeaderOrganizerMenuList>
   );
 
-  const { headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed } =
-    useContext(NavigationContext);
+  const { headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed } = useContext(
+    NavigationContext
+  );
 
   const { renderedCollapsable } = useCollapsable(
     renderedOrganizerList,
@@ -313,6 +316,7 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
           <UserMenu user={user} />
         </StyledHeaderUserMenu>
       )}
+      {!user?.isLoggedIn && <LocaleSwitch switchVariant={LocaleSwitchVariant.minimal} />}
     </StyledHeader>
   );
 };

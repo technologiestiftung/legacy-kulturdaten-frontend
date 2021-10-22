@@ -9,12 +9,14 @@ import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { defaultOrganizerId } from '../../lib/useOrganizer';
+import { Anchor } from '../anchor';
 import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
-import { Button, ButtonSize, ButtonColor, ButtonType } from '../button';
+import { Button, ButtonSize, ButtonColor, ButtonType, ButtonContentPosition } from '../button';
 import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { Info } from '../info';
+import { StandardLinkType } from '../../lib/generalTypes';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },
@@ -52,14 +54,19 @@ export const LoginForm: React.FC = () => {
     if (formRef.current?.checkValidity()) {
       loadingScreen(t('login.loading'), async () => {
         try {
-          const resp = await call<AuthLogin>(authLoginFactory, { body: { email, password } });
+          const resp = await call<AuthLogin>(authLoginFactory, {
+            body: { email, password },
+          });
 
           if (resp.status === 200) {
             const token = resp.body.meta.token.token;
 
             login(
               authCookie(token, remember, locale),
-              routes.dashboard({ locale, query: { organizer: defaultOrganizerId } })
+              routes.dashboard({
+                locale,
+                query: { organizer: defaultOrganizerId },
+              })
             );
 
             return { success: true };
@@ -82,6 +89,7 @@ export const LoginForm: React.FC = () => {
             type={InputType.email}
             value={email}
             label={t('login.email') as string}
+            placeholder={t('login.emailPlaceholder') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             id="login-email"
             required
@@ -104,9 +112,29 @@ export const LoginForm: React.FC = () => {
             label={t('login.remember') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setRemember(e.target.checked)}
           />
-          <Button size={ButtonSize.big} color={ButtonColor.black} type={ButtonType.submit}>
-            {t('login.submit')}
-          </Button>
+          <Anchor
+            href={'#'}
+            type={StandardLinkType.internal}
+            title={t('login.passwordReset') as string}
+          />
+        </AuthFormItem>
+        <Button
+          size={ButtonSize.big}
+          color={ButtonColor.black}
+          type={ButtonType.submit}
+          contentPosition={ButtonContentPosition.center}
+        >
+          {t('login.submit')}
+        </Button>
+        <AuthFormItem justifyContent="center">
+          <span>
+            {t('login.registerReference')}{' '}
+            <Anchor
+              href={routes.register({ locale })}
+              title={t('login.registerReferenceLinkText') as string}
+              type={StandardLinkType.internal}
+            />
+          </span>
         </AuthFormItem>
         {error ? <Info>{t('login.error')}</Info> : ''}
       </AuthFormContainer>

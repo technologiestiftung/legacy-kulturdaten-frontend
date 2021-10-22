@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
+import { TooltipP } from '../components/tooltip/TooltipContent';
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
@@ -9,74 +10,63 @@ export const enDE: Localization = {
   dashboard: {
     info: {
       start: {
-        title: () => 'How to start',
+        title: () => 'How to get started',
         organizer: {
-          title: () => 'Create Organizer',
+          title: () => 'Create an organizer profile',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                An Organizer represents your public profile. It contains information about you or
-                your organization.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                Everything you create in the culture data platform has an Organizer.
+                You want to publish data about a cultural institution, your collective or yourself
+                as a solo artist? Create an organizer profile to describe yourself and link
+                locations and offers to this profile.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          button: () => 'Create Organizer now',
-          done: () => 'Organizer was created',
+          button: () => 'Create profile',
+          done: () => 'Profile has been created',
         },
         offer: {
-          title: () => 'Create Offer',
+          title: () => 'Create an offer',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                An Offer can be an event, but also a course, a radio show, a film screening, or
-                something completely different.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                The Offer contains information about its content, place and time. Each Offer can
-                contain any number of dates.
+                Whether performance or dance class, online collection or research service - here you
+                can describe your cultural offer in all its diversity.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          button: () => 'Create Offer now',
-          done: () => 'Offer was created',
+          button: () => 'Create offer',
+          done: () => 'Offer has been created',
         },
         location: {
-          title: () => 'Create Location',
+          title: () => 'Create a location',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Most offers take place at a Location - this can also be a virtual Location such as a
-                stream.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                You can enter all relevant information about an event location here, including
-                extensive information on accessibility.
+                No more copy-pasting addresses! Enter information about your venue only once and
+                then use it again and again for your offers. You can create as many venues as you
+                like - or even individual rooms.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          button: () => 'Create Location now',
-          done: () => 'Location was created',
+          button: () => 'Create location',
+          done: () => 'Location has been created',
         },
       },
       organizer: {
-        title: () => 'Bringing your Organizer to life',
+        title: () => 'Get your organizer up and running',
         team: {
           title: () => 'Invite team members',
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                You can give other users access to your Organizers. They can then view and edit the
-                data of the Organizers and create offers and locations for them.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                To grant access, you can invite users on the Team page.
+                On the team page, you can give other registered users access to your entries. Once
+                invited, they can view and edit the organizer&apos;s data and create offers and
+                locations for them.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Manage your team now',
+          link: () => 'Manage your team',
         },
         profile: {
           title: () => 'Fill out the profile',
@@ -107,10 +97,8 @@ export const enDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                You can export all data that you provide on kulturdaten.berlin in standard formats.
-              </DashboardTileTextP>
-              <DashboardTileTextP>
-                To do this, you can use the export function in the corresponding lists or entries.
+                All the data you provide can be exported ageain in standard formats using the
+                corresponding buttons.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
@@ -120,8 +108,8 @@ export const enDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                Use our API to access the data on all offers and organizers on kulturdaten.berlin or
-                to connect you own data to your website.
+                Use our API to access the data on all offers, locations and organizers on
+                kulturdaten.berlin or to connect you own data to your website.
               </DashboardTileTextP>
               <DashboardTileTextP>
                 To use our API you only need to create an API token.
@@ -291,9 +279,9 @@ export const enDE: Localization = {
     labelEnglishSimple: () => 'English: simple Language',
     description: () => 'Description',
     teaser: () => 'Teaser',
-    classification: () => 'Topic category (at least 1 main topic required)',
+    classification: () => 'Type of organizer / field of focus (min. 1)',
     type: () => 'Type(s)',
-    subjects: () => 'Subject(s)',
+    subjects: () => 'additional options',
     chooseTypeFirst: () => 'Please choose type first',
     tags: () => 'Tags',
     street1: () => 'Street and house number',
@@ -322,12 +310,16 @@ export const enDE: Localization = {
   },
   login: {
     email: () => 'Email',
+    emailPlaceholder: () => 'e.g. email@example.com',
     password: () => 'Password',
+    passwordReset: () => 'Forgot your password?',
     remember: () => 'Stay logged in',
     submit: () => 'login',
     headline: () => 'Log in to kulturdaten.berlin now!',
     loading: () => 'Logging you in',
     error: () => 'The provided login credentials are not valid.',
+    registerReference: () => 'New here?',
+    registerReferenceLinkText: () => 'Register now.',
   },
   logout: {
     loading: () => 'Logging you out',
@@ -336,17 +328,32 @@ export const enDE: Localization = {
   register: {
     email: () => 'Email',
     password: () => 'Password',
+    passwordPlaceholder: () => '8+ characters',
     confirmPassword: () => 'Confirm password',
-    submit: () => 'register',
+    submit: () => 'sign up',
     headline: () => 'Sign up now! ',
     subline: () => 'Spread your information more convenient via kulturdaten.berlin - for free!',
-    loading: () => 'Registering you',
+    loading: () => 'Signing up',
     passwordError: () => 'The entered passwords do not match.',
     requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
-    uniqueEmailError: () => 'The entered email is already registered. Please use another email.',
+    uniqueEmailError: () => 'This account already exists.',
     successHeadline: () => 'Great, that worked!',
-    successSubline: () =>
-      'We have sent you an email to confirm your registration. Please complete your registration via that email.',
+    successSubline: () => 'We sent you an email. Check your inbox to activate your account.',
+    confirmationText: () => (
+      <>
+        I hereby confirm that I have read and agree to the{' '}
+        <a target="_blank" rel="noreferrer" href="http://kulturdaten.berlin/agb/">
+          terms of use
+        </a>{' '}
+        and{' '}
+        <a target="_blank" rel="noreferrer" href="http://kulturdaten.berlin/datenschutzerklaerung/">
+          privacy policy
+        </a>{' '}
+        of kulturdaten.berlin.
+      </>
+    ),
+    loginReference: () => 'Already have an account?',
+    loginReferenceLinkText: () => 'Log in here.',
   },
   statusBar: {
     status: () => 'Status',
@@ -386,7 +393,7 @@ export const enDE: Localization = {
       'In order for the image to be publicly available, the mandatory fields must be filled out.',
     dropZoneLabel: () => 'Upload new images',
     usageInfo: () =>
-      'Bitte beachte, dass du nur Bilder über kulturdaten.berlin zur Verfügung stellst, die von anderen in unveränderter oder veränderter Form weitergenutzt werden dürfen - auch zu kommerziellen Zwecken und auf Social-Media-Kanälen. Bitte verwende keine Bilder ohne die Zustimmung des/der Rechteinhaber:in. Sind auf den Bildern Personen abgebildet, so müssen diese ihr Einverständnis zur Nutzung des Bildes durch Dritte gegeben haben. Datennutzer:innen - ob Veranstaltungsportal oder App-Entwicklerin - erhalten das Recht, die Bilddateien unter Nennung der Urheber zur Promotion von Angeboten innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.',
+      'Please note that you only provide images via kulturdaten.berlin that may be used by others in unmodified or modified form - including for commercial purposes and on social media channels. Please do not use images without the permission of the copyright holder(s). If persons are depicted in the images, they must have given their consent to the use of the image by third parties. Users of your data - be it an event portal or an app developer - are granted the right to use the image files for the promotion of offers within the limits of the moral rights of the copyright holder, provided that the copyright holder is named.',
   },
   logo: {
     title: () => 'Logo',
@@ -540,8 +547,20 @@ export const enDE: Localization = {
     loading: () => 'loading',
     max: () => 'max.',
     topics: () => 'Keywords (optional)',
-    topicsTooltip: () =>
-      'With theme tags you can indicate more precisely what your offer is about, e.g. certain types of music or art epochs.\nThese terms are based on the GND (integrated authority file) of the German National Library. If there are any terms missing or some concepts seem out of place, please feel free to contact us at hallo@kulturdaten.berlin!',
+    topicsTooltip: () => (
+      <>
+        <TooltipP>
+          With theme tags you can indicate more precisely what this organizer is all about, e.g. the
+          focus of your collections or the artistic field of your choice.
+        </TooltipP>
+        <TooltipP>
+          These terms are based on the GND (integrated authority file) of the German National
+          Library. If there are any terms missing or some concepts seem out of place, please feel
+          free to contact us at
+          <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
+        </TooltipP>
+      </>
+    ),
     topicsPlaceholder: () => 'Just type away, e.g. Bauhaus',
     takeAFewSeconds: () => 'This can take a few seconds.',
     serverProblem: () =>
@@ -632,17 +651,27 @@ export const enDE: Localization = {
       form: {
         create: () => 'Create new Organizer',
         baseInfo: () => 'Basic information',
-        address: () => 'Address data (not public)',
+        address: () => 'Internal contact - for questions regarding this profile',
+        addressTooltip: () =>
+          'This information is for our internal use and will not be published. Please enter contact and address data  via which we can reach your institution / group / you in case of problems or queries.',
+        name: () => 'Name',
+        nameTooltip: () =>
+          "Please enter the name of your institution, group, or the name you use as a  solo-artist. The name you provide here will automatically appear as the organizer's name when you link an offer to this profile.",
+        description: () => 'About you - description (max. 1500 characters)',
+        descriptionTooltip: () =>
+          'What characterizes your institution / group / your own artistic work? Here you give a brief overview for your audience(s).',
         submit: () => 'create',
         save: () => 'save',
         edit: () => 'edit',
         editCancel: () => 'cancel',
-        contact: () => 'Contact data',
+        contact: () => 'Contact for audience / visitor questions',
         tel: () => 'Phone',
         email: () => 'Email',
         website: () => 'Website',
-        links: () => 'Relevant links',
+        links: () => 'Additional links (e.g. social media accounts)',
         additionalContacts: () => 'Additional contacts',
+        additionalContactsTooltip: () =>
+          'Use this option to list additional contacts. You want to add a contact that is only relevant to a specific event? Head to offers and add the contact information to the event in question.',
       },
       tabs: {
         info: () => 'Information',
@@ -707,14 +736,14 @@ export const enDE: Localization = {
         locationInfoPlaceholder: () => 'e.g. specific room',
         mainType: {
           title: () => 'Event type',
-          choose: () => 'What kind of offer is it? Poetry Slam, concert, ...',
+          choose: () => 'What kind of offer is it? Exhibition, concert, tour...',
         },
         pricing: {
           title: () => 'Pricing & admission',
           feeLabel: () => 'Cost',
           registrationLabel: () => 'Admission',
           hasFee: () => 'Ticket required',
-          noFee: () => 'No ticket required',
+          noFee: () => 'Free of charge',
           needsRegistration: () => 'Registration required',
           noRegistration: () => 'No registration required',
           ticketUrl: () => 'Ticket link / ticket information',
@@ -734,6 +763,21 @@ export const enDE: Localization = {
           edit: () => 'Change location',
           title: ({ name }) => `Choose location for ‘${name}’`,
         },
+        topics: () => 'Topic category',
+        topicsTooltip: () => (
+          <>
+            <TooltipP>
+              With theme tags you can indicate more precisely what your offer is about, e.g. certain
+              types of music or art epochs.
+            </TooltipP>
+            <TooltipP>
+              These terms are based on the GND (integrated authority file) of the German National
+              Library. If there are any terms missing or some concepts seem out of place, please
+              feel free to contact us at{' '}
+              <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
+            </TooltipP>
+          </>
+        ),
       },
       tabs: {
         info: () => 'Information',
@@ -764,7 +808,8 @@ export const enDE: Localization = {
         openingHours: () => 'Opening hours',
         create: () => 'Create new Location',
         address: () => 'Address data',
-        name: () => 'Name',
+        name: () => 'Name of the location',
+        namePlaceholder: () => "e.g. 'Kleines Theater' or 'Gallery XY on Youtube'",
         nameGerman: () => 'Name German',
         nameGermanSimple: () => 'Name German: simple Language',
         nameEnglish: () => 'Name English',
@@ -783,6 +828,7 @@ export const enDE: Localization = {
         tel: () => 'Phone',
         district: () => 'District',
         url: () => 'URL of the Location',
+        urlPlaceholder: () => 'https://theatreberlin.de/virtualstage',
         rent: {
           title: () => 'Rent',
           url: () => 'Rent link / Rent information',
@@ -794,7 +840,7 @@ export const enDE: Localization = {
           physicalText: () => 'A physically existing location with an address, e.g. a building.',
           virtualLabel: () => 'Virtual Location',
           virtualText: () =>
-            'A virtually existing location with an URL, e.g. a YouTube or Twitch channel.',
+            'Do your events and offers take place online - on your own platform or social media channels? Add your virtual location here once and link it conveniently with your online offers later.',
         },
       },
       options: {
@@ -808,7 +854,7 @@ export const enDE: Localization = {
     },
   },
   menu: {
-    title: () => 'Kulturdaten.Berlin',
+    title: () => 'kulturdaten.berlin',
     main: () => 'Main Menu',
     button: {
       open: () => 'open menu',

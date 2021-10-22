@@ -52,6 +52,8 @@ export const AuthFormItem = styled.div<{
   flex-direction: row;
   justify-content: ${({ justifyContent }) => justifyContent || 'space-between'};
   column-gap: 1.5rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
 `;
 
 export const AuthHead = styled.div`
@@ -98,11 +100,11 @@ export const AuthContent = styled.div`
   }
 
   ${mq(Breakpoint.wide)} {
-    padding: 9rem 0;
+    padding: 7rem 0;
   }
 
   ${mq(Breakpoint.ultra)} {
-    padding: 11.25rem 0;
+    padding: 8rem 0;
   }
 `;
 

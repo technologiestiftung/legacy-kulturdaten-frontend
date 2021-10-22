@@ -168,15 +168,14 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
 
   const [contactsFromApi, setContactsFromApi] = useState<Contact[]>();
 
-  const initialContacts = useMemo(
-    () => entry?.data?.relations?.contacts,
-    [entry?.data?.relations?.contacts]
-  );
+  const initialContacts = useMemo(() => entry?.data?.relations?.contacts, [
+    entry?.data?.relations?.contacts,
+  ]);
 
-  const pristine = useMemo(
-    () => JSON.stringify(contacts) === JSON.stringify(contactsFromApi),
-    [contacts, contactsFromApi]
-  );
+  const pristine = useMemo(() => JSON.stringify(contacts) === JSON.stringify(contactsFromApi), [
+    contacts,
+    contactsFromApi,
+  ]);
 
   useEffect(() => {
     if (JSON.stringify(initialContacts) !== JSON.stringify(contactsFromApi)) {
@@ -187,7 +186,10 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
 
   const renderedForm = (
     <div>
-      <EntryFormHead title={t('categories.organizer.form.additionalContacts') as string} />
+      <EntryFormHead
+        title={t('categories.organizer.form.additionalContacts') as string}
+        tooltip={t('categories.organizer.form.additionalContactsTooltip') as string}
+      />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           <Contacts
@@ -286,7 +288,9 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    valid,
+    t('categories.organizer.form.name') as string,
+    t('categories.organizer.form.nameTooltip') as string
   );
 
   const {
@@ -304,7 +308,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     loaded,
     valid,
     true,
-    t('categories.organizer.form.address')
+    t('categories.organizer.form.address'),
+    t('categories.organizer.form.addressTooltip')
   );
 
   const {
@@ -368,7 +373,9 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    valid,
+    t('categories.organizer.form.description') as string,
+    t('categories.organizer.form.descriptionTooltip') as string
   );
 
   const renderedEntryHeader = useEntryHeader(
@@ -432,10 +439,10 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const message = t('save.confirmExit') as string;
 
-  const shouldWarn = useMemo(
-    () => !pristine && typeof entry?.data !== 'undefined',
-    [pristine, entry?.data]
-  );
+  const shouldWarn = useMemo(() => !pristine && typeof entry?.data !== 'undefined', [
+    pristine,
+    entry?.data,
+  ]);
 
   useConfirmExit(shouldWarn, message, () => {
     nameReset();

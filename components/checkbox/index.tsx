@@ -81,6 +81,9 @@ const StyledCheckboxLabel = styled.label<{ disabled?: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   padding: 0 0 0 0.75rem;
   flex-grow: 1;
+  a {
+    color: inherit;
+  }
 `;
 
 export interface CheckboxProps {

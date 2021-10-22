@@ -32,16 +32,16 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   const [openingHours, setOpeningHours] = useState<OpeningHours[]>();
   const [openingHoursFromApi, setOpeningHoursFromApi] = useState<OpeningHours[]>();
   const [openingHoursTranslations, setOpeningHoursTranslations] = useState<LocationTranslation[]>();
-  const [openingHoursTranslationsFromApi, setOpeningHoursTranslationsFromApi] =
-    useState<LocationTranslation[]>();
+  const [openingHoursTranslationsFromApi, setOpeningHoursTranslationsFromApi] = useState<
+    LocationTranslation[]
+  >();
 
   const call = useApiCall();
   const t = useT();
 
-  const initialOpeningHours = useMemo(
-    () => entry?.data?.relations?.openingHours,
-    [entry?.data?.relations?.openingHours]
-  );
+  const initialOpeningHours = useMemo(() => entry?.data?.relations?.openingHours, [
+    entry?.data?.relations?.openingHours,
+  ]);
 
   const initialOpeningHoursTranslations = useMemo(
     () =>
@@ -271,7 +271,7 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
         <FormItem width={FormItemWidth.full}>
           <Input
             label={t('categories.location.form.url') as string}
-            placeholder={t('forms.urlPlaceholder') as string}
+            placeholder={t('categories.location.form.urlPlaceholder') as string}
             type={InputType.url}
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
@@ -403,6 +403,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
   const [valid, setValid] = useState(true);
   const { rendered } = useContext(WindowContext);
   const formattedDate = useSaveDate(entry);
+  const t = useT();
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -426,7 +427,8 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    valid,
+    t('categories.location.form.name') as string
   );
 
   const {
