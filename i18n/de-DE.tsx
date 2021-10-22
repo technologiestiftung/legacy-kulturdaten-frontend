@@ -378,6 +378,24 @@ export const deDE: Localization = {
     copyright: () => 'Urheber:in',
     alt: () => 'Alt Text',
     license: () => 'Lizenz',
+    licenses: {
+      '1': {
+        name: () => 'mit Namensnennung nutzbar (CC BY)',
+        href: () => 'https://creativecommons.org/licenses/by/4.0/deed.de',
+      },
+      '2': {
+        name: () => 'ohne Namensnennung nutzbar (Public Domain)',
+        href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.de',
+      },
+      '3': {
+        name: () => 'mit Namensnennung - Weitergabe unter gleichen Bedingungen (CC BY SA)',
+        href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.de',
+      },
+      '4': {
+        name: () => 'Weitere Lizenz (Kulturdaten-Lizenz)',
+        href: () => 'https://kulturdaten.berlin',
+      },
+    },
     licenseEnd: () => 'Ablaufdatum Lizenz',
     imageProcessing: () => 'Das Bild wird verarbeitet und geladen',
     openImage: () => 'Original Bild in neuem Tab öffnen',

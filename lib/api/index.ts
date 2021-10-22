@@ -65,6 +65,7 @@ export enum ApiRoutes {
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
+  mediaLicenseList = 'mediaLicenseList',
   tagList = 'tagList',
 }
 
@@ -122,9 +123,10 @@ export const apiRoutes: {
     }`,
   offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
   offerMainTypeList: () => `/${apiVersion}/offerMainType?include=translations`,
-  mediaShow: ({ id }) => `/${apiVersion}/media/${id}`,
-  mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaShow: ({ id }) => `/${apiVersion}/media/${id}?include=license`,
+  mediaUpdate: ({ id }) => `/${apiVersion}/media/${id}?include=license`,
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
+  mediaLicenseList: () => `/${apiVersion}/mediaLicense`,
   tagList: () => `/${apiVersion}/tag?include=translations`,
 };
 

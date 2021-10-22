@@ -1,6 +1,15 @@
 import { Language } from '../../../config/locales';
 import { CategoryEntry, Translation } from './general';
 
+export type MediaLicense = {
+  id: number;
+  type: 'medialicense';
+  attributes: {
+    name: string;
+    url: string;
+  };
+};
+
 export type RenditionAttributes = {
   width: number;
   height: number;
@@ -23,13 +32,14 @@ export type Media = {
     type: 'media';
     attributes: {
       copyright: string;
-      license: string;
       expiresAt: string;
       createdAt: string;
       updatedAt: string;
+      mediaLicenseId: number;
     } & RenditionAttributes;
     relations: {
       translations: MediaTranslation[];
+      license?: MediaLicense | number;
       renditions?: {
         id: number;
         type: 'rendition';

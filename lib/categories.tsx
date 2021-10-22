@@ -8,7 +8,7 @@ import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { useUser } from '../components/user/useUser';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
-import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { ApiCall, ApiCallFactory, apiRoutes, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
 import { OfferMainTypeList, offerMainTypeListFactory } from './api/routes/offerMainType/list';
 import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
@@ -22,6 +22,8 @@ import { useT } from './i18n';
 import { Route, useLocale } from './routing';
 import { defaultOrganizerId, useOrganizerId, useSetOrganizerId } from './useOrganizer';
 import { routes } from '../config/routes';
+import { MediaLicense } from './api/types/media';
+import { MediaLicenseList, mediaLicenseListFactory } from './api/routes/mediaLicense/list';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -324,6 +326,21 @@ export const useOfferMainTypeList = (): OfferMainType[] => {
   );
 
   return data;
+};
+
+export const useMediaLicenseList = (): MediaLicense[] => {
+  const call = useApiCall();
+
+  const { data } = useSWR(
+    getApiUrlString(ApiRoutes.mediaLicenseList),
+    () => call<MediaLicenseList>(mediaLicenseListFactory),
+    {
+      revalidateOnFocus: false,
+      focusThrottleInterval: 1000 * 60 * 5,
+    }
+  );
+
+  return data?.body?.data;
 };
 
 export const useCreateEntry = (
