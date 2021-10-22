@@ -180,6 +180,33 @@ export const enDE: Localization = {
     de: () => 'German',
     en: () => 'English',
   },
+  team: {
+    list: {
+      title: () => 'Team members',
+      email: () => 'Email',
+      role: () => 'Role',
+      pending: () => 'Invite pending',
+      info: () =>
+        "There always needs to be at least one Owner. There can be more though. If you don't want to be Owner anymore, you can assign the Owner role to someone else and assign yourself a different role.",
+    },
+    roles: {
+      owner: () => 'Owner',
+      editor: () => 'Editor',
+    },
+    invite: {
+      label: () => 'Emails of new members you want to invite',
+      title: () => 'Invite new team members',
+      loading: () => 'Inviting new team members',
+      button: () => 'Invite',
+      pending: () => 'Invite pending',
+      hint: ({ max }) =>
+        `You can add a single email, or a list of emails (max. ${max}) separated with "," (comma).`,
+      hint2: () => 'Example: name@example.com, title@another-example.com',
+      placeholder: () => 'name@example.com, title@another-example.com',
+      invalid: () =>
+        'Your entered data is invalid. Please check that it follows the structure "name@example.com, title@another-example.com".',
+    },
+  },
   greetings: {
     welcome: () => 'Welcome.',
     hello: () => 'Hello.',
@@ -519,6 +546,7 @@ export const enDE: Localization = {
     takeAFewSeconds: () => 'This can take a few seconds.',
     serverProblem: () =>
       'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
+    remove: () => 'remove',
   },
   tags: {
     boxLabel: () => 'Already added keywords',

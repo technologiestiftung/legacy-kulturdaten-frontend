@@ -184,6 +184,33 @@ export const deDE: Localization = {
     de: () => 'Deutsch',
     en: () => 'Englisch',
   },
+  team: {
+    list: {
+      title: () => 'Teammitglieder',
+      email: () => 'E-Mail',
+      role: () => 'Rolle',
+      pending: () => 'Einladung ausstehend',
+      info: () =>
+        'Es muss immer min. eine Besitzer:in geben. Es darf aber auch mehrere geben. Wenn du nicht mehr Besitzer:in sein möchtest, kannst du die Besitzer:innen Rolle jemand anderes zuweisen und dir eine andere Rolle zuweisen.',
+    },
+    roles: {
+      owner: () => 'Besitzer:in',
+      editor: () => 'Redakteur:in',
+    },
+    invite: {
+      label: () => 'E-Mails von neuen Mitgliedern, die du einladen möchtest',
+      title: () => 'Neue Teammitglieder einladen',
+      loading: () => 'Lade neue Teammitglieder ein',
+      pending: () => 'Einladung ausstehend',
+      button: () => 'Einladen',
+      hint: ({ max }) =>
+        `Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mail (max. ${max}), getrennt mit "," (Komma).`,
+      hint2: () => 'Bespiel: name@example.com, title@another-example.com',
+      placeholder: () => 'name@example.com, title@another-example.com',
+      invalid: () =>
+        'Die Eingabe enthält Fehler. Prüfe bitte, dass du der Form "name@example.com, title@another-example.com" folgst.',
+    },
+  },
   greetings: {
     welcome: () => 'Willkommen.',
     hello: () => 'Hallo.',
@@ -526,6 +553,7 @@ export const deDE: Localization = {
     takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
     serverProblem: () =>
       'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
+    remove: () => 'entfernen',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',

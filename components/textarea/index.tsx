@@ -23,6 +23,7 @@ export interface TextareaProps extends ComponentWithVariants {
   id: string;
   value: string;
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
+  onBlur?: ChangeEventHandler<HTMLTextAreaElement>;
   label?: string;
   ariaLabel?: string;
   autoComplete?: string;
@@ -56,7 +57,13 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         valid={props.valid}
         pristine={pristine}
         onChange={props?.onChange}
-        onBlur={() => setPristine(false)}
+        onBlur={(e) => {
+          if (props?.onBlur) {
+            props.onBlur(e);
+          }
+
+          setPristine(false);
+        }}
         aria-label={props?.ariaLabel}
       />
     </StyledTextareaContainer>
