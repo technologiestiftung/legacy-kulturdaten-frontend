@@ -28,7 +28,7 @@ jobs:
 
       - name: Running tests
         run: |
-          npm run test --passWithNoTests
+          npm run test -- --passWithNoTests
         # npm run lint
   deploy:
     needs: verify
