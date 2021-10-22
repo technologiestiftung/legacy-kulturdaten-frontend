@@ -862,6 +862,11 @@ export const enDE: Localization = {
             'Do your events and offers take place online - on your own platform or social media channels? Add your virtual location here once and link it conveniently with your online offers later.',
         },
       },
+      tabs: {
+        info: () => 'Information',
+        accessibility: () => 'Accessibility',
+        media: () => 'Images',
+      },
       options: {
         exportCsv: () => 'Export as CSV',
         exportXls: () => 'Export as Excel',

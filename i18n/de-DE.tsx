@@ -882,6 +882,11 @@ export const deDE: Localization = {
             'Du bietest Angebote auch online an - auf einer eigenen Plattform oder Social Media-Kanälen? Lege hier deine Webpräsenz einmal an und verknüpfe sie später bequem mit deinen Online-Angeboten.',
         },
       },
+      tabs: {
+        info: () => 'Informationen',
+        accessibility: () => 'Barrierefreiheit',
+        media: () => 'Bilder',
+      },
       options: {
         exportCsv: () => 'Export als CSV',
         exportXls: () => 'Export als Excel',
