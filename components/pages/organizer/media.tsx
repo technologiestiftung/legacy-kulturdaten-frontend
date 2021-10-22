@@ -12,7 +12,7 @@ import { useT } from '../../../lib/i18n';
 import { ParsedUrlQuery } from 'querystring';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { DropZone } from '../../DropZone';
-import { Media } from '../../../lib/api/types/media';
+import { Media, MediaLicense } from '../../../lib/api/types/media';
 import { EntryFormHook } from '../helpers/form';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -127,7 +127,11 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
 
   const [logo, setLogo] = useState<Media['data']>();
   const [logoFromApi, setLogoFromApi] = useState<Media['data']>();
-  const [pristine, setPristine] = useState(true);
+
+  const pristine = useMemo(
+    () => JSON.stringify(logo) === JSON.stringify(logoFromApi),
+    [logo, logoFromApi]
+  );
 
   useEffect(() => {
     if (initialLogo) {
@@ -149,16 +153,23 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
         id: entry.data.id,
         entry: {
           relations: {
-            logo,
+            logo: {
+              attributes: {
+                copyright: logo.attributes.copyright,
+                expiresAt: logo.attributes.expiresAt,
+                acceptedTermsAt: logo.attributes.acceptedTermsAt,
+              },
+              relations: {
+                license: (logo.relations.license as MediaLicense).id,
+                translations: logo.relations.translations,
+              },
+            },
           },
         },
       });
 
       if (resp.status === 200) {
-        setLogo(resp.body.data.data.relations.logo);
-        setLogoFromApi(resp.body.data.data.relations.logo);
-        mutate(resp.body.data);
-        setPristine(true);
+        mutate();
       }
     } catch (e) {
       console.error(e);
@@ -172,16 +183,10 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
         <FormGrid>
           {!logo && !logoFromApi && renderedLogoUploadForm}
           <FormItem width={FormItemWidth.full}>
-            <Info color={InfoColor.white} noMaxWidth>
-              {t('media.usageInfo')}
-            </Info>
-          </FormItem>
-          <FormItem width={FormItemWidth.full}>
             <MediaList
               media={logo ? [logo] : logoFromApi ? [logoFromApi] : undefined}
               onChange={(newLogo) => {
                 setLogo(newLogo[0]);
-                setPristine(false);
               }}
               setValid={(valid) => setValid(valid)}
               onDelete={async (mediaItemId) => {
@@ -254,11 +259,17 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
   const { rendered } = useContext(WindowContext);
   const [loaded, setLoaded] = useState(false);
 
-  const { renderedForm, submit, pristine } = useMediaForm({ category, query }, loaded, false);
   const {
-    renderedForm: renderedLogoForm,
-    submit: submitLogo,
-    pristine: pristineLogo,
+    renderedForm: mediaForm,
+    submit: mediaSubmit,
+    pristine: mediaPristine,
+    valid: mediaValid,
+  } = useMediaForm({ category, query }, loaded, false);
+  const {
+    renderedForm: logoForm,
+    submit: logoSubmit,
+    pristine: logoPristine,
+    valid: logoValid,
   } = useLogoForm({ category, query }, loaded, false);
 
   useEffect(() => {
@@ -277,21 +288,21 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
       <div>
         <Save
           onClick={async () => {
-            if (!pristine) {
-              submit();
+            if (!mediaPristine && mediaValid) {
+              mediaSubmit();
             }
-            if (!pristineLogo) {
-              submitLogo();
+            if (!logoPristine && logoValid) {
+              logoSubmit();
             }
           }}
-          active={!pristine}
+          active={!mediaPristine || !logoPristine}
           date={formattedDate}
-          valid={true}
+          valid={mediaValid || logoValid}
           hint={false}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>{renderedLogoForm}</EntryFormContainer>
-          <EntryFormContainer>{renderedForm}</EntryFormContainer>
+          <EntryFormContainer>{logoForm}</EntryFormContainer>
+          <EntryFormContainer>{mediaForm}</EntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

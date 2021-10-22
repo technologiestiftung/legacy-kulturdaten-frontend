@@ -4,7 +4,12 @@ import formatISO9075 from 'date-fns/formatISO9075';
 import Image from 'next/image';
 import { ExternalLink } from 'react-feather';
 import { contentLanguages, languageTranslationKeys } from '../../config/locales';
-import { Media, MediaTranslation, RenditionAttributes } from '../../lib/api/types/media';
+import {
+  Media,
+  MediaLicense,
+  MediaTranslation,
+  RenditionAttributes,
+} from '../../lib/api/types/media';
 import { useT } from '../../lib/i18n';
 import { getTranslation } from '../../lib/translations';
 import { Language } from '../../config/locales';
@@ -17,6 +22,10 @@ import { useFormatNumber } from '../../lib/number';
 import { useEffect, useMemo } from 'react';
 import { AlertSymbol } from '../assets/AlertSymbol';
 import { defaultLanguage } from '../../config/locale';
+import { useMediaLicenseList } from '../../lib/categories';
+import { RadioList } from '../Radio/RadioList';
+import { Info, InfoColor } from '../info';
+import { Checkbox } from '../checkbox';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -277,6 +286,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const uid = usePseudoUID();
   const t = useT();
   const formatNumber = useFormatNumber();
+  const mediaLicenses = useMediaLicenseList();
 
   const smallestRendition =
     mediaItem.relations?.renditions?.length > 0
@@ -392,41 +402,82 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
             />
           </div>
           <div>
-            <Input
-              type={InputType.text}
-              label={t('media.license') as string}
-              id={`${uid}-copyright`}
-              value={mediaItem.attributes.license || ''}
-              onChange={(e) =>
-                onChange({
-                  ...mediaItem,
-                  attributes: { ...mediaItem.attributes, license: e.target.value },
-                })
-              }
+            <RadioList
               required
-            />
-          </div>
-          <div>
-            <Input
-              type={InputType.date}
-              label={t('media.licenseEnd') as string}
-              id={`${uid}-copyright`}
-              value={
-                mediaItem.attributes.expiresAt
-                  ? formatISO9075(new Date(mediaItem.attributes.expiresAt), {
-                      representation: 'date',
-                    })
-                  : ''
-              }
-              onChange={(e) =>
+              label={t('media.license') as string}
+              id={`${uid}-license`}
+              name={`${uid}-license`}
+              value={String(mediaItem.attributes?.mediaLicenseId)}
+              options={mediaLicenses?.map((mediaLicense) => ({
+                value: String(mediaLicense.id),
+                label: t(`media.licenses.${mediaLicense.id}.name`) as string,
+                link: {
+                  href: t(`media.licenses.${mediaLicense.id}.href`) as string,
+                  title: t(`media.licenses.${mediaLicense.id}.href`) as string,
+                },
+              }))}
+              onChange={(newValue) =>
                 onChange({
                   ...mediaItem,
                   attributes: {
                     ...mediaItem.attributes,
-                    expiresAt: e.target.value ? new Date(e.target.value).toISOString() : undefined,
+                    mediaLicenseId: parseInt(newValue, 10),
+                  },
+                  relations: {
+                    ...mediaItem.relations,
+                    license: mediaLicenses.find((license) => license.id === parseInt(newValue, 10)),
                   },
                 })
               }
+            />
+          </div>
+          {(mediaItem.relations?.license as MediaLicense)?.id === 4 && (
+            <div>
+              <Input
+                type={InputType.date}
+                label={t('media.licenseEnd') as string}
+                id={`${uid}-copyright`}
+                value={
+                  mediaItem.attributes.expiresAt
+                    ? formatISO9075(new Date(mediaItem.attributes.expiresAt), {
+                        representation: 'date',
+                      })
+                    : ''
+                }
+                onChange={(e) =>
+                  onChange({
+                    ...mediaItem,
+                    attributes: {
+                      ...mediaItem.attributes,
+                      expiresAt: e.target.value
+                        ? new Date(e.target.value).toISOString()
+                        : undefined,
+                    },
+                  })
+                }
+              />
+            </div>
+          )}
+          <div>
+            <Info color={InfoColor.grey} noMaxWidth>
+              {t('media.usageInfo')}
+            </Info>
+          </div>
+          <div>
+            <Checkbox
+              id={`${uid}-terms`}
+              checked={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
+              label={t('media.acknowledgedUsageInfo') as string}
+              onChange={(e) => {
+                onChange({
+                  ...mediaItem,
+                  attributes: {
+                    ...mediaItem.attributes,
+                    acceptedTermsAt: e.target.checked ? new Date().toISOString() : undefined,
+                  },
+                });
+              }}
+              valid={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
               required
             />
           </div>
@@ -490,14 +541,21 @@ export const MediaList: React.FC<MediaListProps> = ({
     () =>
       media?.map((mediaItem) => {
         const requiredAttributes = [
+          mediaItem.relations.translations?.find(
+            (translation) => translation.attributes?.language === defaultLanguage
+          )?.attributes?.alternativeText,
           mediaItem.attributes.copyright,
-          mediaItem.attributes.expiresAt,
-          mediaItem.attributes.license,
+          mediaItem.attributes.mediaLicenseId,
+          mediaItem.attributes.acceptedTermsAt,
         ];
 
         for (let i = 0; i < requiredAttributes.length; i += 1) {
           const attribute = requiredAttributes[i];
-          if (!attribute || typeof attribute === 'undefined' || attribute.length === 0) {
+          if (
+            !attribute ||
+            typeof attribute === 'undefined' ||
+            (typeof attribute === 'string' && attribute.length === 0)
+          ) {
             return false;
           }
         }

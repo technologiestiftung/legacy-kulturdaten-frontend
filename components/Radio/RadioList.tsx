@@ -31,11 +31,25 @@ const StyledRadioListItems = styled.ul`
 
 const StyledRadioListItem = styled.li``;
 
+const StyledRadioListItemLink = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--font-size-300);
+  padding: 0.375rem 0 0.375rem 2.25rem;
+`;
+
+const StyledRadioListItemLinkA = styled.a`
+  color: inherit;
+`;
+
 export interface RadioListProps extends ComponentWithVariants {
   options: {
     label: string;
     value: string;
     id?: string;
+    link?: {
+      href: string;
+      title: string;
+    };
   }[];
   name: string;
   id: string;
@@ -80,6 +94,17 @@ export const RadioList: React.FC<RadioListProps> = ({
               onChange={(e) => onChange(e.target.value)}
               required={required}
             />
+            {option.link && (
+              <StyledRadioListItemLink>
+                <StyledRadioListItemLinkA
+                  href={option.link.href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {option.link.title}
+                </StyledRadioListItemLinkA>
+              </StyledRadioListItemLink>
+            )}
           </StyledRadioListItem>
         ))}
       </StyledRadioListItems>

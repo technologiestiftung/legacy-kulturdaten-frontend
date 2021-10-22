@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ApiCall, useApiCall, useMediaUpload } from '../../../lib/api';
 import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
 import { CategoryEntry } from '../../../lib/api/types/general';
-import { Media } from '../../../lib/api/types/media';
+import { Media, MediaLicense } from '../../../lib/api/types/media';
 import { useEntry, Category } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { DropZone } from '../../DropZone';
@@ -154,6 +154,7 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
             ...mediaItem,
             relations: {
               ...mediaItem.relations,
+              license: (mediaItem.relations.license as MediaLicense).id,
               translations: mediaItem.relations?.translations,
             },
           },
@@ -173,11 +174,6 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
         <EntryFormHead title={`${t('media.title')} (${t('general.max')} ${imagesMax})`} />
         <FormGrid>
           {renderedMediaUploadForm}
-          <FormItem width={FormItemWidth.full}>
-            <Info color={InfoColor.white} noMaxWidth>
-              {t('media.usageInfo')}
-            </Info>
-          </FormItem>
           <FormItem width={FormItemWidth.full}>
             <MediaList
               media={media}

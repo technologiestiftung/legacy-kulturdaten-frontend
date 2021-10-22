@@ -383,6 +383,24 @@ export const deDE: Localization = {
     copyright: () => 'Urheber:in',
     alt: () => 'Alt Text',
     license: () => 'Lizenz',
+    licenses: {
+      '1': {
+        name: () => 'mit Namensnennung nutzbar (CC BY)',
+        href: () => 'https://creativecommons.org/licenses/by/4.0/deed.de',
+      },
+      '2': {
+        name: () => 'ohne Namensnennung nutzbar (Public Domain)',
+        href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.de',
+      },
+      '3': {
+        name: () => 'mit Namensnennung - Weitergabe unter gleichen Bedingungen (CC BY SA)',
+        href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.de',
+      },
+      '4': {
+        name: () => 'Weitere Lizenz (Kulturdaten-Lizenz)',
+        href: () => 'https://kulturdaten.berlin',
+      },
+    },
     licenseEnd: () => 'Ablaufdatum Lizenz',
     imageProcessing: () => 'Das Bild wird verarbeitet und geladen',
     openImage: () => 'Original Bild in neuem Tab öffnen',
@@ -399,6 +417,7 @@ export const deDE: Localization = {
     dropZoneLabel: () => 'Neue Bilder hochladen',
     usageInfo: () =>
       'Bitte beachte, dass du nur Bilder über kulturdaten.berlin zur Verfügung stellst, die von anderen in unveränderter oder veränderter Form weitergenutzt werden dürfen - auch zu kommerziellen Zwecken und auf Social-Media-Kanälen. Bitte verwende keine Bilder ohne die Zustimmung des/der Rechteinhaber:in. Sind auf den Bildern Personen abgebildet, so müssen diese ihr Einverständnis zur Nutzung des Bildes durch Dritte gegeben haben. Datennutzer:innen - ob Veranstaltungsportal oder App-Entwicklerin - erhalten das Recht, die Bilddateien unter Nennung der Urheber zur Promotion von Angeboten innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.',
+    acknowledgedUsageInfo: () => 'Zur Kenntnis genommen',
   },
   logo: {
     title: () => 'Logo',

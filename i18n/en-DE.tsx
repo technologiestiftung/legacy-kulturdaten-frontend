@@ -378,6 +378,24 @@ export const enDE: Localization = {
     copyright: () => 'Author',
     alt: () => 'Alt text',
     license: () => 'License',
+    licenses: {
+      '1': {
+        name: () => 'with attribution (CC BY)',
+        href: () => 'https://creativecommons.org/licenses/by/4.0/deed.en',
+      },
+      '2': {
+        name: () => 'without restrictions (public domain)',
+        href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.en',
+      },
+      '3': {
+        name: () => 'with attribution-ShareAlike (CC BY SA)',
+        href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
+      },
+      '4': {
+        name: () => 'Different license (Kulturdaten-License)',
+        href: () => 'https://kulturdaten.berlin',
+      },
+    },
     licenseEnd: () => 'End date license',
     imageProcessing: () => 'The image is being processed and loaded',
     openImage: () => 'Open original image in new tab',
@@ -394,6 +412,7 @@ export const enDE: Localization = {
     dropZoneLabel: () => 'Upload new images',
     usageInfo: () =>
       'Please note that you only provide images via kulturdaten.berlin that may be used by others in unmodified or modified form - including for commercial purposes and on social media channels. Please do not use images without the permission of the copyright holder(s). If persons are depicted in the images, they must have given their consent to the use of the image by third parties. Users of your data - be it an event portal or an app developer - are granted the right to use the image files for the promotion of offers within the limits of the moral rights of the copyright holder, provided that the copyright holder is named.',
+    acknowledgedUsageInfo: () => 'I have acknowledged this',
   },
   logo: {
     title: () => 'Logo',
