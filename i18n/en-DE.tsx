@@ -847,11 +847,11 @@ export const enDE: Localization = {
         tel: () => 'Phone',
         district: () => 'District',
         url: () => 'URL of the Location',
-        urlPlaceholder: () => 'https://theatreberlin.de/virtualstage',
+        urlPlaceholder: () => 'e.g. https://theatreberlin.de/virtualstage',
         rent: {
           title: () => 'Rent',
           url: () => 'Rent link / Rent information',
-          urlPlaceholder: () => 'https://example.com',
+          urlPlaceholder: () => 'e.g. https://example.com',
         },
         type: {
           title: () => 'Type of the Location',
