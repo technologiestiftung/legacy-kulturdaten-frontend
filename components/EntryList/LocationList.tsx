@@ -94,14 +94,14 @@ export const LocationList: React.FC<LocationListProps> = ({
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
   const view = useMemo(() => getView(listName), [getView, listName]);
-  const filtersBoxExpanded = useMemo(
-    () => getFiltersBoxExpanded(listName),
-    [getFiltersBoxExpanded, listName]
-  );
-  const dispatchFilters = useMemo(
-    () => getDispatchFilters(listName),
-    [getDispatchFilters, listName]
-  );
+  const filtersBoxExpanded = useMemo(() => getFiltersBoxExpanded(listName), [
+    getFiltersBoxExpanded,
+    listName,
+  ]);
+  const dispatchFilters = useMemo(() => getDispatchFilters(listName), [
+    getDispatchFilters,
+    listName,
+  ]);
   const loadingScreen = useLoadingScreen();
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
@@ -397,12 +397,10 @@ export const LocationList: React.FC<LocationListProps> = ({
             {rows && rows.length > 0 ? (
               <Table
                 columns={[
-                  { title: t('forms.name') as string, bold: true, width: 5 },
-                  { title: t('forms.type') as string, width: 4 },
-                  { title: t('forms.subjects') as string, width: 4 },
-                  { title: t('statusBar.status') as string, width: 3 },
-                  { title: t('categories.organizer.table.updated') as string, width: 2 },
-                  { title: t('categories.organizer.table.created') as string, width: 2 },
+                  { title: t('categories.location.form.name') as string, bold: true, width: 6 },
+                  { title: t('statusBar.status') as string, width: 4 },
+                  { title: t('categories.organizer.table.updated') as string, width: 4 },
+                  { title: t('categories.organizer.table.created') as string, width: 4 },
                 ].slice(0, !expanded ? 2 : undefined)}
                 content={rows}
                 narrow={!expanded}
