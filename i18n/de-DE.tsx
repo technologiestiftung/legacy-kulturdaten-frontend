@@ -867,11 +867,11 @@ export const deDE: Localization = {
         tel: () => 'Telefon',
         district: () => 'Bezirk',
         url: () => 'URL des Ortes',
-        urlPlaceholder: () => 'https://theaterberlin.de/virtualstage',
+        urlPlaceholder: () => 'z.B. https://theaterberlin.de/virtualstage',
         rent: {
           title: () => 'Vermietung',
           url: () => 'Vermietungslinks / Vermietungsinformation',
-          urlPlaceholder: () => 'https://example.com',
+          urlPlaceholder: () => 'z.B. https://example.com',
         },
         type: {
           title: () => 'Typ des Ortes',
