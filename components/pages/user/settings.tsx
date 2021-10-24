@@ -8,11 +8,20 @@ import { LocaleSwitch, LocaleSwitchVariant } from '../../navigation/LocaleSwitch
 import { usePseudoUID } from '../../../lib/uid';
 import { DashboardLinkList } from '../../Dasboard/DashboardLinkList';
 import { StandardLinkType } from '../../../lib/generalTypes';
+import { Info, InfoColor } from '../../info';
+import { Input, InputType } from '../../input';
+import { useState } from 'react';
+import { Button, ButtonColor, ButtonSize } from '../../button';
+import { useLoadingScreen } from '../../Loading/LoadingScreen';
 
 export const UserSettingsPage: React.FC = () => {
   const t = useT();
   const { user } = useUser();
   const uid = usePseudoUID();
+  const loadingScreen = useLoadingScreen();
+
+  const [dummyInput1, setDummyInput1] = useState('');
+  const [dummyInput2, setDummyInput2] = useState('');
 
   return (
     <>
@@ -25,10 +34,54 @@ export const UserSettingsPage: React.FC = () => {
       <div>
         <EntryFormWrapper>
           <EntryFormContainer>
-            <EntryFormHead title="API Token " />
+            <EntryFormHead title={t('settings.api.titleCreate') as string} />
+            <FormGrid>
+              <FormItem width={FormItemWidth.half}>
+                <Input
+                  type={InputType.text}
+                  label={'Bezeichnung deiner Anwendung'}
+                  value={dummyInput1}
+                  placeholder={'Ein aussgaekräftiger Name'}
+                  onChange={(e) => setDummyInput1(e.target.value)}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.half}>
+                <Input
+                  type={InputType.text}
+                  label={'URL deiner Anwendung'}
+                  value={dummyInput2}
+                  placeholder={t('forms.urlPlaceholder') as string}
+                  onChange={(e) => setDummyInput2(e.target.value)}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Button
+                  color={ButtonColor.black}
+                  size={ButtonSize.big}
+                  onClick={() =>
+                    loadingScreen('Erstelle API Token', async () => {
+                      setDummyInput1('');
+                      setDummyInput2('');
+                      return { success: true };
+                    })
+                  }
+                >
+                  API Token erstellen
+                </Button>
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Info color={InfoColor.white}>{t('settings.api.info')}</Info>
+              </FormItem>
+            </FormGrid>
+          </EntryFormContainer>
+          <EntryFormContainer>
+            <EntryFormHead title={t('settings.api.titleList') as string} />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
-                <div>stuff</div>
+                <div></div>
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Info color={InfoColor.white}>{t('settings.api.info')}</Info>
               </FormItem>
             </FormGrid>
           </EntryFormContainer>

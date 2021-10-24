@@ -268,7 +268,10 @@ export const enDE: Localization = {
   },
   settings: {
     api: {
-      title: () => 'API token',
+      titleCreate: () => 'Create API token (for developers)',
+      titleList: () => 'Your existing API tokens',
+      info: () =>
+        'This is a function for developers. To use the Kulturdaten.Berlin API, you need an API token. Requests made with this token are connected to your user account.',
     },
     legal: {
       title: () => 'Further links',

@@ -269,7 +269,10 @@ export const deDE: Localization = {
   },
   settings: {
     api: {
-      title: () => 'API Token',
+      titleCreate: () => 'API Token erstellen (für Entwickler:innen)',
+      titleList: () => 'Deine bestehenden API Token',
+      info: () =>
+        'Dies ist eine Funktion für Entwickler:innen. Um die Kulturdaten.Berlin API zu nutzen, benötigst du ein API Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto zugeordnet.',
     },
     legal: {
       title: () => 'Weiterführende Links',
