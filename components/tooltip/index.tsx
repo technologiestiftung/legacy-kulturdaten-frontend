@@ -160,6 +160,9 @@ const StyledTooltipOverlayContent = styled.div`
   flex-direction: column;
   align-items: stretch;
   row-gap: calc(var(--line-height-400) / 2);
+  a {
+    color: inherit;
+  }
 `;
 
 const StyledTooltipOverlayClose = styled.button`
