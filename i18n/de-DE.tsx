@@ -755,6 +755,7 @@ export const deDE: Localization = {
         name: () => 'Angebotstitel ausgefüllt',
         description: () => 'Beschreibung ausgefüllt',
         categorization: () => 'Kategorien ausgefüllt',
+        mainType: () => 'Angebotstyp ausgewählt',
       },
       title: {
         plural: () => 'Angebote',

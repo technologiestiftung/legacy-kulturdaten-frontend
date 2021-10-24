@@ -17,7 +17,8 @@ export const useAddressForm: EntryFormHook = (
   showHint,
   customRequired?: boolean,
   customTitle?: string,
-  tooltip?: string
+  tooltip?: string,
+  district?: boolean
 ) => {
   const uid = usePseudoUID();
   const { entry, mutate } = useEntry<
@@ -63,7 +64,7 @@ export const useAddressForm: EntryFormHook = (
       !required ||
       (address?.attributes?.street1?.length > 0 &&
         address?.attributes?.zipCode?.length > 0 &&
-        address?.attributes?.district?.length > 0 &&
+        (district ? address?.attributes?.district?.length > 0 : true) &&
         address?.attributes?.city?.length > 0),
     [
       loaded,
@@ -72,6 +73,7 @@ export const useAddressForm: EntryFormHook = (
       address?.attributes?.district?.length,
       address?.attributes?.zipCode?.length,
       required,
+      district,
     ]
   );
 
@@ -83,13 +85,15 @@ export const useAddressForm: EntryFormHook = (
         address.attributes.street1.length < 1 ||
         !address?.attributes?.zipCode ||
         address.attributes.zipCode?.length < 1 ||
-        !address?.attributes?.district ||
-        address.attributes.district?.length < 1 ||
+        (district
+          ? !address?.attributes?.district || address.attributes.district?.length < 1
+          : false) ||
         !address?.attributes?.city ||
         address.attributes.city?.length < 1),
     [
       showHint,
       loaded,
+      district,
       address?.attributes?.street1,
       address?.attributes?.zipCode,
       address?.attributes?.district,
@@ -193,32 +197,41 @@ export const useAddressForm: EntryFormHook = (
               }
             />
           </FormItem>
-          <FormItem width={FormItemWidth.half} alignSelf="flex-end">
-            <Select
-              value={address?.attributes?.district || 'undefined'}
-              id={`${uid}-district`}
-              label={t('categories.location.form.district') as string}
-              size={SelectSize.big}
-              required={required}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    district: e.target.value !== 'undefined' ? e.target.value : undefined,
-                  },
-                });
-              }}
-            >
-              <option value="undefined">{t('categories.location.form.districtPlaceholder')}</option>
-              {districtList?.map((district, index) => (
-                <option value={district.attributes.name} key={index}>
-                  {district.attributes.name}
+          {district && (
+            <FormItem width={FormItemWidth.half} alignSelf="flex-end">
+              <Select
+                value={
+                  address?.attributes?.district?.length > 1
+                    ? address?.attributes?.district
+                    : 'undefined'
+                }
+                id={`${uid}-district`}
+                label={t('categories.location.form.district') as string}
+                size={SelectSize.big}
+                required={required}
+                onChange={(e) => {
+                  setPristine(false);
+                  setAddress({
+                    ...address,
+                    attributes: {
+                      ...address?.attributes,
+                      district: e.target.value !== 'undefined' ? e.target.value : ' ',
+                    },
+                  });
+                }}
+                hint={hint}
+              >
+                <option value="undefined">
+                  {t('categories.location.form.districtPlaceholder')}
                 </option>
-              ))}
-            </Select>
-          </FormItem>
+                {districtList?.map((district, index) => (
+                  <option value={district.attributes.name} key={index}>
+                    {district.attributes.name}
+                  </option>
+                ))}
+              </Select>
+            </FormItem>
+          )}
         </FormGrid>
       </form>
     ),

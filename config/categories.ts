@@ -224,6 +224,10 @@ export const useCategories: () => {
           publishableKeys: ['attributes.description'],
         },
         {
+          translationKey: 'categories.offer.requirements.mainType',
+          publishableKeys: ['relations.mainType'],
+        },
+        {
           translationKey: 'categories.offer.requirements.categorization',
           publishableKeys: ['relations.types', 'relations.subjects'],
         },
@@ -286,6 +290,10 @@ export const useCategories: () => {
         {
           translationKey: 'categories.organizer.requirements.name',
           publishableKeys: ['attributes.name'],
+        },
+        {
+          translationKey: 'categories.offer.requirements.description',
+          publishableKeys: ['attributes.description'],
         },
       ],
     },

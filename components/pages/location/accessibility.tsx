@@ -8,7 +8,7 @@ import {
   useAccessibilityStructure,
 } from '../../Accessibility/useAccessibilityStructure';
 import { EntryFormHook } from '../helpers/form';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { WindowContext } from '../../../lib/WindowService';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { Location } from '../../../lib/api/types/location';
@@ -21,10 +21,12 @@ import {
   locationAccessibilityUpdateFactory,
 } from '../../../lib/api/routes/location/accessibility/update';
 
-const useAccessibilityForm: EntryFormHook = ({ category, query }, loaded) => {
+const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
   const { renderedForm, state, dispatch } = useAccessibilityStructure(locationAccessibility, {});
   const call = useApiCall();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [valid, setValid] = useState(true);
 
   const initialAccessibilityFields = useMemo(
     () => entry?.data?.relations?.accessibility?.relations?.fields,
@@ -81,11 +83,11 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }, loaded) => {
     }
   }, [accessibilityFromApi, dispatch, initialAccessibilityFields]);
 
-  // useEffect(() => {
-  //   if (pristine && accessibilityFieldsState) {
-  //     setPristine(false);
-  //   }
-  // }, [pristine, accessibilityFieldsState]);
+  useEffect(() => {
+    if (accessibilityFieldsState) {
+      setValid(formRef?.current ? formRef?.current?.checkValidity() : true);
+    }
+  }, [accessibilityFieldsState]);
 
   const pristine = useMemo(
     () =>
@@ -127,27 +129,39 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }, loaded) => {
   );
 
   return {
-    renderedForm,
+    renderedForm: (
+      <form
+        ref={formRef}
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <EntryFormWrapper>{renderedForm}</EntryFormWrapper>
+      </form>
+    ),
     submit: async () => {
-      try {
-        const resp = await call<LocationAccessibilityUpdate>(locationAccessibilityUpdateFactory, {
-          id: entry.data.id,
-          entry: {
-            relations: {
-              fields: accessibilityFieldsState,
+      if (valid) {
+        try {
+          const resp = await call<LocationAccessibilityUpdate>(locationAccessibilityUpdateFactory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                fields: accessibilityFieldsState,
+              },
             },
-          },
-        });
+          });
 
-        if (resp.status === 200) {
-          mutate();
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
       }
     },
     pristine,
-    valid: true,
+    valid,
     reset: () => undefined,
     hint: false,
     state,
@@ -194,7 +208,8 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
             hint={loaded === true && hint}
           />
-          <EntryFormWrapper>{renderedForm}</EntryFormWrapper>
+
+          {renderedForm}
         </div>
       </div>
     </>

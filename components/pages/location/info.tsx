@@ -32,16 +32,16 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   const [openingHours, setOpeningHours] = useState<OpeningHours[]>();
   const [openingHoursFromApi, setOpeningHoursFromApi] = useState<OpeningHours[]>();
   const [openingHoursTranslations, setOpeningHoursTranslations] = useState<LocationTranslation[]>();
-  const [openingHoursTranslationsFromApi, setOpeningHoursTranslationsFromApi] = useState<
-    LocationTranslation[]
-  >();
+  const [openingHoursTranslationsFromApi, setOpeningHoursTranslationsFromApi] =
+    useState<LocationTranslation[]>();
 
   const call = useApiCall();
   const t = useT();
 
-  const initialOpeningHours = useMemo(() => entry?.data?.relations?.openingHours, [
-    entry?.data?.relations?.openingHours,
-  ]);
+  const initialOpeningHours = useMemo(
+    () => entry?.data?.relations?.openingHours,
+    [entry?.data?.relations?.openingHours]
+  );
 
   const initialOpeningHoursTranslations = useMemo(
     () =>
@@ -459,7 +459,10 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     },
     loaded,
     valid,
-    false
+    false,
+    false,
+    false,
+    true
   );
 
   const {
