@@ -287,6 +287,10 @@ export const useCategories: () => {
           translationKey: 'categories.organizer.requirements.name',
           publishableKeys: ['attributes.name'],
         },
+        {
+          translationKey: 'categories.offer.requirements.description',
+          publishableKeys: ['attributes.description'],
+        },
       ],
     },
   };
