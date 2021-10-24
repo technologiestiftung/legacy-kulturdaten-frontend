@@ -13,13 +13,13 @@ import { User } from '../../lib/api/types/user';
 import { useMemo } from 'react';
 import { Info, InfoColor } from '../info';
 
-const StyledTeamList = styled.div`
+export const StyledTeamList = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 0.75rem;
 `;
 
-const StyledTeamListList = styled.ul`
+export const StyledTeamListList = styled.ul`
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
 `;
@@ -35,7 +35,7 @@ const teamListRowGrid = css`
   }
 `;
 
-const StyledTeamListItem = styled.li<{ isCurrentUser?: boolean }>`
+export const StyledTeamListItem = styled.li<{ isCurrentUser?: boolean }>`
   ${teamListRowGrid}
   padding: 0.75rem 1.125rem 1.125rem;
   border-bottom: 1px solid var(--grey-400);
@@ -58,7 +58,7 @@ const StyledTeamListItem = styled.li<{ isCurrentUser?: boolean }>`
   }
 `;
 
-const StyledTeamListListTitleRow = styled.li`
+export const StyledTeamListListTitleRow = styled.li`
   ${teamListRowGrid}
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -67,7 +67,7 @@ const StyledTeamListListTitleRow = styled.li`
   border-bottom: 1px solid var(--grey-400);
 `;
 
-const StyledTeamListItemTitle = styled.div`
+export const StyledTeamListItemTitle = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0.375rem 0;
@@ -76,6 +76,12 @@ const StyledTeamListItemTitle = styled.div`
   ${mq(Breakpoint.mid)} {
     grid-column: span 1;
   }
+`;
+
+export const StyledTeamListItemText = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 400;
 `;
 
 const StyledTeamListItemMail = styled.div`
