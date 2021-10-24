@@ -27,7 +27,7 @@ export type A11yAction = {
 };
 
 export const a11yActionInit = (state: A11yState): A11yAction => ({
-  type: A11yActions.set,
+  type: A11yActions.init,
   payload: {
     state,
   },
