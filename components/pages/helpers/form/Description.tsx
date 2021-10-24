@@ -119,7 +119,12 @@ export const useDescription = ({
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
 
-  const { renderedRichText, init: initRichText, valid, textLength } = useRichText({
+  const {
+    renderedRichText,
+    init: initRichText,
+    valid,
+    textLength,
+  } = useRichText({
     onChange: () => {
       if (richTextRef.current) {
         setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
@@ -246,23 +251,35 @@ export const useDescriptionForm: EntryFormHook = (
     showHint,
   });
 
-  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
-    pristineEnglish,
-    pristineGerman,
-  ]);
-
-  const valid = useMemo(() => !loaded || (validGerman && validEnglish), [
-    loaded,
-    validEnglish,
-    validGerman,
-  ]);
-
-  const hint = useMemo(() => showHint && loaded && (hintGerman || hintEnglish), [
+  const {
+    renderedDescription: renderedDescriptionGermanEasy,
+    submit: submitGermanEasy,
+    pristine: pristineGermanEasy,
+    valid: validGermanEasy,
+    hint: hintGermanEasy,
+  } = useDescription({
+    category,
+    query,
+    language: 'de-easy' as Language,
+    title: t('forms.labelGermanEasy') as string,
+    required: false,
     showHint,
-    loaded,
-    hintEnglish,
-    hintGerman,
-  ]);
+  });
+
+  const pristine = useMemo(
+    () => pristineEnglish && pristineGerman && pristineGermanEasy,
+    [pristineEnglish, pristineGerman, pristineGermanEasy]
+  );
+
+  const valid = useMemo(
+    () => !loaded || (validGerman && validEnglish && validGermanEasy),
+    [loaded, validEnglish, validGerman, validGermanEasy]
+  );
+
+  const hint = useMemo(
+    () => showHint && loaded && (hintGerman || hintEnglish || hintGermanEasy),
+    [showHint, loaded, hintEnglish, hintGerman, hintGermanEasy]
+  );
 
   return {
     renderedForm: (
@@ -275,11 +292,13 @@ export const useDescriptionForm: EntryFormHook = (
         />
         {renderedDescriptionGerman}
         {renderedDescriptionEnglish}
+        {renderedDescriptionGermanEasy}
       </FormContainer>
     ),
     submit: async () => {
       submitGerman();
       submitEnglish();
+      submitGermanEasy();
     },
     pristine,
     reset: () => undefined,
@@ -325,23 +344,20 @@ export const useTeaserForm: EntryFormHook = ({ category, query }, loaded, showHi
     key: 'teaser',
   });
 
-  const pristine = useMemo(() => pristineEnglish && pristineGerman, [
-    pristineEnglish,
-    pristineGerman,
-  ]);
+  const pristine = useMemo(
+    () => pristineEnglish && pristineGerman,
+    [pristineEnglish, pristineGerman]
+  );
 
-  const valid = useMemo(() => !loaded || (validGerman && validEnglish), [
-    loaded,
-    validEnglish,
-    validGerman,
-  ]);
+  const valid = useMemo(
+    () => !loaded || (validGerman && validEnglish),
+    [loaded, validEnglish, validGerman]
+  );
 
-  const hint = useMemo(() => showHint && loaded && (hintGerman || hintEnglish), [
-    showHint,
-    loaded,
-    hintEnglish,
-    hintGerman,
-  ]);
+  const hint = useMemo(
+    () => showHint && loaded && (hintGerman || hintEnglish),
+    [showHint, loaded, hintEnglish, hintGerman]
+  );
 
   return {
     renderedForm: (
