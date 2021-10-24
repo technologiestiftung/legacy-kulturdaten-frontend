@@ -96,24 +96,38 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }, loaded) => {
   const pristine = useMemo(
     () =>
       JSON.stringify(
-        accessibilityFromApi.sort((a, b) => {
-          if (a.attributes.key > b.attributes.key) {
-            return 1;
-          } else if (a.attributes.key > b.attributes.key) {
-            return -1;
-          }
-          return 0;
-        })
+        accessibilityFromApi
+          .map((field) => ({
+            attributes: {
+              key: field.attributes.key,
+              value: field.attributes.value,
+            },
+          }))
+          .sort((a, b) => {
+            if (a.attributes.key > b.attributes.key) {
+              return 1;
+            } else if (a.attributes.key > b.attributes.key) {
+              return -1;
+            }
+            return 0;
+          })
       ) ===
       JSON.stringify(
-        accessibilityFieldsState.sort((a, b) => {
-          if (a.attributes.key > b.attributes.key) {
-            return 1;
-          } else if (a.attributes.key > b.attributes.key) {
-            return -1;
-          }
-          return 0;
-        })
+        accessibilityFieldsState
+          .map((field) => ({
+            attributes: {
+              key: field.attributes.key,
+              value: field.attributes.value,
+            },
+          }))
+          .sort((a, b) => {
+            if (a.attributes.key > b.attributes.key) {
+              return 1;
+            } else if (a.attributes.key > b.attributes.key) {
+              return -1;
+            }
+            return 0;
+          })
       ),
     [accessibilityFieldsState, accessibilityFromApi]
   );

@@ -46,7 +46,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       return (
         <FormListConditional
           last={last}
-          checked={value as boolean}
+          checked={typeof value === 'string' ? value === 'true' : (value as boolean)}
           onChange={(checked) => dispatch(a11yActionSet(key, checked))}
           label={label}
         >
