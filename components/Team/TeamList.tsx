@@ -84,6 +84,11 @@ export const StyledTeamListItemText = styled.div`
   font-weight: 400;
 `;
 
+export const StyledTeamListItemTextBold = styled.div`
+  font-weight: 700;
+  word-break: break-all;
+`;
+
 const StyledTeamListItemMail = styled.div`
   font-weight: 700;
   word-break: break-all;
