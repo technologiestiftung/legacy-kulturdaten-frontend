@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import { ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
+import { useDebounce } from '../../lib/useDebounce';
 import { inputStyles } from '../input';
 import { Label, StyledLabel } from '../label';
 
@@ -43,6 +44,20 @@ export interface TextareaProps extends ComponentWithVariants {
 export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
   const [pristine, setPristine] = useState<boolean>(true);
   const t = useT();
+  const [touched, setTouched] = useState(false);
+  const [internalState, setInternalState] = useState(props?.value);
+  const debounce = useDebounce();
+
+  useEffect(() => {
+    if (
+      !touched &&
+      internalState === '' &&
+      ((typeof props?.value === 'string' && props?.value?.length > 0) ||
+        typeof props?.value === 'number')
+    ) {
+      setInternalState(props.value);
+    }
+  }, [touched, props?.value, internalState]);
 
   return (
     <StyledTextareaContainer>
@@ -54,9 +69,18 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
       )}
       <StyledTextarea
         {...props}
+        value={internalState}
         valid={props.valid}
         pristine={pristine}
-        onChange={props?.onChange}
+        onChange={(e) => {
+          setTouched(true);
+
+          setInternalState(e.target.value);
+
+          debounce(() => {
+            props?.onChange(e);
+          });
+        }}
         onBlur={(e) => {
           if (props?.onBlur) {
             props.onBlur(e);

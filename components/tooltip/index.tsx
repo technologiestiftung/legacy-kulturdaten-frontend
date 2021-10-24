@@ -99,15 +99,15 @@ const StyledTooltipOverlay = styled.div<{
   width: calc(var(--parent-width) - 1.5rem);
   min-height: 2.625rem;
   height: auto;
-  position: absolute;
-  display: none;
+  position: fixed;
+  display: flex;
+  left: 0.75rem;
   z-index: 100;
   background: var(--white);
   border-radius: 0.75rem;
   box-shadow: 0.125rem 0.125rem 3rem -0.25rem rgba(0, 0, 0, 0.5);
   padding: 0.75rem;
 
-  margin-left: calc(var(--margin-left) + 0.75rem);
   justify-content: space-between;
 
   ${({ isOpen }) =>
@@ -124,14 +124,24 @@ const StyledTooltipOverlay = styled.div<{
   ${({ yPosition }) =>
     yPosition === YPosition.bottom
       ? css`
-          top: ${tooltipButtonHeight}px;
+          top: calc(var(--distance-to-top) + ${tooltipButtonHeight}px);
         `
       : css`
-          bottom: ${tooltipButtonHeight}px;
+          bottom: calc(var(--distance-to-bottom) + ${tooltipButtonHeight}px);
         `}
 
 
   ${mq(Breakpoint.mid)} {
+    ${({ yPosition }) =>
+      yPosition === YPosition.bottom
+        ? css`
+            top: ${tooltipButtonHeight}px;
+          `
+        : css`
+            bottom: ${tooltipButtonHeight}px;
+          `}
+
+    position: absolute;
     width: ${tooltipWidth}px;
     margin-left: 0;
     ${({ xPosition }) =>
@@ -327,11 +337,20 @@ export const Tooltip: React.FC<TooltipProps> = ({
     setTooltipOverlayHeight(tooltipOverlayRef.current?.getBoundingClientRect()?.height);
 
     tooltipOverlayRef.current?.style.setProperty('--parent-width', `${getWrapperWidth()}px`);
+    tooltipOverlayRef.current?.style.setProperty('--distance-to-top', `${distanceToTop}px`);
+    tooltipOverlayRef.current?.style.setProperty('--distance-to-bottom', `${distanceToBottom}px`);
     tooltipOverlayRef.current?.style.setProperty(
       '--margin-left',
       `${getWrapperLeft() - tooltipButtonRef.current?.getBoundingClientRect().left}px`
     );
-  }, [tooltipOverlayRef, getWrapperWidth, getWrapperHeight, getWrapperLeft]);
+  }, [
+    tooltipOverlayRef,
+    getWrapperWidth,
+    getWrapperHeight,
+    getWrapperLeft,
+    distanceToTop,
+    distanceToBottom,
+  ]);
 
   /**
    * Initially compute the scrollY position.
@@ -366,6 +385,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
     };
   });
 
+  useEffect(() => {
+    computeSizes();
+  }, [computeSizes]);
+
   return (
     <StyledTooltip yPosition={tooltipYPosition} isOpen={isOpen}>
       <StyledTooltipButton
@@ -376,6 +399,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       >
         <InfoIconSvg />
       </StyledTooltipButton>
+
       <StyledTooltipOverlay
         ref={tooltipOverlayRef}
         xPosition={tooltipXPosition}

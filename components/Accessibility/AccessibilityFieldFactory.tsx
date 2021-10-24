@@ -46,7 +46,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       return (
         <FormListConditional
           last={last}
-          checked={value as boolean}
+          checked={typeof value === 'string' ? value === 'true' : (value as boolean)}
           onChange={(checked) => dispatch(a11yActionSet(key, checked))}
           label={label}
         >
@@ -163,6 +163,12 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
     }
 
     case AccessibilityFieldType.checkboxList: {
+      const transformedValue =
+        (value as string)?.charAt(0) === '[' &&
+        (value as string)?.charAt((value as string).length - 1) === ']'
+          ? (value as string).replace('[', '').replace(']', '').split(',')
+          : [];
+
       return (
         <FormListField
           last={last}
@@ -173,8 +179,8 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
           fieldProps={{
             id: `${uid}-radio-list`,
             name: `${uid}-radio-list`,
-            value: (value as string[]) || [],
-            onChange: (newValues) => dispatch(a11yActionSet(key, newValues)),
+            value: (transformedValue as string[]) || [],
+            onChange: (newValues) => dispatch(a11yActionSet(key, `[${newValues.toString()}]`)),
             checkboxes: (field as AccessibilityFieldCheckboxList)?.data?.options?.map(
               (option, optionIndex) => {
                 const optionTranslation = getTranslation(language, option.translations);
