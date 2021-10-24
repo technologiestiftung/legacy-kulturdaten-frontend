@@ -267,6 +267,60 @@ export const deDE: Localization = {
     ariaLabelOpen: () => 'Nutzer:innen Menü anzeigen',
     ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
   },
+  settings: {
+    title: () => 'Einstellungen',
+    loading: () => 'Erstelle API Token',
+    personal: {
+      title: () => 'Persönliche Angaben',
+      tooltip: () =>
+        'Dein Name wird ausschließlich intern auf kulturdaten.berlin verwendet und ist nicht öffentlich einsehbar. Nur deine gemeinsamen Team-Mitglieder:innen können ihn sehen, wenn ihr gemeinsam die Daten eurer Anbieter:in hinterlegt.',
+      firstname: () => 'Vorname',
+      lastname: () => 'Nachname',
+    },
+    api: {
+      titleCreate: () => 'API Token erstellen (für Entwickler:innen)',
+      titleCreateTooltip: () =>
+        'Du möchtest unsere API verwenden? Erzähl uns von deinem Projekt und gib bitte die Website URL bzw. den Projektname an.',
+      projectTitle: () => 'Bezeichnung deiner Anwendung',
+      projectTitlePlaceholder: () => 'Ein aussagekräftiger Name',
+      projectUrl: () => 'URL deiner Anwendung',
+      projectDescription: () => 'Projektbeschreibung',
+      projectDescriptionPlaceholder: () =>
+        'z.B. Smartphone-App zur Kontext-bezogenen Nutzung von Kulturdaten',
+      titleList: () => 'Deine bestehenden API Token',
+      tokenTitle: () => 'Token',
+      tokenName: () => 'Bezeichnung',
+      tokenUrl: () => 'URL',
+      createButton: () => 'API Token erstellen',
+      info: () => (
+        <>
+          Dies ist eine Funktion für Entwickler:innen. Um die kulturdaten.berlin API zu nutzen,
+          benötigst du ein API Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto
+          zugeordnet. Wie du das Token verwenden kannst, um Daten über die API zu erhalten, erfährst
+          du in unserer{' '}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://beta.api.kulturdaten-berlin.anyvent.cloud/docs/"
+          >
+            API-Dokumentation
+          </a>
+        </>
+      ),
+    },
+    docs: {
+      title: () => 'Links zur technischen Dokumentation',
+      api: () => 'API Dokumenation',
+      frontend: () => 'User Interface Dokumentation',
+      backend: () => 'Server Dokumentation',
+    },
+    legal: {
+      title: () => 'Weiterführende Links',
+      legalNotice: () => 'Impressum',
+      terms: () => 'AGB',
+      mediaLicense: () => 'Kulturdaten Lizenz für Bilder',
+    },
+  },
   forms: {
     optional: () => 'optional',
     required: () => 'Pflichtfeld',

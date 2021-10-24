@@ -1,15 +1,12 @@
 import { NextPage } from 'next';
-import { LocaleSwitch } from '../../components/navigation/LocaleSwitch';
+import { UserSettingsPage } from '../../components/pages/user/settings';
 
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
 
 const SettingsPage: NextPage = () => {
   return (
     <AppWrapper>
-      <div>TBD</div>
-      <div>
-        <LocaleSwitch />
-      </div>
+      <UserSettingsPage />
     </AppWrapper>
   );
 };

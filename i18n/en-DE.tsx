@@ -266,6 +266,59 @@ export const enDE: Localization = {
     ariaLabelOpen: () => 'Show user menu',
     ariaLabelClose: () => 'Hide user menu',
   },
+  settings: {
+    title: () => 'Settings',
+    loading: () => 'Generating API token',
+    personal: {
+      title: () => 'Personal data',
+      tooltip: () =>
+        'Your name is only used internally on kulturdaten.berlin and is not publicly visible. Only your common team members will be able to see it when you jointly enter the data of your organizer.',
+      firstname: () => 'First name',
+      lastname: () => 'Last name',
+    },
+    api: {
+      titleCreate: () => 'Create API token (for developers)',
+      titleCreateTooltip: () =>
+        'You want to use our API? Tell us about your project and please enter the website URL or project name.',
+      projectTitle: () => 'Name of your application',
+      projectTitlePlaceholder: () => 'A descriptive name',
+      projectUrl: () => 'URL of your application',
+      projectDescription: () => 'Project description',
+      projectDescriptionPlaceholder: () =>
+        'e.g. smartphone app for context-related use of cultural data',
+      titleList: () => 'Your existing API tokens',
+      tokenTitle: () => 'Token',
+      tokenName: () => 'Project name',
+      tokenUrl: () => 'Url',
+      createButton: () => 'create API token',
+      info: () => (
+        <>
+          This is a function for developers. To use the kulturdaten.berlin API, you need an API
+          token. Requests made with this token are connected to your user account. To find out how
+          you can use the token to get data via the API, please read our{' '}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://beta.api.kulturdaten-berlin.anyvent.cloud/docs/"
+          >
+            API docs.
+          </a>
+        </>
+      ),
+    },
+    docs: {
+      title: () => 'Technical documentation links',
+      api: () => 'API docs',
+      frontend: () => 'User interface docs',
+      backend: () => 'Server docs',
+    },
+    legal: {
+      title: () => 'Further links',
+      legalNotice: () => 'Legal notice / Imprint',
+      terms: () => 'Terms and conditions',
+      mediaLicense: () => 'Kulturdaten license for images',
+    },
+  },
   forms: {
     optional: () => 'optional',
     required: () => 'required',
