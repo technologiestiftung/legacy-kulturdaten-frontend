@@ -191,6 +191,25 @@ export const useTeaserForm: EntryFormHook = (
   });
 
   const {
+    form: setTeaserGermanEasy,
+    onSubmit: onSubmitGermanEasy,
+    pristine: pristineGermanEasy,
+    reset: resetGermanEasy,
+    valid: validGermanEasy,
+    value: valueGermanEasy,
+  } = useTeaser({
+    category,
+    query,
+    language: Language.de,
+    label: t('forms.labelGermanEasy') as string,
+    ariaLabel: title
+      ? `${title} ${t('forms.labelGermanEasy')}`
+      : `${t('forms.teaser')} ${t('forms.labelGermanEasy')}`,
+    loaded,
+    showHint,
+  });
+
+  const {
     form: setTeaserEnglish,
     onSubmit: onSubmitEnglish,
     pristine: pristineEnglish,
@@ -210,13 +229,13 @@ export const useTeaserForm: EntryFormHook = (
   });
 
   const pristine = useMemo(
-    () => Boolean(pristineGerman && pristineEnglish),
-    [pristineEnglish, pristineGerman]
+    () => Boolean(pristineGerman && pristineEnglish && pristineGermanEasy),
+    [pristineEnglish, pristineGerman, pristineGermanEasy]
   );
 
   const valid = useMemo(
-    () => !loaded || Boolean(validGerman && validEnglish),
-    [loaded, validEnglish, validGerman]
+    () => !loaded || Boolean(validGerman && validEnglish && validGermanEasy),
+    [loaded, validEnglish, validGerman, validGermanEasy]
   );
 
   const hint = useMemo(
@@ -225,9 +244,11 @@ export const useTeaserForm: EntryFormHook = (
       loaded &&
       (typeof valueEnglish === 'undefined' ||
         typeof valueGerman === 'undefined' ||
+        typeof valueGermanEasy === 'undefined' ||
         valueEnglish.length < 1 ||
+        valueGermanEasy.length < 1 ||
         valueGerman.length < 1),
-    [showHint, loaded, valueEnglish, valueGerman]
+    [showHint, loaded, valueEnglish, valueGerman, valueGermanEasy]
   );
 
   return {
@@ -241,17 +262,20 @@ export const useTeaserForm: EntryFormHook = (
         <FormGrid>
           <FormItem width={FormItemWidth.full}>{setTeaserGerman}</FormItem>
           <FormItem width={FormItemWidth.full}>{setTeaserEnglish}</FormItem>
+          <FormItem width={FormItemWidth.full}>{setTeaserGermanEasy}</FormItem>
         </FormGrid>
       </div>
     ),
     submit: async () => {
       onSubmitEnglish();
       onSubmitGerman();
+      onSubmitGermanEasy();
     },
     pristine,
     reset: () => {
       resetGerman();
       resetEnglish();
+      resetGermanEasy();
     },
     valid,
     hint,
