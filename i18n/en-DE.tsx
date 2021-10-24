@@ -848,11 +848,11 @@ export const enDE: Localization = {
         district: () => 'District',
         districtPlaceholder: () => 'Choose district',
         url: () => 'URL of the Location',
-        urlPlaceholder: () => 'https://theatreberlin.de/virtualstage',
+        urlPlaceholder: () => 'e.g. https://theatreberlin.de/virtualstage',
         rent: {
           title: () => 'Rent',
           url: () => 'Rent link / Rent information',
-          urlPlaceholder: () => 'https://example.com',
+          urlPlaceholder: () => 'e.g. https://example.com',
         },
         type: {
           title: () => 'Type of the Location',
@@ -862,6 +862,11 @@ export const enDE: Localization = {
           virtualText: () =>
             'Do your events and offers take place online - on your own platform or social media channels? Add your virtual location here once and link it conveniently with your online offers later.',
         },
+      },
+      tabs: {
+        info: () => 'Information',
+        accessibility: () => 'Accessibility',
+        media: () => 'Images',
       },
       options: {
         exportCsv: () => 'Export as CSV',

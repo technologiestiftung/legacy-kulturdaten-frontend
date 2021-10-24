@@ -146,7 +146,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Gibt es auf eurer Website Informationen zum barrierefreien Besuch eurer Räumlichkeiten?',
+                  name:
+                    'Gibt es auf eurer Website Informationen zum barrierefreien Besuch eurer Räumlichkeiten?',
                   placeholder: 'https://example.com',
                 },
               },
@@ -169,14 +170,16 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Kann man den Ort online vorab anschauen - z.B. in Bildergalerien der Räume oder über eine 360-Grad-Ansicht?',
+                  name:
+                    'Kann man den Ort online vorab anschauen - z.B. in Bildergalerien der Räume oder über eine 360-Grad-Ansicht?',
                   placeholder: 'https://example.com',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Is it possible to view the venue online in advance - e.g. in picture galleries of the rooms or via a 360-degree view?',
+                  name:
+                    'Is it possible to view the venue online in advance - e.g. in picture galleries of the rooms or via a 360-degree view?',
                   placeholder: 'https://example.com',
                 },
               },
@@ -310,7 +313,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
           {
             attributes: {
               language: Language.de,
-              name: 'Ticketkauf - Lasst eure Besucher:innen wissen, wie sie Tickets erwerben können.',
+              name:
+                'Ticketkauf - Lasst eure Besucher:innen wissen, wie sie Tickets erwerben können.',
             },
           },
           {
@@ -322,7 +326,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.select,
+            type: AccessibilityFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -391,23 +395,6 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     },
                   ],
                 },
-                {
-                  value: 'other',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Sonstiges',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'other',
-                      },
-                    },
-                  ],
-                },
               ],
             },
           },
@@ -430,7 +417,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.select,
+            type: AccessibilityFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -448,6 +435,23 @@ export const locationAccessibility: AccessibilityCategory[] = [
             data: {
               key: 'planning.admissionInfo.admissionAccessibility',
               options: [
+                {
+                  value: 'no',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'nein, Tickets nur zu regulären Preisen erhältlich',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'no, tickets may only be purchased at the regular price',
+                      },
+                    },
+                  ],
+                },
                 {
                   value: 'impairmentVisitors',
                   translations: [
@@ -477,7 +481,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'Discounted admission for attendant accompanying a visitor with a disability / impairment',
+                        name:
+                          'Discounted admission for attendant accompanying a visitor with a disability / impairment',
                       },
                     },
                   ],
@@ -509,7 +514,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
           {
             attributes: {
               language: Language.de,
-              name: 'Details zu Eintritt / Tickets für Menschen mit Behinderung / Beeinträchtigung:',
+              name:
+                'Details zu Eintritt / Tickets für Menschen mit Behinderung / Beeinträchtigung:',
             },
           },
           {
@@ -550,13 +556,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
           {
             attributes: {
               language: Language.de,
-              name: 'Anreise - Ob per ÖPNV, per Auto oder auf anderem Weg: Was muss man wissen, wenn man zu euch kommt?',
+              name:
+                'Anreise - Ob per ÖPNV, per Auto oder auf anderem Weg: Was muss man wissen, wenn man zu euch kommt?',
             },
           },
           {
             attributes: {
               language: Language.en,
-              name: 'Getting there - Whether by public transport, by car or by other means: What is there to know for people traveling to you?',
+              name:
+                'Getting there - Whether by public transport, by car or by other means: What is there to know for people traveling to you?',
             },
           },
         ],
@@ -571,13 +579,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'ÖPNV - Welches ist die nächstgelegene barrierefreie Haltestelle?:',
+                  name: 'ÖPNV - Welches ist die nächstgelegene barrierefreie Haltestelle?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Public transport - please describe the accessibility of public transport stops nearby:',
+                  name: 'Public transport - Which is the nearest accessible stop?',
                 },
               },
             ],
@@ -588,7 +596,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Wie ist die Haltestelle ausgestattet?:',
+                  name: 'Wie ist die Haltestelle ausgestattet?',
                 },
               },
               {
@@ -607,13 +615,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Mit Aufzug',
+                        name: 'mit Aufzug',
                       },
                     },
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'With elevator',
+                        name: 'with elevator',
                       },
                     },
                   ],
@@ -624,13 +632,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Mit Rollstuhlrampe',
+                        name: 'mit Rollstuhlrampe',
                       },
                     },
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'With ramp for wheelchairs',
+                        name: 'with ramp for wheelchairs',
                       },
                     },
                   ],
@@ -641,13 +649,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Mit Blindenleitsystem',
+                        name: 'mit Blindenleitsystem',
                       },
                     },
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'With tactile paving',
+                        name: 'with tactile paving',
                       },
                     },
                   ],
@@ -664,15 +672,27 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Was wäre der beste Weg von der Haltestelle zum Gebäude für Menschen mit Behinderung / Beeinträchtigung?',
+                  name:
+                    'Was wäre der beste Weg von der Haltestelle zum Gebäude für Menschen mit Behinderung / Beeinträchtigung?',
                   placeholder: 'Wegbeschreibung eingeben',
+                  tooltip: {
+                    content: [
+                      'Die Route sollte möglichst einfach sein. Mögliche Hürden sind für Rollstuhlnutzer:innen z.B. Stufen, Kopfsteinpflaster oder Kieswege und für Blinde z.B. fehlende Leitstreifen oder Stolperfallen entlang des Weges.',
+                    ],
+                  },
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'What would be the best route from the public transport stop to the building for people with disabilities?',
+                  name:
+                    'What would be the best route from the public transport stop to the building for people with disabilities?',
                   placeholder: 'Enter directions',
+                  tooltip: {
+                    content: [
+                      'The route should be as simple as possible. Possible obstacles for wheelchair users are e.g. steps, cobblestones or gravel paths and for blind people e.g. missing guidance strips or tripping hazards along the path.',
+                    ],
+                  },
                 },
               },
             ],
@@ -689,7 +709,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Is there a possibility to stop close to the entrance, e.g. for taxi services?',
+                  name:
+                    'Is there a possibility to stop close to the entrance, e.g. for taxi services?',
                 },
               },
             ],
@@ -739,13 +760,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Parken - Gibt es ausgewiesene Parkplätze für Menschen mit Behinderung / Beeinträchtigung?',
+                  name:
+                    'Parken - Gibt es ausgewiesene Parkplätze für Menschen mit Behinderung / Beeinträchtigung?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Parking - Are there dedicated parking spaces for people with disabilities?',
+                  name:
+                    'Parking - Are there dedicated parking spaces for people with disabilities?',
                 },
               },
             ],
@@ -801,7 +824,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Is a registration or special parking permitt required?',
+                  name: 'Is a registration or special parking permit required?',
                 },
               },
             ],
@@ -831,13 +854,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Blauer EU-Parkausweis',
+                        name: 'blauer EU-Parkausweis',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'Blue EU disability parking card required',
+                        name: 'blue EU disability parking card required',
                       },
                     },
                   ],
@@ -848,13 +871,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Oranger Ausweis über Parkerleichterung',
+                        name: 'oranger Ausweis über Parkerleichterung',
                       },
                     },
                     {
                       attributes: {
                         language: Language.de,
-                        name: "Orange 'Ausweis über Parkerleichterung'",
+                        name: "orange 'Ausweis über Parkerleichterung'",
                       },
                     },
                   ],
@@ -886,12 +909,23 @@ export const locationAccessibility: AccessibilityCategory[] = [
                 attributes: {
                   language: Language.de,
                   name: 'Bieten die regulären Parkplätze vor Ort genug Platz für Rollstühle?',
+                  tooltip: {
+                    content: [
+                      'Genug Platz besteht, wenn Raum zum Entladen für verschiedene Rollstuhltypen und zum Manövrieren besteht - mind. 350 cm (Breite) und 500 cm (Länge). Einige Kleinbusse / PKW transportieren Rollstühle auf dem Dach. In Parkhäusern sollte daher auch genug Raum nach oben sein.',
+                    ],
+                  },
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Do the regular parking spaces on site offer enough space for wheelchair users?',
+                  name:
+                    'Do the regular parking spaces on site offer enough space for wheelchair users?',
+                  tooltip: {
+                    content: [
+                      'Enough space exists if there is room to unload different types of wheelchairs and to manoeuvre - at least 350 cm (width) and 500 cm (length). Some minibuses / cars transport wheelchairs on the roof. In car parks should therefore also be enough space to the ceiling.',
+                    ],
+                  },
                 },
               },
             ],
@@ -1158,7 +1192,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.radioList,
+            type: AccessibilityFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -1189,23 +1223,6 @@ export const locationAccessibility: AccessibilityCategory[] = [
                       attributes: {
                         language: Language.en,
                         name: 'Yes',
-                      },
-                    },
-                  ],
-                },
-                {
-                  value: 'no',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Nein',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'No',
                       },
                     },
                   ],
@@ -1257,7 +1274,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'öffnen nach außen',
+                              name: 'öffnet nach außen',
                             },
                           },
                           {
@@ -1274,13 +1291,13 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'öffnen nach innen',
+                              name: 'öffnet nach innen',
                             },
                           },
                           {
                             attributes: {
                               language: Language.en,
-                              name: 'opens to inside',
+                              name: 'opens inwards',
                             },
                           },
                         ],
@@ -1393,7 +1410,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'Glastür mit kontrastreichen Markierungen (z.B. Institutionsname als Aufkleber oder farbig abgesetzte Gravur)',
+                              name:
+                                'Glastür mit kontrastreichen Markierungen (z.B. Institutionsname als Aufkleber oder farbig abgesetzte Gravur)',
                             },
                           },
                           {
@@ -1574,6 +1592,79 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     ],
                   },
                 },
+                {
+                  type: AccessibilityFieldType.select,
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Falls ein Treppen-/Hublift vorhanden ist: Wie ist dieser nutzbar?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'If a stair lift/ hoist lift is available, how can it be used?',
+                      },
+                    },
+                  ],
+                  data: {
+                    key: 'planning.entry.stairs.lift',
+                    options: [
+                      {
+                        value: 'selfOperable',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'ja, Treppenlift / Hublift, selbst bedienbar',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'stair lift / hoist lift, self-operable',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'staffperable',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'ja, Treppenlift / Hublift, Bedienung durch Personal',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'stair lift / hoist lift, operated by staff',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'noLibraryCard',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Zugang für Begleitperson auch ohne Nutzer:innenausweis',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'Free library card / no library card needed for attendant',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -1620,7 +1711,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                 {
                   type: AccessibilityFieldType.input,
                   data: {
-                    type: InputType.number,
+                    type: InputType.text,
                     key: 'planning.entry.elevator.cabinLength',
                   },
                   translations: [
@@ -1641,7 +1732,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                 {
                   type: AccessibilityFieldType.input,
                   data: {
-                    type: InputType.number,
+                    type: InputType.text,
                     key: 'planning.entry.elevator.cabinWidth',
                   },
                   translations: [
@@ -1660,7 +1751,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.select,
+                  type: AccessibilityFieldType.checkboxList,
                   translations: [
                     {
                       attributes: {
@@ -1684,13 +1775,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'Tasten von Rollstuhl aus erreichbar (z.B. horizontal angeordnet)',
+                              name:
+                                'Tasten von Rollstuhl aus erreichbar (z.B. horizontal angeordnet)',
                             },
                           },
                           {
                             attributes: {
                               language: Language.en,
-                              name: 'buttons can be reached with a wheelchair (e.g. arranged horizontally)',
+                              name:
+                                'buttons can be reached with a wheelchair (e.g. arranged horizontally)',
                             },
                           },
                         ],
@@ -1701,13 +1794,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'Beschilderung und Tasten sind taktil (z.B. in Braille, hervorstehende Zahlen, etc.)',
+                              name:
+                                'Beschilderung und Tasten sind taktil (z.B. in Braille, hervorstehende Zahlen, etc.)',
                             },
                           },
                           {
                             attributes: {
                               language: Language.en,
-                              name: 'labeling and buttons are tactile (e.g. in braille, protruding numbers, etc.).',
+                              name:
+                                'labelling and buttons are tactile (e.g. in braille, protruding numbers, etc.).',
                             },
                           },
                         ],
@@ -1752,7 +1847,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'Etage wird visuell angezeigt',
+                              name: 'Etagen werden visuell angezeigt',
                             },
                           },
                           {
@@ -1775,7 +1870,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.en,
-                              name: 'controlls with pictograms',
+                              name: 'controls with pictograms',
                             },
                           },
                         ],
@@ -1864,7 +1959,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'fest installierte, rollstuhlgerechte Rampe (mind. 120cm Laufbreite, max. 6 Grad Neigung)',
+                              name:
+                                'fest installierte, rollstuhlgerechte Rampe (mind. 120cm Laufbreite, max. 6 Grad Neigung)',
                               tooltip: {
                                 content: ['mind. 120cm Laufbreite, max. 6 Grad Neigung'],
                               },
@@ -1897,118 +1993,6 @@ export const locationAccessibility: AccessibilityCategory[] = [
                       },
                     ],
                   },
-                },
-              ],
-            },
-          },
-          {
-            type: AccessibilityFieldType.radioList,
-            translations: [
-              {
-                attributes: {
-                  language: Language.de,
-                  name: 'Treppenlift / Hublift, selbst bedienbar',
-                },
-              },
-              {
-                attributes: {
-                  language: Language.en,
-                  name: 'stair lift / hoist lift, self-operable',
-                },
-              },
-            ],
-            data: {
-              key: 'planning.entry.stairLiftSelfOperable',
-              options: [
-                {
-                  value: 'yes',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Ja',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'Yes',
-                      },
-                    },
-                  ],
-                },
-                {
-                  value: 'no',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Nein',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'No',
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-          {
-            type: AccessibilityFieldType.radioList,
-            translations: [
-              {
-                attributes: {
-                  language: Language.de,
-                  name: 'Treppenlift / Hublift, Bedienung durch Personal',
-                },
-              },
-              {
-                attributes: {
-                  language: Language.en,
-                  name: 'stair lift / hoist lift, operated by staff',
-                },
-              },
-            ],
-            data: {
-              key: 'planning.entry.stairLiftStaffOperated',
-              options: [
-                {
-                  value: 'yes',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Ja',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'Yes',
-                      },
-                    },
-                  ],
-                },
-                {
-                  value: 'no',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Nein',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'No',
-                      },
-                    },
-                  ],
                 },
               ],
             },
@@ -2055,13 +2039,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Klingel in Rollstuhlhöhe erreichbar (nicht höher als 85 cm über Boden)',
+                        name:
+                          'Klingel in Rollstuhlhöhe erreichbar (nicht höher als 85 cm über Boden)',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'doorbell can be reached from a wheelchair (not higher than 85 cm from floor)',
+                        name:
+                          'doorbell can be reached from a wheelchair (not higher than 85 cm from floor)',
                       },
                     },
                   ],
@@ -2162,24 +2148,27 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.en,
-                  name: 'What is the height of counters/ cash registers/ info desks in the foyer or entrance area?',
+                  name:
+                    'What is the height of counters/ cash registers/ info desks in the foyer or entrance area?',
                 },
               },
             ],
           },
           {
-            type: AccessibilityFieldType.select,
+            type: AccessibilityFieldType.checkboxList,
             translations: [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Kommunikation - Wie interargiert man mit dem Personal bei Sprachbarrieren oder wenn Schalter zu hoch sind?',
+                  name:
+                    'Kommunikation - Wie interagiert man mit dem Personal bei Sprachbarrieren oder wenn Schalter zu hoch sind?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Communication - How to interact with the staff in case of language barriers or when counters are too high?',
+                  name:
+                    'Communication - How to interact with the staff in case of language barriers or when counters are too high?',
                 },
               },
             ],
@@ -2246,13 +2235,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Wie bereitet sich ihr Personal im Eingangsbereich auf Besucher:innen mit Behinderung / Beeinträchtigung vor?',
+                  name:
+                    'Wie bereitet sich ihr Personal im Eingangsbereich auf Besucher:innen mit Behinderung / Beeinträchtigung vor?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'How does your entrance staff prepare for visitors with disabilities / impairments?',
+                  name:
+                    'How does your entrance staff prepare for visitors with disabilities / impairments?',
                 },
               },
             ],
@@ -2271,7 +2262,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'service staff participates in disability / inclusion awareness training',
+                        name:
+                          'service staff participates in disability / inclusion awareness training',
                       },
                     },
                   ],
@@ -2316,13 +2308,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Notfallplan enthält auch Maßnahmen für Menschen mit Behinderung / Beeinträchtigung',
+                        name:
+                          'Notfallplan enthält auch Maßnahmen für Menschen mit Behinderung / Beeinträchtigung',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'emergency plan also includes measures for people with disabilities / impairments.',
+                        name:
+                          'emergency plan also includes measures for people with disabilities / impairments.',
                       },
                     },
                   ],
@@ -2336,13 +2330,24 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Lassen sich Garderoben und Schließfächer auch mit sehr großen (Elektro-)Rollstühlen erreichen?',
+                  name:
+                    'Lassen sich Garderoben und Schließfächer auch mit sehr großen (Elektro-)Rollstühlen erreichen?',
+                  tooltip: {
+                    content: [
+                      'Erreichbar sind Garderoben und Schließfächer u.a. dann, wenn der Weg dorthin mind. 90 cm breit und bestenfalls ebenerdig ist, sie ca. 150x150cm Fläche zum Anfahren und Wenden lassen und Schließfächer im Sitzen befüllt werden können. Kleiderhaken sollte es in unterschiedlichen Höhen geben.',
+                    ],
+                  },
                 },
               },
               {
                 attributes: {
                   language: Language.en,
                   name: 'Can cloakrooms and lockers be reached with very large wheelchairs?',
+                  tooltip: {
+                    content: [
+                      'Cloakrooms and lockers are accessible if the way to them is at least 90 cm wide and ideally, if they have about 150x150 cm of space for approaching and turning around and if lockers can be filled from a sitting position. There should be coat hooks at different heights.',
+                    ],
+                  },
                 },
               },
             ],
@@ -2409,13 +2414,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Können in der Garderobe auch sperrige Geräte abgegeben werden (z.B. Rollstuhl-Zuggerät)?',
+                  name:
+                    'Können in der Garderobe auch sperrige Geräte abgegeben werden (z.B. Rollstuhl-Zuggerät)?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Is it possible to store bulky equipment at the cloakroom, e.g. wheelchair traction device?',
+                  name:
+                    'Is it possible to store bulky equipment at the cloakroom, e.g. wheelchair traction device?',
                 },
               },
             ],
@@ -2460,7 +2467,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: AccessibilityFieldType.select,
             translations: [
               {
                 attributes: {
@@ -2471,12 +2478,68 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Are there any restrooms?',
+                  name: 'Are there any toilets?',
                 },
               },
             ],
             data: {
               key: 'foyer.restroom.restroomAccess',
+              options: [
+                {
+                  value: 'no',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'nein, keine Toilette vor Ort vorhanden',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'no toilet on the premises',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'yes',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'ja, Toiletten vorhanden mit folgenden Merkmalen: ',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'yes, toilets are available with the following features: ',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.checkboxList,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Art der Toilette / des Zugangs',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Type of toilet or access',
+                },
+              },
+            ],
+            data: {
+              key: 'foyer.restroom.restroomAccessType',
               options: [
                 {
                   value: 'outdoorToilette',
@@ -2490,7 +2553,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'outdoor toilette',
+                        name: 'outdoor toilet',
                       },
                     },
                   ],
@@ -2637,7 +2700,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'door opens to inside',
+                        name: 'door opens inwards',
                       },
                     },
                   ],
@@ -2719,13 +2782,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Sind die Innenbereiche (inkl. Waschbecken, Handtrockner, etc.) per Rollstuhl erreichbar?',
+                  name:
+                    'Sind die Innenbereiche (inkl. Waschbecken, Handtrockner, etc.) per Rollstuhl erreichbar?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Is the interior (incl. washbasin, hand dryer, etc.) accessible by wheelchair?',
+                  name:
+                    'Is the interior (incl. washbasin, hand dryer, etc.) accessible by wheelchair?',
                 },
               },
             ],
@@ -2970,7 +3035,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'with handels, can be folded away',
+                        name: 'with handles, can be folded away',
                       },
                     },
                   ],
@@ -3041,7 +3106,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
           {
             attributes: {
               language: Language.de,
-              name: 'Orientierung - Welche Hilfestellungen gibt es für die Bewegung durchs Gebäude?',
+              name:
+                'Orientierung - Welche Hilfestellungen gibt es für die Bewegung durchs Gebäude?',
             },
           },
           {
@@ -3111,7 +3177,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'durchgängiges bildhaftes Leitsystem (z.B. Fußabdrücke als Bodenaufkleber)',
+                        name:
+                          'durchgängiges bildhaftes Leitsystem (z.B. Fußabdrücke als Bodenaufkleber)',
                       },
                     },
                     {
@@ -3145,13 +3212,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Position von Hörinhalten / Videoinhalten ist gekennzeichnet (z.B. mit Piktogrammen)',
+                        name:
+                          'Position von Hörinhalten / Videoinhalten ist gekennzeichnet (z.B. mit Piktogrammen)',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'position of audio content / video content is marked (e.g. with pictograms)',
+                        name:
+                          'position of audio content / video content is marked (e.g. with pictograms)',
                       },
                     },
                   ],
@@ -3168,7 +3237,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'Essential doors and passages are visually rich in contrast (e.g. by colour)',
+                        name:
+                          'Essential doors and passages are visually rich in contrast (e.g. by colour)',
                       },
                     },
                   ],
@@ -3274,7 +3344,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Treppenhandläufe mit ertastbarer Richtungsanzeige bzw. Etageninformation',
+                        name:
+                          'Treppenhandläufe mit ertastbarer Richtungsanzeige bzw. Etageninformation',
                       },
                     },
                     {
@@ -3331,7 +3402,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'controlls are tactilely detectable (e.g. door openers)',
+                        name: 'controls are tactilely detectable (e.g. door openers)',
                       },
                     },
                   ],
@@ -3342,7 +3413,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Bodenbeläge kennzeichnen Gebäudeabschnitte (z.B. Hinweis auf wichtige Exponate)',
+                        name:
+                          'Bodenbeläge kennzeichnen Gebäudeabschnitte (z.B. Hinweis auf wichtige Exponate)',
                       },
                     },
                     {
@@ -3368,7 +3440,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.en,
-                  name: 'signaling and alarms',
+                  name: 'signalling and alarms',
                 },
               },
             ],
@@ -3387,7 +3459,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'escape routes can be perceived in various ways (e.g. visually and tactilely)',
+                        name:
+                          'escape routes can be perceived in various ways (e.g. visually and tactilely)',
                       },
                     },
                   ],
@@ -3398,13 +3471,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Warnsignale verschiedentlich wahrnehmbar (z.B. akustisch und optisch beim Schließen von Türen)',
+                        name:
+                          'Warnsignale verschiedentlich wahrnehmbar (z.B. akustisch und optisch beim Schließen von Türen)',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'warning signals address at least two senses (e.g. closing doors with visual and acoustic signals)',
+                        name:
+                          'warning signals address at least two senses (e.g. closing doors with visual and acoustic signals)',
                       },
                     },
                   ],
@@ -3421,14 +3496,16 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Beleuchtung - Wie steht es um die Lichtverhältnisse in diesem Gebäudeabschnitt (z.B. dunkle, flimmernde oder blendende Bereiche)?',
+                  name:
+                    'Beleuchtung - Wie steht es um die Lichtverhältnisse in diesem Gebäudeabschnitt (z.B. dunkle, flimmernde oder blendende Bereiche)?',
                   placeholder: 'z.B. Ausstellungsraum mit starker Abdunklung',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Lighting - How are the lighting conditions in this area / floor (e.g., dark, flickering, or glaring areas)?',
+                  name:
+                    'Lighting - How are the lighting conditions in this area / floor (e.g., dark, flickering, or glaring areas)?',
                   placeholder: 'e.g. exhibition room with dark sections',
                 },
               },
@@ -3436,172 +3513,1578 @@ export const locationAccessibility: AccessibilityCategory[] = [
           },
         ],
       },
-      // {
-      //   translations: [
-      //     {
-      //       attributes: {
-      //         language: Language.de,
-      //         name:
-      //           'Raumzugänge - Wie gelangt man in die wichtigsten Bereiche des Gebäudes und wie sind sie beschaffen?',
-      //       },
-      //     },
-      //     {
-      //       attributes: {
-      //         language: Language.en,
-      //         name:
-      //           'Room access - How do you get to the main areas of the building and how do they look like?',
-      //       },
-      //     },
-      //   ],
-      //   children: [
-      //     {
-      //       type: AccessibilityFieldType.input,
-      //       data: {
-      //         key: 'orientation.indoorRoomAccess.rooms',
-      //         type: InputType.text,
-      //       },
-      //       translations: [
-      //         {
-      //           attributes: {
-      //             language: Language.de,
-      //             name: 'Name / Bezeichnung',
-      //             placeholder: 'z.B. 1. OG / Sonderausstellungsfläche',
-      //           },
-      //         },
-      //         {
-      //           attributes: {
-      //             language: Language.en,
-      //             name: 'e.g. 1st floor / temporary exhibitions',
-      //           },
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       type: AccessibilityFieldType.checkboxList,
-      //       translations: [
-      //         {
-      //           attributes: {
-      //             language: Language.de,
-      //             name: 'Zugangsart',
-      //           },
-      //         },
-      //         {
-      //           attributes: {
-      //             language: Language.en,
-      //             name: 'Type for access',
-      //           },
-      //         },
-      //       ],
-      //       data: {
-      //         key: 'orientation.indoorRoomAccess.entranceType',
-      //         options: [
-      //           {
-      //             value: 'groundLevelEntrance',
-      //             translations: [
-      //               {
-      //                 attributes: {
-      //                   language: Language.de,
-      //                   name: 'ebenerdiger Zugang',
-      //                 },
-      //               },
-      //               {
-      //                 attributes: {
-      //                   language: Language.en,
-      //                   name: 'ground-level entrance',
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //           {
-      //             value: 'doors',
-      //             translations: [
-      //               {
-      //                 attributes: {
-      //                   language: Language.de,
-      //                   name: 'Türen',
-      //                 },
-      //               },
-      //               {
-      //                 attributes: {
-      //                   language: Language.en,
-      //                   name: 'doors',
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //           {
-      //             value: 'stairs',
-      //             translations: [
-      //               {
-      //                 attributes: {
-      //                   language: Language.de,
-      //                   name: 'Treppen',
-      //                 },
-      //               },
-      //               {
-      //                 attributes: {
-      //                   language: Language.en,
-      //                   name: 'stairs',
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //           {
-      //             value: 'elevator',
-      //             translations: [
-      //               {
-      //                 attributes: {
-      //                   language: Language.de,
-      //                   name: 'Fahrstuhl',
-      //                 },
-      //               },
-      //               {
-      //                 attributes: {
-      //                   language: Language.en,
-      //                   name: 'elevator',
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //           {
-      //             value: 'ramp',
-      //             translations: [
-      //               {
-      //                 attributes: {
-      //                   language: Language.de,
-      //                   name: 'Rampe',
-      //                 },
-      //               },
-      //               {
-      //                 attributes: {
-      //                   language: Language.en,
-      //                   name: 'ramp',
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //           {
-      //             value: 'lift',
-      //             translations: [
-      //               {
-      //                 attributes: {
-      //                   language: Language.de,
-      //                   name: 'Treppenlift / Hublift',
-      //                 },
-      //               },
-      //               {
-      //                 attributes: {
-      //                   language: Language.en,
-      //                   name: 'stair lift / hoist lift',
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //         ],
-      //       },
-      //     },
-      //   ],
-      // },
+      {
+        translations: [
+          {
+            attributes: {
+              language: Language.de,
+              name:
+                'Raumzugänge - Wie gelangt man in die wichtigsten Bereiche des Gebäudes und wie sind sie beschaffen?',
+            },
+          },
+          {
+            attributes: {
+              language: Language.en,
+              name:
+                'Room access - How do you get to the main areas of the building and how do they look like?',
+            },
+          },
+        ],
+        children: [
+          {
+            type: AccessibilityFieldType.input,
+            data: {
+              key: 'orientation.indoorRoomAccess.rooms',
+              type: InputType.text,
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Name / Bezeichnung',
+                  placeholder: 'z.B. 1. OG / Sonderausstellungsfläche',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Name / title',
+                  placeholder: 'e.g. 1st floor / temporary exhibitions',
+                },
+              },
+            ],
+          },
+          {
+            type: AccessibilityFieldType.checkboxList,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Zugangsart',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Type for access',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.entranceType',
+              options: [
+                {
+                  value: 'groundLevelEntrance',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'ebenerdiger Zugang',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'ground-level entrance',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+
+          {
+            type: AccessibilityFieldType.conditional,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Türen',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'doors',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.doors',
+              fields: [
+                {
+                  type: AccessibilityFieldType.checkboxList,
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Was trifft auf die Eingangstür zu?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'What applies to the entrance door?',
+                      },
+                    },
+                  ],
+                  data: {
+                    key: 'orientation.indoorRoomAccess.doors.doorType',
+                    options: [
+                      {
+                        value: 'toOutside',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'öffnet nach außen',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'opens to outside',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'toInside',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'öffnet nach innen',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'opens inwards',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'bothDirections',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'öffnet in beide Richtungen',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'opens in both directions',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'narrowEntrance',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'schmale Tür (Breite weniger als 80 cm)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'narrow entrance (less than 80 cm)',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'heavyDoor',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Tür ist schwer oder öffnet schwer',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'heavy door / difficult to open',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'highThreshold',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Türschwelle höher als 2 cm',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'threshold is higher than 2 cm',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'revolvingDoor',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Drehtür / Rotationstür',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'revolving door',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'automaticDoor',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'öffnet automatisch / immer offen',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'opens automatically or is always open',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'glassDoorMarking',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name:
+                                'Glastür mit kontrastreichen Markierungen (z.B. Institutionsname als Aufkleber oder farbig abgesetzte Gravur)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'glass door, with clear marking',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'glassDoorNoMarking',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Glastür ohne Markierungen',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'glass door, without clear marking',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.conditional,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Treppen',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'stairs',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.stairs',
+              fields: [
+                {
+                  type: AccessibilityFieldType.input,
+                  data: {
+                    type: InputType.number,
+                    key: 'orientation.indoorRoomAccess.stairs.count',
+                  },
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Wie viele Stufen findet man vor?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'How many steps are there?',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: AccessibilityFieldType.checkboxList,
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Wie sind die Stufen beschaffen?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'What are the stairs like?',
+                      },
+                    },
+                  ],
+                  data: {
+                    key: 'orientation.indoorRoomAccess.stairs.properties',
+                    options: [
+                      {
+                        value: 'slipNosing',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'mit Rutschschutz',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'has anti-slip nosing',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'stepEdgesMarked',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Stufenkanten sind gekennzeichnet (z.B. Farbstreifen)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'step edges are marked (e.g. coloured stripes)',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'tactileSafetyStrips',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'mit taktilen Sicherheitsstreifen',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'has tactile safety strips',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'completeHandrail',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'mit vollständigem Geländer',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'has handrail from beginning to end',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'highSteps',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'sehr hohe Stufen (21 cm oder mehr)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'high steps (21cm and more)',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+                {
+                  type: AccessibilityFieldType.select,
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Falls ein Treppen-/Hublift vorhanden ist: Wie ist dieser nutzbar?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'If a stair lift/ hoist lift is available, how can it be used?',
+                      },
+                    },
+                  ],
+                  data: {
+                    key: 'orientation.indoorRoomAccess.stairs.lift',
+                    options: [
+                      {
+                        value: 'selfOperable',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'ja, Treppenlift / Hublift, selbst bedienbar',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'stair lift / hoist lift, self-operable',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'staffperable',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'ja, Treppenlift / Hublift, Bedienung durch Personal',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'stair lift / hoist lift, operated by staff',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'noLibraryCard',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Zugang für Begleitperson auch ohne Nutzer:innenausweis',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'Free library card / no library card needed for attendant',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.conditional,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Fahrstuhl',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'elevator',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.elevator',
+              fields: [
+                {
+                  type: AccessibilityFieldType.input,
+                  data: {
+                    type: InputType.text,
+                    key: 'orientation.indoorRoomAccess.elevator.elevatorLocation',
+                  },
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Wo befindet sich der Fahrstuhl?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'Where is the elevator located?',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: AccessibilityFieldType.input,
+                  data: {
+                    type: InputType.text,
+                    key: 'orientation.indoorRoomAccess.elevator.cabinLength',
+                  },
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Wie ist er beschaffen? (Kabinen-Tiefe)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'Please describe its internal dimensions. (Cabin length)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: AccessibilityFieldType.input,
+                  data: {
+                    type: InputType.text,
+                    key: 'orientation.indoorRoomAccess.elevator.cabinWidth',
+                  },
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Wie ist er beschaffen? (Kabinen-Breite)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'Please describe its internal dimensions. (Cabin width)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: AccessibilityFieldType.checkboxList,
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Wie wird die Bedienung des Aufzugs unterstützt?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: "How would you describe the elevator's controls?",
+                      },
+                    },
+                  ],
+                  data: {
+                    key: 'orientation.indoorRoomAccess.elevator.usage',
+                    options: [
+                      {
+                        value: 'reachedWithWheelchair',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name:
+                                'Tasten von Rollstuhl aus erreichbar (z.B. horizontal angeordnet)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name:
+                                'buttons can be reached with a wheelchair (e.g. arranged horizontally)',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'tactile',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name:
+                                'Beschilderung und Tasten sind taktil (z.B. in Braille, hervorstehende Zahlen, etc.)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name:
+                                'labelling and buttons are tactile (e.g. in braille, protruding numbers, etc.).',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'illuminatedButtons',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Tasten sind beleuchtet',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'buttons are illuminated',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'floorsAudioSignals',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Etagen werden angesagt',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'floors are announced / indicated via audio signals',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'floorsDisplayedVisually',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Etagen werden visuell angezeigt',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'floor numbers are displayed visually',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'pictogramControlls',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Bedienelemente mit Piktogrammen',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'controls with pictograms',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'emergencyCallSignal',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Notruf wird akustisch bestätigt',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'acoustic signal confirms successful emergency call',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'emergencyCallVisual',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Notruf wird optisch bestätigt',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'emergency call is confirmed visually',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.conditional,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Rampe',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'ramp',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.ramp',
+              fields: [
+                {
+                  type: AccessibilityFieldType.select,
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Welche Art von Rampe ist es?',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'What type of ramp is it?',
+                      },
+                    },
+                  ],
+                  data: {
+                    key: 'orientation.indoorRoomAccess.ramp.type',
+                    options: [
+                      {
+                        value: 'fixed',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name:
+                                'fest installierte, rollstuhlgerechte Rampe (mind. 120cm Laufbreite, max. 6 Grad Neigung)',
+                              tooltip: {
+                                content: ['mind. 120cm Laufbreite, max. 6 Grad Neigung'],
+                              },
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'fixed, wheelchair-friendly ramp',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'removable',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'bewegliche Rampe',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'removable ramp',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.input,
+            data: {
+              key: 'orientation.indoorRoomAccess.roomAccessInfo',
+              type: InputType.text,
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Anmerkung',
+                  placeholder: 'z.B. Position von Fahrstühlen oder Hindernisse',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Your comment',
+                  placeholder: 'e.g. position of elevators or obstacles',
+                },
+              },
+            ],
+          },
+          {
+            type: AccessibilityFieldType.select,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Gibt es hier Toiletten?',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Are there any toilets?',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomAccess',
+              options: [
+                {
+                  value: 'no',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'nein, keine Toilette vor Ort vorhanden',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'no toilet on the premises',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'yes',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'ja, Toiletten vorhanden mit folgenden Merkmalen: ',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'yes, toilets are available with the following features: ',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.checkboxList,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Art der Toilette / des Zugangs',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Type of toilet or access',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomAccessType',
+              options: [
+                {
+                  value: 'outdoorToilette',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Außentoilette (z.B. bei Festivals)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'outdoor toilet',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'freelyAccessible',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'WC frei zugänglich',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'restroom freely accessible',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'accessOnDemand',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'WC-Zugang auf Anfrage',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'restroom access on demand',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'accessibleToilet',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'auf Barrierefreiheit geprüftes WC vorhanden',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'has accessible toilet',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'withEurokey',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'zugänglich mit Euroschlüssel',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'accessible with Euro-key',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.textarea,
+            data: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomLocation',
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Wo befindet sich die Toilette?',
+                  placeholder: 'Ortsbeschreibung, z.B. Erdgeschoss, links neben der Kasse',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Where is the restroom located?',
+                  placeholder:
+                    'Please describe the location, e.g. first floor, to the left of the info desk',
+                },
+              },
+            ],
+          },
+          {
+            type: AccessibilityFieldType.checkboxList,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Wie gelangt man in die Toilette?',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'How do visitors enter the restroom?',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomDoor',
+              options: [
+                {
+                  value: 'toOutside',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Tür öffnet nach außen',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'door opens to outside',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'toInside',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Tür öffnet nach innen',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'door opens inwards',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'bothDirections',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Tür öffnet in beide Richtungen',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'door opens in both directions',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'automatically',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Tür öffnet automatisch (Taste)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'door opens automatically (via button)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'narrowEntrance',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'schmale Tür (Breite weniger als 90 cm)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'narrow entrance (less than 90 cm)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'highThreshold',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Türschwelle höher als 2 cm',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'threshold is higher than 2 cm',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.checkboxList,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name:
+                    'Sind die Innenbereiche (inkl. Waschbecken, Handtrockner, etc.) per Rollstuhl erreichbar?',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name:
+                    'Is the interior (incl. washbasin, hand dryer, etc.) accessible by wheelchair?',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.restroom.accessibleWithWheelchair',
+              options: [
+                {
+                  value: 'enoughTurningSpace',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'überall genug Fläche zum Wenden (150x150 cm)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'enough turning space everywhere (150x150cm)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'insufficientTurningSpace',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'nicht überall genug Fläche zum Wenden',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'space partially insufficient for turning with a wheelchair',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'handDrierAccessible',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Handtrockner in Rollstuhlhöhe (mx. 80 cm)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'hand drier accessible from wheelchair (max. 80 cm)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'washbasinAccessible',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Waschbecken in Rollstuhlhöhe (max. Höhe 80 cm)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'washbasin at wheelchair height (max. height 80 cm)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'navigatableUnderSink',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Waschbecken unterfahrbar',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'wheelchair can navigate under a sink',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.checkboxList,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Welche der folgenden Punkte erfüllt das WC?',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Which of the following aspects apply for the WC?',
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.toilet.toiletDetails',
+              options: [
+                {
+                  value: 'heightOfBase',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'WC-Sitz 46 - 48 cm über Fußboden',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'WC seat 46 - 48 cm above floor',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'heightAdjustable',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'WC höhenverstellbar',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'WC height adjustable',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'spaceOnBackside',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'mit Rückenstütze (55 cm hinter Vorderkante WC)',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'with back support (55 cm behind front edge WC)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'spaceInFront',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Platz vor WC mind. 150x150cm',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'space in front of WC at least 150x150 cm',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'spaceOnUsersLeftSide',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Platz links/rechts von WC mind. 90 cm breit und 70 cm tief',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'space to the left/right at least 90cm (width) x 70 cm (depth)',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'appliances',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Toilettenpapierhalter und Spülung mit Hand / Arm bedienbar',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'toilet paper holder and flush operable by hand / arm',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'noFoldingHandles',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Haltegriffe sind fest, nicht einklappbar',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'with handles, do not retract',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'hasFoldingHandles',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Haltegriffe, bei Bedarf wegklappbar',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'with handles, can be folded away',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'emergencyWC',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'Notrufanlage in WC-Nähe',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'emergency call system close to WC',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            type: AccessibilityFieldType.textarea,
+            data: {
+              key: 'orientation.indoorRoomAccess.toilet.restroomInfo',
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Haben Sie hierzu noch Anmerkungen?',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Would you like to add a comment?',
+                },
+              },
+            ],
+          },
+          {
+            type: AccessibilityFieldType.select,
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name:
+                    'Gang-/Türbreiten - Ist in den Wegen und Türen genug Platz zum Fahren und Wenden mit einem Rollstuhl?',
+                  tooltip: {
+                    content: [
+                      'Gänge und Türen mind. 90 cm breit, Bewegungsflächen von mind. 150 x 150 cm',
+                    ],
+                  },
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name:
+                    'Aisle/door widths - Is there enough space in the aisles and doorways to drive and turn with a wheelchair?',
+                  tooltip: {
+                    content: [
+                      'Aisles and doors at least 90 cm wide, movement areas of at least 150 x 150 cm',
+                    ],
+                  },
+                },
+              },
+            ],
+            data: {
+              key: 'orientation.indoorRoomAccess.aisleWidths',
+              options: [
+                {
+                  value: 'completely',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'vollständig',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'completely',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'partially',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'teilweise',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'partially',
+                      },
+                    },
+                  ],
+                },
+                {
+                  value: 'none',
+                  translations: [
+                    {
+                      attributes: {
+                        language: Language.de,
+                        name: 'gar nicht',
+                      },
+                    },
+                    {
+                      attributes: {
+                        language: Language.en,
+                        name: 'not at all',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      },
     ],
   },
 
@@ -3643,13 +5126,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Welche Services sind vor Ort für Menschen mit Behinderung / Beeinträchtigung vorhanden?',
+                  name:
+                    'Welche Services sind vor Ort für Menschen mit Behinderung / Beeinträchtigung vorhanden?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'What services are available on site for people with disabilities / impairments?',
+                  name:
+                    'What services are available on site for people with disabilities / impairments?',
                 },
               },
             ],
@@ -3696,7 +5181,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Rollstuhlnutzer:innen werden gemeinsam mit Begleitpersonen platziert',
+                        name:
+                          'Rollstuhlnutzer:innen werden gemeinsam mit Begleitpersonen platziert',
                       },
                     },
                     {
@@ -3736,7 +5222,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'designated seats for inviduals with visual or hearing impairment',
+                        name: 'designated seats for individuals with visual or hearing impairment',
                       },
                     },
                   ],
@@ -3768,7 +5254,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
           {
             attributes: {
               language: Language.de,
-              name: 'Gibt es vor Ort feste Services oder besondere Infrastrukturen, die das Kulturerlebnis unterstützen?',
+              name:
+                'Gibt es vor Ort feste Services oder besondere Infrastrukturen, die das Kulturerlebnis unterstützen?',
               tooltip: {
                 content: [
                   'Eine Option nicht dabei? Meldet euch bei uns unter hallo@kulturdaten.berlin',
@@ -3779,7 +5266,11 @@ export const locationAccessibility: AccessibilityCategory[] = [
           {
             attributes: {
               language: Language.en,
-              name: 'Are there regular services or special infrastructure that support the visiting experience?',
+              name:
+                'Are there regular services or special infrastructure that support the visiting experience?',
+              tooltip: {
+                content: ['Missing an option? Contact us at hallo@kulturdaten.berlin)'],
+              },
             },
           },
         ],
@@ -3849,7 +5340,8 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.en,
-                        name: "display cases with adjustable height / 'knees-under' access (hollow underneath)",
+                        name:
+                          "display cases with adjustable height / 'knees-under' access (hollow underneath)",
                       },
                     },
                   ],
@@ -3933,15 +5425,22 @@ export const locationAccessibility: AccessibilityCategory[] = [
                 attributes: {
                   language: Language.de,
                   name: 'Informationsvermittlung',
-                  // tooltip:
-                  //   'Immer wenn zusätzliche Geräte & Multimedia-Anwendungen zum Einsatz kommen, gibt es natürlich weitere Anforderungen an die Bedienung. Tipps z.B. zur Gestaltung von Audioguides hat u.a. der Deutsche Museumsbund gesammelt: https://www.museumsbund.de/wp-content/uploads/2017/03/dmb-barrierefreiheit-digital-160728.pdf',
+                  tooltip: {
+                    content: [
+                      'Immer wenn zusätzliche Geräte & Multimedia-Anwendungen zum Einsatz kommen, gibt es natürlich weitere Anforderungen an die Bedienung. Tipps z.B. zur Gestaltung von Audioguides hat u.a. der Deutsche Museumsbund gesammelt: https://www.museumsbund.de/wp-content/uploads/2017/03/dmb-barrierefreiheit-digital-160728.pdf',
+                    ],
+                  },
                 },
               },
               {
                 attributes: {
                   language: Language.en,
                   name: 'Info materials',
-                  // tooltip: 'Whenever additional devices & multimedia applications are used, they should be easy to operate. Tips e.g. on the design of audioguides have been collected by the German Museums Association, among others: https://www.museumsbund.de/wp-content/uploads/2017/03/dmb-barrierefreiheit-digital-160728.pdf)',
+                  tooltip: {
+                    content: [
+                      'Whenever additional devices & multimedia applications are used, there are of course further requirements for operation. Tips, e.g. on the design of audio guides, have been collected by the German Museums Association, among others: https://www.museumsbund.de/wp-content/uploads/2017/03/dmb-barrierefreiheit-digital-160728.pdf',
+                    ],
+                  },
                 },
               },
             ],
@@ -4147,7 +5646,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Hörbücher, Hörzeitungen und -zeitschriften e',
+                        name: 'Hörbücher, Hörzeitungen und -zeitschriften',
                       },
                     },
                     {
@@ -4181,13 +5680,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Computer mit barrierefreier Software und Bedienhilfen (z.B. adaptive Tastatur)',
+                        name:
+                          'Computer mit barrierefreier Software und Bedienhilfen (z.B. adaptive Tastatur)',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'computer with accessible software and operating aids (e.g. adaptive keyboard).',
+                        name:
+                          'computer with accessible software and operating aids (e.g. adaptive keyboard).',
                       },
                     },
                   ],
@@ -4364,24 +5865,23 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: AccessibilityFieldType.textarea,
             data: {
               key: 'afterVisit.sensoryMap',
-              type: InputType.url,
             },
             translations: [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Können sich Besucher:innen vorab über laute oder belebte Bereiche des Ortes informieren - z.B. in einer Sensory Map?',
-                  placeholder: 'https://example.com',
+                  name:
+                    'Können sich Besucher:innen über laute oder belebte Bereiche des Ortes informieren - z.B. in einer Sensory Map?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Do you have a sensory map - a plan of loud or usually very busy parts of the building?',
-                  placeholder: 'https://example.com',
+                  name:
+                    'Do you have a sensory map - a plan of loud or usually very busy parts of the building?',
                 },
               },
             ],
@@ -4392,13 +5892,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Restaurant / Bar / Café - Sind Essensausgabe, Kassen und Esstische mit Rollstuhl erreichbar?',
+                  name:
+                    'Restaurant / Bar / Café - Sind Essensausgabe, Kassen und Esstische mit Rollstuhl erreichbar?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Restaurant / bar / café - Are the food counter, cash registers and dining tables accessible with a wheelchair?',
+                  name:
+                    'Restaurant / bar / café - Are the food counter, cash registers and dining tables accessible with a wheelchair?',
                 },
               },
             ],
@@ -4513,23 +6015,6 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  value: 'wheelchairsTables',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'ausgewiesene Plätze für Rollstuhlfahrer:innen',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'designated tables / areas for wheelchairs',
-                      },
-                    },
-                  ],
-                },
-                {
                   value: 'wheelchairsAreas',
                   translations: [
                     {
@@ -4623,13 +6108,15 @@ export const locationAccessibility: AccessibilityCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Feedback - Wie können Menschen mit Behinderung / Beeinträchtigung euch ihre Besuchseindrücke schildern oder Anregungen geben?',
+                  name:
+                    'Feedback - Wie können Menschen mit Behinderung / Beeinträchtigung euch ihre Besuchseindrücke schildern oder Anregungen geben?',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Feedback - How can people with disabilities / impairments give you feedback or suggestions regarding their visit?',
+                  name:
+                    'Feedback - How can people with disabilities / impairments give you feedback or suggestions regarding their visit?',
                 },
               },
             ],
@@ -4642,7 +6129,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Kontakt Besuchsdienste ( Telefon / Mail)',
+                        name: 'Kontakt Besuchsdienste (Telefon / Mail)',
                       },
                     },
                     {

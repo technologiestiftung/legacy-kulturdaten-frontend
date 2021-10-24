@@ -868,11 +868,11 @@ export const deDE: Localization = {
         district: () => 'Bezirk',
         districtPlaceholder: () => 'Bezirk auswählen',
         url: () => 'URL des Ortes',
-        urlPlaceholder: () => 'https://theaterberlin.de/virtualstage',
+        urlPlaceholder: () => 'z.B. https://theaterberlin.de/virtualstage',
         rent: {
           title: () => 'Vermietung',
           url: () => 'Vermietungslinks / Vermietungsinformation',
-          urlPlaceholder: () => 'https://example.com',
+          urlPlaceholder: () => 'z.B. https://example.com',
         },
         type: {
           title: () => 'Typ des Ortes',
@@ -882,6 +882,11 @@ export const deDE: Localization = {
           virtualText: () =>
             'Du bietest Angebote auch online an - auf einer eigenen Plattform oder Social Media-Kanälen? Lege hier deine Webpräsenz einmal an und verknüpfe sie später bequem mit deinen Online-Angeboten.',
         },
+      },
+      tabs: {
+        info: () => 'Informationen',
+        accessibility: () => 'Barrierefreiheit',
+        media: () => 'Bilder',
       },
       options: {
         exportCsv: () => 'Export als CSV',
