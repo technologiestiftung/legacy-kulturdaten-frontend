@@ -39,6 +39,9 @@ const StyledInfo = styled.div<{ color: InfoColor }>`
   line-height: var(--line-height-300);
   padding: 0.75rem;
   display: flex;
+  a {
+    color: inherit;
+  }
 
   ${({ color }) => css`
     box-shadow: ${insetBorderColored(infoColorMap[color].borderColor, true)};
