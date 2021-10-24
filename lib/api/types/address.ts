@@ -6,5 +6,6 @@ export type Address = {
     street2: string;
     city: string;
     zipCode: string;
+    district: string;
   };
 };

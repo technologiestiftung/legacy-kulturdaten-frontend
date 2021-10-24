@@ -2,10 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { Address } from '../../../../lib/api/types/address';
 import { CategoryEntry, PublishedStatus } from '../../../../lib/api/types/general';
-import { useEntry } from '../../../../lib/categories';
+import { useDistrictList, useEntry } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
+import { usePseudoUID } from '../../../../lib/uid';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
+import { Select, SelectSize } from '../../../select';
 import { EntryFormHook } from '../form';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
@@ -17,6 +19,7 @@ export const useAddressForm: EntryFormHook = (
   customTitle?: string,
   tooltip?: string
 ) => {
+  const uid = usePseudoUID();
   const { entry, mutate } = useEntry<
     {
       data: {
@@ -29,12 +32,14 @@ export const useAddressForm: EntryFormHook = (
   >(category, query);
   const call = useApiCall();
 
-  const initialAddress = useMemo(() => entry?.data?.relations?.address, [
-    entry?.data?.relations?.address,
-  ]);
+  const initialAddress = useMemo(
+    () => entry?.data?.relations?.address,
+    [entry?.data?.relations?.address]
+  );
 
   const [address, setAddress] = useState<Address>(initialAddress);
   const [pristine, setPristine] = useState(true);
+  const districtList = useDistrictList();
 
   const required = useMemo(
     () =>
@@ -58,11 +63,13 @@ export const useAddressForm: EntryFormHook = (
       !required ||
       (address?.attributes?.street1?.length > 0 &&
         address?.attributes?.zipCode?.length > 0 &&
+        address?.attributes?.district?.length > 0 &&
         address?.attributes?.city?.length > 0),
     [
       loaded,
       address?.attributes?.city?.length,
       address?.attributes?.street1?.length,
+      address?.attributes?.district?.length,
       address?.attributes?.zipCode?.length,
       required,
     ]
@@ -76,6 +83,8 @@ export const useAddressForm: EntryFormHook = (
         address.attributes.street1.length < 1 ||
         !address?.attributes?.zipCode ||
         address.attributes.zipCode?.length < 1 ||
+        !address?.attributes?.district ||
+        address.attributes.district?.length < 1 ||
         !address?.attributes?.city ||
         address.attributes.city?.length < 1),
     [
@@ -83,6 +92,7 @@ export const useAddressForm: EntryFormHook = (
       loaded,
       address?.attributes?.street1,
       address?.attributes?.zipCode,
+      address?.attributes?.district,
       address?.attributes?.city,
     ]
   );
@@ -182,6 +192,32 @@ export const useAddressForm: EntryFormHook = (
                 showHint && (!address?.attributes?.city || address?.attributes?.city.length < 1)
               }
             />
+          </FormItem>
+          <FormItem width={FormItemWidth.half} alignSelf="flex-end">
+            <Select
+              value={address?.attributes?.district || 'undefined'}
+              id={`${uid}-district`}
+              label={t('categories.location.form.district') as string}
+              size={SelectSize.big}
+              required={required}
+              onChange={(e) => {
+                setPristine(false);
+                setAddress({
+                  ...address,
+                  attributes: {
+                    ...address?.attributes,
+                    district: e.target.value !== 'undefined' ? e.target.value : undefined,
+                  },
+                });
+              }}
+            >
+              <option value="undefined">{t('categories.location.form.districtPlaceholder')}</option>
+              {districtList?.map((district, index) => (
+                <option value={district.attributes.name} key={index}>
+                  {district.attributes.name}
+                </option>
+              ))}
+            </Select>
           </FormItem>
         </FormGrid>
       </form>
