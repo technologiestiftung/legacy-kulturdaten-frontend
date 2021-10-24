@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ChangeEvent } from 'react';
-import { ComponentVariant, ComponentWithVariants } from '../../lib/generalTypes';
 import { Locale, locales } from '../../config/locales';
 import { useT } from '../../lib/i18n';
 import { useLocale, useSwitchLocale } from '../../lib/routing';
@@ -12,6 +11,7 @@ import { Breakpoint } from '../../lib/WindowService';
 export enum LocaleSwitchVariant {
   default = 'default',
   minimal = 'minimal',
+  settings = 'settings',
 }
 
 const StyledLocaleSwitch = styled.div<{ switchVariant: LocaleSwitchVariant }>`
@@ -31,6 +31,8 @@ const StyledLocaleSwitch = styled.div<{ switchVariant: LocaleSwitchVariant }>`
             padding: 0 1.5rem;
           }
         `
+      : switchVariant === LocaleSwitchVariant.settings
+      ? css``
       : css`
           padding: 1.5rem 1.5rem 2.25rem;
           -webkit-box-pack: start;
@@ -38,12 +40,14 @@ const StyledLocaleSwitch = styled.div<{ switchVariant: LocaleSwitchVariant }>`
         `}
 `;
 
-export interface LocaleSwitchProps extends ComponentWithVariants {
-  switchVariant?: LocaleSwitchVariant | ComponentVariant;
+export interface LocaleSwitchProps {
+  switchVariant?: LocaleSwitchVariant;
+  labelledBy?: string;
 }
 
 export const LocaleSwitch: React.FC<LocaleSwitchProps> = ({
   switchVariant = LocaleSwitchVariant.default,
+  labelledBy,
 }: LocaleSwitchProps) => {
   const activeLocale = useLocale();
   const switchLocale = useSwitchLocale();
@@ -51,9 +55,10 @@ export const LocaleSwitch: React.FC<LocaleSwitchProps> = ({
 
   const select = (
     <Select
-      label={t('menu.localeSwitch.label') as string}
+      label={labelledBy ? undefined : (t('menu.localeSwitch.label') as string)}
       labelPosition={SelectLabelPosition.left}
       ariaLabel={t('menu.localeSwitch.description') as string}
+      ariaLabelledby={labelledBy}
       variant={SelectVariant.minimal}
       id="locale"
       value={activeLocale}

@@ -135,8 +135,8 @@ export const DashboardLinkListLink: React.FC<StandardLink> = (props: StandardLin
 };
 
 interface DashboardLinkListProps {
-  title: string;
   links: StandardLink[];
+  title?: string;
   text?: React.ReactElement;
 }
 
@@ -147,7 +147,7 @@ export const DashboardLinkList: React.FC<DashboardLinkListProps> = ({
 }: DashboardLinkListProps) => {
   return (
     <StyledDashboardLinkList>
-      <StyledDashboardLinkListTitle>{title}</StyledDashboardLinkListTitle>
+      {title && <StyledDashboardLinkListTitle>{title}</StyledDashboardLinkListTitle>}
       {text && <StyledDashboardLinkListText>{text}</StyledDashboardLinkListText>}
       <StyledDashboardLinkListList>
         {links?.map((link, index) => (
