@@ -173,7 +173,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       <StyledEntryFormHeadBorder />
       <StyledEntryFormHeadTitle id={id} size={size}>
         {title}
-        {tooltip && (
+        {tooltip && tooltip.length > 0 && (
           <StyledTooltip>
             <Tooltip>
               <TooltipP>{tooltip}</TooltipP>
