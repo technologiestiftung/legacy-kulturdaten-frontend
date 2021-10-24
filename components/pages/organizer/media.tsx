@@ -14,17 +14,16 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { DropZone } from '../../DropZone';
 import { Media, MediaLicense } from '../../../lib/api/types/media';
 import { EntryFormHook } from '../helpers/form';
-import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { MediaList } from '../../MediaList';
 import { useUser } from '../../user/useUser';
-import { Info, InfoColor } from '../../info/';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
+import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
 
-const maxFileSize = 10240;
+const maxLogoSize = 2048;
 
 const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   { category, query }: { category: Category; query: ParsedUrlQuery },
@@ -101,7 +100,7 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
           success={uploadSuccess}
           disabled={disabled}
           max={maxFiles}
-          maxFileSizeInKb={maxFileSize}
+          maxFileSizeInKb={maxLogoSize}
         />
       </FormItem>
     ),
@@ -149,21 +148,14 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
 
   const submitLogo = useCallback(async () => {
     try {
-      const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-        id: entry.data.id,
-        entry: {
+      const resp = await call<MediaUpdate>(mediaUpdateFactory, {
+        id: logo.id,
+        media: {
+          ...logo,
           relations: {
-            logo: {
-              attributes: {
-                copyright: logo.attributes.copyright,
-                expiresAt: logo.attributes.expiresAt,
-                acceptedTermsAt: logo.attributes.acceptedTermsAt,
-              },
-              relations: {
-                license: (logo.relations.license as MediaLicense).id,
-                translations: logo.relations.translations,
-              },
-            },
+            ...logo.relations,
+            license: (logo.relations.license as MediaLicense).id,
+            translations: logo.relations?.translations,
           },
         },
       });
@@ -174,7 +166,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
     } catch (e) {
       console.error(e);
     }
-  }, [call, category?.api?.update?.factory, entry?.data?.id, logo, mutate]);
+  }, [call, logo, mutate]);
 
   return {
     renderedForm: (
@@ -297,7 +289,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
           }}
           active={!mediaPristine || !logoPristine}
           date={formattedDate}
-          valid={mediaValid || logoValid}
+          valid={mediaValid && logoValid}
           hint={false}
         />
         <EntryFormWrapper>
