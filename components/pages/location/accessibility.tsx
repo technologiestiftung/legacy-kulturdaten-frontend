@@ -53,7 +53,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }, loaded) => {
               attributes: {
                 type,
                 key,
-                value: Array.isArray(value) ? `[${value.toString()}]` : String(value),
+                value: String(value),
               },
             };
           })
@@ -62,28 +62,22 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }, loaded) => {
   );
 
   useEffect(() => {
-    console.log('ejo');
     if (
       initialAccessibilityFields &&
       JSON.stringify(initialAccessibilityFields) !== JSON.stringify(accessibilityFromApi)
     ) {
       setAccessibilityFromApi(initialAccessibilityFields);
 
-      const transformed = initialAccessibilityFields.reduce((combined, field) => {
-        console.log(combined, field);
-        return {
-          ...combined,
-          [field.attributes.key]:
-            field.attributes.value?.charAt(0) === '[' &&
-            field.attributes.value?.charAt(field.attributes.value.length - 1) === ']'
-              ? field.attributes.value.replace('[', '').replace(']', '').split(',')
-              : field.attributes.value,
-        };
-      }, {});
-
-      console.log(transformed);
-
-      dispatch(a11yActionInit(transformed));
+      dispatch(
+        a11yActionInit(
+          initialAccessibilityFields.reduce((combined, field) => {
+            return {
+              ...combined,
+              [field.attributes.key]: field.attributes.value,
+            };
+          }, {})
+        )
+      );
     }
   }, [accessibilityFromApi, dispatch, initialAccessibilityFields]);
 
