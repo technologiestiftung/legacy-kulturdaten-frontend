@@ -17,6 +17,7 @@ import {
   StyledTeamList,
   StyledTeamListItem,
   StyledTeamListItemText,
+  StyledTeamListItemTextBold,
   StyledTeamListItemTitle,
   StyledTeamListList,
   StyledTeamListListTitleRow,
@@ -24,6 +25,7 @@ import {
 import styled from '@emotion/styled';
 import { mq } from '../../globals/Constants';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { Textarea } from '../../textarea';
 
 const CustomListTitleRow = styled(StyledTeamListListTitleRow)`
   grid-template-columns: 100%;
@@ -50,11 +52,12 @@ export const UserSettingsPage: React.FC = () => {
 
   const [dummyInput1, setDummyInput1] = useState('');
   const [dummyInput2, setDummyInput2] = useState('');
+  const [dummyInput3, setDummyInput3] = useState('');
 
   return (
     <>
       <EntryHeader
-        title={'Einstellungen'}
+        title={t('settings.title') as string}
         subTitle={user?.attributes.email}
         minimalVariant
         status={undefined}
@@ -62,24 +65,55 @@ export const UserSettingsPage: React.FC = () => {
       <div>
         <EntryFormWrapper>
           <EntryFormContainer>
-            <EntryFormHead title={t('settings.api.titleCreate') as string} />
+            <EntryFormHead
+              title={`${t('settings.personal.title')} (${t('forms.optional')})`}
+              tooltip={t('settings.personal.tooltip') as string}
+            />
+            <FormGrid>
+              <FormItem width={FormItemWidth.half}>
+                <Input type={InputType.text} label={t('settings.personal.firstname') as string} />
+              </FormItem>
+              <FormItem width={FormItemWidth.half}>
+                <Input type={InputType.text} label={t('settings.personal.lastname') as string} />
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Button color={ButtonColor.black} size={ButtonSize.big}>
+                  {t('forms.save') as string}
+                </Button>
+              </FormItem>
+            </FormGrid>
+          </EntryFormContainer>
+          <EntryFormContainer>
+            <EntryFormHead
+              title={t('settings.api.titleCreate') as string}
+              tooltip={t('settings.api.titleCreateTooltip') as string}
+            />
             <FormGrid>
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.text}
-                  label={'Bezeichnung deiner Anwendung'}
+                  label={t('settings.api.projectTitle') as string}
                   value={dummyInput1}
-                  placeholder={'Ein aussgaekräftiger Name'}
+                  placeholder={t('settings.api.projectTitlePlaceholder') as string}
                   onChange={(e) => setDummyInput1(e.target.value)}
                 />
               </FormItem>
               <FormItem width={FormItemWidth.half}>
                 <Input
                   type={InputType.text}
-                  label={'URL deiner Anwendung'}
+                  label={`${t('settings.api.projectUrl')} (${t('forms.optional')})`}
                   value={dummyInput2}
                   placeholder={t('forms.urlPlaceholder') as string}
                   onChange={(e) => setDummyInput2(e.target.value)}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.half}>
+                <Textarea
+                  id={'project-description'}
+                  value={dummyInput3}
+                  label={`${t('settings.api.projectDescription')} (${t('forms.optional')})`}
+                  placeholder={t('settings.api.projectDescriptionPlaceholder') as string}
+                  onChange={(e) => setDummyInput3(e.target.value)}
                 />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
@@ -87,14 +121,15 @@ export const UserSettingsPage: React.FC = () => {
                   color={ButtonColor.black}
                   size={ButtonSize.big}
                   onClick={() =>
-                    loadingScreen('Erstelle API Token', async () => {
+                    loadingScreen(t('settings.loading'), async () => {
                       setDummyInput1('');
                       setDummyInput2('');
+                      setDummyInput3('');
                       return { success: true };
                     })
                   }
                 >
-                  API Token erstellen
+                  {t('settings.api.createButton') as string}
                 </Button>
               </FormItem>
               <FormItem width={FormItemWidth.full}>
@@ -110,43 +145,120 @@ export const UserSettingsPage: React.FC = () => {
                   <StyledTeamListList>
                     {isMidOrWider && (
                       <CustomListTitleRow>
-                        <StyledTeamListItemTitle>Token</StyledTeamListItemTitle>
-                        <StyledTeamListItemTitle>Bezeichnung</StyledTeamListItemTitle>
-                        <StyledTeamListItemTitle>URL</StyledTeamListItemTitle>
+                        <StyledTeamListItemTitle>
+                          {t('settings.api.tokenTitle') as string}
+                        </StyledTeamListItemTitle>
+                        <StyledTeamListItemTitle>
+                          {t('settings.api.tokenName') as string}
+                        </StyledTeamListItemTitle>
+                        <StyledTeamListItemTitle>
+                          {t('settings.api.tokenUrl') as string}
+                        </StyledTeamListItemTitle>
                       </CustomListTitleRow>
                     )}
                     <CustomListItem>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenTitle') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>
                         UDK8rdbeF7cJ63SST6hSXDbEp4KgEqSY
                       </StyledTeamListItemText>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenName') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>BDE Mobile App</StyledTeamListItemText>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenUrl') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>bde.mobile</StyledTeamListItemText>
                       <StyledTeamListItemText>
-                        <Button color={ButtonColor.black}>entfernen</Button>
+                        <Button color={ButtonColor.black}>{t('general.remove') as string}</Button>
                       </StyledTeamListItemText>
                     </CustomListItem>
                     <CustomListItem>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenTitle') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>
                         zfEY3M2ekAyABs53s34tJ9XUeK6hEtnF
                       </StyledTeamListItemText>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenName') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>BDE Web App</StyledTeamListItemText>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenUrl') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>bde.com</StyledTeamListItemText>
                       <StyledTeamListItemText>
-                        <Button color={ButtonColor.black}>entfernen</Button>
+                        <Button color={ButtonColor.black}>{t('general.remove') as string}</Button>
                       </StyledTeamListItemText>
                     </CustomListItem>
                     <CustomListItem>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenTitle') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>
                         hFnexC5g72bPYSBp3UKgDv6c7xWBCtg9
                       </StyledTeamListItemText>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenName') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>Test Token</StyledTeamListItemText>
+                      {!isMidOrWider && (
+                        <StyledTeamListItemTextBold>
+                          {t('settings.api.tokenUrl') as string}
+                        </StyledTeamListItemTextBold>
+                      )}
                       <StyledTeamListItemText>example.com</StyledTeamListItemText>
                       <StyledTeamListItemText>
-                        <Button color={ButtonColor.black}>entfernen</Button>
+                        <Button color={ButtonColor.black}>{t('general.remove') as string}</Button>
                       </StyledTeamListItemText>
                     </CustomListItem>
                   </StyledTeamListList>
                 </StyledTeamList>
+              </FormItem>
+            </FormGrid>
+          </EntryFormContainer>
+          <EntryFormContainer>
+            <EntryFormHead title={t('settings.docs.title') as string} />
+            <FormGrid>
+              <FormItem width={FormItemWidth.full}>
+                <DashboardLinkList
+                  links={[
+                    {
+                      type: StandardLinkType.external,
+                      title: t('settings.docs.api') as string,
+                      href: 'https://beta.api.kulturdaten-berlin.anyvent.cloud/docs/',
+                    },
+                    {
+                      type: StandardLinkType.external,
+                      title: t('settings.docs.frontend') as string,
+                      href: 'https://github.com/technologiestiftung/kulturdaten-frontend',
+                    },
+                    {
+                      type: StandardLinkType.external,
+                      title: t('settings.docs.backend') as string,
+                      href: 'https://github.com/technologiestiftung/kulturdaten-api',
+                    },
+                  ]}
+                />
               </FormItem>
             </FormGrid>
           </EntryFormContainer>
