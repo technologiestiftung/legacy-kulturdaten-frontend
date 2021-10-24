@@ -53,6 +53,7 @@ export enum ApiRoutes {
   locationCreate = 'locationCreate',
   locationUpdate = 'locationUpdate',
   locationDelete = 'locationDelete',
+  locationAccessibilityUpdate = 'locationAccessibilityUpdate',
   offerList = 'offerList',
   offerShow = 'offerShow',
   offerCreate = 'offerCreate',
@@ -99,10 +100,11 @@ export const apiRoutes: {
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   locationShow: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility`,
+  locationAccessibilityUpdate: ({ id }) => `/${apiVersion}/location/${id}/accessibility`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${
