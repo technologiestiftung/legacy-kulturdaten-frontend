@@ -237,23 +237,23 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
   const getWrapperHeight = useCallback(
     () =>
-      parentNodeRef ? parentNodeRef.current?.getBoundingClientRect().height : window.innerHeight,
+      parentNodeRef ? parentNodeRef.current?.getBoundingClientRect()?.height : window.innerHeight,
     [parentNodeRef]
   );
 
   const getWrapperWidth = useCallback(
     () =>
-      parentNodeRef ? parentNodeRef.current?.getBoundingClientRect().width : window.innerWidth,
+      parentNodeRef ? parentNodeRef.current?.getBoundingClientRect()?.width : window.innerWidth,
     [parentNodeRef]
   );
 
   const getWrapperLeft = useCallback(
-    () => (parentNodeRef ? parentNodeRef.current?.getBoundingClientRect().left : 0),
+    () => (parentNodeRef ? parentNodeRef.current?.getBoundingClientRect()?.left : 0),
     [parentNodeRef]
   );
 
   const getWrapperTop = useCallback(
-    () => (parentNodeRef ? parentNodeRef.current?.getBoundingClientRect().top : 0),
+    () => (parentNodeRef ? parentNodeRef.current?.getBoundingClientRect()?.top : 0),
     [parentNodeRef]
   );
 
@@ -266,7 +266,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const distanceToTop = useMemo<number>(() => yToParent, [yToParent]);
 
   const distanceToBottom = useMemo<number>(
-    () => parentHeight - tooltipButtonRef.current?.getBoundingClientRect().height - yToParent,
+    () => parentHeight - tooltipButtonRef.current?.getBoundingClientRect()?.height - yToParent,
     [yToParent, parentHeight]
   );
 
@@ -317,19 +317,19 @@ export const Tooltip: React.FC<TooltipProps> = ({
    */
 
   const computeScrollY = useCallback(() => {
-    setYToParent(tooltipButtonRef.current.getBoundingClientRect().top - getWrapperTop());
+    setYToParent(tooltipButtonRef.current?.getBoundingClientRect()?.top - getWrapperTop());
   }, [getWrapperTop]);
 
   const computeSizes = useCallback(() => {
-    setXToParent(tooltipButtonRef.current.getBoundingClientRect().left - getWrapperLeft());
+    setXToParent(tooltipButtonRef.current?.getBoundingClientRect()?.left - getWrapperLeft());
     setParentHeight(getWrapperHeight());
     setParentWidth(getWrapperWidth());
-    setTooltipOverlayHeight(tooltipOverlayRef.current.getBoundingClientRect().height);
+    setTooltipOverlayHeight(tooltipOverlayRef.current?.getBoundingClientRect()?.height);
 
-    tooltipOverlayRef.current.style.setProperty('--parent-width', `${getWrapperWidth()}px`);
-    tooltipOverlayRef.current.style.setProperty(
+    tooltipOverlayRef.current?.style.setProperty('--parent-width', `${getWrapperWidth()}px`);
+    tooltipOverlayRef.current?.style.setProperty(
       '--margin-left',
-      `${getWrapperLeft() - tooltipButtonRef.current.getBoundingClientRect().left}px`
+      `${getWrapperLeft() - tooltipButtonRef.current?.getBoundingClientRect().left}px`
     );
   }, [tooltipOverlayRef, getWrapperWidth, getWrapperHeight, getWrapperLeft]);
 

@@ -5,10 +5,10 @@ import useSWR, { mutate as mutateSwr } from 'swr';
 import { EntryListContext } from '../components/EntryList/EntryListContext';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { Tabs, TabsProps } from '../components/navigation/tabs';
-import { useUser } from '../components/user/useUser';
+import { useUser, useUserOrganizerLists } from '../components/user/useUser';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
-import { ApiCall, ApiCallFactory, apiRoutes, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
 import { OfferMainTypeList, offerMainTypeListFactory } from './api/routes/offerMainType/list';
 import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
@@ -24,6 +24,8 @@ import { defaultOrganizerId, useOrganizerId, useSetOrganizerId } from './useOrga
 import { routes } from '../config/routes';
 import { MediaLicense } from './api/types/media';
 import { MediaLicenseList, mediaLicenseListFactory } from './api/routes/mediaLicense/list';
+import { District } from './api/types/district';
+import { DistrictList, districtListFactory } from './api/routes/district/list';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -343,6 +345,21 @@ export const useMediaLicenseList = (): MediaLicense[] => {
   return data?.body?.data;
 };
 
+export const useDistrictList = (): District[] => {
+  const call = useApiCall();
+
+  const { data } = useSWR(
+    getApiUrlString(ApiRoutes.districtList),
+    () => call<DistrictList>(districtListFactory),
+    {
+      revalidateOnFocus: false,
+      focusThrottleInterval: 1000 * 60 * 5,
+    }
+  );
+
+  return data?.body?.data;
+};
+
 export const useCreateEntry = (
   categoryName: Categories
 ): (() => Promise<{
@@ -494,6 +511,8 @@ export const useDeleteEntry = (
   const setOrganizerId = useSetOrganizerId();
   const { mutateUserInfo } = useUser();
   const { setLastEntryId } = useContext(EntryListContext);
+  const { all: organizerOwnerList, contributor: organizerContributorList } =
+    useUserOrganizerLists();
 
   const mutateList = useMutateList(
     category,
@@ -515,17 +534,20 @@ export const useDeleteEntry = (
         });
 
         if (resp.status === 200) {
-          if (categoryName === Categories.organizer) {
-            mutateUserInfo();
-            setTimeout(() => setOrganizerId(id), 500);
-          } else {
-            mutateList();
-          }
-
           setTimeout(() => {
             if (categoryName === Categories.organizer) {
-              router.push(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
+              mutateUserInfo();
+
+              const newActiveOrganizerId =
+                [...organizerOwnerList, ...organizerContributorList].filter(
+                  (organizer) => organizer.id !== id
+                )[0]?.id || defaultOrganizerId;
+
+              setOrganizerId(newActiveOrganizerId);
+
+              router.push(routes.dashboard({ locale, query: { organizer: newActiveOrganizerId } }));
             } else {
+              mutateList();
               setLastEntryId(categoryName, undefined);
               router.push(
                 category.routes.list({
@@ -562,6 +584,8 @@ export const useDeleteEntry = (
       setOrganizerId,
       t,
       setLastEntryId,
+      organizerContributorList,
+      organizerOwnerList,
     ]
   );
 

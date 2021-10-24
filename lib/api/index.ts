@@ -41,6 +41,7 @@ export enum ApiRoutes {
   authLogout = 'authLogout',
   authValidate = 'authValidate',
   authInfo = 'authInfo',
+  districtList = 'districtList',
   organizerList = 'organizerList',
   organizerShow = 'organizerShow',
   organizerCreate = 'organizerCreate',
@@ -79,6 +80,7 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
+  districtList: () => `/${apiVersion}/district`,
   organizerList: (query) =>
     `/${apiVersion}/organizer?include=types,subjects,translations,logo${
       query?.page ? `&page=${query.page}` : ''
