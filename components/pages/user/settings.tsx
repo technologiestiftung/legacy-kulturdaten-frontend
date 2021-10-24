@@ -29,7 +29,7 @@ const CustomListTitleRow = styled(StyledTeamListListTitleRow)`
   grid-template-columns: 100%;
 
   ${mq(Breakpoint.mid)} {
-    grid-template-columns: calc(50% - 2.25rem) 20% 20% 10%;
+    grid-template-columns: calc(50% - 2.625rem) 20% 20% 10%;
   }
 `;
 
@@ -37,7 +37,7 @@ const CustomListItem = styled(StyledTeamListItem)`
   grid-template-columns: 100%;
 
   ${mq(Breakpoint.mid)} {
-    grid-template-columns: calc(50% - 2.25rem) 20% 20% 10%;
+    grid-template-columns: calc(50% - 2.625rem) 20% 20% 10%;
   }
 `;
 
