@@ -100,7 +100,7 @@ const StyledTooltipOverlay = styled.div<{
   min-height: 2.625rem;
   height: auto;
   position: absolute;
-  display: flex;
+  display: none;
   z-index: 100;
   background: var(--white);
   border-radius: 0.75rem;
@@ -117,7 +117,9 @@ const StyledTooltipOverlay = styled.div<{
           opacity: 0;
           pointer-events: none;
         `
-      : ''}
+      : css`
+          display: flex;
+        `}
 
   ${({ yPosition }) =>
     yPosition === YPosition.bottom
