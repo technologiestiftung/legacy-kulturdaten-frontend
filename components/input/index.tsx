@@ -1,8 +1,16 @@
 import { css, SerializedStyles } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { ChangeEvent, ChangeEventHandler, RefObject, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
+import { useDebounce } from '../../lib/useDebounce';
 import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/validations';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
@@ -152,6 +160,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (props: InputProps, forwardedRef: RefObject<HTMLInputElement>) => {
     const [pristine, setPristine] = useState<boolean>(true);
     const [normalized, setNormalized] = useState(true);
+    const [touched, setTouched] = useState(false);
+    const debounce = useDebounce();
+    const [internalState, setInternalState] = useState(props?.value);
 
     const t = useT();
 
@@ -159,21 +170,36 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const ref = forwardedRef || internalRef;
 
+    useEffect(() => {
+      if (
+        !touched &&
+        internalState === '' &&
+        ((typeof props?.value === 'string' && props?.value?.length > 0) ||
+          typeof props?.value === 'number')
+      ) {
+        setInternalState(props.value);
+      }
+    }, [touched, props?.value, internalState]);
+
     const normalizeStrings = () => {
       switch (props?.type) {
         case InputType.url: {
           if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
             if (!props?.value?.includes('://')) {
               if (props?.value?.includes(':/')) {
+                const normalizedValue = props.value.replace(':/', '://');
+                setInternalState(normalizedValue);
                 props.onChange({
                   target: {
-                    value: props.value.replace(':/', '://'),
+                    value: normalizedValue,
                   },
                 } as ChangeEvent<HTMLInputElement>);
               } else if (typeof props?.onChange === 'function') {
+                const normalizedValue = `http://${props.value}`;
+                setInternalState(normalizedValue);
                 props.onChange({
                   target: {
-                    value: `http://${props.value}`,
+                    value: normalizedValue,
                   },
                 } as ChangeEvent<HTMLInputElement>);
               }
@@ -184,9 +210,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         case InputType.tel: {
           if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
+            const normalizedValue = props.value.replace(/\+/g, '00').match(/[0-9]/g).join('');
+            setInternalState(normalizedValue);
             props.onChange({
               target: {
-                value: props.value.replace(/\+/g, '00').match(/[0-9]/g).join(''),
+                value: normalizedValue,
               },
             } as ChangeEvent<HTMLInputElement>);
           }
@@ -217,14 +245,20 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             <StyledInput
               {...props}
+              value={internalState}
               variant={props?.variant}
               aria-label={props?.ariaLabel}
               onChange={(e) => {
                 if (props?.type !== InputType.date || e.target.value) {
-                  if (typeof props?.onChange === 'function') {
-                    props?.onChange(e);
-                  }
-                  setNormalized(false);
+                  setTouched(true);
+                  setInternalState(e.target.value);
+
+                  debounce(() => {
+                    if (typeof props?.onChange === 'function') {
+                      props?.onChange(e);
+                      setNormalized(false);
+                    }
+                  });
                 }
               }}
               ref={ref}
