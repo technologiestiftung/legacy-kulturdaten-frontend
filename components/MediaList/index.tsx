@@ -407,7 +407,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
               label={t('media.license') as string}
               id={`${uid}-license`}
               name={`${uid}-license`}
-              value={String(mediaItem.attributes?.mediaLicenseId)}
+              value={String((mediaItem.relations?.license as MediaLicense)?.id)}
               options={mediaLicenses?.map((mediaLicense) => ({
                 value: String(mediaLicense.id),
                 label: t(`media.licenses.${mediaLicense.id}.name`) as string,
@@ -421,7 +421,6 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   ...mediaItem,
                   attributes: {
                     ...mediaItem.attributes,
-                    mediaLicenseId: parseInt(newValue, 10),
                   },
                   relations: {
                     ...mediaItem.relations,
@@ -545,7 +544,7 @@ export const MediaList: React.FC<MediaListProps> = ({
             (translation) => translation.attributes?.language === defaultLanguage
           )?.attributes?.alternativeText,
           mediaItem.attributes.copyright,
-          mediaItem.attributes.mediaLicenseId,
+          (mediaItem.relations?.license as MediaLicense)?.id,
           mediaItem.attributes.acceptedTermsAt,
         ];
 
