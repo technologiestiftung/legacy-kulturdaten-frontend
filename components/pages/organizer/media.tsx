@@ -118,6 +118,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
   const call = useApiCall();
   const t = useT();
   const loadingScreen = useLoadingScreen();
+  const { mutateUserInfo } = useUser();
 
   const initialLogo = useMemo<Media['data']>(
     () => entry?.data?.relations?.logo,
@@ -142,7 +143,12 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
         setLogoFromApi(initialLogo);
       }
     }
-  }, [initialLogo, logo, logoFromApi]);
+
+    if (entry?.data?.id && !initialLogo) {
+      setLogo(undefined);
+      setLogoFromApi(initialLogo);
+    }
+  }, [initialLogo, logo, logoFromApi, entry?.data?.id]);
 
   const { renderedForm: renderedLogoUploadForm } = useLogoUploadForm({ category, query }, false);
 
@@ -203,7 +209,10 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                         });
 
                         if (resp.status === 200) {
-                          mutate();
+                          setTimeout(() => {
+                            mutate();
+                            mutateUserInfo();
+                          }, 1000);
                           return { success: true };
                         }
 
