@@ -219,6 +219,7 @@ export const useAddressForm: EntryFormHook = (
                     },
                   });
                 }}
+                hint={hint}
               >
                 <option value="undefined">
                   {t('categories.location.form.districtPlaceholder')}

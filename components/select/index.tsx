@@ -22,6 +22,9 @@ export enum SelectVariant {
   header = 'header',
 }
 
+const hintBorderShadow = 'inset 0px 0px 0px 1px rgb(10, 47, 211)';
+const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
+
 const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>`
   display: flex;
   flex-direction: column;
@@ -47,9 +50,7 @@ const StyledSelectContainer = styled.div<{ labelPosition: SelectLabelPosition }>
 `;
 
 const selectSizes: {
-  [key in SelectSize]: (
-    withIcon: boolean
-  ) => {
+  [key in SelectSize]: (withIcon: boolean) => {
     fontSize: string;
     lineHeight: string;
     padding: string;
@@ -68,9 +69,9 @@ const selectSizes: {
 };
 
 const selectVariants: {
-  [key in SelectVariant]: SerializedStyles;
+  [key in SelectVariant]: (hint?: boolean) => SerializedStyles;
 } = {
-  default: css`
+  default: (hint) => css`
     background: var(--white);
     transition: box-shadow var(--transition-duration);
     box-shadow: var(--shadow), inset 0px 0px 0px 1px var(--black);
@@ -97,8 +98,23 @@ const selectVariants: {
         box-shadow: none;
       }
     }
+
+    ${hint &&
+    css`
+      box-shadow: ${hintBorderShadow}, ${hintShadow}, var(--shadow),
+        inset 0px 0px 0px 1px var(--black);
+
+      &:hover {
+        box-shadow: ${hintBorderShadow}, ${hintShadow}, var(--shadow-hover),
+          inset 0px 0px 0px 2px var(--black);
+      }
+
+      &:active {
+        box-shadow: ${hintBorderShadow}, ${hintShadow}, var(--shadow-active);
+      }
+    `}
   `,
-  minimal: css`
+  minimal: (hint) => css`
     background: inherit;
     color: currentColor;
     border: none;
@@ -121,8 +137,17 @@ const selectVariants: {
         box-shadow: none;
       }
     }
+
+    ${hint &&
+    css`
+      box-shadow: ${hintBorderShadow}, ${hintShadow}, inset 0px 0px 0px 1px var(--black);
+
+      &:hover {
+        box-shadow: ${hintBorderShadow}, ${hintShadow}, box-shadow: inset 0px 0px 0px 2px currentColor;
+      }
+    `}
   `,
-  header: css`
+  header: () => css`
     background: inherit;
     color: currentColor;
     border: none;
@@ -133,7 +158,7 @@ const selectVariants: {
       box-shadow: inset 0px 0px 0px 2px currentColor;
     }
   `,
-  formList: css`
+  formList: (hint) => css`
     background: var(--white);
     transition: background var(--transition-duration), box-shadow var(--transition-duration);
     border: none;
@@ -165,6 +190,15 @@ const selectVariants: {
         background: var(--grey-350);
       }
     }
+
+    ${hint &&
+    css`
+      box-shadow: ${hintBorderShadow}, ${hintShadow}, inset 0px 0px 0px 1px var(--black);
+
+      &:active {
+        box-shadow: ${hintBorderShadow}, ${hintShadow}, box-shadow: inset 0px 0px 0px 1px var(--blue);
+      }
+    `}
   `,
 };
 
@@ -172,6 +206,7 @@ const StyledSelect = styled.select<{
   selectSize: SelectSize;
   variant: SelectVariant | ComponentVariant;
   withIcon: boolean;
+  hint?: boolean;
 }>`
   margin: 0;
   appearance: none;
@@ -183,7 +218,7 @@ const StyledSelect = styled.select<{
   width: 100%;
   cursor: pointer;
 
-  ${({ variant }) => selectVariants[variant]}
+  ${({ variant, hint }) => selectVariants[variant](hint)}
 `;
 
 const StyledSelectIcon = styled.div<{ size: SelectSize }>`
@@ -234,6 +269,7 @@ export interface SelectProps extends ComponentWithVariants {
   placeholder?: string;
   required?: boolean;
   ariaLabelledby?: string;
+  hint?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -252,6 +288,7 @@ export const Select: React.FC<SelectProps> = ({
   placeholder,
   required,
   ariaLabelledby,
+  hint,
 }: SelectProps) => {
   const internalState = useState<string>(defaultValue);
   const t = useT();
@@ -267,6 +304,7 @@ export const Select: React.FC<SelectProps> = ({
       )}
       <StyledSelectAndChevron>
         <StyledSelect
+          hint={hint}
           aria-label={ariaLabel}
           variant={variant}
           selectSize={elementSize}
