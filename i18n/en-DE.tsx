@@ -734,6 +734,7 @@ export const enDE: Localization = {
         name: () => 'Offer title added',
         description: () => 'Description added',
         categorization: () => 'Categories added',
+        mainType: () => 'Event type chosen',
       },
       title: {
         plural: () => 'Offers',
