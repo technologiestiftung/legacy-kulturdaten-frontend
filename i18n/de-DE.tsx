@@ -267,6 +267,17 @@ export const deDE: Localization = {
     ariaLabelOpen: () => 'Nutzer:innen Menü anzeigen',
     ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
   },
+  settings: {
+    api: {
+      title: () => 'API Token',
+    },
+    legal: {
+      title: () => 'Weiterführende Links',
+      legalNotice: () => 'Impressum',
+      terms: () => 'AGB',
+      mediaLicense: () => 'Kulturdaten Lizenz für Bilder',
+    },
+  },
   forms: {
     optional: () => 'optional',
     required: () => 'Pflichtfeld',

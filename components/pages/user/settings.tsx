@@ -4,11 +4,15 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useUser } from '../../user/useUser';
 import { EntryHeader } from '../../EntryHeader';
-import { LocaleSwitch } from '../../navigation/LocaleSwitch';
+import { LocaleSwitch, LocaleSwitchVariant } from '../../navigation/LocaleSwitch';
+import { usePseudoUID } from '../../../lib/uid';
+import { DashboardLinkList } from '../../Dasboard/DashboardLinkList';
+import { StandardLinkType } from '../../../lib/generalTypes';
 
 export const UserSettingsPage: React.FC = () => {
   const t = useT();
   const { user } = useUser();
+  const uid = usePseudoUID();
 
   return (
     <>
@@ -29,19 +33,42 @@ export const UserSettingsPage: React.FC = () => {
             </FormGrid>
           </EntryFormContainer>
           <EntryFormContainer>
-            <EntryFormHead title="Locale Switch " />
+            <EntryFormHead
+              title={t('menu.localeSwitch.label') as string}
+              id={`${uid}-localeswitch`}
+            />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
-                <div>stuff</div>
-                <LocaleSwitch />
+                <LocaleSwitch
+                  switchVariant={LocaleSwitchVariant.settings}
+                  labelledBy={`${uid}-localeswitch`}
+                />
               </FormItem>
             </FormGrid>
           </EntryFormContainer>
           <EntryFormContainer>
-            <EntryFormHead title="Legal links " />
+            <EntryFormHead title={t('settings.legal.title') as string} />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
-                <div>stuff</div>
+                <DashboardLinkList
+                  links={[
+                    {
+                      type: StandardLinkType.external,
+                      title: t('settings.legal.legalNotice') as string,
+                      href: 'https://kulturdaten.berlin',
+                    },
+                    {
+                      type: StandardLinkType.external,
+                      title: t('settings.legal.terms') as string,
+                      href: 'https://kulturdaten.berlin',
+                    },
+                    {
+                      type: StandardLinkType.external,
+                      title: t('settings.legal.mediaLicense') as string,
+                      href: 'https://kulturdaten.berlin',
+                    },
+                  ]}
+                />
               </FormItem>
             </FormGrid>
           </EntryFormContainer>

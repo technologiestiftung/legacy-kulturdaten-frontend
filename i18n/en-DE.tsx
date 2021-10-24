@@ -266,6 +266,17 @@ export const enDE: Localization = {
     ariaLabelOpen: () => 'Show user menu',
     ariaLabelClose: () => 'Hide user menu',
   },
+  settings: {
+    api: {
+      title: () => 'API token',
+    },
+    legal: {
+      title: () => 'Further links',
+      legalNotice: () => 'Legal notice / Imprint',
+      terms: () => 'Terms and conditions',
+      mediaLicense: () => 'Kulturdaten license for images',
+    },
+  },
   forms: {
     optional: () => 'optional',
     required: () => 'required',
