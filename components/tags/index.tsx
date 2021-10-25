@@ -309,60 +309,48 @@ export const Tags: React.FC<TagsProps> = ({
         )}
       </StyledTagsBox>
       <StyledTagsAutocomplete>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (autocompleteValue?.id) {
-              dispatchTags({ type: TagsActions.add, payload: { tagId: autocompleteValue.id } });
-              setAutocompleteValue(null);
-              setInputValue('');
-            }
-          }}
-        >
-          <StyledTagsLabel>
-            <Label htmlFor={`tags-${uid}`}>
-              {t(i18nKeys?.addLabel || 'tags.autocompleteLabel')}
-            </Label>
-          </StyledTagsLabel>
-          <StyledTagsAutocompleteContainer variant={variant as ComponentVariants}>
-            <StyledAutocomplete
-              variant={variant as ComponentVariants}
-              id={`tags-${uid}`}
-              options={autocompleteOptions}
-              value={autocompleteValue}
-              onChange={(e, newValue) => {
-                setAutocompleteValue(
-                  newValue ? (newValue as { label: string; id: number }) : { label: '', id: null }
-                );
-                setInputValue(newValue ? (newValue as { label: string; id: number }).label : '');
-              }}
-              onKeyDown={(e) => {
-                if (e?.key?.toLowerCase() === 'enter') {
-                  submitAutocomplete();
-                }
-              }}
-              noOptionsText={t(i18nKeys?.noMatch || 'tags.noOptions')}
-              renderInput={(params) => (
-                <StyledTextField
-                  {...params}
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => {
-                    setInputValue(e.target.value);
-                  }}
-                  variant="outlined"
-                  autoComplete="off"
-                  placeholder={t(i18nKeys?.addPlaceholder || 'general.topicsPlaceholder') as string}
-                />
-              )}
-            />
-            <StyledTagsAutocompleteButton>
-              <Button onClick={() => submitAutocomplete()} color={ButtonColor.black}>
-                {t(i18nKeys?.addButton || 'tags.add')}
-              </Button>
-            </StyledTagsAutocompleteButton>
-          </StyledTagsAutocompleteContainer>
-        </form>
+        <StyledTagsLabel>
+          <Label htmlFor={`tags-${uid}`}>{t(i18nKeys?.addLabel || 'tags.autocompleteLabel')}</Label>
+        </StyledTagsLabel>
+        <StyledTagsAutocompleteContainer variant={variant as ComponentVariants}>
+          <StyledAutocomplete
+            variant={variant as ComponentVariants}
+            id={`tags-${uid}`}
+            options={autocompleteOptions}
+            value={autocompleteValue}
+            onChange={(e, newValue) => {
+              setAutocompleteValue(
+                newValue ? (newValue as { label: string; id: number }) : { label: '', id: null }
+              );
+              setInputValue(newValue ? (newValue as { label: string; id: number }).label : '');
+            }}
+            onKeyDown={(e) => {
+              if (e?.key?.toLowerCase() === 'enter') {
+                e.preventDefault();
+                submitAutocomplete();
+              }
+            }}
+            noOptionsText={t(i18nKeys?.noMatch || 'tags.noOptions')}
+            renderInput={(params) => (
+              <StyledTextField
+                {...params}
+                type="text"
+                value={inputValue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                }}
+                variant="outlined"
+                autoComplete="off"
+                placeholder={t(i18nKeys?.addPlaceholder || 'general.topicsPlaceholder') as string}
+              />
+            )}
+          />
+          <StyledTagsAutocompleteButton>
+            <Button onClick={() => submitAutocomplete()} color={ButtonColor.black}>
+              {t(i18nKeys?.addButton || 'tags.add')}
+            </Button>
+          </StyledTagsAutocompleteButton>
+        </StyledTagsAutocompleteContainer>
       </StyledTagsAutocomplete>
     </StyledTags>
   );

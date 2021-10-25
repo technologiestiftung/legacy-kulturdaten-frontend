@@ -225,7 +225,17 @@ const useAudienceForm: EntryFormHook = ({ category, query }) => {
   );
 
   return {
-    renderedForm: <EntryFormWrapper>{renderedForm}</EntryFormWrapper>,
+    renderedForm: (
+      <form
+        ref={formRef}
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      >
+        <EntryFormWrapper>{renderedForm}</EntryFormWrapper>
+      </form>
+    ),
     submit: async () => {
       if (valid) {
         try {
