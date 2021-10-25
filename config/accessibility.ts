@@ -1,5 +1,5 @@
 import { InputType } from '../components/input';
-import { GenericFormCategory, GenericFormFieldType } from '../lib/accessibility';
+import { GenericFormCategory, GenericFormFieldType } from '../lib/genericForm';
 import { Language } from './locale';
 
 export const locationAccessibility: GenericFormCategory[] = [

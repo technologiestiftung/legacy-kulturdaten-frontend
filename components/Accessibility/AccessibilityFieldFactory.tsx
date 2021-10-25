@@ -10,7 +10,7 @@ import {
   GenericFormFieldSelect,
   GenericFormFieldTextarea,
   GenericFormFieldType,
-} from '../../lib/accessibility';
+} from '../../lib/genericForm';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';

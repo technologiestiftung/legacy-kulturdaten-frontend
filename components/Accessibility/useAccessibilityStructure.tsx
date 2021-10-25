@@ -1,5 +1,5 @@
 import { Dispatch, Reducer, useReducer } from 'react';
-import { GenericFormCategory, GenericFormFieldValue } from '../../lib/accessibility';
+import { GenericFormCategory, GenericFormFieldValue } from '../../lib/genericForm';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { EntryFormContainer } from '../EntryForm/wrappers';

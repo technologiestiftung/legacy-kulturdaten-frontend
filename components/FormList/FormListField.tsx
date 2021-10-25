@@ -10,7 +10,7 @@ import { Input, InputProps } from '../input';
 import { RadioList, RadioListProps } from '../Radio/RadioList';
 import { Select, SelectProps, SelectVariant } from '../select';
 import { Textarea, TextareaProps } from '../textarea';
-import { GenericFormFieldTooltip } from '../../lib/accessibility';
+import { GenericFormFieldTooltip } from '../../lib/genericForm';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
 

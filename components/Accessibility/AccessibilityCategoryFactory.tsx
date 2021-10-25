@@ -8,7 +8,7 @@ import {
   GenericFormFieldCondition,
   GenericFormFieldConditionType,
   GenericFormFieldGroup,
-} from '../../lib/accessibility';
+} from '../../lib/genericForm';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { A11yState, A11yStateConsumer } from './useAccessibilityStructure';
