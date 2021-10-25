@@ -34,6 +34,7 @@ import { contentLanguages } from '../../../config/locales';
 import { useLinksForm } from '../helpers/form/Links';
 import { RadioList } from '../../Radio/RadioList';
 import { useTeaserForm } from '../helpers/form/Teaser';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -127,7 +128,9 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setTranslations(initialTranslations);
+    },
     valid: true,
     hint: false,
   };
@@ -242,7 +245,9 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setAttributes(initialAttributes);
+    },
     valid: true,
     hint: false,
   };
@@ -381,7 +386,10 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setLocationId(initialLocationId);
+      setOrganizerId(initialOrganizerId);
+    },
     valid: true,
     hint: false,
   };
@@ -416,6 +424,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: organizerLocationPristine,
     valid: organizerLocationValid,
     hint: organizerLocationHint,
+    reset: organizerLocationReset,
   } = useOrganizerLocationForm(
     {
       category,
@@ -431,6 +440,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     valid: nameValid,
     hint: nameHint,
+    reset: nameReset,
   } = useNameForm(
     {
       category,
@@ -447,6 +457,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     valid: descriptionValid,
     hint: descriptionHint,
+    reset: descriptionReset,
   } = useDescriptionForm(
     {
       category,
@@ -462,6 +473,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: teaserPristine,
     valid: teaserValid,
     hint: teaserHint,
+    reset: teaserReset,
   } = useTeaserForm(
     {
       category,
@@ -477,6 +489,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: pricingPristine,
     valid: pricingValid,
     hint: pricingHint,
+    reset: pricingReset,
   } = usePricingForm(
     {
       category,
@@ -492,6 +505,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: roomPristine,
     valid: roomValid,
     hint: roomHint,
+    reset: roomReset,
   } = useRoomForm(
     {
       category,
@@ -507,6 +521,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: linksPristine,
     valid: linksValid,
     hint: linksHint,
+    reset: linksReset,
   } = useLinksForm(
     {
       category,
@@ -571,6 +586,23 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       linksHint,
     [nameHint, descriptionHint, teaserHint, organizerLocationHint, pricingHint, roomHint, linksHint]
   );
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    linksReset();
+    nameReset();
+    descriptionReset();
+    organizerLocationReset();
+    pricingReset();
+    roomReset();
+    teaserReset();
+  });
 
   return (
     <>

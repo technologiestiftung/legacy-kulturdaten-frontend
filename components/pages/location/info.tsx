@@ -25,6 +25,7 @@ import { LocationDelete } from '../../../lib/api/routes/location/delete';
 import { contentLanguages, languageTranslationKeys } from '../../../config/locales';
 import { getTranslation } from '../../../lib/translations';
 import { Textarea } from '../../textarea';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 
 const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   const uid = usePseudoUID();
@@ -176,7 +177,10 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setOpeningHours(initialOpeningHours);
+      setOpeningHoursTranslations(initialOpeningHoursTranslations);
+    },
     valid: true,
     hint: false,
   };
@@ -241,7 +245,9 @@ const useRentForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setUrl(initialUrl);
+    },
     valid: true,
     hint: false,
   };
@@ -305,7 +311,9 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setUrl(initialUrl);
+    },
     valid: true,
     hint: false,
   };
@@ -387,7 +395,9 @@ const useTypeForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setType(initialType);
+    },
     valid: true,
     hint: false,
     value: type,
@@ -422,6 +432,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     valid: nameValid,
     hint: nameHint,
+    reset: nameReset,
   } = useNameForm(
     {
       category,
@@ -438,6 +449,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     valid: descriptionValid,
     hint: descriptionHint,
+    reset: descriptionReset,
   } = useDescriptionForm(
     {
       category,
@@ -453,6 +465,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: addressPristine,
     valid: addressValid,
     hint: addressHint,
+    reset: addressReset,
   } = useAddressForm(
     {
       category,
@@ -473,6 +486,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     valid: typeValid,
     hint: typeHint,
     value: typeValue,
+    reset: typeReset,
   } = useTypeForm(
     {
       category,
@@ -489,6 +503,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: openingHoursPristine,
     valid: openingHoursValid,
     hint: openingHoursHint,
+    reset: openingHoursReset,
   } = useOpeningHoursForm(
     {
       category,
@@ -505,6 +520,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: urlPristine,
     valid: urlValid,
     hint: urlHint,
+    reset: urlReset,
   } = useUrlForm(
     {
       category,
@@ -521,6 +537,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: rentPristine,
     valid: rentValid,
     hint: rentHint,
+    reset: rentReset,
   } = useRentForm(
     {
       category,
@@ -593,6 +610,23 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       rentHint,
     ]
   );
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    addressReset();
+    nameReset();
+    descriptionReset();
+    rentReset();
+    openingHoursReset();
+    typeReset();
+    urlReset();
+  });
 
   return (
     <>

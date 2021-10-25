@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ApiCall, useApiCall } from '../../../lib/api';
-import { CategoryEntry } from '../../../lib/api/types/general';
+import { useApiCall } from '../../../lib/api';
 import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -24,6 +23,7 @@ import { Role, RoleName } from '../../../lib/api/types/role';
 import { User } from '../../../lib/api/types/user';
 import { useUser } from '../../user/useUser';
 import { Info, InfoColor } from '../../info';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 
 const maxInvites = 50;
 
@@ -173,7 +173,9 @@ const useTeamForm: EntryFormHook = ({ category, query }) => {
     hint: false,
     pristine,
     valid: true,
-    reset: () => undefined,
+    reset: () => {
+      setRoles(initialRoles);
+    },
     submit: async () => {
       try {
         const roleIds = roles.map((role) => role.id);
@@ -247,11 +249,23 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
     renderedForm: teamForm,
     pristine: teamPristine,
     submit: teamSubmit,
+    reset: teamReset,
   } = useTeamForm({ category, query }, true, false);
 
   const inviteForm = useTeamAddForm({ category, query });
 
   const pristine = teamPristine;
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    teamReset();
+  });
 
   return (
     <>

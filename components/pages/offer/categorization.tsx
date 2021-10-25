@@ -42,10 +42,10 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query }, loaded) => {
     [entry?.data?.relations?.mainType]
   );
 
-  const pristine = useMemo(() => JSON.stringify(initialTypes) === JSON.stringify(types), [
-    initialTypes,
-    types,
-  ]);
+  const pristine = useMemo(
+    () => JSON.stringify(initialTypes) === JSON.stringify(types),
+    [initialTypes, types]
+  );
 
   useEffect(() => {
     if (pristine) {
@@ -187,10 +187,15 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     valid: mainTypeValid,
   } = useOfferMainTypeForm({ category, query }, loaded, false);
 
-  const shouldWarn = useMemo(() => !pristineClassification && typeof entry?.data !== 'undefined', [
-    pristineClassification,
-    entry?.data,
-  ]);
+  const pristine = useMemo(
+    () => pristineTags && pristineClassification && mainTypePristine,
+    [mainTypePristine, pristineClassification, pristineTags]
+  );
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
 
   useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
 
@@ -210,7 +215,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
               mainTypeSubmit();
             }
           }}
-          active={!pristineTags || !pristineClassification || !mainTypePristine}
+          active={!pristine}
           date={formattedDate}
           valid={loaded !== true || (entryTypeSubjectValid && mainTypeValid)}
         />
