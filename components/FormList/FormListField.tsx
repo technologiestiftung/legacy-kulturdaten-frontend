@@ -10,9 +10,10 @@ import { Input, InputProps } from '../input';
 import { RadioList, RadioListProps } from '../Radio/RadioList';
 import { Select, SelectProps, SelectVariant } from '../select';
 import { Textarea, TextareaProps } from '../textarea';
-import { AccessibilityFieldTooltip } from '../../lib/accessibility';
+import { GenericFormFieldTooltip } from '../../lib/genericForm';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
+import { Tags, TagsProps } from '../tags';
 
 const StyledFormListField = styled.div<{ last?: boolean }>`
   display: grid;
@@ -86,12 +87,13 @@ export enum FormListFieldType {
   select = 'select',
   radioList = 'radioList',
   checkboxList = 'checkboxList',
+  tags = 'tags',
 }
 
 const formListFieldTypeComponentMap: {
   [key in FormListFieldType]: {
     component: React.FC<
-      InputProps | SelectProps | RadioListProps | CheckboxListProps | TextareaProps
+      InputProps | SelectProps | RadioListProps | CheckboxListProps | TextareaProps | TagsProps
     >;
     variant: ComponentVariant;
   };
@@ -101,15 +103,22 @@ const formListFieldTypeComponentMap: {
   select: { component: Select, variant: SelectVariant.formList },
   radioList: { component: RadioList, variant: ComponentVariants.formList },
   checkboxList: { component: CheckboxList, variant: ComponentVariants.formList },
+  tags: { component: Tags, variant: ComponentVariants.formList },
 };
 
 export interface FormListFieldProps {
   label: string;
   type: FormListFieldType;
-  fieldProps: InputProps | SelectProps | RadioListProps | CheckboxListProps | TextareaProps;
+  fieldProps:
+    | InputProps
+    | SelectProps
+    | RadioListProps
+    | CheckboxListProps
+    | TextareaProps
+    | TagsProps;
   last?: boolean;
   first?: boolean;
-  tooltip?: AccessibilityFieldTooltip;
+  tooltip?: GenericFormFieldTooltip;
 }
 
 export const FormListField: React.FC<FormListFieldProps> = ({

@@ -19,8 +19,8 @@ import { useApiCall } from '../../../lib/api';
 import { useT } from '../../../lib/i18n';
 import { LocationUpdate } from '../../../lib/api/routes/location/update';
 import { Input, InputType } from '../../input';
-import { OpeningHours } from '../../../lib/api/types/openingHours';
-import { OpeningHoursField } from '../../OpeningHoursField';
+import { OpeningHours } from '../../../lib/api/types/hours';
+import { HoursField } from '../../HoursField';
 import { LocationDelete } from '../../../lib/api/routes/location/delete';
 import { contentLanguages, languageTranslationKeys } from '../../../config/locales';
 import { getTranslation } from '../../../lib/translations';
@@ -84,13 +84,14 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       <EntryFormHead title={t('categories.location.form.openingHours') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
-          <OpeningHoursField
-            openingHours={openingHours || []}
+          <HoursField
+            i18nKeys={{ addButton: 'openingHours.add' }}
+            hours={openingHours || []}
             onChange={(updatedOpeningHours) => setOpeningHours(updatedOpeningHours)}
           />
         </FormItem>
       </FormGrid>
-      <EntryFormHead title={t('openingHours.note') as string} />
+      <EntryFormHead title={t('hours.note') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           {contentLanguages.map((contentLanguage, index) => {

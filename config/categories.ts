@@ -31,12 +31,14 @@ import { OfferListPage } from '../components/pages/offer/list';
 import { LocationListPage } from '../components/pages/location/list';
 import { OfferCategorizationPage } from '../components/pages/offer/categorization';
 import { OfferAccessibilityPage } from '../components/pages/offer/accessibility';
+import { OfferAudiencePage } from '../components/pages/offer/audience';
 import { OfferDatesPage } from '../components/pages/offer/dates';
 import { organizerMediaFactory } from '../lib/api/routes/organizer/media';
 import { OrganizerMediaPage } from '../components/pages/organizer/media';
 import { OfferMediaPage } from '../components/pages/offer/media';
 import { LocationMediaPage } from '../components/pages/location/media';
 import { LocationAccessibilityPage } from '../components/pages/location/accessibility';
+import { LocationServicePage } from '../components/pages/location/service';
 import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
 import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 
@@ -170,6 +172,7 @@ export const useCategories: () => {
         media: OfferMediaPage,
         categorization: OfferCategorizationPage,
         accessibility: OfferAccessibilityPage,
+        audience: OfferAudiencePage,
         list: OfferListPage,
         dates: OfferDatesPage,
       },
@@ -177,7 +180,8 @@ export const useCategories: () => {
         { title: t('categories.offer.tabs.info') as string, sub: 'info' },
         { title: t('categories.offer.tabs.categorization') as string, sub: 'categorization' },
         { title: t('categories.offer.tabs.dates') as string, sub: 'dates' },
-        { title: t('categories.offer.tabs.accessibility') as string, sub: 'accessibility' },
+        //{ title: t('categories.offer.tabs.accessibility') as string, sub: 'accessibility' },
+        { title: t('categories.offer.tabs.audience') as string, sub: 'audience' },
         { title: t('categories.offer.tabs.media') as string, sub: 'media' },
       ],
       api: {
@@ -248,12 +252,14 @@ export const useCategories: () => {
       pages: {
         create: LocationCreatePage,
         info: LocationInfoPage,
+        service: LocationServicePage,
         media: LocationMediaPage,
         accessibility: LocationAccessibilityPage,
         list: LocationListPage,
       },
       tabs: [
         { title: t('categories.location.tabs.info') as string, sub: 'info' },
+        { title: t('categories.location.tabs.service') as string, sub: 'service' },
         { title: t('categories.location.tabs.accessibility') as string, sub: 'accessibility' },
         { title: t('categories.location.tabs.media') as string, sub: 'media' },
       ],

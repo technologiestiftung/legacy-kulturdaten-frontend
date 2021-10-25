@@ -1,7 +1,7 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { EntryFormWrapper } from '../../EntryForm/wrappers';
-import { locationAccessibility } from '../../../config/accessibility';
+import { locationService } from '../../../config/service';
 import {
   genericFormActionInit,
   GenericFormState,
@@ -14,32 +14,32 @@ import { useSaveDate } from '../helpers/useSaveDate';
 import { Location } from '../../../lib/api/types/location';
 import { LocationShow } from '../../../lib/api/routes/location/show';
 import { Save } from '../../EntryForm/Save';
-import { AccessibilityField } from '../../../lib/api/types/accessibility';
+import { ServiceField } from '../../../lib/api/types/service';
 import { useApiCall } from '../../../lib/api';
 import {
-  LocationAccessibilityUpdate,
-  locationAccessibilityUpdateFactory,
-} from '../../../lib/api/routes/location/accessibility/update';
+  LocationServiceUpdate,
+  locationServiceUpdateFactory,
+} from '../../../lib/api/routes/location/service/update';
 
-const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
+const useServiceForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
-  const { renderedForm, state, dispatch } = useGenericFormStructure(locationAccessibility, {});
+  const { renderedForm, state, dispatch } = useGenericFormStructure(locationService, {});
   const call = useApiCall();
   const formRef = useRef<HTMLFormElement>(null);
   const [valid, setValid] = useState(true);
 
-  const initialAccessibilityFields = useMemo(
-    () => entry?.data?.relations?.accessibility?.relations?.fields,
-    [entry?.data?.relations?.accessibility?.relations?.fields]
+  const initialServiceFields = useMemo(
+    () => entry?.data?.relations?.service?.relations?.fields,
+    [entry?.data?.relations?.service?.relations?.fields]
   );
-  const [accessibilityFromApi, setAccessibilityFromApi] = useState<AccessibilityField[]>([]);
+  const [serviceFromApi, setServiceFromApi] = useState<ServiceField[]>([]);
 
   // const [pristine, setPristine] = useState(true);
 
-  const accessibilityFieldsState = useMemo(
+  const serviceFieldsState = useMemo(
     () =>
       state
-        ? Object.entries(state as GenericFormState).map<AccessibilityField>(([key, value]) => {
+        ? Object.entries(state as GenericFormState).map<ServiceField>(([key, value]) => {
             const type =
               typeof value === 'number'
                 ? 'number'
@@ -65,14 +65,14 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
 
   useEffect(() => {
     if (
-      initialAccessibilityFields &&
-      JSON.stringify(initialAccessibilityFields) !== JSON.stringify(accessibilityFromApi)
+      initialServiceFields &&
+      JSON.stringify(initialServiceFields) !== JSON.stringify(serviceFromApi)
     ) {
-      setAccessibilityFromApi(initialAccessibilityFields);
+      setServiceFromApi(initialServiceFields);
 
       dispatch(
         genericFormActionInit(
-          initialAccessibilityFields.reduce((combined, field) => {
+          initialServiceFields.reduce((combined, field) => {
             return {
               ...combined,
               [field.attributes.key]: field.attributes.value,
@@ -81,18 +81,18 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
         )
       );
     }
-  }, [accessibilityFromApi, dispatch, initialAccessibilityFields]);
+  }, [serviceFromApi, dispatch, initialServiceFields]);
 
   useEffect(() => {
-    if (accessibilityFieldsState) {
+    if (serviceFieldsState) {
       setValid(formRef?.current ? formRef?.current?.checkValidity() : true);
     }
-  }, [accessibilityFieldsState]);
+  }, [serviceFieldsState]);
 
   const pristine = useMemo(
     () =>
       JSON.stringify(
-        accessibilityFromApi
+        serviceFromApi
           .map((field) => ({
             attributes: {
               key: field.attributes.key,
@@ -109,7 +109,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
           })
       ) ===
       JSON.stringify(
-        accessibilityFieldsState
+        serviceFieldsState
           .map((field) => ({
             attributes: {
               key: field.attributes.key,
@@ -125,7 +125,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
             return 0;
           })
       ),
-    [accessibilityFieldsState, accessibilityFromApi]
+    [serviceFieldsState, serviceFromApi]
   );
 
   return {
@@ -143,11 +143,11 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
     submit: async () => {
       if (valid) {
         try {
-          const resp = await call<LocationAccessibilityUpdate>(locationAccessibilityUpdateFactory, {
+          const resp = await call<LocationServiceUpdate>(locationServiceUpdateFactory, {
             id: entry.data.id,
             entry: {
               relations: {
-                fields: accessibilityFieldsState,
+                fields: serviceFieldsState,
               },
             },
           });
@@ -168,7 +168,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
   };
 };
 
-export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
+export const LocationServicePage: React.FC<CategoryEntryPage> = ({
   category,
   query,
 }: CategoryEntryPage) => {
@@ -178,7 +178,7 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
   const { rendered } = useContext(WindowContext);
   const formattedDate = useSaveDate(entry);
 
-  const { renderedForm, valid, submit, hint, pristine } = useAccessibilityForm(
+  const { renderedForm, valid, submit, hint, pristine } = useServiceForm(
     { category, query },
     loaded,
     false

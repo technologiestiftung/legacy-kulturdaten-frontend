@@ -169,6 +169,15 @@ export const deDE: Localization = {
     de: () => 'Deutsch',
     en: () => 'Englisch',
   },
+  languageTags: {
+    addButton: () => 'Sprache hinzufügen',
+    addLabel: () => 'Neue Sprache hinzufügen',
+    addPlaceholder: () => 'Tippe einfach drauf los, z.B. Deutsch',
+    listDelete: () => 'Sprache entfernen',
+    listLabel: () => 'Bereits hinzugefügte Sprachen',
+    listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
+    noMatch: () => 'Keine passende Sprache gefunden',
+  },
   team: {
     list: {
       title: () => 'Teammitglieder',
@@ -210,13 +219,19 @@ export const deDE: Localization = {
     add: () => 'Neuen Kontakt hinzufügen',
     remove: () => 'entfernen',
   },
-  openingHours: {
+  hours: {
     weekday: () => 'Wochentag',
     from: () => 'von',
     to: () => 'bis',
-    add: () => 'Neue Öffnungszeit hinzufügen',
+    add: () => 'Neue Zeit hinzufügen',
     remove: () => 'entfernen',
-    note: () => 'Anmerkung zu Öffnungszeiten',
+    note: () => 'Anmerkung zu Zeiten',
+  },
+  openingHours: {
+    add: () => 'Neue Öffnungszeit hinzufügen',
+  },
+  peakHours: {
+    add: () => 'Neue Stoßzeit hinzufügen',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Veröffentliche ${categoryName}`,
@@ -829,6 +844,7 @@ export const deDE: Localization = {
         editCancel: () => 'abbrechen',
         locationInfo: () => 'Hinweis zum Angebotsort',
         locationInfoPlaceholder: () => 'z.B. spezifischer Raum',
+        peakHours: () => 'Stoßzeiten',
         mainType: {
           title: () => 'Angebotstyp',
           choose: () => 'Um was handelt es sich? z.B. Ausstellung, Konzert, Führung...',
@@ -877,6 +893,7 @@ export const deDE: Localization = {
         info: () => 'Informationen',
         categorization: () => 'Kategorisierung',
         dates: () => 'Termine',
+        audience: () => 'Zielgruppe',
         accessibility: () => 'Barrierefreiheit',
         media: () => 'Bilder',
       },
@@ -940,6 +957,7 @@ export const deDE: Localization = {
       },
       tabs: {
         info: () => 'Informationen',
+        service: () => 'Service',
         accessibility: () => 'Barrierefreiheit',
         media: () => 'Bilder',
       },

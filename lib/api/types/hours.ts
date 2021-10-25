@@ -1,4 +1,4 @@
-export enum OpeningHoursWeekday {
+export enum HoursWeekday {
   monday = 'monday',
   tuesday = 'tuesday',
   wednesday = 'wednesday',
@@ -8,11 +8,15 @@ export enum OpeningHoursWeekday {
   sunday = 'sunday',
 }
 
-export type OpeningHours = {
+export type Hours = {
   id?: number;
   attributes: {
-    weekday: OpeningHoursWeekday;
+    weekday: HoursWeekday;
     from: string;
     to: string;
   };
 };
+
+export type OpeningHours = Hours;
+
+export type PeakHours = Hours;
