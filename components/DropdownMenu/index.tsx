@@ -192,8 +192,6 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
       <StyledDropdownMenuDropdown visible={visible} animating={animating}>
         <StyledDropdownMenuDropdownContent>
           {React.Children.toArray(children).map((child) => {
-            console.log(child);
-
             const elementType = (
               (child as React.ReactElement)?.type as JSXElementConstructor<unknown>
             )?.name;
@@ -203,7 +201,10 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
                 elementType === 'HeaderMenuLink' || elementType === 'Button'
                   ? () => {
                       clickHandler(false);
-                      (child as React.ReactElement)?.props?.onClick();
+
+                      if (typeof (child as React.ReactElement)?.props?.onClick === 'function') {
+                        (child as React.ReactElement)?.props?.onClick();
+                      }
                     }
                   : (child as React.ReactElement)?.props?.onClick,
             });
