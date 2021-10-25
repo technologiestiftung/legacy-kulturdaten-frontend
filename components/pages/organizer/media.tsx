@@ -135,11 +135,11 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
 
   useEffect(() => {
     if (initialLogo) {
-      if (logo === undefined) {
+      if (logo === undefined || JSON.stringify(initialLogo) !== JSON.stringify(logoFromApi)) {
         setLogo(initialLogo);
       }
 
-      if (!logoFromApi || initialLogo !== logoFromApi) {
+      if (JSON.stringify(initialLogo) !== JSON.stringify(logoFromApi)) {
         setLogoFromApi(initialLogo);
       }
     }
