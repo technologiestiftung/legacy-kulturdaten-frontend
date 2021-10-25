@@ -76,7 +76,10 @@ export const useGenericFormStructure = (
   const [state, dispatch] = useReducer(genericFormReducer, initialState || {});
 
   const renderedElements = structure?.map((category, index) => {
-    const currentTranslation = getTranslation(language, category.translations, true);
+    const currentTranslation = category.translations
+      ? getTranslation(language, category.translations, true)
+      : undefined;
+
     return (
       <EntryFormContainer key={index}>
         <GenericFormCategoryFactory
@@ -84,6 +87,7 @@ export const useGenericFormStructure = (
           fieldGroups={category.children}
           state={state}
           dispatch={dispatch}
+          collapsable={category.collapsable}
         />
       </EntryFormContainer>
     );

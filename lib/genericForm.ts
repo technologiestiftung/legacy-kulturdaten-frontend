@@ -136,5 +136,6 @@ export interface GenericFormFieldConditional extends GenericFormField {
 
 export interface GenericFormCategory {
   children: GenericFormFieldGroup[];
-  translations: GenericFormTranslation[];
+  translations?: GenericFormTranslation[];
+  collapsable?: boolean;
 }

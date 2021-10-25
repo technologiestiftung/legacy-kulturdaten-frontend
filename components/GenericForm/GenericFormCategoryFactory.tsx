@@ -14,8 +14,9 @@ import { getTranslation } from '../../lib/translations';
 import { GenericFormState, GenericFormStateConsumer } from './useGenericFormStructure';
 
 interface GenericFormCategoryContainerProps extends GenericFormStateConsumer {
-  title: string;
   fieldGroups: GenericFormFieldGroup[];
+  title?: string;
+  collapsable?: boolean;
 }
 
 const validateCondition = (
@@ -54,6 +55,7 @@ export const GenericFormCategoryFactory: React.FC<GenericFormCategoryContainerPr
   fieldGroups,
   state,
   dispatch,
+  collapsable = true,
 }: GenericFormCategoryContainerProps) => {
   const language = useLanguage();
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -84,7 +86,7 @@ export const GenericFormCategoryFactory: React.FC<GenericFormCategoryContainerPr
 
   const { renderedCollapsable } = useCollapsable(renderedGroups, isCollapsed, setIsCollapsed);
 
-  return (
+  return collapsable && title ? (
     <div>
       <EntryFormHead
         title={title}
@@ -94,6 +96,11 @@ export const GenericFormCategoryFactory: React.FC<GenericFormCategoryContainerPr
         }}
       />
       {renderedCollapsable}
+    </div>
+  ) : (
+    <div>
+      {title && <EntryFormHead title={title} />}
+      {renderedGroups}
     </div>
   );
 };
