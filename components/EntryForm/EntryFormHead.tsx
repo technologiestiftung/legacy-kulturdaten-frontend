@@ -176,7 +176,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
         {tooltip && (
           <StyledTooltip>
             <Tooltip>
-              <TooltipP>{tooltip}</TooltipP>
+              {typeof tooltip === 'string' ? <TooltipP>{tooltip}</TooltipP> : tooltip}
             </Tooltip>
           </StyledTooltip>
         )}
