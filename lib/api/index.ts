@@ -115,10 +115,10 @@ export const apiRoutes: {
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,audience`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,audience,peakHours`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,audience`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,audience,peakHours`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>

@@ -218,13 +218,19 @@ export const enDE: Localization = {
     add: () => 'Add new contact',
     remove: () => 'remove',
   },
-  openingHours: {
+  hours: {
     weekday: () => 'Weekday',
     from: () => 'von',
     to: () => 'bis',
-    add: () => 'Add new opening hours',
+    add: () => 'Add new hours',
     remove: () => 'remove',
-    note: () => 'Note on opening hours',
+    note: () => 'Note on hours',
+  },
+  openingHours: {
+    add: () => 'Add new opening hours',
+  },
+  peakHours: {
+    add: () => 'Add new peak hours',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Publishing ${categoryName}`,
@@ -845,6 +851,7 @@ export const enDE: Localization = {
           edit: () => 'Change location',
           title: ({ name }) => `Choose location for ‘${name}’`,
         },
+        peakhours: () => 'Peak hours',
         topics: () => 'Topic category',
         topicsTooltip: () => (
           <>

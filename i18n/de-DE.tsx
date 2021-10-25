@@ -219,13 +219,19 @@ export const deDE: Localization = {
     add: () => 'Neuen Kontakt hinzufügen',
     remove: () => 'entfernen',
   },
-  openingHours: {
+  hours: {
     weekday: () => 'Wochentag',
     from: () => 'von',
     to: () => 'bis',
-    add: () => 'Neue Öffnungszeit hinzufügen',
+    add: () => 'Neue Zeit hinzufügen',
     remove: () => 'entfernen',
-    note: () => 'Anmerkung zu Öffnungszeiten',
+    note: () => 'Anmerkung zu Zeiten',
+  },
+  openingHours: {
+    add: () => 'Neue Öffnungszeit hinzufügen',
+  },
+  peakHours: {
+    add: () => 'Neue Stoßzeit hinzufügen',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Veröffentliche ${categoryName}`,
@@ -867,6 +873,7 @@ export const deDE: Localization = {
           edit: () => 'Ort ändern',
           title: ({ name }) => `Ort für ‚${name}‘ wählen`,
         },
+        peakhours: () => 'Stoßzeiten',
         topics: () => 'Themen-Kategorie',
         topicsTooltip: () => (
           <>
