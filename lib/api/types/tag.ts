@@ -1,16 +1,10 @@
-import { Language } from '../../../config/locale';
 import { Translation } from './general';
 
-type TagTranslation = {
-  attributes: {
-    language: Language;
-    name: string;
-  };
-} & Translation;
+type TagTranslation = Translation;
 
 export type Tag = {
-  id: number;
-  type: 'tag';
+  id: number | string;
+  type?: 'tag';
   relations: {
     translations: TagTranslation[];
   };

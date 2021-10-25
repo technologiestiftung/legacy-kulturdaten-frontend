@@ -168,6 +168,15 @@ export const enDE: Localization = {
     de: () => 'German',
     en: () => 'English',
   },
+  languageTags: {
+    addButton: () => 'Add language',
+    addLabel: () => 'Add new languages',
+    addPlaceholder: () => 'Just type away, e.g. English',
+    listDelete: () => 'Remove language',
+    listLabel: () => 'Already added languages',
+    listPlaceholder: () => 'No language has been added yet',
+    noMatch: () => 'No languages found',
+  },
   team: {
     list: {
       title: () => 'Team members',
