@@ -22,8 +22,6 @@ export const dinLanguages = languagesDe
       ({ dinKey: dinKeyEn }) => dinKeyEn === dinKey
     )?.translation;
 
-    console.log(translationEn);
-
     return translationEn
       ? {
           value: dinKey,
