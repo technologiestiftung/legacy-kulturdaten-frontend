@@ -223,7 +223,6 @@ export const DropZone: React.FC<DropZoneProps> = ({
       const fileSize =
         maxFileSizeInKb && files
           ? [...files].reduce<number>((combinedFileSize, fileItem) => {
-              console.log(fileItem);
               return combinedFileSize + fileItem?.size;
             }, 0)
           : undefined;
