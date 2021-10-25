@@ -1,9 +1,9 @@
 import { Autocomplete, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { Reducer, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 
-import { Button, ButtonColor, ButtonType } from '../button';
+import { Button, ButtonColor } from '../button';
 import { useT } from '../../lib/i18n';
 import { XCircle } from 'react-feather';
 import { Label } from '../label';
@@ -238,6 +238,17 @@ export const Tags: React.FC<TagsProps> = ({
 
   const [pristine, setPristine] = useState(true);
 
+  const submitAutocomplete = useCallback(() => {
+    if (autocompleteValue?.id) {
+      dispatchTags({
+        type: TagsActions.add,
+        payload: { tagId: autocompleteValue.id },
+      });
+      setAutocompleteValue(null);
+      setInputValue('');
+    }
+  }, [autocompleteValue?.id]);
+
   useEffect(() => {
     if (onChange) {
       setTagsBefore(tags);
@@ -298,55 +309,48 @@ export const Tags: React.FC<TagsProps> = ({
         )}
       </StyledTagsBox>
       <StyledTagsAutocomplete>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (autocompleteValue?.id) {
-              dispatchTags({ type: TagsActions.add, payload: { tagId: autocompleteValue.id } });
-              setAutocompleteValue(null);
-              setInputValue('');
-            }
-          }}
-        >
-          <StyledTagsLabel>
-            <Label htmlFor={`tags-${uid}`}>
-              {t(i18nKeys?.addLabel || 'tags.autocompleteLabel')}
-            </Label>
-          </StyledTagsLabel>
-          <StyledTagsAutocompleteContainer variant={variant as ComponentVariants}>
-            <StyledAutocomplete
-              variant={variant as ComponentVariants}
-              id={`tags-${uid}`}
-              options={autocompleteOptions}
-              value={autocompleteValue}
-              onChange={(e, newValue) => {
-                setAutocompleteValue(
-                  newValue ? (newValue as { label: string; id: number }) : { label: '', id: null }
-                );
-                setInputValue(newValue ? (newValue as { label: string; id: number }).label : '');
-              }}
-              noOptionsText={t(i18nKeys?.noMatch || 'tags.noOptions')}
-              renderInput={(params) => (
-                <StyledTextField
-                  {...params}
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => {
-                    setInputValue(e.target.value);
-                  }}
-                  variant="outlined"
-                  autoComplete="off"
-                  placeholder={t(i18nKeys?.addPlaceholder || 'general.topicsPlaceholder') as string}
-                />
-              )}
-            />
-            <StyledTagsAutocompleteButton>
-              <Button type={ButtonType.submit} color={ButtonColor.black}>
-                {t(i18nKeys?.addButton || 'tags.add')}
-              </Button>
-            </StyledTagsAutocompleteButton>
-          </StyledTagsAutocompleteContainer>
-        </form>
+        <StyledTagsLabel>
+          <Label htmlFor={`tags-${uid}`}>{t(i18nKeys?.addLabel || 'tags.autocompleteLabel')}</Label>
+        </StyledTagsLabel>
+        <StyledTagsAutocompleteContainer variant={variant as ComponentVariants}>
+          <StyledAutocomplete
+            variant={variant as ComponentVariants}
+            id={`tags-${uid}`}
+            options={autocompleteOptions}
+            value={autocompleteValue}
+            onChange={(e, newValue) => {
+              setAutocompleteValue(
+                newValue ? (newValue as { label: string; id: number }) : { label: '', id: null }
+              );
+              setInputValue(newValue ? (newValue as { label: string; id: number }).label : '');
+            }}
+            onKeyDown={(e) => {
+              if (e?.key?.toLowerCase() === 'enter') {
+                e.preventDefault();
+                submitAutocomplete();
+              }
+            }}
+            noOptionsText={t(i18nKeys?.noMatch || 'tags.noOptions')}
+            renderInput={(params) => (
+              <StyledTextField
+                {...params}
+                type="text"
+                value={inputValue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                }}
+                variant="outlined"
+                autoComplete="off"
+                placeholder={t(i18nKeys?.addPlaceholder || 'general.topicsPlaceholder') as string}
+              />
+            )}
+          />
+          <StyledTagsAutocompleteButton>
+            <Button onClick={() => submitAutocomplete()} color={ButtonColor.black}>
+              {t(i18nKeys?.addButton || 'tags.add')}
+            </Button>
+          </StyledTagsAutocompleteButton>
+        </StyledTagsAutocompleteContainer>
       </StyledTagsAutocomplete>
     </StyledTags>
   );

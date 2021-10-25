@@ -4,6 +4,7 @@ import {
   GenericFormFieldType,
   GenericFormFieldConditionType,
 } from '../lib/genericForm';
+import { dinLanguages } from './dinLanguages';
 import { Language } from './locale';
 
 export const offerAudience: GenericFormCategory[] = [
@@ -46,13 +47,13 @@ export const offerAudience: GenericFormCategory[] = [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Ermäßigungen',
+                  name: 'Sprache des Angebots',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Reduced admission',
+                  name: 'Language',
                 },
               },
             ],
@@ -67,60 +68,7 @@ export const offerAudience: GenericFormCategory[] = [
                 listPlaceholder: 'languageTags.listPlaceholder',
                 noMatch: 'languageTags.noMatch',
               },
-              options: [
-                {
-                  value: 'impairmentVisitors',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Ermäßigung für Menschen mit Behinderung / Beeinträchtigung',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'Reduced admission for visitors with disability / impairment',
-                      },
-                    },
-                  ],
-                },
-                {
-                  value: 'impairmentAccompany',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Ermäßigungen für Begleitpersonen',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name:
-                          'Discounted admission for attendant accompanying a visitor with a disability / impairment',
-                      },
-                    },
-                  ],
-                },
-                {
-                  value: 'noLibraryCard',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Zugang für Begleitperson auch ohne Nutzer:innenausweis',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'Free library card / no library card needed for attendant',
-                      },
-                    },
-                  ],
-                },
-              ],
+              options: dinLanguages,
             },
           },
           {

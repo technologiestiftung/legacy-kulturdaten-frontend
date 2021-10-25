@@ -118,7 +118,7 @@ export enum EntryFormHeadSize {
 
 interface EntryFormHeadProps {
   title: string;
-  tooltip?: string;
+  tooltip?: string | React.ReactElement;
   id?: string;
   valid?: boolean;
   hint?: boolean;
@@ -176,7 +176,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
         {tooltip && (
           <StyledTooltip>
             <Tooltip>
-              <TooltipP>{tooltip}</TooltipP>
+              {typeof tooltip === 'string' ? <TooltipP>{tooltip}</TooltipP> : tooltip}
             </Tooltip>
           </StyledTooltip>
         )}
