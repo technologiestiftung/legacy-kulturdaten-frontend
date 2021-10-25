@@ -1,9 +1,9 @@
 import { Autocomplete, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import React, { Reducer, useEffect, useMemo, useReducer, useState } from 'react';
+import React, { Reducer, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 
-import { Button, ButtonColor, ButtonType } from '../button';
+import { Button, ButtonColor } from '../button';
 import { useT } from '../../lib/i18n';
 import { XCircle } from 'react-feather';
 import { Label } from '../label';
@@ -238,6 +238,17 @@ export const Tags: React.FC<TagsProps> = ({
 
   const [pristine, setPristine] = useState(true);
 
+  const submitAutocomplete = useCallback(() => {
+    if (autocompleteValue?.id) {
+      dispatchTags({
+        type: TagsActions.add,
+        payload: { tagId: autocompleteValue.id },
+      });
+      setAutocompleteValue(null);
+      setInputValue('');
+    }
+  }, [autocompleteValue?.id]);
+
   useEffect(() => {
     if (onChange) {
       setTagsBefore(tags);
@@ -325,6 +336,11 @@ export const Tags: React.FC<TagsProps> = ({
                 );
                 setInputValue(newValue ? (newValue as { label: string; id: number }).label : '');
               }}
+              onKeyDown={(e) => {
+                if (e?.key?.toLowerCase() === 'enter') {
+                  submitAutocomplete();
+                }
+              }}
               noOptionsText={t(i18nKeys?.noMatch || 'tags.noOptions')}
               renderInput={(params) => (
                 <StyledTextField
@@ -341,7 +357,7 @@ export const Tags: React.FC<TagsProps> = ({
               )}
             />
             <StyledTagsAutocompleteButton>
-              <Button type={ButtonType.submit} color={ButtonColor.black}>
+              <Button onClick={() => submitAutocomplete()} color={ButtonColor.black}>
                 {t(i18nKeys?.addButton || 'tags.add')}
               </Button>
             </StyledTagsAutocompleteButton>
