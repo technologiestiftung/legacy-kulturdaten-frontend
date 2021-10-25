@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { JSXElementConstructor, useEffect, useMemo, useRef, useState } from 'react';
 import * as feather from 'react-feather';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
@@ -190,7 +190,26 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         </StyledDropdownMenuButtonIcon>
       </StyledDropdownMenuButton>
       <StyledDropdownMenuDropdown visible={visible} animating={animating}>
-        <StyledDropdownMenuDropdownContent>{children}</StyledDropdownMenuDropdownContent>
+        <StyledDropdownMenuDropdownContent>
+          {React.Children.toArray(children).map((child) => {
+            const elementType = (
+              (child as React.ReactElement)?.type as JSXElementConstructor<unknown>
+            )?.name;
+
+            return React.cloneElement(child as React.ReactElement, {
+              onClick:
+                elementType === 'HeaderMenuLink' || elementType === 'Button'
+                  ? () => {
+                      clickHandler(false);
+
+                      if (typeof (child as React.ReactElement)?.props?.onClick === 'function') {
+                        (child as React.ReactElement)?.props?.onClick();
+                      }
+                    }
+                  : (child as React.ReactElement)?.props?.onClick,
+            });
+          })}
+        </StyledDropdownMenuDropdownContent>
       </StyledDropdownMenuDropdown>
     </StyledDropdownMenu>
   );
