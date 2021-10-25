@@ -1,9 +1,7 @@
 import styled from '@emotion/styled';
 import { Story } from '@storybook/react';
 import { locationAccessibility } from '../../config/accessibility';
-import { Breakpoint } from '../../lib/WindowService';
 import { EntryFormWrapper } from '../EntryForm/wrappers';
-import { mq } from '../globals/Constants';
 import { useGenericFormStructure } from './useGenericFormStructure';
 
 export default {

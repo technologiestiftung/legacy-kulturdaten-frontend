@@ -6,7 +6,7 @@ import {
   genericFormActionInit,
   GenericFormState,
   useGenericFormStructure,
-} from '../../Accessibility/useGenericFormStructure';
+} from '../../GenericForm/useGenericFormStructure';
 import { EntryFormHook } from '../helpers/form';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { WindowContext } from '../../../lib/WindowService';
