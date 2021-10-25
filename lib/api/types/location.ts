@@ -2,7 +2,7 @@ import { Language } from '../../../config/locale';
 import { Accessibility } from './accessibility';
 import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
-import { OpeningHours } from './openingHours';
+import { OpeningHours } from './hours';
 import { Organizer } from './organizer';
 import { Service } from './service';
 

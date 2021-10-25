@@ -28,14 +28,15 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [valid, setValid] = useState(true);
 
-  const initialServiceFields = useMemo(() => entry?.data?.relations?.service?.relations?.fields, [
-    entry?.data?.relations?.service?.relations?.fields,
-  ]);
-  const [accessibilityFromApi, setServiceFromApi] = useState<ServiceField[]>([]);
+  const initialServiceFields = useMemo(
+    () => entry?.data?.relations?.service?.relations?.fields,
+    [entry?.data?.relations?.service?.relations?.fields]
+  );
+  const [serviceFromApi, setServiceFromApi] = useState<ServiceField[]>([]);
 
   // const [pristine, setPristine] = useState(true);
 
-  const accessibilityFieldsState = useMemo(
+  const serviceFieldsState = useMemo(
     () =>
       state
         ? Object.entries(state as GenericFormState).map<ServiceField>(([key, value]) => {
@@ -65,7 +66,7 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
   useEffect(() => {
     if (
       initialServiceFields &&
-      JSON.stringify(initialServiceFields) !== JSON.stringify(accessibilityFromApi)
+      JSON.stringify(initialServiceFields) !== JSON.stringify(serviceFromApi)
     ) {
       setServiceFromApi(initialServiceFields);
 
@@ -80,18 +81,18 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
         )
       );
     }
-  }, [accessibilityFromApi, dispatch, initialServiceFields]);
+  }, [serviceFromApi, dispatch, initialServiceFields]);
 
   useEffect(() => {
-    if (accessibilityFieldsState) {
+    if (serviceFieldsState) {
       setValid(formRef?.current ? formRef?.current?.checkValidity() : true);
     }
-  }, [accessibilityFieldsState]);
+  }, [serviceFieldsState]);
 
   const pristine = useMemo(
     () =>
       JSON.stringify(
-        accessibilityFromApi
+        serviceFromApi
           .map((field) => ({
             attributes: {
               key: field.attributes.key,
@@ -108,7 +109,7 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
           })
       ) ===
       JSON.stringify(
-        accessibilityFieldsState
+        serviceFieldsState
           .map((field) => ({
             attributes: {
               key: field.attributes.key,
@@ -124,7 +125,7 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
             return 0;
           })
       ),
-    [accessibilityFieldsState, accessibilityFromApi]
+    [serviceFieldsState, serviceFromApi]
   );
 
   return {
@@ -146,7 +147,7 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
             id: entry.data.id,
             entry: {
               relations: {
-                fields: accessibilityFieldsState,
+                fields: serviceFieldsState,
               },
             },
           });
