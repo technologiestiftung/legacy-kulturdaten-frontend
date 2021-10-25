@@ -3,6 +3,7 @@ import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { Link } from './link';
 import { Location } from './location';
 import { Organizer } from './organizer';
+import { Audience } from './audience';
 import {
   EntrySubject,
   EntrySubjectTranslation,
@@ -86,6 +87,7 @@ export type Offer = {
       translations: OfferTranslation[];
       types?: OfferType[];
       mainType?: OfferMainType[];
+      audience?: Audience;
     } & CategoryEntry['data']['relations'];
   };
   meta?: {

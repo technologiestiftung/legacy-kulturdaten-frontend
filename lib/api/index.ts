@@ -55,6 +55,7 @@ export enum ApiRoutes {
   locationDelete = 'locationDelete',
   locationAccessibilityUpdate = 'locationAccessibilityUpdate',
   locationServiceUpdate = 'locationServiceUpdate',
+  offerAudienceUpdate = 'offerAudienceUpdate',
   offerList = 'offerList',
   offerShow = 'offerShow',
   offerCreate = 'offerCreate',
@@ -108,15 +109,16 @@ export const apiRoutes: {
   locationAccessibilityUpdate: ({ id }) => `/${apiVersion}/location/${id}/accessibility`,
   locationServiceUpdate: ({ id }) => `/${apiVersion}/location/${id}/service`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
+  offerAudienceUpdate: ({ id }) => `/${apiVersion}/offer/${id}/audience`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,audience`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,audience`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
