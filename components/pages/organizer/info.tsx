@@ -168,14 +168,15 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
 
   const [contactsFromApi, setContactsFromApi] = useState<Contact[]>();
 
-  const initialContacts = useMemo(() => entry?.data?.relations?.contacts, [
-    entry?.data?.relations?.contacts,
-  ]);
+  const initialContacts = useMemo(
+    () => entry?.data?.relations?.contacts,
+    [entry?.data?.relations?.contacts]
+  );
 
-  const pristine = useMemo(() => JSON.stringify(contacts) === JSON.stringify(contactsFromApi), [
-    contacts,
-    contactsFromApi,
-  ]);
+  const pristine = useMemo(
+    () => JSON.stringify(contacts) === JSON.stringify(contactsFromApi),
+    [contacts, contactsFromApi]
+  );
 
   useEffect(() => {
     if (JSON.stringify(initialContacts) !== JSON.stringify(contactsFromApi)) {
@@ -188,7 +189,7 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
     <div>
       <EntryFormHead
         title={t('categories.organizer.form.additionalContacts') as string}
-        tooltip={t('categories.organizer.form.additionalContactsTooltip') as string}
+        tooltip={t('categories.organizer.form.additionalContactsTooltip')}
       />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
@@ -439,10 +440,10 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const message = t('save.confirmExit') as string;
 
-  const shouldWarn = useMemo(() => !pristine && typeof entry?.data !== 'undefined', [
-    pristine,
-    entry?.data,
-  ]);
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
 
   useConfirmExit(shouldWarn, message, () => {
     nameReset();

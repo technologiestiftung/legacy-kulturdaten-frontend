@@ -223,7 +223,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
         <EntryFormContainer noPadding fullWidth>
           <EntryFormHead
             title={`${t('date.title')} (${t('forms.optional')})`}
-            tooltip={t('date.titleTooltip') as string}
+            tooltip={t('date.titleTooltip')}
           />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
@@ -347,25 +347,25 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const [toDateISOString, setToDateISOString] = useState<string>(earliestDateISOString);
   const [toTimeISOString, setToTimeISOString] = useState<string>(startPlusOneHourTimeISOString);
 
-  const fromDateTime = useMemo(() => parseISO(`${fromDateISOString}T${fromTimeISOString}`), [
-    fromDateISOString,
-    fromTimeISOString,
-  ]);
+  const fromDateTime = useMemo(
+    () => parseISO(`${fromDateISOString}T${fromTimeISOString}`),
+    [fromDateISOString, fromTimeISOString]
+  );
 
-  const toDateTime = useMemo(() => parseISO(`${toDateISOString}T${toTimeISOString}`), [
-    toDateISOString,
-    toTimeISOString,
-  ]);
+  const toDateTime = useMemo(
+    () => parseISO(`${toDateISOString}T${toTimeISOString}`),
+    [toDateISOString, toTimeISOString]
+  );
 
   const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
   const toDate = useMemo(() => new Date(toDateISOString), [toDateISOString]);
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
-  const toTimeValid = useMemo(() => compareAsc(fromDateTime, toDateTime) === -1, [
-    fromDateTime,
-    toDateTime,
-  ]);
+  const toTimeValid = useMemo(
+    () => compareAsc(fromDateTime, toDateTime) === -1,
+    [fromDateTime, toDateTime]
+  );
 
   const date = useMemo<OfferDate>(
     () => ({
