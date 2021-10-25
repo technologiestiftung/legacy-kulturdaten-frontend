@@ -37,6 +37,7 @@ import { OrganizerMediaPage } from '../components/pages/organizer/media';
 import { OfferMediaPage } from '../components/pages/offer/media';
 import { LocationMediaPage } from '../components/pages/location/media';
 import { LocationAccessibilityPage } from '../components/pages/location/accessibility';
+import { LocationServicePage } from '../components/pages/location/service';
 import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
 import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 
@@ -248,12 +249,14 @@ export const useCategories: () => {
       pages: {
         create: LocationCreatePage,
         info: LocationInfoPage,
+        service: LocationServicePage,
         media: LocationMediaPage,
         accessibility: LocationAccessibilityPage,
         list: LocationListPage,
       },
       tabs: [
         { title: t('categories.location.tabs.info') as string, sub: 'info' },
+        { title: t('categories.location.tabs.service') as string, sub: 'service' },
         { title: t('categories.location.tabs.accessibility') as string, sub: 'accessibility' },
         { title: t('categories.location.tabs.media') as string, sub: 'media' },
       ],
