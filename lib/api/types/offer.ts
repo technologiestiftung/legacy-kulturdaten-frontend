@@ -10,6 +10,7 @@ import {
   EntryType,
   EntryTypeTranslation,
 } from './typeSubject';
+import { PeakHours } from './hours';
 
 export type OfferType = EntryType;
 export type OfferSubject = EntrySubject;
@@ -88,6 +89,7 @@ export type Offer = {
       types?: OfferType[];
       mainType?: OfferMainType[];
       audience?: Audience;
+      peakHours?: PeakHours[];
     } & CategoryEntry['data']['relations'];
   };
   meta?: {

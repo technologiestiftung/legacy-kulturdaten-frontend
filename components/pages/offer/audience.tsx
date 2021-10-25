@@ -1,6 +1,6 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useEntryHeader } from '../helpers/useEntryHeader';
-import { EntryFormWrapper } from '../../EntryForm/wrappers';
+import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { offerAudience } from '../../../config/audience';
 import {
   genericFormActionInit,
@@ -20,6 +20,102 @@ import {
   OfferAudienceUpdate,
   offerAudienceUpdateFactory,
 } from '../../../lib/api/routes/offer/audience/update';
+import { PeakHours } from '../../../lib/api/types/hours';
+import { useT } from '../../../lib/i18n';
+import { EntryFormHead } from '../../EntryForm/EntryFormHead';
+import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { HoursField } from '../../HoursField';
+import { OfferDelete } from '../../../lib/api/routes/offer/delete';
+import { OfferUpdate } from '../../../lib/api/routes/offer/update';
+
+const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
+  const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
+  const [peakHours, setPeakHours] = useState<PeakHours[]>();
+  const [peakHoursFromApi, setPeakHoursFromApi] = useState<PeakHours[]>();
+
+  const call = useApiCall();
+  const t = useT();
+
+  const initialPeakHours = useMemo(
+    () => entry?.data?.relations?.peakHours,
+    [entry?.data?.relations?.peakHours]
+  );
+
+  const pristine = useMemo(
+    () => JSON.stringify(peakHours) === JSON.stringify(peakHoursFromApi),
+    [peakHours, peakHoursFromApi]
+  );
+
+  useEffect(() => {
+    if (JSON.stringify(initialPeakHours) !== JSON.stringify(peakHoursFromApi)) {
+      setPeakHoursFromApi(initialPeakHours);
+      setPeakHours(initialPeakHours);
+    }
+  }, [initialPeakHours, peakHoursFromApi]);
+
+  const renderedForm = (
+    <div>
+      <EntryFormHead title={t('categories.offer.form.peakHours') as string} />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          <HoursField
+            i18nKeys={{ addButton: 'peakHours.add' }}
+            hours={peakHours || []}
+            onChange={(updatedPeakHours) => setPeakHours(updatedPeakHours)}
+          />
+        </FormItem>
+      </FormGrid>
+    </div>
+  );
+
+  return {
+    renderedForm,
+    submit: async () => {
+      if (!pristine) {
+        const peakHoursIds = peakHours?.map((peakHour) => peakHour.id);
+        const deletedPeakHours = peakHoursFromApi
+          ?.filter((peakHour) => !peakHoursIds.includes(peakHour.id))
+          .map((peakHour) => peakHour.id);
+
+        if (deletedPeakHours?.length > 0) {
+          try {
+            await call<OfferDelete>(category.api.delete.factory, {
+              id: entry.data.id,
+              entry: {
+                relations: {
+                  peakHours: deletedPeakHours,
+                },
+              },
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        try {
+          const resp = await call<OfferUpdate>(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                peakHours,
+              },
+            },
+          });
+
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    },
+    pristine,
+    reset: () => undefined,
+    valid: true,
+    hint: false,
+  };
+};
 
 const useAudienceForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -28,9 +124,10 @@ const useAudienceForm: EntryFormHook = ({ category, query }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [valid, setValid] = useState(true);
 
-  const initialAudienceFields = useMemo(() => entry?.data?.relations?.audience?.relations?.fields, [
-    entry?.data?.relations?.audience?.relations?.fields,
-  ]);
+  const initialAudienceFields = useMemo(
+    () => entry?.data?.relations?.audience?.relations?.fields,
+    [entry?.data?.relations?.audience?.relations?.fields]
+  );
   const [accessibilityFromApi, setAudienceFromApi] = useState<AudienceField[]>([]);
 
   // const [pristine, setPristine] = useState(true);
@@ -176,10 +273,29 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
   const formattedDate = useSaveDate(entry);
+  const [valid, setValid] = useState(true);
 
-  const { renderedForm, valid, submit, hint, pristine } = useAudienceForm(
-    { category, query },
+  const {
+    renderedForm: audienceForm,
+    valid: audienceValid,
+    submit: audienceSubmit,
+    hint: audienceHint,
+    pristine: audiencePristine,
+  } = useAudienceForm({ category, query }, loaded, false);
+
+  const {
+    renderedForm: peakHoursForm,
+    submit: peakHoursSubmit,
+    pristine: peakHoursPristine,
+    valid: peakHoursValid,
+    hint: peakHoursHint,
+  } = usePeakHoursForm(
+    {
+      category,
+      query,
+    },
     loaded,
+    valid,
     false
   );
 
@@ -193,6 +309,17 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     };
   }, [rendered, entry]);
 
+  useEffect(() => {
+    setValid(![audienceValid, peakHoursValid].includes(false));
+  }, [audienceValid, peakHoursValid]);
+
+  const pristine = useMemo(
+    () => ![audiencePristine, peakHoursPristine].includes(false),
+    [audiencePristine, peakHoursPristine]
+  );
+
+  const hint = useMemo(() => audienceHint || peakHoursHint, [audienceHint, peakHoursHint]);
+
   return (
     <>
       {renderedEntryHeader}
@@ -200,7 +327,8 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
         <div role="form" aria-invalid={!valid}>
           <Save
             onClick={async () => {
-              submit();
+              audienceSubmit();
+              peakHoursSubmit();
             }}
             date={formattedDate}
             active={!pristine}
@@ -208,7 +336,10 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
             hint={loaded === true && hint}
           />
 
-          {renderedForm}
+          {audienceForm}
+          <EntryFormWrapper>
+            <EntryFormContainer>{peakHoursForm}</EntryFormContainer>
+          </EntryFormWrapper>
         </div>
       </div>
     </>

@@ -844,6 +844,7 @@ export const deDE: Localization = {
         editCancel: () => 'abbrechen',
         locationInfo: () => 'Hinweis zum Angebotsort',
         locationInfoPlaceholder: () => 'z.B. spezifischer Raum',
+        peakHours: () => 'Stoßzeiten',
         mainType: {
           title: () => 'Angebotstyp',
           choose: () => 'Um was handelt es sich? z.B. Ausstellung, Konzert, Führung...',
@@ -873,7 +874,6 @@ export const deDE: Localization = {
           edit: () => 'Ort ändern',
           title: ({ name }) => `Ort für ‚${name}‘ wählen`,
         },
-        peakhours: () => 'Stoßzeiten',
         topics: () => 'Themen-Kategorie',
         topicsTooltip: () => (
           <>

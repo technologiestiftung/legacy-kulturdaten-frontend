@@ -822,6 +822,7 @@ export const enDE: Localization = {
         editCancel: () => 'cancel',
         locationInfo: () => 'Note on the offer location',
         locationInfoPlaceholder: () => 'e.g. specific room',
+        peakHours: () => 'Peak hours',
         mainType: {
           title: () => 'Event type',
           choose: () => 'What kind of offer is it? Exhibition, concert, tour...',
@@ -851,7 +852,6 @@ export const enDE: Localization = {
           edit: () => 'Change location',
           title: ({ name }) => `Choose location for ‘${name}’`,
         },
-        peakhours: () => 'Peak hours',
         topics: () => 'Topic category',
         topicsTooltip: () => (
           <>
