@@ -307,7 +307,7 @@ export const LocationList: React.FC<LocationListProps> = ({
             <RadioSwitch
               value={showAllLocations ? 'true' : 'false'}
               label={t('categories.location.list.allOrMy') as string}
-              name={`entry-order-${pseudoUID}`}
+              name={`location-selection-${pseudoUID}`}
               onChange={(value) => {
                 setShowAllLocation(value === 'true');
               }}
