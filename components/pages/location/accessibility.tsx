@@ -3,10 +3,10 @@ import { useEntryHeader } from '../helpers/useEntryHeader';
 import { EntryFormWrapper } from '../../EntryForm/wrappers';
 import { locationAccessibility } from '../../../config/accessibility';
 import {
-  a11yActionInit,
-  A11yState,
-  useAccessibilityStructure,
-} from '../../Accessibility/useAccessibilityStructure';
+  genericFormActionInit,
+  GenericFormState,
+  useGenericFormStructure,
+} from '../../Accessibility/useGenericFormStructure';
 import { EntryFormHook } from '../helpers/form';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { WindowContext } from '../../../lib/WindowService';
@@ -23,7 +23,7 @@ import {
 
 const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
-  const { renderedForm, state, dispatch } = useAccessibilityStructure(locationAccessibility, {});
+  const { renderedForm, state, dispatch } = useGenericFormStructure(locationAccessibility, {});
   const call = useApiCall();
   const formRef = useRef<HTMLFormElement>(null);
   const [valid, setValid] = useState(true);
@@ -39,7 +39,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
   const accessibilityFieldsState = useMemo(
     () =>
       state
-        ? Object.entries(state as A11yState).map<GenericFormField>(([key, value]) => {
+        ? Object.entries(state as GenericFormState).map<GenericFormField>(([key, value]) => {
             const type =
               typeof value === 'number'
                 ? 'number'
@@ -71,7 +71,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
       setAccessibilityFromApi(initialAccessibilityFields);
 
       dispatch(
-        a11yActionInit(
+        genericFormActionInit(
           initialAccessibilityFields.reduce((combined, field) => {
             return {
               ...combined,

@@ -3,51 +3,54 @@ import { GenericFormCategory, GenericFormFieldValue } from '../../lib/genericFor
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { EntryFormContainer } from '../EntryForm/wrappers';
-import { AccessibilityCategoryFactory } from './AccessibilityCategoryFactory';
+import { GenericFormCategoryFactory } from './GenericFormCategoryFactory';
 
-export interface A11yStateConsumer {
-  state: A11yState;
-  dispatch: Dispatch<A11yAction>;
+export interface GenericFormStateConsumer {
+  state: GenericFormState;
+  dispatch: Dispatch<GenericFormAction>;
 }
 
-export enum A11yActions {
+export enum GenericFormActions {
   init = 'init',
   set = 'set',
 }
 
-export type A11yState = { [key: string]: GenericFormFieldValue };
+export type GenericFormState = { [key: string]: GenericFormFieldValue };
 
-export type A11yAction = {
-  type: A11yActions;
+export type GenericFormAction = {
+  type: GenericFormActions;
   payload?: {
-    state?: A11yState;
+    state?: GenericFormState;
     key?: string;
     value?: GenericFormFieldValue;
   };
 };
 
-export const a11yActionInit = (state: A11yState): A11yAction => ({
-  type: A11yActions.init,
+export const genericFormActionInit = (state: GenericFormState): GenericFormAction => ({
+  type: GenericFormActions.init,
   payload: {
     state,
   },
 });
 
-export const a11yActionSet = (key: string, value: string | string[] | boolean): A11yAction => ({
-  type: A11yActions.set,
+export const genericFormActionSet = (
+  key: string,
+  value: string | string[] | boolean
+): GenericFormAction => ({
+  type: GenericFormActions.set,
   payload: {
     key,
     value,
   },
 });
 
-const a11yReducer: Reducer<A11yState, A11yAction> = (state, action) => {
+const genericFormReducer: Reducer<GenericFormState, GenericFormAction> = (state, action) => {
   switch (action.type) {
-    case A11yActions.init: {
+    case GenericFormActions.init: {
       return action.payload.state;
     }
 
-    case A11yActions.set: {
+    case GenericFormActions.set: {
       return {
         ...state,
         [action.payload.key]: action.payload.value,
@@ -60,19 +63,23 @@ const a11yReducer: Reducer<A11yState, A11yAction> = (state, action) => {
   }
 };
 
-export const useAccessibilityStructure = (
+export const useGenericFormStructure = (
   structure: GenericFormCategory[],
-  initialState?: A11yState
-): { renderedForm: React.ReactElement; state: A11yState; dispatch: Dispatch<A11yAction> } => {
+  initialState?: GenericFormState
+): {
+  renderedForm: React.ReactElement;
+  state: GenericFormState;
+  dispatch: Dispatch<GenericFormAction>;
+} => {
   const language = useLanguage();
 
-  const [state, dispatch] = useReducer(a11yReducer, initialState || {});
+  const [state, dispatch] = useReducer(genericFormReducer, initialState || {});
 
   const renderedElements = structure?.map((category, index) => {
     const currentTranslation = getTranslation(language, category.translations, true);
     return (
       <EntryFormContainer key={index}>
-        <AccessibilityCategoryFactory
+        <GenericFormCategoryFactory
           title={currentTranslation?.attributes?.name}
           fieldGroups={category.children}
           state={state}

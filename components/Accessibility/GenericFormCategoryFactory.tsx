@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCollapsable } from '../collapsable';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { AccessibilityFieldFactory } from './AccessibilityFieldFactory';
+import { GenericFormFieldFactory } from './GenericFormFieldFactory';
 import { FormListGroup } from '../FormList/FormListGroup';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 import {
@@ -11,14 +11,17 @@ import {
 } from '../../lib/genericForm';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
-import { A11yState, A11yStateConsumer } from './useAccessibilityStructure';
+import { GenericFormState, GenericFormStateConsumer } from './useGenericFormStructure';
 
-interface AccessibilityCategoryContainerProps extends A11yStateConsumer {
+interface GenericFormCategoryContainerProps extends GenericFormStateConsumer {
   title: string;
   fieldGroups: GenericFormFieldGroup[];
 }
 
-const validateCondition = (state: A11yState, condition: GenericFormFieldCondition): boolean => {
+const validateCondition = (
+  state: GenericFormState,
+  condition: GenericFormFieldCondition
+): boolean => {
   if (condition) {
     switch (condition.type) {
       case GenericFormFieldConditionType.equal: {
@@ -46,12 +49,12 @@ const validateCondition = (state: A11yState, condition: GenericFormFieldConditio
   return true;
 };
 
-export const AccessibilityCategoryFactory: React.FC<AccessibilityCategoryContainerProps> = ({
+export const GenericFormCategoryFactory: React.FC<GenericFormCategoryContainerProps> = ({
   title,
   fieldGroups,
   state,
   dispatch,
-}: AccessibilityCategoryContainerProps) => {
+}: GenericFormCategoryContainerProps) => {
   const language = useLanguage();
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -64,7 +67,7 @@ export const AccessibilityCategoryFactory: React.FC<AccessibilityCategoryContain
             <FormListGroup title={currentTranslation?.attributes?.name}>
               {group.children.map((field, index) =>
                 validateCondition(state, field.condition) ? (
-                  <AccessibilityFieldFactory
+                  <GenericFormFieldFactory
                     key={index}
                     field={field}
                     state={state}

@@ -4,7 +4,7 @@ import { locationAccessibility } from '../../config/accessibility';
 import { Breakpoint } from '../../lib/WindowService';
 import { EntryFormWrapper } from '../EntryForm/wrappers';
 import { mq } from '../globals/Constants';
-import { useAccessibilityStructure } from './useAccessibilityStructure';
+import { useGenericFormStructure } from './useGenericFormStructure';
 
 export default {
   title: 'Accessibility',
@@ -22,7 +22,7 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
 `;
 
 const EmbeddedAccessibilityLocationStory: React.FC = () => {
-  const { renderedForm } = useAccessibilityStructure(locationAccessibility, {
+  const { renderedForm } = useGenericFormStructure(locationAccessibility, {
     'planning.entry.stairs': true,
   });
 
