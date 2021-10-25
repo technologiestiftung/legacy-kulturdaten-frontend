@@ -169,6 +169,15 @@ export const deDE: Localization = {
     de: () => 'Deutsch',
     en: () => 'Englisch',
   },
+  languageTags: {
+    addButton: () => 'Sprache hinzufügen',
+    addLabel: () => 'Neue Sprache hinzufügen',
+    addPlaceholder: () => 'Tippe einfach drauf los, z.B. Deutsch',
+    listDelete: () => 'Sprache entfernen',
+    listLabel: () => 'Bereits hinzugefügte Sprachen',
+    listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
+    noMatch: () => 'Keine passende Sprache gefunden',
+  },
   team: {
     list: {
       title: () => 'Teammitglieder',

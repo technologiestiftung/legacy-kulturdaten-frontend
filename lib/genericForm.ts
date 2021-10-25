@@ -1,4 +1,5 @@
 import { InputType } from '../components/input';
+import { TagsProps } from '../components/tags';
 import { Language } from '../config/locale';
 import { Translation } from './api/types/general';
 
@@ -29,6 +30,7 @@ export enum GenericFormFieldType {
   textarea = 'textarea',
   radioList = 'radioList',
   checkboxList = 'checkboxList',
+  tags = 'tags',
   conditional = 'conditional',
 }
 
@@ -107,6 +109,19 @@ export interface GenericFormFieldCheckboxList extends GenericFormField {
   };
 }
 
+export interface GenericFormFieldTags extends GenericFormField {
+  type: GenericFormFieldType.tags;
+  data: {
+    key: string;
+    value?: string[];
+    i18nKeys: TagsProps['i18nKeys'];
+    options: {
+      value: string;
+      translations: GenericFormTranslation[];
+    }[];
+  };
+}
+
 export interface GenericFormFieldGroup {
   children: (
     | GenericFormFieldInput
@@ -114,6 +129,7 @@ export interface GenericFormFieldGroup {
     | GenericFormFieldSelect
     | GenericFormFieldRadioList
     | GenericFormFieldCheckboxList
+    | GenericFormFieldTags
     | GenericFormFieldConditional
   )[];
   translations?: GenericFormTranslation[];
@@ -129,6 +145,7 @@ export interface GenericFormFieldConditional extends GenericFormField {
       | GenericFormFieldSelect
       | GenericFormFieldRadioList
       | GenericFormFieldCheckboxList
+      | GenericFormFieldTags
     )[];
     value?: boolean;
   };

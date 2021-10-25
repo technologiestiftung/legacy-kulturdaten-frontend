@@ -8,6 +8,7 @@ import {
   GenericFormFieldInput,
   GenericFormFieldRadioList,
   GenericFormFieldSelect,
+  GenericFormFieldTags,
   GenericFormFieldTextarea,
   GenericFormFieldType,
 } from '../../lib/genericForm';
@@ -17,6 +18,7 @@ import { usePseudoUID } from '../../lib/uid';
 import { genericFormActionSet, GenericFormStateConsumer } from './useGenericFormStructure';
 import { useMemo } from 'react';
 import { useT } from '../../lib/i18n';
+import { Tag } from '../../lib/api/types/tag';
 
 interface GenericFormListFieldContainerProps extends GenericFormStateConsumer {
   field: GenericFormField;
@@ -188,6 +190,40 @@ export const GenericFormFieldFactory: React.FC<GenericFormListFieldContainerProp
                 };
               }
             ),
+          }}
+        />
+      );
+    }
+
+    case GenericFormFieldType.tags: {
+      const transformedValue =
+        (value as string)?.charAt(0) === '[' &&
+        (value as string)?.charAt((value as string).length - 1) === ']'
+          ? (value as string).replace('[', '').replace(']', '').split(',')
+          : [];
+
+      return (
+        <FormListField
+          last={last}
+          first={first}
+          type={FormListFieldType.tags}
+          label={label}
+          tooltip={currentTranslation?.attributes?.tooltip}
+          fieldProps={{
+            id: `${uid}-tags`,
+            name: `${uid}-tags`,
+            value: (transformedValue as string[]) || [],
+            i18nKeys: (field as GenericFormFieldTags)?.data?.i18nKeys,
+            onChange: (newValues) =>
+              dispatch(genericFormActionSet(key, `[${newValues.toString()}]`)),
+            options: (field as GenericFormFieldTags)?.data?.options?.map<Tag>((option) => {
+              return {
+                id: option.value,
+                relations: {
+                  translations: option.translations,
+                },
+              };
+            }),
           }}
         />
       );
