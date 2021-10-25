@@ -22,7 +22,11 @@ export const OfferMediaPage: React.FC<CategoryEntryPage> = <
   const { rendered } = useContext(WindowContext);
   const [loaded, setLoaded] = useState(false);
 
-  const { renderedForm, submit, pristine } = useMediaForm({ category, query }, loaded, false);
+  const { renderedForm, submit, pristine, valid } = useMediaForm(
+    { category, query },
+    loaded,
+    false
+  );
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -44,7 +48,7 @@ export const OfferMediaPage: React.FC<CategoryEntryPage> = <
           }}
           active={!pristine}
           date={formattedDate}
-          valid={true}
+          valid={valid}
           hint={false}
         />
         <EntryFormWrapper>
