@@ -3,12 +3,14 @@ import { CategoryEntry, DefaultAttributes, Translation } from './general';
 import { Link } from './link';
 import { Location } from './location';
 import { Organizer } from './organizer';
+import { Audience } from './audience';
 import {
   EntrySubject,
   EntrySubjectTranslation,
   EntryType,
   EntryTypeTranslation,
 } from './typeSubject';
+import { PeakHours } from './hours';
 
 export type OfferType = EntryType;
 export type OfferSubject = EntrySubject;
@@ -86,6 +88,8 @@ export type Offer = {
       translations: OfferTranslation[];
       types?: OfferType[];
       mainType?: OfferMainType[];
+      audience?: Audience;
+      peakHours?: PeakHours[];
     } & CategoryEntry['data']['relations'];
   };
   meta?: {

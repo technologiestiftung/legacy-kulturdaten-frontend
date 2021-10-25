@@ -67,7 +67,7 @@ export const UserSettingsPage: React.FC = () => {
           <EntryFormContainer>
             <EntryFormHead
               title={`${t('settings.personal.title')} (${t('forms.optional')})`}
-              tooltip={t('settings.personal.tooltip') as string}
+              tooltip={t('settings.personal.tooltip')}
             />
             <FormGrid>
               <FormItem width={FormItemWidth.half}>
@@ -86,7 +86,7 @@ export const UserSettingsPage: React.FC = () => {
           <EntryFormContainer>
             <EntryFormHead
               title={t('settings.api.titleCreate') as string}
-              tooltip={t('settings.api.titleCreateTooltip') as string}
+              tooltip={t('settings.api.titleCreateTooltip')}
             />
             <FormGrid>
               <FormItem width={FormItemWidth.half}>

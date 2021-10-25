@@ -168,6 +168,15 @@ export const enDE: Localization = {
     de: () => 'German',
     en: () => 'English',
   },
+  languageTags: {
+    addButton: () => 'Add language',
+    addLabel: () => 'Add new languages',
+    addPlaceholder: () => 'Just type away, e.g. English',
+    listDelete: () => 'Remove language',
+    listLabel: () => 'Already added languages',
+    listPlaceholder: () => 'No language has been added yet',
+    noMatch: () => 'No languages found',
+  },
   team: {
     list: {
       title: () => 'Team members',
@@ -209,13 +218,19 @@ export const enDE: Localization = {
     add: () => 'Add new contact',
     remove: () => 'remove',
   },
-  openingHours: {
+  hours: {
     weekday: () => 'Weekday',
     from: () => 'von',
     to: () => 'bis',
-    add: () => 'Add new opening hours',
+    add: () => 'Add new hours',
     remove: () => 'remove',
-    note: () => 'Note on opening hours',
+    note: () => 'Note on hours',
+  },
+  openingHours: {
+    add: () => 'Add new opening hours',
+  },
+  peakHours: {
+    add: () => 'Add new peak hours',
   },
   publish: {
     loadingTitle: ({ categoryName }) => `Publishing ${categoryName}`,
@@ -807,6 +822,7 @@ export const enDE: Localization = {
         editCancel: () => 'cancel',
         locationInfo: () => 'Note on the offer location',
         locationInfoPlaceholder: () => 'e.g. specific room',
+        peakHours: () => 'Peak hours',
         mainType: {
           title: () => 'Event type',
           choose: () => 'What kind of offer is it? Exhibition, concert, tour...',
@@ -856,6 +872,7 @@ export const enDE: Localization = {
         info: () => 'Information',
         categorization: () => 'Categorization',
         dates: () => 'Dates',
+        audience: () => 'Audience',
         accessibility: () => 'Accessibility',
         media: () => 'Images',
       },
@@ -919,6 +936,7 @@ export const enDE: Localization = {
       },
       tabs: {
         info: () => 'Information',
+        service: () => 'Service',
         accessibility: () => 'Accessibility',
         media: () => 'Images',
       },

@@ -2,8 +2,9 @@ import { Language } from '../../../config/locale';
 import { Accessibility } from './accessibility';
 import { Address } from './address';
 import { CategoryEntry, DefaultAttributes, Translation } from './general';
-import { OpeningHours } from './openingHours';
+import { OpeningHours } from './hours';
 import { Organizer } from './organizer';
+import { Service } from './service';
 
 export type LocationTranslation = {
   type: 'locationtranslation';
@@ -34,6 +35,7 @@ export type Location = {
       address?: Address;
       openingHours?: OpeningHours[];
       accessibility?: Accessibility;
+      service?: Service;
     } & CategoryEntry['data']['relations'];
   };
   meta?: {

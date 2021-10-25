@@ -153,6 +153,7 @@ export interface InputProps extends ComponentWithVariants {
   valid?: boolean;
   value?: string | number;
   hideError?: boolean;
+  debounce?: boolean;
 }
 
 // eslint-disable-next-line react/display-name
@@ -161,7 +162,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [pristine, setPristine] = useState<boolean>(true);
     const [normalized, setNormalized] = useState(true);
     const [touched, setTouched] = useState(false);
-    const debounce = useDebounce();
+    const debouncer = useDebounce();
     const [internalState, setInternalState] = useState(props?.value);
 
     const t = useT();
@@ -210,7 +211,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         case InputType.tel: {
           if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
-            const normalizedValue = props.value.replace(/\+/g, '00').match(/[0-9]/g).join('');
+            const normalizedValue = props?.value?.replace(/\+/g, '00')?.match(/[0-9]/g).join('');
             setInternalState(normalizedValue);
             props.onChange({
               target: {
@@ -245,20 +246,27 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             )}
             <StyledInput
               {...props}
-              value={internalState}
+              value={props?.debounce ? internalState : props?.value || ''}
               variant={props?.variant}
               aria-label={props?.ariaLabel}
               onChange={(e) => {
-                if (props?.type !== InputType.date || e.target.value) {
-                  setTouched(true);
-                  setInternalState(e.target.value);
+                if (props?.debounce) {
+                  if (props?.type !== InputType.date || e.target.value) {
+                    setTouched(true);
+                    setInternalState(e.target.value);
 
-                  debounce(() => {
-                    if (typeof props?.onChange === 'function') {
-                      props?.onChange(e);
-                      setNormalized(false);
-                    }
-                  });
+                    debouncer(() => {
+                      if (typeof props?.onChange === 'function') {
+                        props?.onChange(e);
+                        setNormalized(false);
+                      }
+                    });
+                  }
+                } else {
+                  if (typeof props?.onChange === 'function') {
+                    props?.onChange(e);
+                    setNormalized(false);
+                  }
                 }
               }}
               ref={ref}

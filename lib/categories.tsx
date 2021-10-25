@@ -440,8 +440,17 @@ export const useCreateEntry = (
           setLastEntryId(categoryName, id);
         }
 
-        setTimeout(
-          () =>
+        setTimeout(() => {
+          router.push(
+            routes.dashboard({
+              locale,
+              query: {
+                organizerId,
+              },
+            })
+          );
+
+          setTimeout(() => {
             router.push(
               category.routes.list({
                 locale,
@@ -451,9 +460,9 @@ export const useCreateEntry = (
                   organizer: categoryName === Categories.organizer ? id : organizerId,
                 },
               })
-            ),
-          250
-        );
+            );
+          }, 250);
+        }, 150);
 
         return { success: true };
       }

@@ -1,8 +1,8 @@
 import { InputType } from '../components/input';
-import { AccessibilityCategory, AccessibilityFieldType } from '../lib/accessibility';
+import { GenericFormCategory, GenericFormFieldType } from '../lib/genericForm';
 import { Language } from './locale';
 
-export const locationAccessibility: AccessibilityCategory[] = [
+export const locationAccessibility: GenericFormCategory[] = [
   {
     translations: [
       {
@@ -36,7 +36,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.select,
+            type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
@@ -114,7 +114,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'generals.accessGeneral.testReportUrl',
               type: InputType.url,
@@ -137,7 +137,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'generals.accessGeneral.serviceWebsiteUrl',
               type: InputType.url,
@@ -160,7 +160,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'generals.accessGeneral.premisesPreview',
               type: InputType.url,
@@ -219,7 +219,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'planning.serviceAddress.serviceContact',
               type: InputType.text,
@@ -242,7 +242,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'planning.serviceAddress.servicePhoneNumber',
               type: InputType.tel,
@@ -263,7 +263,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'planning.serviceAddress.serviceMail',
               type: InputType.email,
@@ -284,7 +284,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'planning.serviceAddress.serviceHours',
             },
@@ -322,7 +322,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -413,7 +413,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -521,7 +521,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'planning.admissionInfo.admissionLink',
               type: InputType.url,
@@ -562,7 +562,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'planning.arrivalInfo.accessOPNV',
               type: InputType.text,
@@ -583,7 +583,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -656,7 +656,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'planning.arrivalInfo.accessDirections',
             },
@@ -688,7 +688,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.radioList,
+            type: GenericFormFieldType.radioList,
             translations: [
               {
                 attributes: {
@@ -744,7 +744,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.radioList,
+            type: GenericFormFieldType.radioList,
             translations: [
               {
                 attributes: {
@@ -800,7 +800,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -890,7 +890,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.radioList,
+            type: GenericFormFieldType.radioList,
             translations: [
               {
                 attributes: {
@@ -956,7 +956,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'planning.arrivalInfo.parkingInfo',
             },
@@ -997,7 +997,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -1138,7 +1138,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'planning.entranceService.accessServiceInfo',
             },
@@ -1178,7 +1178,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -1217,7 +1217,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -1236,7 +1236,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'planning.entry.doors',
               fields: [
                 {
-                  type: AccessibilityFieldType.checkboxList,
+                  type: GenericFormFieldType.checkboxList,
                   translations: [
                     {
                       attributes: {
@@ -1431,7 +1431,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -1450,7 +1450,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'planning.entry.stairs',
               fields: [
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.number,
                     key: 'planning.entry.stairs.count',
@@ -1471,7 +1471,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.checkboxList,
+                  type: GenericFormFieldType.checkboxList,
                   translations: [
                     {
                       attributes: {
@@ -1578,7 +1578,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   },
                 },
                 {
-                  type: AccessibilityFieldType.select,
+                  type: GenericFormFieldType.select,
                   translations: [
                     {
                       attributes: {
@@ -1654,7 +1654,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -1673,7 +1673,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'planning.entry.elevator',
               fields: [
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.text,
                     key: 'planning.entry.elevator.elevatorLocation',
@@ -1694,7 +1694,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.text,
                     key: 'planning.entry.elevator.cabinLength',
@@ -1715,7 +1715,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.text,
                     key: 'planning.entry.elevator.cabinWidth',
@@ -1736,7 +1736,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.checkboxList,
+                  type: GenericFormFieldType.checkboxList,
                   translations: [
                     {
                       attributes: {
@@ -1897,7 +1897,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -1916,7 +1916,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'planning.entry.ramp',
               fields: [
                 {
-                  type: AccessibilityFieldType.select,
+                  type: GenericFormFieldType.select,
                   translations: [
                     {
                       attributes: {
@@ -1978,7 +1978,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -2051,7 +2051,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'planning.entry.entranceConstraints',
             },
@@ -2111,7 +2111,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'foyer.foyer.counters',
               type: InputType.text,
@@ -2132,7 +2132,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -2205,7 +2205,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -2295,7 +2295,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.select,
+            type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
@@ -2378,7 +2378,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.radioList,
+            type: GenericFormFieldType.radioList,
             translations: [
               {
                 attributes: {
@@ -2434,7 +2434,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.select,
+            type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
@@ -2490,7 +2490,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -2597,7 +2597,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'foyer.restroom.restroomLocation',
             },
@@ -2620,7 +2620,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -2744,7 +2744,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -2851,7 +2851,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -3026,7 +3026,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'foyer.toilet.restroomInfo',
             },
@@ -3083,7 +3083,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -3207,7 +3207,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -3246,7 +3246,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -3387,7 +3387,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -3443,7 +3443,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'orientation.lightInfo.lighting',
             },
@@ -3483,7 +3483,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'orientation.indoorRoomAccess.rooms',
               type: InputType.text,
@@ -3506,7 +3506,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -3546,7 +3546,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
           },
 
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -3565,7 +3565,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'orientation.indoorRoomAccess.doors',
               fields: [
                 {
-                  type: AccessibilityFieldType.checkboxList,
+                  type: GenericFormFieldType.checkboxList,
                   translations: [
                     {
                       attributes: {
@@ -3760,7 +3760,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -3779,7 +3779,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'orientation.indoorRoomAccess.stairs',
               fields: [
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.number,
                     key: 'orientation.indoorRoomAccess.stairs.count',
@@ -3800,7 +3800,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.checkboxList,
+                  type: GenericFormFieldType.checkboxList,
                   translations: [
                     {
                       attributes: {
@@ -3907,7 +3907,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   },
                 },
                 {
-                  type: AccessibilityFieldType.select,
+                  type: GenericFormFieldType.select,
                   translations: [
                     {
                       attributes: {
@@ -3983,7 +3983,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -4002,7 +4002,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'orientation.indoorRoomAccess.elevator',
               fields: [
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.text,
                     key: 'orientation.indoorRoomAccess.elevator.elevatorLocation',
@@ -4023,7 +4023,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.text,
                     key: 'orientation.indoorRoomAccess.elevator.cabinLength',
@@ -4044,7 +4044,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.input,
+                  type: GenericFormFieldType.input,
                   data: {
                     type: InputType.text,
                     key: 'orientation.indoorRoomAccess.elevator.cabinWidth',
@@ -4065,7 +4065,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
                   ],
                 },
                 {
-                  type: AccessibilityFieldType.checkboxList,
+                  type: GenericFormFieldType.checkboxList,
                   translations: [
                     {
                       attributes: {
@@ -4226,7 +4226,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.conditional,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
@@ -4245,7 +4245,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
               key: 'orientation.indoorRoomAccess.ramp',
               fields: [
                 {
-                  type: AccessibilityFieldType.select,
+                  type: GenericFormFieldType.select,
                   translations: [
                     {
                       attributes: {
@@ -4307,7 +4307,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.input,
+            type: GenericFormFieldType.input,
             data: {
               key: 'orientation.indoorRoomAccess.roomAccessInfo',
               type: InputType.text,
@@ -4330,7 +4330,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.select,
+            type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
@@ -4386,7 +4386,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -4493,7 +4493,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'orientation.indoorRoomAccess.restroom.restroomLocation',
             },
@@ -4516,7 +4516,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -4640,7 +4640,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -4747,7 +4747,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -4922,7 +4922,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'orientation.indoorRoomAccess.toilet.restroomInfo',
             },
@@ -4942,7 +4942,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.select,
+            type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
@@ -5062,7 +5062,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -5212,7 +5212,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -5354,7 +5354,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
           },
 
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -5506,7 +5506,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
           },
 
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -5647,7 +5647,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'offerArea.mediaAid.mediaInfo',
             },
@@ -5708,7 +5708,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
         ],
         children: [
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -5798,7 +5798,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.textarea,
+            type: GenericFormFieldType.textarea,
             data: {
               key: 'afterVisit.sensoryMap',
             },
@@ -5818,7 +5818,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             ],
           },
           {
-            type: AccessibilityFieldType.select,
+            type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
@@ -5891,7 +5891,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -6032,7 +6032,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.checkboxList,
+            type: GenericFormFieldType.checkboxList,
             translations: [
               {
                 attributes: {
@@ -6156,7 +6156,7 @@ export const locationAccessibility: AccessibilityCategory[] = [
             },
           },
           {
-            type: AccessibilityFieldType.select,
+            type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {

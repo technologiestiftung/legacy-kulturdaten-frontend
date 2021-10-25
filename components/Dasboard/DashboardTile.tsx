@@ -56,16 +56,7 @@ const StyledDashboardTileDone = styled.div`
   background: rgba(0, 0, 0, 0.9);
   color: var(--white);
   display: flex;
-
-  @supports (backdrop-filter: blur(12px)) {
-    backdrop-filter: blur(12px);
-    background: rgba(0, 0, 0, 0.7);
-  }
-
-  @supports (-webkit-backdrop-filter: blur(12px)) {
-    -webkit-backdrop-filter: blur(12px);
-    background: rgba(0, 0, 0, 0.7);
-  }
+  z-index: 2;
 `;
 
 const StyledDashboardTileDoneCheck = styled.div`
@@ -115,6 +106,8 @@ const StyledDashboardTileContainerChildren = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  position: relative;
+  z-index: 1;
 `;
 
 const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean }>`
