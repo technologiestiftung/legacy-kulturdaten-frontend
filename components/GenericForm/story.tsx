@@ -5,7 +5,7 @@ import { EntryFormWrapper } from '../EntryForm/wrappers';
 import { useGenericFormStructure } from './useGenericFormStructure';
 
 export default {
-  title: 'Accessibility',
+  title: 'Generic Form',
 };
 
 const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
@@ -19,7 +19,7 @@ const StyledTestWrapper = styled.div<{ background?: string; color?: string }>`
   color: ${({ color }) => (color ? color : '')};
 `;
 
-const EmbeddedAccessibilityLocationStory: React.FC = () => {
+const EmbeddedGenericFormLocationStory: React.FC = () => {
   const { renderedForm } = useGenericFormStructure(locationAccessibility, {
     'planning.entry.stairs': true,
   });
@@ -31,4 +31,7 @@ const EmbeddedAccessibilityLocationStory: React.FC = () => {
   );
 };
 
-export const AccessibilityLocationStory: Story = () => <EmbeddedAccessibilityLocationStory />;
+export const GenericFormAccessibilityLocationStory: Story = () => (
+  <EmbeddedGenericFormLocationStory />
+);
+GenericFormAccessibilityLocationStory.storyName = 'Accessibility Location';
