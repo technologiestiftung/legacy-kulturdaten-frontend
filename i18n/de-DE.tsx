@@ -333,7 +333,7 @@ export const deDE: Localization = {
       title: () => 'Weiterführende Links',
       legalNotice: () => 'Impressum',
       terms: () => 'AGB',
-      mediaLicense: () => 'Kulturdaten Lizenz für Bilder',
+      mediaLicense: () => 'Informationen zu Bildlizenzen',
     },
   },
   forms: {

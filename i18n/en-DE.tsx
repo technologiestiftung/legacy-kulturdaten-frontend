@@ -331,7 +331,7 @@ export const enDE: Localization = {
       title: () => 'Further links',
       legalNotice: () => 'Legal notice / Imprint',
       terms: () => 'Terms and conditions',
-      mediaLicense: () => 'Kulturdaten license for images',
+      mediaLicense: () => 'Information on image licences',
     },
   },
   forms: {

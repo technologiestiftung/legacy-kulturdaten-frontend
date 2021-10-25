@@ -285,17 +285,17 @@ export const UserSettingsPage: React.FC = () => {
                     {
                       type: StandardLinkType.external,
                       title: t('settings.legal.legalNotice') as string,
-                      href: 'https://kulturdaten.berlin',
+                      href: 'https://kulturdaten.berlin/impressum/',
                     },
                     {
                       type: StandardLinkType.external,
                       title: t('settings.legal.terms') as string,
-                      href: 'https://kulturdaten.berlin',
+                      href: ' https://kulturdaten.berlin/agb/',
                     },
                     {
                       type: StandardLinkType.external,
                       title: t('settings.legal.mediaLicense') as string,
-                      href: 'https://kulturdaten.berlin',
+                      href: 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
                     },
                   ]}
                 />
