@@ -82,8 +82,8 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
           valid={loaded !== true || valid}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
           <EntryFormContainer>{renderedForm}</EntryFormContainer>
+          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>
