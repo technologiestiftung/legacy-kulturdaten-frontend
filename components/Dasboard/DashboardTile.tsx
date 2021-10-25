@@ -108,6 +108,11 @@ const StyledDashboardTileContainerChildren = styled.div`
   flex-grow: 1;
   position: relative;
   z-index: 1;
+  ${mq(Breakpoint.mid)} {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean }>`
@@ -116,14 +121,14 @@ const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean }>`
   font-weight: 700;
   padding: 0.75rem 1.125rem;
   color: var(--black);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 
   ${mq(Breakpoint.mid)} {
     font-size: var(--font-size-500);
     line-height: var(--line-height-500);
     padding: 1.125rem 1.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   ${({ hasDigit }) =>
@@ -152,6 +157,7 @@ const StyledDashboardTileContent = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  white-space: normal;
 `;
 
 export const DashboardTileText = styled.div`
