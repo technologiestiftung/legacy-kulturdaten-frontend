@@ -889,6 +889,9 @@ export const enDE: Localization = {
         loading: () => 'Loading Locations',
         nothing: () => 'There are no Locations yet. Feel free to create one.',
         nothingFilter: () => 'No Locations found with current filters.',
+        allOrMy: () => 'Show selection',
+        allLocations: () => 'All Locations',
+        myLocations: () => 'Only my Locations',
       },
       title: {
         plural: () => 'Locations',

@@ -27,6 +27,7 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { HoursField } from '../../HoursField';
 import { OfferDelete } from '../../../lib/api/routes/offer/delete';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 
 const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -274,6 +275,7 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
   const { rendered } = useContext(WindowContext);
   const formattedDate = useSaveDate(entry);
   const [valid, setValid] = useState(true);
+  const t = useT();
 
   const {
     renderedForm: audienceForm,
@@ -289,6 +291,7 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     pristine: peakHoursPristine,
     valid: peakHoursValid,
     hint: peakHoursHint,
+    reset: peakHoursReset,
   } = usePeakHoursForm(
     {
       category,
@@ -319,6 +322,17 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
   );
 
   const hint = useMemo(() => audienceHint || peakHoursHint, [audienceHint, peakHoursHint]);
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    peakHoursReset();
+  });
 
   return (
     <>

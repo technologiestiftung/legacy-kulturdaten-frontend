@@ -1,11 +1,7 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import {
-  EntryFormContainer,
-  EntryFormContainerColumns,
-  EntryFormWrapper,
-} from '../../EntryForm/wrappers';
+import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
 import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { Location } from '../../../lib/api/types/location';
@@ -14,7 +10,6 @@ import { Language, languageTranslationKeys } from '../../../config/locales';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { EntryPicker } from '../../EntryPicker';
-import { OrganizerList } from '../../EntryList/OrganizerList';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
@@ -27,13 +22,13 @@ import { useDescriptionForm } from '../helpers/form/Description';
 import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
-import { Organizer } from '../../../lib/api/types/organizer';
 import { usePseudoUID } from '../../../lib/uid';
 import { Input, InputType } from '../../input';
 import { contentLanguages } from '../../../config/locales';
 import { useLinksForm } from '../helpers/form/Links';
 import { RadioList } from '../../Radio/RadioList';
 import { useTeaserForm } from '../helpers/form/Teaser';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -127,7 +122,9 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setTranslations(initialTranslations);
+    },
     valid: true,
     hint: false,
   };
@@ -242,7 +239,9 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setAttributes(initialAttributes);
+    },
     valid: true,
     hint: false,
   };
@@ -250,7 +249,6 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
 
 const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
-  const [organizerId, setOrganizerId] = useState<string>();
   const [locationId, setLocationId] = useState<string>();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const language = useLanguage();
@@ -258,29 +256,13 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
   const t = useT();
   const translation = getTranslation(language, entry?.data?.relations?.translations, true);
 
-  const [organizerIdFromApi, setOrganizerIdFromApi] = useState<string>();
-  const initialOrganizerId = useMemo(() => {
-    const organizers = entry?.data?.relations?.organizers as Organizer['data'][];
-    return organizers?.length > 0 ? organizers[0]?.id : undefined;
-  }, [entry?.data?.relations?.organizers]);
-
   const [locationIdFromApi, setLocationIdFromApi] = useState<string>();
   const initialLocationId = useMemo(
     () => (entry?.data?.relations?.location as Location['data'])?.id,
     [entry?.data?.relations?.location]
   );
 
-  const pristine = useMemo(
-    () => organizerId === organizerIdFromApi && locationId === locationIdFromApi,
-    [organizerIdFromApi, organizerId, locationIdFromApi, locationId]
-  );
-
-  useEffect(() => {
-    if (initialOrganizerId !== organizerIdFromApi) {
-      setOrganizerIdFromApi(initialOrganizerId);
-      setOrganizerId(initialOrganizerId);
-    }
-  }, [initialOrganizerId, organizerIdFromApi]);
+  const pristine = useMemo(() => locationId === locationIdFromApi, [locationIdFromApi, locationId]);
 
   useEffect(() => {
     if (initialLocationId !== locationIdFromApi) {
@@ -290,71 +272,39 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
   }, [initialLocationId, locationIdFromApi]);
 
   const renderedForm = (
-    <EntryFormContainerColumns>
-      <div>
-        <EntryFormHead
-          title={`${t('categories.offer.form.organizer.label')} (${t('forms.required')})`}
-          hint={typeof organizerId === 'undefined'}
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.full}>
-            <EntryPicker
-              chooseText={t('categories.offer.form.organizer.choose') as string}
-              editText={t('categories.offer.form.organizer.edit') as string}
-              overlayTitle={
-                t('categories.offer.form.organizer.title', {
-                  name: translation?.attributes?.name,
-                }) as string
-              }
-              value={organizerId}
-              onChange={(value) => setOrganizerId(value)}
-              categoryName={Categories.organizer}
-              showHint={typeof organizerId === 'undefined'}
-              list={
-                <OrganizerList
-                  expanded={isMidOrWider}
-                  expandable={false}
-                  enableUltraWideLayout={false}
-                  activeEntryId={organizerId}
-                />
-              }
-            />
-          </FormItem>
-        </FormGrid>
-      </div>
-      <div>
-        <EntryFormHead
-          title={t('categories.offer.form.location.label') as string}
-          hint={typeof locationId === 'undefined'}
-          showHintInline
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.full}>
-            <EntryPicker
-              chooseText={t('categories.offer.form.location.choose') as string}
-              editText={t('categories.offer.form.location.edit') as string}
-              overlayTitle={
-                t('categories.offer.form.location.title', {
-                  name: translation?.attributes?.name,
-                }) as string
-              }
-              value={locationId}
-              onChange={(value) => setLocationId(value)}
-              categoryName={Categories.location}
-              showHint={typeof locationId === 'undefined'}
-              list={
-                <LocationList
-                  expanded={isMidOrWider}
-                  expandable={false}
-                  enableUltraWideLayout={false}
-                  activeEntryId={locationId}
-                />
-              }
-            />
-          </FormItem>
-        </FormGrid>
-      </div>
-    </EntryFormContainerColumns>
+    <div>
+      <EntryFormHead
+        title={t('categories.offer.form.location.label') as string}
+        hint={typeof locationId === 'undefined'}
+        showHintInline
+      />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>
+          <EntryPicker
+            chooseText={t('categories.offer.form.location.choose') as string}
+            editText={t('categories.offer.form.location.edit') as string}
+            overlayTitle={
+              t('categories.offer.form.location.title', {
+                name: translation?.attributes?.name,
+              }) as string
+            }
+            value={locationId}
+            onChange={(value) => setLocationId(value)}
+            categoryName={Categories.location}
+            showHint={typeof locationId === 'undefined'}
+            list={
+              <LocationList
+                expanded={isMidOrWider}
+                expandable={false}
+                enableUltraWideLayout={false}
+                activeEntryId={locationId}
+                showAllLocationsSwitch={true}
+              />
+            }
+          />
+        </FormItem>
+      </FormGrid>
+    </div>
   );
 
   return {
@@ -366,7 +316,6 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
             id: entry.data.id,
             entry: {
               relations: {
-                organizers: [organizerId],
                 location: locationId,
               },
             },
@@ -381,7 +330,9 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setLocationId(initialLocationId);
+    },
     valid: true,
     hint: false,
   };
@@ -416,6 +367,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: organizerLocationPristine,
     valid: organizerLocationValid,
     hint: organizerLocationHint,
+    reset: organizerLocationReset,
   } = useOrganizerLocationForm(
     {
       category,
@@ -431,6 +383,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     valid: nameValid,
     hint: nameHint,
+    reset: nameReset,
   } = useNameForm(
     {
       category,
@@ -447,6 +400,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     valid: descriptionValid,
     hint: descriptionHint,
+    reset: descriptionReset,
   } = useDescriptionForm(
     {
       category,
@@ -462,6 +416,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: teaserPristine,
     valid: teaserValid,
     hint: teaserHint,
+    reset: teaserReset,
   } = useTeaserForm(
     {
       category,
@@ -477,6 +432,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: pricingPristine,
     valid: pricingValid,
     hint: pricingHint,
+    reset: pricingReset,
   } = usePricingForm(
     {
       category,
@@ -492,6 +448,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: roomPristine,
     valid: roomValid,
     hint: roomHint,
+    reset: roomReset,
   } = useRoomForm(
     {
       category,
@@ -507,6 +464,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: linksPristine,
     valid: linksValid,
     hint: linksHint,
+    reset: linksReset,
   } = useLinksForm(
     {
       category,
@@ -571,6 +529,23 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       linksHint,
     [nameHint, descriptionHint, teaserHint, organizerLocationHint, pricingHint, roomHint, linksHint]
   );
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    linksReset();
+    nameReset();
+    descriptionReset();
+    organizerLocationReset();
+    pricingReset();
+    roomReset();
+    teaserReset();
+  });
 
   return (
     <>
