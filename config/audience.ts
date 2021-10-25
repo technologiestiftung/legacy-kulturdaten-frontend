@@ -213,7 +213,7 @@ export const offerAudience: GenericFormCategory[] = [
             ],
             condition: {
               key: 'languageOptions.languageAid',
-              type: GenericFormFieldConditionType.equal,
+              type: GenericFormFieldConditionType.include,
               value: 'openCaptioning',
             },
             data: {
@@ -936,15 +936,13 @@ export const offerAudience: GenericFormCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name:
-                          'Darstellung / Thematisierung von rassistischen, sexistischen, ableistischen, queerfeindlichen oder anderen Diskriminierungserfahrungen, die möglicherweise Traumata triggern',
+                        name: 'Darstellung / Thematisierung von rassistischen, sexistischen, ableistischen, queerfeindlichen oder anderen Diskriminierungserfahrungen, die möglicherweise Traumata triggern',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name:
-                          'Presentation / thematisation of racist, sexist, ableist, queer-hostile or other discrimination experiences that may trigger trauma',
+                        name: 'Presentation / thematisation of racist, sexist, ableist, queer-hostile or other discrimination experiences that may trigger trauma',
                       },
                     },
                   ],

@@ -32,16 +32,32 @@ const validateCondition = (
       case GenericFormFieldConditionType.unequal: {
         return state[condition.key] !== condition.value;
       }
+
       case GenericFormFieldConditionType.include: {
+        const transformedValue =
+          (state[condition.key] as string)?.charAt(0) === '[' &&
+          (state[condition.key] as string)?.charAt((state[condition.key] as string).length - 1) ===
+            ']'
+            ? (state[condition.key] as string).replace('[', '').replace(']', '').split(',')
+            : [];
+
         return (
-          Array.isArray(state[condition.key]) &&
-          (state[condition.key] as string[]).includes(condition.value as string)
+          Array.isArray(transformedValue) &&
+          (transformedValue as string[]).includes(condition.value as string)
         );
       }
+
       case GenericFormFieldConditionType.exclude: {
+        const transformedValue =
+          (state[condition.key] as string)?.charAt(0) === '[' &&
+          (state[condition.key] as string)?.charAt((state[condition.key] as string).length - 1) ===
+            ']'
+            ? (state[condition.key] as string).replace('[', '').replace(']', '').split(',')
+            : [];
+
         return (
-          !Array.isArray(state[condition.key]) ||
-          !(state[condition.key] as string[]).includes(condition.value as string)
+          !Array.isArray(transformedValue) ||
+          !(transformedValue as string[]).includes(condition.value as string)
         );
       }
     }
