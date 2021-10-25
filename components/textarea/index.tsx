@@ -39,6 +39,7 @@ export interface TextareaProps extends ComponentWithVariants {
   placeholder?: string;
   required?: boolean;
   valid?: boolean;
+  debounce?: boolean;
 }
 
 export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
@@ -46,7 +47,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
   const t = useT();
   const [touched, setTouched] = useState(false);
   const [internalState, setInternalState] = useState(props?.value);
-  const debounce = useDebounce();
+  const debouncer = useDebounce();
 
   useEffect(() => {
     if (
@@ -69,17 +70,20 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
       )}
       <StyledTextarea
         {...props}
-        value={internalState}
+        value={props?.debounce ? internalState : props?.value || ''}
         valid={props.valid}
         pristine={pristine}
         onChange={(e) => {
           setTouched(true);
 
-          setInternalState(e.target.value);
-
-          debounce(() => {
+          if (props?.debounce) {
+            setInternalState(e.target.value);
+            debouncer(() => {
+              props?.onChange(e);
+            });
+          } else {
             props?.onChange(e);
-          });
+          }
         }}
         onBlur={(e) => {
           if (props?.onBlur) {

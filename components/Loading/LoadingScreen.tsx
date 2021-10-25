@@ -209,8 +209,8 @@ export const useLoadingScreen = (): ((
         error?: React.ReactNode | string;
       }>,
       message,
-      preDelayInMs = 1000,
-      postDelayInMs = 1000
+      preDelayInMs = 1250,
+      postDelayInMs = 1250
     ) => {
       if (!render) {
         setRender(true);

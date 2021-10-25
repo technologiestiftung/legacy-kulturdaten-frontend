@@ -68,6 +68,7 @@ export const GenericFormFieldFactory: React.FC<GenericFormListFieldContainerProp
           label={label}
           tooltip={currentTranslation?.attributes?.tooltip}
           fieldProps={{
+            debounce: true,
             value: (value as string) || '',
             id: `${uid}-input`,
             type: (field as unknown as GenericFormFieldInput).data.type as InputType,
@@ -87,6 +88,7 @@ export const GenericFormFieldFactory: React.FC<GenericFormListFieldContainerProp
           label={label}
           tooltip={currentTranslation?.attributes?.tooltip}
           fieldProps={{
+            debounce: true,
             value: (value as string) || '',
             id: `${uid}-textarea`,
             placeholder: currentTranslation?.attributes?.placeholder,
