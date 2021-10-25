@@ -756,7 +756,7 @@ export const offerAudience: GenericFormCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: '*extreme, überraschend einsetzende Soundeffekte',
+                        name: 'extreme, überraschend einsetzende Soundeffekte',
                       },
                     },
                     {
