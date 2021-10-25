@@ -2,28 +2,28 @@ import { InputType } from '../components/input';
 import { Language } from '../config/locale';
 import { Translation } from './api/types/general';
 
-export type AccessibilityFieldValue = boolean | string | number | string[];
+export type GenericFormFieldValue = boolean | string | number | string[];
 
-export type AccessibilityFieldCondition = {
+export type GenericFormFieldCondition = {
   key: string;
-  type: AccessibilityFieldConditionType;
-  value: AccessibilityFieldValue;
+  type: GenericFormFieldConditionType;
+  value: GenericFormFieldValue;
 };
 
-export type AccessibilityFieldTooltip = {
+export type GenericFormFieldTooltip = {
   content: string[];
 };
 
-export type AccessibilityTranslation = {
+export type GenericFormTranslation = {
   attributes: {
     language: Language;
     name: string;
     placeholder?: string;
-    tooltip?: AccessibilityFieldTooltip;
+    tooltip?: GenericFormFieldTooltip;
   };
 } & Translation;
 
-export enum AccessibilityFieldType {
+export enum GenericFormFieldType {
   select = 'select',
   input = 'input',
   textarea = 'textarea',
@@ -32,41 +32,41 @@ export enum AccessibilityFieldType {
   conditional = 'conditional',
 }
 
-export enum AccessibilityFieldConditionType {
+export enum GenericFormFieldConditionType {
   equal = 'equal',
   unequal = 'unequal',
   include = 'include',
   exclude = 'exclude',
 }
 
-export interface AccessibilityField {
-  type: AccessibilityFieldType;
+export interface GenericFormField {
+  type: GenericFormFieldType;
   data: {
     key: string;
-    value?: AccessibilityFieldValue;
+    value?: GenericFormFieldValue;
     options?: unknown;
   };
-  translations?: AccessibilityTranslation[];
+  translations?: GenericFormTranslation[];
   meta?: {
-    hint?: AccessibilityTranslation[];
+    hint?: GenericFormTranslation[];
   };
-  condition?: AccessibilityFieldCondition;
+  condition?: GenericFormFieldCondition;
 }
 
-export interface AccessibilityFieldSelect extends AccessibilityField {
-  type: AccessibilityFieldType.select;
+export interface GenericFormFieldSelect extends GenericFormField {
+  type: GenericFormFieldType.select;
   data: {
     key: string;
     value?: string;
     options?: {
       value: string;
-      translations: AccessibilityTranslation[];
+      translations: GenericFormTranslation[];
     }[];
   };
 }
 
-export interface AccessibilityFieldInput extends AccessibilityField {
-  type: AccessibilityFieldType.input;
+export interface GenericFormFieldInput extends GenericFormField {
+  type: GenericFormFieldType.input;
   data: {
     key: string;
     type: InputType.url | InputType.number | InputType.email | InputType.text | InputType.tel;
@@ -74,8 +74,8 @@ export interface AccessibilityFieldInput extends AccessibilityField {
   };
 }
 
-export interface AccessibilityFieldTextarea extends AccessibilityField {
-  type: AccessibilityFieldType.textarea;
+export interface GenericFormFieldTextarea extends GenericFormField {
+  type: GenericFormFieldType.textarea;
   data: {
     key: string;
     rows?: number;
@@ -83,58 +83,58 @@ export interface AccessibilityFieldTextarea extends AccessibilityField {
   };
 }
 
-export interface AccessibilityFieldRadioList extends AccessibilityField {
-  type: AccessibilityFieldType.radioList;
+export interface GenericFormFieldRadioList extends GenericFormField {
+  type: GenericFormFieldType.radioList;
   data: {
     key: string;
     value?: boolean;
     options: {
       value: string;
-      translations: AccessibilityTranslation[];
+      translations: GenericFormTranslation[];
     }[];
   };
 }
 
-export interface AccessibilityFieldCheckboxList extends AccessibilityField {
-  type: AccessibilityFieldType.checkboxList;
+export interface GenericFormFieldCheckboxList extends GenericFormField {
+  type: GenericFormFieldType.checkboxList;
   data: {
     key: string;
     value?: string[];
     options: {
       value: string;
-      translations: AccessibilityTranslation[];
+      translations: GenericFormTranslation[];
     }[];
   };
 }
 
-export interface AccessibilityFieldGroup {
+export interface GenericFormFieldGroup {
   children: (
-    | AccessibilityFieldInput
-    | AccessibilityFieldTextarea
-    | AccessibilityFieldSelect
-    | AccessibilityFieldRadioList
-    | AccessibilityFieldCheckboxList
-    | AccessibilityFieldConditional
+    | GenericFormFieldInput
+    | GenericFormFieldTextarea
+    | GenericFormFieldSelect
+    | GenericFormFieldRadioList
+    | GenericFormFieldCheckboxList
+    | GenericFormFieldConditional
   )[];
-  translations?: AccessibilityTranslation[];
+  translations?: GenericFormTranslation[];
 }
 
-export interface AccessibilityFieldConditional extends AccessibilityField {
-  type: AccessibilityFieldType.conditional;
+export interface GenericFormFieldConditional extends GenericFormField {
+  type: GenericFormFieldType.conditional;
   data: {
     key: string;
     fields: (
-      | AccessibilityFieldInput
-      | AccessibilityFieldTextarea
-      | AccessibilityFieldSelect
-      | AccessibilityFieldRadioList
-      | AccessibilityFieldCheckboxList
+      | GenericFormFieldInput
+      | GenericFormFieldTextarea
+      | GenericFormFieldSelect
+      | GenericFormFieldRadioList
+      | GenericFormFieldCheckboxList
     )[];
     value?: boolean;
   };
 }
 
-export interface AccessibilityCategory {
-  children: AccessibilityFieldGroup[];
-  translations: AccessibilityTranslation[];
+export interface GenericFormCategory {
+  children: GenericFormFieldGroup[];
+  translations: GenericFormTranslation[];
 }

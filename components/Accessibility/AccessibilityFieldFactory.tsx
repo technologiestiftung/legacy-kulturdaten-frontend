@@ -2,14 +2,14 @@ import { FormListConditional } from '../FormList/FormListConditional';
 import { FormListField, FormListFieldType } from '../FormList/FormListField';
 import { InputType } from '../input';
 import {
-  AccessibilityField,
-  AccessibilityFieldCheckboxList,
-  AccessibilityFieldConditional,
-  AccessibilityFieldInput,
-  AccessibilityFieldRadioList,
-  AccessibilityFieldSelect,
-  AccessibilityFieldTextarea,
-  AccessibilityFieldType,
+  GenericFormField,
+  GenericFormFieldCheckboxList,
+  GenericFormFieldConditional,
+  GenericFormFieldInput,
+  GenericFormFieldRadioList,
+  GenericFormFieldSelect,
+  GenericFormFieldTextarea,
+  GenericFormFieldType,
 } from '../../lib/accessibility';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -19,7 +19,7 @@ import { useMemo } from 'react';
 import { useT } from '../../lib/i18n';
 
 interface AccessibilityFormListFieldContainerProps extends A11yStateConsumer {
-  field: AccessibilityField;
+  field: GenericFormField;
   last?: boolean;
   first?: boolean;
 }
@@ -42,7 +42,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
   const value = useMemo(() => (state && key ? state[key] : undefined), [state, key]);
 
   switch (field?.type) {
-    case AccessibilityFieldType.conditional: {
+    case GenericFormFieldType.conditional: {
       return (
         <FormListConditional
           last={last}
@@ -50,7 +50,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
           onChange={(checked) => dispatch(a11yActionSet(key, checked))}
           label={label}
         >
-          {(field as AccessibilityFieldConditional).data?.fields?.map((field, index) => (
+          {(field as GenericFormFieldConditional).data?.fields?.map((field, index) => (
             <AccessibilityFieldFactory
               key={index}
               field={field}
@@ -62,7 +62,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       );
     }
 
-    case AccessibilityFieldType.input: {
+    case GenericFormFieldType.input: {
       return (
         <FormListField
           last={last}
@@ -73,7 +73,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
           fieldProps={{
             value: (value as string) || '',
             id: `${uid}-input`,
-            type: (field as unknown as AccessibilityFieldInput).data.type as InputType,
+            type: (field as unknown as GenericFormFieldInput).data.type as InputType,
             placeholder: currentTranslation?.attributes?.placeholder,
             onChange: (e) => dispatch(a11yActionSet(key, e.target.value)),
           }}
@@ -81,7 +81,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       );
     }
 
-    case AccessibilityFieldType.textarea: {
+    case GenericFormFieldType.textarea: {
       return (
         <FormListField
           last={last}
@@ -93,14 +93,14 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
             value: (value as string) || '',
             id: `${uid}-textarea`,
             placeholder: currentTranslation?.attributes?.placeholder,
-            rows: (field as unknown as AccessibilityFieldTextarea)?.data?.rows,
+            rows: (field as unknown as GenericFormFieldTextarea)?.data?.rows,
             onChange: (e) => dispatch(a11yActionSet(key, e.target.value)),
           }}
         />
       );
     }
 
-    case AccessibilityFieldType.select: {
+    case GenericFormFieldType.select: {
       return (
         <FormListField
           last={last}
@@ -117,7 +117,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
                 <option value="undefined" key="-1">
                   {currentTranslation?.attributes?.placeholder || t('general.choose')}
                 </option>
-                {(field as AccessibilityFieldSelect).data?.options?.map((option, optionIndex) => {
+                {(field as GenericFormFieldSelect).data?.options?.map((option, optionIndex) => {
                   const optionTranslation = getTranslation(language, option.translations);
 
                   return (
@@ -133,7 +133,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       );
     }
 
-    case AccessibilityFieldType.radioList: {
+    case GenericFormFieldType.radioList: {
       return (
         <FormListField
           last={last}
@@ -146,7 +146,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
             name: `${uid}-radio-list`,
             value: (value as string) || '',
             onChange: (newValue) => dispatch(a11yActionSet(key, newValue)),
-            options: (field as AccessibilityFieldRadioList)?.data?.options?.map(
+            options: (field as GenericFormFieldRadioList)?.data?.options?.map(
               (option, optionIndex) => {
                 const optionTranslation = getTranslation(language, option.translations);
 
@@ -162,7 +162,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
       );
     }
 
-    case AccessibilityFieldType.checkboxList: {
+    case GenericFormFieldType.checkboxList: {
       const transformedValue =
         (value as string)?.charAt(0) === '[' &&
         (value as string)?.charAt((value as string).length - 1) === ']'
@@ -181,7 +181,7 @@ export const AccessibilityFieldFactory: React.FC<AccessibilityFormListFieldConta
             name: `${uid}-radio-list`,
             value: (transformedValue as string[]) || [],
             onChange: (newValues) => dispatch(a11yActionSet(key, `[${newValues.toString()}]`)),
-            checkboxes: (field as AccessibilityFieldCheckboxList)?.data?.options?.map(
+            checkboxes: (field as GenericFormFieldCheckboxList)?.data?.options?.map(
               (option, optionIndex) => {
                 const optionTranslation = getTranslation(language, option.translations);
 

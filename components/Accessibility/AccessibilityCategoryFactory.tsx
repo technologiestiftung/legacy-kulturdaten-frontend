@@ -5,9 +5,9 @@ import { AccessibilityFieldFactory } from './AccessibilityFieldFactory';
 import { FormListGroup } from '../FormList/FormListGroup';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 import {
-  AccessibilityFieldCondition,
-  AccessibilityFieldConditionType,
-  AccessibilityFieldGroup,
+  GenericFormFieldCondition,
+  GenericFormFieldConditionType,
+  GenericFormFieldGroup,
 } from '../../lib/accessibility';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -15,26 +15,26 @@ import { A11yState, A11yStateConsumer } from './useAccessibilityStructure';
 
 interface AccessibilityCategoryContainerProps extends A11yStateConsumer {
   title: string;
-  fieldGroups: AccessibilityFieldGroup[];
+  fieldGroups: GenericFormFieldGroup[];
 }
 
-const validateCondition = (state: A11yState, condition: AccessibilityFieldCondition): boolean => {
+const validateCondition = (state: A11yState, condition: GenericFormFieldCondition): boolean => {
   if (condition) {
     switch (condition.type) {
-      case AccessibilityFieldConditionType.equal: {
+      case GenericFormFieldConditionType.equal: {
         return state[condition.key] === condition.value;
       }
 
-      case AccessibilityFieldConditionType.unequal: {
+      case GenericFormFieldConditionType.unequal: {
         return state[condition.key] !== condition.value;
       }
-      case AccessibilityFieldConditionType.include: {
+      case GenericFormFieldConditionType.include: {
         return (
           Array.isArray(state[condition.key]) &&
           (state[condition.key] as string[]).includes(condition.value as string)
         );
       }
-      case AccessibilityFieldConditionType.exclude: {
+      case GenericFormFieldConditionType.exclude: {
         return (
           !Array.isArray(state[condition.key]) ||
           !(state[condition.key] as string[]).includes(condition.value as string)

@@ -196,6 +196,8 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
               (child as React.ReactElement)?.type as JSXElementConstructor<unknown>
             )?.name;
 
+            console.log(child);
+
             return React.cloneElement(child as React.ReactElement, {
               onClick:
                 elementType === 'HeaderMenuLink' || elementType === 'Button'

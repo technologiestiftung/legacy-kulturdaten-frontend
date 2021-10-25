@@ -10,7 +10,7 @@ import { Input, InputProps } from '../input';
 import { RadioList, RadioListProps } from '../Radio/RadioList';
 import { Select, SelectProps, SelectVariant } from '../select';
 import { Textarea, TextareaProps } from '../textarea';
-import { AccessibilityFieldTooltip } from '../../lib/accessibility';
+import { GenericFormFieldTooltip } from '../../lib/accessibility';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
 
@@ -109,7 +109,7 @@ export interface FormListFieldProps {
   fieldProps: InputProps | SelectProps | RadioListProps | CheckboxListProps | TextareaProps;
   last?: boolean;
   first?: boolean;
-  tooltip?: AccessibilityFieldTooltip;
+  tooltip?: GenericFormFieldTooltip;
 }
 
 export const FormListField: React.FC<FormListFieldProps> = ({

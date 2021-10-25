@@ -1,4 +1,4 @@
-export type AccessibilityField = {
+export type GenericFormField = {
   attributes: {
     type: string;
     key: string;
@@ -10,6 +10,6 @@ export type Accessibility = {
   id?: number;
   type?: 'accessibility';
   relations?: {
-    fields: AccessibilityField[];
+    fields: GenericFormField[];
   };
 };

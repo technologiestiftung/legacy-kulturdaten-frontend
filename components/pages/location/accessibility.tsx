@@ -14,7 +14,7 @@ import { useSaveDate } from '../helpers/useSaveDate';
 import { Location } from '../../../lib/api/types/location';
 import { LocationShow } from '../../../lib/api/routes/location/show';
 import { Save } from '../../EntryForm/Save';
-import { AccessibilityField } from '../../../lib/api/types/accessibility';
+import { GenericFormField } from '../../../lib/api/types/accessibility';
 import { useApiCall } from '../../../lib/api';
 import {
   LocationAccessibilityUpdate,
@@ -32,14 +32,14 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
     () => entry?.data?.relations?.accessibility?.relations?.fields,
     [entry?.data?.relations?.accessibility?.relations?.fields]
   );
-  const [accessibilityFromApi, setAccessibilityFromApi] = useState<AccessibilityField[]>([]);
+  const [accessibilityFromApi, setAccessibilityFromApi] = useState<GenericFormField[]>([]);
 
   // const [pristine, setPristine] = useState(true);
 
   const accessibilityFieldsState = useMemo(
     () =>
       state
-        ? Object.entries(state as A11yState).map<AccessibilityField>(([key, value]) => {
+        ? Object.entries(state as A11yState).map<GenericFormField>(([key, value]) => {
             const type =
               typeof value === 'number'
                 ? 'number'

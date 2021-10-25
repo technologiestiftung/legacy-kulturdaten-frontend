@@ -1,5 +1,5 @@
 import { Dispatch, Reducer, useReducer } from 'react';
-import { AccessibilityCategory, AccessibilityFieldValue } from '../../lib/accessibility';
+import { GenericFormCategory, GenericFormFieldValue } from '../../lib/accessibility';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { EntryFormContainer } from '../EntryForm/wrappers';
@@ -15,14 +15,14 @@ export enum A11yActions {
   set = 'set',
 }
 
-export type A11yState = { [key: string]: AccessibilityFieldValue };
+export type A11yState = { [key: string]: GenericFormFieldValue };
 
 export type A11yAction = {
   type: A11yActions;
   payload?: {
     state?: A11yState;
     key?: string;
-    value?: AccessibilityFieldValue;
+    value?: GenericFormFieldValue;
   };
 };
 
@@ -61,7 +61,7 @@ const a11yReducer: Reducer<A11yState, A11yAction> = (state, action) => {
 };
 
 export const useAccessibilityStructure = (
-  structure: AccessibilityCategory[],
+  structure: GenericFormCategory[],
   initialState?: A11yState
 ): { renderedForm: React.ReactElement; state: A11yState; dispatch: Dispatch<A11yAction> } => {
   const language = useLanguage();
