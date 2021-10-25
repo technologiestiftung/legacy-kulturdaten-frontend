@@ -940,6 +940,7 @@ export const deDE: Localization = {
       },
       tabs: {
         info: () => 'Informationen',
+        service: () => 'Service',
         accessibility: () => 'Barrierefreiheit',
         media: () => 'Bilder',
       },

@@ -919,6 +919,7 @@ export const enDE: Localization = {
       },
       tabs: {
         info: () => 'Information',
+        service: () => 'Service',
         accessibility: () => 'Accessibility',
         media: () => 'Images',
       },
