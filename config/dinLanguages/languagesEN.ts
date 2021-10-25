@@ -1,4 +1,6 @@
-export const english = [
+import { LanguageList } from '.';
+
+export const languagesEn: LanguageList = [
   {
     translation: 'Afar',
     dinKey: 'aa',

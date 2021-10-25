@@ -1,4 +1,6 @@
-export const german = [
+import { LanguageList } from '.';
+
+export const languagesDe: LanguageList = [
   {
     translation: 'Afar',
     dinKey: 'aa',
@@ -70,10 +72,6 @@ export const german = [
   {
     translation: 'Bengalisch',
     dinKey: 'bn',
-  },
-  {
-    translation: 'Bihari',
-    dinKey: 'bh',
   },
   {
     translation: 'Bislama',
@@ -384,11 +382,8 @@ export const german = [
     dinKey: 'lv',
   },
   {
-    translation: 'Manx,',
+    translation: 'Manx, Manx-Gälisch',
     dinKey: 'gv',
-  },
-  {
-    translation: 'Manx-Gälisch',
   },
   {
     translation: 'Mazedonisch',
@@ -549,10 +544,6 @@ export const german = [
   {
     translation: 'Nordsamisch',
     dinKey: 'se',
-  },
-  {
-    translation: '(Serbokroatisch)',
-    dinKey: '(sh)',
   },
   {
     translation: 'Samoanisch',
