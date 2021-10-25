@@ -52,6 +52,7 @@ interface LocationListProps {
   enableUltraWideLayout?: boolean;
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
+  showAllLocationsSwitch?: boolean;
 }
 
 export const LocationList: React.FC<LocationListProps> = ({
@@ -60,6 +61,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   enableUltraWideLayout = true,
   customEntryOnClick,
   activeEntryId,
+  showAllLocationsSwitch = false,
 }: LocationListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -94,23 +96,25 @@ export const LocationList: React.FC<LocationListProps> = ({
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
   const view = useMemo(() => getView(listName), [getView, listName]);
-  const filtersBoxExpanded = useMemo(() => getFiltersBoxExpanded(listName), [
-    getFiltersBoxExpanded,
-    listName,
-  ]);
-  const dispatchFilters = useMemo(() => getDispatchFilters(listName), [
-    getDispatchFilters,
-    listName,
-  ]);
+  const filtersBoxExpanded = useMemo(
+    () => getFiltersBoxExpanded(listName),
+    [getFiltersBoxExpanded, listName]
+  );
+  const dispatchFilters = useMemo(
+    () => getDispatchFilters(listName),
+    [getDispatchFilters, listName]
+  );
   const loadingScreen = useLoadingScreen();
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
+
+  const [showAllLocations, setShowAllLocation] = useState(false);
 
   const list = useList<LocationListCall, Location>(
     categories.location,
     currentPage,
     entriesPerPage,
-    [...Object.entries(filters), ['organizer', organizerId]],
+    [...Object.entries(filters), ['organizer', showAllLocations ? undefined : organizerId]],
     { key: sortKey, order }
   );
 
@@ -299,6 +303,30 @@ export const LocationList: React.FC<LocationListProps> = ({
         activeFiltersCount={activeFiltersCount}
       >
         <StyledFilters expanded={expanded}>
+          {showAllLocationsSwitch && (
+            <RadioSwitch
+              value={showAllLocations ? 'true' : 'false'}
+              label={t('categories.location.list.allOrMy') as string}
+              name={`entry-order-${pseudoUID}`}
+              onChange={(value) => {
+                setShowAllLocation(value === 'true');
+              }}
+              options={[
+                {
+                  value: 'false',
+                  label: t('categories.location.list.myLocations') as string,
+                  ariaLabel: t('categories.location.list.myLocations') as string,
+                  icon: 'User',
+                },
+                {
+                  value: 'true',
+                  label: t('categories.location.list.allLocations') as string,
+                  ariaLabel: t('categories.location.list.myLocations') as string,
+                  icon: 'Users',
+                },
+              ]}
+            />
+          )}
           <Select
             label={t('categories.organizer.filters.status.label') as string}
             id={`entry-filter-status-${pseudoUID}`}
