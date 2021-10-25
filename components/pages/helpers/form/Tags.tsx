@@ -24,9 +24,10 @@ export const useEntryTags: EntryFormHook = (
   const [tagsFromApi, setTagsFromApi] = useState<Tag['id'][]>();
   const t = useT();
 
-  const initialTags = useMemo(() => entry?.data?.relations?.tags?.map((tag) => tag.id), [
-    entry?.data?.relations?.tags,
-  ]);
+  const initialTags = useMemo(
+    () => entry?.data?.relations?.tags?.map((tag) => tag.id),
+    [entry?.data?.relations?.tags]
+  );
 
   const pristine = useMemo(
     () => JSON.stringify(tagsFromApi?.sort()) === JSON.stringify(selectedTags?.sort()),
@@ -60,7 +61,9 @@ export const useEntryTags: EntryFormHook = (
     pristine,
     valid: true,
     hint: false,
-    reset: () => undefined,
+    reset: () => {
+      setSelectedTags(initialTags);
+    },
     submit: async () => {
       try {
         const resp = await call(category.api.update.factory, {

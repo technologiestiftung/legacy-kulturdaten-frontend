@@ -20,6 +20,8 @@ import {
   LocationAccessibilityUpdate,
   locationAccessibilityUpdateFactory,
 } from '../../../lib/api/routes/location/accessibility/update';
+import { useT } from '../../../lib/i18n';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 
 const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
@@ -177,8 +179,9 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
   const formattedDate = useSaveDate(entry);
+  const t = useT();
 
-  const { renderedForm, valid, submit, hint, pristine } = useAccessibilityForm(
+  const { renderedForm, valid, submit, hint, pristine, reset } = useAccessibilityForm(
     { category, query },
     loaded,
     false
@@ -193,6 +196,17 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
       setLoaded(false);
     };
   }, [rendered, entry]);
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    reset();
+  });
 
   return (
     <>

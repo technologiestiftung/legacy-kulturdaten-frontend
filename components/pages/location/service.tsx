@@ -20,6 +20,8 @@ import {
   LocationServiceUpdate,
   locationServiceUpdateFactory,
 } from '../../../lib/api/routes/location/service/update';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { useT } from '../../../lib/i18n';
 
 const useServiceForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
@@ -177,8 +179,9 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
   const formattedDate = useSaveDate(entry);
+  const t = useT();
 
-  const { renderedForm, valid, submit, hint, pristine } = useServiceForm(
+  const { renderedForm, valid, submit, hint, pristine, reset } = useServiceForm(
     { category, query },
     loaded,
     false
@@ -193,6 +196,17 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
       setLoaded(false);
     };
   }, [rendered, entry]);
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    reset();
+  });
 
   return (
     <>

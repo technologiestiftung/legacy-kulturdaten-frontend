@@ -22,6 +22,7 @@ import { useUser } from '../../user/useUser';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
 import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 
 const maxLogoSize = 2048;
 
@@ -237,7 +238,9 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
     submit: async () => {
       submitLogo();
     },
-    reset: () => undefined,
+    reset: () => {
+      setLogo(initialLogo);
+    },
     valid,
   };
 };
@@ -265,12 +268,14 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
     submit: mediaSubmit,
     pristine: mediaPristine,
     valid: mediaValid,
+    reset: mediaReset,
   } = useMediaForm({ category, query }, loaded, false);
   const {
     renderedForm: logoForm,
     submit: logoSubmit,
     pristine: logoPristine,
     valid: logoValid,
+    reset: logoReset,
   } = useLogoForm({ category, query }, loaded, false);
 
   useEffect(() => {
@@ -282,6 +287,20 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
       setLoaded(false);
     };
   }, [rendered, entry]);
+
+  const pristine = useMemo(() => mediaPristine && logoPristine, [mediaPristine, logoPristine]);
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    mediaReset();
+    logoReset();
+  });
 
   return (
     <>

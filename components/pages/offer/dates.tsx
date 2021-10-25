@@ -14,6 +14,7 @@ import { CategoryEntryPage, Order, useEntry, useOfferDateList } from '../../../l
 import { useT } from '../../../lib/i18n';
 import { getTranslation } from '../../../lib/translations';
 import { usePseudoUID } from '../../../lib/uid';
+import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { Breakpoint, WindowContext } from '../../../lib/WindowService';
 import { useCollapsable } from '../../collapsable';
 import { DateCreate } from '../../DateCreate';
@@ -130,7 +131,9 @@ const useIsPermanentForm: EntryFormHook = ({ category, query }) => {
       }
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      setIsPermanent(initialIsPermanent);
+    },
     valid: true,
     hint: false,
     value: isPermanent,
@@ -171,6 +174,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     submit: isPermanentSubmit,
     pristine: isPermanentPristine,
     value: isPermanentValue,
+    reset: isPermanentReset,
   } = useIsPermanentForm(
     {
       category,
@@ -324,6 +328,17 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     }
     setDatesNotPristineList([]);
   }, [call, dates, datesNotPristineList, entry?.data?.id, mutateDateList]);
+
+  const message = t('save.confirmExit') as string;
+
+  const shouldWarn = useMemo(
+    () => !pristine && typeof entry?.data !== 'undefined',
+    [pristine, entry?.data]
+  );
+
+  useConfirmExit(shouldWarn, message, () => {
+    isPermanentReset();
+  });
 
   return (
     <>
