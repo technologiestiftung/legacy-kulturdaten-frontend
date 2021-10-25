@@ -108,13 +108,16 @@ export const LocationList: React.FC<LocationListProps> = ({
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
 
-  const [showAllLocations, setShowAllLocation] = useState(false);
+  const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
   const list = useList<LocationListCall, Location>(
     categories.location,
     currentPage,
     entriesPerPage,
-    [...Object.entries(filters), ['organizer', showAllLocations ? undefined : organizerId]],
+    [
+      ...Object.entries(filters),
+      ['organizer', showAllLocationsSwitch && showAllLocations ? undefined : organizerId],
+    ],
     { key: sortKey, order }
   );
 
@@ -313,16 +316,16 @@ export const LocationList: React.FC<LocationListProps> = ({
               }}
               options={[
                 {
-                  value: 'false',
-                  label: t('categories.location.list.myLocations') as string,
-                  ariaLabel: t('categories.location.list.myLocations') as string,
-                  icon: 'User',
-                },
-                {
                   value: 'true',
                   label: t('categories.location.list.allLocations') as string,
                   ariaLabel: t('categories.location.list.myLocations') as string,
                   icon: 'Users',
+                },
+                {
+                  value: 'false',
+                  label: t('categories.location.list.myLocations') as string,
+                  ariaLabel: t('categories.location.list.myLocations') as string,
+                  icon: 'User',
                 },
               ]}
             />
@@ -412,7 +415,7 @@ export const LocationList: React.FC<LocationListProps> = ({
               cards
             ) : cards && cards.length === 0 ? (
               <EntryListPlaceholder>
-                {activeFiltersCount === 0
+                {activeFiltersCount === 0 && (!showAllLocationsSwitch || !setShowAllLocation)
                   ? t('categories.location.list.nothing')
                   : t('categories.location.list.nothingFilter')}
               </EntryListPlaceholder>
