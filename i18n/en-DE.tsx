@@ -865,6 +865,7 @@ export const enDE: Localization = {
         info: () => 'Information',
         categorization: () => 'Categorization',
         dates: () => 'Dates',
+        audience: () => 'Audience',
         accessibility: () => 'Accessibility',
         media: () => 'Images',
       },

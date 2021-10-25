@@ -886,6 +886,7 @@ export const deDE: Localization = {
         info: () => 'Informationen',
         categorization: () => 'Kategorisierung',
         dates: () => 'Termine',
+        audience: () => 'Zielgruppe',
         accessibility: () => 'Barrierefreiheit',
         media: () => 'Bilder',
       },
