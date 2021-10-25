@@ -43,9 +43,10 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
 
   const [translationsFromApi, setTranslationsFromApi] = useState<OfferTranslation[]>();
 
-  const initialTranslations = useMemo(() => entry?.data?.relations?.translations, [
-    entry?.data?.relations?.translations,
-  ]);
+  const initialTranslations = useMemo(
+    () => entry?.data?.relations?.translations,
+    [entry?.data?.relations?.translations]
+  );
 
   const pristine = useMemo(
     () => JSON.stringify(translations) === JSON.stringify(translationsFromApi),
@@ -76,7 +77,7 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
                 value={currentTranslation?.attributes?.roomDescription || ''}
                 type={InputType.text}
                 placeholder={`${t('categories.offer.form.locationInfoPlaceholder')} (${t(
-                  'general.english'
+                  languageTranslationKeys[language]
                 )})`}
                 onChange={(e) => {
                   const updatedTranslation = {
@@ -143,10 +144,10 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
-  const pristine = useMemo(() => JSON.stringify(attributes) === JSON.stringify(attributesFromApi), [
-    attributes,
-    attributesFromApi,
-  ]);
+  const pristine = useMemo(
+    () => JSON.stringify(attributes) === JSON.stringify(attributesFromApi),
+    [attributes, attributesFromApi]
+  );
 
   useEffect(() => {
     if (JSON.stringify(initialAttributes) !== JSON.stringify(attributesFromApi)) {

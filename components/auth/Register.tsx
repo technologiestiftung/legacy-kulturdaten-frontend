@@ -80,7 +80,6 @@ export const RegisterForm: React.FC = () => {
               },
             });
             setSuccess(true);
-            console.log(resp);
             return { success: true };
           } catch (e) {
             const requestErrors = e.message

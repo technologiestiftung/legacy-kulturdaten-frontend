@@ -76,8 +76,6 @@ export const LoginForm: React.FC = () => {
           return { success: false, error: <Info>{t('login.error')}</Info> };
         }
       });
-    } else {
-      console.log('ejo');
     }
   };
 

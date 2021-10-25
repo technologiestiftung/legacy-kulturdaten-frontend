@@ -108,7 +108,6 @@ export const useUser = (): WrappedUser => {
 
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
-        console.log('userTokenIsValid = false, log out!');
         logoutUser();
       } else if (userTokenIsValid === true && !isAuthenticated) {
         if (userObject) {
@@ -132,7 +131,6 @@ export const useUser = (): WrappedUser => {
         }
       }
     } else if (isAuthenticated) {
-      console.log('no token present, log out!');
       logoutUser();
     } else {
       if (locale && internalRoutes.includes(activeRoute)) {
