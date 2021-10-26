@@ -110,6 +110,19 @@ export const LocationList: React.FC<LocationListProps> = ({
 
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
+  // Set status filter to published if all locations are shown.
+  useEffect(() => {
+    if (showAllLocationsSwitch && showAllLocations && filters?.status !== 'published') {
+      dispatchFilters({
+        type: FiltersActions.set,
+        payload: {
+          key: 'status',
+          value: 'published',
+        },
+      });
+    }
+  }, [dispatchFilters, showAllLocations, showAllLocationsSwitch, filters?.status]);
+
   const list = useList<LocationListCall, Location>(
     categories.location,
     currentPage,
@@ -313,6 +326,16 @@ export const LocationList: React.FC<LocationListProps> = ({
               name={`location-selection-${pseudoUID}`}
               onChange={(value) => {
                 setShowAllLocation(value === 'true');
+
+                if (value === 'false') {
+                  dispatchFilters({
+                    type: FiltersActions.set,
+                    payload: {
+                      key: 'status',
+                      value: undefined,
+                    },
+                  });
+                }
               }}
               options={[
                 {
@@ -334,6 +357,7 @@ export const LocationList: React.FC<LocationListProps> = ({
             label={t('categories.organizer.filters.status.label') as string}
             id={`entry-filter-status-${pseudoUID}`}
             value={filters?.status}
+            disabled={showAllLocationsSwitch && showAllLocations}
             onChange={(e) => {
               setCurrentPage(listName, 1);
               dispatchFilters({
