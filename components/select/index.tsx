@@ -217,6 +217,9 @@ const StyledSelect = styled.select<{
   position: relative;
   width: 100%;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   ${({ variant, hint }) => selectVariants[variant](hint)}
 `;
