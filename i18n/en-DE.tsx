@@ -460,8 +460,8 @@ export const enDE: Localization = {
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
       },
       '4': {
-        name: () => 'Different license (Kulturdaten-License)',
-        href: () => 'https://kulturdaten.berlin',
+        name: () => 'permitted exclusively in the context of current reporting',
+        href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
       },
     },
     licenseEnd: () => 'End date license',
@@ -890,7 +890,7 @@ export const enDE: Localization = {
         nothing: () => 'There are no Locations yet. Feel free to create one.',
         nothingFilter: () => 'No Locations found with current filters.',
         allOrMy: () => 'Show selection',
-        allLocations: () => 'All Locations',
+        allLocations: () => 'All public Locations',
         myLocations: () => 'Only my Locations',
       },
       title: {

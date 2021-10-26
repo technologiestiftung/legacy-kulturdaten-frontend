@@ -466,8 +466,8 @@ export const deDE: Localization = {
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.de',
       },
       '4': {
-        name: () => 'Weitere Lizenz (Kulturdaten-Lizenz)',
-        href: () => 'https://kulturdaten.berlin',
+        name: () => 'nur im Zuge der aktuellen Berichtersattung nutzbar',
+        href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
       },
     },
     licenseEnd: () => 'Ablaufdatum Lizenz',
@@ -912,7 +912,7 @@ export const deDE: Localization = {
         nothing: () => 'Es gibt noch keine Orte. Lege gerne einen an.',
         nothingFilter: () => 'Keine Orte für die aktive Filterung gefunden.',
         allOrMy: () => 'Zeige Auswahl',
-        allLocations: () => 'Alle Orte',
+        allLocations: () => 'Alle öffentlichen Orte',
         myLocations: () => 'Nur meine Orte',
       },
       title: {
