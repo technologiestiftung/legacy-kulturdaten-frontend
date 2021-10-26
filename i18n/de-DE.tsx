@@ -912,7 +912,7 @@ export const deDE: Localization = {
         nothing: () => 'Es gibt noch keine Orte. Lege gerne einen an.',
         nothingFilter: () => 'Keine Orte für die aktive Filterung gefunden.',
         allOrMy: () => 'Zeige Auswahl',
-        allLocations: () => 'Alle Orte',
+        allLocations: () => 'Alle öffentlichen Orte',
         myLocations: () => 'Nur meine Orte',
       },
       title: {

@@ -890,7 +890,7 @@ export const enDE: Localization = {
         nothing: () => 'There are no Locations yet. Feel free to create one.',
         nothingFilter: () => 'No Locations found with current filters.',
         allOrMy: () => 'Show selection',
-        allLocations: () => 'All Locations',
+        allLocations: () => 'All public Locations',
         myLocations: () => 'Only my Locations',
       },
       title: {
