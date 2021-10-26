@@ -108,6 +108,8 @@ const StyledDashboardTileContainerChildren = styled.div`
   flex-grow: 1;
   position: relative;
   z-index: 1;
+  background: var(--white);
+
   ${mq(Breakpoint.mid)} {
     white-space: nowrap;
     overflow: hidden;
