@@ -859,7 +859,7 @@ export const deDE: Localization = {
           noRegistration: () => 'Nicht anmeldepflichtig',
           ticketUrl: () => 'Ticketlink / Ticketinformation',
           ticketUrlPlaceholder: () => 'https://example.com',
-          registrationUrl: () => 'Anmeldelink / Anmeldungeinformation',
+          registrationUrl: () => 'Anmeldelink / Anmeldungsinformation',
           registrationUrlPlaceholder: () => 'https://example.com',
         },
         organizer: {
