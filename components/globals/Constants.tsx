@@ -9,6 +9,9 @@ export const CSSVars: React.FC = () => (
         --white: #f8f8f8;
         --white-o0: rgba(248, 248, 248, 0);
         --white-o50: rgba(248, 248, 248, 0.5);
+        --white-red: rgb(247, 244, 244);
+        --white-green: rgb(243, 246, 245);
+        --white-green-o50: rgba(243, 246, 245, 0.5);
         --grey-200: #e6e6e6;
         --grey-350: #c8c8c8;
         --grey-400: #cbcbcb;

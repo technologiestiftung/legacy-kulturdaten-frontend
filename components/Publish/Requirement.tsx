@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { Check } from 'react-feather';
 
 const StyledRequirement = styled.div<{ fulfilled: boolean }>`
-  background: ${({ fulfilled }) => (fulfilled ? 'var(--white-o50)' : 'var(--white)')};
+  background: ${({ fulfilled }) => (fulfilled ? 'var(--white-green-o50)' : 'var(--white-red)')};
   color: ${({ fulfilled }) => (fulfilled ? 'var(--black-o70)' : 'var(--black)')};
   border-radius: 0.1875rem;
   font-size: var(--font-size-300);
