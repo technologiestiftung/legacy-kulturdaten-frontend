@@ -735,15 +735,17 @@ export const deDE: Localization = {
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} ausgewählt`,
       },
       requirements: {
-        name: () => 'Bezeichnung ausgefüllt',
-        description: () => 'Beschreibung ausgefüllt',
-        categorization: () => 'Kategorien ausgefüllt',
-        address: () => 'Adresse ausgefüllt',
+        name: () => 'Bezeichnung / Name',
+        description: () => 'Beschreibung',
+        categorization: () => 'Art der Anbieter:in',
+        address: () => 'Kontakt intern',
       },
       title: {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',
       },
+      publishText: () =>
+        'Diese Anbieter:in ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche sie. Erst dann sind ihre Daten, Angebote und Orte öffentlich verfügbar.',
       form: {
         create: () => 'Neue Anbieter:in anlegen',
         baseInfo: () => 'Grundlagen',
@@ -824,15 +826,17 @@ export const deDE: Localization = {
         nothingFilter: () => 'Keine Angebote für die aktive Filterung gefunden.',
       },
       requirements: {
-        name: () => 'Angebotstitel ausgefüllt',
-        description: () => 'Beschreibung ausgefüllt',
-        categorization: () => 'Kategorien ausgefüllt',
-        mainType: () => 'Angebotstyp ausgewählt',
+        name: () => 'Angebotstitel',
+        description: () => 'Beschreibung',
+        categorization: () => 'Themen-Kategorie',
+        mainType: () => 'Angebotstyp',
       },
       title: {
         plural: () => 'Angebote',
         singular: () => 'Angebot',
       },
+      publishText: () =>
+        'Dieses Angebot ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche es. Erst dann sind seine Daten und Termine öffentlich verfügbar.',
       form: {
         create: () => 'Neues Angebot anlegen',
         name: () => 'Angebotstitel',
@@ -877,7 +881,7 @@ export const deDE: Localization = {
           edit: () => 'Ort ändern',
           title: ({ name }) => `Ort für ‚${name}‘ wählen`,
         },
-        topics: () => 'Themen-Kategorie',
+        topics: () => 'Themen-Kategorie (Pflichtfeld)',
         topicsTooltip: () => (
           <>
             <TooltipP>
@@ -921,6 +925,12 @@ export const deDE: Localization = {
       title: {
         plural: () => 'Orte',
         singular: () => 'Ort',
+      },
+      publishText: () =>
+        'Dieser Ort ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche ihn. Erst dann sind seine Daten öffentlich verfügbar.',
+      requirements: {
+        name: () => 'Bezeichnung des Ortes',
+        description: () => 'Beschreibung',
       },
       form: {
         openingHours: () => 'Öffnungszeiten',

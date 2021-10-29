@@ -181,10 +181,7 @@ export const Publish: React.FC<PublishProps> = ({ category, query }: PublishProp
         <StyledPublishHeadStatus>
           <StatusFlag status={entry?.data?.attributes?.status} variant={StatusFlagVariant.big} />
         </StyledPublishHeadStatus>
-        <StyledPublishHeadText>
-          Diese Anbieter:in ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche sie.
-          Erst dann sind ihre Daten und Angebote öffentlich verfügbar.
-        </StyledPublishHeadText>
+        <StyledPublishHeadText>{category.publishText}</StyledPublishHeadText>
       </StyledPublishHead>
       <StyledPublishBody>
         <StyledPublishRequirements>

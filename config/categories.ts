@@ -76,7 +76,6 @@ export const useCategories: () => {
         list: routes[Routes.organizer],
         create: routes[Routes.createOrganizer],
       },
-      // subMenuKey: 'organizer',
       pages: {
         create: OrganizerCreatePage,
         preview: OrganizerPreviewPage,
@@ -129,6 +128,7 @@ export const useCategories: () => {
         deleteConfirm: t('categories.organizer.options.deleteConfirm') as string,
         deleting: t('categories.organizer.options.deleting') as string,
       },
+      publishText: t('categories.organizer.publishText') as string,
       requirements: [
         {
           translationKey: 'categories.organizer.requirements.name',
@@ -217,6 +217,7 @@ export const useCategories: () => {
         deleteConfirm: t('categories.offer.options.deleteConfirm') as string,
         deleting: t('categories.offer.options.deleting') as string,
       },
+      publishText: t('categories.offer.publishText') as string,
       requirements: [
         {
           translationKey: 'categories.offer.requirements.name',
@@ -292,13 +293,14 @@ export const useCategories: () => {
         deleteConfirm: t('categories.location.options.deleteConfirm') as string,
         deleting: t('categories.location.options.deleting') as string,
       },
+      publishText: t('categories.location.publishText') as string,
       requirements: [
         {
-          translationKey: 'categories.organizer.requirements.name',
+          translationKey: 'categories.location.requirements.name',
           publishableKeys: ['attributes.name'],
         },
         {
-          translationKey: 'categories.offer.requirements.description',
+          translationKey: 'categories.location.requirements.description',
           publishableKeys: ['attributes.description'],
         },
       ],

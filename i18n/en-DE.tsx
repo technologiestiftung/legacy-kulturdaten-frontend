@@ -728,11 +728,13 @@ export const enDE: Localization = {
         },
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} active`,
       },
+      publishText: () =>
+        'This Organizer is a draft. Fill in the required information and publish it. Only then will its data, Offers and Locations be publicly available.',
       requirements: {
-        name: () => 'Name added',
-        description: () => 'Description added',
-        categorization: () => 'Categories added',
-        address: () => 'Address added',
+        name: () => 'Name',
+        description: () => 'Description',
+        categorization: () => 'Categories',
+        address: () => 'Address',
       },
       title: {
         plural: () => 'Organizers',
@@ -801,11 +803,13 @@ export const enDE: Localization = {
         nothing: () => 'There are no Offers yet. Feel free to create one.',
         nothingFilter: () => 'No Offers found with current filters.',
       },
+      publishText: () =>
+        'This Offer is a draft. Fill in the required information and publish it. Only then will its data and dates be publicly available.',
       requirements: {
-        name: () => 'Offer title added',
-        description: () => 'Description added',
-        categorization: () => 'Categories added',
-        mainType: () => 'Event type chosen',
+        name: () => 'Offer title',
+        description: () => 'Description',
+        categorization: () => 'Topic category',
+        mainType: () => 'Event type',
       },
       title: {
         plural: () => 'Offers',
@@ -855,7 +859,7 @@ export const enDE: Localization = {
           edit: () => 'Change location',
           title: ({ name }) => `Choose location for ‘${name}’`,
         },
-        topics: () => 'Topic category',
+        topics: () => 'Topic category (required)',
         topicsTooltip: () => (
           <>
             <TooltipP>
@@ -899,6 +903,12 @@ export const enDE: Localization = {
       title: {
         plural: () => 'Locations',
         singular: () => 'Location',
+      },
+      publishText: () =>
+        'This Location is a draft. Fill in the required information and publish it. Only then will its data be publicly available.',
+      requirements: {
+        name: () => 'Name of the location',
+        description: () => 'Description',
       },
       form: {
         openingHours: () => 'Opening hours',

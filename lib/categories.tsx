@@ -79,6 +79,7 @@ export type Category = {
     deleting: string;
   };
   requirements?: Requirement[];
+  publishText: string;
 };
 
 export const useCategory = (): Category => {
