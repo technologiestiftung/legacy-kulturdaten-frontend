@@ -1,7 +1,8 @@
 import { Story } from '@storybook/react';
 import { EntryHeader } from '.';
-import { PublishedStatus } from '../../lib/api/types/general';
-import { Button, ButtonVariant, IconPosition } from '../button';
+import { useT } from '../../lib/i18n';
+import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '../button';
+import { DropdownMenu, DropdownMenuForm } from '../DropdownMenu';
 import { Tabs } from '../navigation/tabs';
 
 export default {
@@ -29,6 +30,8 @@ const testTabLinks = [
 ];
 
 export const EntryHeaderDefaultStory: Story = () => {
+  const t = useT();
+
   return (
     <EntryHeader
       backButton={
@@ -36,20 +39,43 @@ export const EntryHeaderDefaultStory: Story = () => {
           zurück
         </Button>
       }
-      actions={
-        <>
-          <Button key={1} icon="Users" variant={ButtonVariant.minimal}>
-            Zugriffsrechte
+      menu={
+        <DropdownMenu
+          icon="Sliders"
+          text={t('general.options') as string}
+          form={DropdownMenuForm.rounded}
+          buttonAriaLabels={{
+            open: t('general.optionsOpen') as string,
+            close: t('general.optionsClose') as string,
+          }}
+        >
+          <Button
+            variant={ButtonVariant.minimal}
+            size={ButtonSize.default}
+            color={ButtonColor.white}
+            onClick={() => alert('Download startet')}
+          >
+            Export als CSV
           </Button>
-          ,
-          <Button key={2} icon="Archive" variant={ButtonVariant.minimal}>
-            Export
+          <Button
+            variant={ButtonVariant.minimal}
+            size={ButtonSize.default}
+            color={ButtonColor.white}
+            onClick={() => alert('Download startet')}
+          >
+            Export als Excel
           </Button>
-        </>
+          <Button
+            variant={ButtonVariant.minimal}
+            size={ButtonSize.default}
+            color={ButtonColor.black}
+          >
+            Lösche Eintrag
+          </Button>
+        </DropdownMenu>
       }
       title="This is a very long title"
       tabs={<Tabs links={testTabLinks} />}
-      status={PublishedStatus.published}
     />
   );
 };

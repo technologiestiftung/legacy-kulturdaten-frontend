@@ -12,63 +12,124 @@ import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { contentGrid, mq } from '../globals/Constants';
-import { Label } from '../label';
-import { Categories, Requirement as RequirementType } from '../../config/categories';
+import { Label, StyledLabel } from '../label';
+import { Categories } from '../../config/categories';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useOrganizerId } from '../../lib/useOrganizer';
+import { StatusFlag, StatusFlagVariant } from '../Status/StatusFlag';
 
 const StyledPublish = styled.div`
   ${contentGrid(1)}
+  background: var(--grey-200);
+  box-shadow: inset 0 -0.4375rem 0.75rem -0.75rem rgba(0, 0, 0, 0.25);
 
-  row-gap: 0.75rem;
+  padding: 1.5rem 0.75rem;
+  row-gap: 1.5rem;
 
   ${mq(Breakpoint.mid)} {
-    ${contentGrid(6)}
+    ${contentGrid(8)}
+
+    row-gap: 2.25rem;
+    padding: 1.5rem;
   }
-`;
-
-const StyledPublishLabel = styled.div`
-  grid-column: 1 / -1;
-`;
-
-const StyledPublishRequirements = styled.div`
-  display: grid;
-  grid-template-columns: auto;
-  column-gap: 0.75rem;
-  row-gap: 0.75rem;
-  grid-column: 1 / -1;
 
   ${mq(Breakpoint.widish)} {
-    grid-column: 1 / span 4;
-    grid-template-columns: 1fr 1fr;
+    row-gap: 2.25rem;
+    padding: 2.25rem 0;
   }
+`;
+
+const StyledPublishHead = styled.div`
+  grid-column: 1 / -1;
+  max-width: var(--max-content-width);
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+
+  ${mq(Breakpoint.widish)} {
+    grid-column: 2 / -2;
+  }
+`;
+
+const StyledPublishBody = styled.div`
+  grid-column: 1 / -1;
+  display: flex;
+  row-gap: 1.5rem;
+  column-gap: 0.75rem;
+  max-width: var(--max-content-width);
+  width: 100%;
+  margin: 0 auto;
+  flex-direction: column;
+
+  ${mq(Breakpoint.mid)} {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  ${mq(Breakpoint.widish)} {
+    grid-column: 2 / -2;
+  }
+`;
+
+const StyledPublishHeadStatus = styled.div``;
+
+const StyledPublishHeadText = styled.p`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  max-width: 78ch;
+`;
+
+const StyledPublishRequirements = styled.div``;
+
+const StyledPublishRequirementsItems = styled.div`
+  display: flex;
+  column-gap: 0.75rem;
+  row-gap: 0.75rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+`;
+
+const StyledPublishRequirementsLabel = styled.div`
+  margin-bottom: 0.375rem;
+  display: flex;
+  column-gap: 0.375rem;
+  row-gap: 0.375rem;
+
+  ${StyledLabel} {
+    font-size: var(--font-size-300);
+    line-height: var(--line-height-300);
+  }
+`;
+
+const StyledPublishRequirementsLabelCount = styled.span`
+  display: block;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
 `;
 
 const StyledPublishAction = styled.div`
-  grid-column: 1 / -1;
-
   display: flex;
-  justify-content: flex-end;
-  align-self: flex-end;
-  align-items: center;
 
-  ${mq(Breakpoint.widish)} {
-    grid-column: 5 / span 2;
-    grid-template-columns: 1fr 1fr;
+  > * {
+    width: 100%;
+  }
+
+  ${mq(Breakpoint.mid)} {
+    justify-content: flex-end;
+    align-self: flex-end;
+    align-items: center;
   }
 `;
 
 interface PublishProps {
   category: Category;
   query: ParsedUrlQuery;
-  requirements: RequirementType[];
 }
 
-export const Publish: React.FC<PublishProps> = ({
-  category,
-  query,
-  requirements,
-}: PublishProps) => {
+export const Publish: React.FC<PublishProps> = ({ category, query }: PublishProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const organizerId = useOrganizerId();
@@ -81,6 +142,7 @@ export const Publish: React.FC<PublishProps> = ({
       : undefined
   );
   const loadingScreen = useLoadingScreen();
+  const requirements = category?.requirements;
 
   const t = useT();
 
@@ -115,56 +177,79 @@ export const Publish: React.FC<PublishProps> = ({
 
   return (
     <StyledPublish role="group">
-      <StyledPublishLabel>
-        <Label>{t('categories.organizer.requirements.label')}</Label>
-      </StyledPublishLabel>
-      <StyledPublishRequirements>
-        {requirementsFulfillment.map((fulfillment, index) => (
-          <Requirement
-            key={index}
-            text={t(fulfillment.requirement.translationKey) as string}
-            fulfilled={fulfillment.fulfilled}
-          />
-        ))}
-      </StyledPublishRequirements>
-      <StyledPublishAction>
-        <Button
-          size={ButtonSize.big}
-          color={ButtonColor.green}
-          icon="Heart"
-          disabled={!isPublishable}
-          onClick={async () =>
-            loadingScreen(
-              t('publish.loadingTitle', { categoryName: category.title.singular }),
-              async () => {
-                try {
-                  const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                    id: entry.data.id,
-                    entry: {
-                      attributes: {
-                        status: PublishedStatus.published,
+      <StyledPublishHead>
+        <StyledPublishHeadStatus>
+          <StatusFlag status={entry?.data?.attributes?.status} variant={StatusFlagVariant.big} />
+        </StyledPublishHeadStatus>
+        <StyledPublishHeadText>
+          Diese Anbieter:in ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche sie.
+          Erst dann sind ihre Daten und Angebote öffentlich verfügbar.
+        </StyledPublishHeadText>
+      </StyledPublishHead>
+      <StyledPublishBody>
+        <StyledPublishRequirements>
+          <StyledPublishRequirementsLabel>
+            <Label>{t('requirements.label')} </Label>
+            <StyledPublishRequirementsLabelCount>
+              {t('requirements.fulfilled', {
+                count:
+                  requirements.length -
+                  (failedPublishedRequirements
+                    ? Object.values(failedPublishedRequirements)?.length || 0
+                    : 0),
+                total: requirements.length,
+              })}
+            </StyledPublishRequirementsLabelCount>
+          </StyledPublishRequirementsLabel>
+          <StyledPublishRequirementsItems>
+            {requirementsFulfillment.map((fulfillment, index) => (
+              <Requirement
+                key={index}
+                text={t(fulfillment.requirement.translationKey) as string}
+                fulfilled={fulfillment.fulfilled}
+              />
+            ))}
+          </StyledPublishRequirementsItems>
+        </StyledPublishRequirements>
+        <StyledPublishAction>
+          <Button
+            size={ButtonSize.big}
+            color={ButtonColor.green}
+            icon="Heart"
+            disabled={!isPublishable}
+            onClick={async () =>
+              loadingScreen(
+                t('publish.loadingTitle', { categoryName: category.title.singular }),
+                async () => {
+                  try {
+                    const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+                      id: entry.data.id,
+                      entry: {
+                        attributes: {
+                          status: PublishedStatus.published,
+                        },
                       },
-                    },
-                  });
+                    });
 
-                  if (resp.status === 200) {
-                    mutate();
-                    mutateList();
+                    if (resp.status === 200) {
+                      mutate();
+                      mutateList();
 
-                    return { success: true };
+                      return { success: true };
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    return { success: false, error: t('general.serverProblem') };
                   }
-                } catch (e) {
-                  console.error(e);
-                  return { success: false, error: t('general.serverProblem') };
-                }
-              },
-              t('general.takeAFewSeconds')
-            )
-          }
-        >
-          {t('general.publish')}
-        </Button>
-      </StyledPublishAction>
+                },
+                t('general.takeAFewSeconds')
+              )
+            }
+          >
+            {t('general.publish')}
+          </Button>
+        </StyledPublishAction>
+      </StyledPublishBody>
     </StyledPublish>
   );
 };

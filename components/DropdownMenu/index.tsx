@@ -5,11 +5,17 @@ import * as feather from 'react-feather';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 
-const StyledDropdownMenu = styled.div`
+const StyledDropdownMenu = styled.div<{ stretch?: boolean }>`
   position: relative;
+
+  ${({ stretch }) => stretch && 'width: 100%;'}
 `;
 
-const StyledDropdownMenuButton = styled.button<{ visible: boolean; form?: DropdownMenuForm }>`
+const StyledDropdownMenuButton = styled.button<{
+  visible: boolean;
+  form?: DropdownMenuForm;
+  stretch?: boolean;
+}>`
   appearance: none;
   border: none;
   background: var(--black);
@@ -26,6 +32,13 @@ const StyledDropdownMenuButton = styled.button<{ visible: boolean; form?: Dropdo
   position: relative;
   z-index: 2;
   padding: 0;
+
+  ${({ stretch }) =>
+    stretch &&
+    css`
+      width: 100%;
+      justify-content: space-between;
+    `}
 
   ${({ visible }) =>
     visible
@@ -129,6 +142,7 @@ interface DropdownMenuProps {
   };
   text?: string;
   form?: DropdownMenuForm;
+  stretch?: boolean;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -137,6 +151,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   text,
   buttonAriaLabels,
   form = DropdownMenuForm.round,
+  stretch,
 }: DropdownMenuProps) => {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -175,12 +190,13 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   }, [visible, animating, clickHandler]);
 
   return (
-    <StyledDropdownMenu ref={dropdownMenuRef}>
+    <StyledDropdownMenu ref={dropdownMenuRef} stretch={stretch}>
       <StyledDropdownMenuButton
         onClick={() => clickHandler()}
         visible={visible}
         aria-label={visible ? buttonAriaLabels.close : buttonAriaLabels.open}
         form={form}
+        stretch={stretch}
       >
         {text && <StyledDropdownMenuButtonText>{text}</StyledDropdownMenuButtonText>}
         <StyledDropdownMenuButtonIcon hasText={hasText}>

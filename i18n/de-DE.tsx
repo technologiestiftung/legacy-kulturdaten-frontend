@@ -705,6 +705,10 @@ export const deDE: Localization = {
     previous: () => 'zurück',
     currentPage: ({ currentPage, lastPage }) => `Seite ${currentPage} von ${lastPage}`,
   },
+  requirements: {
+    label: () => 'Pflichtangaben',
+    fulfilled: ({ count, total }) => `${count} von ${total} ausgefüllt`,
+  },
   categories: {
     organizer: {
       list: {
@@ -731,7 +735,6 @@ export const deDE: Localization = {
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} ausgewählt`,
       },
       requirements: {
-        label: () => 'Für Veröffentlichung notwendig',
         name: () => 'Bezeichnung ausgefüllt',
         description: () => 'Beschreibung ausgefüllt',
         categorization: () => 'Kategorien ausgefüllt',

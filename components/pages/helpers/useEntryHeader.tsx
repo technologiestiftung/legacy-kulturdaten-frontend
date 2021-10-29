@@ -9,6 +9,7 @@ import { useT } from '../../../lib/i18n';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { useOrganizerId } from '../../../lib/useOrganizer';
+import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
@@ -29,6 +30,7 @@ export const useEntryHeader = (
   const tabs = useTabs(category);
   const router = useRouter();
   const language = useLanguage();
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   const { entry } = useEntry<CategoryEntry, ApiCall>(category, query);
 
@@ -60,79 +62,75 @@ export const useEntryHeader = (
   );
 
   return (
-    <EntryHeader
-      wideLayout={wideLayout}
-      backButton={titleBarLink}
-      title={mainTitle}
-      subTitle={subTitle}
-      tabs={minimalVariant ? undefined : tabs}
-      actions={
-        minimalVariant ? undefined : (
-          <DropdownMenu
-            icon="Sliders"
-            text={t('general.options') as string}
-            form={DropdownMenuForm.rounded}
-            buttonAriaLabels={{
-              open: t('general.optionsOpen') as string,
-              close: t('general.optionsClose') as string,
-            }}
-          >
-            <Button
-              variant={ButtonVariant.minimal}
-              size={ButtonSize.default}
-              color={ButtonColor.white}
-              onClick={() => alert('Download startet')}
-            >
-              {category?.options?.exportCsv}
-            </Button>
-            <Button
-              variant={ButtonVariant.minimal}
-              size={ButtonSize.default}
-              color={ButtonColor.white}
-              onClick={() => alert('Download startet')}
-            >
-              {category?.options?.exportXls}
-            </Button>
-            <Button
-              variant={ButtonVariant.minimal}
-              size={ButtonSize.default}
-              color={ButtonColor.black}
-              onClick={async () => {
-                if (confirm(category?.options?.deleteConfirm)) {
-                  loadingScreen(category?.options?.deleting, async () => {
-                    switch (category.name) {
-                      case Categories.organizer: {
-                        return await deleteOrganizer(entry?.data?.id);
-                      }
-                      case Categories.offer: {
-                        return await deleteOffer(entry?.data?.id);
-                      }
-                      case Categories.location: {
-                        return await deleteLocation(entry?.data?.id);
-                      }
-                    }
-                  });
-                }
-              }}
-            >
-              {category?.options?.delete}
-            </Button>
-          </DropdownMenu>
-        )
-      }
-      publish={
-        category?.requirements &&
+    <>
+      {category?.requirements &&
         entry?.data?.attributes?.status &&
-        entry?.data?.attributes?.status !== PublishedStatus.published ? (
-          <Publish
-            category={category}
-            query={router?.query}
-            requirements={category?.requirements}
-          />
-        ) : undefined
-      }
-      status={entry?.data?.attributes?.status}
-      minimalVariant={minimalVariant}
-    />
+        entry?.data?.attributes?.status !== PublishedStatus.published && (
+          <Publish category={category} query={router?.query} />
+        )}
+      <EntryHeader
+        wideLayout={wideLayout}
+        backButton={titleBarLink}
+        title={mainTitle}
+        subTitle={subTitle}
+        tabs={minimalVariant ? undefined : tabs}
+        menu={
+          minimalVariant ? undefined : (
+            <DropdownMenu
+              icon="Sliders"
+              text={t('general.options') as string}
+              form={DropdownMenuForm.rounded}
+              buttonAriaLabels={{
+                open: t('general.optionsOpen') as string,
+                close: t('general.optionsClose') as string,
+              }}
+              stretch={!isMidOrWider}
+            >
+              <Button
+                variant={ButtonVariant.minimal}
+                size={ButtonSize.default}
+                color={ButtonColor.white}
+                onClick={() => alert('Download startet')}
+              >
+                {category?.options?.exportCsv}
+              </Button>
+              <Button
+                variant={ButtonVariant.minimal}
+                size={ButtonSize.default}
+                color={ButtonColor.white}
+                onClick={() => alert('Download startet')}
+              >
+                {category?.options?.exportXls}
+              </Button>
+              <Button
+                variant={ButtonVariant.minimal}
+                size={ButtonSize.default}
+                color={ButtonColor.black}
+                onClick={async () => {
+                  if (confirm(category?.options?.deleteConfirm)) {
+                    loadingScreen(category?.options?.deleting, async () => {
+                      switch (category.name) {
+                        case Categories.organizer: {
+                          return await deleteOrganizer(entry?.data?.id);
+                        }
+                        case Categories.offer: {
+                          return await deleteOffer(entry?.data?.id);
+                        }
+                        case Categories.location: {
+                          return await deleteLocation(entry?.data?.id);
+                        }
+                      }
+                    });
+                  }
+                }}
+              >
+                {category?.options?.delete}
+              </Button>
+            </DropdownMenu>
+          )
+        }
+        minimalVariant={minimalVariant}
+      />
+    </>
   );
 };

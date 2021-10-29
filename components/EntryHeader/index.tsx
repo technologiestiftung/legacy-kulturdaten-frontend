@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { PublishedStatus } from '../../lib/api/types/general';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, insetBorder, mq } from '../globals/Constants';
@@ -54,7 +53,7 @@ const StyledEntryHeaderHead = styled.div<{ minimalVariant?: boolean }>`
   }
 `;
 
-const StyledEntryHeaderActions = styled.div`
+const StyledEntryHeaderMenu = styled.div`
   display: flex;
   justify-content: stretch;
   align-items: flex-start;
@@ -130,23 +129,6 @@ const StyledEntryHeaderSubTitle = styled.h2`
   font-weight: 400;
 `;
 
-const StyledEntryHeaderPublishSlot = styled.div`
-  padding: 0 0.75rem;
-  width: 100%;
-
-  ${mq(Breakpoint.mid)} {
-    padding: 0 1.5rem;
-
-    grid-column: 1 / -1;
-  }
-
-  ${mq(Breakpoint.widish)} {
-    grid-column: 2 / -2;
-    padding: 0;
-    max-width: var(--max-content-width);
-  }
-`;
-
 const StyledEntryHeaderTabsSlot = styled.div`
   width: 100%;
 
@@ -194,66 +176,11 @@ const StyledEntryHeaderTabsSlotContainer = styled.div<{ wideLayout?: boolean }>`
   }
 `;
 
-const StyledEntryHeaderStatus = styled.div`
-  display: flex;
-  font-size: var(--font-size-300);
-  line-height: var(--line-height-300);
-  font-weight: 700;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  background: var(--grey-200);
-  flex-basis: 0;
-  flex-grow: 1;
-
-  ${mq(Breakpoint.mid)} {
-    flex-basis: initial;
-    flex-grow: initial;
-  }
-`;
-
-const StyledEntryHeaderStatusLabel = styled.div`
-  padding: calc(0.375rem) calc(0.75rem);
-  flex-grow: 1;
-  text-align: center;
-`;
-
-const StyledEntryHeaderStatusFlag = styled.div<{ backgroundColor: string }>`
-  text-align: center;
-  background: ${({ backgroundColor }) => backgroundColor};
-  padding: calc(0.375rem) calc(0.75rem);
-  flex-grow: 1;
-`;
-
-const statusBarStatuses: {
-  [key in PublishedStatus]: { backgroundColor: string; textKey: string };
-} = {
-  draft: {
-    backgroundColor: 'var(--yellow)',
-    textKey: 'statusBar.draft',
-  },
-  published: {
-    backgroundColor: 'var(--green-light)',
-    textKey: 'statusBar.published',
-  },
-};
-
-const useStatusBarFlag = (status = PublishedStatus.draft): React.ReactElement => {
-  const t = useT();
-
-  return (
-    <StyledEntryHeaderStatusFlag backgroundColor={statusBarStatuses[status].backgroundColor}>
-      {t(statusBarStatuses[status].textKey)}
-    </StyledEntryHeaderStatusFlag>
-  );
-};
-
 interface EntryHeaderProps {
   title: string;
-  status: PublishedStatus;
   subTitle?: string;
   backButton?: React.ReactElement;
-  actions?: React.ReactElement;
-  publish?: React.ReactElement;
+  menu?: React.ReactElement;
   tabs?: React.ReactElement<TabsProps>;
   wideLayout?: boolean;
   minimalVariant?: boolean;
@@ -262,16 +189,12 @@ interface EntryHeaderProps {
 export const EntryHeader: React.FC<EntryHeaderProps> = ({
   title,
   subTitle,
-  actions,
-  publish,
+  menu,
   tabs,
-  status,
   wideLayout,
   minimalVariant,
 }: EntryHeaderProps) => {
   const t = useT();
-
-  const statusFlag = useStatusBarFlag(status);
 
   return (
     <StyledEntryHeader>
@@ -286,20 +209,8 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
             </StyledEntryHeaderSubTitle>
           )}
         </StyledEntryHeaderTitleWrapper>
-        {!minimalVariant && (
-          <StyledEntryHeaderActions>
-            {actions}
-            <StyledEntryHeaderStatus>
-              <StyledEntryHeaderStatusLabel>{t('statusBar.status')}</StyledEntryHeaderStatusLabel>
-
-              {statusFlag}
-            </StyledEntryHeaderStatus>
-          </StyledEntryHeaderActions>
-        )}
+        {!minimalVariant && menu && <StyledEntryHeaderMenu>{menu}</StyledEntryHeaderMenu>}
       </StyledEntryHeaderHead>
-      {!minimalVariant && publish && (
-        <StyledEntryHeaderPublishSlot>{publish}</StyledEntryHeaderPublishSlot>
-      )}
       {!minimalVariant && tabs && (
         <StyledEntryHeaderTabsSlot>
           <StyledEntryHeaderTabsSlotContainer wideLayout={wideLayout}>

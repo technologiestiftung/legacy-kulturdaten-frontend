@@ -699,6 +699,10 @@ export const enDE: Localization = {
     previous: () => 'previous',
     currentPage: ({ currentPage, lastPage }) => `Page ${currentPage} of ${lastPage}`,
   },
+  requirements: {
+    label: () => 'Required information',
+    fulfilled: ({ count, total }) => `${count} of ${total} filled out`,
+  },
   categories: {
     organizer: {
       list: {
@@ -725,7 +729,6 @@ export const enDE: Localization = {
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} active`,
       },
       requirements: {
-        label: () => 'Required for publishing',
         name: () => 'Name added',
         description: () => 'Description added',
         categorization: () => 'Categories added',
