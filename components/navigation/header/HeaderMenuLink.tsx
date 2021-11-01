@@ -72,6 +72,7 @@ interface InternalMenuLinkProps {
   icon?: string;
   onClick?: () => void;
   disabled?: boolean;
+  __TYPE?: 'HeaderMenuLink';
 }
 
 export interface HeaderMenuLinkProps extends InternalMenuLinkProps {
@@ -135,4 +136,8 @@ export const HeaderMenuLink: React.FC<HeaderMenuLinkProps> = (props: HeaderMenuL
       throw new Error(`MenuLink type "${type}" is not valid`);
     }
   }
+};
+
+HeaderMenuLink.defaultProps = {
+  __TYPE: 'HeaderMenuLink',
 };
