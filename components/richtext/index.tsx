@@ -41,9 +41,13 @@ const StyledEditable = styled.div`
   > div {
     padding: 2rem 0.75rem;
     min-height: 100%;
-
-    max-width: 44rem;
     margin: 0 auto;
+
+    > * {
+      max-width: 44rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     ${mq(Breakpoint.mid)} {
       padding: 4rem 4rem;
