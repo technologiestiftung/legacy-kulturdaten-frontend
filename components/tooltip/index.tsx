@@ -241,6 +241,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
   // The ref pointing to our tooltip overlay. Used for calculating the overlay position.
   const tooltipOverlayRef = useRef<HTMLDivElement>(null);
 
+  // The ref pointing to the whole tooltip. Used to determine click outside of tooltip.
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
   /**
    * Helper functions to get size and position information about parent container or window.
    * Wrap functions in useCallback to don't cause update on every render.
@@ -390,8 +393,22 @@ export const Tooltip: React.FC<TooltipProps> = ({
     computeSizes();
   }, [computeSizes]);
 
+  useEffect(() => {
+    const handle = (e: MouseEvent) => {
+      if (isOpen && !tooltipRef.current?.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document?.body.addEventListener('click', handle);
+
+    return () => {
+      document?.body.removeEventListener('click', handle);
+    };
+  }, [isOpen]);
+
   return (
-    <StyledTooltip yPosition={tooltipYPosition} isOpen={isOpen}>
+    <StyledTooltip yPosition={tooltipYPosition} isOpen={isOpen} ref={tooltipRef}>
       <StyledTooltipButton
         ref={tooltipButtonRef}
         onClick={() => setIsOpen(!isOpen)}

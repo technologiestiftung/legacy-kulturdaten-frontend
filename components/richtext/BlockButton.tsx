@@ -76,7 +76,7 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
       }}
       variant={ButtonVariant.toolbar}
       ariaLabel={ariaLabel}
-      title={ariaLabel}
+      tooltip={ariaLabel}
       icon={icon}
       iconHeight={iconHeight || '1.125rem'}
       iconWidth={iconWidth}
