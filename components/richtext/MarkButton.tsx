@@ -36,6 +36,7 @@ interface MarkButtonProps {
   label?: string;
   iconWidth?: string;
   iconHeight?: string;
+  tooltip?: string;
 }
 
 export const MarkButton: React.FC<MarkButtonProps> = ({
@@ -46,6 +47,7 @@ export const MarkButton: React.FC<MarkButtonProps> = ({
   label,
   iconWidth,
   iconHeight,
+  tooltip,
 }: MarkButtonProps) => {
   const editor = useSlate();
   return (
@@ -62,6 +64,7 @@ export const MarkButton: React.FC<MarkButtonProps> = ({
       renderedIcon={renderedIcon}
       iconHeight={iconHeight || '1.125rem'}
       iconWidth={iconWidth}
+      tooltip={tooltip}
     >
       {label}
     </Button>

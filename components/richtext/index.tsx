@@ -12,7 +12,6 @@ import { Leaf } from './Leaf';
 import { Button, ButtonVariant, IconPosition } from '../button';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
-import { PSvg } from '../assets/PSvg';
 import { H1Svg } from '../assets/H1Svg';
 import { H2Svg } from '../assets/H2Svg';
 import { H3Svg } from '../assets/H3Svg';
@@ -24,7 +23,6 @@ interface CustomRenderElementProps extends RenderElementProps {
 }
 
 const StyledRichText = styled.div`
-  /* background: var(--white); */
   min-height: 100%;
   flex-grow: 1;
   display: flex;
@@ -33,7 +31,6 @@ const StyledRichText = styled.div`
 `;
 
 const StyledEditableContainer = styled.div`
-  /* background: var(--white); */
   min-height: 100%;
   flex-grow: 1;
 `;
@@ -110,7 +107,7 @@ const RichText: React.FC<RichTextProps> = ({
                   iconPosition={IconPosition.left}
                   key={0}
                   ariaLabel={t('richText.undo') as string}
-                  title={t('richText.undo') as string}
+                  tooltip={t('richText.undo') as string}
                   variant={ButtonVariant.toolbar}
                 />,
                 <Button
@@ -119,7 +116,7 @@ const RichText: React.FC<RichTextProps> = ({
                   icon="CornerUpRight"
                   key={1}
                   ariaLabel={t('richText.redo') as string}
-                  title={t('richText.redo') as string}
+                  tooltip={t('richText.redo') as string}
                   variant={ButtonVariant.toolbar}
                 />,
               ],
@@ -129,25 +126,22 @@ const RichText: React.FC<RichTextProps> = ({
               width: ToolbarGroupWidth.half,
               items: [
                 <BlockButton
-                  ariaLabel={t('richText.paragraph') as string}
-                  format={ElementType['paragraph']}
-                  renderedIcon={<PSvg />}
-                  key={0}
-                />,
-                <BlockButton
                   ariaLabel={t('richText.headingOne') as string}
+                  tooltip={t('richText.headingOne') as string}
                   format={ElementType['heading_one']}
                   renderedIcon={<H1Svg />}
                   key={1}
                 />,
                 <BlockButton
                   ariaLabel={t('richText.headingTwo') as string}
+                  tooltip={t('richText.headingTwo') as string}
                   format={ElementType['heading_two']}
                   renderedIcon={<H2Svg />}
                   key={2}
                 />,
                 <BlockButton
                   ariaLabel={t('richText.headingThree') as string}
+                  tooltip={t('richText.headingThree') as string}
                   format={ElementType['heading_three']}
                   renderedIcon={<H3Svg />}
                   key={3}
@@ -160,12 +154,14 @@ const RichText: React.FC<RichTextProps> = ({
               items: [
                 <BlockButton
                   ariaLabel={t('richText.listUnordered') as string}
+                  tooltip={t('richText.listUnordered') as string}
                   format={ElementType['ul_list']}
                   icon="List"
                   key={1}
                 />,
                 <BlockButton
                   ariaLabel={t('richText.listOrdered') as string}
+                  tooltip={t('richText.listOrdered') as string}
                   format={ElementType['ol_list']}
                   renderedIcon={<ListOrderedSvg />}
                   iconWidth="1.125rem"
@@ -180,12 +176,14 @@ const RichText: React.FC<RichTextProps> = ({
               items: [
                 <MarkButton
                   ariaLabel={t('richText.bold') as string}
+                  tooltip={t('richText.bold') as string}
                   format={MarkButtonFormat.bold}
                   icon="Bold"
                   key={0}
                 />,
                 <MarkButton
                   ariaLabel={t('richText.italic') as string}
+                  tooltip={t('richText.italic') as string}
                   format={MarkButtonFormat.italic}
                   icon="Italic"
                   key={1}
