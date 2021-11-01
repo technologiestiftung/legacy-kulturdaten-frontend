@@ -49,7 +49,6 @@ interface BlockButtonProps {
   label?: string;
   iconWidth?: string;
   iconHeight?: string;
-  tooltip?: string;
 }
 
 export const BlockButton: React.FC<BlockButtonProps> = ({
@@ -60,7 +59,6 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
   label,
   iconWidth,
   iconHeight,
-  tooltip,
 }: BlockButtonProps) => {
   const editor = useSlate();
 
@@ -78,12 +76,11 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
       }}
       variant={ButtonVariant.toolbar}
       ariaLabel={ariaLabel}
-      title={ariaLabel}
+      tooltip={ariaLabel}
       icon={icon}
       iconHeight={iconHeight || '1.125rem'}
       iconWidth={iconWidth}
       renderedIcon={renderedIcon}
-      tooltip={tooltip}
     >
       {label}
     </Button>

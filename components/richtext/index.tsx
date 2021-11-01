@@ -127,21 +127,18 @@ const RichText: React.FC<RichTextProps> = ({
               items: [
                 <BlockButton
                   ariaLabel={t('richText.headingOne') as string}
-                  tooltip={t('richText.headingOne') as string}
                   format={ElementType['heading_one']}
                   renderedIcon={<H1Svg />}
                   key={1}
                 />,
                 <BlockButton
                   ariaLabel={t('richText.headingTwo') as string}
-                  tooltip={t('richText.headingTwo') as string}
                   format={ElementType['heading_two']}
                   renderedIcon={<H2Svg />}
                   key={2}
                 />,
                 <BlockButton
                   ariaLabel={t('richText.headingThree') as string}
-                  tooltip={t('richText.headingThree') as string}
                   format={ElementType['heading_three']}
                   renderedIcon={<H3Svg />}
                   key={3}
@@ -154,14 +151,12 @@ const RichText: React.FC<RichTextProps> = ({
               items: [
                 <BlockButton
                   ariaLabel={t('richText.listUnordered') as string}
-                  tooltip={t('richText.listUnordered') as string}
                   format={ElementType['ul_list']}
                   icon="List"
                   key={1}
                 />,
                 <BlockButton
                   ariaLabel={t('richText.listOrdered') as string}
-                  tooltip={t('richText.listOrdered') as string}
                   format={ElementType['ol_list']}
                   renderedIcon={<ListOrderedSvg />}
                   iconWidth="1.125rem"
@@ -176,14 +171,12 @@ const RichText: React.FC<RichTextProps> = ({
               items: [
                 <MarkButton
                   ariaLabel={t('richText.bold') as string}
-                  tooltip={t('richText.bold') as string}
                   format={MarkButtonFormat.bold}
                   icon="Bold"
                   key={0}
                 />,
                 <MarkButton
                   ariaLabel={t('richText.italic') as string}
-                  tooltip={t('richText.italic') as string}
                   format={MarkButtonFormat.italic}
                   icon="Italic"
                   key={1}
