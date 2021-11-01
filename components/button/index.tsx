@@ -264,6 +264,7 @@ export interface ButtonProps {
   title?: string;
   css?: SerializedStyles;
   tooltip?: string;
+  __TYPE?: 'Button';
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -357,4 +358,8 @@ export const Button: React.FC<ButtonProps> = ({
       )}
     </>
   );
+};
+
+Button.defaultProps = {
+  __TYPE: 'Button',
 };

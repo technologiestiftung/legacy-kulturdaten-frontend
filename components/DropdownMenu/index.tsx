@@ -192,9 +192,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
       <StyledDropdownMenuDropdown visible={visible} animating={animating}>
         <StyledDropdownMenuDropdownContent>
           {React.Children.toArray(children).map((child) => {
-            const elementType = (
-              (child as React.ReactElement)?.type as JSXElementConstructor<unknown>
-            )?.name;
+            const elementType = (child as React.ReactElement)?.props?.__TYPE;
 
             return React.cloneElement(child as React.ReactElement, {
               onClick:
