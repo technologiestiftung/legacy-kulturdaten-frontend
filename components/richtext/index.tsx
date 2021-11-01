@@ -12,7 +12,6 @@ import { Leaf } from './Leaf';
 import { Button, ButtonVariant, IconPosition } from '../button';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
-import { PSvg } from '../assets/PSvg';
 import { H1Svg } from '../assets/H1Svg';
 import { H2Svg } from '../assets/H2Svg';
 import { H3Svg } from '../assets/H3Svg';
@@ -24,7 +23,6 @@ interface CustomRenderElementProps extends RenderElementProps {
 }
 
 const StyledRichText = styled.div`
-  /* background: var(--white); */
   min-height: 100%;
   flex-grow: 1;
   display: flex;
@@ -33,7 +31,6 @@ const StyledRichText = styled.div`
 `;
 
 const StyledEditableContainer = styled.div`
-  /* background: var(--white); */
   min-height: 100%;
   flex-grow: 1;
 `;
@@ -44,9 +41,13 @@ const StyledEditable = styled.div`
   > div {
     padding: 2rem 0.75rem;
     min-height: 100%;
-
-    max-width: 44rem;
     margin: 0 auto;
+
+    > * {
+      max-width: 44rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
     ${mq(Breakpoint.mid)} {
       padding: 4rem 4rem;
@@ -110,7 +111,7 @@ const RichText: React.FC<RichTextProps> = ({
                   iconPosition={IconPosition.left}
                   key={0}
                   ariaLabel={t('richText.undo') as string}
-                  title={t('richText.undo') as string}
+                  tooltip={t('richText.undo') as string}
                   variant={ButtonVariant.toolbar}
                 />,
                 <Button
@@ -119,7 +120,7 @@ const RichText: React.FC<RichTextProps> = ({
                   icon="CornerUpRight"
                   key={1}
                   ariaLabel={t('richText.redo') as string}
-                  title={t('richText.redo') as string}
+                  tooltip={t('richText.redo') as string}
                   variant={ButtonVariant.toolbar}
                 />,
               ],
@@ -128,12 +129,6 @@ const RichText: React.FC<RichTextProps> = ({
               label: t('richText.format') as string,
               width: ToolbarGroupWidth.half,
               items: [
-                <BlockButton
-                  ariaLabel={t('richText.paragraph') as string}
-                  format={ElementType['paragraph']}
-                  renderedIcon={<PSvg />}
-                  key={0}
-                />,
                 <BlockButton
                   ariaLabel={t('richText.headingOne') as string}
                   format={ElementType['heading_one']}
