@@ -57,7 +57,7 @@ export const MarkButton: React.FC<MarkButtonProps> = ({
       }}
       icon={icon}
       ariaLabel={ariaLabel}
-      title={ariaLabel}
+      tooltip={ariaLabel}
       variant={ButtonVariant.toolbar}
       renderedIcon={renderedIcon}
       iconHeight={iconHeight || '1.125rem'}

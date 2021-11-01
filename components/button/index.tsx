@@ -1,8 +1,10 @@
-import React, { MouseEvent } from 'react';
+import React, { MouseEvent, useRef } from 'react';
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/react';
 import * as feather from 'react-feather';
 import { insetBorderColored } from '../globals/Constants';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { MouseTooltip } from '../MouseTooltip';
 
 export enum ButtonColor {
   default = 'default',
@@ -261,6 +263,7 @@ export interface ButtonProps {
   ariaLabel?: string;
   title?: string;
   css?: SerializedStyles;
+  tooltip?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -284,56 +287,74 @@ export const Button: React.FC<ButtonProps> = ({
   ariaLabel,
   title,
   css,
-}: ButtonProps) =>
-  asInput ? (
-    <StyledButton
-      as="input"
-      value={children as string}
-      color={color}
-      contentPosition={contentPosition}
-      size={size}
-      variant={variant}
-      id={id}
-      name={name}
-      type="submit"
-      onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
-      onMouseDown={onMouseDown ? (e: MouseEvent<HTMLInputElement>) => onMouseDown(e) : undefined}
-      disabled={disabled}
-      aria-label={ariaLabel}
-      title={title}
-      customCss={css}
-    />
-  ) : (
-    <StyledButton
-      onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
-      onMouseDown={onMouseDown ? (e: MouseEvent<HTMLButtonElement>) => onMouseDown(e) : undefined}
-      color={color}
-      contentPosition={contentPosition}
-      size={size}
-      variant={variant}
-      id={id}
-      name={name}
-      disabled={disabled}
-      type={type}
-      aria-label={ariaLabel}
-      title={title}
-      customCss={css}
-    >
-      {children && <StyledButtonSpan>{children}</StyledButtonSpan>}
-      {renderedIcon || (icon && feather[icon]) ? (
-        <StyledButtonIcon
-          size={size}
-          iconWidth={iconWidth}
-          iconHeight={iconHeight}
-          position={iconPosition}
-          hasChildren={typeof children !== 'undefined'}
-        >
-          {renderedIcon
-            ? renderedIcon
-            : React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
-        </StyledButtonIcon>
-      ) : (
-        ''
+  tooltip,
+}: ButtonProps) => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+
+  return (
+    <>
+      {tooltip && isMidOrWider && (
+        <MouseTooltip hoverElement={buttonRef.current}>{tooltip}</MouseTooltip>
       )}
-    </StyledButton>
+      {asInput ? (
+        <StyledButton
+          ref={buttonRef}
+          as="input"
+          value={children as string}
+          color={color}
+          contentPosition={contentPosition}
+          size={size}
+          variant={variant}
+          id={id}
+          name={name}
+          type="submit"
+          onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
+          onMouseDown={
+            onMouseDown ? (e: MouseEvent<HTMLInputElement>) => onMouseDown(e) : undefined
+          }
+          disabled={disabled}
+          aria-label={ariaLabel}
+          title={title}
+          customCss={css}
+        />
+      ) : (
+        <StyledButton
+          ref={buttonRef}
+          onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
+          onMouseDown={
+            onMouseDown ? (e: MouseEvent<HTMLButtonElement>) => onMouseDown(e) : undefined
+          }
+          color={color}
+          contentPosition={contentPosition}
+          size={size}
+          variant={variant}
+          id={id}
+          name={name}
+          disabled={disabled}
+          type={type}
+          aria-label={ariaLabel}
+          title={title}
+          customCss={css}
+        >
+          {children && <StyledButtonSpan>{children}</StyledButtonSpan>}
+          {renderedIcon || (icon && feather[icon]) ? (
+            <StyledButtonIcon
+              size={size}
+              iconWidth={iconWidth}
+              iconHeight={iconHeight}
+              position={iconPosition}
+              hasChildren={typeof children !== 'undefined'}
+            >
+              {renderedIcon
+                ? renderedIcon
+                : React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
+            </StyledButtonIcon>
+          ) : (
+            ''
+          )}
+        </StyledButton>
+      )}
+    </>
   );
+};
