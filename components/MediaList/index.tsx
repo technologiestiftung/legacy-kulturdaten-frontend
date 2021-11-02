@@ -220,6 +220,7 @@ const StyledMediaListItemFunctions = styled.div``;
 const StyledMediaListItemSub = styled.div`
   padding: 0.75rem;
   border-top: 1px solid var(--grey-400);
+  border-radius: 0 0 calc(0.75rem - 1px) calc(0.75rem - 1px);
   background: var(--grey-200);
   display: flex;
   justify-content: space-between;
