@@ -5,6 +5,12 @@ import { useT } from '../../lib/i18n';
 
 const StyledStatusFlag = styled.div<{ status: PublishedStatus; variant: StatusFlagVariant }>`
   display: flex;
+
+  ${({ variant }) =>
+    variant === StatusFlagVariant.inline &&
+    css`
+      display: inline-flex;
+    `}
 `;
 
 const StyledEntryHeaderStatusLabel = styled.div`
@@ -33,16 +39,24 @@ const StyledEntryHeaderStatusFlag = styled.span<{
   line-height: var(--line-height-200);
 
   ${({ variant }) =>
-    variant === StatusFlagVariant.big &&
-    css`
-      border-radius: 0 0.375rem 0.375rem 0;
-      padding: 0.375rem 0.75rem;
-      font-size: var(--font-size-400);
-      line-height: var(--line-height-400);
-    `}
+    variant === StatusFlagVariant.big
+      ? css`
+          border-radius: 0 0.375rem 0.375rem 0;
+          padding: 0.375rem 0.75rem;
+          font-size: var(--font-size-400);
+          line-height: var(--line-height-400);
+        `
+      : variant === StatusFlagVariant.inline
+      ? css`
+          font-size: inherit;
+          line-height: inherit;
+          padding: 0 0.375rem;
+        `
+      : ''}
 `;
 
 export enum StatusFlagVariant {
+  inline = 'inline',
   small = 'small',
   big = 'big',
 }

@@ -63,7 +63,8 @@ export const useEntryHeader = (
 
   return (
     <>
-      {category?.requirements &&
+      {!minimalVariant &&
+        category?.requirements &&
         entry?.data?.attributes?.status &&
         entry?.data?.attributes?.status !== PublishedStatus.published && (
           <Publish category={category} query={router?.query} />

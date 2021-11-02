@@ -53,6 +53,12 @@ const StyledPublishHead = styled.div`
   }
 `;
 
+const StyledPublishHeadline = styled.h2`
+  font-size: var(--font-size-500);
+  line-height: var(--line-height-500);
+  font-weight: 700;
+`;
+
 const StyledPublishBody = styled.div`
   grid-column: 1 / -1;
   display: flex;
@@ -73,8 +79,6 @@ const StyledPublishBody = styled.div`
     grid-column: 2 / -2;
   }
 `;
-
-const StyledPublishHeadStatus = styled.div``;
 
 const StyledPublishHeadText = styled.p`
   font-size: var(--font-size-300);
@@ -178,9 +182,7 @@ export const Publish: React.FC<PublishProps> = ({ category, query }: PublishProp
   return (
     <StyledPublish role="group">
       <StyledPublishHead>
-        <StyledPublishHeadStatus>
-          <StatusFlag status={entry?.data?.attributes?.status} variant={StatusFlagVariant.big} />
-        </StyledPublishHeadStatus>
+        <StyledPublishHeadline>{t('requirements.title')}</StyledPublishHeadline>
         <StyledPublishHeadText>{category.publishText}</StyledPublishHeadText>
       </StyledPublishHead>
       <StyledPublishBody>

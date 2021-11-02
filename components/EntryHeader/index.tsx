@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, insetBorder, mq } from '../globals/Constants';
 import { TabsProps } from '../navigation/tabs';
@@ -193,31 +192,27 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
   tabs,
   wideLayout,
   minimalVariant,
-}: EntryHeaderProps) => {
-  const t = useT();
-
-  return (
-    <StyledEntryHeader>
-      <StyledEntryHeaderHead minimalVariant={minimalVariant}>
-        <StyledEntryHeaderTitleWrapper>
-          <StyledEntryHeaderTitle skeleton={typeof title === 'undefined' || title.length === 0}>
-            {title}
-          </StyledEntryHeaderTitle>
-          {subTitle && (
-            <StyledEntryHeaderSubTitle>
-              <span>{subTitle}</span>
-            </StyledEntryHeaderSubTitle>
-          )}
-        </StyledEntryHeaderTitleWrapper>
-        {!minimalVariant && menu && <StyledEntryHeaderMenu>{menu}</StyledEntryHeaderMenu>}
-      </StyledEntryHeaderHead>
-      {!minimalVariant && tabs && (
-        <StyledEntryHeaderTabsSlot>
-          <StyledEntryHeaderTabsSlotContainer wideLayout={wideLayout}>
-            {tabs}
-          </StyledEntryHeaderTabsSlotContainer>
-        </StyledEntryHeaderTabsSlot>
-      )}
-    </StyledEntryHeader>
-  );
-};
+}: EntryHeaderProps) => (
+  <StyledEntryHeader>
+    <StyledEntryHeaderHead minimalVariant={minimalVariant}>
+      <StyledEntryHeaderTitleWrapper>
+        <StyledEntryHeaderTitle skeleton={typeof title === 'undefined' || title.length === 0}>
+          {title}
+        </StyledEntryHeaderTitle>
+        {subTitle && (
+          <StyledEntryHeaderSubTitle>
+            <span>{subTitle}</span>
+          </StyledEntryHeaderSubTitle>
+        )}
+      </StyledEntryHeaderTitleWrapper>
+      {!minimalVariant && menu && <StyledEntryHeaderMenu>{menu}</StyledEntryHeaderMenu>}
+    </StyledEntryHeaderHead>
+    {!minimalVariant && tabs && (
+      <StyledEntryHeaderTabsSlot>
+        <StyledEntryHeaderTabsSlotContainer wideLayout={wideLayout}>
+          {tabs}
+        </StyledEntryHeaderTabsSlotContainer>
+      </StyledEntryHeaderTabsSlot>
+    )}
+  </StyledEntryHeader>
+);

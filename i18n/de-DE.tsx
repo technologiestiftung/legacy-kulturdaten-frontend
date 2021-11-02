@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
+import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
+import { PublishedStatus } from '../lib/api/types/general';
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
@@ -706,6 +708,7 @@ export const deDE: Localization = {
     currentPage: ({ currentPage, lastPage }) => `Seite ${currentPage} von ${lastPage}`,
   },
   requirements: {
+    title: () => 'Veröffentlichung',
     label: () => 'Pflichtangaben',
     fulfilled: ({ count, total }) => `${count} von ${total} ausgefüllt`,
   },
@@ -744,8 +747,14 @@ export const deDE: Localization = {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',
       },
-      publishText: () =>
-        'Diese Anbieter:in ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche sie. Erst dann sind ihre Daten, Angebote und Orte öffentlich verfügbar.',
+      publishText: () => (
+        <>
+          Diese Anbieter:in ist ein{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fülle
+          die Pflichtangaben aus und veröffentliche sie. Erst dann sind ihre Daten, Angebote und
+          Orte öffentlich verfügbar.
+        </>
+      ),
       form: {
         create: () => 'Neue Anbieter:in anlegen',
         baseInfo: () => 'Grundlagen',
@@ -835,8 +844,14 @@ export const deDE: Localization = {
         plural: () => 'Angebote',
         singular: () => 'Angebot',
       },
-      publishText: () =>
-        'Dieses Angebot ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche es. Erst dann sind seine Daten und Termine öffentlich verfügbar.',
+      publishText: () => (
+        <>
+          Dieses Angebot ist ein{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fülle
+          die Pflichtangaben aus und veröffentliche es. Erst dann sind seine Daten und Termine
+          öffentlich verfügbar.
+        </>
+      ),
       form: {
         create: () => 'Neues Angebot anlegen',
         name: () => 'Angebotstitel',
@@ -926,8 +941,14 @@ export const deDE: Localization = {
         plural: () => 'Orte',
         singular: () => 'Ort',
       },
-      publishText: () =>
-        'Dieser Ort ist ein Entwurf. Fülle die Pflichtangaben aus und veröffentliche ihn. Erst dann sind seine Daten öffentlich verfügbar.',
+      publishText: () => (
+        <>
+          Dieser Ort ist ein{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fülle
+          die Pflichtangaben aus und veröffentliche ihn. Erst dann sind seine Daten öffentlich
+          verfügbar.
+        </>
+      ),
       requirements: {
         name: () => 'Bezeichnung des Ortes',
         description: () => 'Beschreibung',

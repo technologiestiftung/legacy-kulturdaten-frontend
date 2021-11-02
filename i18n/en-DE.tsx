@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
+import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
+import { PublishedStatus } from '../lib/api/types/general';
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
@@ -700,6 +702,7 @@ export const enDE: Localization = {
     currentPage: ({ currentPage, lastPage }) => `Page ${currentPage} of ${lastPage}`,
   },
   requirements: {
+    title: () => 'Publishing',
     label: () => 'Required information',
     fulfilled: ({ count, total }) => `${count} of ${total} filled out`,
   },
@@ -728,8 +731,14 @@ export const enDE: Localization = {
         },
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} active`,
       },
-      publishText: () =>
-        'This Organizer is a draft. Fill in the required information and publish it. Only then will its data, Offers and Locations be publicly available.',
+      publishText: () => (
+        <>
+          This Organizer is a{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fill in
+          the required information and publish it. Only then will its data, Offers and Locations be
+          publicly available.
+        </>
+      ),
       requirements: {
         name: () => 'Name',
         description: () => 'Description',
@@ -803,8 +812,14 @@ export const enDE: Localization = {
         nothing: () => 'There are no Offers yet. Feel free to create one.',
         nothingFilter: () => 'No Offers found with current filters.',
       },
-      publishText: () =>
-        'This Offer is a draft. Fill in the required information and publish it. Only then will its data and dates be publicly available.',
+      publishText: () => (
+        <>
+          This Offer is a{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fill in
+          the required information and publish it. Only then will its data and dates be publicly
+          available.
+        </>
+      ),
       requirements: {
         name: () => 'Offer title',
         description: () => 'Description',
@@ -904,8 +919,13 @@ export const enDE: Localization = {
         plural: () => 'Locations',
         singular: () => 'Location',
       },
-      publishText: () =>
-        'This Location is a draft. Fill in the required information and publish it. Only then will its data be publicly available.',
+      publishText: () => (
+        <>
+          This Location is a{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fill in
+          the required information and publish it. Only then will its data be publicly available.
+        </>
+      ),
       requirements: {
         name: () => 'Name of the location',
         description: () => 'Description',
