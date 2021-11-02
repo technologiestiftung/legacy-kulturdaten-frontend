@@ -252,12 +252,14 @@ export const locationAccessibility: GenericFormCategory[] = [
                 attributes: {
                   language: Language.de,
                   name: 'Telefon',
+                  placeholder: 'z.B. +49301234567',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
                   name: 'Phone',
+                  placeholder: 'e.g. +49301234567',
                 },
               },
             ],

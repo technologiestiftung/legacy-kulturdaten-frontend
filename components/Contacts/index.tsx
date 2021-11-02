@@ -114,6 +114,7 @@ export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: Contac
               type={InputType.tel}
               value={contact.attributes.phone || ''}
               label={t('forms.tel') as string}
+              placeholder={t('general.telPlaceholder') as string}
               onChange={(e) =>
                 onChange([
                   ...contacts.slice(0, index),
