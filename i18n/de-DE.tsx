@@ -449,8 +449,13 @@ export const deDE: Localization = {
   },
   media: {
     title: () => 'Bilder',
-    copyright: () => 'Urheber:in',
+    copyright: () => 'Bildnachweis / Urheber:in',
+    copyrightPlaceholder: () => 'z.B. © Name Fotograf:in, Veröffentlichungsjahr',
+    copyrightTooltip: () =>
+      'Bitte gib immer einen Bildnachweis bzw. einen Hinweis auf den/die Urheber:in des Bildes an. Das Format des Bildnachweises hängt von den Vorgaben des/der Urheber:in ab, z.B. © Name des Fotografen od. Agentur, Jahr; Name einer Institution, Foto: © Name Fotograf:in',
     alt: () => 'Alt Text',
+    altTooltip: () =>
+      'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima.',
     license: () => 'Lizenz',
     licenses: {
       '1': {
@@ -481,11 +486,10 @@ export const deDE: Localization = {
     deleteConfirm: () =>
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
-    hint: () =>
-      'Damit das Bild öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
-    dropZoneLabel: () => 'Neue Bilder hochladen',
+    hint: () => 'Bitte fülle die Pflichtfelder aus, damit das Bild öffentlich verfügbar ist.',
+    dropZoneLabel: () => 'Bilder hochladen',
     usageInfo: () =>
-      'Bitte beachte, dass du nur Bilder über kulturdaten.berlin zur Verfügung stellst, die von anderen in unveränderter oder veränderter Form weitergenutzt werden dürfen - auch zu kommerziellen Zwecken und auf Social-Media-Kanälen. Bitte verwende keine Bilder ohne die Zustimmung des/der Rechteinhaber:in. Sind auf den Bildern Personen abgebildet, so müssen diese ihr Einverständnis zur Nutzung des Bildes durch Dritte gegeben haben. Datennutzer:innen - ob Veranstaltungsportal oder App-Entwicklerin - erhalten das Recht, die Bilddateien unter Nennung der Urheber zur Promotion von Angeboten innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.',
+      'Bitte beachte, dass du nur Bilder über kulturdaten.berlin zur Verfügung stellst, die von anderen in unveränderter oder veränderter Form weitergenutzt werden dürfen - auch zu kommerziellen Zwecken und im Fall der CC-Lizenzen auch auf Social Media. Bitte verwende keine Bilder ohne die Zustimmung des/der Rechteinhaber:in. Sind auf den Bildern Personen abgebildet, so müssen diese ihr Einverständnis zur Nutzung des Bildes durch Dritte gegeben haben. Datennutzer:innen - ob Veranstaltungsportal oder App-Entwickler:in - erhalten das Recht, die Bilddateien unter Nennung der Urheber:in zur Promotion von Angeboten innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.',
     acknowledgedUsageInfo: () => 'Zur Kenntnis genommen',
   },
   logo: {
