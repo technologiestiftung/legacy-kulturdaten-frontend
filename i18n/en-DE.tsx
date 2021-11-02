@@ -653,6 +653,7 @@ export const enDE: Localization = {
     serverProblem: () =>
       'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
     remove: () => 'remove',
+    telPlaceholder: () => 'e.g. +49301234567',
   },
   tags: {
     boxLabel: () => 'Already added keywords',
