@@ -43,7 +43,6 @@ const StyledMediaListItem = styled.div`
   background: var(--white);
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
-  overflow: hidden;
 `;
 
 const StyledMediaListItemMain = styled.div`
@@ -350,9 +349,10 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                 <Input
                   type={InputType.text}
                   label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
-                  id={`${uid}-copyright`}
+                  id={`${uid}-alt-${language}`}
                   value={currentTranslation?.attributes?.alternativeText || ''}
                   required={language === defaultLanguage}
+                  tooltip={language === defaultLanguage ? (t('media.altTooltip') as string) : ''}
                   onChange={(e) => {
                     const updatedTranslation = {
                       ...currentTranslation,
@@ -392,6 +392,8 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
               label={t('media.copyright') as string}
               id={`${uid}-copyright`}
               value={mediaItem.attributes.copyright || ''}
+              placeholder={t('media.copyrightPlaceholder') as string}
+              tooltip={t('media.copyrightTooltip') as string}
               onChange={(e) =>
                 onChange({
                   ...mediaItem,
