@@ -155,7 +155,7 @@ const StyledTooltipOverlay = styled.div<{
 
 const StyledTooltipOverlayContent = styled.div`
   flex-grow: 1;
-  padding-right: 1.375rem;
+  padding-right: 1.75rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
