@@ -443,8 +443,13 @@ export const enDE: Localization = {
   },
   media: {
     title: () => 'Images',
-    copyright: () => 'Author',
+    copyright: () => 'Image credits / author',
+    copyrightPlaceholder: () => 'e.g. © name of photographer, year of publication',
+    copyrightTooltip: () =>
+      'Please make sure to include a photo credit or reference to the creator(s) of the image. The format of the image credit depends on the specifications provided by the creator(s), e.g. © name of photographer or agency, year; name of an institution, photo: © name photographer',
     alt: () => 'Alt text',
+    altTooltip: () =>
+      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
     license: () => 'License',
     licenses: {
       '1': {
@@ -476,10 +481,10 @@ export const enDE: Localization = {
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
     ariaLabel: () => 'Upload files',
     hint: () =>
-      'In order for the image to be publicly available, the mandatory fields must be filled out.',
-    dropZoneLabel: () => 'Upload new images',
+      'In order for the image to be publicly available, the required fields must be filled out.',
+    dropZoneLabel: () => 'Upload images',
     usageInfo: () =>
-      'Please note that you only provide images via kulturdaten.berlin that may be used by others in unmodified or modified form - including for commercial purposes and on social media channels. Please do not use images without the permission of the copyright holder(s). If persons are depicted in the images, they must have given their consent to the use of the image by third parties. Users of your data - be it an event portal or an app developer - are granted the right to use the image files for the promotion of offers within the limits of the moral rights of the copyright holder, provided that the copyright holder is named.',
+      'Please make sure to upload only those images that may be used by others - either unaltered or in modified form and also for commercial purposes. In the case you chose a CC licence, images may also be used on social media. Do not use any images without the permission of the copyright holder(s). If people are depicted in the images, they must have given you their consent for the image to be used by third parties. By publishing your image via kulturdaten.berlin, you grant any data users - whether event portals or app developers - the right to use the image files within the limits of moral rights, provided the copyright holder is named.',
     acknowledgedUsageInfo: () => 'I have acknowledged this',
   },
   logo: {
