@@ -661,6 +661,7 @@ export const deDE: Localization = {
     serverProblem: () =>
       'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
     remove: () => 'entfernen',
+    telPlaceholder: () => 'z.B. +49301234567',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
@@ -976,7 +977,7 @@ export const deDE: Localization = {
         tel: () => 'Telefon',
         district: () => 'Bezirk',
         districtPlaceholder: () => 'Bezirk auswählen',
-        url: () => 'URL des Ortes',
+        url: () => 'URL / Online-Informationen zum Ort',
         urlPlaceholder: () => 'z.B. https://theaterberlin.de/virtualstage',
         rent: {
           title: () => 'Vermietung',

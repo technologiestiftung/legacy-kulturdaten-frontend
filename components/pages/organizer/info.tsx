@@ -92,6 +92,7 @@ const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
             <Input
               label={t('categories.organizer.form.tel') as string}
               type={InputType.tel}
+              placeholder={t('general.telPlaceholder') as string}
               value={attributes?.phone || ''}
               onChange={(e) => {
                 setPristine(false);

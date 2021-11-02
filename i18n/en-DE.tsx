@@ -655,6 +655,7 @@ export const enDE: Localization = {
     serverProblem: () =>
       'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
     remove: () => 'remove',
+    telPlaceholder: () => 'e.g. +49301234567',
   },
   tags: {
     boxLabel: () => 'Already added keywords',
@@ -954,7 +955,7 @@ export const enDE: Localization = {
         tel: () => 'Phone',
         district: () => 'District',
         districtPlaceholder: () => 'Choose district',
-        url: () => 'URL of the Location',
+        url: () => 'URL / venue information',
         urlPlaceholder: () => 'e.g. https://theatreberlin.de/virtualstage',
         rent: {
           title: () => 'Rent',
