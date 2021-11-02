@@ -9,6 +9,7 @@ import {
 } from '../../lib/api/types/organizer';
 import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
+import { sortByTranslation } from '../../lib/sortTranslations';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Checkbox } from '../checkbox';
@@ -214,19 +215,23 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                       payload: { subjects: value },
                     });
                   }}
-                  checkboxes={type?.relations?.subjects?.map((subject) => {
-                    const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                      language,
-                      subject.relations?.translations
-                    );
+                  checkboxes={
+                    type?.relations?.subjects
+                      ? sortByTranslation(type?.relations?.subjects, language)?.map((subject) => {
+                          const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                            language,
+                            subject.relations?.translations
+                          );
 
-                    return {
-                      id: `${pseudoUid}-type-${type.id}-subject-${subject.id}`,
-                      value: String(subject.id),
-                      label: subjectTranslation?.attributes?.name,
-                      checked: state.subjects?.includes(String(subject.id)),
-                    };
-                  })}
+                          return {
+                            id: `${pseudoUid}-type-${type.id}-subject-${subject.id}`,
+                            value: String(subject.id),
+                            label: subjectTranslation?.attributes?.name,
+                            checked: state.subjects?.includes(String(subject.id)),
+                          };
+                        })
+                      : undefined
+                  }
                 />
               </StyledTypesSubjectsSubjects>
             )}
