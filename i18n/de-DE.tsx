@@ -942,7 +942,7 @@ export const deDE: Localization = {
         tel: () => 'Telefon',
         district: () => 'Bezirk',
         districtPlaceholder: () => 'Bezirk auswählen',
-        url: () => 'URL des Ortes',
+        url: () => 'URL / Online-Informationen zum Ort',
         urlPlaceholder: () => 'z.B. https://theaterberlin.de/virtualstage',
         rent: {
           title: () => 'Vermietung',

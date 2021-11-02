@@ -921,7 +921,7 @@ export const enDE: Localization = {
         tel: () => 'Phone',
         district: () => 'District',
         districtPlaceholder: () => 'Choose district',
-        url: () => 'URL of the Location',
+        url: () => 'URL / venue information',
         urlPlaceholder: () => 'e.g. https://theatreberlin.de/virtualstage',
         rent: {
           title: () => 'Rent',
