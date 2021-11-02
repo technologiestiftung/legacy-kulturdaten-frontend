@@ -659,6 +659,7 @@ export const deDE: Localization = {
     serverProblem: () =>
       'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
     remove: () => 'entfernen',
+    telPlaceholder: () => 'z.B. +49301234567',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
