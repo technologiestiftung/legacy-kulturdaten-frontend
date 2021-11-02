@@ -366,7 +366,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: organizerLocationSubmit,
     pristine: organizerLocationPristine,
     valid: organizerLocationValid,
-    hint: organizerLocationHint,
     reset: organizerLocationReset,
   } = useOrganizerLocationForm(
     {
@@ -374,7 +373,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -382,7 +381,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: nameSubmit,
     pristine: namePristine,
     valid: nameValid,
-    hint: nameHint,
     reset: nameReset,
   } = useNameForm(
     {
@@ -390,7 +388,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
+    false,
     t('categories.offer.form.name') as string
   );
 
@@ -399,7 +397,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: descriptionSubmit,
     pristine: descriptionPristine,
     valid: descriptionValid,
-    hint: descriptionHint,
     reset: descriptionReset,
   } = useDescriptionForm(
     {
@@ -407,7 +404,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -415,7 +412,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: teaserSubmit,
     pristine: teaserPristine,
     valid: teaserValid,
-    hint: teaserHint,
     reset: teaserReset,
   } = useTeaserForm(
     {
@@ -431,7 +427,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: pricingSubmit,
     pristine: pricingPristine,
     valid: pricingValid,
-    hint: pricingHint,
     reset: pricingReset,
   } = usePricingForm(
     {
@@ -447,7 +442,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: roomSubmit,
     pristine: roomPristine,
     valid: roomValid,
-    hint: roomHint,
     reset: roomReset,
   } = useRoomForm(
     {
@@ -463,7 +457,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: linksSubmit,
     pristine: linksPristine,
     valid: linksValid,
-    hint: linksHint,
     reset: linksReset,
   } = useLinksForm(
     {
@@ -518,18 +511,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     ]
   );
 
-  const hint = useMemo(
-    () =>
-      nameHint ||
-      descriptionHint ||
-      teaserHint ||
-      organizerLocationHint ||
-      pricingHint ||
-      roomHint ||
-      linksHint,
-    [nameHint, descriptionHint, teaserHint, organizerLocationHint, pricingHint, roomHint, linksHint]
-  );
-
   const message = t('save.confirmExit') as string;
 
   const shouldWarn = useMemo(
@@ -565,7 +546,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>

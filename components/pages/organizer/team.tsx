@@ -279,7 +279,6 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
             active={!pristine}
             date={formattedDate}
             valid={true}
-            hint={false}
           />
         )}
         <EntryFormWrapper>

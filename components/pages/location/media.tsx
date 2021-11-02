@@ -63,7 +63,6 @@ export const LocationMediaPage: React.FC<CategoryEntryPage> = <
           active={!pristine}
           date={formattedDate}
           valid={valid}
-          hint={false}
         />
         <EntryFormWrapper>
           <EntryFormContainer>{renderedForm}</EntryFormContainer>

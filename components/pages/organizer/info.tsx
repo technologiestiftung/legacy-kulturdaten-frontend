@@ -283,14 +283,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     reset: nameReset,
     valid: nameValid,
-    hint: nameHint,
   } = useNameForm(
     {
       category,
       query,
     },
     loaded,
-    valid,
+    false,
     t('categories.organizer.form.name') as string,
     t('categories.organizer.form.nameTooltip') as string
   );
@@ -301,14 +300,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: addressPristine,
     reset: addressReset,
     valid: addressValid,
-    hint: addressHint,
   } = useAddressForm(
     {
       category,
       query,
     },
     loaded,
-    valid,
+    false,
     entry?.data?.attributes?.status === PublishedStatus.published,
     t('categories.organizer.form.address'),
     t('categories.organizer.form.addressTooltip')
@@ -320,14 +318,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: linksPristine,
     reset: linksReset,
     valid: linksValid,
-    hint: linksHint,
   } = useLinksForm(
     {
       category,
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -336,14 +333,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: contactPristine,
     reset: contactReset,
     valid: contactValid,
-    hint: contactHint,
   } = useContactForm(
     {
       category,
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -352,14 +348,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: additionalContactsPristine,
     reset: additionalContactsReset,
     valid: additionalContactsValid,
-    hint: additionalContactsHint,
   } = useAdditionalContactsForm(
     {
       category,
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -368,14 +363,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     reset: descriptionReset,
     valid: descriptionValid,
-    hint: descriptionHint,
   } = useDescriptionForm(
     {
       category,
       query,
     },
     loaded,
-    valid,
+    false,
     t('categories.organizer.form.description') as string,
     t('categories.organizer.form.descriptionTooltip') as string
   );
@@ -428,17 +422,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     additionalContactsValid,
   ]);
 
-  const hint = useMemo(
-    () =>
-      addressHint ||
-      contactHint ||
-      linksHint ||
-      nameHint ||
-      descriptionHint ||
-      additionalContactsHint,
-    [addressHint, contactHint, descriptionHint, linksHint, nameHint, additionalContactsHint]
-  );
-
   const message = t('save.confirmExit') as string;
 
   const shouldWarn = useMemo(
@@ -472,7 +455,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>

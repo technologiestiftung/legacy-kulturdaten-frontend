@@ -228,7 +228,6 @@ export const Save: React.FC<SaveProps> = ({
   date,
   active = false,
   valid = true,
-  hint = false,
 }: SaveProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const t = useT();
@@ -262,15 +261,6 @@ export const Save: React.FC<SaveProps> = ({
               </StyledSaveMessageSymbol>
               <StyledSaveMessageText>
                 {t(isMidOrWider ? 'save.issues' : 'save.issuesShort')}
-              </StyledSaveMessageText>
-            </>
-          ) : hint ? (
-            <>
-              <StyledSaveMessageSymbol>
-                <InfoSymbol ariaLabel="" />
-              </StyledSaveMessageSymbol>
-              <StyledSaveMessageText>
-                {t(isMidOrWider ? 'save.hint' : 'save.hintShort')}
               </StyledSaveMessageText>
             </>
           ) : (

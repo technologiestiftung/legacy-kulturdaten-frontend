@@ -175,7 +175,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
   } = useEntryTags(
     { category, query },
     loaded,
-    entryTypeSubjectValid,
+    false,
     false,
     t('categories.offer.form.topicsTooltip')
   );

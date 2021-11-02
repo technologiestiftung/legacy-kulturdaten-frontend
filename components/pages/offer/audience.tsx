@@ -281,7 +281,6 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     renderedForm: audienceForm,
     valid: audienceValid,
     submit: audienceSubmit,
-    hint: audienceHint,
     pristine: audiencePristine,
   } = useAudienceForm({ category, query }, loaded, false);
 
@@ -290,7 +289,6 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     submit: peakHoursSubmit,
     pristine: peakHoursPristine,
     valid: peakHoursValid,
-    hint: peakHoursHint,
     reset: peakHoursReset,
   } = usePeakHoursForm(
     {
@@ -298,7 +296,6 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
     false
   );
 
@@ -320,8 +317,6 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     () => ![audiencePristine, peakHoursPristine].includes(false),
     [audiencePristine, peakHoursPristine]
   );
-
-  const hint = useMemo(() => audienceHint || peakHoursHint, [audienceHint, peakHoursHint]);
 
   const message = t('save.confirmExit') as string;
 
@@ -347,7 +342,6 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
 
           {audienceForm}

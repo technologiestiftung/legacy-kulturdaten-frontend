@@ -431,7 +431,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: nameSubmit,
     pristine: namePristine,
     valid: nameValid,
-    hint: nameHint,
     reset: nameReset,
   } = useNameForm(
     {
@@ -439,7 +438,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
+    false,
     t('categories.location.form.name') as string
   );
 
@@ -448,7 +447,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: descriptionSubmit,
     pristine: descriptionPristine,
     valid: descriptionValid,
-    hint: descriptionHint,
     reset: descriptionReset,
   } = useDescriptionForm(
     {
@@ -456,7 +454,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid
+    false
   );
 
   const {
@@ -464,7 +462,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: addressSubmit,
     pristine: addressPristine,
     valid: addressValid,
-    hint: addressHint,
     reset: addressReset,
   } = useAddressForm(
     {
@@ -472,7 +469,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
+    false,
     false,
     false,
     false,
@@ -484,7 +481,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: typeSubmit,
     pristine: typePristine,
     valid: typeValid,
-    hint: typeHint,
     value: typeValue,
     reset: typeReset,
   } = useTypeForm(
@@ -493,7 +489,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
+    false,
     false
   );
 
@@ -502,7 +498,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: openingHoursSubmit,
     pristine: openingHoursPristine,
     valid: openingHoursValid,
-    hint: openingHoursHint,
     reset: openingHoursReset,
   } = useOpeningHoursForm(
     {
@@ -510,7 +505,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
+    false,
     false
   );
 
@@ -519,7 +514,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: urlSubmit,
     pristine: urlPristine,
     valid: urlValid,
-    hint: urlHint,
     reset: urlReset,
   } = useUrlForm(
     {
@@ -536,7 +530,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: rentSubmit,
     pristine: rentPristine,
     valid: rentValid,
-    hint: rentHint,
     reset: rentReset,
   } = useRentForm(
     {
@@ -544,7 +537,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       query,
     },
     loaded,
-    valid,
+    false,
     false
   );
 
@@ -592,25 +585,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     ]
   );
 
-  const hint = useMemo(
-    () =>
-      nameHint ||
-      descriptionHint ||
-      typeHint ||
-      (typeValue === LocationType.virtual && urlHint) ||
-      (typeValue === LocationType.physical && (openingHoursHint || addressHint || rentHint)),
-    [
-      nameHint,
-      descriptionHint,
-      typeHint,
-      typeValue,
-      urlHint,
-      openingHoursHint,
-      addressHint,
-      rentHint,
-    ]
-  );
-
   const message = t('save.confirmExit') as string;
 
   const shouldWarn = useMemo(
@@ -650,7 +624,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>

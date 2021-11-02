@@ -181,7 +181,7 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const t = useT();
 
-  const { renderedForm, valid, submit, hint, pristine, reset } = useServiceForm(
+  const { renderedForm, valid, submit, pristine, reset } = useServiceForm(
     { category, query },
     loaded,
     false
@@ -220,7 +220,6 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
 
           {renderedForm}

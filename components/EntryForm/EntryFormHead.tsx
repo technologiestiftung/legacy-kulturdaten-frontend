@@ -136,7 +136,6 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   tooltip,
   id,
   valid = true,
-  hint = false,
   showHintInline = false,
   expander,
   size,
@@ -162,10 +161,6 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       {valid === false ? (
         <StyledEntryFormHeadAlert showInline={showHintInline}>
           <AlertSymbol />
-        </StyledEntryFormHeadAlert>
-      ) : hint ? (
-        <StyledEntryFormHeadAlert showInline={showHintInline}>
-          <InfoSymbol />
         </StyledEntryFormHeadAlert>
       ) : (
         ''
