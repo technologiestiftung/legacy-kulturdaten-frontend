@@ -5,7 +5,7 @@ import { OrganizerDelete } from '../../../lib/api/routes/organizer/delete';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Contact } from '../../../lib/api/types/contact';
-import { CategoryEntry } from '../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -308,7 +308,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     },
     loaded,
     valid,
-    true,
+    entry?.data?.attributes?.status === PublishedStatus.published,
     t('categories.organizer.form.address'),
     t('categories.organizer.form.addressTooltip')
   );
