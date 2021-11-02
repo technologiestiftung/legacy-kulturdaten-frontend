@@ -226,14 +226,17 @@ export const useMutateList = (
     getOrder,
   } = useContext(EntryListContext);
   const apiCallRoute = category?.api.list.route;
-  const query = makeListQuery(
-    getPage(category.name),
-    getSize(category.name),
-    additionalFilters
-      ? [...Object.entries(getFilters(category.name)), ...additionalFilters]
-      : Object.entries(getFilters(category.name)),
-    { key: getSortKey(category.name), order: getOrder(category.name) }
-  );
+  const query =
+    getPage && getSize
+      ? makeListQuery(
+          getPage(category.name),
+          getSize(category.name),
+          additionalFilters
+            ? [...Object.entries(getFilters(category.name)), ...additionalFilters]
+            : Object.entries(getFilters(category.name)),
+          { key: getSortKey(category.name), order: getOrder(category.name) }
+        )
+      : undefined;
 
   return () => mutateSwr(getApiUrlString(apiCallRoute, query));
 };
