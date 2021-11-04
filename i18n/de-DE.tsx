@@ -712,6 +712,8 @@ export const deDE: Localization = {
     title: () => 'Veröffentlichung',
     label: () => 'Pflichtangaben',
     fulfilled: ({ count, total }) => `${count} von ${total} ausgefüllt`,
+    notFulfilled: () => 'Pflichtangabe fehlt',
+    isFulfilled: () => 'Pflichtangabe erfüllt',
   },
   categories: {
     organizer: {

@@ -5,7 +5,6 @@ import { ChevronDown } from 'react-feather';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
-import { InfoSymbol } from '../assets/InfoSymbol';
 import { mq } from '../globals/Constants';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
@@ -159,7 +158,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       addPadding={addPadding}
     >
       {valid === false ? (
-        <StyledEntryFormHeadAlert showInline={showHintInline}>
+        <StyledEntryFormHeadAlert showInline={true}>
           <AlertSymbol />
         </StyledEntryFormHeadAlert>
       ) : (

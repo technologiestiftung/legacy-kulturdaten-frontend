@@ -63,12 +63,6 @@ export const useEntryHeader = (
 
   return (
     <>
-      {!minimalVariant &&
-        category?.requirements &&
-        entry?.data?.attributes?.status &&
-        entry?.data?.attributes?.status !== PublishedStatus.published && (
-          <Publish category={category} query={router?.query} />
-        )}
       <EntryHeader
         wideLayout={wideLayout}
         backButton={titleBarLink}

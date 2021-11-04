@@ -16,6 +16,7 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
+import { Publish } from '../../Publish';
 import { EntryFormHook } from '../helpers/form';
 import { useAddressForm } from '../helpers/form/Address';
 import { useDescriptionForm } from '../helpers/form/Description';
@@ -307,9 +308,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     },
     loaded,
     false,
-    entry?.data?.attributes?.status === PublishedStatus.published,
+    true,
     t('categories.organizer.form.address'),
-    t('categories.organizer.form.addressTooltip')
+    t('categories.organizer.form.addressTooltip'),
+    false,
+    {
+      fulfilled: false,
+    }
   );
 
   const {
@@ -438,8 +443,41 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     linksReset();
   });
 
+  const requirements = category?.requirements;
+
+  const failedPublishedRequirements =
+    typeof entry?.meta?.publishable === 'object' &&
+    Object.entries(entry?.meta?.publishable).length > 0
+      ? entry?.meta?.publishable
+      : undefined;
+
+  const requirementsFulfillment = useMemo(
+    () =>
+      requirements.map((requirement) => ({
+        text: t(requirement.translationKey) as string,
+        fulfilled: requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
+          if (
+            failedPublishedRequirements &&
+            failedPublishedRequirements.hasOwnProperty(publishableKey)
+          ) {
+            return false;
+          }
+
+          return fulfilled;
+        }, true),
+      })),
+    [failedPublishedRequirements, requirements, t]
+  );
+
   return (
     <>
+      <Publish
+        category={category}
+        query={query}
+        requirements={requirementsFulfillment}
+        onPublish={async () => console.log('publish')}
+        publishable={false}
+      />
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>

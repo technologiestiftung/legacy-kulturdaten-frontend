@@ -9,7 +9,13 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { Select, SelectSize } from '../../../select';
 import { EntryFormHook } from '../form';
-import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
+import {
+  FormGrid,
+  FormItem,
+  FormItemWidth,
+  FormWrapper,
+  FormWrapperProps,
+} from '../formComponents';
 
 export const useAddressForm: EntryFormHook = (
   { category, query },
@@ -18,7 +24,8 @@ export const useAddressForm: EntryFormHook = (
   customRequired?: boolean,
   customTitle?: string,
   tooltip?: string,
-  district?: boolean
+  district?: boolean,
+  requirement?: FormWrapperProps['requirement']
 ) => {
   const uid = usePseudoUID();
   const { entry, mutate } = useEntry<
@@ -108,131 +115,133 @@ export const useAddressForm: EntryFormHook = (
           e.preventDefault();
         }}
       >
-        <EntryFormHead
-          title={`${customTitle || (t('forms.address') as string)}`}
-          valid={valid}
-          hint={hint}
-          tooltip={tooltip}
-        />
-        <FormGrid>
-          <FormItem width={FormItemWidth.half}>
-            <Input
-              label={t('forms.street1') as string}
-              type={InputType.text}
-              value={address?.attributes?.street1 || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    street1: e.target.value,
-                  },
-                });
-              }}
-              required={required}
-              hint={
-                showHint &&
-                (!address?.attributes?.street1 || address?.attributes?.street1.length < 1)
-              }
-            />
-          </FormItem>
-          <FormItem width={FormItemWidth.half}>
-            <Input
-              label={t('forms.street2') as string}
-              type={InputType.text}
-              value={address?.attributes?.street2 || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    street2: e.target.value,
-                  },
-                });
-              }}
-            />
-          </FormItem>
-          <FormItem width={FormItemWidth.quarter}>
-            <Input
-              label={t('forms.zipCode') as string}
-              type={InputType.text}
-              value={address?.attributes?.zipCode || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    zipCode: e.target.value,
-                  },
-                });
-              }}
-              required={required}
-              hint={
-                showHint &&
-                (!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1)
-              }
-            />
-          </FormItem>
-          <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
-            <Input
-              label={t('forms.city') as string}
-              type={InputType.text}
-              value={address?.attributes?.city || ''}
-              onChange={(e) => {
-                setPristine(false);
-                setAddress({
-                  ...address,
-                  attributes: {
-                    ...address?.attributes,
-                    city: e.target.value,
-                  },
-                });
-              }}
-              required={required}
-              hint={
-                showHint && (!address?.attributes?.city || address?.attributes?.city.length < 1)
-              }
-            />
-          </FormItem>
-          {district && (
-            <FormItem width={FormItemWidth.half} alignSelf="flex-end">
-              <Select
-                value={
-                  address?.attributes?.district?.length > 1
-                    ? address?.attributes?.district
-                    : 'undefined'
-                }
-                id={`${uid}-district`}
-                label={t('categories.location.form.district') as string}
-                size={SelectSize.big}
-                required={required}
+        <FormWrapper requirement={requirement}>
+          <EntryFormHead
+            title={`${customTitle || (t('forms.address') as string)}`}
+            valid={valid}
+            hint={hint}
+            tooltip={tooltip}
+          />
+          <FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                label={t('forms.street1') as string}
+                type={InputType.text}
+                value={address?.attributes?.street1 || ''}
                 onChange={(e) => {
                   setPristine(false);
                   setAddress({
                     ...address,
                     attributes: {
                       ...address?.attributes,
-                      district: e.target.value !== 'undefined' ? e.target.value : ' ',
+                      street1: e.target.value,
                     },
                   });
                 }}
-                hint={hint}
-              >
-                <option value="undefined">
-                  {t('categories.location.form.districtPlaceholder')}
-                </option>
-                {districtList?.map((district, index) => (
-                  <option value={district.attributes.name} key={index}>
-                    {district.attributes.name}
-                  </option>
-                ))}
-              </Select>
+                required={required}
+                hint={
+                  showHint &&
+                  (!address?.attributes?.street1 || address?.attributes?.street1.length < 1)
+                }
+              />
             </FormItem>
-          )}
-        </FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                label={t('forms.street2') as string}
+                type={InputType.text}
+                value={address?.attributes?.street2 || ''}
+                onChange={(e) => {
+                  setPristine(false);
+                  setAddress({
+                    ...address,
+                    attributes: {
+                      ...address?.attributes,
+                      street2: e.target.value,
+                    },
+                  });
+                }}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.quarter}>
+              <Input
+                label={t('forms.zipCode') as string}
+                type={InputType.text}
+                value={address?.attributes?.zipCode || ''}
+                onChange={(e) => {
+                  setPristine(false);
+                  setAddress({
+                    ...address,
+                    attributes: {
+                      ...address?.attributes,
+                      zipCode: e.target.value,
+                    },
+                  });
+                }}
+                required={required}
+                hint={
+                  showHint &&
+                  (!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1)
+                }
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
+              <Input
+                label={t('forms.city') as string}
+                type={InputType.text}
+                value={address?.attributes?.city || ''}
+                onChange={(e) => {
+                  setPristine(false);
+                  setAddress({
+                    ...address,
+                    attributes: {
+                      ...address?.attributes,
+                      city: e.target.value,
+                    },
+                  });
+                }}
+                required={required}
+                hint={
+                  showHint && (!address?.attributes?.city || address?.attributes?.city.length < 1)
+                }
+              />
+            </FormItem>
+            {district && (
+              <FormItem width={FormItemWidth.half} alignSelf="flex-end">
+                <Select
+                  value={
+                    address?.attributes?.district?.length > 1
+                      ? address?.attributes?.district
+                      : 'undefined'
+                  }
+                  id={`${uid}-district`}
+                  label={t('categories.location.form.district') as string}
+                  size={SelectSize.big}
+                  required={required}
+                  onChange={(e) => {
+                    setPristine(false);
+                    setAddress({
+                      ...address,
+                      attributes: {
+                        ...address?.attributes,
+                        district: e.target.value !== 'undefined' ? e.target.value : ' ',
+                      },
+                    });
+                  }}
+                  hint={hint}
+                >
+                  <option value="undefined">
+                    {t('categories.location.form.districtPlaceholder')}
+                  </option>
+                  {districtList?.map((district, index) => (
+                    <option value={district.attributes.name} key={index}>
+                      {district.attributes.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormItem>
+            )}
+          </FormGrid>
+        </FormWrapper>
       </form>
     ),
     submit: async () => {

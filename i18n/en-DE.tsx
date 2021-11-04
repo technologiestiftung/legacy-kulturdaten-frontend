@@ -706,6 +706,8 @@ export const enDE: Localization = {
     title: () => 'Publishing',
     label: () => 'Required information',
     fulfilled: ({ count, total }) => `${count} of ${total} filled out`,
+    notFulfilled: () => 'Required information missing',
+    isFulfilled: () => 'Required information filled out',
   },
   categories: {
     organizer: {

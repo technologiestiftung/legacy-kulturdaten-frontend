@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { ParsedUrlQuery } from 'node:querystring';
 import { useMemo } from 'react';
 import { useApiCall } from '../../lib/api';
-import { Requirement } from './Requirement';
+import { Requirement, RequirementProps } from './Requirement';
 import { OrganizerShow } from '../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../lib/api/routes/organizer/update';
 import { PublishedStatus } from '../../lib/api/types/general';
@@ -16,7 +16,6 @@ import { Label, StyledLabel } from '../label';
 import { Categories } from '../../config/categories';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useOrganizerId } from '../../lib/useOrganizer';
-import { StatusFlag, StatusFlagVariant } from '../Status/StatusFlag';
 
 const StyledPublish = styled.div`
   ${contentGrid(1)}
@@ -129,55 +128,60 @@ const StyledPublishAction = styled.div`
 `;
 
 interface PublishProps {
-  category: Category;
-  query: ParsedUrlQuery;
+  category?: Category;
+  query?: ParsedUrlQuery;
+  requirements?: RequirementProps[];
+  publishable?: boolean;
+  onPublish?: () => Promise<void>;
 }
 
-export const Publish: React.FC<PublishProps> = ({ category, query }: PublishProps) => {
+export const Publish: React.FC<PublishProps> = ({
+  category,
+  query,
+  requirements,
+  publishable,
+  onPublish,
+}: PublishProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
-  const organizerId = useOrganizerId();
-  const mutateList = useMutateList(
-    category,
-    category.name === Categories.location
-      ? [['organizer', organizerId]]
-      : category.name === Categories.offer
-      ? [['organizers', organizerId]]
-      : undefined
-  );
   const loadingScreen = useLoadingScreen();
-  const requirements = category?.requirements;
+  // const requirements = category?.requirements;
 
   const t = useT();
 
-  const isPublishable = useMemo(
-    () => entry?.meta?.publishable === true,
-    [entry?.meta?.publishable]
+  const fulfilledRequirementsCount = useMemo(
+    () => requirements?.filter(({ fulfilled }) => fulfilled)?.length,
+    [requirements]
   );
 
-  const failedPublishedRequirements =
-    typeof entry?.meta?.publishable === 'object' &&
-    Object.entries(entry?.meta?.publishable).length > 0
-      ? entry?.meta?.publishable
-      : undefined;
+  // const isPublishable = useMemo(
+  //   () => entry?.meta?.publishable === true,
+  //   [entry?.meta?.publishable]
+  // );
 
-  const requirementsFulfillment = useMemo(
-    () =>
-      requirements.map((requirement) => ({
-        requirement,
-        fulfilled: requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
-          if (
-            failedPublishedRequirements &&
-            failedPublishedRequirements.hasOwnProperty(publishableKey)
-          ) {
-            return false;
-          }
+  // const failedPublishedRequirements =
+  //   typeof entry?.meta?.publishable === 'object' &&
+  //   Object.entries(entry?.meta?.publishable).length > 0
+  //     ? entry?.meta?.publishable
+  //     : undefined;
 
-          return fulfilled;
-        }, true),
-      })),
-    [failedPublishedRequirements, requirements]
-  );
+  // const requirementsFulfillment = useMemo(
+  //   () =>
+  //     requirements.map((requirement) => ({
+  //       requirement,
+  //       fulfilled: requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
+  //         if (
+  //           failedPublishedRequirements &&
+  //           failedPublishedRequirements.hasOwnProperty(publishableKey)
+  //         ) {
+  //           return false;
+  //         }
+
+  //         return fulfilled;
+  //       }, true),
+  //     })),
+  //   [failedPublishedRequirements, requirements]
+  // );
 
   return (
     <StyledPublish role="group">
@@ -191,22 +195,14 @@ export const Publish: React.FC<PublishProps> = ({ category, query }: PublishProp
             <Label>{t('requirements.label')} </Label>
             <StyledPublishRequirementsLabelCount>
               {t('requirements.fulfilled', {
-                count:
-                  requirements.length -
-                  (failedPublishedRequirements
-                    ? Object.values(failedPublishedRequirements)?.length || 0
-                    : 0),
+                count: fulfilledRequirementsCount,
                 total: requirements.length,
               })}
             </StyledPublishRequirementsLabelCount>
           </StyledPublishRequirementsLabel>
           <StyledPublishRequirementsItems>
-            {requirementsFulfillment.map((fulfillment, index) => (
-              <Requirement
-                key={index}
-                text={t(fulfillment.requirement.translationKey) as string}
-                fulfilled={fulfillment.fulfilled}
-              />
+            {requirements.map((requirement, index) => (
+              <Requirement key={index} {...requirement} />
             ))}
           </StyledPublishRequirementsItems>
         </StyledPublishRequirements>
@@ -215,34 +211,35 @@ export const Publish: React.FC<PublishProps> = ({ category, query }: PublishProp
             size={ButtonSize.big}
             color={ButtonColor.green}
             icon="Heart"
-            disabled={!isPublishable}
-            onClick={async () =>
-              loadingScreen(
-                t('publish.loadingTitle', { categoryName: category.title.singular }),
-                async () => {
-                  try {
-                    const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-                      id: entry.data.id,
-                      entry: {
-                        attributes: {
-                          status: PublishedStatus.published,
-                        },
-                      },
-                    });
+            disabled={!publishable}
+            onClick={
+              onPublish
+              // loadingScreen(
+              //   t('publish.loadingTitle', { categoryName: category.title.singular }),
+              //   async () => {
+              //     try {
+              //       const resp = await call<OrganizerUpdate>(category.api.update.factory, {
+              //         id: entry.data.id,
+              //         entry: {
+              //           attributes: {
+              //             status: PublishedStatus.published,
+              //           },
+              //         },
+              //       });
 
-                    if (resp.status === 200) {
-                      mutate();
-                      mutateList();
+              //       if (resp.status === 200) {
+              //         mutate();
+              //         mutateList();
 
-                      return { success: true };
-                    }
-                  } catch (e) {
-                    console.error(e);
-                    return { success: false, error: t('general.serverProblem') };
-                  }
-                },
-                t('general.takeAFewSeconds')
-              )
+              //         return { success: true };
+              //       }
+              //     } catch (e) {
+              //       console.error(e);
+              //       return { success: false, error: t('general.serverProblem') };
+              //     }
+              //   },
+              //   t('general.takeAFewSeconds')
+              // )
             }
           >
             {t('general.publish')}

@@ -12,7 +12,7 @@ import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
-import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 
 interface SetNameProps {
   label: string;
@@ -260,7 +260,7 @@ export const useNameForm: EntryFormHook = (
 
   return {
     renderedForm: (
-      <div>
+      <FormWrapper requirement={{ fulfilled: validGerman }}>
         <EntryFormHead
           title={title || `${t('forms.name') as string}`}
           valid={valid}
@@ -271,7 +271,7 @@ export const useNameForm: EntryFormHook = (
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
         </FormGrid>
-      </div>
+      </FormWrapper>
     ),
     submit: async () => {
       onSubmitEnglish();

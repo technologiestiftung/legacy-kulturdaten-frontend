@@ -18,7 +18,7 @@ const StyledRequirementText = styled.div`
   flex-grow: 1;
 `;
 
-const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
+export const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
   flex-shrink: 0;
   flex-grow: 0;
   min-height: 100%;
@@ -48,7 +48,7 @@ const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
       : 'opacity: 0.7;'}
 `;
 
-interface RequirementProps {
+export interface RequirementProps {
   text: string;
   fulfilled: boolean;
 }
