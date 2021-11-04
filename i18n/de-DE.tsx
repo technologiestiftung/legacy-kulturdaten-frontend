@@ -200,7 +200,7 @@ export const deDE: Localization = {
       pending: () => 'Einladung ausstehend',
       button: () => 'Einladen',
       hint: ({ max }) =>
-        `Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mail (max. ${max}), getrennt mit "," (Komma).`,
+        `Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mails (max. ${max}), getrennt mit "," (Komma).`,
       hint2: () => 'Bespiel: name@example.com, title@another-example.com',
       placeholder: () => 'name@example.com, title@another-example.com',
       invalid: () =>
