@@ -21,7 +21,7 @@ import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
 import { sortByTranslation } from '../../../lib/sortTranslations';
 
-const useOfferMainTypeForm: EntryFormHook = ({ category, query }, loaded) => {
+const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -130,7 +130,6 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query }, loaded) => {
       setTypes(initialTypes);
     },
     valid,
-    hint: false,
   };
 };
 
@@ -161,31 +160,25 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     pristine: pristineClassification,
     reset,
     valid: entryTypeSubjectValid,
-  } = useEntryTypeSubjectForm(
-    { category, query },
+  } = useEntryTypeSubjectForm({
+    category,
+    query,
     loaded,
-    false,
-    t('categories.offer.form.topics')
-  );
+    title: t('categories.offer.form.topics') as string,
+  });
 
   const {
     renderedForm: renderedTagsForm,
     submit: submitTags,
     pristine: pristineTags,
-  } = useEntryTags(
-    { category, query },
-    loaded,
-    false,
-    false,
-    t('categories.offer.form.topicsTooltip')
-  );
+  } = useEntryTags({ category, query, loaded, tooltip: t('categories.offer.form.topicsTooltip') });
 
   const {
     renderedForm: mainTypeForm,
     submit: mainTypeSubmit,
     pristine: mainTypePristine,
     valid: mainTypeValid,
-  } = useOfferMainTypeForm({ category, query }, loaded, false);
+  } = useOfferMainTypeForm({ category, query, loaded });
 
   const pristine = useMemo(
     () => pristineTags && pristineClassification && mainTypePristine,

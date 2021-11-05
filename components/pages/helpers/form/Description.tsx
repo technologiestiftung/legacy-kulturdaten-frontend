@@ -72,7 +72,6 @@ const StyledDescriptionRichTextContainer = styled.div<{ valid?: boolean }>`
 interface DescriptionProps extends EntryFormProps {
   language: Language;
   title: string;
-  showHint: boolean;
   required?: boolean;
   key?: string;
 }
@@ -83,14 +82,12 @@ export const useDescription = ({
   language,
   title,
   required,
-  showHint,
   key = 'description',
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
   pristine: boolean;
   valid: boolean;
-  hint: boolean;
 } => {
   const { entry, mutate } = useEntry<
     {
@@ -152,8 +149,6 @@ export const useDescription = ({
     }
   }, [initRichText, textFromApi, cachedApiText]);
 
-  const hint = useMemo(() => showHint && textLength < 1, [showHint, textLength]);
-
   return {
     renderedDescription: (
       <StyledDescription>
@@ -167,7 +162,7 @@ export const useDescription = ({
                 </Label>
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
-            <StyledDescriptionRichTextWrapper valid={valid} hint={hint}>
+            <StyledDescriptionRichTextWrapper valid={valid}>
               <StyledDescriptionRichTextContainer valid={valid}>
                 {renderedRichText}
               </StyledDescriptionRichTextContainer>
@@ -205,17 +200,10 @@ export const useDescription = ({
     },
     pristine,
     valid,
-    hint,
   };
 };
 
-export const useDescriptionForm: EntryFormHook = (
-  { category, query },
-  loaded,
-  showHint,
-  title?: string,
-  tooltip?: string
-) => {
+export const useDescriptionForm: EntryFormHook = ({ category, query, loaded, tooltip, title }) => {
   const t = useT();
   const { entry } = useEntry(category, query);
 
@@ -226,14 +214,12 @@ export const useDescriptionForm: EntryFormHook = (
     submit: submitGerman,
     pristine: pristineGerman,
     valid: validGerman,
-    hint: hintGerman,
   } = useDescription({
     category,
     query,
     language: Language.de,
     title: t('forms.labelGerman') as string,
     required: isPublished,
-    showHint,
   });
 
   const {
@@ -241,14 +227,12 @@ export const useDescriptionForm: EntryFormHook = (
     submit: submitEnglish,
     pristine: pristineEnglish,
     valid: validEnglish,
-    hint: hintEnglish,
   } = useDescription({
     category,
     query,
     language: Language.en,
     title: t('forms.labelEnglish') as string,
     required: false,
-    showHint,
   });
 
   const {
@@ -256,14 +240,12 @@ export const useDescriptionForm: EntryFormHook = (
     submit: submitGermanEasy,
     pristine: pristineGermanEasy,
     valid: validGermanEasy,
-    hint: hintGermanEasy,
   } = useDescription({
     category,
     query,
     language: 'de-easy' as Language,
     title: t('forms.labelGermanEasy') as string,
     required: false,
-    showHint,
   });
 
   const pristine = useMemo(
@@ -276,18 +258,12 @@ export const useDescriptionForm: EntryFormHook = (
     [loaded, validEnglish, validGerman, validGermanEasy]
   );
 
-  const hint = useMemo(
-    () => showHint && loaded && (hintGerman || hintEnglish || hintGermanEasy),
-    [showHint, loaded, hintEnglish, hintGerman, hintGermanEasy]
-  );
-
   return {
     renderedForm: (
       <FormContainer>
         <EntryFormHead
           title={title || `${t('forms.description') as string}`}
           valid={valid}
-          hint={hint}
           tooltip={tooltip}
         />
         {renderedDescriptionGerman}
@@ -303,11 +279,10 @@ export const useDescriptionForm: EntryFormHook = (
     pristine,
     reset: () => undefined,
     valid,
-    hint,
   };
 };
 
-export const useTeaserForm: EntryFormHook = ({ category, query }, loaded, showHint) => {
+export const useTeaserForm: EntryFormHook = ({ category, query, loaded }) => {
   const t = useT();
   const { entry } = useEntry(category, query);
 
@@ -318,14 +293,12 @@ export const useTeaserForm: EntryFormHook = ({ category, query }, loaded, showHi
     submit: submitGerman,
     pristine: pristineGerman,
     valid: validGerman,
-    hint: hintGerman,
   } = useDescription({
     category,
     query,
     language: Language.de,
     title: t('forms.labelGerman') as string,
     required: isPublished,
-    showHint,
   });
 
   const {
@@ -333,14 +306,12 @@ export const useTeaserForm: EntryFormHook = ({ category, query }, loaded, showHi
     submit: submitEnglish,
     pristine: pristineEnglish,
     valid: validEnglish,
-    hint: hintEnglish,
   } = useDescription({
     category,
     query,
     language: Language.en,
     title: t('forms.labelEnglish') as string,
     required: false,
-    showHint,
     key: 'teaser',
   });
 
@@ -354,15 +325,10 @@ export const useTeaserForm: EntryFormHook = ({ category, query }, loaded, showHi
     [loaded, validEnglish, validGerman]
   );
 
-  const hint = useMemo(
-    () => showHint && loaded && (hintGerman || hintEnglish),
-    [showHint, loaded, hintEnglish, hintGerman]
-  );
-
   return {
     renderedForm: (
       <FormContainer>
-        <EntryFormHead title={`${t('forms.teaser') as string}`} valid={valid} hint={hint} />
+        <EntryFormHead title={`${t('forms.teaser') as string}`} valid={valid} />
         {renderedTeaserGerman}
         {renderedTeaserEnglish}
       </FormContainer>
@@ -374,6 +340,5 @@ export const useTeaserForm: EntryFormHook = ({ category, query }, loaded, showHi
     pristine,
     reset: () => undefined,
     valid,
-    hint,
   };
 };

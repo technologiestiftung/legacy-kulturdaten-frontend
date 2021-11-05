@@ -5,7 +5,7 @@ import { OrganizerDelete } from '../../../lib/api/routes/organizer/delete';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Contact } from '../../../lib/api/types/contact';
-import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
+import { CategoryEntry } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -26,7 +26,7 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 
-const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
+const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
 
@@ -284,16 +284,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     reset: nameReset,
     valid: nameValid,
-  } = useNameForm(
-    {
-      category,
-      query,
-    },
+  } = useNameForm({
+    category,
+    query,
     loaded,
-    false,
-    t('categories.organizer.form.name') as string,
-    t('categories.organizer.form.nameTooltip') as string
-  );
+    title: t('categories.organizer.form.name') as string,
+    tooltip: t('categories.organizer.form.nameTooltip') as string,
+  });
 
   const {
     renderedForm: addressForm,
@@ -301,21 +298,18 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: addressPristine,
     reset: addressReset,
     valid: addressValid,
-  } = useAddressForm(
-    {
-      category,
-      query,
-    },
+  } = useAddressForm({
+    category,
+    query,
     loaded,
-    false,
-    true,
-    t('categories.organizer.form.address'),
-    t('categories.organizer.form.addressTooltip'),
-    false,
-    {
+    customRequired: true,
+    title: t('categories.organizer.form.address') as string,
+    tooltip: t('categories.organizer.form.addressTooltip') as string,
+    district: false,
+    requirement: {
       fulfilled: false,
-    }
-  );
+    },
+  });
 
   const {
     renderedForm: linksForm,
@@ -323,14 +317,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: linksPristine,
     reset: linksReset,
     valid: linksValid,
-  } = useLinksForm(
-    {
-      category,
-      query,
-    },
+  } = useLinksForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: contactForm,
@@ -338,14 +329,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: contactPristine,
     reset: contactReset,
     valid: contactValid,
-  } = useContactForm(
-    {
-      category,
-      query,
-    },
+  } = useContactForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: additionalContactsForm,
@@ -353,14 +341,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: additionalContactsPristine,
     reset: additionalContactsReset,
     valid: additionalContactsValid,
-  } = useAdditionalContactsForm(
-    {
-      category,
-      query,
-    },
+  } = useAdditionalContactsForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: descriptionForm,
@@ -368,16 +353,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     reset: descriptionReset,
     valid: descriptionValid,
-  } = useDescriptionForm(
-    {
-      category,
-      query,
-    },
+  } = useDescriptionForm({
+    category,
+    query,
     loaded,
-    false,
-    t('categories.organizer.form.description') as string,
-    t('categories.organizer.form.descriptionTooltip') as string
-  );
+    title: t('categories.organizer.form.description') as string,
+    tooltip: t('categories.organizer.form.descriptionTooltip') as string,
+  });
 
   const renderedEntryHeader = useEntryHeader(
     { category, query },

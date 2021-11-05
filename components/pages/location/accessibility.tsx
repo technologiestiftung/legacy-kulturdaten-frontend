@@ -165,7 +165,6 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
     pristine,
     valid,
     reset: () => undefined,
-    hint: false,
     state,
   };
 };
@@ -181,11 +180,11 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const t = useT();
 
-  const { renderedForm, valid, submit, pristine, reset } = useAccessibilityForm(
-    { category, query },
+  const { renderedForm, valid, submit, pristine, reset } = useAccessibilityForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {

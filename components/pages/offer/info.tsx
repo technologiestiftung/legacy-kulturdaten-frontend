@@ -126,7 +126,6 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
       setTranslations(initialTranslations);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -243,7 +242,6 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
       setAttributes(initialAttributes);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -334,7 +332,6 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
       setLocationId(initialLocationId);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -367,14 +364,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: organizerLocationPristine,
     valid: organizerLocationValid,
     reset: organizerLocationReset,
-  } = useOrganizerLocationForm(
-    {
-      category,
-      query,
-    },
+  } = useOrganizerLocationForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: nameForm,
@@ -382,15 +376,12 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     valid: nameValid,
     reset: nameReset,
-  } = useNameForm(
-    {
-      category,
-      query,
-    },
+  } = useNameForm({
+    category,
+    query,
     loaded,
-    false,
-    t('categories.offer.form.name') as string
-  );
+    title: t('categories.offer.form.name') as string,
+  });
 
   const {
     renderedForm: descriptionForm,
@@ -398,14 +389,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     valid: descriptionValid,
     reset: descriptionReset,
-  } = useDescriptionForm(
-    {
-      category,
-      query,
-    },
+  } = useDescriptionForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: teaserForm,
@@ -413,14 +401,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: teaserPristine,
     valid: teaserValid,
     reset: teaserReset,
-  } = useTeaserForm(
-    {
-      category,
-      query,
-    },
+  } = useTeaserForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: pricingForm,
@@ -428,14 +413,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: pricingPristine,
     valid: pricingValid,
     reset: pricingReset,
-  } = usePricingForm(
-    {
-      category,
-      query,
-    },
+  } = usePricingForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: roomForm,
@@ -443,14 +425,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: roomPristine,
     valid: roomValid,
     reset: roomReset,
-  } = useRoomForm(
-    {
-      category,
-      query,
-    },
+  } = useRoomForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: linksForm,
@@ -458,14 +437,11 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: linksPristine,
     valid: linksValid,
     reset: linksReset,
-  } = useLinksForm(
-    {
-      category,
-      query,
-    },
+  } = useLinksForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     setValid(

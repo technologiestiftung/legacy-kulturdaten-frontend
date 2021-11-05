@@ -43,24 +43,23 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
     pristine: pristineClassification,
     reset,
     valid,
-  } = useEntryTypeSubjectForm({ category, query }, loaded, false);
+  } = useEntryTypeSubjectForm({ category, query, loaded });
 
   const {
     renderedForm: renderedTagsForm,
     submit: submitTags,
     pristine: pristineTags,
-  } = useEntryTags(
-    { category, query },
+  } = useEntryTags({
+    category,
+    query,
     loaded,
-    valid,
-    false,
-    t('categories.organizer.form.topicsTooltip')
-  );
+    tooltip: t('categories.organizer.form.topicsTooltip'),
+  });
 
-  const shouldWarn = useMemo(() => !pristineClassification && typeof entry?.data !== 'undefined', [
-    pristineClassification,
-    entry?.data,
-  ]);
+  const shouldWarn = useMemo(
+    () => !pristineClassification && typeof entry?.data !== 'undefined',
+    [pristineClassification, entry?.data]
+  );
 
   useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
 

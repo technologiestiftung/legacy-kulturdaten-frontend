@@ -135,7 +135,6 @@ const useIsPermanentForm: EntryFormHook = ({ category, query }) => {
       setIsPermanent(initialIsPermanent);
     },
     valid: true,
-    hint: false,
     value: isPermanent,
   };
 };
@@ -175,15 +174,11 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     pristine: isPermanentPristine,
     value: isPermanentValue,
     reset: isPermanentReset,
-  } = useIsPermanentForm(
-    {
-      category,
-      query,
-    },
+  } = useIsPermanentForm({
+    category,
+    query,
     loaded,
-    true,
-    false
-  );
+  });
 
   const {
     data: datesFromApi,

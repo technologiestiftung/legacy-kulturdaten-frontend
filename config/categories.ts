@@ -6,12 +6,8 @@ import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
 import { Routes, routes } from '../lib/routing';
 import { Category } from '../lib/categories';
-import { OrganizerCreatePage } from '../components/pages/organizer/create';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
 import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
-import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
-import { OrganizerRightsPage } from '../components/pages/organizer/rights';
-import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { LocationInfoPage } from '../components/pages/location/info';
 import { locationCreateFactory } from '../lib/api/routes/location/create';
@@ -24,13 +20,10 @@ import { offerCreateFactory } from '../lib/api/routes/offer/create';
 import { offerUpdateFactory } from '../lib/api/routes/offer/update';
 import { offerDeleteFactory } from '../lib/api/routes/offer/delete';
 import { OfferInfoPage } from '../components/pages/offer/info';
-import { LocationCreatePage } from '../components/pages/location/create';
-import { OfferCreatePage } from '../components/pages/offer/create';
 import { OrganizerListPage } from '../components/pages/organizer/list';
 import { OfferListPage } from '../components/pages/offer/list';
 import { LocationListPage } from '../components/pages/location/list';
 import { OfferCategorizationPage } from '../components/pages/offer/categorization';
-import { OfferAccessibilityPage } from '../components/pages/offer/accessibility';
 import { OfferAudiencePage } from '../components/pages/offer/audience';
 import { OfferDatesPage } from '../components/pages/offer/dates';
 import { organizerMediaFactory } from '../lib/api/routes/organizer/media';
@@ -41,10 +34,20 @@ import { LocationAccessibilityPage } from '../components/pages/location/accessib
 import { LocationServicePage } from '../components/pages/location/service';
 import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
 import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
+import { defaultLanguage, Language } from './locale';
+
+type RequirementAttributes = {
+  path: string;
+  translation?: {
+    language: Language;
+    attribute: string;
+  };
+};
 
 export type Requirement = {
   translationKey: string;
   publishableKeys: string[];
+  attributes: RequirementAttributes[];
 };
 
 export enum Categories {
@@ -77,13 +80,9 @@ export const useCategories: () => {
         create: routes[Routes.createOrganizer],
       },
       pages: {
-        create: OrganizerCreatePage,
-        preview: OrganizerPreviewPage,
         info: OrganizerInfoPage,
         categorization: OrganizerCategorizationPage,
         media: OrganizerMediaPage,
-        rights: OrganizerRightsPage,
-        export: OrganizerExportPage,
         list: OrganizerListPage,
       },
       tabs: [
@@ -133,24 +132,55 @@ export const useCategories: () => {
         {
           translationKey: 'categories.organizer.requirements.name',
           publishableKeys: ['attributes.name'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'name',
+              },
+            },
+          ],
         },
         {
           translationKey: 'categories.organizer.requirements.address',
-          publishableKeys: [
-            'relations.address',
-            'relations.address.attributes.city',
-            'relations.address.attributes.street1',
-            'relations.address.attributes.street2',
-            'relations.address.attributes.zipCode',
+          publishableKeys: ['relations.address'],
+          attributes: [
+            {
+              path: 'relations.address.attributes.city',
+            },
+            {
+              path: 'relations.address.attributes.street1',
+            },
+            {
+              path: 'relations.address.attributes.zipCode',
+            },
           ],
         },
         {
           translationKey: 'categories.organizer.requirements.description',
           publishableKeys: ['attributes.description'],
+          attributes: [
+            {
+              path: 'relations.translation',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'description',
+              },
+            },
+          ],
         },
         {
           translationKey: 'categories.organizer.requirements.categorization',
           publishableKeys: ['relations.types', 'relations.subjects'],
+          attributes: [
+            {
+              path: 'relations.types',
+            },
+            {
+              path: 'relations.subjects',
+            },
+          ],
         },
       ],
     },
@@ -167,11 +197,9 @@ export const useCategories: () => {
       },
       subMenuKey: 'offer',
       pages: {
-        create: OfferCreatePage,
         info: OfferInfoPage,
         media: OfferMediaPage,
         categorization: OfferCategorizationPage,
-        accessibility: OfferAccessibilityPage,
         audience: OfferAudiencePage,
         list: OfferListPage,
         dates: OfferDatesPage,
@@ -222,19 +250,47 @@ export const useCategories: () => {
         {
           translationKey: 'categories.offer.requirements.name',
           publishableKeys: ['attributes.name'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'name',
+              },
+            },
+          ],
         },
 
         {
           translationKey: 'categories.offer.requirements.description',
           publishableKeys: ['attributes.description'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'description',
+              },
+            },
+          ],
         },
         {
           translationKey: 'categories.offer.requirements.mainType',
           publishableKeys: ['relations.mainType'],
+          attributes: [
+            {
+              path: 'relations.mainType',
+            },
+          ],
         },
         {
           translationKey: 'categories.offer.requirements.categorization',
-          publishableKeys: ['relations.types', 'relations.subjects'],
+          publishableKeys: ['relations.types'],
+          attributes: [
+            {
+              path: 'relations.types',
+            },
+          ],
         },
       ],
     },
@@ -251,7 +307,6 @@ export const useCategories: () => {
       },
       subMenuKey: 'location',
       pages: {
-        create: LocationCreatePage,
         info: LocationInfoPage,
         service: LocationServicePage,
         media: LocationMediaPage,
@@ -298,10 +353,28 @@ export const useCategories: () => {
         {
           translationKey: 'categories.location.requirements.name',
           publishableKeys: ['attributes.name'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'name',
+              },
+            },
+          ],
         },
         {
           translationKey: 'categories.location.requirements.description',
           publishableKeys: ['attributes.description'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'description',
+              },
+            },
+          ],
         },
       ],
     },

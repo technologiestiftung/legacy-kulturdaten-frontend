@@ -9,7 +9,7 @@ import { useLinkList } from '../../../linklist';
 import { EntryFormHook } from '../form';
 import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
-export const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
+export const useLinksForm: EntryFormHook = ({ category, query, loaded }) => {
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry(category, query);
@@ -94,6 +94,5 @@ export const useLinksForm: EntryFormHook = ({ category, query }, loaded) => {
       init(initialLinks);
     },
     valid: !loaded || valid,
-    hint: false,
   };
 };

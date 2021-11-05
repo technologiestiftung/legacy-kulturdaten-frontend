@@ -105,7 +105,6 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
         />
       </FormItem>
     ),
-    hint: false,
     valid: true,
     pristine: true,
     reset: () => undefined,
@@ -233,7 +232,6 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
         </FormGrid>
       </div>
     ),
-    hint: false,
     pristine,
     submit: async () => {
       submitLogo();
@@ -269,14 +267,14 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
     pristine: mediaPristine,
     valid: mediaValid,
     reset: mediaReset,
-  } = useMediaForm({ category, query }, loaded, false);
+  } = useMediaForm({ category, query, loaded });
   const {
     renderedForm: logoForm,
     submit: logoSubmit,
     pristine: logoPristine,
     valid: logoValid,
     reset: logoReset,
-  } = useLogoForm({ category, query }, loaded, false);
+  } = useLogoForm({ category, query, loaded });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -318,7 +316,6 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
           active={!mediaPristine || !logoPristine}
           date={formattedDate}
           valid={mediaValid && logoValid}
-          hint={false}
         />
         <EntryFormWrapper>
           <EntryFormContainer>{logoForm}</EntryFormContainer>

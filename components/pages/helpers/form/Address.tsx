@@ -8,7 +8,7 @@ import { usePseudoUID } from '../../../../lib/uid';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { Select, SelectSize } from '../../../select';
-import { EntryFormHook } from '../form';
+import { EntryFormHook, EntryFormHookProps } from '../form';
 import {
   FormGrid,
   FormItem,
@@ -17,16 +17,22 @@ import {
   FormWrapperProps,
 } from '../formComponents';
 
-export const useAddressForm: EntryFormHook = (
-  { category, query },
+interface AddressFormHookProps extends EntryFormHookProps {
+  customRequired?: boolean;
+  district?: boolean;
+  requirement?: FormWrapperProps['requirement'];
+}
+
+export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
+  category,
+  query,
   loaded,
-  showHint,
-  customRequired?: boolean,
-  customTitle?: string,
-  tooltip?: string,
-  district?: boolean,
-  requirement?: FormWrapperProps['requirement']
-) => {
+  tooltip,
+  customRequired,
+  title,
+  district,
+  requirement,
+}) => {
   const uid = usePseudoUID();
   const { entry, mutate } = useEntry<
     {
@@ -84,30 +90,6 @@ export const useAddressForm: EntryFormHook = (
     ]
   );
 
-  const hint = useMemo(
-    () =>
-      showHint &&
-      loaded &&
-      (!address?.attributes?.street1 ||
-        address.attributes.street1.length < 1 ||
-        !address?.attributes?.zipCode ||
-        address.attributes.zipCode?.length < 1 ||
-        (district
-          ? !address?.attributes?.district || address.attributes.district?.length < 1
-          : false) ||
-        !address?.attributes?.city ||
-        address.attributes.city?.length < 1),
-    [
-      showHint,
-      loaded,
-      district,
-      address?.attributes?.street1,
-      address?.attributes?.zipCode,
-      address?.attributes?.district,
-      address?.attributes?.city,
-    ]
-  );
-
   return {
     renderedForm: (
       <form
@@ -117,9 +99,8 @@ export const useAddressForm: EntryFormHook = (
       >
         <FormWrapper requirement={requirement}>
           <EntryFormHead
-            title={`${customTitle || (t('forms.address') as string)}`}
+            title={`${title || (t('forms.address') as string)}`}
             valid={valid}
-            hint={hint}
             tooltip={tooltip}
           />
           <FormGrid>
@@ -139,10 +120,6 @@ export const useAddressForm: EntryFormHook = (
                   });
                 }}
                 required={required}
-                hint={
-                  showHint &&
-                  (!address?.attributes?.street1 || address?.attributes?.street1.length < 1)
-                }
               />
             </FormItem>
             <FormItem width={FormItemWidth.half}>
@@ -178,10 +155,6 @@ export const useAddressForm: EntryFormHook = (
                   });
                 }}
                 required={required}
-                hint={
-                  showHint &&
-                  (!address?.attributes?.zipCode || address?.attributes?.zipCode.length < 1)
-                }
               />
             </FormItem>
             <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
@@ -200,9 +173,6 @@ export const useAddressForm: EntryFormHook = (
                   });
                 }}
                 required={required}
-                hint={
-                  showHint && (!address?.attributes?.city || address?.attributes?.city.length < 1)
-                }
               />
             </FormItem>
             {district && (
@@ -227,7 +197,6 @@ export const useAddressForm: EntryFormHook = (
                       },
                     });
                   }}
-                  hint={hint}
                 >
                   <option value="undefined">
                     {t('categories.location.form.districtPlaceholder')}
@@ -271,6 +240,5 @@ export const useAddressForm: EntryFormHook = (
       setPristine(true);
     },
     valid,
-    hint,
   };
 };

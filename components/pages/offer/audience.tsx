@@ -114,7 +114,6 @@ const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
     pristine,
     reset: () => undefined,
     valid: true,
-    hint: false,
   };
 };
 
@@ -260,7 +259,6 @@ const useAudienceForm: EntryFormHook = ({ category, query }) => {
     pristine,
     valid,
     reset: () => undefined,
-    hint: false,
     state,
   };
 };
@@ -282,7 +280,7 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     valid: audienceValid,
     submit: audienceSubmit,
     pristine: audiencePristine,
-  } = useAudienceForm({ category, query }, loaded, false);
+  } = useAudienceForm({ category, query, loaded });
 
   const {
     renderedForm: peakHoursForm,
@@ -290,14 +288,11 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     pristine: peakHoursPristine,
     valid: peakHoursValid,
     reset: peakHoursReset,
-  } = usePeakHoursForm(
-    {
-      category,
-      query,
-    },
+  } = usePeakHoursForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {

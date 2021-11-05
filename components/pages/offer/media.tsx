@@ -25,11 +25,11 @@ export const OfferMediaPage: React.FC<CategoryEntryPage> = <
   const [loaded, setLoaded] = useState(false);
   const t = useT();
 
-  const { renderedForm, submit, pristine, valid, reset } = useMediaForm(
-    { category, query },
+  const { renderedForm, submit, pristine, valid, reset } = useMediaForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {

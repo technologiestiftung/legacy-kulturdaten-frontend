@@ -8,7 +8,6 @@ import { useEntry, Category } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { DropZone } from '../../DropZone';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { Info, InfoColor } from '../../info';
 import { MediaList } from '../../MediaList';
 import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
 import { EntryFormHook } from '../helpers/form';
@@ -82,7 +81,6 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
         />
       </FormItem>
     ),
-    hint: false,
     valid: true,
     pristine: true,
     reset: () => undefined,
@@ -227,7 +225,6 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
         </FormGrid>
       </div>
     ),
-    hint: false,
     pristine,
     submit: async () => {
       submitMediaList();

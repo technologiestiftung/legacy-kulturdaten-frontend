@@ -182,7 +182,6 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       setOpeningHoursTranslations(initialOpeningHoursTranslations);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -315,7 +314,6 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
       setUrl(initialUrl);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -399,7 +397,6 @@ const useTypeForm: EntryFormHook = ({ category, query }) => {
       setType(initialType);
     },
     valid: true,
-    hint: false,
     value: type,
   };
 };
@@ -432,15 +429,12 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     valid: nameValid,
     reset: nameReset,
-  } = useNameForm(
-    {
-      category,
-      query,
-    },
+  } = useNameForm({
+    category,
+    query,
     loaded,
-    false,
-    t('categories.location.form.name') as string
-  );
+    title: t('categories.location.form.name') as string,
+  });
 
   const {
     renderedForm: descriptionForm,
@@ -448,14 +442,11 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     valid: descriptionValid,
     reset: descriptionReset,
-  } = useDescriptionForm(
-    {
-      category,
-      query,
-    },
+  } = useDescriptionForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: addressForm,
@@ -463,18 +454,12 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: addressPristine,
     valid: addressValid,
     reset: addressReset,
-  } = useAddressForm(
-    {
-      category,
-      query,
-    },
+  } = useAddressForm({
+    category,
+    query,
     loaded,
-    false,
-    false,
-    false,
-    false,
-    true
-  );
+    district: true,
+  });
 
   const {
     renderedForm: typeForm,
@@ -483,15 +468,11 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     valid: typeValid,
     value: typeValue,
     reset: typeReset,
-  } = useTypeForm(
-    {
-      category,
-      query,
-    },
+  } = useTypeForm({
+    category,
+    query,
     loaded,
-    false,
-    false
-  );
+  });
 
   const {
     renderedForm: openingHoursForm,
@@ -499,15 +480,11 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: openingHoursPristine,
     valid: openingHoursValid,
     reset: openingHoursReset,
-  } = useOpeningHoursForm(
-    {
-      category,
-      query,
-    },
+  } = useOpeningHoursForm({
+    category,
+    query,
     loaded,
-    false,
-    false
-  );
+  });
 
   const {
     renderedForm: urlForm,
@@ -515,15 +492,11 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: urlPristine,
     valid: urlValid,
     reset: urlReset,
-  } = useUrlForm(
-    {
-      category,
-      query,
-    },
+  } = useUrlForm({
+    category,
+    query,
     loaded,
-    false,
-    false
-  );
+  });
 
   const {
     renderedForm: rentForm,
@@ -531,15 +504,11 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: rentPristine,
     valid: rentValid,
     reset: rentReset,
-  } = useRentForm(
-    {
-      category,
-      query,
-    },
+  } = useRentForm({
+    category,
+    query,
     loaded,
-    false,
-    false
-  );
+  });
 
   useEffect(() => {
     setValid(

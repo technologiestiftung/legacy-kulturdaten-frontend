@@ -117,7 +117,7 @@ export enum EntryFormHeadSize {
 
 interface EntryFormHeadProps {
   title: string;
-  tooltip?: string | React.ReactElement;
+  tooltip?: string | React.ReactNode;
   id?: string;
   valid?: boolean;
   hint?: boolean;

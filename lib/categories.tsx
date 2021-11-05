@@ -53,7 +53,6 @@ export type Category = {
     create: Route;
   };
   pages: {
-    create: React.FC<CategoryPage>;
     info: React.FC<CategoryEntryPage>;
     media: React.FC<CategoryEntryPage>;
     list: React.FC<CategoryPage>;

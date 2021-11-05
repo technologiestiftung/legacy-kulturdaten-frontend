@@ -36,8 +36,6 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
   );
   const [serviceFromApi, setServiceFromApi] = useState<ServiceField[]>([]);
 
-  // const [pristine, setPristine] = useState(true);
-
   const serviceFieldsState = useMemo(
     () =>
       state
@@ -165,7 +163,6 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
     pristine,
     valid,
     reset: () => undefined,
-    hint: false,
     state,
   };
 };
@@ -181,11 +178,11 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const t = useT();
 
-  const { renderedForm, valid, submit, pristine, reset } = useServiceForm(
-    { category, query },
+  const { renderedForm, valid, submit, pristine, reset } = useServiceForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {

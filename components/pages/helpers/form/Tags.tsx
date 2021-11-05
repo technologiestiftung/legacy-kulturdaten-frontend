@@ -10,13 +10,7 @@ import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 import { EntryFormHook } from '../form';
 import { CategoryEntry } from '../../../../lib/api/types/general';
 
-export const useEntryTags: EntryFormHook = (
-  { category, query },
-  loaded?,
-  showHint?,
-  title?: string,
-  tooltip?: string
-) => {
+export const useEntryTags: EntryFormHook = ({ category, query, tooltip }) => {
   const tagOptions = useTags();
   const { entry, mutate } = useEntry<CategoryEntry, ApiCall>(category, query);
   const call = useApiCall();
@@ -60,7 +54,6 @@ export const useEntryTags: EntryFormHook = (
     ),
     pristine,
     valid: true,
-    hint: false,
     reset: () => {
       setSelectedTags(initialTags);
     },

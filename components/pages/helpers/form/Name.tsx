@@ -1,6 +1,6 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { EntryFormHook } from '.';
+import { EntryFormHook, EntryFormHookProps } from '.';
 import { Categories } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
@@ -76,7 +76,6 @@ export const useName = <
   label: string;
   ariaLabel?: string;
   loaded: boolean;
-  showHint: boolean;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -85,7 +84,7 @@ export const useName = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, ariaLabel, loaded, showHint } = props;
+  const { category, query, language, label, ariaLabel } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
   const organizerId = useOrganizerId();
@@ -156,11 +155,6 @@ export const useName = <
     }
   };
 
-  const hint = useMemo(
-    () => showHint && loaded && (!value || value?.length < 1),
-    [showHint, loaded, value]
-  );
-
   return {
     form: (
       <Name
@@ -175,7 +169,6 @@ export const useName = <
           name,
           required,
           valid,
-          hint,
         }}
       />
     ),
@@ -190,13 +183,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = (
-  { category, query },
-  loaded,
-  showHint,
-  title?: string,
-  tooltip?: string
-) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip }) => {
   const t = useT();
 
   const {
@@ -205,7 +192,6 @@ export const useNameForm: EntryFormHook = (
     pristine: pristineGerman,
     reset: resetGerman,
     valid: validGerman,
-    value: valueGerman,
   } = useName({
     category,
     query,
@@ -215,7 +201,6 @@ export const useNameForm: EntryFormHook = (
       ? `${title} ${t('forms.labelGerman')}`
       : `${t('forms.name')} ${t('forms.labelGerman')}`,
     loaded,
-    showHint,
   });
 
   const {
@@ -224,7 +209,6 @@ export const useNameForm: EntryFormHook = (
     pristine: pristineEnglish,
     reset: resetEnglish,
     valid: validEnglish,
-    value: valueEnglish,
   } = useName({
     category,
     query,
@@ -234,7 +218,6 @@ export const useNameForm: EntryFormHook = (
       ? `${title} ${t('forms.labelEnglish')}`
       : `${t('forms.name')} ${t('forms.labelEnglish')}`,
     loaded,
-    showHint,
   });
 
   const pristine = useMemo(
@@ -247,24 +230,12 @@ export const useNameForm: EntryFormHook = (
     [loaded, validEnglish, validGerman]
   );
 
-  const hint = useMemo(
-    () =>
-      showHint &&
-      loaded &&
-      (typeof valueEnglish === 'undefined' ||
-        typeof valueGerman === 'undefined' ||
-        valueEnglish?.length < 1 ||
-        valueGerman?.length < 1),
-    [showHint, loaded, valueEnglish, valueGerman]
-  );
-
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled: validGerman }}>
         <EntryFormHead
           title={title || `${t('forms.name') as string}`}
           valid={valid}
-          hint={hint}
           tooltip={tooltip}
         />
         <FormGrid>
@@ -283,6 +254,5 @@ export const useNameForm: EntryFormHook = (
       resetEnglish();
     },
     valid,
-    hint,
   };
 };

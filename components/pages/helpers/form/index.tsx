@@ -6,17 +6,17 @@ export interface EntryFormProps {
   query: ParsedUrlQuery;
 }
 
-export type EntryFormHook = (
-  props: EntryFormProps,
-  loaded: boolean,
-  showHint: boolean,
-  ...parameters: unknown[]
-) => {
+export interface EntryFormHookProps extends EntryFormProps {
+  loaded: boolean;
+  tooltip?: string | React.ReactNode;
+  title?: string;
+}
+
+export type EntryFormHook<T = EntryFormHookProps> = (props: T) => {
   renderedForm: React.ReactElement;
   submit: () => Promise<void>;
   pristine: boolean;
   reset: () => void;
   valid: boolean;
-  hint: boolean;
   [key: string]: unknown;
 };
