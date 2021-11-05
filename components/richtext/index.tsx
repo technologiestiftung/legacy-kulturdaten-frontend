@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Editable, withReact, Slate, ReactEditor, RenderElementProps } from 'slate-react';
 import { createEditor } from 'slate';
 import { withHistory } from 'slate-history';
-import React, { Ref, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Ref, useCallback, useMemo, useState } from 'react';
 
 import { CustomDescendant, CustomElement, ElementType, Element, CustomText } from './Element';
 import { Toolbar, ToolbarGroupWidth } from './Toolbar';
@@ -17,6 +17,7 @@ import { H2Svg } from '../assets/H2Svg';
 import { H3Svg } from '../assets/H3Svg';
 import { ListOrderedSvg } from '../assets/ListOrderedSvg';
 import { useT } from '../../lib/i18n';
+import { useDebounce } from '../../lib/useDebounce';
 
 interface CustomRenderElementProps extends RenderElementProps {
   element: CustomElement;
@@ -63,6 +64,7 @@ type RichTextProps = {
   intValue: CustomDescendant[];
   setIntValue: (value: CustomDescendant[]) => void;
   required?: boolean;
+  softRequired?: boolean;
   valid: boolean;
 };
 
@@ -84,19 +86,19 @@ const RichText: React.FC<RichTextProps> = ({
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
   const t = useT();
-
-  useEffect(() => {
-    if (onChange) {
-      onChange(intValue);
-    }
-  }, [intValue, onChange]);
+  const debouncer = useDebounce();
 
   return (
     <StyledRichText role="group">
       <Slate
         editor={editor}
         value={intValue || []}
-        onChange={(updatedValue) => setIntValue(updatedValue as CustomDescendant[])}
+        onChange={(updatedValue) => {
+          setIntValue(updatedValue as CustomDescendant[]);
+          debouncer(() => {
+            onChange(updatedValue as CustomDescendant[]);
+          });
+        }}
       >
         <Toolbar
           groups={[
@@ -268,7 +270,10 @@ const getDescendantsTextLength = (descendants: CustomDescendant[]): number => {
 };
 
 export const useRichText = (
-  props: Pick<RichTextProps, 'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required'>
+  props: Pick<
+    RichTextProps,
+    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired'
+  >
 ): {
   renderedRichText: React.ReactElement<RichTextProps>;
   init: (value: RichTextProps['value']) => void;

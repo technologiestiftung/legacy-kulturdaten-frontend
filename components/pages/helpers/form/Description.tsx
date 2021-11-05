@@ -55,7 +55,7 @@ const StyledDescriptionRichTextWrapper = styled.div<{ valid?: boolean; hint?: bo
         `}
 `;
 
-const StyledDescriptionRichTextContainer = styled.div<{ valid?: boolean }>`
+const StyledDescriptionRichTextContainer = styled.div`
   position: relative;
 
   max-height: calc(var(--app-height) - var(--header-height) - 8rem);
@@ -132,6 +132,7 @@ export const useDescription = ({
     },
     contentRef: richTextRef,
     required,
+    softRequired,
   });
 
   const pristine = useMemo(() => {
@@ -165,8 +166,10 @@ export const useDescription = ({
                 </Label>
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
-            <StyledDescriptionRichTextWrapper valid={valid}>
-              <StyledDescriptionRichTextContainer valid={valid}>
+            <StyledDescriptionRichTextWrapper
+              valid={softRequired ? valid && textLength > 0 : valid}
+            >
+              <StyledDescriptionRichTextContainer>
                 {renderedRichText}
               </StyledDescriptionRichTextContainer>
             </StyledDescriptionRichTextWrapper>
