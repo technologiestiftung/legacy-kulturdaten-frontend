@@ -26,6 +26,7 @@ import { contentLanguages, languageTranslationKeys } from '../../../config/local
 import { getTranslation } from '../../../lib/translations';
 import { Textarea } from '../../textarea';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   const uid = usePseudoUID();
@@ -429,6 +430,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     valid: nameValid,
     reset: nameReset,
+    requirementFulfillment: nameRequirementFulfillment,
   } = useNameForm({
     category,
     query,
@@ -442,6 +444,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     valid: descriptionValid,
     reset: descriptionReset,
+    requirementFulfillment: descriptionRequirementFulfillment,
   } = useDescriptionForm({
     category,
     query,
@@ -459,6 +462,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     district: true,
+    customRequired: false,
   });
 
   const {
@@ -571,8 +575,21 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     urlReset();
   });
 
+  const formRequirementFulfillments = useMemo(
+    () => [nameRequirementFulfillment, descriptionRequirementFulfillment],
+    [nameRequirementFulfillment, descriptionRequirementFulfillment]
+  );
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>

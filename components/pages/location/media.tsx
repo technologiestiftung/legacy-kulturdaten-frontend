@@ -10,6 +10,7 @@ import { useSaveDate } from '../helpers/useSaveDate';
 import { useMediaForm } from '../helpers/media';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 export const LocationMediaPage: React.FC<CategoryEntryPage> = <
   T extends CategoryEntry,
@@ -52,8 +53,15 @@ export const LocationMediaPage: React.FC<CategoryEntryPage> = <
     reset();
   });
 
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div>
         <Save

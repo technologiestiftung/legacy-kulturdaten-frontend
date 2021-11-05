@@ -55,6 +55,11 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
     [entry?.data?.attributes?.status, customRequired]
   );
 
+  const softRequired = useMemo(
+    () => (typeof customRequired !== 'undefined' ? customRequired : true),
+    [customRequired]
+  );
+
   useEffect(() => {
     if (pristine) {
       setAddress(initialAddress);
@@ -84,12 +89,14 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
 
   const fulfilled = useMemo(
     () =>
+      !softRequired ||
       !loaded ||
       (address?.attributes?.street1?.length > 0 &&
         address?.attributes?.zipCode?.length > 0 &&
         (district ? address?.attributes?.district?.length > 0 : true) &&
         address?.attributes?.city?.length > 0),
     [
+      softRequired,
       loaded,
       address?.attributes?.city?.length,
       address?.attributes?.street1?.length,
@@ -107,9 +114,13 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
         }}
       >
         <FormWrapper
-          requirement={{
-            fulfilled,
-          }}
+          requirement={
+            softRequired
+              ? {
+                  fulfilled,
+                }
+              : undefined
+          }
         >
           <EntryFormHead title={`${title || (t('forms.address') as string)}`} tooltip={tooltip} />
           <FormGrid>
@@ -129,7 +140,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                   });
                 }}
                 required={required}
-                softRequired
+                softRequired={softRequired}
               />
             </FormItem>
             <FormItem width={FormItemWidth.half}>
@@ -165,7 +176,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                   });
                 }}
                 required={required}
-                softRequired
+                softRequired={softRequired}
               />
             </FormItem>
             <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
@@ -184,7 +195,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                   });
                 }}
                 required={required}
-                softRequired
+                softRequired={softRequired}
               />
             </FormItem>
             {district && (

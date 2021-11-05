@@ -22,6 +22,7 @@ import {
 } from '../../../lib/api/routes/location/service/update';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { useT } from '../../../lib/i18n';
+import { usePublish } from '../../Publish';
 
 const useServiceForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
@@ -205,8 +206,15 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
     reset();
   });
 
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
