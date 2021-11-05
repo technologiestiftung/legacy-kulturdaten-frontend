@@ -129,6 +129,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                   });
                 }}
                 required={required}
+                softRequired
               />
             </FormItem>
             <FormItem width={FormItemWidth.half}>
@@ -164,6 +165,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                   });
                 }}
                 required={required}
+                softRequired
               />
             </FormItem>
             <FormItem width={FormItemWidth.quarter} alignSelf="flex-end">
@@ -182,6 +184,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                   });
                 }}
                 required={required}
+                softRequired
               />
             </FormItem>
             {district && (

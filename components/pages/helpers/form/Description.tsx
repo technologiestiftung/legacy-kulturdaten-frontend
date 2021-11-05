@@ -73,6 +73,7 @@ interface DescriptionProps extends EntryFormProps {
   language: Language;
   title: string;
   required?: boolean;
+  softRequired?: boolean;
   key?: string;
 }
 
@@ -82,6 +83,7 @@ export const useDescription = ({
   language,
   title,
   required,
+  softRequired,
   key = 'description',
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
@@ -159,7 +161,7 @@ export const useDescription = ({
               <StyledDescriptionTitle>
                 <Label>
                   {title}
-                  {required && ` (${t('forms.required')})`}
+                  {(required || softRequired) && ` (${t('forms.required')})`}
                 </Label>
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
@@ -227,6 +229,7 @@ export const useDescriptionForm: EntryFormHook = ({
     language: Language.de,
     title: t('forms.labelGerman') as string,
     required,
+    softRequired: true,
   });
 
   const {

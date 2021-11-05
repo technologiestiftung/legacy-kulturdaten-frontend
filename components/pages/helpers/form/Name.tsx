@@ -4,7 +4,7 @@ import { EntryFormHook, EntryFormHookProps } from '.';
 import { Categories } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
-import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
@@ -24,6 +24,7 @@ interface SetNameProps {
   setValue: (value: string) => void;
   name: string;
   required?: boolean;
+  softRequired?: boolean;
   valid?: boolean;
   hint?: boolean;
 }
@@ -38,6 +39,7 @@ const Name: React.FC<SetNameProps> = ({
   name,
   value,
   required,
+  softRequired,
   hint,
 }: SetNameProps) => {
   // set initial value
@@ -60,6 +62,7 @@ const Name: React.FC<SetNameProps> = ({
         }}
         required={required}
         hint={hint}
+        softRequired={softRequired}
       />
     </form>
   );
@@ -87,6 +90,11 @@ export const useName = <
   const { category, query, language, label, ariaLabel } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
+  const isPublished = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
+
   const organizerId = useOrganizerId();
   const mutateList = useMutateList(
     category,
@@ -118,7 +126,12 @@ export const useName = <
     }
   }, [pristine, name, value, valueFromApi]);
 
-  const required = useMemo(() => language === defaultLanguage, [language]);
+  const required = useMemo(
+    () => isPublished && language === defaultLanguage,
+    [isPublished, language]
+  );
+
+  const softRequired = useMemo(() => language === defaultLanguage, [language]);
 
   const valid = useMemo(() => required !== true || (value && value.length > 0), [required, value]);
 
@@ -169,6 +182,7 @@ export const useName = <
           name,
           required,
           valid,
+          softRequired,
         }}
       />
     ),
@@ -192,6 +206,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     pristine: pristineGerman,
     reset: resetGerman,
     valid: validGerman,
+    value: valueGerman,
   } = useName({
     category,
     query,
@@ -230,9 +245,14 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     [loaded, validEnglish, validGerman]
   );
 
+  const fulfilled = useMemo(
+    () => validGerman && valueGerman?.length > 0,
+    [validGerman, valueGerman]
+  );
+
   return {
     renderedForm: (
-      <FormWrapper requirement={{ fulfilled: validGerman }}>
+      <FormWrapper requirement={{ fulfilled }}>
         <EntryFormHead title={title || `${t('forms.name') as string}`} tooltip={tooltip} />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
@@ -252,7 +272,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     valid,
     requirementFulfillment: {
       requirementKey: 'name',
-      fulfilled: valid,
+      fulfilled,
     },
   };
 };

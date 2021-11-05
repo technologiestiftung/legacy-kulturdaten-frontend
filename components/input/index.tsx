@@ -5,6 +5,7 @@ import React, {
   ChangeEventHandler,
   RefObject,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -91,7 +92,7 @@ export const inputStyles = ({
     }
   `}
 
-  ${valid === false && !pristine && errorStyle}
+  ${valid === false && errorStyle}
 
   ${variant === ComponentVariants.formList &&
   css`
@@ -149,6 +150,7 @@ export interface InputProps extends ComponentWithVariants {
   placeholder?: string;
   pattern?: string;
   required?: boolean;
+  softRequired?: boolean;
   step?: number | string;
   valid?: boolean;
   value?: string | number;
@@ -230,6 +232,18 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       setNormalized(true);
     };
 
+    const inputValid = useMemo(() => {
+      if (props?.softRequired) {
+        if (props?.debounce) {
+          return Boolean(String(internalState)?.length > 0);
+        } else {
+          return Boolean(String(props?.value)?.length > 0);
+        }
+      } else {
+        return typeof props?.valid === 'undefined' ? true : props.valid;
+      }
+    }, [internalState, props?.debounce, props?.softRequired, props?.valid, props?.value]);
+
     return (
       <StyledInputContainer>
         {props.type === InputType.submit ? (
@@ -241,7 +255,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {props.label && (
               <Label htmlFor={props.id}>
                 {props.label}
-                {props.required ? ` (${t('forms.required')})` : ''}
+                {props.required || props.softRequired ? ` (${t('forms.required')})` : ''}
               </Label>
             )}
             <StyledInput
@@ -271,7 +285,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               }}
               ref={ref}
               pristine={pristine}
-              valid={typeof props.valid === 'undefined' ? true : props.valid}
+              valid={inputValid}
               pattern={
                 props?.type === InputType.url
                   ? urlRegExpString
