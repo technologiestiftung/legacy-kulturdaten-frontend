@@ -9,18 +9,11 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { Select, SelectSize } from '../../../select';
 import { EntryFormHook, EntryFormHookProps } from '../form';
-import {
-  FormGrid,
-  FormItem,
-  FormItemWidth,
-  FormWrapper,
-  FormWrapperProps,
-} from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 
 interface AddressFormHookProps extends EntryFormHookProps {
   customRequired?: boolean;
   district?: boolean;
-  requirement?: FormWrapperProps['requirement'];
 }
 
 export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
@@ -31,7 +24,6 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
   customRequired,
   title,
   district,
-  requirement,
 }) => {
   const uid = usePseudoUID();
   const { entry, mutate } = useEntry<
@@ -90,6 +82,23 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
     ]
   );
 
+  const fulfilled = useMemo(
+    () =>
+      !loaded ||
+      (address?.attributes?.street1?.length > 0 &&
+        address?.attributes?.zipCode?.length > 0 &&
+        (district ? address?.attributes?.district?.length > 0 : true) &&
+        address?.attributes?.city?.length > 0),
+    [
+      loaded,
+      address?.attributes?.city?.length,
+      address?.attributes?.street1?.length,
+      address?.attributes?.district?.length,
+      address?.attributes?.zipCode?.length,
+      district,
+    ]
+  );
+
   return {
     renderedForm: (
       <form
@@ -97,12 +106,12 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
           e.preventDefault();
         }}
       >
-        <FormWrapper requirement={requirement}>
-          <EntryFormHead
-            title={`${title || (t('forms.address') as string)}`}
-            valid={valid}
-            tooltip={tooltip}
-          />
+        <FormWrapper
+          requirement={{
+            fulfilled,
+          }}
+        >
+          <EntryFormHead title={`${title || (t('forms.address') as string)}`} tooltip={tooltip} />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
               <Input
@@ -240,5 +249,9 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
       setPristine(true);
     },
     valid,
+    requirementFulfillment: {
+      requirementKey: 'address',
+      fulfilled,
+    },
   };
 };

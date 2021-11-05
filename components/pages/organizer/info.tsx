@@ -5,7 +5,7 @@ import { OrganizerDelete } from '../../../lib/api/routes/organizer/delete';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Contact } from '../../../lib/api/types/contact';
-import { CategoryEntry } from '../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -268,6 +268,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const [valid, setValid] = useState(true);
 
+  const isPublished = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
+
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
       setTimeout(() => setLoaded(true), 150);
@@ -284,6 +289,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     reset: nameReset,
     valid: nameValid,
+    requirementFulfillment: nameRequirementFulfillment,
   } = useNameForm({
     category,
     query,
@@ -298,17 +304,15 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: addressPristine,
     reset: addressReset,
     valid: addressValid,
+    requirementFulfillment: addressRequirementFulfillment,
   } = useAddressForm({
     category,
     query,
     loaded,
-    customRequired: true,
+    customRequired: isPublished,
     title: t('categories.organizer.form.address') as string,
     tooltip: t('categories.organizer.form.addressTooltip') as string,
     district: false,
-    requirement: {
-      fulfilled: false,
-    },
   });
 
   const {
@@ -353,13 +357,24 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     reset: descriptionReset,
     valid: descriptionValid,
+    requirementFulfillment: descriptionRequirementFulfillment,
   } = useDescriptionForm({
     category,
     query,
     loaded,
+    required: isPublished,
     title: t('categories.organizer.form.description') as string,
     tooltip: t('categories.organizer.form.descriptionTooltip') as string,
   });
+
+  const formRequirementFulfillments = useMemo(
+    () => [
+      nameRequirementFulfillment,
+      addressRequirementFulfillment,
+      descriptionRequirementFulfillment,
+    ],
+    [nameRequirementFulfillment, addressRequirementFulfillment, descriptionRequirementFulfillment]
+  );
 
   const renderedEntryHeader = useEntryHeader(
     { category, query },
@@ -427,28 +442,36 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const requirements = category?.requirements;
 
-  const failedPublishedRequirements =
+  const failedRequirementsFromApi =
     typeof entry?.meta?.publishable === 'object' &&
     Object.entries(entry?.meta?.publishable).length > 0
       ? entry?.meta?.publishable
       : undefined;
 
-  const requirementsFulfillment = useMemo(
+  const stateRequirements = useMemo(
     () =>
-      requirements.map((requirement) => ({
-        text: t(requirement.translationKey) as string,
-        fulfilled: requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
-          if (
-            failedPublishedRequirements &&
-            failedPublishedRequirements.hasOwnProperty(publishableKey)
-          ) {
-            return false;
-          }
+      requirements.map((requirement) => {
+        const stateFulfillment = formRequirementFulfillments.find(
+          ({ requirementKey }) => requirement?.key === requirementKey
+        );
 
-          return fulfilled;
-        }, true),
-      })),
-    [failedPublishedRequirements, requirements, t]
+        return {
+          text: t(requirement.translationKey) as string,
+          fulfilled: stateFulfillment
+            ? stateFulfillment.fulfilled
+            : requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
+                if (
+                  failedRequirementsFromApi &&
+                  failedRequirementsFromApi.hasOwnProperty(publishableKey)
+                ) {
+                  return false;
+                }
+
+                return fulfilled;
+              }, true),
+        };
+      }),
+    [formRequirementFulfillments, failedRequirementsFromApi, requirements, t]
   );
 
   return (
@@ -456,9 +479,8 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       <Publish
         category={category}
         query={query}
-        requirements={requirementsFulfillment}
+        requirements={stateRequirements}
         onPublish={async () => console.log('publish')}
-        publishable={false}
       />
       {renderedEntryHeader}
       <div role="tabpanel">

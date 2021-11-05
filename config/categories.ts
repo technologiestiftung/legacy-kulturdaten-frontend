@@ -45,9 +45,15 @@ type RequirementAttributes = {
 };
 
 export type Requirement = {
+  key: string;
   translationKey: string;
   publishableKeys: string[];
   attributes: RequirementAttributes[];
+};
+
+export type RequirementFulfillment = {
+  requirementKey: string;
+  fulfilled: boolean;
 };
 
 export enum Categories {
@@ -130,6 +136,7 @@ export const useCategories: () => {
       publishText: t('categories.organizer.publishText') as string,
       requirements: [
         {
+          key: 'name',
           translationKey: 'categories.organizer.requirements.name',
           publishableKeys: ['attributes.name'],
           attributes: [
@@ -143,6 +150,7 @@ export const useCategories: () => {
           ],
         },
         {
+          key: 'address',
           translationKey: 'categories.organizer.requirements.address',
           publishableKeys: ['relations.address'],
           attributes: [
@@ -158,6 +166,7 @@ export const useCategories: () => {
           ],
         },
         {
+          key: 'description',
           translationKey: 'categories.organizer.requirements.description',
           publishableKeys: ['attributes.description'],
           attributes: [
@@ -171,6 +180,7 @@ export const useCategories: () => {
           ],
         },
         {
+          key: 'typesSubjects',
           translationKey: 'categories.organizer.requirements.categorization',
           publishableKeys: ['relations.types', 'relations.subjects'],
           attributes: [
@@ -248,6 +258,7 @@ export const useCategories: () => {
       publishText: t('categories.offer.publishText') as string,
       requirements: [
         {
+          key: 'name',
           translationKey: 'categories.offer.requirements.name',
           publishableKeys: ['attributes.name'],
           attributes: [
@@ -262,6 +273,7 @@ export const useCategories: () => {
         },
 
         {
+          key: 'description',
           translationKey: 'categories.offer.requirements.description',
           publishableKeys: ['attributes.description'],
           attributes: [
@@ -275,6 +287,7 @@ export const useCategories: () => {
           ],
         },
         {
+          key: 'mainType',
           translationKey: 'categories.offer.requirements.mainType',
           publishableKeys: ['relations.mainType'],
           attributes: [
@@ -284,6 +297,7 @@ export const useCategories: () => {
           ],
         },
         {
+          key: 'types',
           translationKey: 'categories.offer.requirements.categorization',
           publishableKeys: ['relations.types'],
           attributes: [
@@ -351,6 +365,7 @@ export const useCategories: () => {
       publishText: t('categories.location.publishText') as string,
       requirements: [
         {
+          key: 'name',
           translationKey: 'categories.location.requirements.name',
           publishableKeys: ['attributes.name'],
           attributes: [
@@ -364,6 +379,7 @@ export const useCategories: () => {
           ],
         },
         {
+          key: 'description',
           translationKey: 'categories.location.requirements.description',
           publishableKeys: ['attributes.description'],
           attributes: [

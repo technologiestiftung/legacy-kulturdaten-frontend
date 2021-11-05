@@ -233,11 +233,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled: validGerman }}>
-        <EntryFormHead
-          title={title || `${t('forms.name') as string}`}
-          valid={valid}
-          tooltip={tooltip}
-        />
+        <EntryFormHead title={title || `${t('forms.name') as string}`} tooltip={tooltip} />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
@@ -254,5 +250,9 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
       resetEnglish();
     },
     valid,
+    requirementFulfillment: {
+      requirementKey: 'name',
+      fulfilled: valid,
+    },
   };
 };

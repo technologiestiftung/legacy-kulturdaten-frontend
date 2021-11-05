@@ -131,7 +131,6 @@ interface PublishProps {
   category?: Category;
   query?: ParsedUrlQuery;
   requirements?: RequirementProps[];
-  publishable?: boolean;
   onPublish?: () => Promise<void>;
 }
 
@@ -139,7 +138,6 @@ export const Publish: React.FC<PublishProps> = ({
   category,
   query,
   requirements,
-  publishable,
   onPublish,
 }: PublishProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
@@ -158,6 +156,11 @@ export const Publish: React.FC<PublishProps> = ({
   //   () => entry?.meta?.publishable === true,
   //   [entry?.meta?.publishable]
   // );
+
+  const publishable = useMemo(
+    () => fulfilledRequirementsCount === requirements.length,
+    [fulfilledRequirementsCount, requirements]
+  );
 
   // const failedPublishedRequirements =
   //   typeof entry?.meta?.publishable === 'object' &&

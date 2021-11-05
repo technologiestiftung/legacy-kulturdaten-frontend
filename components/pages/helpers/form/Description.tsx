@@ -14,7 +14,7 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
 import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
-import { FormContainer } from '../formComponents';
+import { FormContainer, FormWrapper } from '../formComponents';
 
 const StyledDescription = styled.div`
   display: flex;
@@ -88,6 +88,7 @@ export const useDescription = ({
   submit: () => Promise<void>;
   pristine: boolean;
   valid: boolean;
+  textLength: number;
 } => {
   const { entry, mutate } = useEntry<
     {
@@ -200,26 +201,32 @@ export const useDescription = ({
     },
     pristine,
     valid,
+    textLength,
   };
 };
 
-export const useDescriptionForm: EntryFormHook = ({ category, query, loaded, tooltip, title }) => {
+export const useDescriptionForm: EntryFormHook = ({
+  category,
+  query,
+  loaded,
+  tooltip,
+  title,
+  required,
+}) => {
   const t = useT();
-  const { entry } = useEntry(category, query);
-
-  const isPublished = entry?.data?.attributes?.status === PublishedStatus.published;
 
   const {
     renderedDescription: renderedDescriptionGerman,
     submit: submitGerman,
     pristine: pristineGerman,
     valid: validGerman,
+    textLength: textLengthGerman,
   } = useDescription({
     category,
     query,
     language: Language.de,
     title: t('forms.labelGerman') as string,
-    required: isPublished,
+    required,
   });
 
   const {
@@ -258,18 +265,25 @@ export const useDescriptionForm: EntryFormHook = ({ category, query, loaded, too
     [loaded, validEnglish, validGerman, validGermanEasy]
   );
 
+  const fulfilled = useMemo(
+    () => textLengthGerman > 0 && validGerman,
+    [textLengthGerman, validGerman]
+  );
+
   return {
     renderedForm: (
-      <FormContainer>
-        <EntryFormHead
-          title={title || `${t('forms.description') as string}`}
-          valid={valid}
-          tooltip={tooltip}
-        />
-        {renderedDescriptionGerman}
-        {renderedDescriptionEnglish}
-        {renderedDescriptionGermanEasy}
-      </FormContainer>
+      <FormWrapper requirement={{ fulfilled }}>
+        <FormContainer>
+          <EntryFormHead
+            title={title || `${t('forms.description') as string}`}
+            valid={valid}
+            tooltip={tooltip}
+          />
+          {renderedDescriptionGerman}
+          {renderedDescriptionEnglish}
+          {renderedDescriptionGermanEasy}
+        </FormContainer>
+      </FormWrapper>
     ),
     submit: async () => {
       submitGerman();
@@ -279,6 +293,10 @@ export const useDescriptionForm: EntryFormHook = ({ category, query, loaded, too
     pristine,
     reset: () => undefined,
     valid,
+    requirementFulfillment: {
+      requirementKey: 'description',
+      fulfilled,
+    },
   };
 };
 
