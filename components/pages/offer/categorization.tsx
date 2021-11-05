@@ -14,14 +14,15 @@ import { useEntryTags } from '../helpers/form/Tags';
 import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../helpers/formComponents';
 import { Select, SelectSize } from '../../select';
 import { usePseudoUID } from '../../../lib/uid';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
 import { sortByTranslation } from '../../../lib/sortTranslations';
+import { usePublish } from '../../Publish';
 
-const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
+const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -33,9 +34,10 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
   const typeOptions = useOfferMainTypeList();
 
   // Valid if types and subjects are defined
-  const valid = useMemo(() => {
-    return !loaded || (types?.length > 0 && types[0] !== 'undefined');
-  }, [loaded, types]);
+  const valid = useMemo(
+    () => !required || !loaded || (types?.length > 0 && types[0] !== 'undefined'),
+    [required, loaded, types]
+  );
 
   const initialTypes = useMemo(
     () => entry?.data?.relations?.mainType?.map((type) => String(type.id)),
@@ -45,6 +47,11 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
   const pristine = useMemo(
     () => JSON.stringify(initialTypes) === JSON.stringify(types),
     [initialTypes, types]
+  );
+
+  const fulfilled = useMemo(
+    () => !loaded || (types?.length > 0 && types[0] !== 'undefined'),
+    [loaded, types]
   );
 
   useEffect(() => {
@@ -67,10 +74,9 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
 
   return {
     renderedForm: (
-      <div>
+      <FormWrapper requirement={{ fulfilled }}>
         <EntryFormHead
           title={`${t('categories.offer.form.mainType.title')} (${t('forms.required')})`}
-          valid={valid}
         />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
@@ -82,6 +88,8 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
                 id={`${uid}-select`}
                 onChange={(e) => setTypes([e.target.value])}
                 size={SelectSize.big}
+                required={required}
+                valid={valid}
               >
                 <option key={'-1'} value="undefined">
                   {t('categories.offer.form.mainType.choose')}
@@ -105,7 +113,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
             )}
           </FormItem>
         </FormGrid>
-      </div>
+      </FormWrapper>
     ),
     submit: async () => {
       try {
@@ -130,6 +138,10 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded }) => {
       setTypes(initialTypes);
     },
     valid,
+    requirementFulfillment: {
+      requirementKey: 'mainType',
+      fulfilled,
+    },
   };
 };
 
@@ -160,11 +172,13 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     pristine: pristineClassification,
     reset,
     valid: entryTypeSubjectValid,
+    requirementFulfillment: requirementFulfillmentTypeSubject,
   } = useEntryTypeSubjectForm({
     category,
     query,
     loaded,
     title: t('categories.offer.form.topics') as string,
+    required: true,
   });
 
   const {
@@ -178,7 +192,8 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     submit: mainTypeSubmit,
     pristine: mainTypePristine,
     valid: mainTypeValid,
-  } = useOfferMainTypeForm({ category, query, loaded });
+    requirementFulfillment: requirementFulfillmentMainType,
+  } = useOfferMainTypeForm({ category, query, loaded, required: true });
 
   const pristine = useMemo(
     () => pristineTags && pristineClassification && mainTypePristine,
@@ -192,8 +207,21 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
 
   useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
 
+  const formRequirementFulfillments = useMemo(
+    () => [requirementFulfillmentTypeSubject, requirementFulfillmentMainType],
+    [requirementFulfillmentTypeSubject, requirementFulfillmentMainType]
+  );
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="form">
         <Save

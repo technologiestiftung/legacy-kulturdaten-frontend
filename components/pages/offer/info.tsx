@@ -29,6 +29,7 @@ import { useLinksForm } from '../helpers/form/Links';
 import { RadioList } from '../../Radio/RadioList';
 import { useTeaserForm } from '../helpers/form/Teaser';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -376,6 +377,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     valid: nameValid,
     reset: nameReset,
+    requirementFulfillment: nameRequirementFulfillment,
   } = useNameForm({
     category,
     query,
@@ -389,6 +391,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     valid: descriptionValid,
     reset: descriptionReset,
+    requirementFulfillment: descriptionRequirementFulfillment,
   } = useDescriptionForm({
     category,
     query,
@@ -504,8 +507,21 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     teaserReset();
   });
 
+  const formRequirementFulfillments = useMemo(
+    () => [nameRequirementFulfillment, descriptionRequirementFulfillment],
+    [nameRequirementFulfillment, descriptionRequirementFulfillment]
+  );
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>

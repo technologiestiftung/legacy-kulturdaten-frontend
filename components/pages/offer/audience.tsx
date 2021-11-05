@@ -28,6 +28,7 @@ import { HoursField } from '../../HoursField';
 import { OfferDelete } from '../../../lib/api/routes/offer/delete';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -324,8 +325,15 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     peakHoursReset();
   });
 
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>

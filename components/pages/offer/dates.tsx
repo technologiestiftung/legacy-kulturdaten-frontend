@@ -25,6 +25,7 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { usePublish } from '../../Publish';
 import { RadioSwitch } from '../../RadioSwitch';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { Select } from '../../select';
@@ -335,8 +336,15 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     isPermanentReset();
   });
 
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <Save
         onClick={async () => {
