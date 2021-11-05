@@ -133,37 +133,39 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({
       </FormWrapper>
     ),
     submit: async () => {
-      try {
-        const validTypeOptions = typeOptions.filter((type) => types.includes(String(type.id)));
+      if (valid && !pristine) {
+        try {
+          const validTypeOptions = typeOptions.filter((type) => types.includes(String(type.id)));
 
-        const subs = subjects.filter((subject) => {
-          for (let i = 0; i < validTypeOptions.length; i += 1) {
-            const validSubjects = validTypeOptions[i].relations.subjects.map(
-              (subject) => subject.id
-            );
-            if (validSubjects.includes(parseInt(subject, 10))) {
-              return true;
+          const subs = subjects.filter((subject) => {
+            for (let i = 0; i < validTypeOptions.length; i += 1) {
+              const validSubjects = validTypeOptions[i].relations.subjects.map(
+                (subject) => subject.id
+              );
+              if (validSubjects.includes(parseInt(subject, 10))) {
+                return true;
+              }
             }
-          }
 
-          return false;
-        });
+            return false;
+          });
 
-        const resp = await call(category.api.update.factory, {
-          id: entry.data.id,
-          entry: {
-            relations: {
-              types: types.map((type) => parseInt(type, 10)),
-              subjects: subs.map((subject) => parseInt(subject, 10)),
+          const resp = await call(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                types: types.map((type) => parseInt(type, 10)),
+                subjects: subs.map((subject) => parseInt(subject, 10)),
+              },
             },
-          },
-        });
+          });
 
-        if (resp.status === 200) {
-          mutate();
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
       }
     },
     pristine,

@@ -58,21 +58,23 @@ export const useEntryTags: EntryFormHook = ({ category, query, tooltip }) => {
       setSelectedTags(initialTags);
     },
     submit: async () => {
-      try {
-        const resp = await call(category.api.update.factory, {
-          id: entry.data.id,
-          entry: {
-            relations: {
-              tags: selectedTags,
+      if (!pristine) {
+        try {
+          const resp = await call(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                tags: selectedTags,
+              },
             },
-          },
-        });
+          });
 
-        if (resp.status === 200) {
-          mutate();
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
       }
     },
   };

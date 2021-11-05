@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Location, LocationTranslation, LocationType } from '../../../lib/api/types/location';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -580,11 +580,33 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     [nameRequirementFulfillment, descriptionRequirementFulfillment]
   );
 
+  const onSave = useCallback(async () => {
+    typeSubmit();
+    nameSubmit();
+    descriptionSubmit();
+    urlSubmit();
+
+    if (typeValue === LocationType.physical) {
+      addressSubmit();
+      openingHoursSubmit();
+      rentSubmit();
+    }
+  }, [
+    addressSubmit,
+    descriptionSubmit,
+    nameSubmit,
+    openingHoursSubmit,
+    rentSubmit,
+    typeSubmit,
+    typeValue,
+    urlSubmit,
+  ]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
     formRequirementFulfillments,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -594,19 +616,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              typeSubmit();
-              nameSubmit();
-              descriptionSubmit();
-              urlSubmit();
-
-              if (typeValue === LocationType.physical) {
-                addressSubmit();
-                openingHoursSubmit();
-                rentSubmit();
-              } else {
-              }
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}

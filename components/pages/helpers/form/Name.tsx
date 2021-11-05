@@ -19,7 +19,6 @@ interface SetNameProps {
   ariaLabel?: string;
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
-  setPristine: (pristine: boolean) => void;
   value: string;
   setValue: (value: string) => void;
   name: string;
@@ -34,7 +33,6 @@ const Name: React.FC<SetNameProps> = ({
   ariaLabel,
   onSubmit,
   pristine,
-  setPristine,
   setValue,
   name,
   value,
@@ -57,7 +55,6 @@ const Name: React.FC<SetNameProps> = ({
         type={InputType.text}
         value={value || ''}
         onChange={(e) => {
-          setPristine(false);
           setValue(e.target.value);
         }}
         required={required}
@@ -116,8 +113,10 @@ export const useName = <
   );
   const [value, setValue] = useState(name || '');
   const [valueFromApi, setValueFromApi] = useState(name || '');
-  const [pristine, setPristine] = useState(true);
+  // const [pristine, setPristine] = useState(true);
   const { mutateUserInfo } = useUser();
+
+  const pristine = useMemo(() => value === valueFromApi, [value, valueFromApi]);
 
   useEffect(() => {
     if (JSON.stringify(name) !== JSON.stringify(valueFromApi)) {
@@ -160,7 +159,6 @@ export const useName = <
           mutate();
           mutateList();
           mutateUserInfo();
-          setTimeout(() => setPristine(true), 500);
         }
       } catch (e) {
         console.error(e);
@@ -173,7 +171,6 @@ export const useName = <
       <Name
         {...{
           pristine,
-          setPristine,
           value,
           setValue,
           label,
@@ -190,7 +187,6 @@ export const useName = <
     pristine,
     reset: () => {
       setValue(name);
-      setPristine(true);
     },
     valid,
     value,

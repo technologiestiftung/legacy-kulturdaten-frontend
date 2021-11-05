@@ -13,7 +13,7 @@ import { EntryPicker } from '../../EntryPicker';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Categories } from '../../../config/categories';
 import { LocationList } from '../../EntryList/LocationList';
 import { Save } from '../../EntryForm/Save';
@@ -512,11 +512,29 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     [nameRequirementFulfillment, descriptionRequirementFulfillment]
   );
 
+  const onSave = useCallback(async () => {
+    nameSubmit();
+    descriptionSubmit();
+    teaserSubmit();
+    organizerLocationSubmit();
+    pricingSubmit();
+    roomSubmit();
+    linksSubmit();
+  }, [
+    descriptionSubmit,
+    linksSubmit,
+    nameSubmit,
+    organizerLocationSubmit,
+    pricingSubmit,
+    roomSubmit,
+    teaserSubmit,
+  ]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
     formRequirementFulfillments,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -526,15 +544,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              nameSubmit();
-              descriptionSubmit();
-              teaserSubmit();
-              organizerLocationSubmit();
-              pricingSubmit();
-              roomSubmit();
-              linksSubmit();
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}

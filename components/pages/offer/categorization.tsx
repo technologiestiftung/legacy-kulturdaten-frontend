@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import { CategoryEntryPage, useEntry, useOfferMainTypeList } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
@@ -116,21 +116,23 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
       </FormWrapper>
     ),
     submit: async () => {
-      try {
-        const resp = await call(category.api.update.factory, {
-          id: entry.data.id,
-          entry: {
-            relations: {
-              mainType: types.map((type) => parseInt(type, 10)),
+      if (valid && !pristine) {
+        try {
+          const resp = await call(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                mainType: types.map((type) => parseInt(type, 10)),
+              },
             },
-          },
-        });
+          });
 
-        if (resp.status === 200) {
-          mutate();
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
       }
     },
     pristine,
@@ -167,10 +169,10 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
   }, [rendered, entry]);
 
   const {
-    renderedForm,
-    submit,
-    pristine: pristineClassification,
-    reset,
+    renderedForm: formTypeSubject,
+    submit: submitTypeSubject,
+    pristine: pristineTypeSubject,
+    reset: resetTypeSubject,
     valid: entryTypeSubjectValid,
     requirementFulfillment: requirementFulfillmentTypeSubject,
   } = useEntryTypeSubjectForm({
@@ -193,11 +195,12 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     pristine: mainTypePristine,
     valid: mainTypeValid,
     requirementFulfillment: requirementFulfillmentMainType,
+    reset: resetMainType,
   } = useOfferMainTypeForm({ category, query, loaded, required: true });
 
   const pristine = useMemo(
-    () => pristineTags && pristineClassification && mainTypePristine,
-    [mainTypePristine, pristineClassification, pristineTags]
+    () => pristineTags && pristineTypeSubject && mainTypePristine,
+    [mainTypePristine, pristineTypeSubject, pristineTags]
   );
 
   const shouldWarn = useMemo(
@@ -205,18 +208,27 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     [pristine, entry?.data]
   );
 
-  useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
+  useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => {
+    resetTypeSubject();
+    resetMainType();
+  });
 
   const formRequirementFulfillments = useMemo(
     () => [requirementFulfillmentTypeSubject, requirementFulfillmentMainType],
     [requirementFulfillmentTypeSubject, requirementFulfillmentMainType]
   );
 
+  const onSave = useCallback(async () => {
+    submitTypeSubject();
+    submitTags();
+    mainTypeSubmit();
+  }, [submitTypeSubject, submitTags, mainTypeSubmit]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
     formRequirementFulfillments,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -225,24 +237,14 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
       {renderedEntryHeader}
       <div role="form">
         <Save
-          onClick={async () => {
-            if (!pristineClassification) {
-              submit();
-            }
-            if (!pristineTags) {
-              submitTags();
-            }
-            if (!mainTypePristine) {
-              mainTypeSubmit();
-            }
-          }}
+          onClick={onSave}
           active={!pristine}
           date={formattedDate}
           valid={loaded !== true || (entryTypeSubjectValid && mainTypeValid)}
         />
         <EntryFormWrapper>
           <EntryFormContainer>{mainTypeForm}</EntryFormContainer>
-          <EntryFormContainer>{renderedForm}</EntryFormContainer>
+          <EntryFormContainer>{formTypeSubject}</EntryFormContainer>
           <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
         </EntryFormWrapper>
       </div>

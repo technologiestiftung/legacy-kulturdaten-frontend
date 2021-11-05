@@ -8,7 +8,7 @@ import {
   useGenericFormStructure,
 } from '../../GenericForm/useGenericFormStructure';
 import { EntryFormHook } from '../helpers/form';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { WindowContext } from '../../../lib/WindowService';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { Location } from '../../../lib/api/types/location';
@@ -142,7 +142,7 @@ const useServiceForm: EntryFormHook = ({ category, query }) => {
       </form>
     ),
     submit: async () => {
-      if (valid) {
+      if (valid && !pristine) {
         try {
           const resp = await call<LocationServiceUpdate>(locationServiceUpdateFactory, {
             id: entry.data.id,
@@ -206,10 +206,14 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
     reset();
   });
 
+  const onSave = useCallback(async () => {
+    submit();
+  }, [submit]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -219,9 +223,7 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              submit();
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}

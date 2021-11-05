@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
@@ -82,11 +82,20 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
     [requiredFulfillmentTypeSubject]
   );
 
+  const onSave = useCallback(async () => {
+    if (!pristineTypeSubject) {
+      submitTypeSubject();
+    }
+    if (!pristineTags) {
+      submitTags();
+    }
+  }, [pristineTypeSubject, pristineTags, submitTypeSubject, submitTags]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
     formRequirementFulfillments,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -95,14 +104,7 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
       {renderedEntryHeader}
       <div role="form">
         <Save
-          onClick={async () => {
-            if (!pristineTypeSubject) {
-              submitTypeSubject();
-            }
-            if (!pristineTags) {
-              submitTags();
-            }
-          }}
+          onClick={onSave}
           active={!pristine}
           date={formattedDate}
           valid={loaded !== true || valid}

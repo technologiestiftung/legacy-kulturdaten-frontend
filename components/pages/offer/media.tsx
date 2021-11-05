@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ApiCall } from '../../../lib/api';
 import { CategoryEntry } from '../../../lib/api/types/general';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
@@ -53,10 +53,14 @@ export const OfferMediaPage: React.FC<CategoryEntryPage> = <
     reset();
   });
 
+  const onSave = useCallback(async () => {
+    submit();
+  }, [submit]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -64,15 +68,7 @@ export const OfferMediaPage: React.FC<CategoryEntryPage> = <
       {renderedPublish}
       {renderedEntryHeader}
       <div>
-        <Save
-          onClick={async () => {
-            submit();
-          }}
-          active={!pristine}
-          date={formattedDate}
-          valid={valid}
-          hint={false}
-        />
+        <Save onClick={onSave} active={!pristine} date={formattedDate} valid={valid} hint={false} />
         <EntryFormWrapper>
           <EntryFormContainer>{renderedForm}</EntryFormContainer>
         </EntryFormWrapper>

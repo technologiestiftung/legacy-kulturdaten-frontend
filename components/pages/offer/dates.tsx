@@ -336,10 +336,15 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     isPermanentReset();
   });
 
+  const onSave = useCallback(async () => {
+    isPermanentSubmit();
+    submitDateList();
+  }, [isPermanentSubmit, submitDateList]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -347,10 +352,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
       {renderedPublish}
       {renderedEntryHeader}
       <Save
-        onClick={async () => {
-          isPermanentSubmit();
-          submitDateList();
-        }}
+        onClick={onSave}
         active={!pristine || !isPermanentPristine}
         date={formattedDate}
         valid={true}

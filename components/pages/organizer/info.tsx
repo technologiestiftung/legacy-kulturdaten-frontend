@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerDelete } from '../../../lib/api/routes/organizer/delete';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
@@ -309,7 +309,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     category,
     query,
     loaded,
-    customRequired: isPublished,
+    customRequired: isPublished || undefined,
     title: t('categories.organizer.form.address') as string,
     tooltip: t('categories.organizer.form.addressTooltip') as string,
     district: false,
@@ -439,11 +439,27 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     [nameRequirementFulfillment, addressRequirementFulfillment, descriptionRequirementFulfillment]
   );
 
+  const onSave = useCallback(async () => {
+    nameSubmit();
+    addressSubmit();
+    descriptionSubmit();
+    linksSubmit();
+    contactSubmit();
+    additionalContactsSubmit();
+  }, [
+    nameSubmit,
+    addressSubmit,
+    descriptionSubmit,
+    linksSubmit,
+    contactSubmit,
+    additionalContactsSubmit,
+  ]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
     formRequirementFulfillments,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -453,14 +469,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              nameSubmit();
-              addressSubmit();
-              descriptionSubmit();
-              linksSubmit();
-              contactSubmit();
-              additionalContactsSubmit();
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}

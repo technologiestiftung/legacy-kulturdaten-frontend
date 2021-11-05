@@ -5,7 +5,7 @@ import { useApiCall } from '../../lib/api';
 import { Requirement, RequirementProps } from './Requirement';
 import { OrganizerShow } from '../../lib/api/routes/organizer/show';
 import { Organizer } from '../../lib/api/types/organizer';
-import { Category, useEntry } from '../../lib/categories';
+import { Category, useEntry, useMutateList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
@@ -14,6 +14,7 @@ import { Label, StyledLabel } from '../label';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { RequirementFulfillment } from '../../config/categories';
 import { useRouter } from 'next/router';
+import { PublishedStatus } from '../../lib/api/types/general';
 
 const StyledPublish = styled.div`
   ${contentGrid(1)}
@@ -141,8 +142,7 @@ export const Publish: React.FC<PublishProps> = ({
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const loadingScreen = useLoadingScreen();
-  // const requirements = category?.requirements;
-
+  const mutateList = useMutateList(category);
   const t = useT();
 
   const fulfilledRequirementsCount = useMemo(
@@ -150,39 +150,28 @@ export const Publish: React.FC<PublishProps> = ({
     [requirements]
   );
 
-  // const isPublishable = useMemo(
-  //   () => entry?.meta?.publishable === true,
-  //   [entry?.meta?.publishable]
-  // );
-
   const publishable = useMemo(
     () => fulfilledRequirementsCount === requirements.length,
     [fulfilledRequirementsCount, requirements]
   );
 
-  // const failedPublishedRequirements =
-  //   typeof entry?.meta?.publishable === 'object' &&
-  //   Object.entries(entry?.meta?.publishable).length > 0
-  //     ? entry?.meta?.publishable
-  //     : undefined;
+  const entryIsPublishable = useMemo(() => entry?.meta?.publishable, [entry?.meta?.publishable]);
 
-  // const requirementsFulfillment = useMemo(
-  //   () =>
-  //     requirements.map((requirement) => ({
-  //       requirement,
-  //       fulfilled: requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
-  //         if (
-  //           failedPublishedRequirements &&
-  //           failedPublishedRequirements.hasOwnProperty(publishableKey)
-  //         ) {
-  //           return false;
-  //         }
-
-  //         return fulfilled;
-  //       }, true),
-  //     })),
-  //   [failedPublishedRequirements, requirements]
-  // );
+  const waitForSave = (intervalInMs = 250, thresholdInMs = 5000) => {
+    return new Promise<{ success: boolean }>((resolve) => {
+      let timer = 0;
+      const interval = setInterval(() => {
+        timer += intervalInMs;
+        if (entryIsPublishable) {
+          resolve({ success: true });
+          clearInterval(interval);
+        } else if (timer > thresholdInMs) {
+          resolve({ success: false });
+          clearInterval(interval);
+        }
+      }, intervalInMs);
+    });
+  };
 
   return (
     <StyledPublish role="group">
@@ -213,35 +202,48 @@ export const Publish: React.FC<PublishProps> = ({
             color={ButtonColor.green}
             icon="Heart"
             disabled={!publishable}
-            onClick={
-              onPublish
-              // loadingScreen(
-              //   t('publish.loadingTitle', { categoryName: category.title.singular }),
-              //   async () => {
-              //     try {
-              //       const resp = await call<OrganizerUpdate>(category.api.update.factory, {
-              //         id: entry.data.id,
-              //         entry: {
-              //           attributes: {
-              //             status: PublishedStatus.published,
-              //           },
-              //         },
-              //       });
+            onClick={async () => {
+              loadingScreen(
+                t('publish.loadingTitle', { categoryName: category.title.singular }),
+                async () => {
+                  try {
+                    try {
+                      await onPublish();
+                    } catch (e) {
+                      console.error(e);
+                      return { success: false, error: t('general.serverProblem') };
+                    }
 
-              //       if (resp.status === 200) {
-              //         mutate();
-              //         mutateList();
+                    const save = await waitForSave();
 
-              //         return { success: true };
-              //       }
-              //     } catch (e) {
-              //       console.error(e);
-              //       return { success: false, error: t('general.serverProblem') };
-              //     }
-              //   },
-              //   t('general.takeAFewSeconds')
-              // )
-            }
+                    if (save.success) {
+                      const resp = await call(category.api.update.factory, {
+                        id: entry.data.id,
+                        entry: {
+                          attributes: {
+                            status: PublishedStatus.published,
+                          },
+                        },
+                      });
+
+                      if (resp.status === 200) {
+                        mutate();
+                        mutateList();
+
+                        return { success: true };
+                      }
+                    } else {
+                      return { success: false, error: t('general.serverProblem') };
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    return { success: false, error: t('general.serverProblem') };
+                  }
+                },
+                t('general.takeAFewSeconds'),
+                1000
+              );
+            }}
           >
             {t('general.publish')}
           </Button>
@@ -303,13 +305,14 @@ export const usePublish = ({
   );
 
   return {
-    renderedPublish: (
-      <Publish
-        category={category}
-        query={query}
-        requirements={stateRequirements}
-        onPublish={onPublish}
-      />
-    ),
+    renderedPublish:
+      entry?.data?.attributes?.status === PublishedStatus.draft ? (
+        <Publish
+          category={category}
+          query={query}
+          requirements={stateRequirements}
+          onPublish={onPublish}
+        />
+      ) : null,
   };
 };

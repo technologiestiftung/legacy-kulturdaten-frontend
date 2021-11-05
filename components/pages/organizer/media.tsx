@@ -301,10 +301,19 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
     logoReset();
   });
 
+  const onSave = useCallback(async () => {
+    if (!mediaPristine && mediaValid) {
+      mediaSubmit();
+    }
+    if (!logoPristine && logoValid) {
+      logoSubmit();
+    }
+  }, [mediaPristine, mediaValid, mediaSubmit, logoPristine, logoValid, logoSubmit]);
+
   const { renderedPublish } = usePublish({
     category,
     query,
-    onPublish: async () => console.log('publish'),
+    onPublish: onSave,
   });
 
   return (
@@ -313,14 +322,7 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
       {renderedEntryHeader}
       <div>
         <Save
-          onClick={async () => {
-            if (!mediaPristine && mediaValid) {
-              mediaSubmit();
-            }
-            if (!logoPristine && logoValid) {
-              logoSubmit();
-            }
-          }}
+          onClick={onSave}
           active={!mediaPristine || !logoPristine}
           date={formattedDate}
           valid={mediaValid && logoValid}

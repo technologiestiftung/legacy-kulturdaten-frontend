@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Editable, withReact, Slate, ReactEditor, RenderElementProps } from 'slate-react';
 import { createEditor } from 'slate';
 import { withHistory } from 'slate-history';
-import React, { Ref, useCallback, useMemo, useState } from 'react';
+import React, { Ref, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { CustomDescendant, CustomElement, ElementType, Element, CustomText } from './Element';
 import { Toolbar, ToolbarGroupWidth } from './Toolbar';
@@ -87,6 +87,14 @@ const RichText: React.FC<RichTextProps> = ({
   const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
   const t = useT();
   const debouncer = useDebounce();
+
+  useEffect(() => {
+    if (onChange) {
+      debouncer(() => {
+        onChange(intValue as CustomDescendant[]);
+      });
+    }
+  }, [intValue, onChange]);
 
   return (
     <StyledRichText role="group">

@@ -136,6 +136,7 @@ export const useDescription = ({
   });
 
   const pristine = useMemo(() => {
+    console.log(serializedMarkdown, cachedApiText);
     return (
       (serializedMarkdown && cachedApiText && serializedMarkdown === cachedApiText) ||
       (!cachedApiText && !serializedMarkdown)
