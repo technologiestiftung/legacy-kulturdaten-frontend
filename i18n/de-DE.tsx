@@ -342,6 +342,7 @@ export const deDE: Localization = {
     create: () => 'Neue Anbieter:in anlegen',
     baseInfo: () => 'Grundlagen',
     address: () => 'Adressdaten',
+    arrival: () => 'Anreiseinformationen',
     name: () => 'Bezeichnung / Name',
     labelGerman: () => 'Deutsch',
     labelGermanEasy: () => 'Deutsch: einfache Sprache',
