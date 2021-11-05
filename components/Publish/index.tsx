@@ -4,18 +4,16 @@ import { useMemo } from 'react';
 import { useApiCall } from '../../lib/api';
 import { Requirement, RequirementProps } from './Requirement';
 import { OrganizerShow } from '../../lib/api/routes/organizer/show';
-import { OrganizerUpdate } from '../../lib/api/routes/organizer/update';
-import { PublishedStatus } from '../../lib/api/types/general';
 import { Organizer } from '../../lib/api/types/organizer';
-import { Category, useEntry, useMutateList } from '../../lib/categories';
+import { Category, useEntry } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { contentGrid, mq } from '../globals/Constants';
 import { Label, StyledLabel } from '../label';
-import { Categories } from '../../config/categories';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
-import { useOrganizerId } from '../../lib/useOrganizer';
+import { RequirementFulfillment } from '../../config/categories';
+import { useRouter } from 'next/router';
 
 const StyledPublish = styled.div`
   ${contentGrid(1)}
@@ -79,7 +77,7 @@ const StyledPublishBody = styled.div`
   }
 `;
 
-const StyledPublishHeadText = styled.p`
+const StyledPublishHeadText = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   max-width: 78ch;
@@ -251,4 +249,67 @@ export const Publish: React.FC<PublishProps> = ({
       </StyledPublishBody>
     </StyledPublish>
   );
+};
+
+export const usePublish = ({
+  category,
+  query,
+  formRequirementFulfillments,
+  onPublish,
+}: {
+  category: Category;
+  query: ParsedUrlQuery;
+  onPublish: () => Promise<void>;
+  formRequirementFulfillments?: RequirementFulfillment[];
+}): {
+  renderedPublish: React.ReactElement<PublishProps>;
+} => {
+  const t = useT();
+  const router = useRouter();
+  const { entry } = useEntry(category, router?.query);
+
+  const requirements = category?.requirements;
+
+  const failedRequirementsFromApi =
+    typeof entry?.meta?.publishable === 'object' &&
+    Object.entries(entry?.meta?.publishable).length > 0
+      ? entry?.meta?.publishable
+      : undefined;
+
+  const stateRequirements = useMemo(
+    () =>
+      requirements.map((requirement) => {
+        const stateFulfillment = formRequirementFulfillments?.find(
+          ({ requirementKey }) => requirement?.key === requirementKey
+        );
+
+        return {
+          text: t(requirement.translationKey) as string,
+          fulfilled: stateFulfillment
+            ? stateFulfillment.fulfilled
+            : requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
+                if (
+                  failedRequirementsFromApi &&
+                  failedRequirementsFromApi.hasOwnProperty(publishableKey)
+                ) {
+                  return false;
+                }
+
+                return fulfilled;
+              }, true),
+        };
+      }),
+    [formRequirementFulfillments, failedRequirementsFromApi, requirements, t]
+  );
+
+  return {
+    renderedPublish: (
+      <Publish
+        category={category}
+        query={query}
+        requirements={stateRequirements}
+        onPublish={onPublish}
+      />
+    ),
+  };
 };

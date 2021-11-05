@@ -180,15 +180,12 @@ export const useCategories: () => {
           ],
         },
         {
-          key: 'typesSubjects',
+          key: 'types',
           translationKey: 'categories.organizer.requirements.categorization',
           publishableKeys: ['relations.types', 'relations.subjects'],
           attributes: [
             {
               path: 'relations.types',
-            },
-            {
-              path: 'relations.subjects',
             },
           ],
         },

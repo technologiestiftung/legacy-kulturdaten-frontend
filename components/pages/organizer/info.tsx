@@ -16,7 +16,7 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
-import { Publish } from '../../Publish';
+import { usePublish } from '../../Publish';
 import { EntryFormHook } from '../helpers/form';
 import { useAddressForm } from '../helpers/form/Address';
 import { useDescriptionForm } from '../helpers/form/Description';
@@ -366,16 +366,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     title: t('categories.organizer.form.description') as string,
     tooltip: t('categories.organizer.form.descriptionTooltip') as string,
   });
-
-  const formRequirementFulfillments = useMemo(
-    () => [
-      nameRequirementFulfillment,
-      addressRequirementFulfillment,
-      descriptionRequirementFulfillment,
-    ],
-    [nameRequirementFulfillment, addressRequirementFulfillment, descriptionRequirementFulfillment]
-  );
-
   const renderedEntryHeader = useEntryHeader(
     { category, query },
     t('menu.start.items.profile') as string,
@@ -440,48 +430,25 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     linksReset();
   });
 
-  const requirements = category?.requirements;
-
-  const failedRequirementsFromApi =
-    typeof entry?.meta?.publishable === 'object' &&
-    Object.entries(entry?.meta?.publishable).length > 0
-      ? entry?.meta?.publishable
-      : undefined;
-
-  const stateRequirements = useMemo(
-    () =>
-      requirements.map((requirement) => {
-        const stateFulfillment = formRequirementFulfillments.find(
-          ({ requirementKey }) => requirement?.key === requirementKey
-        );
-
-        return {
-          text: t(requirement.translationKey) as string,
-          fulfilled: stateFulfillment
-            ? stateFulfillment.fulfilled
-            : requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
-                if (
-                  failedRequirementsFromApi &&
-                  failedRequirementsFromApi.hasOwnProperty(publishableKey)
-                ) {
-                  return false;
-                }
-
-                return fulfilled;
-              }, true),
-        };
-      }),
-    [formRequirementFulfillments, failedRequirementsFromApi, requirements, t]
+  const formRequirementFulfillments = useMemo(
+    () => [
+      nameRequirementFulfillment,
+      addressRequirementFulfillment,
+      descriptionRequirementFulfillment,
+    ],
+    [nameRequirementFulfillment, addressRequirementFulfillment, descriptionRequirementFulfillment]
   );
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: async () => console.log('publish'),
+  });
 
   return (
     <>
-      <Publish
-        category={category}
-        query={query}
-        requirements={stateRequirements}
-        onPublish={async () => console.log('publish')}
-      />
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>

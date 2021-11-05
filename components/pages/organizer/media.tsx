@@ -23,6 +23,7 @@ import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
 import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const maxLogoSize = 2048;
 
@@ -300,8 +301,15 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
     logoReset();
   });
 
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: async () => console.log('publish'),
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div>
         <Save

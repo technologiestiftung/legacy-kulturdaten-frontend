@@ -4,11 +4,17 @@ import { useEntry, useEntryTypeList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { TypesSubjects } from '../../../TypesSubjects';
-import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 import { EntryFormHook } from '../form';
 import { CategoryEntry } from '../../../../lib/api/types/general';
 
-export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query, loaded, title }) => {
+export const useEntryTypeSubjectForm: EntryFormHook = ({
+  category,
+  query,
+  loaded,
+  title,
+  required,
+}) => {
   const { entry, mutate } = useEntry<CategoryEntry, ApiCall>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -44,8 +50,12 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query, loaded
     [validSubjectOptions, subjects]
   );
 
-  // Valid if types and subjects are defined
+  // Valid if one or more types are defined
   const valid = useMemo(() => {
+    return !required || !loaded || (types && types.length > 0);
+  }, [required, loaded, types]);
+
+  const fulfilled = useMemo(() => {
     return !loaded || (types && types.length > 0);
   }, [loaded, types]);
 
@@ -103,11 +113,8 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query, loaded
 
   return {
     renderedForm: (
-      <div>
-        <EntryFormHead
-          title={title || `${t('forms.classification') as string}`}
-          valid={!loaded || valid}
-        />
+      <FormWrapper requirement={{ fulfilled }}>
+        <EntryFormHead title={title || `${t('forms.classification') as string}`} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             <TypesSubjects
@@ -123,7 +130,7 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query, loaded
             />
           </FormItem>
         </FormGrid>
-      </div>
+      </FormWrapper>
     ),
     submit: async () => {
       try {
@@ -166,5 +173,9 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({ category, query, loaded
       setTypesSubjectsPristine(true);
     },
     valid,
+    requirementFulfillment: {
+      requirementKey: 'types',
+      fulfilled,
+    },
   };
 };

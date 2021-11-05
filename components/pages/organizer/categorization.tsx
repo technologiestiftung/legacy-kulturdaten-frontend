@@ -11,6 +11,7 @@ import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useEntryTypeSubjectForm } from '../helpers/form/TypeSubject';
 import { useEntryTags } from '../helpers/form/Tags';
+import { usePublish } from '../../Publish';
 
 export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   category,
@@ -38,17 +39,20 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   }, [rendered, entry]);
 
   const {
-    renderedForm,
-    submit,
-    pristine: pristineClassification,
-    reset,
-    valid,
-  } = useEntryTypeSubjectForm({ category, query, loaded });
+    renderedForm: formTypeSubject,
+    submit: submitTypeSubject,
+    pristine: pristineTypeSubject,
+    reset: resetTypeSubject,
+    valid: validTypeSubject,
+    requirementFulfillment: requiredFulfillmentTypeSubject,
+  } = useEntryTypeSubjectForm({ category, query, loaded, required: true });
 
   const {
-    renderedForm: renderedTagsForm,
+    renderedForm: formTags,
     submit: submitTags,
     pristine: pristineTags,
+    reset: resetTags,
+    valid: validTags,
   } = useEntryTags({
     category,
     query,
@@ -57,32 +61,55 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   });
 
   const shouldWarn = useMemo(
-    () => !pristineClassification && typeof entry?.data !== 'undefined',
-    [pristineClassification, entry?.data]
+    () => !pristineTypeSubject && typeof entry?.data !== 'undefined',
+    [pristineTypeSubject, entry?.data]
   );
 
-  useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
+  useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => {
+    resetTypeSubject();
+    resetTags();
+  });
+
+  const valid = useMemo(() => validTypeSubject && validTags, [validTypeSubject, validTags]);
+
+  const pristine = useMemo(
+    () => ![pristineTypeSubject, pristineTags].includes(false),
+    [pristineTypeSubject, pristineTags]
+  );
+
+  const formRequirementFulfillments = useMemo(
+    () => [requiredFulfillmentTypeSubject],
+    [requiredFulfillmentTypeSubject]
+  );
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: async () => console.log('publish'),
+  });
 
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="form">
         <Save
           onClick={async () => {
-            if (!pristineClassification) {
-              submit();
+            if (!pristineTypeSubject) {
+              submitTypeSubject();
             }
             if (!pristineTags) {
               submitTags();
             }
           }}
-          active={!pristineTags || !pristineClassification}
+          active={!pristine}
           date={formattedDate}
           valid={loaded !== true || valid}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>{renderedForm}</EntryFormContainer>
-          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
+          <EntryFormContainer>{formTypeSubject}</EntryFormContainer>
+          <EntryFormContainer>{formTags}</EntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>
