@@ -281,7 +281,7 @@ export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
     return {
       title,
       href,
-      isActive: router.asPath === href,
+      isActive: router.asPath.split('#')[0] === href,
     };
   });
 

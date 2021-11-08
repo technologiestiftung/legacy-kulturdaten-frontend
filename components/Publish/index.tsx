@@ -192,7 +192,7 @@ export const Publish: React.FC<PublishProps> = ({
           </StyledPublishRequirementsLabel>
           <StyledPublishRequirementsItems>
             {requirements.map((requirement, index) => (
-              <Requirement key={index} {...requirement} />
+              <Requirement key={index} {...requirement} link={requirement?.link} />
             ))}
           </StyledPublishRequirementsItems>
         </StyledPublishRequirements>
@@ -299,9 +299,14 @@ export const usePublish = ({
 
                 return fulfilled;
               }, true),
+          link: requirement.link
+            ? {
+                href: requirement.link?.href(query),
+              }
+            : undefined,
         };
       }),
-    [formRequirementFulfillments, failedRequirementsFromApi, requirements, t]
+    [formRequirementFulfillments, failedRequirementsFromApi, requirements, t, query]
   );
 
   return {

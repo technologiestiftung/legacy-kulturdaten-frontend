@@ -437,6 +437,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.location.form.name') as string,
+    id: 'location-name',
   });
 
   const {
@@ -450,6 +451,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     category,
     query,
     loaded,
+    id: 'location-description',
   });
 
   const {

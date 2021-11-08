@@ -22,7 +22,7 @@ import { useLanguage } from '../../../lib/routing';
 import { sortByTranslation } from '../../../lib/sortTranslations';
 import { usePublish } from '../../Publish';
 
-const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required }) => {
+const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -77,6 +77,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
       <FormWrapper requirement={{ fulfilled }}>
         <EntryFormHead
           title={`${t('categories.offer.form.mainType.title')} (${t('forms.required')})`}
+          id={id}
         />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
@@ -181,6 +182,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     loaded,
     title: t('categories.offer.form.topics') as string,
     required: true,
+    id: 'offer-types',
   });
 
   const {
@@ -196,7 +198,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     valid: mainTypeValid,
     requirementFulfillment: requirementFulfillmentMainType,
     reset: resetMainType,
-  } = useOfferMainTypeForm({ category, query, loaded, required: true });
+  } = useOfferMainTypeForm({ category, query, loaded, required: true, id: 'offer-main-type' });
 
   const pristine = useMemo(
     () => pristineTags && pristineTypeSubject && mainTypePristine,

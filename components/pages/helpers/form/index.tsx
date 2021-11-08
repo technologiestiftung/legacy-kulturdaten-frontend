@@ -12,6 +12,7 @@ export interface EntryFormHookProps extends EntryFormProps {
   tooltip?: string | React.ReactNode;
   title?: string;
   required?: boolean;
+  id?: string;
 }
 
 export type EntryFormHook<T = EntryFormHookProps> = (props: T) => {

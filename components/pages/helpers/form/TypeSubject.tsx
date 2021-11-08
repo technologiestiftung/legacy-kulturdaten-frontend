@@ -14,6 +14,7 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({
   loaded,
   title,
   required,
+  id,
 }) => {
   const { entry, mutate } = useEntry<CategoryEntry, ApiCall>(category, query);
   const t = useT();
@@ -114,7 +115,7 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }}>
-        <EntryFormHead title={title || `${t('forms.classification') as string}`} />
+        <EntryFormHead title={title || `${t('forms.classification') as string}`} id={id} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             <TypesSubjects

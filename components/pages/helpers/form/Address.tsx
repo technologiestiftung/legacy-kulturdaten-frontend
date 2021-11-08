@@ -24,6 +24,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
   customRequired,
   title,
   district,
+  id,
 }) => {
   const uid = usePseudoUID();
   const { entry, mutate } = useEntry<
@@ -122,7 +123,11 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
               : undefined
           }
         >
-          <EntryFormHead title={`${title || (t('forms.address') as string)}`} tooltip={tooltip} />
+          <EntryFormHead
+            title={`${title || (t('forms.address') as string)}`}
+            tooltip={tooltip}
+            id={id}
+          />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
               <Input

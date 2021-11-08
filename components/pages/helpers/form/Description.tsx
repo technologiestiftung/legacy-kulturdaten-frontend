@@ -136,7 +136,6 @@ export const useDescription = ({
   });
 
   const pristine = useMemo(() => {
-    console.log(serializedMarkdown, cachedApiText);
     return (
       (serializedMarkdown && cachedApiText && serializedMarkdown === cachedApiText) ||
       (!cachedApiText && !serializedMarkdown)
@@ -218,6 +217,7 @@ export const useDescriptionForm: EntryFormHook = ({
   tooltip,
   title,
   required,
+  id,
 }) => {
   const t = useT();
 
@@ -285,6 +285,7 @@ export const useDescriptionForm: EntryFormHook = ({
             title={title || `${t('forms.description') as string}`}
             valid={valid}
             tooltip={tooltip}
+            id={id}
           />
           {renderedDescriptionGerman}
           {renderedDescriptionEnglish}

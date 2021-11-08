@@ -45,7 +45,7 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
     reset: resetTypeSubject,
     valid: validTypeSubject,
     requirementFulfillment: requiredFulfillmentTypeSubject,
-  } = useEntryTypeSubjectForm({ category, query, loaded, required: true });
+  } = useEntryTypeSubjectForm({ category, query, loaded, required: true, id: 'organizer-types' });
 
   const {
     renderedForm: formTags,

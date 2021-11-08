@@ -62,6 +62,7 @@ const StyledEntryFormHeadTitle = styled.h2<{ size: EntryFormHeadSize }>`
   margin-bottom: ${({ size }) => (size === EntryFormHeadSize.small ? '0.375rem' : '0.75rem')};
   position: relative;
   display: inline-flex;
+  scroll-margin-top: calc(var(--header-height) * 2 + 5vh);
 `;
 
 const StyledEntryFormHeadChevron = styled.div<{ isExpanded: boolean }>`

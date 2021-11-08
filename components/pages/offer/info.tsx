@@ -383,6 +383,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.offer.form.name') as string,
+    id: 'offer-name',
   });
 
   const {
@@ -396,6 +397,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     category,
     query,
     loaded,
+    id: 'offer-description',
   });
 
   const {

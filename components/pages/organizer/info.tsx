@@ -296,6 +296,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     loaded,
     title: t('categories.organizer.form.name') as string,
     tooltip: t('categories.organizer.form.nameTooltip') as string,
+    id: 'organizer-name',
   });
 
   const {
@@ -313,6 +314,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     title: t('categories.organizer.form.address') as string,
     tooltip: t('categories.organizer.form.addressTooltip') as string,
     district: false,
+    id: 'organizer-internal-contact',
   });
 
   const {
@@ -365,6 +367,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     required: isPublished,
     title: t('categories.organizer.form.description') as string,
     tooltip: t('categories.organizer.form.descriptionTooltip') as string,
+    id: 'organizer-description',
   });
   const renderedEntryHeader = useEntryHeader(
     { category, query },

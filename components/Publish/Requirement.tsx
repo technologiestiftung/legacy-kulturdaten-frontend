@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Check } from 'react-feather';
+import Link from 'next/link';
 
-const StyledRequirement = styled.div<{ fulfilled: boolean }>`
+const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
   background: ${({ fulfilled }) => (fulfilled ? 'var(--white-green-o50)' : 'var(--white-red)')};
   color: ${({ fulfilled }) => (fulfilled ? 'var(--black-o70)' : 'var(--black)')};
   border-radius: 0.1875rem;
@@ -12,6 +13,29 @@ const StyledRequirement = styled.div<{ fulfilled: boolean }>`
   justify-content: flex-start;
   column-gap: 0.1875rem;
   padding: 0.1875rem 0.5625rem 0.1875rem 0.1875rem;
+
+  ${({ hasLink }) =>
+    hasLink &&
+    css`
+      box-shadow: none;
+      transform: scale(1);
+      transform-origin: 50% 50%;
+      transition: color var(--transition-duration-fast), background var(--transition-duration-fast),
+        box-shadow var(--transition-duration-fast), transform var(--transition-duration-fast);
+
+      &:hover {
+        background: var(--white);
+        box-shadow: 0 0 1.5rem -0.5rem rgba(0, 0, 0, 0.25);
+        transform: scale(1.025);
+        color: var(--black);
+      }
+
+      &:active {
+        background: var(--white);
+        box-shadow: 0 0 0.75rem -0.5rem rgba(0, 0, 0, 0.25);
+        transform: scale(1);
+      }
+    `}
 `;
 
 const StyledRequirementText = styled.div`
@@ -42,22 +66,46 @@ export const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
             width: 0.625rem;
             height: 0.625rem;
             border-radius: 1rem;
-            border: 0.4375rem solid var(--white);
+            margin: 0.4375rem;
           }
         `
       : 'opacity: 0.7;'}
 `;
 
+const StyledRequirementLink = styled.a`
+  text-decoration: none;
+  color: inherit;
+`;
+
 export interface RequirementProps {
   text: string;
   fulfilled: boolean;
+  link?: {
+    href: string;
+  };
 }
 
-export const Requirement: React.FC<RequirementProps> = ({ text, fulfilled }: RequirementProps) => (
-  <StyledRequirement fulfilled={fulfilled}>
-    <StyledRequirementMark fulfilled={fulfilled}>
-      {fulfilled && <Check color="var(--green-publish)" />}
-    </StyledRequirementMark>
-    <StyledRequirementText>{text}</StyledRequirementText>
-  </StyledRequirement>
-);
+export const Requirement: React.FC<RequirementProps> = ({
+  text,
+  fulfilled,
+  link,
+}: RequirementProps) => {
+  const hasLink = typeof link !== 'undefined';
+
+  const renderedRequirement = (
+    <StyledRequirement fulfilled={fulfilled} hasLink={hasLink}>
+      <StyledRequirementMark fulfilled={fulfilled}>
+        {fulfilled && <Check color="var(--green-publish)" />}
+      </StyledRequirementMark>
+      <StyledRequirementText>{text}</StyledRequirementText>
+    </StyledRequirement>
+  );
+
+  return hasLink ? (
+    <Link href={link.href} passHref>
+      <StyledRequirementLink>{renderedRequirement}</StyledRequirementLink>
+    </Link>
+  ) : (
+    renderedRequirement
+  );
+};

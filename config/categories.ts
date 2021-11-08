@@ -4,7 +4,7 @@ import { organizerCreateFactory } from '../lib/api/routes/organizer/create';
 import { useT } from '../lib/i18n';
 import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
-import { Routes, routes } from '../lib/routing';
+import { Routes, routes, useLocale } from '../lib/routing';
 import { Category } from '../lib/categories';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
 import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
@@ -35,6 +35,7 @@ import { LocationServicePage } from '../components/pages/location/service';
 import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
 import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 import { defaultLanguage, Language } from './locale';
+import { ParsedUrlQuery } from 'querystring';
 
 type RequirementAttributes = {
   path: string;
@@ -49,6 +50,9 @@ export type Requirement = {
   translationKey: string;
   publishableKeys: string[];
   attributes: RequirementAttributes[];
+  link: {
+    href: (query: ParsedUrlQuery) => string;
+  };
 };
 
 export type RequirementFulfillment = {
@@ -72,6 +76,7 @@ export const useCategories: () => {
   [key in Categories]: Category;
 } = () => {
   const t = useT();
+  const locale = useLocale();
 
   return {
     organizer: {
@@ -148,6 +153,10 @@ export const useCategories: () => {
               },
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({ locale, query: { ...query, sub: 'info' } })}#organizer-name`,
+          },
         },
         {
           key: 'address',
@@ -164,6 +173,13 @@ export const useCategories: () => {
               path: 'relations.address.attributes.zipCode',
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({
+                locale,
+                query: { ...query, sub: 'info' },
+              })}#organizer-internal-contact`,
+          },
         },
         {
           key: 'description',
@@ -178,6 +194,13 @@ export const useCategories: () => {
               },
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({
+                locale,
+                query: { ...query, sub: 'info' },
+              })}#organizer-description`,
+          },
         },
         {
           key: 'types',
@@ -188,6 +211,13 @@ export const useCategories: () => {
               path: 'relations.types',
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({
+                locale,
+                query: { ...query, sub: 'categorization' },
+              })}#organizer-types`,
+          },
         },
       ],
     },
@@ -267,6 +297,10 @@ export const useCategories: () => {
               },
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-name`,
+          },
         },
 
         {
@@ -282,6 +316,10 @@ export const useCategories: () => {
               },
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-description`,
+          },
         },
         {
           key: 'mainType',
@@ -292,6 +330,13 @@ export const useCategories: () => {
               path: 'relations.mainType',
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.offer({
+                locale,
+                query: { ...query, sub: 'categorization' },
+              })}#offer-main-type`,
+          },
         },
         {
           key: 'types',
@@ -302,6 +347,10 @@ export const useCategories: () => {
               path: 'relations.types',
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.offer({ locale, query: { ...query, sub: 'categorization' } })}#offer-types`,
+          },
         },
       ],
     },
@@ -374,6 +423,10 @@ export const useCategories: () => {
               },
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.location({ locale, query: { ...query, sub: 'info' } })}#location-name`,
+          },
         },
         {
           key: 'description',
@@ -388,6 +441,13 @@ export const useCategories: () => {
               },
             },
           ],
+          link: {
+            href: (query) =>
+              `${routes.location({
+                locale,
+                query: { ...query, sub: 'info' },
+              })}#location-description`,
+          },
         },
       ],
     },
