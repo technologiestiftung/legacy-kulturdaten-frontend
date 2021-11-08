@@ -719,6 +719,7 @@ export const deDE: Localization = {
     fulfilled: ({ count, total }) => `${count} von ${total} ausgefüllt`,
     notFulfilled: () => 'Pflichtangabe fehlt',
     isFulfilled: () => 'Pflichtangabe erfüllt',
+    nameLabel: ({ fieldName }) => `Zum Feld '${fieldName}' gehen`,
   },
   categories: {
     organizer: {

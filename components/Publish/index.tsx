@@ -266,7 +266,6 @@ export const usePublish = ({
 }): {
   renderedPublish: React.ReactElement<PublishProps>;
 } => {
-  const t = useT();
   const router = useRouter();
   const { entry } = useEntry(category, router?.query);
 
@@ -286,7 +285,7 @@ export const usePublish = ({
         );
 
         return {
-          text: t(requirement.translationKey) as string,
+          text: requirement.translation,
           fulfilled: stateFulfillment
             ? stateFulfillment.fulfilled
             : requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
@@ -302,11 +301,12 @@ export const usePublish = ({
           link: requirement.link
             ? {
                 href: requirement.link?.href(query),
+                ariaLabel: requirement.link.ariaLabel,
               }
             : undefined,
         };
       }),
-    [formRequirementFulfillments, failedRequirementsFromApi, requirements, t, query]
+    [formRequirementFulfillments, failedRequirementsFromApi, requirements, query]
   );
 
   return {

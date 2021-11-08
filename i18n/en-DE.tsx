@@ -714,6 +714,7 @@ export const enDE: Localization = {
     fulfilled: ({ count, total }) => `${count} of ${total} filled out`,
     notFulfilled: () => 'Required information missing',
     isFulfilled: () => 'Required information filled out',
+    nameLabel: ({ fieldName }) => `Go to the field '${fieldName}'`,
   },
   categories: {
     organizer: {

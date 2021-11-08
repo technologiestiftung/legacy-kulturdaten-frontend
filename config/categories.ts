@@ -47,11 +47,12 @@ type RequirementAttributes = {
 
 export type Requirement = {
   key: string;
-  translationKey: string;
+  translation: string;
   publishableKeys: string[];
   attributes: RequirementAttributes[];
   link: {
     href: (query: ParsedUrlQuery) => string;
+    ariaLabel: string;
   };
 };
 
@@ -142,7 +143,7 @@ export const useCategories: () => {
       requirements: [
         {
           key: 'name',
-          translationKey: 'categories.organizer.requirements.name',
+          translation: t('categories.organizer.requirements.name'),
           publishableKeys: ['attributes.name'],
           attributes: [
             {
@@ -156,11 +157,14 @@ export const useCategories: () => {
           link: {
             href: (query) =>
               `${routes.organizer({ locale, query: { ...query, sub: 'info' } })}#organizer-name`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.name') as string,
+            }),
           },
         },
         {
           key: 'address',
-          translationKey: 'categories.organizer.requirements.address',
+          translation: t('categories.organizer.requirements.address'),
           publishableKeys: ['relations.address'],
           attributes: [
             {
@@ -179,11 +183,14 @@ export const useCategories: () => {
                 locale,
                 query: { ...query, sub: 'info' },
               })}#organizer-internal-contact`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.address') as string,
+            }),
           },
         },
         {
           key: 'description',
-          translationKey: 'categories.organizer.requirements.description',
+          translation: t('categories.organizer.requirements.description'),
           publishableKeys: ['attributes.description'],
           attributes: [
             {
@@ -200,11 +207,14 @@ export const useCategories: () => {
                 locale,
                 query: { ...query, sub: 'info' },
               })}#organizer-description`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.description') as string,
+            }),
           },
         },
         {
           key: 'types',
-          translationKey: 'categories.organizer.requirements.categorization',
+          translation: t('categories.organizer.requirements.categorization'),
           publishableKeys: ['relations.types', 'relations.subjects'],
           attributes: [
             {
@@ -217,6 +227,9 @@ export const useCategories: () => {
                 locale,
                 query: { ...query, sub: 'categorization' },
               })}#organizer-types`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.categorization') as string,
+            }),
           },
         },
       ],
@@ -286,7 +299,7 @@ export const useCategories: () => {
       requirements: [
         {
           key: 'name',
-          translationKey: 'categories.offer.requirements.name',
+          translation: t('categories.offer.requirements.name'),
           publishableKeys: ['attributes.name'],
           attributes: [
             {
@@ -300,12 +313,15 @@ export const useCategories: () => {
           link: {
             href: (query) =>
               `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-name`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.name') as string,
+            }),
           },
         },
 
         {
           key: 'description',
-          translationKey: 'categories.offer.requirements.description',
+          translation: t('categories.offer.requirements.description'),
           publishableKeys: ['attributes.description'],
           attributes: [
             {
@@ -319,11 +335,14 @@ export const useCategories: () => {
           link: {
             href: (query) =>
               `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-description`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.description') as string,
+            }),
           },
         },
         {
           key: 'mainType',
-          translationKey: 'categories.offer.requirements.mainType',
+          translation: t('categories.offer.requirements.mainType'),
           publishableKeys: ['relations.mainType'],
           attributes: [
             {
@@ -336,11 +355,14 @@ export const useCategories: () => {
                 locale,
                 query: { ...query, sub: 'categorization' },
               })}#offer-main-type`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.mainType') as string,
+            }),
           },
         },
         {
           key: 'types',
-          translationKey: 'categories.offer.requirements.categorization',
+          translation: t('categories.offer.requirements.categorization'),
           publishableKeys: ['relations.types'],
           attributes: [
             {
@@ -350,6 +372,9 @@ export const useCategories: () => {
           link: {
             href: (query) =>
               `${routes.offer({ locale, query: { ...query, sub: 'categorization' } })}#offer-types`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.categorization') as string,
+            }),
           },
         },
       ],
@@ -412,7 +437,7 @@ export const useCategories: () => {
       requirements: [
         {
           key: 'name',
-          translationKey: 'categories.location.requirements.name',
+          translation: t('categories.location.requirements.name'),
           publishableKeys: ['attributes.name'],
           attributes: [
             {
@@ -426,11 +451,14 @@ export const useCategories: () => {
           link: {
             href: (query) =>
               `${routes.location({ locale, query: { ...query, sub: 'info' } })}#location-name`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.location.requirements.name') as string,
+            }),
           },
         },
         {
           key: 'description',
-          translationKey: 'categories.location.requirements.description',
+          translation: t('categories.location.requirements.description'),
           publishableKeys: ['attributes.description'],
           attributes: [
             {
@@ -447,6 +475,9 @@ export const useCategories: () => {
                 locale,
                 query: { ...query, sub: 'info' },
               })}#location-description`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.location.requirements.description') as string,
+            }),
           },
         },
       ],

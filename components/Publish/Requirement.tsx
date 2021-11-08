@@ -65,7 +65,7 @@ export const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
             background: var(--red-publish);
             width: 0.625rem;
             height: 0.625rem;
-            border-radius: 1rem;
+            border-radius: 2rem;
             margin: 0.4375rem;
           }
         `
@@ -82,6 +82,7 @@ export interface RequirementProps {
   fulfilled: boolean;
   link?: {
     href: string;
+    ariaLabel: string;
   };
 }
 
@@ -103,7 +104,9 @@ export const Requirement: React.FC<RequirementProps> = ({
 
   return hasLink ? (
     <Link href={link.href} passHref>
-      <StyledRequirementLink>{renderedRequirement}</StyledRequirementLink>
+      <StyledRequirementLink aria-label={link.ariaLabel}>
+        {renderedRequirement}
+      </StyledRequirementLink>
     </Link>
   ) : (
     renderedRequirement
