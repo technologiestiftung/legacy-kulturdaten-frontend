@@ -24,11 +24,10 @@ const StyledFormWrapper = styled.div<{ required: boolean; fulfilled?: boolean }>
         border-radius: 0px 1.5px 1.5px 0px;
 
         ${mq(Breakpoint.mid)} {
-          border-radius: 1.5px;
+          left: -1.5rem;
         }
 
         ${mq(Breakpoint.widish)} {
-          left: -1.5rem;
           border-radius: 1.5px;
         }
       }
