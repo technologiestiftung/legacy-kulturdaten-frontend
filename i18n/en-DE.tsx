@@ -82,7 +82,7 @@ export const enDE: Localization = {
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Fill out the profile now',
+          link: () => 'Fill out the profile',
         },
       },
       offers: {
@@ -484,20 +484,41 @@ export const enDE: Localization = {
     hint: () =>
       'In order for the image to be publicly available, the required fields must be filled out.',
     dropZoneLabel: () => 'Upload images',
-    usageInfo: () =>
-      'Please make sure to upload only those images that may be used by others - either unaltered or in modified form and also for commercial purposes. In the case you chose a CC licence, images may also be used on social media. Do not use any images without the permission of the copyright holder(s). If people are depicted in the images, they must have given you their consent for the image to be used by third parties. By publishing your image via kulturdaten.berlin, you grant any data users - whether event portals or app developers - the right to use the image files within the limits of moral rights, provided the copyright holder is named.',
-    acknowledgedUsageInfo: () => 'I have acknowledged this',
+    usageInfo: () => (
+      <>
+        <TooltipP>Please ensure:</TooltipP>
+        <TooltipP>
+          * to upload only those images that may be used free of charge by others - either unaltered
+          or in modified form and also for commercial purposes. In the case you chose a CC licence,
+          images may also be used on social media.
+        </TooltipP>
+        <TooltipP>
+          * to not use any images without the permission of the copyright holder(s). If people are
+          depicted in the images, they must have given you their consent for the image to be used by
+          third parties.
+        </TooltipP>
+        <TooltipP>
+          * that by publishing your image via kulturdaten.berlin, you grant any data users - e.g.
+          event portals or app developers - the right to use the image files within the limits of
+          moral rights, provided the copyright holder is named.
+        </TooltipP>
+      </>
+    ),
+    acknowledgedUsageInfo: () => 'I have read the following notice',
   },
   logo: {
-    title: () => 'Logo',
-    imageProcessing: () => 'The logo is being processed and loaded',
-    openImage: () => 'Open original logo in new tab',
-    delete: () => 'delete logo',
-    deleteConfirm: () => 'Do you really want to delete the logo? This cannot be undone.',
-    ariaLabel: () => 'Upload logo',
+    title: () => 'Profile picture / logo',
+    titleTooltip: () =>
+      'You can upload a logo or profile picture and specify under which licence it can be used by others. If the trademark associated with the logo is registered, it will of course remain protected, regardless of the image licence selected.',
+    imageProcessing: () => 'The profile picture / logo is being processed and loaded',
+    openImage: () => 'Open original profile picture / logo in new tab',
+    delete: () => 'delete profile picture / logo',
+    deleteConfirm: () =>
+      'Do you really want to delete the profile picture / logo? This cannot be undone.',
+    ariaLabel: () => 'Upload profile picture / logo',
     hint: () =>
-      'In order for the logo to be publicly available, the mandatory fields must be filled out.',
-    dropZoneLabel: () => 'Upload new logo',
+      'In order for the profile picture / logo to be publicly available, the mandatory fields must be filled out.',
+    dropZoneLabel: () => 'Upload profile picture / logo',
   },
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',
