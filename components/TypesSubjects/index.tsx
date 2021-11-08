@@ -1,7 +1,5 @@
-import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Reducer, useEffect, useReducer, useState } from 'react';
-import { ChevronDown } from 'react-feather';
 import {
   OrganizerSubjectTranslation,
   OrganizerType,
@@ -9,6 +7,7 @@ import {
 } from '../../lib/api/types/organizer';
 import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
+import { sortByTranslation } from '../../lib/sortTranslations';
 import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Checkbox } from '../checkbox';
@@ -31,35 +30,9 @@ const StyledTypesSubjectsType = styled.div`
   overflow: hidden;
 `;
 
-const StyledTypesSubjectsTypeHead = styled.div<{ hasSubjects: boolean }>`
+const StyledTypesSubjectsTypeHead = styled.div`
   padding: 0.75rem;
   position: relative;
-
-  ${({ hasSubjects }) =>
-    hasSubjects
-      ? css`
-          padding-right: 3rem;
-        `
-      : ''}
-`;
-
-const StyledTypesSubjectsChevron = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-  right: 0.75rem;
-  top: 0.75rem;
-  pointer-events: none;
-  transition: transform var(--transition-duration);
-  transform-origin: 50% 50%;
-  line-height: 0;
-
-  ${({ isOpen }) =>
-    isOpen
-      ? css`
-          transform: rotateX(-180deg);
-        `
-      : css`
-          transform: rotateX(0deg);
-        `}
 `;
 
 const StyledTypesSubjectsSubjects = styled.div`
@@ -179,7 +152,7 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
 
         return (
           <StyledTypesSubjectsType key={index}>
-            <StyledTypesSubjectsTypeHead hasSubjects={hasSubjects}>
+            <StyledTypesSubjectsTypeHead>
               <Checkbox
                 id={`${pseudoUid}-type-${type?.id}`}
                 value={String(type?.id)}
@@ -196,11 +169,6 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                 }}
               />
             </StyledTypesSubjectsTypeHead>
-            {hasSubjects && (
-              <StyledTypesSubjectsChevron isOpen={typeIsChecked}>
-                <ChevronDown color="var(--grey-600)" />
-              </StyledTypesSubjectsChevron>
-            )}
             {hasSubjects && typeIsChecked && (
               <StyledTypesSubjectsSubjects>
                 <CheckboxList
@@ -214,19 +182,23 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
                       payload: { subjects: value },
                     });
                   }}
-                  checkboxes={type?.relations?.subjects?.map((subject) => {
-                    const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                      language,
-                      subject.relations?.translations
-                    );
+                  checkboxes={
+                    type?.relations?.subjects
+                      ? sortByTranslation(type?.relations?.subjects, language)?.map((subject) => {
+                          const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
+                            language,
+                            subject.relations?.translations
+                          );
 
-                    return {
-                      id: `${pseudoUid}-type-${type.id}-subject-${subject.id}`,
-                      value: String(subject.id),
-                      label: subjectTranslation?.attributes?.name,
-                      checked: state.subjects?.includes(String(subject.id)),
-                    };
-                  })}
+                          return {
+                            id: `${pseudoUid}-type-${type.id}-subject-${subject.id}`,
+                            value: String(subject.id),
+                            label: subjectTranslation?.attributes?.name,
+                            checked: state.subjects?.includes(String(subject.id)),
+                          };
+                        })
+                      : undefined
+                  }
                 />
               </StyledTypesSubjectsSubjects>
             )}

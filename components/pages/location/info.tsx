@@ -9,6 +9,7 @@ import { WindowContext } from '../../../lib/WindowService';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useDescriptionForm } from '../helpers/form/Description';
 import { useAddressForm } from '../helpers/form/Address';
+import { useArrivalForm } from '../helpers/form/Arrival';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
@@ -466,6 +467,18 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
   });
 
   const {
+    renderedForm: arrivalForm,
+    submit: arrivalSubmit,
+    pristine: arrivalPristine,
+    valid: arrivalValid,
+    reset: arrivalReset,
+  } = useArrivalForm({
+    category,
+    query,
+    loaded,
+  });
+
+  const {
     renderedForm: typeForm,
     submit: typeSubmit,
     pristine: typePristine,
@@ -522,12 +535,14 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
         typeValid,
         urlValid,
         LocationType.physical ? addressValid : true,
+        LocationType.physical ? arrivalValid : true,
         LocationType.physical ? rentValid : true,
         LocationType.virtual ? openingHoursValid : true,
       ].includes(false)
     );
   }, [
     addressValid,
+    arrivalValid,
     descriptionValid,
     nameValid,
     typeValid,
@@ -544,6 +559,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
         typePristine,
         urlPristine,
         LocationType.physical ? addressPristine : true,
+        LocationType.physical ? arrivalPristine : true,
         LocationType.physical ? rentPristine : true,
         LocationType.virtual ? openingHoursPristine : true,
       ].includes(false),
@@ -552,6 +568,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
       descriptionPristine,
       typePristine,
       addressPristine,
+      arrivalPristine,
       rentPristine,
       openingHoursPristine,
       urlPristine,
@@ -567,6 +584,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
 
   useConfirmExit(shouldWarn, message, () => {
     addressReset();
+    arrivalReset();
     nameReset();
     descriptionReset();
     rentReset();
@@ -588,11 +606,13 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
 
     if (typeValue === LocationType.physical) {
       addressSubmit();
+      arrivalSubmit();
       openingHoursSubmit();
       rentSubmit();
     }
   }, [
     addressSubmit,
+    arrivalSubmit,
     descriptionSubmit,
     nameSubmit,
     openingHoursSubmit,
@@ -628,6 +648,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               <>
                 <EntryFormContainer>{addressForm}</EntryFormContainer>
                 <EntryFormContainer>{urlForm}</EntryFormContainer>
+                <EntryFormContainer>{arrivalForm}</EntryFormContainer>
                 <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
                 <EntryFormContainer>{rentForm}</EntryFormContainer>
               </>

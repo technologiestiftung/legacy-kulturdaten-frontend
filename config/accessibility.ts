@@ -36,12 +36,35 @@ export const locationAccessibility: GenericFormCategory[] = [
         ],
         children: [
           {
+            type: GenericFormFieldType.input,
+            data: {
+              key: 'generals.accessGeneral.serviceWebsiteUrl',
+              type: InputType.url,
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Gibt es auf eurer Website Informationen zum barrierefreien Besuch eurer Räumlichkeiten?',
+                  placeholder: 'https://example.com',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Is there information online about visiting your premises?',
+                  placeholder: 'https://example.com',
+                },
+              },
+            ],
+          },
+          {
             type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Wurde der Ort bereits auf Barrierefreiheit geprüft?',
+                  name: "Wurde der Ort bereits auf Barrierefreiheit geprüft, z.B. via 'Reisen für alle'?",
                   tooltip: {
                     content: [
                       'Nicht die richtige Option dabei? Schreib uns unter hallo@kulturdaten.berlin!',
@@ -131,29 +154,6 @@ export const locationAccessibility: GenericFormCategory[] = [
                 attributes: {
                   language: Language.en,
                   name: 'If available: Please provide a link to the test report.',
-                  placeholder: 'https://example.com',
-                },
-              },
-            ],
-          },
-          {
-            type: GenericFormFieldType.input,
-            data: {
-              key: 'generals.accessGeneral.serviceWebsiteUrl',
-              type: InputType.url,
-            },
-            translations: [
-              {
-                attributes: {
-                  language: Language.de,
-                  name: 'Gibt es auf eurer Website Informationen zum barrierefreien Besuch eurer Räumlichkeiten?',
-                  placeholder: 'https://example.com',
-                },
-              },
-              {
-                attributes: {
-                  language: Language.en,
-                  name: 'Is there information online about visiting your premises?',
                   placeholder: 'https://example.com',
                 },
               },
