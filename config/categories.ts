@@ -47,7 +47,7 @@ type RequirementAttributes = {
 
 export type Requirement = {
   key: string;
-  translation: string;
+  translation: string | React.ReactNode;
   publishableKeys: string[];
   attributes: RequirementAttributes[];
   link: {
@@ -159,7 +159,7 @@ export const useCategories: () => {
               `${routes.organizer({ locale, query: { ...query, sub: 'info' } })}#organizer-name`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.name') as string,
-            }),
+            }) as string,
           },
         },
         {
@@ -185,7 +185,7 @@ export const useCategories: () => {
               })}#organizer-internal-contact`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.address') as string,
-            }),
+            }) as string,
           },
         },
         {
@@ -209,7 +209,7 @@ export const useCategories: () => {
               })}#organizer-description`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.description') as string,
-            }),
+            }) as string,
           },
         },
         {
@@ -229,7 +229,7 @@ export const useCategories: () => {
               })}#organizer-types`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.categorization') as string,
-            }),
+            }) as string,
           },
         },
       ],
@@ -315,7 +315,7 @@ export const useCategories: () => {
               `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-name`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.name') as string,
-            }),
+            }) as string,
           },
         },
 
@@ -337,7 +337,7 @@ export const useCategories: () => {
               `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-description`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.description') as string,
-            }),
+            }) as string,
           },
         },
         {
@@ -357,7 +357,7 @@ export const useCategories: () => {
               })}#offer-main-type`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.mainType') as string,
-            }),
+            }) as string,
           },
         },
         {
@@ -374,7 +374,7 @@ export const useCategories: () => {
               `${routes.offer({ locale, query: { ...query, sub: 'categorization' } })}#offer-types`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.categorization') as string,
-            }),
+            }) as string,
           },
         },
       ],
@@ -453,7 +453,7 @@ export const useCategories: () => {
               `${routes.location({ locale, query: { ...query, sub: 'info' } })}#location-name`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.location.requirements.name') as string,
-            }),
+            }) as string,
           },
         },
         {
@@ -477,7 +477,7 @@ export const useCategories: () => {
               })}#location-description`,
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.location.requirements.description') as string,
-            }),
+            }) as string,
           },
         },
       ],
