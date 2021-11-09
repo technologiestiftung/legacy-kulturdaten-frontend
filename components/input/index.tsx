@@ -17,6 +17,8 @@ import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
 import { mq } from '../globals/Constants';
 import { Label, StyledLabel } from '../label';
+import { Tooltip } from '../tooltip';
+import { TooltipP } from '../tooltip/TooltipContent';
 
 const StyledInputContainer = styled.div`
   display: flex;
@@ -26,6 +28,11 @@ const StyledInputContainer = styled.div`
   ${StyledLabel} {
     padding-bottom: 0.375rem;
   }
+`;
+
+const StyledTooltip = styled.div`
+  display: inline-block;
+  margin-left: 0.5rem;
 `;
 
 const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
@@ -154,6 +161,7 @@ export interface InputProps extends ComponentWithVariants {
   value?: string | number;
   hideError?: boolean;
   debounce?: boolean;
+  tooltip?: string;
 }
 
 // eslint-disable-next-line react/display-name
@@ -242,6 +250,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               <Label htmlFor={props.id}>
                 {props.label}
                 {props.required ? ` (${t('forms.required')})` : ''}
+                {props.tooltip && (
+                  <StyledTooltip>
+                    <Tooltip>
+                      {typeof props.tooltip === 'string' ? (
+                        <TooltipP>{props.tooltip}</TooltipP>
+                      ) : (
+                        props.tooltip
+                      )}
+                    </Tooltip>
+                  </StyledTooltip>
+                )}
               </Label>
             )}
             <StyledInput

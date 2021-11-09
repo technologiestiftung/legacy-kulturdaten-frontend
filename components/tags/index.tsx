@@ -1,4 +1,5 @@
 import { Autocomplete, TextField } from '@mui/material';
+import { matchSorter } from 'match-sorter';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import React, { Reducer, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
@@ -222,6 +223,11 @@ export const Tags: React.FC<TagsProps> = ({
   const t = useT();
   const language = useLanguage();
   const uid = usePseudoUID();
+  const filterOptions = (options, { inputValue }) =>
+    matchSorter(options, inputValue, {
+      keys: ['label'],
+      threshold: matchSorter.rankings.WORD_STARTS_WITH,
+    });
 
   const autocompleteOptions = useMemo(
     () =>
@@ -316,6 +322,7 @@ export const Tags: React.FC<TagsProps> = ({
           <StyledAutocomplete
             variant={variant as ComponentVariants}
             id={`tags-${uid}`}
+            filterOptions={filterOptions}
             options={autocompleteOptions}
             value={autocompleteValue}
             onChange={(e, newValue) => {

@@ -87,7 +87,7 @@ export const deDE: Localization = {
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Jetzt das Profil ausfüllen',
+          link: () => 'Profil ausfüllen',
         },
       },
       data: {
@@ -342,6 +342,7 @@ export const deDE: Localization = {
     create: () => 'Neue Anbieter:in anlegen',
     baseInfo: () => 'Grundlagen',
     address: () => 'Adressdaten',
+    arrival: () => 'Anreiseinformationen',
     name: () => 'Bezeichnung / Name',
     labelGerman: () => 'Deutsch',
     labelGermanEasy: () => 'Deutsch: einfache Sprache',
@@ -449,8 +450,13 @@ export const deDE: Localization = {
   },
   media: {
     title: () => 'Bilder',
-    copyright: () => 'Urheber:in',
+    copyright: () => 'Bildnachweis / Urheber:in',
+    copyrightPlaceholder: () => 'z.B. © Name Fotograf:in, Veröffentlichungsjahr',
+    copyrightTooltip: () =>
+      'Bitte gib immer einen Bildnachweis bzw. einen Hinweis auf den/die Urheber:in des Bildes an. Das Format des Bildnachweises hängt von den Vorgaben des/der Urheber:in ab, z.B. © Name des Fotografen od. Agentur, Jahr; Name einer Institution, Foto: © Name Fotograf:in',
     alt: () => 'Alt Text',
+    altTooltip: () =>
+      'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima.',
     license: () => 'Lizenz',
     licenses: {
       '1': {
@@ -481,23 +487,41 @@ export const deDE: Localization = {
     deleteConfirm: () =>
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
-    hint: () =>
-      'Damit das Bild öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
-    dropZoneLabel: () => 'Neue Bilder hochladen',
-    usageInfo: () =>
-      'Bitte beachte, dass du nur Bilder über kulturdaten.berlin zur Verfügung stellst, die von anderen in unveränderter oder veränderter Form weitergenutzt werden dürfen - auch zu kommerziellen Zwecken und auf Social-Media-Kanälen. Bitte verwende keine Bilder ohne die Zustimmung des/der Rechteinhaber:in. Sind auf den Bildern Personen abgebildet, so müssen diese ihr Einverständnis zur Nutzung des Bildes durch Dritte gegeben haben. Datennutzer:innen - ob Veranstaltungsportal oder App-Entwicklerin - erhalten das Recht, die Bilddateien unter Nennung der Urheber zur Promotion von Angeboten innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.',
+    hint: () => 'Bitte fülle die Pflichtfelder aus, damit das Bild öffentlich verfügbar ist.',
+    dropZoneLabel: () => 'Bilder hochladen',
+    usageInfo: () => (
+      <>
+        <TooltipP>Bitte beachte, dass:</TooltipP>
+        <TooltipP>
+          * du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
+          Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media Kanälen.
+        </TooltipP>
+        <TooltipP>
+          * du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
+          Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
+          Dritte vorliegen.
+        </TooltipP>
+        <TooltipP>
+          * Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
+          erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
+          innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
+        </TooltipP>
+      </>
+    ),
     acknowledgedUsageInfo: () => 'Zur Kenntnis genommen',
   },
   logo: {
-    title: () => 'Logo',
-    imageProcessing: () => 'Das Logo wird verarbeitet und geladen',
-    openImage: () => 'Original Logo in neuem Tab öffnen',
-    delete: () => 'Logo löschen',
+    title: () => 'Profilbild / Logo',
+    titleTooltip: () =>
+      'Du kannst ein Logo oder Profilbild für Datennutzende (z.B. Online-Kalender) hochladen und festlegen, unter welcher Lizenz es verwendet werden kann. Ist die mit dem Logo verbundene Marke geschützt, bleibt sie natürlich geschützt, unabhängig von der gewählten Bildlizenz.',
+    imageProcessing: () => 'Das Profilbild / Logo wird verarbeitet und geladen',
+    openImage: () => 'Original Profilbild / Logo in neuem Tab öffnen',
+    delete: () => 'Profilbild / Logo löschen',
     deleteConfirm: () =>
-      'Willst du das Logo wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
+      'Willst du das Profilbild / Logo wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     hint: () =>
-      'Damit das Logo öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
-    dropZoneLabel: () => 'Neues Logo hochladen',
+      'Damit das Profilbild / Logo öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
+    dropZoneLabel: () => 'Profilbild / Logo hochladen',
   },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
@@ -659,6 +683,7 @@ export const deDE: Localization = {
     serverProblem: () =>
       'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
     remove: () => 'entfernen',
+    telPlaceholder: () => 'z.B. +49301234567',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
@@ -824,7 +849,7 @@ export const deDE: Localization = {
         name: () => 'Angebotstitel ausgefüllt',
         description: () => 'Beschreibung ausgefüllt',
         categorization: () => 'Kategorien ausgefüllt',
-        mainType: () => 'Angebotstyp ausgewählt',
+        mainType: () => 'Angebotsart ausgewählt',
       },
       title: {
         plural: () => 'Angebote',
@@ -846,7 +871,7 @@ export const deDE: Localization = {
         locationInfoPlaceholder: () => 'z.B. spezifischer Raum',
         peakHours: () => 'Stoßzeiten',
         mainType: {
-          title: () => 'Angebotstyp',
+          title: () => 'Angebotsart',
           choose: () => 'Um was handelt es sich? z.B. Ausstellung, Konzert, Führung...',
         },
         pricing: {
@@ -942,7 +967,7 @@ export const deDE: Localization = {
         tel: () => 'Telefon',
         district: () => 'Bezirk',
         districtPlaceholder: () => 'Bezirk auswählen',
-        url: () => 'URL des Ortes',
+        url: () => 'URL / Online-Informationen zum Ort',
         urlPlaceholder: () => 'z.B. https://theaterberlin.de/virtualstage',
         rent: {
           title: () => 'Vermietung',

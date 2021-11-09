@@ -354,7 +354,7 @@ export const offerAudience: GenericFormCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'nur für Erwachsene (ab 18 Jahren)',
+                        name: 'Erwachsene (ab 18 Jahren)',
                       },
                     },
                     {
@@ -582,40 +582,6 @@ export const offerAudience: GenericFormCategory[] = [
                       attributes: {
                         language: Language.en,
                         name: 'People with dementia',
-                      },
-                    },
-                  ],
-                },
-                {
-                  value: 'youngChildren',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Vorschulkinder (bis 6 Jahre)',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'young children (up to 6 yrs)',
-                      },
-                    },
-                  ],
-                },
-                {
-                  value: 'youngChildren',
-                  translations: [
-                    {
-                      attributes: {
-                        language: Language.de,
-                        name: 'Vorschulkinder (bis 6 Jahre)',
-                      },
-                    },
-                    {
-                      attributes: {
-                        language: Language.en,
-                        name: 'young children (up to 6 yrs)',
                       },
                     },
                   ],

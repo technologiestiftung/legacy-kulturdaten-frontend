@@ -13,6 +13,9 @@ module.exports = {
   images: {
     domains: ['beta.api.kulturdaten.berlin', 'api.kulturdaten.berlin'],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   async redirects() {
     return [
       {

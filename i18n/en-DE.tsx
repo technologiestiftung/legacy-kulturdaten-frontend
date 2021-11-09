@@ -82,7 +82,7 @@ export const enDE: Localization = {
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Fill out the profile now',
+          link: () => 'Fill out the profile',
         },
       },
       offers: {
@@ -340,6 +340,7 @@ export const enDE: Localization = {
     create: () => 'Create new Organizer',
     baseInfo: () => 'Basic information',
     address: () => 'Address data',
+    arrival: () => 'Travel information',
     name: () => 'Name',
     labelGerman: () => 'German',
     labelGermanEasy: () => 'German: simple Language',
@@ -443,8 +444,13 @@ export const enDE: Localization = {
   },
   media: {
     title: () => 'Images',
-    copyright: () => 'Author',
+    copyright: () => 'Image credits / author',
+    copyrightPlaceholder: () => 'e.g. © name of photographer, year of publication',
+    copyrightTooltip: () =>
+      'Please make sure to include a photo credit or reference to the creator(s) of the image. The format of the image credit depends on the specifications provided by the creator(s), e.g. © name of photographer or agency, year; name of an institution, photo: © name photographer',
     alt: () => 'Alt text',
+    altTooltip: () =>
+      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
     license: () => 'License',
     licenses: {
       '1': {
@@ -476,22 +482,43 @@ export const enDE: Localization = {
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
     ariaLabel: () => 'Upload files',
     hint: () =>
-      'In order for the image to be publicly available, the mandatory fields must be filled out.',
-    dropZoneLabel: () => 'Upload new images',
-    usageInfo: () =>
-      'Please note that you only provide images via kulturdaten.berlin that may be used by others in unmodified or modified form - including for commercial purposes and on social media channels. Please do not use images without the permission of the copyright holder(s). If persons are depicted in the images, they must have given their consent to the use of the image by third parties. Users of your data - be it an event portal or an app developer - are granted the right to use the image files for the promotion of offers within the limits of the moral rights of the copyright holder, provided that the copyright holder is named.',
-    acknowledgedUsageInfo: () => 'I have acknowledged this',
+      'In order for the image to be publicly available, the required fields must be filled out.',
+    dropZoneLabel: () => 'Upload images',
+    usageInfo: () => (
+      <>
+        <TooltipP>Please ensure:</TooltipP>
+        <TooltipP>
+          * to upload only those images that may be used free of charge by others - either unaltered
+          or in modified form and also for commercial purposes. In the case you chose a CC licence,
+          images may also be used on social media.
+        </TooltipP>
+        <TooltipP>
+          * to not use any images without the permission of the copyright holder(s). If people are
+          depicted in the images, they must have given you their consent for the image to be used by
+          third parties.
+        </TooltipP>
+        <TooltipP>
+          * that by publishing your image via kulturdaten.berlin, you grant any data users - e.g.
+          event portals or app developers - the right to use the image files within the limits of
+          moral rights, provided the copyright holder is named.
+        </TooltipP>
+      </>
+    ),
+    acknowledgedUsageInfo: () => 'I have read the following notice',
   },
   logo: {
-    title: () => 'Logo',
-    imageProcessing: () => 'The logo is being processed and loaded',
-    openImage: () => 'Open original logo in new tab',
-    delete: () => 'delete logo',
-    deleteConfirm: () => 'Do you really want to delete the logo? This cannot be undone.',
-    ariaLabel: () => 'Upload logo',
+    title: () => 'Profile picture / logo',
+    titleTooltip: () =>
+      'You can upload a logo or profile picture and specify under which licence it can be used by others. If the trademark associated with the logo is registered, it will of course remain protected, regardless of the image licence selected.',
+    imageProcessing: () => 'The profile picture / logo is being processed and loaded',
+    openImage: () => 'Open original profile picture / logo in new tab',
+    delete: () => 'delete profile picture / logo',
+    deleteConfirm: () =>
+      'Do you really want to delete the profile picture / logo? This cannot be undone.',
+    ariaLabel: () => 'Upload profile picture / logo',
     hint: () =>
-      'In order for the logo to be publicly available, the mandatory fields must be filled out.',
-    dropZoneLabel: () => 'Upload new logo',
+      'In order for the profile picture / logo to be publicly available, the mandatory fields must be filled out.',
+    dropZoneLabel: () => 'Upload profile picture / logo',
   },
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',
@@ -653,6 +680,7 @@ export const enDE: Localization = {
     serverProblem: () =>
       'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
     remove: () => 'remove',
+    telPlaceholder: () => 'e.g. +49301234567',
   },
   tags: {
     boxLabel: () => 'Already added keywords',
@@ -921,7 +949,7 @@ export const enDE: Localization = {
         tel: () => 'Phone',
         district: () => 'District',
         districtPlaceholder: () => 'Choose district',
-        url: () => 'URL of the Location',
+        url: () => 'URL / venue information',
         urlPlaceholder: () => 'e.g. https://theatreberlin.de/virtualstage',
         rent: {
           title: () => 'Rent',

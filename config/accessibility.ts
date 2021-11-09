@@ -36,12 +36,35 @@ export const locationAccessibility: GenericFormCategory[] = [
         ],
         children: [
           {
+            type: GenericFormFieldType.input,
+            data: {
+              key: 'generals.accessGeneral.serviceWebsiteUrl',
+              type: InputType.url,
+            },
+            translations: [
+              {
+                attributes: {
+                  language: Language.de,
+                  name: 'Gibt es auf eurer Website Informationen zum barrierefreien Besuch eurer Räumlichkeiten?',
+                  placeholder: 'https://example.com',
+                },
+              },
+              {
+                attributes: {
+                  language: Language.en,
+                  name: 'Is there information online about visiting your premises?',
+                  placeholder: 'https://example.com',
+                },
+              },
+            ],
+          },
+          {
             type: GenericFormFieldType.select,
             translations: [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Wurde der Ort bereits auf Barrierefreiheit geprüft?',
+                  name: "Wurde der Ort bereits auf Barrierefreiheit geprüft, z.B. via 'Reisen für alle'?",
                   tooltip: {
                     content: [
                       'Nicht die richtige Option dabei? Schreib uns unter hallo@kulturdaten.berlin!',
@@ -131,29 +154,6 @@ export const locationAccessibility: GenericFormCategory[] = [
                 attributes: {
                   language: Language.en,
                   name: 'If available: Please provide a link to the test report.',
-                  placeholder: 'https://example.com',
-                },
-              },
-            ],
-          },
-          {
-            type: GenericFormFieldType.input,
-            data: {
-              key: 'generals.accessGeneral.serviceWebsiteUrl',
-              type: InputType.url,
-            },
-            translations: [
-              {
-                attributes: {
-                  language: Language.de,
-                  name: 'Gibt es auf eurer Website Informationen zum barrierefreien Besuch eurer Räumlichkeiten?',
-                  placeholder: 'https://example.com',
-                },
-              },
-              {
-                attributes: {
-                  language: Language.en,
-                  name: 'Is there information online about visiting your premises?',
                   placeholder: 'https://example.com',
                 },
               },
@@ -252,12 +252,14 @@ export const locationAccessibility: GenericFormCategory[] = [
                 attributes: {
                   language: Language.de,
                   name: 'Telefon',
+                  placeholder: 'z.B. +49301234567',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
                   name: 'Phone',
+                  placeholder: 'e.g. +49301234567',
                 },
               },
             ],
@@ -1626,23 +1628,6 @@ export const locationAccessibility: GenericFormCategory[] = [
                             attributes: {
                               language: Language.en,
                               name: 'stair lift / hoist lift, operated by staff',
-                            },
-                          },
-                        ],
-                      },
-                      {
-                        value: 'noLibraryCard',
-                        translations: [
-                          {
-                            attributes: {
-                              language: Language.de,
-                              name: 'Zugang für Begleitperson auch ohne Nutzer:innenausweis',
-                            },
-                          },
-                          {
-                            attributes: {
-                              language: Language.en,
-                              name: 'Free library card / no library card needed for attendant',
                             },
                           },
                         ],
@@ -3955,23 +3940,6 @@ export const locationAccessibility: GenericFormCategory[] = [
                             attributes: {
                               language: Language.en,
                               name: 'stair lift / hoist lift, operated by staff',
-                            },
-                          },
-                        ],
-                      },
-                      {
-                        value: 'noLibraryCard',
-                        translations: [
-                          {
-                            attributes: {
-                              language: Language.de,
-                              name: 'Zugang für Begleitperson auch ohne Nutzer:innenausweis',
-                            },
-                          },
-                          {
-                            attributes: {
-                              language: Language.en,
-                              name: 'Free library card / no library card needed for attendant',
                             },
                           },
                         ],
