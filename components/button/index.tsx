@@ -33,15 +33,44 @@ const buttonColors: {
   [key in ButtonColor]: {
     background: string;
     color: string;
+    iconBackground: string;
   };
 } = {
-  default: { background: 'var(--grey-350)', color: 'var(--black)' },
-  green: { background: 'var(--green-light)', color: 'var(--black)' },
-  yellow: { background: 'var(--yellow)', color: 'var(--black)' },
-  red: { background: 'var(--red-50)', color: 'var(--black)' },
-  blue: { background: 'var(--blue)', color: 'var(--white)' },
-  white: { background: 'var(--white)', color: 'var(--black)' },
-  black: { background: 'var(--black)', color: 'var(--white)' },
+  default: {
+    background: 'var(--grey-350)',
+    color: 'var(--black)',
+    iconBackground: 'rgba(255,255,255,0.15)',
+  },
+  green: {
+    background: 'var(--green-publish)',
+    color: 'var(--white)',
+    iconBackground: '#069C6F',
+  },
+  yellow: {
+    background: 'var(--yellow)',
+    color: 'var(--black)',
+    iconBackground: 'rgba(0,0,0,0.15)',
+  },
+  red: {
+    background: 'var(--red-50)',
+    color: 'var(--black)',
+    iconBackground: 'rgba(255,255,255,0.15)',
+  },
+  blue: {
+    background: 'var(--blue)',
+    color: 'var(--white)',
+    iconBackground: 'rgba(255,255,255,0.15)',
+  },
+  white: {
+    background: 'var(--white)',
+    color: 'var(--black)',
+    iconBackground: 'rgba(0,0,0,0.15)',
+  },
+  black: {
+    background: 'var(--black)',
+    color: 'var(--white)',
+    iconBackground: 'rgba(255,255,255,0.15)',
+  },
 };
 
 const buttonSizes: {
@@ -72,7 +101,7 @@ const buttonSizes: {
     lineHeight: 'var(--line-height-400)',
     padding: 'calc(0.75rem - 1px) calc(1rem - 1px)',
     borderRadius: '0.75rem',
-    iconGap: '0.75rem',
+    iconGap: '0.875rem',
   },
 };
 
@@ -137,68 +166,50 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
   `,
 };
 
-const StyledButton = styled.button<{
-  color: ButtonColor;
-  size: ButtonSize;
+const StyledButtonText = styled.div<{
   variant: ButtonVariant;
-  disabled?: boolean;
-  customCss?: SerializedStyles;
-  contentPosition?: ButtonContentPosition;
+  size: ButtonSize;
+  iconPosition: IconPosition;
+  hasIcon: boolean;
 }>`
-  margin: 0;
-  appearance: none;
-  display: inline-flex;
-  flex-direction: row;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: ${({ contentPosition }) =>
-    contentPosition ? contentPosition : ButtonContentPosition.default};
-  border: 1px solid var(--black);
-  background: ${({ color }) => buttonColors[color].background};
-  color: ${({ color }) => buttonColors[color].color};
-  font-size: ${({ size }) => buttonSizes[size].fontSize};
-  line-height: ${({ size }) => buttonSizes[size].lineHeight};
-  font-weight: 700;
-  border-radius: ${({ size }) => buttonSizes[size].borderRadius};
+
   padding: ${({ size }) => buttonSizes[size].padding};
-  cursor: pointer;
 
-  ${({ variant }) => buttonVariants[variant]}
-
-  ${({ customCss }) => customCss}
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.25;
-  }
+  ${({ variant, hasIcon, iconPosition }) =>
+    variant === ButtonVariant.borderless &&
+    hasIcon &&
+    css`
+      ${iconPosition === IconPosition.right ? 'padding-right: 0;' : 'padding-left: 0;'}
+    `}
 `;
-
-export enum ButtonContentPosition {
-  default = 'space-between',
-  center = 'center',
-}
-
-const StyledButtonSpan = styled.span``;
-
-export enum IconPosition {
-  left = 'left',
-  right = 'right',
-}
 
 const StyledButtonIcon = styled.div<{
   size: ButtonSize;
   position: IconPosition;
   hasChildren: boolean;
+  variant: ButtonVariant;
   iconWidth?: string;
   iconHeight?: string;
+  color: ButtonColor;
 }>`
-  padding: ${({ size, position, hasChildren }) =>
-    hasChildren
-      ? position === IconPosition.right
-        ? `0 0 0 ${buttonSizes[size].iconGap}`
-        : `0 ${buttonSizes[size].iconGap} 0 0`
-      : '0'};
   display: flex;
-  align-content: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: ${({ color, variant }) =>
+    variant !== ButtonVariant.borderless ? buttonColors[color].iconBackground : 'transparent'};
+  padding: ${({ size, position, hasChildren, variant }) =>
+    hasChildren
+      ? variant === ButtonVariant.borderless
+        ? position === IconPosition.right
+          ? `0 0 0 ${buttonSizes[size].iconGap}`
+          : `0 ${buttonSizes[size].iconGap} 0 0`
+        : `0 ${buttonSizes[size].iconGap}`
+      : '0'};
 
   ${({ iconWidth }) =>
     iconWidth
@@ -231,6 +242,51 @@ const StyledButtonIcon = styled.div<{
   }
 `;
 
+const StyledButton = styled.button<{
+  color: ButtonColor;
+  size: ButtonSize;
+  variant: ButtonVariant;
+  disabled?: boolean;
+  customCss?: SerializedStyles;
+  contentPosition?: ButtonContentPosition;
+}>`
+  margin: 0;
+  appearance: none;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: ${({ contentPosition }) =>
+    contentPosition ? contentPosition : ButtonContentPosition.default};
+  border: 1px solid var(--black);
+  background: ${({ color }) => buttonColors[color].background};
+  color: ${({ color }) => buttonColors[color].color};
+  font-size: ${({ size }) => buttonSizes[size].fontSize};
+  line-height: ${({ size }) => buttonSizes[size].lineHeight};
+  font-weight: 700;
+  border-radius: ${({ size }) => buttonSizes[size].borderRadius};
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+
+  ${({ variant }) => buttonVariants[variant]}
+
+  ${({ customCss }) => customCss}
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.25;
+  }
+`;
+
+export enum ButtonContentPosition {
+  default = 'space-between',
+  center = 'center',
+}
+export enum IconPosition {
+  left = 'left',
+  right = 'right',
+}
+
 const buttonSizeIconSizeMap: { [key in ButtonSize]: number } = {
   default: 18,
   small: 16,
@@ -250,6 +306,7 @@ export interface ButtonProps {
   color?: ButtonColor;
   contentPosition?: ButtonContentPosition;
   icon?: string;
+  iconBackground?: boolean;
   renderedIcon?: React.ReactElement;
   iconPosition?: IconPosition;
   iconWidth?: string;
@@ -292,6 +349,7 @@ export const Button: React.FC<ButtonProps> = ({
 }: ButtonProps) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const hasIcon = Boolean(renderedIcon || (icon && feather[icon]));
 
   return (
     <>
@@ -338,21 +396,30 @@ export const Button: React.FC<ButtonProps> = ({
           title={title}
           customCss={css}
         >
-          {children && <StyledButtonSpan>{children}</StyledButtonSpan>}
-          {renderedIcon || (icon && feather[icon]) ? (
+          {children && (
+            <StyledButtonText
+              variant={variant}
+              size={size}
+              iconPosition={iconPosition}
+              hasIcon={hasIcon}
+            >
+              {children}
+            </StyledButtonText>
+          )}
+          {hasIcon && (
             <StyledButtonIcon
               size={size}
               iconWidth={iconWidth}
               iconHeight={iconHeight}
               position={iconPosition}
               hasChildren={typeof children !== 'undefined'}
+              variant={variant}
+              color={color}
             >
               {renderedIcon
                 ? renderedIcon
                 : React.createElement(feather[icon], { size: buttonSizeIconSizeMap[size] })}
             </StyledButtonIcon>
-          ) : (
-            ''
           )}
         </StyledButton>
       )}
