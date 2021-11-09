@@ -555,8 +555,8 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
             <EntryFormContainer>{roomForm}</EntryFormContainer>
-            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{teaserForm}</EntryFormContainer>
+            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
             <EntryFormContainer>{linksForm}</EntryFormContainer>
           </EntryFormWrapper>
