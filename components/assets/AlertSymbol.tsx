@@ -3,7 +3,7 @@ import { useT } from '../../lib/i18n';
 import { ExclamationMarkSvg } from '../assets/ExclamationMarkSvg';
 
 export const StyledAlertSymbol = styled.div`
-  background: var(--error);
+  background: var(--red-publish);
   color: var(--white);
   border-radius: 0.375rem;
   line-height: 0;

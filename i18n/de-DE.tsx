@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
+import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
+import { PublishedStatus } from '../lib/api/types/general';
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
@@ -198,7 +200,7 @@ export const deDE: Localization = {
       pending: () => 'Einladung ausstehend',
       button: () => 'Einladen',
       hint: ({ max }) =>
-        `Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mail (max. ${max}), getrennt mit "," (Komma).`,
+        `Du kannst einzelne E-Mails hinzufügen, oder eine Liste mehrerer E-Mails (max. ${max}), getrennt mit "," (Komma).`,
       hint2: () => 'Bespiel: name@example.com, title@another-example.com',
       placeholder: () => 'name@example.com, title@another-example.com',
       invalid: () =>
@@ -664,20 +666,6 @@ export const deDE: Localization = {
     loading: () => 'lädt',
     max: () => 'max.',
     topics: () => 'Stichworte (optional)',
-    topicsTooltip: () => (
-      <>
-        <TooltipP>
-          Mit Stichworten kannst du diese:n Anbieter:in noch detaillierter beschreiben, z.B. über
-          Stichwort-tags zum Sammlungsschwerpunkt oder der Kunstrichtung, in der ihr euch zu Hause
-          fühlt.
-        </TooltipP>
-        <TooltipP>
-          Diese Begriffe basieren auf der Gemeinsamen Normdatei (GND) der Deutschen
-          Nationalbibliothek. Sollten Begriffe fehlen oder hier fehl am Platz sein, schreib uns
-          unter <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
-        </TooltipP>
-      </>
-    ),
     topicsPlaceholder: () => 'Tippe einfach drauflos, z.B. Bauhaus',
     takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
     serverProblem: () =>
@@ -730,6 +718,14 @@ export const deDE: Localization = {
     previous: () => 'zurück',
     currentPage: ({ currentPage, lastPage }) => `Seite ${currentPage} von ${lastPage}`,
   },
+  requirements: {
+    title: () => 'Veröffentlichung',
+    label: () => 'Pflichtangaben',
+    fulfilled: ({ count, total }) => `${count} von ${total} ausgefüllt`,
+    notFulfilled: () => 'Pflichtangabe fehlt',
+    isFulfilled: () => 'Pflichtangabe erfüllt',
+    nameLabel: ({ fieldName }) => `Zum Feld '${fieldName}' gehen`,
+  },
   categories: {
     organizer: {
       list: {
@@ -756,16 +752,23 @@ export const deDE: Localization = {
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} ausgewählt`,
       },
       requirements: {
-        label: () => 'Für Veröffentlichung notwendig',
-        name: () => 'Bezeichnung ausgefüllt',
-        description: () => 'Beschreibung ausgefüllt',
-        categorization: () => 'Kategorien ausgefüllt',
-        address: () => 'Adresse ausgefüllt',
+        name: () => 'Bezeichnung / Name',
+        description: () => 'Beschreibung',
+        categorization: () => 'Art der Anbieter:in',
+        address: () => 'Kontakt intern',
       },
       title: {
         plural: () => 'Anbieter:innen',
         singular: () => 'Anbieter:in',
       },
+      publishText: () => (
+        <>
+          Diese Anbieter:in ist ein{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fülle
+          die Pflichtangaben aus und veröffentliche sie. Erst dann sind ihre Daten, Angebote und
+          Orte öffentlich verfügbar.
+        </>
+      ),
       form: {
         create: () => 'Neue Anbieter:in anlegen',
         baseInfo: () => 'Grundlagen',
@@ -846,15 +849,23 @@ export const deDE: Localization = {
         nothingFilter: () => 'Keine Angebote für die aktive Filterung gefunden.',
       },
       requirements: {
-        name: () => 'Angebotstitel ausgefüllt',
-        description: () => 'Beschreibung ausgefüllt',
-        categorization: () => 'Kategorien ausgefüllt',
-        mainType: () => 'Angebotsart ausgewählt',
+        name: () => 'Angebotstitel',
+        description: () => 'Beschreibung',
+        categorization: () => 'Themen-Kategorie',
+        mainType: () => 'Angebotsart',
       },
       title: {
         plural: () => 'Angebote',
         singular: () => 'Angebot',
       },
+      publishText: () => (
+        <>
+          Dieses Angebot ist ein{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fülle
+          die Pflichtangaben aus und veröffentliche es. Erst dann sind seine Daten und Termine
+          öffentlich verfügbar.
+        </>
+      ),
       form: {
         create: () => 'Neues Angebot anlegen',
         name: () => 'Angebotstitel',
@@ -899,7 +910,7 @@ export const deDE: Localization = {
           edit: () => 'Ort ändern',
           title: ({ name }) => `Ort für ‚${name}‘ wählen`,
         },
-        topics: () => 'Themen-Kategorie',
+        topics: () => 'Themen-Kategorie (Pflichtfeld)',
         topicsTooltip: () => (
           <>
             <TooltipP>
@@ -943,6 +954,18 @@ export const deDE: Localization = {
       title: {
         plural: () => 'Orte',
         singular: () => 'Ort',
+      },
+      publishText: () => (
+        <>
+          Dieser Ort ist ein{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fülle
+          die Pflichtangaben aus und veröffentliche ihn. Erst dann sind seine Daten öffentlich
+          verfügbar.
+        </>
+      ),
+      requirements: {
+        name: () => 'Bezeichnung des Ortes',
+        description: () => 'Beschreibung',
       },
       form: {
         openingHours: () => 'Öffnungszeiten',

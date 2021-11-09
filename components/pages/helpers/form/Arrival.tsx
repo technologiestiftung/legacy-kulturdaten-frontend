@@ -161,7 +161,6 @@ export const useArrivalForm: EntryFormHook = ({ category, query }) => {
     pristine,
     valid,
     reset: () => undefined,
-    hint: false,
     state,
   };
 };

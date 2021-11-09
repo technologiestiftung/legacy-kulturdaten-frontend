@@ -14,7 +14,7 @@ import { isUrl } from '../../lib/validations';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Button, ButtonSize, ButtonType } from '../button';
 import { insetBorder, mq } from '../globals/Constants';
-import { Info } from '../info';
+import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
 import { Label } from '../label';
 
@@ -270,7 +270,7 @@ const LinkList: React.FC<LinkListProps> = ({
       </StyledLinkListList>
       {maxLinksReached && (
         <StyledLinkListInfo>
-          <Info>{t('linkList.maxReached', { amount: maxLinks })}</Info>
+          <Info color={InfoColor.grey}>{t('linkList.maxReached', { amount: maxLinks })}</Info>
         </StyledLinkListInfo>
       )}
       <form

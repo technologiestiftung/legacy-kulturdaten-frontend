@@ -8,7 +8,7 @@ import {
   useGenericFormStructure,
 } from '../../GenericForm/useGenericFormStructure';
 import { EntryFormHook } from '../helpers/form';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { WindowContext } from '../../../lib/WindowService';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { Offer } from '../../../lib/api/types/offer';
@@ -28,6 +28,7 @@ import { HoursField } from '../../HoursField';
 import { OfferDelete } from '../../../lib/api/routes/offer/delete';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -114,7 +115,6 @@ const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
     pristine,
     reset: () => undefined,
     valid: true,
-    hint: false,
   };
 };
 
@@ -238,7 +238,7 @@ const useAudienceForm: EntryFormHook = ({ category, query }) => {
       </form>
     ),
     submit: async () => {
-      if (valid) {
+      if (valid && !pristine) {
         try {
           const resp = await call<OfferAudienceUpdate>(offerAudienceUpdateFactory, {
             id: entry.data.id,
@@ -260,7 +260,6 @@ const useAudienceForm: EntryFormHook = ({ category, query }) => {
     pristine,
     valid,
     reset: () => undefined,
-    hint: false,
     state,
   };
 };
@@ -281,26 +280,20 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     renderedForm: audienceForm,
     valid: audienceValid,
     submit: audienceSubmit,
-    hint: audienceHint,
     pristine: audiencePristine,
-  } = useAudienceForm({ category, query }, loaded, false);
+  } = useAudienceForm({ category, query, loaded });
 
   const {
     renderedForm: peakHoursForm,
     submit: peakHoursSubmit,
     pristine: peakHoursPristine,
     valid: peakHoursValid,
-    hint: peakHoursHint,
     reset: peakHoursReset,
-  } = usePeakHoursForm(
-    {
-      category,
-      query,
-    },
+  } = usePeakHoursForm({
+    category,
+    query,
     loaded,
-    valid,
-    false
-  );
+  });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -321,8 +314,6 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     [audiencePristine, peakHoursPristine]
   );
 
-  const hint = useMemo(() => audienceHint || peakHoursHint, [audienceHint, peakHoursHint]);
-
   const message = t('save.confirmExit') as string;
 
   const shouldWarn = useMemo(
@@ -334,20 +325,28 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
     peakHoursReset();
   });
 
+  const onSave = useCallback(async () => {
+    audienceSubmit();
+    peakHoursSubmit();
+  }, [audienceSubmit, peakHoursSubmit]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: onSave,
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              audienceSubmit();
-              peakHoursSubmit();
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
 
           {audienceForm}

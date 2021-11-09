@@ -170,7 +170,6 @@ const useTeamForm: EntryFormHook = ({ category, query }) => {
 
   return {
     renderedForm: renderedForm,
-    hint: false,
     pristine,
     valid: true,
     reset: () => {
@@ -250,7 +249,7 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
     pristine: teamPristine,
     submit: teamSubmit,
     reset: teamReset,
-  } = useTeamForm({ category, query }, true, false);
+  } = useTeamForm({ category, query, loaded: true });
 
   const inviteForm = useTeamAddForm({ category, query });
 
@@ -279,7 +278,6 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
             active={!pristine}
             date={formattedDate}
             valid={true}
-            hint={false}
           />
         )}
         <EntryFormWrapper>

@@ -4,14 +4,10 @@ import { organizerCreateFactory } from '../lib/api/routes/organizer/create';
 import { useT } from '../lib/i18n';
 import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
-import { Routes, routes } from '../lib/routing';
+import { Routes, routes, useLocale } from '../lib/routing';
 import { Category } from '../lib/categories';
-import { OrganizerCreatePage } from '../components/pages/organizer/create';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
 import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
-import { OrganizerPreviewPage } from '../components/pages/organizer/preview';
-import { OrganizerRightsPage } from '../components/pages/organizer/rights';
-import { OrganizerExportPage } from '../components/pages/organizer/export';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
 import { LocationInfoPage } from '../components/pages/location/info';
 import { locationCreateFactory } from '../lib/api/routes/location/create';
@@ -24,13 +20,10 @@ import { offerCreateFactory } from '../lib/api/routes/offer/create';
 import { offerUpdateFactory } from '../lib/api/routes/offer/update';
 import { offerDeleteFactory } from '../lib/api/routes/offer/delete';
 import { OfferInfoPage } from '../components/pages/offer/info';
-import { LocationCreatePage } from '../components/pages/location/create';
-import { OfferCreatePage } from '../components/pages/offer/create';
 import { OrganizerListPage } from '../components/pages/organizer/list';
 import { OfferListPage } from '../components/pages/offer/list';
 import { LocationListPage } from '../components/pages/location/list';
 import { OfferCategorizationPage } from '../components/pages/offer/categorization';
-import { OfferAccessibilityPage } from '../components/pages/offer/accessibility';
 import { OfferAudiencePage } from '../components/pages/offer/audience';
 import { OfferDatesPage } from '../components/pages/offer/dates';
 import { organizerMediaFactory } from '../lib/api/routes/organizer/media';
@@ -41,10 +34,31 @@ import { LocationAccessibilityPage } from '../components/pages/location/accessib
 import { LocationServicePage } from '../components/pages/location/service';
 import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
 import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
+import { defaultLanguage, Language } from './locale';
+import { ParsedUrlQuery } from 'querystring';
+
+type RequirementAttributes = {
+  path: string;
+  translation?: {
+    language: Language;
+    attribute: string;
+  };
+};
 
 export type Requirement = {
-  translationKey: string;
+  key: string;
+  translation: string | React.ReactNode;
   publishableKeys: string[];
+  attributes: RequirementAttributes[];
+  link: {
+    href: (query: ParsedUrlQuery) => string;
+    ariaLabel: string;
+  };
+};
+
+export type RequirementFulfillment = {
+  requirementKey: string;
+  fulfilled: boolean;
 };
 
 export enum Categories {
@@ -63,6 +77,7 @@ export const useCategories: () => {
   [key in Categories]: Category;
 } = () => {
   const t = useT();
+  const locale = useLocale();
 
   return {
     organizer: {
@@ -76,15 +91,10 @@ export const useCategories: () => {
         list: routes[Routes.organizer],
         create: routes[Routes.createOrganizer],
       },
-      // subMenuKey: 'organizer',
       pages: {
-        create: OrganizerCreatePage,
-        preview: OrganizerPreviewPage,
         info: OrganizerInfoPage,
         categorization: OrganizerCategorizationPage,
         media: OrganizerMediaPage,
-        rights: OrganizerRightsPage,
-        export: OrganizerExportPage,
         list: OrganizerListPage,
       },
       tabs: [
@@ -129,28 +139,98 @@ export const useCategories: () => {
         deleteConfirm: t('categories.organizer.options.deleteConfirm') as string,
         deleting: t('categories.organizer.options.deleting') as string,
       },
+      publishText: t('categories.organizer.publishText') as string,
       requirements: [
         {
-          translationKey: 'categories.organizer.requirements.name',
+          key: 'name',
+          translation: t('categories.organizer.requirements.name'),
           publishableKeys: ['attributes.name'],
-        },
-        {
-          translationKey: 'categories.organizer.requirements.address',
-          publishableKeys: [
-            'relations.address',
-            'relations.address.attributes.city',
-            'relations.address.attributes.street1',
-            'relations.address.attributes.street2',
-            'relations.address.attributes.zipCode',
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'name',
+              },
+            },
           ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({ locale, query: { ...query, sub: 'info' } })}#organizer-name`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.name') as string,
+            }) as string,
+          },
         },
         {
-          translationKey: 'categories.organizer.requirements.description',
+          key: 'address',
+          translation: t('categories.organizer.requirements.address'),
+          publishableKeys: ['relations.address'],
+          attributes: [
+            {
+              path: 'relations.address.attributes.city',
+            },
+            {
+              path: 'relations.address.attributes.street1',
+            },
+            {
+              path: 'relations.address.attributes.zipCode',
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({
+                locale,
+                query: { ...query, sub: 'info' },
+              })}#organizer-internal-contact`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.address') as string,
+            }) as string,
+          },
+        },
+        {
+          key: 'description',
+          translation: t('categories.organizer.requirements.description'),
           publishableKeys: ['attributes.description'],
+          attributes: [
+            {
+              path: 'relations.translation',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'description',
+              },
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({
+                locale,
+                query: { ...query, sub: 'info' },
+              })}#organizer-description`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.description') as string,
+            }) as string,
+          },
         },
         {
-          translationKey: 'categories.organizer.requirements.categorization',
+          key: 'types',
+          translation: t('categories.organizer.requirements.categorization'),
           publishableKeys: ['relations.types', 'relations.subjects'],
+          attributes: [
+            {
+              path: 'relations.types',
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.organizer({
+                locale,
+                query: { ...query, sub: 'categorization' },
+              })}#organizer-types`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.organizer.requirements.categorization') as string,
+            }) as string,
+          },
         },
       ],
     },
@@ -167,11 +247,9 @@ export const useCategories: () => {
       },
       subMenuKey: 'offer',
       pages: {
-        create: OfferCreatePage,
         info: OfferInfoPage,
         media: OfferMediaPage,
         categorization: OfferCategorizationPage,
-        accessibility: OfferAccessibilityPage,
         audience: OfferAudiencePage,
         list: OfferListPage,
         dates: OfferDatesPage,
@@ -217,23 +295,87 @@ export const useCategories: () => {
         deleteConfirm: t('categories.offer.options.deleteConfirm') as string,
         deleting: t('categories.offer.options.deleting') as string,
       },
+      publishText: t('categories.offer.publishText') as string,
       requirements: [
         {
-          translationKey: 'categories.offer.requirements.name',
+          key: 'name',
+          translation: t('categories.offer.requirements.name'),
           publishableKeys: ['attributes.name'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'name',
+              },
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-name`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.name') as string,
+            }) as string,
+          },
         },
 
         {
-          translationKey: 'categories.offer.requirements.description',
+          key: 'description',
+          translation: t('categories.offer.requirements.description'),
           publishableKeys: ['attributes.description'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'description',
+              },
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.offer({ locale, query: { ...query, sub: 'info' } })}#offer-description`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.description') as string,
+            }) as string,
+          },
         },
         {
-          translationKey: 'categories.offer.requirements.mainType',
+          key: 'mainType',
+          translation: t('categories.offer.requirements.mainType'),
           publishableKeys: ['relations.mainType'],
+          attributes: [
+            {
+              path: 'relations.mainType',
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.offer({
+                locale,
+                query: { ...query, sub: 'categorization' },
+              })}#offer-main-type`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.mainType') as string,
+            }) as string,
+          },
         },
         {
-          translationKey: 'categories.offer.requirements.categorization',
-          publishableKeys: ['relations.types', 'relations.subjects'],
+          key: 'types',
+          translation: t('categories.offer.requirements.categorization'),
+          publishableKeys: ['relations.types'],
+          attributes: [
+            {
+              path: 'relations.types',
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.offer({ locale, query: { ...query, sub: 'categorization' } })}#offer-types`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.offer.requirements.categorization') as string,
+            }) as string,
+          },
         },
       ],
     },
@@ -250,7 +392,6 @@ export const useCategories: () => {
       },
       subMenuKey: 'location',
       pages: {
-        create: LocationCreatePage,
         info: LocationInfoPage,
         service: LocationServicePage,
         media: LocationMediaPage,
@@ -292,14 +433,52 @@ export const useCategories: () => {
         deleteConfirm: t('categories.location.options.deleteConfirm') as string,
         deleting: t('categories.location.options.deleting') as string,
       },
+      publishText: t('categories.location.publishText') as string,
       requirements: [
         {
-          translationKey: 'categories.organizer.requirements.name',
+          key: 'name',
+          translation: t('categories.location.requirements.name'),
           publishableKeys: ['attributes.name'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'name',
+              },
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.location({ locale, query: { ...query, sub: 'info' } })}#location-name`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.location.requirements.name') as string,
+            }) as string,
+          },
         },
         {
-          translationKey: 'categories.offer.requirements.description',
+          key: 'description',
+          translation: t('categories.location.requirements.description'),
           publishableKeys: ['attributes.description'],
+          attributes: [
+            {
+              path: 'relations.translations',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'description',
+              },
+            },
+          ],
+          link: {
+            href: (query) =>
+              `${routes.location({
+                locale,
+                query: { ...query, sub: 'info' },
+              })}#location-description`,
+            ariaLabel: t('requirements.nameLabel', {
+              fieldName: t('categories.location.requirements.description') as string,
+            }) as string,
+          },
         },
       ],
     },

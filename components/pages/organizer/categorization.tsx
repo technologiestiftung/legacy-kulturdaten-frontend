@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
@@ -11,6 +11,7 @@ import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useEntryTypeSubjectForm } from '../helpers/form/TypeSubject';
 import { useEntryTags } from '../helpers/form/Tags';
+import { usePublish } from '../../Publish';
 
 export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   category,
@@ -38,52 +39,79 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   }, [rendered, entry]);
 
   const {
-    renderedForm,
-    submit,
-    pristine: pristineClassification,
-    reset,
-    valid,
-  } = useEntryTypeSubjectForm({ category, query }, loaded, false);
+    renderedForm: formTypeSubject,
+    submit: submitTypeSubject,
+    pristine: pristineTypeSubject,
+    reset: resetTypeSubject,
+    valid: validTypeSubject,
+    requirementFulfillment: requiredFulfillmentTypeSubject,
+  } = useEntryTypeSubjectForm({ category, query, loaded, required: true, id: 'organizer-types' });
 
   const {
-    renderedForm: renderedTagsForm,
+    renderedForm: formTags,
     submit: submitTags,
     pristine: pristineTags,
-  } = useEntryTags(
-    { category, query },
+    reset: resetTags,
+    valid: validTags,
+  } = useEntryTags({
+    category,
+    query,
     loaded,
-    valid,
-    false,
-    t('categories.organizer.form.topicsTooltip')
+    tooltip: t('categories.organizer.form.topicsTooltip'),
+  });
+
+  const shouldWarn = useMemo(
+    () => !pristineTypeSubject && typeof entry?.data !== 'undefined',
+    [pristineTypeSubject, entry?.data]
   );
 
-  const shouldWarn = useMemo(() => !pristineClassification && typeof entry?.data !== 'undefined', [
-    pristineClassification,
-    entry?.data,
-  ]);
+  useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => {
+    resetTypeSubject();
+    resetTags();
+  });
 
-  useConfirmExit(shouldWarn, t('save.confirmExit') as string, () => reset());
+  const valid = useMemo(() => validTypeSubject && validTags, [validTypeSubject, validTags]);
+
+  const pristine = useMemo(
+    () => ![pristineTypeSubject, pristineTags].includes(false),
+    [pristineTypeSubject, pristineTags]
+  );
+
+  const formRequirementFulfillments = useMemo(
+    () => [requiredFulfillmentTypeSubject],
+    [requiredFulfillmentTypeSubject]
+  );
+
+  const onSave = useCallback(async () => {
+    if (!pristineTypeSubject) {
+      submitTypeSubject();
+    }
+    if (!pristineTags) {
+      submitTags();
+    }
+  }, [pristineTypeSubject, pristineTags, submitTypeSubject, submitTags]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: onSave,
+  });
 
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="form">
         <Save
-          onClick={async () => {
-            if (!pristineClassification) {
-              submit();
-            }
-            if (!pristineTags) {
-              submitTags();
-            }
-          }}
-          active={!pristineTags || !pristineClassification}
+          onClick={onSave}
+          active={!pristine}
           date={formattedDate}
           valid={loaded !== true || valid}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>{renderedForm}</EntryFormContainer>
-          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
+          <EntryFormContainer>{formTypeSubject}</EntryFormContainer>
+          <EntryFormContainer>{formTags}</EntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

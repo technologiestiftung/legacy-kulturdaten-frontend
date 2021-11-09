@@ -25,6 +25,7 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { usePublish } from '../../Publish';
 import { RadioSwitch } from '../../RadioSwitch';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { Select } from '../../select';
@@ -135,7 +136,6 @@ const useIsPermanentForm: EntryFormHook = ({ category, query }) => {
       setIsPermanent(initialIsPermanent);
     },
     valid: true,
-    hint: false,
     value: isPermanent,
   };
 };
@@ -175,15 +175,11 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     pristine: isPermanentPristine,
     value: isPermanentValue,
     reset: isPermanentReset,
-  } = useIsPermanentForm(
-    {
-      category,
-      query,
-    },
+  } = useIsPermanentForm({
+    category,
+    query,
     loaded,
-    true,
-    false
-  );
+  });
 
   const {
     data: datesFromApi,
@@ -340,14 +336,23 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
     isPermanentReset();
   });
 
+  const onSave = useCallback(async () => {
+    isPermanentSubmit();
+    submitDateList();
+  }, [isPermanentSubmit, submitDateList]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: onSave,
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <Save
-        onClick={async () => {
-          isPermanentSubmit();
-          submitDateList();
-        }}
+        onClick={onSave}
         active={!pristine || !isPermanentPristine}
         date={formattedDate}
         valid={true}

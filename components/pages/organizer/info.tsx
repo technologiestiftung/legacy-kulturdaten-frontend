@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ApiCall, useApiCall } from '../../../lib/api';
 import { OrganizerDelete } from '../../../lib/api/routes/organizer/delete';
 import { OrganizerShow } from '../../../lib/api/routes/organizer/show';
 import { OrganizerUpdate } from '../../../lib/api/routes/organizer/update';
 import { Contact } from '../../../lib/api/types/contact';
-import { CategoryEntry } from '../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus } from '../../../lib/api/types/general';
 import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -16,6 +16,7 @@ import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
+import { usePublish } from '../../Publish';
 import { EntryFormHook } from '../helpers/form';
 import { useAddressForm } from '../helpers/form/Address';
 import { useDescriptionForm } from '../helpers/form/Description';
@@ -25,7 +26,7 @@ import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 
-const useContactForm: EntryFormHook = ({ category, query }, loaded) => {
+const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
 
@@ -267,6 +268,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const [valid, setValid] = useState(true);
 
+  const isPublished = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
+
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
       setTimeout(() => setLoaded(true), 150);
@@ -283,17 +289,15 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: namePristine,
     reset: nameReset,
     valid: nameValid,
-    hint: nameHint,
-  } = useNameForm(
-    {
-      category,
-      query,
-    },
+    requirementFulfillment: nameRequirementFulfillment,
+  } = useNameForm({
+    category,
+    query,
     loaded,
-    valid,
-    t('categories.organizer.form.name') as string,
-    t('categories.organizer.form.nameTooltip') as string
-  );
+    title: t('categories.organizer.form.name') as string,
+    tooltip: t('categories.organizer.form.nameTooltip') as string,
+    id: 'organizer-name',
+  });
 
   const {
     renderedForm: addressForm,
@@ -301,18 +305,17 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: addressPristine,
     reset: addressReset,
     valid: addressValid,
-    hint: addressHint,
-  } = useAddressForm(
-    {
-      category,
-      query,
-    },
+    requirementFulfillment: addressRequirementFulfillment,
+  } = useAddressForm({
+    category,
+    query,
     loaded,
-    valid,
-    true,
-    t('categories.organizer.form.address'),
-    t('categories.organizer.form.addressTooltip')
-  );
+    customRequired: isPublished || undefined,
+    title: t('categories.organizer.form.address') as string,
+    tooltip: t('categories.organizer.form.addressTooltip') as string,
+    district: false,
+    id: 'organizer-internal-contact',
+  });
 
   const {
     renderedForm: linksForm,
@@ -320,15 +323,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: linksPristine,
     reset: linksReset,
     valid: linksValid,
-    hint: linksHint,
-  } = useLinksForm(
-    {
-      category,
-      query,
-    },
+  } = useLinksForm({
+    category,
+    query,
     loaded,
-    valid
-  );
+  });
 
   const {
     renderedForm: contactForm,
@@ -336,15 +335,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: contactPristine,
     reset: contactReset,
     valid: contactValid,
-    hint: contactHint,
-  } = useContactForm(
-    {
-      category,
-      query,
-    },
+  } = useContactForm({
+    category,
+    query,
     loaded,
-    valid
-  );
+  });
 
   const {
     renderedForm: additionalContactsForm,
@@ -352,15 +347,11 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: additionalContactsPristine,
     reset: additionalContactsReset,
     valid: additionalContactsValid,
-    hint: additionalContactsHint,
-  } = useAdditionalContactsForm(
-    {
-      category,
-      query,
-    },
+  } = useAdditionalContactsForm({
+    category,
+    query,
     loaded,
-    valid
-  );
+  });
 
   const {
     renderedForm: descriptionForm,
@@ -368,18 +359,16 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     pristine: descriptionPristine,
     reset: descriptionReset,
     valid: descriptionValid,
-    hint: descriptionHint,
-  } = useDescriptionForm(
-    {
-      category,
-      query,
-    },
+    requirementFulfillment: descriptionRequirementFulfillment,
+  } = useDescriptionForm({
+    category,
+    query,
     loaded,
-    valid,
-    t('categories.organizer.form.description') as string,
-    t('categories.organizer.form.descriptionTooltip') as string
-  );
-
+    required: isPublished,
+    title: t('categories.organizer.form.description') as string,
+    tooltip: t('categories.organizer.form.descriptionTooltip') as string,
+    id: 'organizer-description',
+  });
   const renderedEntryHeader = useEntryHeader(
     { category, query },
     t('menu.start.items.profile') as string,
@@ -428,17 +417,6 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     additionalContactsValid,
   ]);
 
-  const hint = useMemo(
-    () =>
-      addressHint ||
-      contactHint ||
-      linksHint ||
-      nameHint ||
-      descriptionHint ||
-      additionalContactsHint,
-    [addressHint, contactHint, descriptionHint, linksHint, nameHint, additionalContactsHint]
-  );
-
   const message = t('save.confirmExit') as string;
 
   const shouldWarn = useMemo(
@@ -455,24 +433,49 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     linksReset();
   });
 
+  const formRequirementFulfillments = useMemo(
+    () => [
+      nameRequirementFulfillment,
+      addressRequirementFulfillment,
+      descriptionRequirementFulfillment,
+    ],
+    [nameRequirementFulfillment, addressRequirementFulfillment, descriptionRequirementFulfillment]
+  );
+
+  const onSave = useCallback(async () => {
+    nameSubmit();
+    addressSubmit();
+    descriptionSubmit();
+    linksSubmit();
+    contactSubmit();
+    additionalContactsSubmit();
+  }, [
+    nameSubmit,
+    addressSubmit,
+    descriptionSubmit,
+    linksSubmit,
+    contactSubmit,
+    additionalContactsSubmit,
+  ]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: onSave,
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              nameSubmit();
-              addressSubmit();
-              descriptionSubmit();
-              linksSubmit();
-              contactSubmit();
-              additionalContactsSubmit();
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>

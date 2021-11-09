@@ -3,10 +3,10 @@ import styled from '@emotion/styled';
 import { MutableRefObject, useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { X } from 'react-feather';
 
-import { InfoIconSvg } from '../assets/InfoIconSvg';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { useT } from '../../lib/i18n';
+import { QuestionSvg } from '../assets/QuestionSvg';
 
 enum YPosition {
   top = 'top',
@@ -133,7 +133,7 @@ const StyledTooltipOverlay = styled.div<{
     ${({ yPosition }) =>
       yPosition === YPosition.bottom
         ? css`
-            top: ${tooltipButtonHeight}px;
+            top: calc(${tooltipButtonHeight}px - 0.375rem);
           `
         : css`
             bottom: ${tooltipButtonHeight}px;
@@ -155,7 +155,7 @@ const StyledTooltipOverlay = styled.div<{
 
 const StyledTooltipOverlayContent = styled.div`
   flex-grow: 1;
-  padding-right: 1.375rem;
+  padding-right: 1.75rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -415,7 +415,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
         aria-label={buttonAriaLabel || buttonTitle || (t('tooltip.open') as string)}
         title={buttonTitle || buttonAriaLabel || (t('tooltip.open') as string)}
       >
-        <InfoIconSvg />
+        <QuestionSvg />
       </StyledTooltipButton>
 
       <StyledTooltipOverlay

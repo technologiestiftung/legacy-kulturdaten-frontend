@@ -3,6 +3,75 @@ import { insetBorder, mq } from '../../globals/Constants';
 import { Breakpoint } from '../../../lib/WindowService';
 import styled from '@emotion/styled';
 import React, { PropsWithChildren } from 'react';
+import { StyledRequirementMark } from '../../Publish/Requirement';
+import { Check } from 'react-feather';
+import { useT } from '../../../lib/i18n';
+
+const StyledFormWrapper = styled.div<{ required: boolean; fulfilled?: boolean }>`
+  position: relative;
+
+  ${({ required, fulfilled }) =>
+    required &&
+    css`
+      &::before {
+        content: '';
+        height: 100%;
+        position: absolute;
+        width: 3px;
+        background: ${fulfilled ? 'var(--green-publish)' : 'var(--red-publish)'};
+        opacity: ${fulfilled ? '0.7' : '1'};
+        left: -0.75rem;
+        border-radius: 0px 1.5px 1.5px 0px;
+
+        ${mq(Breakpoint.mid)} {
+          left: -1.5rem;
+        }
+
+        ${mq(Breakpoint.widish)} {
+          border-radius: 1.5px;
+        }
+      }
+    `}
+`;
+
+const StyledFormWrapperRequirement = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+  display: flex;
+  column-gap: 0.1875rem;
+  padding: 0 0 0.375rem 0;
+`;
+
+export interface FormWrapperProps {
+  children: React.ReactNode;
+  requirement?: {
+    fulfilled: boolean;
+  };
+}
+
+export const FormWrapper: React.FC<FormWrapperProps> = ({
+  children,
+  requirement,
+}: FormWrapperProps) => {
+  const required = typeof requirement !== 'undefined';
+  const fulfilled = requirement?.fulfilled;
+  const t = useT();
+
+  return (
+    <StyledFormWrapper required={required} fulfilled={fulfilled}>
+      {children}
+      {required && (
+        <StyledFormWrapperRequirement>
+          <StyledRequirementMark fulfilled={fulfilled}>
+            {fulfilled && <Check color="var(--green-publish)" />}
+          </StyledRequirementMark>
+          <span>{t(fulfilled ? 'requirements.isFulfilled' : 'requirements.notFulfilled')}</span>
+        </StyledFormWrapperRequirement>
+      )}
+    </StyledFormWrapper>
+  );
+};
 
 export const FormGrid = styled.div`
   display: grid;

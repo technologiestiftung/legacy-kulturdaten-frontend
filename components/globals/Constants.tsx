@@ -8,6 +8,10 @@ export const CSSVars: React.FC = () => (
       html {
         --white: #f8f8f8;
         --white-o0: rgba(248, 248, 248, 0);
+        --white-o50: rgba(248, 248, 248, 0.5);
+        --white-red: rgb(247, 244, 244);
+        --white-green: rgb(243, 246, 245);
+        --white-green-o50: rgba(243, 246, 245, 0.5);
         --grey-200: #e6e6e6;
         --grey-350: #c8c8c8;
         --grey-400: #cbcbcb;
@@ -17,12 +21,14 @@ export const CSSVars: React.FC = () => (
         --black-o25: rgba(0, 0, 0, 0.25);
         --black-o40: rgba(0, 0, 0, 0.4);
         --black-o70: rgba(0, 0, 0, 0.7);
-        --yellow: #f6ef31;
+        --yellow: #f0d909;
         --yellow-dark: #a7ad00;
         --green-light: #41b496;
         --green-mid: #46948c;
         --green-kelly: #91c882;
+        --green-publish: #00835c;
         --red: #b01e1e;
+        --red-publish: #e60032;
         --error: #ae0026;
         --error-light: #ff6c8c;
         --error-o50: rgba(174, 0, 38, 0.5);

@@ -1,6 +1,8 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
+import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
+import { PublishedStatus } from '../lib/api/types/general';
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
@@ -661,20 +663,6 @@ export const enDE: Localization = {
     loading: () => 'loading',
     max: () => 'max.',
     topics: () => 'Keywords (optional)',
-    topicsTooltip: () => (
-      <>
-        <TooltipP>
-          With theme tags you can indicate more precisely what this organizer is all about, e.g. the
-          focus of your collections or the artistic field of your choice.
-        </TooltipP>
-        <TooltipP>
-          These terms are based on the GND (integrated authority file) of the German National
-          Library. If there are any terms missing or some concepts seem out of place, please feel
-          free to contact us at
-          <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
-        </TooltipP>
-      </>
-    ),
     topicsPlaceholder: () => 'Just type away, e.g. Bauhaus',
     takeAFewSeconds: () => 'This can take a few seconds.',
     serverProblem: () =>
@@ -727,6 +715,14 @@ export const enDE: Localization = {
     previous: () => 'previous',
     currentPage: ({ currentPage, lastPage }) => `Page ${currentPage} of ${lastPage}`,
   },
+  requirements: {
+    title: () => 'Publishing',
+    label: () => 'Required information',
+    fulfilled: ({ count, total }) => `${count} of ${total} filled out`,
+    notFulfilled: () => 'Required information missing',
+    isFulfilled: () => 'Required information filled out',
+    nameLabel: ({ fieldName }) => `Go to the field '${fieldName}'`,
+  },
   categories: {
     organizer: {
       list: {
@@ -752,12 +748,19 @@ export const enDE: Localization = {
         },
         activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} active`,
       },
+      publishText: () => (
+        <>
+          This Organizer is a{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fill in
+          the required information and publish it. Only then will its data, Offers and Locations be
+          publicly available.
+        </>
+      ),
       requirements: {
-        label: () => 'Required for publishing',
-        name: () => 'Name added',
-        description: () => 'Description added',
-        categorization: () => 'Categories added',
-        address: () => 'Address added',
+        name: () => 'Name',
+        description: () => 'Description',
+        categorization: () => 'Type of organizer',
+        address: () => 'Internal contact',
       },
       title: {
         plural: () => 'Organizers',
@@ -787,6 +790,20 @@ export const enDE: Localization = {
         additionalContacts: () => 'Additional contacts',
         additionalContactsTooltip: () =>
           'Use this option to list additional contacts. You want to add a contact that is only relevant to a specific event? Head to offers and add the contact information to the event in question.',
+        topicsTooltip: () => (
+          <>
+            <TooltipP>
+              With theme tags you can indicate more precisely what this organizer is all about, e.g.
+              the focus of your collections or the artistic field of your choice.
+            </TooltipP>
+            <TooltipP>
+              These terms are based on the GND (integrated authority file) of the German National
+              Library. If there are any terms missing or some concepts seem out of place, please
+              feel free to contact us at
+              <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
+            </TooltipP>
+          </>
+        ),
       },
       tabs: {
         info: () => 'Information',
@@ -826,11 +843,19 @@ export const enDE: Localization = {
         nothing: () => 'There are no Offers yet. Feel free to create one.',
         nothingFilter: () => 'No Offers found with current filters.',
       },
+      publishText: () => (
+        <>
+          This Offer is a{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fill in
+          the required information and publish it. Only then will its data and dates be publicly
+          available.
+        </>
+      ),
       requirements: {
-        name: () => 'Offer title added',
-        description: () => 'Description added',
-        categorization: () => 'Categories added',
-        mainType: () => 'Event type chosen',
+        name: () => 'Offer title',
+        description: () => 'Description',
+        categorization: () => 'Topic category',
+        mainType: () => 'Event type',
       },
       title: {
         plural: () => 'Offers',
@@ -880,7 +905,7 @@ export const enDE: Localization = {
           edit: () => 'Change location',
           title: ({ name }) => `Choose location for ‘${name}’`,
         },
-        topics: () => 'Topic category',
+        topics: () => 'Topic category (required)',
         topicsTooltip: () => (
           <>
             <TooltipP>
@@ -924,6 +949,17 @@ export const enDE: Localization = {
       title: {
         plural: () => 'Locations',
         singular: () => 'Location',
+      },
+      publishText: () => (
+        <>
+          This Location is a{' '}
+          <StatusFlag status={PublishedStatus.draft} variant={StatusFlagVariant.inline} />. Fill in
+          the required information and publish it. Only then will its data be publicly available.
+        </>
+      ),
+      requirements: {
+        name: () => 'Name of the location',
+        description: () => 'Description',
       },
       form: {
         openingHours: () => 'Opening hours',
