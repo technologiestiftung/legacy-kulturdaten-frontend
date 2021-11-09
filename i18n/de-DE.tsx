@@ -666,20 +666,6 @@ export const deDE: Localization = {
     loading: () => 'lädt',
     max: () => 'max.',
     topics: () => 'Stichworte (optional)',
-    topicsTooltip: () => (
-      <>
-        <TooltipP>
-          Mit Stichworten kannst du diese:n Anbieter:in noch detaillierter beschreiben, z.B. über
-          Stichwort-tags zum Sammlungsschwerpunkt oder der Kunstrichtung, in der ihr euch zu Hause
-          fühlt.
-        </TooltipP>
-        <TooltipP>
-          Diese Begriffe basieren auf der Gemeinsamen Normdatei (GND) der Deutschen
-          Nationalbibliothek. Sollten Begriffe fehlen oder hier fehl am Platz sein, schreib uns
-          unter <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
-        </TooltipP>
-      </>
-    ),
     topicsPlaceholder: () => 'Tippe einfach drauflos, z.B. Bauhaus',
     takeAFewSeconds: () => 'Dies kann ein paar Sekunden dauern.',
     serverProblem: () =>

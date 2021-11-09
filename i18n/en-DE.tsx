@@ -663,20 +663,6 @@ export const enDE: Localization = {
     loading: () => 'loading',
     max: () => 'max.',
     topics: () => 'Keywords (optional)',
-    topicsTooltip: () => (
-      <>
-        <TooltipP>
-          With theme tags you can indicate more precisely what this organizer is all about, e.g. the
-          focus of your collections or the artistic field of your choice.
-        </TooltipP>
-        <TooltipP>
-          These terms are based on the GND (integrated authority file) of the German National
-          Library. If there are any terms missing or some concepts seem out of place, please feel
-          free to contact us at
-          <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
-        </TooltipP>
-      </>
-    ),
     topicsPlaceholder: () => 'Just type away, e.g. Bauhaus',
     takeAFewSeconds: () => 'This can take a few seconds.',
     serverProblem: () =>
@@ -804,6 +790,20 @@ export const enDE: Localization = {
         additionalContacts: () => 'Additional contacts',
         additionalContactsTooltip: () =>
           'Use this option to list additional contacts. You want to add a contact that is only relevant to a specific event? Head to offers and add the contact information to the event in question.',
+        topicsTooltip: () => (
+          <>
+            <TooltipP>
+              With theme tags you can indicate more precisely what this organizer is all about, e.g.
+              the focus of your collections or the artistic field of your choice.
+            </TooltipP>
+            <TooltipP>
+              These terms are based on the GND (integrated authority file) of the German National
+              Library. If there are any terms missing or some concepts seem out of place, please
+              feel free to contact us at
+              <a href="mailto:hallo@kulturdaten.berlin">hallo@kulturdaten.berlin</a>!
+            </TooltipP>
+          </>
+        ),
       },
       tabs: {
         info: () => 'Information',
