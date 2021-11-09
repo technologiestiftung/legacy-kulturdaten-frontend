@@ -53,7 +53,6 @@ export type Category = {
     create: Route;
   };
   pages: {
-    create: React.FC<CategoryPage>;
     info: React.FC<CategoryEntryPage>;
     media: React.FC<CategoryEntryPage>;
     list: React.FC<CategoryPage>;
@@ -79,6 +78,7 @@ export type Category = {
     deleting: string;
   };
   requirements?: Requirement[];
+  publishText: string;
 };
 
 export const useCategory = (): Category => {
@@ -225,14 +225,17 @@ export const useMutateList = (
     getOrder,
   } = useContext(EntryListContext);
   const apiCallRoute = category?.api.list.route;
-  const query = makeListQuery(
-    getPage(category.name),
-    getSize(category.name),
-    additionalFilters
-      ? [...Object.entries(getFilters(category.name)), ...additionalFilters]
-      : Object.entries(getFilters(category.name)),
-    { key: getSortKey(category.name), order: getOrder(category.name) }
-  );
+  const query =
+    getPage && getSize
+      ? makeListQuery(
+          getPage(category.name),
+          getSize(category.name),
+          additionalFilters
+            ? [...Object.entries(getFilters(category.name)), ...additionalFilters]
+            : Object.entries(getFilters(category.name)),
+          { key: getSortKey(category.name), order: getOrder(category.name) }
+        )
+      : undefined;
 
   return () => mutateSwr(getApiUrlString(apiCallRoute, query));
 };
@@ -278,7 +281,7 @@ export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
     return {
       title,
       href,
-      isActive: router.asPath === href,
+      isActive: router.asPath.split('#')[0] === href,
     };
   });
 

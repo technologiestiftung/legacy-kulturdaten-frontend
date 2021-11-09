@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Location, LocationTranslation, LocationType } from '../../../lib/api/types/location';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -27,6 +27,7 @@ import { contentLanguages, languageTranslationKeys } from '../../../config/local
 import { getTranslation } from '../../../lib/translations';
 import { Textarea } from '../../textarea';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   const uid = usePseudoUID();
@@ -183,7 +184,6 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       setOpeningHoursTranslations(initialOpeningHoursTranslations);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -316,7 +316,6 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
       setUrl(initialUrl);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -400,7 +399,6 @@ const useTypeForm: EntryFormHook = ({ category, query }) => {
       setType(initialType);
     },
     valid: true,
-    hint: false,
     value: type,
   };
 };
@@ -432,142 +430,104 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     submit: nameSubmit,
     pristine: namePristine,
     valid: nameValid,
-    hint: nameHint,
     reset: nameReset,
-  } = useNameForm(
-    {
-      category,
-      query,
-    },
+    requirementFulfillment: nameRequirementFulfillment,
+  } = useNameForm({
+    category,
+    query,
     loaded,
-    valid,
-    t('categories.location.form.name') as string
-  );
+    title: t('categories.location.form.name') as string,
+    id: 'location-name',
+  });
 
   const {
     renderedForm: descriptionForm,
     submit: descriptionSubmit,
     pristine: descriptionPristine,
     valid: descriptionValid,
-    hint: descriptionHint,
     reset: descriptionReset,
-  } = useDescriptionForm(
-    {
-      category,
-      query,
-    },
+    requirementFulfillment: descriptionRequirementFulfillment,
+  } = useDescriptionForm({
+    category,
+    query,
     loaded,
-    valid
-  );
+    id: 'location-description',
+  });
 
   const {
     renderedForm: addressForm,
     submit: addressSubmit,
     pristine: addressPristine,
     valid: addressValid,
-    hint: addressHint,
     reset: addressReset,
-  } = useAddressForm(
-    {
-      category,
-      query,
-    },
+  } = useAddressForm({
+    category,
+    query,
     loaded,
-    valid,
-    false,
-    false,
-    false,
-    true
-  );
+    district: true,
+    customRequired: false,
+  });
 
   const {
     renderedForm: arrivalForm,
     submit: arrivalSubmit,
     pristine: arrivalPristine,
     valid: arrivalValid,
-    hint: arrivalHint,
     reset: arrivalReset,
-  } = useArrivalForm(
-    {
-      category,
-      query,
-    },
+  } = useArrivalForm({
+    category,
+    query,
     loaded,
-    valid,
-    false,
-    false,
-    false,
-    true
-  );
+  });
 
   const {
     renderedForm: typeForm,
     submit: typeSubmit,
     pristine: typePristine,
     valid: typeValid,
-    hint: typeHint,
     value: typeValue,
     reset: typeReset,
-  } = useTypeForm(
-    {
-      category,
-      query,
-    },
+  } = useTypeForm({
+    category,
+    query,
     loaded,
-    valid,
-    false
-  );
+  });
 
   const {
     renderedForm: openingHoursForm,
     submit: openingHoursSubmit,
     pristine: openingHoursPristine,
     valid: openingHoursValid,
-    hint: openingHoursHint,
     reset: openingHoursReset,
-  } = useOpeningHoursForm(
-    {
-      category,
-      query,
-    },
+  } = useOpeningHoursForm({
+    category,
+    query,
     loaded,
-    valid,
-    false
-  );
+  });
 
   const {
     renderedForm: urlForm,
     submit: urlSubmit,
     pristine: urlPristine,
     valid: urlValid,
-    hint: urlHint,
     reset: urlReset,
-  } = useUrlForm(
-    {
-      category,
-      query,
-    },
+  } = useUrlForm({
+    category,
+    query,
     loaded,
-    false,
-    false
-  );
+  });
 
   const {
     renderedForm: rentForm,
     submit: rentSubmit,
     pristine: rentPristine,
     valid: rentValid,
-    hint: rentHint,
     reset: rentReset,
-  } = useRentForm(
-    {
-      category,
-      query,
-    },
+  } = useRentForm({
+    category,
+    query,
     loaded,
-    valid,
-    false
-  );
+  });
 
   useEffect(() => {
     setValid(
@@ -617,27 +577,6 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     ]
   );
 
-  const hint = useMemo(
-    () =>
-      nameHint ||
-      descriptionHint ||
-      typeHint ||
-      (typeValue === LocationType.virtual && urlHint) ||
-      (typeValue === LocationType.physical &&
-        (openingHoursHint || addressHint || arrivalHint || rentHint)),
-    [
-      nameHint,
-      descriptionHint,
-      typeHint,
-      typeValue,
-      urlHint,
-      openingHoursHint,
-      addressHint,
-      arrivalHint,
-      rentHint,
-    ]
-  );
-
   const message = t('save.confirmExit') as string;
 
   const shouldWarn = useMemo(
@@ -656,30 +595,53 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     urlReset();
   });
 
+  const formRequirementFulfillments = useMemo(
+    () => [nameRequirementFulfillment, descriptionRequirementFulfillment],
+    [nameRequirementFulfillment, descriptionRequirementFulfillment]
+  );
+
+  const onSave = useCallback(async () => {
+    typeSubmit();
+    nameSubmit();
+    descriptionSubmit();
+    urlSubmit();
+
+    if (typeValue === LocationType.physical) {
+      addressSubmit();
+      arrivalSubmit();
+      openingHoursSubmit();
+      rentSubmit();
+    }
+  }, [
+    addressSubmit,
+    arrivalSubmit,
+    descriptionSubmit,
+    nameSubmit,
+    openingHoursSubmit,
+    rentSubmit,
+    typeSubmit,
+    typeValue,
+    urlSubmit,
+  ]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: onSave,
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              typeSubmit();
-              nameSubmit();
-              descriptionSubmit();
-              urlSubmit();
-
-              if (typeValue === LocationType.physical) {
-                addressSubmit();
-                arrivalSubmit();
-                openingHoursSubmit();
-                rentSubmit();
-              } else {
-              }
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>

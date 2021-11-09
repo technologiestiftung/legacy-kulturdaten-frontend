@@ -9,7 +9,7 @@ import { setCookie } from './cookies';
 
 export type Route = (props: { locale: Locale; query?: ParsedUrlQuery }) => string;
 
-const isRouteActive = (
+export const isRouteActive = (
   currentRoute: string,
   route: Routes,
   locale: Locale,
@@ -34,7 +34,7 @@ export const useIsRouteStringActive = (routeString: string): boolean => {
   const router = useRouter();
 
   useEffect(() => {
-    setIsActive(routeString === router?.asPath);
+    setIsActive(routeString === router?.asPath.split('#')[0]);
   }, [router, routeString]);
 
   return isActive;
@@ -56,7 +56,7 @@ export const useIsRouteActive = (
   const router = useRouter();
 
   useEffect(() => {
-    setRouteActive(isRouteActive(router?.asPath, route, locale, query));
+    setRouteActive(isRouteActive(router?.asPath.split('#')[0], route, locale, query));
   }, [route, router, locale, query]);
 
   return routeActive;
@@ -71,7 +71,9 @@ export const useActiveRoute = (): Routes => {
   const router = useRouter();
 
   useEffect(() => {
-    setRoute(getActiveRoute(router?.asPath, router?.locale as Locale, router?.query));
+    const activeRouteWithoutAnchor = router?.asPath.split('#')[0];
+
+    setRoute(getActiveRoute(activeRouteWithoutAnchor, router?.locale as Locale, router?.query));
   }, [router]);
 
   return route;

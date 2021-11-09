@@ -69,8 +69,23 @@ const StyledInfoIcon = styled.div`
 `;
 
 const StyledInfoText = styled.div<{ noMaxWidth?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
   ${({ noMaxWidth }) => (noMaxWidth ? '' : 'max-width: 64ch;')}
 `;
+
+export const InfoUl = styled.ul`
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.75rem;
+  padding-left: 0.875rem;
+`;
+
+export const InfoLi = styled.li``;
+
+export const InfoP = styled.p``;
 
 interface InfoProps {
   children: React.ReactNode;

@@ -1,10 +1,10 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { EntryFormHook } from '.';
+import { EntryFormHook, EntryFormHookProps } from '.';
 import { Categories } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
-import { CategoryEntry, Translation } from '../../../../lib/api/types/general';
+import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
 import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
@@ -12,18 +12,18 @@ import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
-import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 
 interface SetNameProps {
   label: string;
   ariaLabel?: string;
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
-  setPristine: (pristine: boolean) => void;
   value: string;
   setValue: (value: string) => void;
   name: string;
   required?: boolean;
+  softRequired?: boolean;
   valid?: boolean;
   hint?: boolean;
 }
@@ -33,11 +33,11 @@ const Name: React.FC<SetNameProps> = ({
   ariaLabel,
   onSubmit,
   pristine,
-  setPristine,
   setValue,
   name,
   value,
   required,
+  softRequired,
   hint,
 }: SetNameProps) => {
   // set initial value
@@ -55,11 +55,11 @@ const Name: React.FC<SetNameProps> = ({
         type={InputType.text}
         value={value || ''}
         onChange={(e) => {
-          setPristine(false);
           setValue(e.target.value);
         }}
         required={required}
         hint={hint}
+        softRequired={softRequired}
       />
     </form>
   );
@@ -76,7 +76,6 @@ export const useName = <
   label: string;
   ariaLabel?: string;
   loaded: boolean;
-  showHint: boolean;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -85,9 +84,14 @@ export const useName = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, ariaLabel, loaded, showHint } = props;
+  const { category, query, language, label, ariaLabel } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
+  const isPublished = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
+
   const organizerId = useOrganizerId();
   const mutateList = useMutateList(
     category,
@@ -109,8 +113,10 @@ export const useName = <
   );
   const [value, setValue] = useState(name || '');
   const [valueFromApi, setValueFromApi] = useState(name || '');
-  const [pristine, setPristine] = useState(true);
+  // const [pristine, setPristine] = useState(true);
   const { mutateUserInfo } = useUser();
+
+  const pristine = useMemo(() => value === valueFromApi, [value, valueFromApi]);
 
   useEffect(() => {
     if (JSON.stringify(name) !== JSON.stringify(valueFromApi)) {
@@ -119,7 +125,12 @@ export const useName = <
     }
   }, [pristine, name, value, valueFromApi]);
 
-  const required = useMemo(() => language === defaultLanguage, [language]);
+  const required = useMemo(
+    () => isPublished && language === defaultLanguage,
+    [isPublished, language]
+  );
+
+  const softRequired = useMemo(() => language === defaultLanguage, [language]);
 
   const valid = useMemo(() => required !== true || (value && value.length > 0), [required, value]);
 
@@ -148,7 +159,6 @@ export const useName = <
           mutate();
           mutateList();
           mutateUserInfo();
-          setTimeout(() => setPristine(true), 500);
         }
       } catch (e) {
         console.error(e);
@@ -156,17 +166,11 @@ export const useName = <
     }
   };
 
-  const hint = useMemo(
-    () => showHint && loaded && (!value || value?.length < 1),
-    [showHint, loaded, value]
-  );
-
   return {
     form: (
       <Name
         {...{
           pristine,
-          setPristine,
           value,
           setValue,
           label,
@@ -175,7 +179,7 @@ export const useName = <
           name,
           required,
           valid,
-          hint,
+          softRequired,
         }}
       />
     ),
@@ -183,20 +187,13 @@ export const useName = <
     pristine,
     reset: () => {
       setValue(name);
-      setPristine(true);
     },
     valid,
     value,
   };
 };
 
-export const useNameForm: EntryFormHook = (
-  { category, query },
-  loaded,
-  showHint,
-  title?: string,
-  tooltip?: string
-) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, id }) => {
   const t = useT();
 
   const {
@@ -215,7 +212,6 @@ export const useNameForm: EntryFormHook = (
       ? `${title} ${t('forms.labelGerman')}`
       : `${t('forms.name')} ${t('forms.labelGerman')}`,
     loaded,
-    showHint,
   });
 
   const {
@@ -224,7 +220,6 @@ export const useNameForm: EntryFormHook = (
     pristine: pristineEnglish,
     reset: resetEnglish,
     valid: validEnglish,
-    value: valueEnglish,
   } = useName({
     category,
     query,
@@ -234,7 +229,6 @@ export const useNameForm: EntryFormHook = (
       ? `${title} ${t('forms.labelEnglish')}`
       : `${t('forms.name')} ${t('forms.labelEnglish')}`,
     loaded,
-    showHint,
   });
 
   const pristine = useMemo(
@@ -247,31 +241,20 @@ export const useNameForm: EntryFormHook = (
     [loaded, validEnglish, validGerman]
   );
 
-  const hint = useMemo(
-    () =>
-      showHint &&
-      loaded &&
-      (typeof valueEnglish === 'undefined' ||
-        typeof valueGerman === 'undefined' ||
-        valueEnglish?.length < 1 ||
-        valueGerman?.length < 1),
-    [showHint, loaded, valueEnglish, valueGerman]
+  const fulfilled = useMemo(
+    () => validGerman && valueGerman?.length > 0,
+    [validGerman, valueGerman]
   );
 
   return {
     renderedForm: (
-      <div>
-        <EntryFormHead
-          title={title || `${t('forms.name') as string}`}
-          valid={valid}
-          hint={hint}
-          tooltip={tooltip}
-        />
+      <FormWrapper requirement={{ fulfilled }}>
+        <EntryFormHead title={title || `${t('forms.name') as string}`} tooltip={tooltip} id={id} />
         <FormGrid>
           <FormItem width={FormItemWidth.half}>{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half}>{setNameEnglish}</FormItem>
         </FormGrid>
-      </div>
+      </FormWrapper>
     ),
     submit: async () => {
       onSubmitEnglish();
@@ -283,6 +266,9 @@ export const useNameForm: EntryFormHook = (
       resetEnglish();
     },
     valid,
-    hint,
+    requirementFulfillment: {
+      requirementKey: 'name',
+      fulfilled,
+    },
   };
 };

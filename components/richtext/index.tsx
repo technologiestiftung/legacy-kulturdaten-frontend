@@ -17,6 +17,7 @@ import { H2Svg } from '../assets/H2Svg';
 import { H3Svg } from '../assets/H3Svg';
 import { ListOrderedSvg } from '../assets/ListOrderedSvg';
 import { useT } from '../../lib/i18n';
+import { useDebounce } from '../../lib/useDebounce';
 
 interface CustomRenderElementProps extends RenderElementProps {
   element: CustomElement;
@@ -63,6 +64,7 @@ type RichTextProps = {
   intValue: CustomDescendant[];
   setIntValue: (value: CustomDescendant[]) => void;
   required?: boolean;
+  softRequired?: boolean;
   valid: boolean;
 };
 
@@ -84,10 +86,13 @@ const RichText: React.FC<RichTextProps> = ({
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor() as ReactEditor)), []);
   const t = useT();
+  const debouncer = useDebounce();
 
   useEffect(() => {
     if (onChange) {
-      onChange(intValue);
+      debouncer(() => {
+        onChange(intValue as CustomDescendant[]);
+      });
     }
   }, [intValue, onChange]);
 
@@ -96,7 +101,12 @@ const RichText: React.FC<RichTextProps> = ({
       <Slate
         editor={editor}
         value={intValue || []}
-        onChange={(updatedValue) => setIntValue(updatedValue as CustomDescendant[])}
+        onChange={(updatedValue) => {
+          setIntValue(updatedValue as CustomDescendant[]);
+          debouncer(() => {
+            onChange(updatedValue as CustomDescendant[]);
+          });
+        }}
       >
         <Toolbar
           groups={[
@@ -268,7 +278,10 @@ const getDescendantsTextLength = (descendants: CustomDescendant[]): number => {
 };
 
 export const useRichText = (
-  props: Pick<RichTextProps, 'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required'>
+  props: Pick<
+    RichTextProps,
+    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired'
+  >
 ): {
   renderedRichText: React.ReactElement<RichTextProps>;
   init: (value: RichTextProps['value']) => void;

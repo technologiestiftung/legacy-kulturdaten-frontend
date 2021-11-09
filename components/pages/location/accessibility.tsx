@@ -8,7 +8,7 @@ import {
   useGenericFormStructure,
 } from '../../GenericForm/useGenericFormStructure';
 import { EntryFormHook } from '../helpers/form';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { WindowContext } from '../../../lib/WindowService';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { Location } from '../../../lib/api/types/location';
@@ -22,6 +22,7 @@ import {
 } from '../../../lib/api/routes/location/accessibility/update';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
@@ -143,7 +144,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
       </form>
     ),
     submit: async () => {
-      if (valid) {
+      if (valid && !pristine) {
         try {
           const resp = await call<LocationAccessibilityUpdate>(locationAccessibilityUpdateFactory, {
             id: entry.data.id,
@@ -165,7 +166,6 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
     pristine,
     valid,
     reset: () => undefined,
-    hint: false,
     state,
   };
 };
@@ -181,11 +181,11 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const t = useT();
 
-  const { renderedForm, valid, submit, hint, pristine, reset } = useAccessibilityForm(
-    { category, query },
+  const { renderedForm, valid, submit, pristine, reset } = useAccessibilityForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -208,19 +208,27 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
     reset();
   });
 
+  const onSave = useCallback(async () => {
+    submit();
+  }, [submit]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: onSave,
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              submit();
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
 
           {renderedForm}

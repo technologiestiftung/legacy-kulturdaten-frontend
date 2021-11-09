@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ApiCall } from '../../../lib/api';
 import { CategoryEntry } from '../../../lib/api/types/general';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
@@ -10,6 +10,7 @@ import { useSaveDate } from '../helpers/useSaveDate';
 import { useMediaForm } from '../helpers/media';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 export const LocationMediaPage: React.FC<CategoryEntryPage> = <
   T extends CategoryEntry,
@@ -25,11 +26,11 @@ export const LocationMediaPage: React.FC<CategoryEntryPage> = <
   const [loaded, setLoaded] = useState(false);
   const t = useT();
 
-  const { renderedForm, submit, pristine, valid, reset } = useMediaForm(
-    { category, query },
+  const { renderedForm, submit, pristine, valid, reset } = useMediaForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -52,19 +53,22 @@ export const LocationMediaPage: React.FC<CategoryEntryPage> = <
     reset();
   });
 
+  const onSave = useCallback(async () => {
+    submit();
+  }, [submit]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    onPublish: onSave,
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div>
-        <Save
-          onClick={async () => {
-            submit();
-          }}
-          active={!pristine}
-          date={formattedDate}
-          valid={valid}
-          hint={false}
-        />
+        <Save onClick={onSave} active={!pristine} date={formattedDate} valid={valid} />
         <EntryFormWrapper>
           <EntryFormContainer>{renderedForm}</EntryFormContainer>
         </EntryFormWrapper>

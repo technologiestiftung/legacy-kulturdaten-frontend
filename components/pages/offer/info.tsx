@@ -13,7 +13,7 @@ import { EntryPicker } from '../../EntryPicker';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Categories } from '../../../config/categories';
 import { LocationList } from '../../EntryList/LocationList';
 import { Save } from '../../EntryForm/Save';
@@ -29,6 +29,7 @@ import { useLinksForm } from '../helpers/form/Links';
 import { RadioList } from '../../Radio/RadioList';
 import { useTeaserForm } from '../helpers/form/Teaser';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { usePublish } from '../../Publish';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -126,7 +127,6 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
       setTranslations(initialTranslations);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -243,7 +243,6 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
       setAttributes(initialAttributes);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -334,7 +333,6 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
       setLocationId(initialLocationId);
     },
     valid: true,
-    hint: false,
   };
 };
 
@@ -366,113 +364,89 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     submit: organizerLocationSubmit,
     pristine: organizerLocationPristine,
     valid: organizerLocationValid,
-    hint: organizerLocationHint,
     reset: organizerLocationReset,
-  } = useOrganizerLocationForm(
-    {
-      category,
-      query,
-    },
+  } = useOrganizerLocationForm({
+    category,
+    query,
     loaded,
-    valid
-  );
+  });
 
   const {
     renderedForm: nameForm,
     submit: nameSubmit,
     pristine: namePristine,
     valid: nameValid,
-    hint: nameHint,
     reset: nameReset,
-  } = useNameForm(
-    {
-      category,
-      query,
-    },
+    requirementFulfillment: nameRequirementFulfillment,
+  } = useNameForm({
+    category,
+    query,
     loaded,
-    valid,
-    t('categories.offer.form.name') as string
-  );
+    title: t('categories.offer.form.name') as string,
+    id: 'offer-name',
+  });
 
   const {
     renderedForm: descriptionForm,
     submit: descriptionSubmit,
     pristine: descriptionPristine,
     valid: descriptionValid,
-    hint: descriptionHint,
     reset: descriptionReset,
-  } = useDescriptionForm(
-    {
-      category,
-      query,
-    },
+    requirementFulfillment: descriptionRequirementFulfillment,
+  } = useDescriptionForm({
+    category,
+    query,
     loaded,
-    valid
-  );
+    id: 'offer-description',
+  });
 
   const {
     renderedForm: teaserForm,
     submit: teaserSubmit,
     pristine: teaserPristine,
     valid: teaserValid,
-    hint: teaserHint,
     reset: teaserReset,
-  } = useTeaserForm(
-    {
-      category,
-      query,
-    },
+  } = useTeaserForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: pricingForm,
     submit: pricingSubmit,
     pristine: pricingPristine,
     valid: pricingValid,
-    hint: pricingHint,
     reset: pricingReset,
-  } = usePricingForm(
-    {
-      category,
-      query,
-    },
+  } = usePricingForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: roomForm,
     submit: roomSubmit,
     pristine: roomPristine,
     valid: roomValid,
-    hint: roomHint,
     reset: roomReset,
-  } = useRoomForm(
-    {
-      category,
-      query,
-    },
+  } = useRoomForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   const {
     renderedForm: linksForm,
     submit: linksSubmit,
     pristine: linksPristine,
     valid: linksValid,
-    hint: linksHint,
     reset: linksReset,
-  } = useLinksForm(
-    {
-      category,
-      query,
-    },
+  } = useLinksForm({
+    category,
+    query,
     loaded,
-    false
-  );
+  });
 
   useEffect(() => {
     setValid(
@@ -518,18 +492,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     ]
   );
 
-  const hint = useMemo(
-    () =>
-      nameHint ||
-      descriptionHint ||
-      teaserHint ||
-      organizerLocationHint ||
-      pricingHint ||
-      roomHint ||
-      linksHint,
-    [nameHint, descriptionHint, teaserHint, organizerLocationHint, pricingHint, roomHint, linksHint]
-  );
-
   const message = t('save.confirmExit') as string;
 
   const shouldWarn = useMemo(
@@ -547,32 +509,54 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     teaserReset();
   });
 
+  const formRequirementFulfillments = useMemo(
+    () => [nameRequirementFulfillment, descriptionRequirementFulfillment],
+    [nameRequirementFulfillment, descriptionRequirementFulfillment]
+  );
+
+  const onSave = useCallback(async () => {
+    nameSubmit();
+    descriptionSubmit();
+    teaserSubmit();
+    organizerLocationSubmit();
+    pricingSubmit();
+    roomSubmit();
+    linksSubmit();
+  }, [
+    descriptionSubmit,
+    linksSubmit,
+    nameSubmit,
+    organizerLocationSubmit,
+    pricingSubmit,
+    roomSubmit,
+    teaserSubmit,
+  ]);
+
+  const { renderedPublish } = usePublish({
+    category,
+    query,
+    formRequirementFulfillments,
+    onPublish: onSave,
+  });
+
   return (
     <>
+      {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
         <div role="form" aria-invalid={!valid}>
           <Save
-            onClick={async () => {
-              nameSubmit();
-              descriptionSubmit();
-              teaserSubmit();
-              organizerLocationSubmit();
-              pricingSubmit();
-              roomSubmit();
-              linksSubmit();
-            }}
+            onClick={onSave}
             date={formattedDate}
             active={!pristine}
             valid={loaded === false || valid}
-            hint={loaded === true && hint}
           />
           <EntryFormWrapper>
             <EntryFormContainer>{nameForm}</EntryFormContainer>
             <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
             <EntryFormContainer>{roomForm}</EntryFormContainer>
-            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{teaserForm}</EntryFormContainer>
+            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
             <EntryFormContainer>{pricingForm}</EntryFormContainer>
             <EntryFormContainer>{linksForm}</EntryFormContainer>
           </EntryFormWrapper>

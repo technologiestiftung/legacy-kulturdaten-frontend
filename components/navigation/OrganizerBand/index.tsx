@@ -11,6 +11,7 @@ import { OrganizerBandItem } from './OrganizerBandItem';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { useUserOrganizerLists } from '../../user/useUser';
 import { useCreateOrganizer } from '../../../lib/categories';
+import { defaultLanguage } from '../../../config/locale';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
@@ -49,7 +50,11 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   return (
     <StyledOrganizerBand layout={layout}>
       {[...organizerOwnerList, ...organizerContributorList]?.map((organizer, index) => {
-        const translation = getTranslation(language, organizer.relations?.translations);
+        const translation = getTranslation(language, organizer.relations?.translations, true);
+        const defaultTranslation = getTranslation(
+          defaultLanguage,
+          organizer.relations?.translations
+        );
 
         return (
           <Link
@@ -69,7 +74,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
                 }
               }}
             >
-              {translation?.attributes?.name}
+              {translation?.attributes?.name || defaultTranslation?.attributes?.name}
             </OrganizerBandItem>
           </Link>
         );

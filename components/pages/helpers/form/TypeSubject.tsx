@@ -4,16 +4,18 @@ import { useEntry, useEntryTypeList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { TypesSubjects } from '../../../TypesSubjects';
-import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 import { EntryFormHook } from '../form';
 import { CategoryEntry } from '../../../../lib/api/types/general';
 
-export const useEntryTypeSubjectForm: EntryFormHook = (
-  { category, query },
-  loaded?,
-  showHint?,
-  title?: string
-) => {
+export const useEntryTypeSubjectForm: EntryFormHook = ({
+  category,
+  query,
+  loaded,
+  title,
+  required,
+  id,
+}) => {
   const { entry, mutate } = useEntry<CategoryEntry, ApiCall>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -49,10 +51,14 @@ export const useEntryTypeSubjectForm: EntryFormHook = (
     [validSubjectOptions, subjects]
   );
 
-  // Valid if types and subjects are defined
+  // Valid if one or more types are defined
   const valid = useMemo(() => {
-    return !loaded || (types && types.length > 0);
-  }, [loaded, types]);
+    return !required || !loaded || (types && types.length > 0);
+  }, [required, loaded, types]);
+
+  const fulfilled = useMemo(() => {
+    return (types && typeof types !== 'undefined' && types.length > 0) || undefined;
+  }, [types]);
 
   const initialSubjects = useMemo(
     () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),
@@ -108,11 +114,8 @@ export const useEntryTypeSubjectForm: EntryFormHook = (
 
   return {
     renderedForm: (
-      <div>
-        <EntryFormHead
-          title={title || `${t('forms.classification') as string}`}
-          valid={!loaded || valid}
-        />
+      <FormWrapper requirement={{ fulfilled }}>
+        <EntryFormHead title={title || `${t('forms.classification') as string}`} id={id} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             <TypesSubjects
@@ -128,40 +131,42 @@ export const useEntryTypeSubjectForm: EntryFormHook = (
             />
           </FormItem>
         </FormGrid>
-      </div>
+      </FormWrapper>
     ),
     submit: async () => {
-      try {
-        const validTypeOptions = typeOptions.filter((type) => types.includes(String(type.id)));
+      if (valid && !pristine) {
+        try {
+          const validTypeOptions = typeOptions.filter((type) => types.includes(String(type.id)));
 
-        const subs = subjects.filter((subject) => {
-          for (let i = 0; i < validTypeOptions.length; i += 1) {
-            const validSubjects = validTypeOptions[i].relations.subjects.map(
-              (subject) => subject.id
-            );
-            if (validSubjects.includes(parseInt(subject, 10))) {
-              return true;
+          const subs = subjects.filter((subject) => {
+            for (let i = 0; i < validTypeOptions.length; i += 1) {
+              const validSubjects = validTypeOptions[i].relations.subjects.map(
+                (subject) => subject.id
+              );
+              if (validSubjects.includes(parseInt(subject, 10))) {
+                return true;
+              }
             }
-          }
 
-          return false;
-        });
+            return false;
+          });
 
-        const resp = await call(category.api.update.factory, {
-          id: entry.data.id,
-          entry: {
-            relations: {
-              types: types.map((type) => parseInt(type, 10)),
-              subjects: subs.map((subject) => parseInt(subject, 10)),
+          const resp = await call(category.api.update.factory, {
+            id: entry.data.id,
+            entry: {
+              relations: {
+                types: types.map((type) => parseInt(type, 10)),
+                subjects: subs.map((subject) => parseInt(subject, 10)),
+              },
             },
-          },
-        });
+          });
 
-        if (resp.status === 200) {
-          mutate();
+          if (resp.status === 200) {
+            mutate();
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
       }
     },
     pristine,
@@ -171,6 +176,9 @@ export const useEntryTypeSubjectForm: EntryFormHook = (
       setTypesSubjectsPristine(true);
     },
     valid,
-    hint: false,
+    requirementFulfillment: {
+      requirementKey: 'types',
+      fulfilled,
+    },
   };
 };

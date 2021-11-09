@@ -60,7 +60,6 @@ export const UserSettingsPage: React.FC = () => {
         title={t('settings.title') as string}
         subTitle={user?.attributes.email}
         minimalVariant
-        status={undefined}
       />
       <div>
         <EntryFormWrapper>

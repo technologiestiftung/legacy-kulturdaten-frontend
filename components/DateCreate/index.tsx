@@ -480,7 +480,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
         css={css`
           width: 100%;
         `}
-        color={ButtonColor.white}
+        color={ButtonColor.black}
       >
         {t('dateCreate.create')}
       </Button>

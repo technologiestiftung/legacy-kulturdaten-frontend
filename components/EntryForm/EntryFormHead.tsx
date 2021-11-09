@@ -5,7 +5,6 @@ import { ChevronDown } from 'react-feather';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
-import { InfoSymbol } from '../assets/InfoSymbol';
 import { mq } from '../globals/Constants';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
@@ -63,6 +62,7 @@ const StyledEntryFormHeadTitle = styled.h2<{ size: EntryFormHeadSize }>`
   margin-bottom: ${({ size }) => (size === EntryFormHeadSize.small ? '0.375rem' : '0.75rem')};
   position: relative;
   display: inline-flex;
+  scroll-margin-top: calc(var(--header-height) * 2 + 5vh);
 `;
 
 const StyledEntryFormHeadChevron = styled.div<{ isExpanded: boolean }>`
@@ -118,7 +118,7 @@ export enum EntryFormHeadSize {
 
 interface EntryFormHeadProps {
   title: string;
-  tooltip?: string | React.ReactElement;
+  tooltip?: string | React.ReactNode;
   id?: string;
   valid?: boolean;
   hint?: boolean;
@@ -136,7 +136,6 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   tooltip,
   id,
   valid = true,
-  hint = false,
   showHintInline = false,
   expander,
   size,
@@ -160,12 +159,8 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       addPadding={addPadding}
     >
       {valid === false ? (
-        <StyledEntryFormHeadAlert showInline={showHintInline}>
+        <StyledEntryFormHeadAlert showInline={true}>
           <AlertSymbol />
-        </StyledEntryFormHeadAlert>
-      ) : hint ? (
-        <StyledEntryFormHeadAlert showInline={showHintInline}>
-          <InfoSymbol />
         </StyledEntryFormHeadAlert>
       ) : (
         ''

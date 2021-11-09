@@ -1,4 +1,5 @@
 import { ParsedUrlQuery } from 'node:querystring';
+import { RequirementFulfillment } from '../../../../config/categories';
 import { Category } from '../../../../lib/categories';
 
 export interface EntryFormProps {
@@ -6,17 +7,20 @@ export interface EntryFormProps {
   query: ParsedUrlQuery;
 }
 
-export type EntryFormHook = (
-  props: EntryFormProps,
-  loaded: boolean,
-  showHint: boolean,
-  ...parameters: unknown[]
-) => {
+export interface EntryFormHookProps extends EntryFormProps {
+  loaded: boolean;
+  tooltip?: string | React.ReactNode;
+  title?: string;
+  required?: boolean;
+  id?: string;
+}
+
+export type EntryFormHook<T = EntryFormHookProps> = (props: T) => {
   renderedForm: React.ReactElement;
   submit: () => Promise<void>;
   pristine: boolean;
   reset: () => void;
   valid: boolean;
-  hint: boolean;
+  requirementFulfillment?: RequirementFulfillment;
   [key: string]: unknown;
 };
