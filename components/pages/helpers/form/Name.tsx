@@ -242,8 +242,8 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
   );
 
   const fulfilled = useMemo(
-    () => !loaded || (validGerman && valueGerman?.length > 0),
-    [loaded, validGerman, valueGerman]
+    () => validGerman && valueGerman?.length > 0,
+    [validGerman, valueGerman]
   );
 
   return {

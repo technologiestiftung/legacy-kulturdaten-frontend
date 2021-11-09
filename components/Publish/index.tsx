@@ -305,18 +305,19 @@ export const usePublish = ({
 
         return {
           text: requirement.translation,
-          fulfilled: stateFulfillment
-            ? stateFulfillment.fulfilled
-            : requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
-                if (
-                  failedRequirementsFromApi &&
-                  failedRequirementsFromApi.hasOwnProperty(publishableKey)
-                ) {
-                  return false;
-                }
+          fulfilled:
+            stateFulfillment && typeof stateFulfillment.fulfilled === 'boolean'
+              ? stateFulfillment.fulfilled
+              : requirement.publishableKeys.reduce((fulfilled, publishableKey) => {
+                  if (
+                    failedRequirementsFromApi &&
+                    failedRequirementsFromApi.hasOwnProperty(publishableKey)
+                  ) {
+                    return false;
+                  }
 
-                return fulfilled;
-              }, true),
+                  return fulfilled;
+                }, true),
           link: requirement.link
             ? {
                 href: requirement.link?.href(query),

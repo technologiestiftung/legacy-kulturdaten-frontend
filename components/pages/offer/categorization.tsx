@@ -49,10 +49,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
     [initialTypes, types]
   );
 
-  const fulfilled = useMemo(
-    () => !loaded || (types?.length > 0 && types[0] !== 'undefined'),
-    [loaded, types]
-  );
+  const fulfilled = useMemo(() => types?.length > 0 && types[0] !== 'undefined', [types]);
 
   useEffect(() => {
     if (pristine) {

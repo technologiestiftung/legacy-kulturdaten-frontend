@@ -273,8 +273,8 @@ export const useDescriptionForm: EntryFormHook = ({
   );
 
   const fulfilled = useMemo(
-    () => !loaded || (textLengthGerman > 0 && validGerman),
-    [loaded, textLengthGerman, validGerman]
+    () => textLengthGerman > 0 && validGerman,
+    [textLengthGerman, validGerman]
   );
 
   return {

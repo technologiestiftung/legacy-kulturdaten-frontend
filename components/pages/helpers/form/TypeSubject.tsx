@@ -57,8 +57,8 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({
   }, [required, loaded, types]);
 
   const fulfilled = useMemo(() => {
-    return !loaded || (types && types.length > 0);
-  }, [loaded, types]);
+    return (types && typeof types !== 'undefined' && types.length > 0) || undefined;
+  }, [types]);
 
   const initialSubjects = useMemo(
     () => entry?.data?.relations?.subjects?.map((subject) => String(subject.id)),

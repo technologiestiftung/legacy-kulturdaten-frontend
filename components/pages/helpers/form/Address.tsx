@@ -91,14 +91,12 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
   const fulfilled = useMemo(
     () =>
       !softRequired ||
-      !loaded ||
       (address?.attributes?.street1?.length > 0 &&
         address?.attributes?.zipCode?.length > 0 &&
         (district ? address?.attributes?.district?.length > 0 : true) &&
         address?.attributes?.city?.length > 0),
     [
       softRequired,
-      loaded,
       address?.attributes?.city?.length,
       address?.attributes?.street1?.length,
       address?.attributes?.district?.length,
