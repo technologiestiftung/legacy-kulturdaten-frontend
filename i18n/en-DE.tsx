@@ -759,8 +759,8 @@ export const enDE: Localization = {
       requirements: {
         name: () => 'Name',
         description: () => 'Description',
-        categorization: () => 'Categories',
-        address: () => 'Address',
+        categorization: () => 'Type of organizer',
+        address: () => 'Internal contact',
       },
       title: {
         plural: () => 'Organizers',
