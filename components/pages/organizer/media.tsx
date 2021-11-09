@@ -25,7 +25,7 @@ import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/u
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
 
-const maxLogoSize = 2048;
+const maxLogoSize = 10240;
 
 const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   { category, query }: { category: Category; query: ParsedUrlQuery },
@@ -178,7 +178,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={`${t('logo.title')}`} />
+        <EntryFormHead title={`${t('logo.title')}`} tooltip={`${t('logo.titleTooltip')}`} />
         <FormGrid>
           {!logo && !logoFromApi && renderedLogoUploadForm}
           <FormItem width={FormItemWidth.full}>

@@ -1632,23 +1632,6 @@ export const locationAccessibility: GenericFormCategory[] = [
                           },
                         ],
                       },
-                      {
-                        value: 'noLibraryCard',
-                        translations: [
-                          {
-                            attributes: {
-                              language: Language.de,
-                              name: 'Zugang für Begleitperson auch ohne Nutzer:innenausweis',
-                            },
-                          },
-                          {
-                            attributes: {
-                              language: Language.en,
-                              name: 'Free library card / no library card needed for attendant',
-                            },
-                          },
-                        ],
-                      },
                     ],
                   },
                 },
@@ -3957,23 +3940,6 @@ export const locationAccessibility: GenericFormCategory[] = [
                             attributes: {
                               language: Language.en,
                               name: 'stair lift / hoist lift, operated by staff',
-                            },
-                          },
-                        ],
-                      },
-                      {
-                        value: 'noLibraryCard',
-                        translations: [
-                          {
-                            attributes: {
-                              language: Language.de,
-                              name: 'Zugang für Begleitperson auch ohne Nutzer:innenausweis',
-                            },
-                          },
-                          {
-                            attributes: {
-                              language: Language.en,
-                              name: 'Free library card / no library card needed for attendant',
                             },
                           },
                         ],

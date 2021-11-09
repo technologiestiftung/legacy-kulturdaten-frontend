@@ -89,7 +89,7 @@ export const deDE: Localization = {
               </DashboardTileTextP>
             </DashboardTileText>
           ),
-          link: () => 'Jetzt das Profil ausfüllen',
+          link: () => 'Profil ausfüllen',
         },
       },
       data: {
@@ -491,20 +491,39 @@ export const deDE: Localization = {
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
     hint: () => 'Bitte fülle die Pflichtfelder aus, damit das Bild öffentlich verfügbar ist.',
     dropZoneLabel: () => 'Bilder hochladen',
-    usageInfo: () =>
-      'Bitte beachte, dass du nur Bilder über kulturdaten.berlin zur Verfügung stellst, die von anderen in unveränderter oder veränderter Form weitergenutzt werden dürfen - auch zu kommerziellen Zwecken und im Fall der CC-Lizenzen auch auf Social Media. Bitte verwende keine Bilder ohne die Zustimmung des/der Rechteinhaber:in. Sind auf den Bildern Personen abgebildet, so müssen diese ihr Einverständnis zur Nutzung des Bildes durch Dritte gegeben haben. Datennutzer:innen - ob Veranstaltungsportal oder App-Entwickler:in - erhalten das Recht, die Bilddateien unter Nennung der Urheber:in zur Promotion von Angeboten innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.',
+    usageInfo: () => (
+      <>
+        <TooltipP>Bitte beachte, dass:</TooltipP>
+        <TooltipP>
+          * du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
+          Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media Kanälen.
+        </TooltipP>
+        <TooltipP>
+          * du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
+          Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
+          Dritte vorliegen.
+        </TooltipP>
+        <TooltipP>
+          * Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
+          erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
+          innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
+        </TooltipP>
+      </>
+    ),
     acknowledgedUsageInfo: () => 'Zur Kenntnis genommen',
   },
   logo: {
-    title: () => 'Logo',
-    imageProcessing: () => 'Das Logo wird verarbeitet und geladen',
-    openImage: () => 'Original Logo in neuem Tab öffnen',
-    delete: () => 'Logo löschen',
+    title: () => 'Profilbild / Logo',
+    titleTooltip: () =>
+      'Du kannst ein Logo oder Profilbild für Datennutzende (z.B. Online-Kalender) hochladen und festlegen, unter welcher Lizenz es verwendet werden kann. Ist die mit dem Logo verbundene Marke geschützt, bleibt sie natürlich geschützt, unabhängig von der gewählten Bildlizenz.',
+    imageProcessing: () => 'Das Profilbild / Logo wird verarbeitet und geladen',
+    openImage: () => 'Original Profilbild / Logo in neuem Tab öffnen',
+    delete: () => 'Profilbild / Logo löschen',
     deleteConfirm: () =>
-      'Willst du das Logo wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
+      'Willst du das Profilbild / Logo wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     hint: () =>
-      'Damit das Logo öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
-    dropZoneLabel: () => 'Neues Logo hochladen',
+      'Damit das Profilbild / Logo öffentlich verfügbar ist, müssen die Pflichtfelder ausgefüllt werden.',
+    dropZoneLabel: () => 'Profilbild / Logo hochladen',
   },
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
@@ -847,7 +866,7 @@ export const deDE: Localization = {
         name: () => 'Angebotstitel',
         description: () => 'Beschreibung',
         categorization: () => 'Themen-Kategorie',
-        mainType: () => 'Angebotstyp',
+        mainType: () => 'Angebotsart',
       },
       title: {
         plural: () => 'Angebote',
@@ -877,7 +896,7 @@ export const deDE: Localization = {
         locationInfoPlaceholder: () => 'z.B. spezifischer Raum',
         peakHours: () => 'Stoßzeiten',
         mainType: {
-          title: () => 'Angebotstyp',
+          title: () => 'Angebotsart',
           choose: () => 'Um was handelt es sich? z.B. Ausstellung, Konzert, Führung...',
         },
         pricing: {
