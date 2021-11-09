@@ -78,7 +78,7 @@ const StyledRequirementLink = styled.a`
 `;
 
 export interface RequirementProps {
-  text: string;
+  text: string | React.ReactNode;
   fulfilled: boolean;
   link?: {
     href: string;
