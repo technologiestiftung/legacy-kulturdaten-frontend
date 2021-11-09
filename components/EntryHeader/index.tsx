@@ -123,8 +123,8 @@ const StyledEntryHeaderTitle = styled.h1<{ skeleton: boolean }>`
 `;
 
 const StyledEntryHeaderSubTitle = styled.h2`
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
+  font-size: var(--font-size-500);
+  line-height: var(--line-height-500);
   font-weight: 400;
 `;
 
