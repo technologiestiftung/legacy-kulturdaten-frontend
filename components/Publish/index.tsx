@@ -13,9 +13,10 @@ import { Button, ButtonColor, ButtonSize } from '../button';
 import { contentGrid, mq } from '../globals/Constants';
 import { Label, StyledLabel } from '../label';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
-import { RequirementFulfillment } from '../../config/categories';
+import { Categories, RequirementFulfillment } from '../../config/categories';
 import { useRouter } from 'next/router';
 import { PublishedStatus } from '../../lib/api/types/general';
+import { useOrganizerId } from '../../lib/useOrganizer';
 
 const StyledPublish = styled.div`
   ${contentGrid(1)}
@@ -143,7 +144,16 @@ export const Publish: React.FC<PublishProps> = ({
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const loadingScreen = useLoadingScreen();
-  const mutateList = useMutateList(category);
+  const categoryName = category?.name;
+  const organizerId = useOrganizerId();
+  const mutateList = useMutateList(
+    category,
+    categoryName === Categories.location
+      ? [['organizer', organizerId]]
+      : categoryName === Categories.offer
+      ? [['organizers', organizerId]]
+      : undefined
+  );
   const t = useT();
 
   const fulfilledRequirementsCount = useMemo(
