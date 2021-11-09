@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { ParsedUrlQuery } from 'node:querystring';
 import { useMemo } from 'react';
 import { useApiCall } from '../../lib/api';
@@ -202,6 +203,18 @@ export const Publish: React.FC<PublishProps> = ({
             color={ButtonColor.green}
             icon="Heart"
             disabled={!publishable}
+            css={css`
+              box-shadow: 0.125rem 0.125rem 1.75rem -0.25rem rgba(0, 131, 92, 0.35);
+
+              &:hover {
+                box-shadow: 0.125rem 0.125rem 2.25rem -0.25rem rgba(0, 131, 92, 0.55);
+                transform: translateY(-0.125rem);
+              }
+
+              &:active {
+                transform: translateY(0.125rem);
+              }
+            `}
             onClick={async () => {
               loadingScreen(
                 t('publish.loadingTitle', { categoryName: category.title.singular }),
@@ -213,9 +226,7 @@ export const Publish: React.FC<PublishProps> = ({
                       console.error(e);
                       return { success: false, error: t('general.serverProblem') };
                     }
-
                     const save = await waitForSave();
-
                     if (save.success) {
                       const resp = await call(category.api.update.factory, {
                         id: entry.data.id,
@@ -225,11 +236,9 @@ export const Publish: React.FC<PublishProps> = ({
                           },
                         },
                       });
-
                       if (resp.status === 200) {
                         mutate();
                         mutateList();
-
                         return { success: true };
                       }
                     } else {

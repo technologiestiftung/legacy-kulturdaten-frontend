@@ -64,7 +64,7 @@ const buttonColors: {
   white: {
     background: 'var(--white)',
     color: 'var(--black)',
-    iconBackground: 'rgba(0,0,0,0.15)',
+    iconBackground: 'rgba(0,0,0,0.05)',
   },
   black: {
     background: 'var(--black)',
