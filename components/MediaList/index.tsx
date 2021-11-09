@@ -463,26 +463,25 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
           <div>
             <Info color={InfoColor.grey} noMaxWidth>
               {t('media.usageInfo')}
+              <Checkbox
+                id={`${uid}-terms`}
+                checked={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
+                label={t('media.acknowledgedUsageInfo') as string}
+                onChange={(e) => {
+                  onChange({
+                    ...mediaItem,
+                    attributes: {
+                      ...mediaItem.attributes,
+                      acceptedTermsAt: e.target.checked ? new Date().toISOString() : undefined,
+                    },
+                  });
+                }}
+                valid={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
+                required
+              />
             </Info>
           </div>
-          <div>
-            <Checkbox
-              id={`${uid}-terms`}
-              checked={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
-              label={t('media.acknowledgedUsageInfo') as string}
-              onChange={(e) => {
-                onChange({
-                  ...mediaItem,
-                  attributes: {
-                    ...mediaItem.attributes,
-                    acceptedTermsAt: e.target.checked ? new Date().toISOString() : undefined,
-                  },
-                });
-              }}
-              valid={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
-              required
-            />
-          </div>
+          <div></div>
         </StyledMediaListItemForm>
         <StyledMediaListItemFunctions></StyledMediaListItemFunctions>
       </StyledMediaListItemMain>

@@ -1,5 +1,6 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
+import { InfoLi, InfoP, InfoUl } from '../components/info';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
@@ -493,21 +494,24 @@ export const deDE: Localization = {
     dropZoneLabel: () => 'Bilder hochladen',
     usageInfo: () => (
       <>
-        <TooltipP>Bitte beachte, dass:</TooltipP>
-        <TooltipP>
-          * du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
-          Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media Kanälen.
-        </TooltipP>
-        <TooltipP>
-          * du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
-          Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
-          Dritte vorliegen.
-        </TooltipP>
-        <TooltipP>
-          * Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
-          erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
-          innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
-        </TooltipP>
+        <InfoP>Bitte beachte, dass:</InfoP>
+        <InfoUl>
+          <InfoLi>
+            du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
+            Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media
+            Kanälen.
+          </InfoLi>
+          <InfoLi>
+            du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
+            Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
+            Dritte vorliegen.
+          </InfoLi>
+          <InfoLi>
+            Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
+            erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
+            innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
+          </InfoLi>
+        </InfoUl>
       </>
     ),
     acknowledgedUsageInfo: () => 'Zur Kenntnis genommen',
