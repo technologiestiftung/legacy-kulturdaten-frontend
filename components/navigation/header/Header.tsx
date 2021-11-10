@@ -142,12 +142,15 @@ export const HeaderMain: React.FC<HeaderProps> = ({
     </Link>
   );
 
-  const renderedMenuSection = menuItems.map(({ type, action }, index) => {
+  const renderedMenuSection = menuItems.map(({ type, action, disabled: itemDisabled }, index) => {
     switch (type) {
       case MenuItemType.link: {
         return (
           <StyledHeaderMenuItem key={index}>
-            <HeaderMenuLink {...(action as MenuItemLink)} disabled={disabled} />
+            <HeaderMenuLink
+              {...(action as MenuItemLink)}
+              disabled={typeof itemDisabled === 'boolean' ? itemDisabled : disabled}
+            />
           </StyledHeaderMenuItem>
         );
       }
@@ -249,9 +252,8 @@ const HeaderOrganizerMenu: React.FC<HeaderOrganizerMenuProps> = ({
     </StyledHeaderOrganizerMenuList>
   );
 
-  const { headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed } = useContext(
-    NavigationContext
-  );
+  const { headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed } =
+    useContext(NavigationContext);
 
   const { renderedCollapsable } = useCollapsable(
     renderedOrganizerList,

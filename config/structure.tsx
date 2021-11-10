@@ -53,6 +53,7 @@ export const useMenuStructure = (): NavigationStructure => {
         menuItems: [
           {
             type: MenuItemType.link,
+            disabled: false,
             action: {
               title: t('menu.start.items.dashboard') as string,
               href: routes.dashboard({ locale, query: { organizer: organizerId } }),
