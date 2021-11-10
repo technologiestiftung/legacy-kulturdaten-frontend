@@ -61,6 +61,7 @@ export type MenuSectionData = {
 
 export type MenuItem = {
   type: MenuItemType;
+  disabled?: boolean;
   action?: MenuItemLink | MenuItemButton | MenuItemFolder;
 };
 

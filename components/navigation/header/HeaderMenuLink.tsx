@@ -1,10 +1,11 @@
+import React, { useContext, useMemo } from 'react';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import * as feather from 'react-feather';
 
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { css } from '@emotion/react';
-import React, { useMemo } from 'react';
+import { NavigationContext } from '../NavigationContext';
 
 const StyledA = styled.a<{ active?: boolean; disabled?: boolean }>`
   color: inherit;
@@ -90,12 +91,19 @@ const InternalMenuLink: React.FC<InternalMenuLinkProps> = ({
   const isRouteActive = useIsRouteStringActive(href);
   const linkIsActive = active !== undefined ? active : isRouteActive;
   const isDisabled = useMemo(() => disabled && !linkIsActive, [disabled, linkIsActive]);
+  const { setMenuExpanded } = useContext(NavigationContext);
 
   const renderedStyledLink = (
     <StyledA
       title={title}
       active={linkIsActive}
-      onClick={onClick}
+      onClick={() => {
+        if (onClick) {
+          onClick();
+        }
+
+        setMenuExpanded(false);
+      }}
       as={isDisabled ? 'div' : undefined}
       disabled={isDisabled}
     >

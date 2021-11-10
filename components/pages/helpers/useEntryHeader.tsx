@@ -72,12 +72,12 @@ export const useEntryHeader = (
         menu={
           minimalVariant ? undefined : (
             <DropdownMenu
-              icon="Sliders"
-              text={t('general.options') as string}
+              icon="MoreVertical"
+              text={t('general.actions') as string}
               form={DropdownMenuForm.rounded}
               buttonAriaLabels={{
-                open: t('general.optionsOpen') as string,
-                close: t('general.optionsClose') as string,
+                open: t('general.actionsOpen') as string,
+                close: t('general.actionsClose') as string,
               }}
               stretch={!isMidOrWider}
             >
