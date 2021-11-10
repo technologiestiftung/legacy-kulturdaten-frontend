@@ -42,11 +42,11 @@ export const EntryHeaderDefaultStory: Story = () => {
       menu={
         <DropdownMenu
           icon="Sliders"
-          text={t('general.options') as string}
+          text={t('general.actions') as string}
           form={DropdownMenuForm.rounded}
           buttonAriaLabels={{
-            open: t('general.optionsOpen') as string,
-            close: t('general.optionsClose') as string,
+            open: t('general.actionsOpen') as string,
+            close: t('general.actionsClose') as string,
           }}
         >
           <Button
