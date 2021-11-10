@@ -38,12 +38,17 @@ const StyledRadioSwitchOptions = styled.div`
   background: var(--black);
   mask-image: -webkit-radial-gradient(white, black);
   flex-wrap: wrap;
+  align-items: stretch;
 `;
 
 const StyledRadioSwitchOption = styled.div<{ active: boolean }>`
   flex-basis: 0;
   flex-grow: 1;
   position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: stretch;
 `;
 
 const StyledRadioSwitchOptionInput = styled.input`
@@ -56,6 +61,7 @@ const StyledRadioSwitchOptionInput = styled.input`
   border: 2px solid var(--grey-600);
   border-radius: 1rem;
   pointer-events: none;
+  flex-shrink: 0;
 
   &::after {
     content: '';
@@ -80,6 +86,7 @@ const StyledRadioSwitchOptionInput = styled.input`
 `;
 
 const StyledRadioSwitchOptionLabel = styled.label<{ active: boolean }>`
+  flex-grow: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -87,6 +94,7 @@ const StyledRadioSwitchOptionLabel = styled.label<{ active: boolean }>`
   background: var(--white);
   color: var(--grey-600);
   cursor: pointer;
+  column-gap: 0.375rem;
 
   ${({ active }) =>
     active

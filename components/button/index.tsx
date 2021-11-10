@@ -206,8 +206,8 @@ const StyledButtonIcon = styled.div<{
     hasChildren
       ? variant === ButtonVariant.borderless
         ? position === IconPosition.right
-          ? `0 0 0 ${buttonSizes[size].iconGap}`
-          : `0 ${buttonSizes[size].iconGap} 0 0`
+          ? `0 0 0 calc(${buttonSizes[size].iconGap} / 2)`
+          : `0 calc(${buttonSizes[size].iconGap} / 2) 0 0`
         : `0 ${buttonSizes[size].iconGap}`
       : '0'};
 
