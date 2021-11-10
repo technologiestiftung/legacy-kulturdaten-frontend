@@ -40,6 +40,7 @@ const StyledRadioListItemLink = styled.div`
 const StyledRadioListItemLinkA = styled.a`
   color: inherit;
   overflow-wrap: anywhere;
+  word-break: break-word;
 `;
 
 export interface RadioListProps extends ComponentWithVariants {
