@@ -10,7 +10,7 @@ import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
 import { HeaderBackLink } from './header/HeaderBackLink';
 import { HeaderLinkProps } from './header/HeaderLink';
-import { Menu, MenuData, MenuItemType, MenuItemButton, MenuItemFolder, MenuItemLink } from './Menu';
+import { Menu, MenuData, MenuItem } from './Menu';
 import { NavigationContext } from './NavigationContext';
 
 export interface NavigationProps {
@@ -29,16 +29,10 @@ export interface NavigationProps {
 export type NavigationStructure = {
   header: {
     loggedIn: {
-      menuItems: {
-        type: MenuItemType;
-        action?: MenuItemLink | MenuItemButton | MenuItemFolder;
-      }[];
+      menuItems: MenuItem[];
     };
     loggedOut: {
-      menuItems: {
-        type: MenuItemType;
-        action?: MenuItemLink | MenuItemButton | MenuItemFolder;
-      }[];
+      menuItems: MenuItem[];
     };
   };
   menus: MenuData[];
