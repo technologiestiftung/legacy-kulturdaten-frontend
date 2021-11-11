@@ -200,10 +200,17 @@ const StyledMediaListItemThumbnailPlaceholderInner = styled.div`
 const StyledMediaListItemFormWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0.75rem;
+  row-gap: 1.5rem;
+
+  ${mq(Breakpoint.mid)} {
+    padding: 1.5rem;
+  }
 
   ${mq(Breakpoint.ultra)} {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    column-gap: 1.5rem;
   }
 `;
 
@@ -211,11 +218,6 @@ const StyledMediaListItemForm = styled.div<{ columns?: number }>`
   display: flex;
   flex-direction: column;
   row-gap: 1.5rem;
-  padding: 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    padding: 1.5rem;
-  }
 
   ${({ columns }) =>
     columns &&
