@@ -15,7 +15,6 @@ const StyledContacts = styled.div`
   flex-direction: column;
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
-  /* box-shadow: 0 0 2rem -0.75rem rgba(0, 0, 0, 0.5); */
 `;
 
 const StyledContactsAdd = styled.div`
@@ -54,14 +53,12 @@ const StyledContactsItem = styled.div`
 `;
 
 const StyledContactsItemIndex = styled.div<{ first: boolean }>`
-  /* width: 2.25rem; */
-  padding: 0.75rem 0.375rem;
+  padding: 0.375rem 0.375rem 0.75rem;
   text-align: center;
   font-size: var(--font-size-650);
   line-height: var(--line-height-650);
   font-weight: 700;
   background: var(--grey-200);
-  /* border-right: 1px solid var(--grey-400); */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -69,8 +66,7 @@ const StyledContactsItemIndex = styled.div<{ first: boolean }>`
   ${({ first }) => first && 'border-top-left-radius: 0.75rem;'}
 
   ${mq(Breakpoint.mid)} {
-    /* width: 3rem; */
-    padding: 1.125rem 0.75rem;
+    padding: 0.75rem 0.75rem 1.5rem;
   }
 `;
 
@@ -95,6 +91,7 @@ const StyledContactsItemField = styled.div`
 
 const StyledContactsItemRemove = styled.div`
   position: relative;
+  line-height: 0;
 `;
 
 interface ContactsProps {
