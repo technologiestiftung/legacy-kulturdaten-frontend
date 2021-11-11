@@ -31,12 +31,6 @@ const StyledMediaList = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 1.5rem;
-
-  ${mq(Breakpoint.ultra)} {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 1.5rem;
-  }
 `;
 
 const StyledMediaListItem = styled.div`
@@ -203,7 +197,17 @@ const StyledMediaListItemThumbnailPlaceholderInner = styled.div`
   }
 `;
 
-const StyledMediaListItemForm = styled.div`
+const StyledMediaListItemFormWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  ${mq(Breakpoint.ultra)} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+`;
+
+const StyledMediaListItemForm = styled.div<{ columns?: number }>`
   display: flex;
   flex-direction: column;
   row-gap: 1.5rem;
@@ -211,11 +215,16 @@ const StyledMediaListItemForm = styled.div`
 
   ${mq(Breakpoint.mid)} {
     padding: 1.5rem;
-    grid-template-columns: 1fr 2fr;
   }
-`;
 
-const StyledMediaListItemFunctions = styled.div``;
+  ${({ columns }) =>
+    columns &&
+    css`
+      ${mq(Breakpoint.ultra)} {
+        grid-column: span ${columns};
+      }
+    `}
+`;
 
 const StyledMediaListItemSub = styled.div`
   padding: 0.75rem;
@@ -339,151 +348,162 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
             </StyledMediaListItemThumbnailInner>
           )}
         </StyledMediaListItemThumbnail>
-        <StyledMediaListItemForm>
-          {contentLanguages.map((language: Language, index) => {
-            const currentTranslation = mediaItem.relations?.translations
-              ? getTranslation<MediaTranslation>(language, mediaItem.relations.translations, false)
-              : undefined;
+        <StyledMediaListItemFormWrapper>
+          <StyledMediaListItemForm>
+            {contentLanguages.map((language: Language, index) => {
+              const currentTranslation = mediaItem.relations?.translations
+                ? getTranslation<MediaTranslation>(
+                    language,
+                    mediaItem.relations.translations,
+                    false
+                  )
+                : undefined;
 
-            return (
-              <div key={index}>
-                <Input
-                  type={InputType.text}
-                  label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
-                  id={`${uid}-alt-${language}`}
-                  value={currentTranslation?.attributes?.alternativeText || ''}
-                  required={language === defaultLanguage}
-                  tooltip={language === defaultLanguage ? (t('media.altTooltip') as string) : ''}
-                  onChange={(e) => {
-                    const updatedTranslation = {
-                      ...currentTranslation,
-                      attributes: {
-                        ...currentTranslation?.attributes,
-                        language,
-                        alternativeText: e.target.value,
-                      },
-                    };
+              return (
+                <div key={index}>
+                  <Input
+                    type={InputType.text}
+                    label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
+                    id={`${uid}-alt-${language}`}
+                    value={currentTranslation?.attributes?.alternativeText || ''}
+                    required={language === defaultLanguage}
+                    tooltip={language === defaultLanguage ? (t('media.altTooltip') as string) : ''}
+                    onChange={(e) => {
+                      const updatedTranslation = {
+                        ...currentTranslation,
+                        attributes: {
+                          ...currentTranslation?.attributes,
+                          language,
+                          alternativeText: e.target.value,
+                        },
+                      };
 
-                    const filteredTranslations =
-                      mediaItem?.relations?.translations?.filter(
-                        (translation) => translation.attributes?.language !== language
-                      ) || [];
+                      const filteredTranslations =
+                        mediaItem?.relations?.translations?.filter(
+                          (translation) => translation.attributes?.language !== language
+                        ) || [];
 
-                    onChange({
-                      attributes: mediaItem?.attributes,
-                      id: mediaItem?.id,
-                      type: mediaItem?.type,
-                      relations: mediaItem?.relations
-                        ? {
-                            ...mediaItem.relations,
-                            translations: [...filteredTranslations, updatedTranslation],
-                          }
-                        : {
-                            translations: [updatedTranslation],
-                          },
-                    });
-                  }}
-                />
-              </div>
-            );
-          })}
-          <div>
-            <Input
-              type={InputType.text}
-              label={t('media.copyright') as string}
-              id={`${uid}-copyright`}
-              value={mediaItem.attributes.copyright || ''}
-              placeholder={t('media.copyrightPlaceholder') as string}
-              tooltip={t('media.copyrightTooltip') as string}
-              onChange={(e) =>
-                onChange({
-                  ...mediaItem,
-                  attributes: { ...mediaItem.attributes, copyright: e.target.value },
-                })
-              }
-              required
-            />
-          </div>
-          <div>
-            <RadioList
-              required
-              label={t('media.license') as string}
-              id={`${uid}-license`}
-              name={`${uid}-license`}
-              value={String((mediaItem.relations?.license as MediaLicense)?.id)}
-              options={mediaLicenses?.map((mediaLicense) => ({
-                value: String(mediaLicense.id),
-                label: t(`media.licenses.${mediaLicense.id}.name`) as string,
-                link: {
-                  href: t(`media.licenses.${mediaLicense.id}.href`) as string,
-                  title: t(`media.licenses.${mediaLicense.id}.href`) as string,
-                },
-              }))}
-              onChange={(newValue) =>
-                onChange({
-                  ...mediaItem,
-                  attributes: {
-                    ...mediaItem.attributes,
-                  },
-                  relations: {
-                    ...mediaItem.relations,
-                    license: mediaLicenses.find((license) => license.id === parseInt(newValue, 10)),
-                  },
-                })
-              }
-            />
-          </div>
-          {(mediaItem.relations?.license as MediaLicense)?.id === 4 && (
+                      onChange({
+                        attributes: mediaItem?.attributes,
+                        id: mediaItem?.id,
+                        type: mediaItem?.type,
+                        relations: mediaItem?.relations
+                          ? {
+                              ...mediaItem.relations,
+                              translations: [...filteredTranslations, updatedTranslation],
+                            }
+                          : {
+                              translations: [updatedTranslation],
+                            },
+                      });
+                    }}
+                  />
+                </div>
+              );
+            })}
             <div>
               <Input
-                type={InputType.date}
-                label={t('media.licenseEnd') as string}
+                type={InputType.text}
+                label={t('media.copyright') as string}
                 id={`${uid}-copyright`}
-                value={
-                  mediaItem.attributes.expiresAt
-                    ? formatISO9075(new Date(mediaItem.attributes.expiresAt), {
-                        representation: 'date',
-                      })
-                    : ''
-                }
+                value={mediaItem.attributes.copyright || ''}
+                placeholder={t('media.copyrightPlaceholder') as string}
+                tooltip={t('media.copyrightTooltip') as string}
                 onChange={(e) =>
+                  onChange({
+                    ...mediaItem,
+                    attributes: { ...mediaItem.attributes, copyright: e.target.value },
+                  })
+                }
+                required
+              />
+            </div>
+          </StyledMediaListItemForm>
+          <StyledMediaListItemForm>
+            {' '}
+            <div>
+              <RadioList
+                required
+                label={t('media.license') as string}
+                id={`${uid}-license`}
+                name={`${uid}-license`}
+                value={String((mediaItem.relations?.license as MediaLicense)?.id)}
+                options={mediaLicenses?.map((mediaLicense) => ({
+                  value: String(mediaLicense.id),
+                  label: t(`media.licenses.${mediaLicense.id}.name`) as string,
+                  link: {
+                    href: t(`media.licenses.${mediaLicense.id}.href`) as string,
+                    title: t(`media.licenses.${mediaLicense.id}.href`) as string,
+                  },
+                }))}
+                onChange={(newValue) =>
                   onChange({
                     ...mediaItem,
                     attributes: {
                       ...mediaItem.attributes,
-                      expiresAt: e.target.value
-                        ? new Date(e.target.value).toISOString()
-                        : undefined,
+                    },
+                    relations: {
+                      ...mediaItem.relations,
+                      license: mediaLicenses.find(
+                        (license) => license.id === parseInt(newValue, 10)
+                      ),
                     },
                   })
                 }
               />
             </div>
-          )}
-          <div>
-            <Info color={InfoColor.grey} noMaxWidth>
-              {t('media.usageInfo')}
-              <Checkbox
-                id={`${uid}-terms`}
-                checked={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
-                label={t('media.acknowledgedUsageInfo') as string}
-                onChange={(e) => {
-                  onChange({
-                    ...mediaItem,
-                    attributes: {
-                      ...mediaItem.attributes,
-                      acceptedTermsAt: e.target.checked ? new Date().toISOString() : undefined,
-                    },
-                  });
-                }}
-                valid={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
-                required
-              />
-            </Info>
-          </div>
-          <div></div>
-        </StyledMediaListItemForm>
-        <StyledMediaListItemFunctions></StyledMediaListItemFunctions>
+            {(mediaItem.relations?.license as MediaLicense)?.id === 4 && (
+              <div>
+                <Input
+                  type={InputType.date}
+                  label={t('media.licenseEnd') as string}
+                  id={`${uid}-copyright`}
+                  value={
+                    mediaItem.attributes.expiresAt
+                      ? formatISO9075(new Date(mediaItem.attributes.expiresAt), {
+                          representation: 'date',
+                        })
+                      : ''
+                  }
+                  onChange={(e) =>
+                    onChange({
+                      ...mediaItem,
+                      attributes: {
+                        ...mediaItem.attributes,
+                        expiresAt: e.target.value
+                          ? new Date(e.target.value).toISOString()
+                          : undefined,
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+          </StyledMediaListItemForm>
+          <StyledMediaListItemForm columns={2}>
+            <div>
+              <Info color={InfoColor.grey} noMaxWidth>
+                {t('media.usageInfo')}
+                <Checkbox
+                  id={`${uid}-terms`}
+                  checked={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
+                  label={t('media.acknowledgedUsageInfo') as string}
+                  onChange={(e) => {
+                    onChange({
+                      ...mediaItem,
+                      attributes: {
+                        ...mediaItem.attributes,
+                        acceptedTermsAt: e.target.checked ? new Date().toISOString() : undefined,
+                      },
+                    });
+                  }}
+                  valid={mediaItem?.attributes?.acceptedTermsAt?.length > 0}
+                  required
+                />
+              </Info>
+            </div>
+          </StyledMediaListItemForm>
+        </StyledMediaListItemFormWrapper>
       </StyledMediaListItemMain>
       <StyledMediaListItemSub>
         <StyledMediaListItemInfo>
