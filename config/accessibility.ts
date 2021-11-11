@@ -1,5 +1,9 @@
 import { InputType } from '../components/input';
-import { GenericFormCategory, GenericFormFieldType } from '../lib/genericForm';
+import {
+  GenericFormCategory,
+  GenericFormFieldConditionType,
+  GenericFormFieldType,
+} from '../lib/genericForm';
 import { Language } from './locale';
 
 export const locationAccessibility: GenericFormCategory[] = [
@@ -1180,12 +1184,12 @@ export const locationAccessibility: GenericFormCategory[] = [
         ],
         children: [
           {
-            type: GenericFormFieldType.checkboxList,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'ebenerdiger Zugang',
+                  name: 'Ebenerdiger Zugang',
                 },
               },
               {
@@ -1197,23 +1201,62 @@ export const locationAccessibility: GenericFormCategory[] = [
             ],
             data: {
               key: 'planning.entry.groundLevelEntrance',
-              options: [
+              fields: [
                 {
-                  value: 'yes',
+                  type: GenericFormFieldType.radioList,
                   translations: [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Ja',
+                        name: 'Art der Ebenerdigkeit',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'Yes',
+                        name: 'Type of ground level',
                       },
                     },
                   ],
+                  data: {
+                    key: 'planning.entry.groundLevelEntranceType',
+                    options: [
+                      {
+                        value: 'smoothSurface',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Bodenoberfläche glatt',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'ground surface smooth',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'roughSurface',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Bodenoberfläche rau oder schwer befahrbar (z.B. Gras, Teppich)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'ground surface rough or difficult to drive over (e.g. grass, carpet)',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -2046,7 +2089,7 @@ export const locationAccessibility: GenericFormCategory[] = [
                   language: Language.de,
                   name: 'Anmerkungen',
                   placeholder:
-                    'z.B. Kiesfläche vor Tür, Kasse nicht sofort sichtbar, Schranken, Poller, Taschenkontrolle, etc.',
+                    'z.B. Kasse nicht sofort sichtbar, Schranken, Poller, Taschenkontrolle, etc.',
                 },
               },
               {
@@ -2490,6 +2533,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'foyer.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'foyer.restroom.restroomAccessType',
               options: [
@@ -2603,6 +2651,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'foyer.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
           },
           {
             type: GenericFormFieldType.checkboxList,
@@ -2620,6 +2673,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'foyer.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'foyer.restroom.restroomDoor',
               options: [
@@ -2744,6 +2802,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'foyer.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'foyer.restroom.accessibleWithWheelchair',
               options: [
@@ -2851,6 +2914,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'foyer.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'foyer.toilet.toiletDetails',
               options: [
@@ -3491,45 +3559,83 @@ export const locationAccessibility: GenericFormCategory[] = [
             ],
           },
           {
-            type: GenericFormFieldType.checkboxList,
+            type: GenericFormFieldType.conditional,
             translations: [
               {
                 attributes: {
                   language: Language.de,
-                  name: 'Zugangsart',
+                  name: 'Ebenerdiger Zugang',
                 },
               },
               {
                 attributes: {
                   language: Language.en,
-                  name: 'Type for access',
+                  name: 'ground-level entrance',
                 },
               },
             ],
             data: {
-              key: 'orientation.indoorRoomAccess.entranceType',
-              options: [
+              key: 'orientation.indoorRoomAccess.groundLevelEntrance',
+              fields: [
                 {
-                  value: 'groundLevelEntrance',
+                  type: GenericFormFieldType.radioList,
                   translations: [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'ebenerdiger Zugang',
+                        name: 'Art der Ebenerdigkeit',
                       },
                     },
                     {
                       attributes: {
                         language: Language.en,
-                        name: 'ground-level entrance',
+                        name: 'Type of ground level',
                       },
                     },
                   ],
+                  data: {
+                    key: 'orientation.indoorRoomAccess.groundLevelEntranceType',
+                    options: [
+                      {
+                        value: 'smoothSurface',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Bodenoberfläche glatt',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'ground surface smooth',
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        value: 'roughSurface',
+                        translations: [
+                          {
+                            attributes: {
+                              language: Language.de,
+                              name: 'Bodenoberfläche rau oder schwer befahrbar (z.B. Gras, Teppich)',
+                            },
+                          },
+                          {
+                            attributes: {
+                              language: Language.en,
+                              name: 'ground surface rough or difficult to drive over (e.g. grass, carpet)',
+                            },
+                          },
+                        ],
+                      },
+                    ],
+                  },
                 },
               ],
             },
           },
-
           {
             type: GenericFormFieldType.conditional,
             translations: [
@@ -4369,6 +4475,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'orientation.indoorRoomAccess.restroom.restroomAccessType',
               options: [
@@ -4482,6 +4593,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
           },
           {
             type: GenericFormFieldType.checkboxList,
@@ -4499,6 +4615,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'orientation.indoorRoomAccess.restroom.restroomDoor',
               options: [
@@ -4623,6 +4744,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'orientation.indoorRoomAccess.restroom.accessibleWithWheelchair',
               options: [
@@ -4730,6 +4856,11 @@ export const locationAccessibility: GenericFormCategory[] = [
                 },
               },
             ],
+            condition: {
+              key: 'orientation.indoorRoomAccess.restroom.restroomAccess',
+              type: GenericFormFieldConditionType.equal,
+              value: 'yes',
+            },
             data: {
               key: 'orientation.indoorRoomAccess.toilet.toiletDetails',
               options: [
