@@ -355,9 +355,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <>
-      {tooltip && isMidOrWider && (
-        <MouseTooltip hoverElement={buttonRef.current}>{tooltip}</MouseTooltip>
-      )}
+      {tooltip && isMidOrWider && <MouseTooltip hoverElement={buttonRef}>{tooltip}</MouseTooltip>}
       {asInput ? (
         <StyledButton
           ref={buttonRef}

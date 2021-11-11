@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, RefObject } from 'react';
 
 const StyledMouseTooltip = styled.div<{ x: number; y: number }>`
   position: fixed;
@@ -23,7 +23,7 @@ const StyledMouseTooltip = styled.div<{ x: number; y: number }>`
 
 type MouseTooltipProps = {
   children: React.ReactNode;
-  hoverElement: HTMLElement;
+  hoverElement: RefObject<HTMLElement>;
 };
 
 export const MouseTooltip: React.FC<MouseTooltipProps> = ({
@@ -57,15 +57,15 @@ export const MouseTooltip: React.FC<MouseTooltipProps> = ({
       setIsTouchEvent(true);
     };
 
-    element?.addEventListener('mouseenter', mouseEnterHandler);
-    element?.addEventListener('mouseleave', mouseLeaveHandler);
-    element?.addEventListener('touchstart', touchHandler);
+    element?.current?.addEventListener('mouseenter', mouseEnterHandler);
+    element?.current?.addEventListener('mouseleave', mouseLeaveHandler);
+    element?.current?.addEventListener('touchstart', touchHandler);
     window?.addEventListener('mousemove', mouseMoveHandler);
 
     return () => {
-      element?.removeEventListener('mouseenter', mouseEnterHandler);
-      element?.removeEventListener('mouseleave', mouseLeaveHandler);
-      element?.removeEventListener('touchstart', touchHandler);
+      element?.current?.removeEventListener('mouseenter', mouseEnterHandler);
+      element?.current?.removeEventListener('mouseleave', mouseLeaveHandler);
+      element?.current?.removeEventListener('touchstart', touchHandler);
       window?.removeEventListener('mousemove', mouseMoveHandler);
     };
   }, [hoverElement, show]);
