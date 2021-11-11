@@ -17,7 +17,7 @@ import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
 import { mq } from '../globals/Constants';
-import { Label, StyledLabel } from '../label';
+import { Label } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
 
@@ -25,14 +25,18 @@ const StyledInputContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+`;
 
-  ${StyledLabel} {
-    padding-bottom: 0.375rem;
-  }
+const StyledInputLabelContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 0.375rem;
+  position: relative;
 `;
 
 const StyledTooltip = styled.div`
-  display: inline-block;
+  display: block;
+  position: relative;
   margin-left: 0.5rem;
 `;
 
@@ -261,9 +265,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ) : (
           <>
             {props.label && (
-              <Label htmlFor={props.id}>
-                {props.label}
-                {props.required || props.softRequired ? ` (${t('forms.required')})` : ''}
+              <StyledInputLabelContainer>
+                <Label htmlFor={props.id}>
+                  {props.label}
+                  {props.required || props.softRequired ? ` (${t('forms.required')})` : ''}
+                </Label>
                 {props.tooltip && (
                   <StyledTooltip>
                     <Tooltip>
@@ -275,8 +281,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     </Tooltip>
                   </StyledTooltip>
                 )}
-              </Label>
+              </StyledInputLabelContainer>
             )}
+
             <StyledInput
               {...props}
               value={props?.debounce ? internalState : props?.value || ''}

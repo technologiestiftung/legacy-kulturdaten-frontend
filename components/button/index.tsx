@@ -201,7 +201,9 @@ const StyledButtonIcon = styled.div<{
   justify-content: center;
   align-items: center;
   background: ${({ color, variant }) =>
-    variant !== ButtonVariant.borderless ? buttonColors[color].iconBackground : 'transparent'};
+    variant !== ButtonVariant.borderless && variant !== ButtonVariant.toolbar
+      ? buttonColors[color].iconBackground
+      : 'transparent'};
   padding: ${({ size, position, hasChildren, variant }) =>
     hasChildren
       ? variant === ButtonVariant.borderless
@@ -353,9 +355,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <>
-      {tooltip && isMidOrWider && (
-        <MouseTooltip hoverElement={buttonRef.current}>{tooltip}</MouseTooltip>
-      )}
+      {tooltip && isMidOrWider && <MouseTooltip hoverElement={buttonRef}>{tooltip}</MouseTooltip>}
       {asInput ? (
         <StyledButton
           ref={buttonRef}

@@ -218,8 +218,9 @@ export const enDE: Localization = {
     minError: ({ min }) => `Please choose at least ${min} ${min === 1 ? 'day' : 'days'}`,
   },
   contacts: {
-    add: () => 'Add new contact',
+    add: () => 'Add contact',
     remove: () => 'remove',
+    placeholder: () => 'No contacts added yet',
   },
   hours: {
     weekday: () => 'Weekday',
