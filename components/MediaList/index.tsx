@@ -17,7 +17,7 @@ import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
-import { Button, ButtonColor } from '../button';
+import { Button, ButtonColor, ButtonVariant } from '../button';
 import { useFormatNumber } from '../../lib/number';
 import { useEffect, useMemo } from 'react';
 import { AlertSymbol } from '../assets/AlertSymbol';
@@ -239,9 +239,8 @@ const StyledMediaListItemSub = styled.div`
   row-gap: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
-    column-gap: 1.5rem;
-    flex-direction: row;
-    padding: 0.75rem 1.5rem;
+    row-gap: 1.125rem;
+    padding: 1.125rem 1.5rem;
   }
 `;
 
@@ -537,7 +536,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
         </StyledMediaListItemInfo>
         {onDelete && (
           <StyledMediaListItemDelete>
-            <Button color={ButtonColor.white} onClick={() => onDelete(mediaItem.id)}>
+            <Button variant={ButtonVariant.minimal} onClick={() => onDelete(mediaItem.id)}>
               {t('media.delete')}
             </Button>
           </StyledMediaListItemDelete>
