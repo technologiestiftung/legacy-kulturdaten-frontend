@@ -219,8 +219,9 @@ export const deDE: Localization = {
     minError: ({ min }) => `Bitte min. ${min} ${min === 1 ? 'Tag' : 'Tage'} auswählen`,
   },
   contacts: {
-    add: () => 'Neuen Kontakt hinzufügen',
+    add: () => 'Kontakt hinzufügen',
     remove: () => 'entfernen',
+    placeholder: () => 'Noch keine Kontakte hinzugefügt',
   },
   hours: {
     weekday: () => 'Wochentag',

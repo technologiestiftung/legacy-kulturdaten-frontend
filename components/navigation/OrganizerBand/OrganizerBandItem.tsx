@@ -208,7 +208,7 @@ const OrganizerBandItemForwarded = (
         </StyledOrganizerBandItemLogo>
 
         {layout === OrganizerBandLayout.narrow ? (
-          <MouseTooltip hoverElement={selfRef.current}>{children}</MouseTooltip>
+          <MouseTooltip hoverElement={selfRef}>{children}</MouseTooltip>
         ) : (
           <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
         )}
