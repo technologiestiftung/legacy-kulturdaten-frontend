@@ -45,14 +45,9 @@ export const LoadingContextProvider: React.FC<LoadingContextProviderProps> = ({
   const [render, setRender] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [title, setTitle] = useState<React.ReactNode | string>('Erstelle neuen Ort');
-  const [message, setMessage] = useState<React.ReactNode | string>(
-    'Dies kann ein paar Sekunden dauern.'
-  );
+  const [title, setTitle] = useState<React.ReactNode | string>('');
+  const [message, setMessage] = useState<React.ReactNode | string>('');
   const [error, setError] = useState<React.ReactNode | string>();
-  // const [error, setError] = useState<React.ReactNode | string>(
-  //   'Es gibt leider ein Problem mit dem Server. Versuche es bitte später noch einmal.'
-  // );
 
   return (
     <LoadingContext.Provider

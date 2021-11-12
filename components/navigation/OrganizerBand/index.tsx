@@ -12,6 +12,8 @@ import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { useUserOrganizerLists } from '../../user/useUser';
 import { useCreateOrganizer } from '../../../lib/categories';
 import { defaultLanguage } from '../../../config/locale';
+import { useAdminMode } from '../../Admin/AdminContext';
+import { Button } from '../../button';
 
 const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
   width: 100%;
@@ -43,58 +45,65 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   const t = useT();
   const loadingScreen = useLoadingScreen();
   const createOrganizer = useCreateOrganizer();
+  const { adminModeActive, quit: quitAdminMode } = useAdminMode();
 
   const { owner: organizerOwnerList, contributor: organizerContributorList } =
     useUserOrganizerLists();
 
   return (
     <StyledOrganizerBand layout={layout}>
-      {[...organizerOwnerList, ...organizerContributorList]?.map((organizer, index) => {
-        const translation = getTranslation(language, organizer.relations?.translations, true);
-        const defaultTranslation = getTranslation(
-          defaultLanguage,
-          organizer.relations?.translations
-        );
+      {adminModeActive ? (
+        <Button onClick={() => quitAdminMode()}>AM</Button>
+      ) : (
+        <>
+          {[...organizerOwnerList, ...organizerContributorList]?.map((organizer, index) => {
+            const translation = getTranslation(language, organizer.relations?.translations, true);
+            const defaultTranslation = getTranslation(
+              defaultLanguage,
+              organizer.relations?.translations
+            );
 
-        return (
-          <Link
-            key={index}
-            href={routes.dashboard({ locale, query: { organizer: organizer.id } })}
-            passHref
+            return (
+              <Link
+                key={index}
+                href={routes.dashboard({ locale, query: { organizer: organizer.id } })}
+                passHref
+              >
+                <OrganizerBandItem
+                  active={router?.query?.organizer === organizer.id}
+                  layout={layout}
+                  logo={organizer.relations?.logo}
+                  onClick={(e) => {
+                    setOrganizerId(organizer.id);
+
+                    if (onClick) {
+                      onClick(e);
+                    }
+                  }}
+                >
+                  {translation?.attributes?.name || defaultTranslation?.attributes?.name}
+                </OrganizerBandItem>
+              </Link>
+            );
+          })}
+          <OrganizerBandItem
+            active={router?.asPath === routes.createOrganizer({ locale })}
+            layout={layout}
+            icon="Plus"
+            noBorder
+            asButton
+            onClick={async () => {
+              loadingScreen(
+                t('menu.createOrganizer'),
+                async () => await createOrganizer(),
+                t('general.takeAFewSeconds')
+              );
+            }}
           >
-            <OrganizerBandItem
-              active={router?.query?.organizer === organizer.id}
-              layout={layout}
-              logo={organizer.relations?.logo}
-              onClick={(e) => {
-                setOrganizerId(organizer.id);
-
-                if (onClick) {
-                  onClick(e);
-                }
-              }}
-            >
-              {translation?.attributes?.name || defaultTranslation?.attributes?.name}
-            </OrganizerBandItem>
-          </Link>
-        );
-      })}
-      <OrganizerBandItem
-        active={router?.asPath === routes.createOrganizer({ locale })}
-        layout={layout}
-        icon="Plus"
-        noBorder
-        asButton
-        onClick={async () => {
-          loadingScreen(
-            t('menu.createOrganizer'),
-            async () => await createOrganizer(),
-            t('general.takeAFewSeconds')
-          );
-        }}
-      >
-        {t('menu.createOrganizer') as string}
-      </OrganizerBandItem>
+            {t('menu.createOrganizer') as string}
+          </OrganizerBandItem>
+        </>
+      )}
     </StyledOrganizerBand>
   );
 };

@@ -10,6 +10,12 @@ export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
   },
+  admin: {
+    title: () => 'Administration',
+    organizers: {
+      subtitle: () => 'Organizers',
+    },
+  },
   dashboard: {
     info: {
       start: {

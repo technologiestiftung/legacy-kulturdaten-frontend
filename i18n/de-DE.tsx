@@ -10,6 +10,12 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  admin: {
+    title: () => 'Administration',
+    organizers: {
+      subtitle: () => 'Anbieter:innen',
+    },
+  },
   dashboard: {
     info: {
       start: {

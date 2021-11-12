@@ -7,6 +7,7 @@ import { Organizer } from './api/types/organizer';
 import { useEntry } from './categories';
 import { getCookie, setCookie } from './cookies';
 import { routes, useLocale } from './routing';
+import { useAdminMode } from '../components/Admin/AdminContext';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 const activeOrganizerCookieName =
@@ -17,6 +18,7 @@ export const defaultOrganizerId = 'default';
 export const useOrganizerId = (): string => {
   const { activeOrganizerId, setActiveOrganizerId } = useContext(NavigationContext);
   const locale = useLocale();
+  const { adminModeActive, activeOrganizerId: adminActiveOrganizerId } = useAdminMode();
 
   useEffect(() => {
     const organizerIdFromCookie = getCookie(activeOrganizerCookieName)?.value;
@@ -26,7 +28,7 @@ export const useOrganizerId = (): string => {
     }
   }, [activeOrganizerId, locale, setActiveOrganizerId]);
 
-  return activeOrganizerId;
+  return adminModeActive ? adminActiveOrganizerId : activeOrganizerId;
 };
 
 export const useSetOrganizerId = (): ((organizerId: string) => void) => {

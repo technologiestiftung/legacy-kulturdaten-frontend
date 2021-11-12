@@ -75,6 +75,7 @@ export const internalRoutes = [
   Routes.createLocation,
   Routes.createOffer,
   Routes.createOrganizer,
+  Routes.admin,
 ];
 
 /**
