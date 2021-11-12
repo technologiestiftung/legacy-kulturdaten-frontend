@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { routes, useLocale } from '../lib/routing';
 import { useUser } from '../components/user/useUser';
 import { useRouter } from 'next/router';
-import { useOrganizerId } from '../lib/useOrganizer';
+import { defaultOrganizerId, useOrganizerId } from '../lib/useOrganizer';
 
 const AppIndexPage: NextPage = () => {
   useUser();
@@ -11,7 +11,9 @@ const AppIndexPage: NextPage = () => {
   const organizerId = useOrganizerId();
   const router = useRouter();
 
-  router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
+  router.replace(
+    routes.dashboard({ locale, query: { organizer: organizerId || defaultOrganizerId } })
+  );
 
   return null;
 };

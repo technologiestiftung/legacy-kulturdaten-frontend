@@ -263,7 +263,11 @@ const DashboardPage: NextPage = () => {
   ]);
 
   useEffect(() => {
-    if (organizerId !== defaultOrganizerId && router?.query?.organizer !== organizerId) {
+    if (
+      organizerId !== defaultOrganizerId &&
+      router?.query?.organizer !== organizerId &&
+      organizerId
+    ) {
       router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
     }
   }, [locale, organizerId, router]);

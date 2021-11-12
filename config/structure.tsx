@@ -13,8 +13,7 @@ import { LocationList } from '../components/EntryList/LocationList';
 import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 import { OfferList } from '../components/EntryList/OfferList';
 import { useRouter } from 'next/router';
-import { useOrganizerId } from '../lib/useOrganizer';
-import { MenuLinkType } from '../components/navigation/header/HeaderMenuLink';
+import { defaultOrganizerId, useOrganizerId } from '../lib/useOrganizer';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -56,7 +55,10 @@ export const useMenuStructure = (): NavigationStructure => {
             disabled: false,
             action: {
               title: t('menu.start.items.back') as string,
-              href: routes.dashboard({ locale, query: { organizer: organizerId } }),
+              href: routes.dashboard({
+                locale,
+                query: { organizer: organizerId || defaultOrganizerId },
+              }),
             },
           },
         ],
@@ -68,7 +70,10 @@ export const useMenuStructure = (): NavigationStructure => {
             disabled: false,
             action: {
               title: t('menu.start.items.dashboard') as string,
-              href: routes.dashboard({ locale, query: { organizer: organizerId } }),
+              href: routes.dashboard({
+                locale,
+                query: { organizer: organizerId || defaultOrganizerId },
+              }),
             },
           },
           {

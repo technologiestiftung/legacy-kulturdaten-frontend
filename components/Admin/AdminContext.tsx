@@ -1,9 +1,16 @@
-import { useRouter } from 'next/router';
+import getConfig from 'next/config';
 import React, { ReactNode, useCallback, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { routes } from '../../config/routes';
 import { useLocale } from '../../lib/routing';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useUser } from '../user/useUser';
+import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
+import { defaultOrganizerId } from '../../lib/useOrganizer';
+
+const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
+const adminOrganizerCookieName =
+  (publicRuntimeConfig?.adminOrganizerCookieName as string) || 'ADMIN_ORGANIZER_ID';
 
 type AdminContext = {
   adminModeActive: boolean;
@@ -27,23 +34,49 @@ export const AdminContextProvider: React.FC<LoadingContextProviderProps> = ({
   children,
 }: LoadingContextProviderProps) => {
   const [adminModeActive, setAdminModeActive] = useState<boolean>(false);
-  const [activeOrganizerId, setActiveOrganizerId] = useState<string>();
+  const [activeOrganizerId, setActiveOrganizerIdState] = useState<string>();
   const { user, isSuperuser, isLoggedIn } = useUser();
+  const locale = useLocale();
 
   const router = useRouter();
 
-  useEffect(() => {
-    const { query } = router;
+  const setActiveOrganizerId = useCallback(
+    (organizerId: string) => {
+      setActiveOrganizerIdState(organizerId);
 
-    console.log(query);
-  }, [router]);
+      if (organizerId) {
+        setCookie({
+          'name': adminOrganizerCookieName,
+          'value': organizerId,
+          'path': routes.index({ locale }),
+          'max-age': 1209600,
+        });
+      } else {
+        deleteCookie({
+          name: adminOrganizerCookieName,
+          path: routes.index({ locale }),
+        } as Cookie);
+      }
+    },
+    [locale]
+  );
 
   useEffect(() => {
-    if ((user?.id && !isSuperuser) || !isLoggedIn) {
+    const cookie = getCookie(adminOrganizerCookieName);
+
+    if (cookie?.value?.length > 0 && !adminModeActive) {
+      setAdminModeActive(true);
+      setActiveOrganizerIdState(cookie.value);
+      router.push(routes.dashboard({ locale, query: { organizer: cookie.value } }));
+    }
+  }, [router, adminModeActive, locale]);
+
+  useEffect(() => {
+    if (isLoggedIn && user?.id && !isSuperuser) {
       setAdminModeActive(false);
       setActiveOrganizerId(undefined);
     }
-  }, [user?.id, isSuperuser, isLoggedIn]);
+  }, [user?.id, isSuperuser, isLoggedIn, setActiveOrganizerId]);
 
   return (
     <AdminContext.Provider
@@ -67,14 +100,15 @@ export const useAdminMode = (): {
 } => {
   const { adminModeActive, activeOrganizerId, setActiveOrganizerId, setAdminModeActive } =
     useContext(AdminContext);
+
   const router = useRouter();
   const locale = useLocale();
   const loadingScreen = useLoadingScreen();
 
   const quit = useCallback(() => {
     loadingScreen('Beende Admin Modus', async () => {
-      setAdminModeActive(false);
       setActiveOrganizerId(undefined);
+      setAdminModeActive(false);
 
       setTimeout(() => router.push(routes.admin({ locale })), 250);
 
@@ -89,7 +123,10 @@ export const useAdminMode = (): {
         setActiveOrganizerId(organizerId);
 
         setTimeout(
-          () => router.push(routes.dashboard({ locale, query: { organizer: organizerId } })),
+          () =>
+            router.push(
+              routes.dashboard({ locale, query: { organizer: organizerId || defaultOrganizerId } })
+            ),
           250
         );
 

@@ -24,6 +24,7 @@ import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useT } from '../../lib/i18n';
 import { Organizer } from '../../lib/api/types/organizer';
 import { RoleName } from '../../lib/api/types/role';
+import { AdminContext } from '../Admin/AdminContext';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -64,6 +65,8 @@ export const useUser = (): WrappedUser => {
   const loadingScreen = useLoadingScreen();
   const activeOrganizerId = useOrganizerId();
   const setActiveOrganizerId = useSetOrganizerId();
+  const { setActiveOrganizerId: setAdminOrganizerId, setAdminModeActive } =
+    useContext(AdminContext);
   const t = useT();
 
   const { data, mutate: mutateValidate } = useSWR(
@@ -89,12 +92,16 @@ export const useUser = (): WrappedUser => {
     if (authTokenFromStateOrCookie) {
       call<AuthLogout>(authLogoutFactory).catch((e) => console.error(e));
     }
+    setAdminOrganizerId(undefined);
+    setAdminModeActive(false);
     deleteCookie({ name: authTokenCookieName, path: routes.index({ locale }) } as Cookie);
     deleteCookie({ name: activeOrganizerCookieName, path: routes.index({ locale }) } as Cookie);
     mutateValidate(undefined);
     setUserTokenIsValid(false);
     invalidateUser();
   }, [
+    setAdminModeActive,
+    setAdminOrganizerId,
     authTokenFromStateOrCookie,
     authTokenCookieName,
     activeOrganizerCookieName,
@@ -110,11 +117,15 @@ export const useUser = (): WrappedUser => {
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
         logoutUser();
-      } else if (userTokenIsValid === true && !isAuthenticated) {
+      } else {
         if (userObject) {
-          setUser(userObject.data);
-          setAuthToken(authTokenFromStateOrCookie);
-          authenticateUser();
+          if (userTokenIsValid === true && !isAuthenticated) {
+            setUser(userObject.data);
+            setAuthToken(authTokenFromStateOrCookie);
+            authenticateUser();
+          } else {
+            setUser(userObject.data);
+          }
 
           const userOrganizerIds = userObject.data?.relations?.organizers?.map(
             (role) => role.relations?.organizer?.id
@@ -125,10 +136,6 @@ export const useUser = (): WrappedUser => {
           } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
             setActiveOrganizerId(defaultOrganizerId);
           }
-        }
-      } else {
-        if (userObject) {
-          setUser(userObject.data);
         }
       }
     } else if (isAuthenticated) {
