@@ -1647,7 +1647,7 @@ export const locationAccessibility: GenericFormCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'ja, Treppenlift / Hublift, selbst bedienbar',
+                              name: 'Treppenlift / Hublift, selbst bedienbar',
                             },
                           },
                           {
@@ -1664,7 +1664,7 @@ export const locationAccessibility: GenericFormCategory[] = [
                           {
                             attributes: {
                               language: Language.de,
-                              name: 'ja, Treppenlift / Hublift, Bedienung durch Personal',
+                              name: 'Treppenlift / Hublift, Bedienung durch Personal',
                             },
                           },
                           {
@@ -1944,7 +1944,7 @@ export const locationAccessibility: GenericFormCategory[] = [
               key: 'planning.entry.ramp',
               fields: [
                 {
-                  type: GenericFormFieldType.select,
+                  type: GenericFormFieldType.radioList,
                   translations: [
                     {
                       attributes: {
@@ -4319,7 +4319,7 @@ export const locationAccessibility: GenericFormCategory[] = [
               key: 'orientation.indoorRoomAccess.ramp',
               fields: [
                 {
-                  type: GenericFormFieldType.select,
+                  type: GenericFormFieldType.radioList,
                   translations: [
                     {
                       attributes: {
