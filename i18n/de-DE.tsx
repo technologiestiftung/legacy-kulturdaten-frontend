@@ -285,6 +285,7 @@ export const deDE: Localization = {
     logOut: () => 'Abmelden',
     ariaLabelOpen: () => 'Nutzer:innen Menü anzeigen',
     ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
+    admin: () => 'Administration',
   },
   settings: {
     title: () => 'Einstellungen',
@@ -1037,6 +1038,7 @@ export const deDE: Localization = {
     start: {
       title: () => 'Start',
       items: {
+        back: () => 'zurück zum Dashboard',
         dashboard: () => 'Dashboard',
         notifications: () => 'Benachrichtigungen',
         profile: () => 'Profil',

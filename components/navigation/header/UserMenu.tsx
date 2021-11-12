@@ -11,7 +11,7 @@ interface UserMenuProps {
 }
 
 export const UserMenu: React.FC<UserMenuProps> = () => {
-  const { logout, user } = useUser();
+  const { logout, user, isSuperuser } = useUser();
   const t = useT();
   const locale = useLocale();
 
@@ -31,6 +31,13 @@ export const UserMenu: React.FC<UserMenuProps> = () => {
         title={t('userMenu.settings') as string}
         icon="Sliders"
       />
+      {isSuperuser && (
+        <HeaderMenuLink
+          href={routes.admin({ locale })}
+          title={t('userMenu.admin') as string}
+          icon="Eye"
+        />
+      )}
       <Button
         variant={ButtonVariant.minimal}
         color={ButtonColor.white}

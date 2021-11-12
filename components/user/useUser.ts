@@ -34,6 +34,7 @@ export type WrappedUser = {
   login: (cookie: Cookie, redirectRoute: string) => void;
   logout: () => Promise<void>;
   mutateUserInfo: () => void;
+  isSuperuser: boolean;
 };
 
 export const useUser = (): WrappedUser => {
@@ -181,6 +182,7 @@ export const useUser = (): WrappedUser => {
       );
     },
     mutateUserInfo,
+    isSuperuser: user?.attributes?.isSuperuser,
   };
 };
 

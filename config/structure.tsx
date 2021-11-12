@@ -49,6 +49,18 @@ export const useMenuStructure = (): NavigationStructure => {
           },
         ],
       },
+      loggedInMeta: {
+        menuItems: [
+          {
+            type: MenuItemType.link,
+            disabled: false,
+            action: {
+              title: t('menu.start.items.back') as string,
+              href: routes.dashboard({ locale, query: { organizer: organizerId } }),
+            },
+          },
+        ],
+      },
       loggedIn: {
         menuItems: [
           {

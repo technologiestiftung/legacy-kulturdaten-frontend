@@ -189,6 +189,7 @@ const StyledMainMenuOverlay = styled.div`
 
 export enum Layouts {
   loggedIn = 'loggedIn',
+  loggedInMeta = 'loggedInMeta',
   loggedOut = 'loggedOut',
 }
 
@@ -201,6 +202,9 @@ export const appLayouts: {
 } = {
   loggedIn: {
     hasOrganizerBand: true,
+  },
+  loggedInMeta: {
+    hasOrganizerBand: false,
   },
   loggedOut: {
     hasOrganizerBand: false,

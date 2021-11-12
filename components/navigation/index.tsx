@@ -5,7 +5,7 @@ import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { defaultOrganizerId, useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { appLayouts, Layouts } from '../layouts/AppLayout';
+import { appLayouts, Layouts, useLayout } from '../layouts/AppLayout';
 import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
 import { HeaderBackLink } from './header/HeaderBackLink';
@@ -31,6 +31,9 @@ export type NavigationStructure = {
     loggedIn: {
       menuItems: MenuItem[];
     };
+    loggedInMeta: {
+      menuItems: MenuItem[];
+    };
     loggedOut: {
       menuItems: MenuItem[];
     };
@@ -54,9 +57,16 @@ export const useNavigation = (
   const router = useRouter();
   const language = useLanguage();
 
+  const activeLayout = useMemo(() => appLayouts[layout], [layout]);
+
   const activeHeader = useMemo(
-    () => (user?.isLoggedIn ? structure?.header?.loggedIn : structure?.header?.loggedOut),
-    [user?.isLoggedIn, structure?.header]
+    () =>
+      user?.isLoggedIn
+        ? activeLayout?.hasOrganizerBand
+          ? structure?.header?.loggedIn
+          : structure?.header?.loggedInMeta
+        : structure?.header?.loggedOut,
+    [user?.isLoggedIn, structure?.header, activeLayout?.hasOrganizerBand]
   );
 
   const isEntryPage = useMemo(
