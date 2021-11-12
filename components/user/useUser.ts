@@ -126,16 +126,6 @@ export const useUser = (): WrappedUser => {
           } else {
             setUser(userObject.data);
           }
-
-          const userOrganizerIds = userObject.data?.relations?.organizers?.map(
-            (role) => role.relations?.organizer?.id
-          );
-
-          if (userOrganizerIds?.length > 0 && !userOrganizerIds.includes(activeOrganizerId)) {
-            setActiveOrganizerId(userOrganizerIds[0]);
-          } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
-            setActiveOrganizerId(defaultOrganizerId);
-          }
         }
       }
     } else if (isAuthenticated) {
@@ -146,21 +136,34 @@ export const useUser = (): WrappedUser => {
       }
     }
   }, [
-    isAuthenticated,
-    authenticateUser,
-    userResponse,
-    setUser,
-    router,
-    userTokenIsValid,
-    logoutUser,
-    locale,
-    authTokenFromStateOrCookie,
-    setAuthToken,
-    mutateValidate,
     activeRoute,
-    activeOrganizerId,
-    setActiveOrganizerId,
+    authTokenFromStateOrCookie,
+    authenticateUser,
+    isAuthenticated,
+    locale,
+    logoutUser,
+    router,
+    setAuthToken,
+    setUser,
+    userResponse?.body,
+    userTokenIsValid,
   ]);
+
+  useEffect(() => {
+    const userOrganizerIds = user?.relations?.organizers?.map(
+      (role) => role.relations?.organizer?.id
+    );
+
+    if (
+      activeOrganizerId &&
+      userOrganizerIds?.length > 0 &&
+      !userOrganizerIds.includes(activeOrganizerId)
+    ) {
+      setActiveOrganizerId(userOrganizerIds[0]);
+    } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
+      setActiveOrganizerId(defaultOrganizerId);
+    }
+  }, [activeOrganizerId, setActiveOrganizerId, user?.relations?.organizers]);
 
   return {
     user: user,
