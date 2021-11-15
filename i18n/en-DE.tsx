@@ -354,7 +354,6 @@ export const enDE: Localization = {
     create: () => 'Create new Organizer',
     baseInfo: () => 'Basic information',
     address: () => 'Address data',
-    arrival: () => 'Travel information',
     name: () => 'Name',
     labelGerman: () => 'German',
     labelGermanEasy: () => 'German: simple Language',

@@ -650,7 +650,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
               <>
                 <EntryFormContainer>{addressForm}</EntryFormContainer>
                 <EntryFormContainer>{urlForm}</EntryFormContainer>
-                <EntryFormContainer>{arrivalForm}</EntryFormContainer>
+                <EntryFormContainer noPadding>{arrivalForm}</EntryFormContainer>
                 <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
                 <EntryFormContainer>{rentForm}</EntryFormContainer>
               </>
