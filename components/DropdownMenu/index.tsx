@@ -1,9 +1,30 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React, { JSXElementConstructor, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as feather from 'react-feather';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
+
+export enum DropdownMenuButtonColor {
+  black = 'black',
+  white = 'white',
+}
+
+const ButtonColors: {
+  [key in DropdownMenuButtonColor]: {
+    background: string;
+    color: string;
+  };
+} = {
+  black: {
+    background: 'var(--black)',
+    color: 'var(--white)',
+  },
+  white: {
+    background: 'var(--white)',
+    color: 'var(--black)',
+  },
+};
 
 const StyledDropdownMenu = styled.div<{ stretch?: boolean }>`
   position: relative;
@@ -15,12 +36,11 @@ const StyledDropdownMenuButton = styled.button<{
   visible: boolean;
   form?: DropdownMenuForm;
   stretch?: boolean;
+  color: DropdownMenuButtonColor;
 }>`
   appearance: none;
   border: none;
-  background: var(--black);
   display: flex;
-  color: var(--white);
   column-gap: 0.75rem;
   border-radius: ${({ form }) => (form === DropdownMenuForm.round ? '2rem' : '0.75rem')};
   margin: 0;
@@ -32,6 +52,11 @@ const StyledDropdownMenuButton = styled.button<{
   position: relative;
   z-index: 2;
   padding: 0;
+
+  ${({ color }) => css`
+    background: ${ButtonColors[color].background};
+    color: ${ButtonColors[color].color};
+  `}
 
   ${({ stretch }) =>
     stretch &&
@@ -144,6 +169,7 @@ interface DropdownMenuProps {
   text?: string;
   form?: DropdownMenuForm;
   stretch?: boolean;
+  buttonColor?: DropdownMenuButtonColor;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -153,6 +179,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   buttonAriaLabels,
   form = DropdownMenuForm.round,
   stretch,
+  buttonColor = DropdownMenuButtonColor.black,
 }: DropdownMenuProps) => {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -198,6 +225,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         aria-label={visible ? buttonAriaLabels.close : buttonAriaLabels.open}
         form={form}
         stretch={stretch}
+        color={buttonColor}
       >
         {text && <StyledDropdownMenuButtonText>{text}</StyledDropdownMenuButtonText>}
         <StyledDropdownMenuButtonIcon hasText={hasText}>
