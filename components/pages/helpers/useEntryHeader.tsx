@@ -9,6 +9,7 @@ import { useT } from '../../../lib/i18n';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { useOrganizerId } from '../../../lib/useOrganizer';
+import { useUserIsOwner } from '../../../lib/useUserIsOwner';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
@@ -28,9 +29,9 @@ export const useEntryHeader = (
   minimalVariant?: boolean
 ): React.ReactElement => {
   const tabs = useTabs(category);
-  const router = useRouter();
   const language = useLanguage();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const userIsOwner = useUserIsOwner();
 
   const { entry } = useEntry<CategoryEntry, ApiCall>(category, query);
 
@@ -97,30 +98,32 @@ export const useEntryHeader = (
               >
                 {category?.options?.exportXls}
               </Button>
-              <Button
-                variant={ButtonVariant.minimal}
-                size={ButtonSize.default}
-                color={ButtonColor.black}
-                onClick={async () => {
-                  if (confirm(category?.options?.deleteConfirm)) {
-                    loadingScreen(category?.options?.deleting, async () => {
-                      switch (category.name) {
-                        case Categories.organizer: {
-                          return await deleteOrganizer(entry?.data?.id);
+              {userIsOwner && (
+                <Button
+                  variant={ButtonVariant.minimal}
+                  size={ButtonSize.default}
+                  color={ButtonColor.black}
+                  onClick={async () => {
+                    if (confirm(category?.options?.deleteConfirm)) {
+                      loadingScreen(category?.options?.deleting, async () => {
+                        switch (category.name) {
+                          case Categories.organizer: {
+                            return await deleteOrganizer(entry?.data?.id);
+                          }
+                          case Categories.offer: {
+                            return await deleteOffer(entry?.data?.id);
+                          }
+                          case Categories.location: {
+                            return await deleteLocation(entry?.data?.id);
+                          }
                         }
-                        case Categories.offer: {
-                          return await deleteOffer(entry?.data?.id);
-                        }
-                        case Categories.location: {
-                          return await deleteLocation(entry?.data?.id);
-                        }
-                      }
-                    });
-                  }
-                }}
-              >
-                {category?.options?.delete}
-              </Button>
+                      });
+                    }
+                  }}
+                >
+                  {category?.options?.delete}
+                </Button>
+              )}
             </DropdownMenu>
           )
         }
