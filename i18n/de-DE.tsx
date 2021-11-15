@@ -17,7 +17,7 @@ export const deDE: Localization = {
     },
     start: () => 'Starte Adminmodus',
     quit: () => 'Beende Adminmodus',
-    leave: () => 'Adminmodus verlassen',
+    leave: () => 'Adminmodus beenden',
   },
   dashboard: {
     info: {

@@ -98,7 +98,7 @@ const HeaderSlotSecondary = styled.div<{ hasOrganizerBand: boolean; adminModeAct
   ${({ hasOrganizerBand, adminModeActive }) => css`
     background: ${hasOrganizerBand
       ? adminModeActive
-        ? 'var(--blue)'
+        ? 'var(--black)'
         : 'var(--grey-200)'
       : 'var(--white)'};
     color: ${hasOrganizerBand && adminModeActive ? 'var(--white)' : 'var(--black)'};

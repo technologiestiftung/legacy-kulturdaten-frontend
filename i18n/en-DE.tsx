@@ -17,7 +17,7 @@ export const enDE: Localization = {
     },
     start: () => 'Start admin mode',
     quit: () => 'Quit admin mode',
-    leave: () => 'Leave admin mode',
+    leave: () => 'Quit admin mode',
   },
   dashboard: {
     info: {

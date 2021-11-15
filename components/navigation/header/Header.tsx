@@ -112,6 +112,9 @@ const StyledHeaderUserMenu = styled.div`
   ${mq(Breakpoint.mid)} {
     top: 0.75rem;
     position: fixed;
+  }
+
+  ${mq(Breakpoint.wide)} {
     padding: 0 1.5rem;
   }
 `;
