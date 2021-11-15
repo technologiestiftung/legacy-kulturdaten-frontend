@@ -157,7 +157,10 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createOffer({ query: { organizer: organizerId }, locale })}>
+              <Link
+                href={routes.createOffer({ query: { organizer: organizerId }, locale })}
+                passHref
+              >
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.offer.items.create')}
                 </ButtonLink>
@@ -181,7 +184,10 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createOrganizer({ query: { organizer: organizerId }, locale })}>
+              <Link
+                href={routes.createOrganizer({ query: { organizer: organizerId }, locale })}
+                passHref
+              >
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.organizer.items.create')}
                 </ButtonLink>
@@ -205,7 +211,10 @@ export const useMenuStructure = (): NavigationStructure => {
               uppercase: true,
             },
             button: (
-              <Link href={routes.createLocation({ query: { organizer: organizerId }, locale })}>
+              <Link
+                href={routes.createLocation({ query: { organizer: organizerId }, locale })}
+                passHref
+              >
                 <ButtonLink variant={ButtonVariant.minimal}>
                   {t('menu.location.items.create')}
                 </ButtonLink>

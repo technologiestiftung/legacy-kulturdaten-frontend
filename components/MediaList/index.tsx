@@ -26,6 +26,7 @@ import { useMediaLicenseList } from '../../lib/categories';
 import { RadioList } from '../Radio/RadioList';
 import { Info, InfoColor } from '../info';
 import { Checkbox } from '../checkbox';
+import { useLanguage } from '../../lib/routing';
 
 const StyledMediaList = styled.div`
   display: flex;
@@ -295,8 +296,13 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
   const t = useT();
+  const language = useLanguage();
   const formatNumber = useFormatNumber();
   const mediaLicenses = useMediaLicenseList();
+  const currentTranslation = getTranslation<MediaTranslation>(
+    language,
+    mediaItem?.relations?.translations
+  );
 
   const smallestRendition =
     mediaItem.relations?.renditions?.length > 0
@@ -333,6 +339,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   width={isMidOrWider ? smallestRendition.width : undefined}
                   height={isMidOrWider ? smallestRendition.height : undefined}
                   objectFit="contain"
+                  alt={currentTranslation?.attributes?.alternativeText || ''}
                 />
                 <StyledMediaListItemThumbnailLinkHover>
                   <ExternalLink />
