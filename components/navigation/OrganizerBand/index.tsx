@@ -14,6 +14,8 @@ import { useUserOrganizerLists } from '../../user/useUser';
 import { useCreateOrganizer } from '../../../lib/categories';
 import { defaultLanguage } from '../../../config/locale';
 import { useAdminMode } from '../../Admin/AdminContext';
+import { mq } from '../../globals/Constants';
+import { Breakpoint } from '../../../lib/WindowService';
 
 const StyledOrganizerBand = styled.div<{ adminModeActive: boolean }>`
   width: 100%;
@@ -24,6 +26,31 @@ const StyledOrganizerBand = styled.div<{ adminModeActive: boolean }>`
   padding: 0.75rem;
 
   ${({ adminModeActive }) => adminModeActive && css``}
+`;
+
+const StyledOrganizerBandAdminMark = styled.div`
+  display: flex;
+  flex-grow: 1;
+  padding: 0;
+
+  ${mq(Breakpoint.mid)} {
+    order: 1000;
+    padding: 1.125rem 0;
+    justify-content: center;
+  }
+`;
+
+const StyledOrganizerBandAdminMarkText = styled.div`
+  color: var(--white);
+  font-size: var(--font-size-500);
+  line-height: var(--line-height-500);
+  font-weight: 700;
+
+  ${mq(Breakpoint.mid)} {
+    writing-mode: vertical-rl;
+    text-orientation: sideways;
+    transform: rotate(180deg);
+  }
 `;
 
 export enum OrganizerBandLayout {
@@ -52,20 +79,29 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
   const { owner: organizerOwnerList, contributor: organizerContributorList } =
     useUserOrganizerLists();
 
+  const renderedAdminMark = (
+    <StyledOrganizerBandAdminMark>
+      <StyledOrganizerBandAdminMarkText>Adminmodus</StyledOrganizerBandAdminMarkText>
+    </StyledOrganizerBandAdminMark>
+  );
+
   return (
     <StyledOrganizerBand adminModeActive={adminModeActive}>
       {adminModeActive ? (
-        <OrganizerBandItem
-          active={router?.asPath === routes.createOrganizer({ locale })}
-          layout={layout}
-          icon="X"
-          noBorder
-          asButton
-          onClick={() => quitAdminMode()}
-          adminModeActive
-        >
-          {t('admin.leave') as string}
-        </OrganizerBandItem>
+        <>
+          {renderedAdminMark}
+          <OrganizerBandItem
+            active={router?.asPath === routes.createOrganizer({ locale })}
+            layout={layout}
+            icon="X"
+            noBorder
+            asButton
+            onClick={() => quitAdminMode()}
+            adminModeActive
+          >
+            {t('admin.leave') as string}
+          </OrganizerBandItem>
+        </>
       ) : (
         <>
           {[...organizerOwnerList, ...organizerContributorList]?.map((organizer, index) => {

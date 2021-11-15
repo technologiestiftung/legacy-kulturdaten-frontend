@@ -73,6 +73,7 @@ const StyledDropdownMenuDropdown = styled.div<{
   visible: boolean;
   animating: boolean;
 }>`
+  color: var(--black);
   background: var(--grey-200);
   border-radius: 1.125rem;
   border-radius: 1.125rem;
