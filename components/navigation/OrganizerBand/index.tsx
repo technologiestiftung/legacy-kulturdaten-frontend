@@ -119,6 +119,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
 
             return (
               <OrganizerBandItem
+                key={index}
                 asButton
                 active={router?.query?.organizer === organizer.id}
                 layout={layout}
