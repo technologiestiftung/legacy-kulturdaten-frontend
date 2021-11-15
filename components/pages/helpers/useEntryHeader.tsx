@@ -11,6 +11,7 @@ import { getTranslation } from '../../../lib/translations';
 import { useOrganizerId } from '../../../lib/useOrganizer';
 import { useUserIsOwner } from '../../../lib/useUserIsOwner';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { useAdminMode } from '../../Admin/AdminContext';
 import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
@@ -43,6 +44,7 @@ export const useEntryHeader = (
   const subTitle = title ? currentTranslation?.attributes.name : undefined;
 
   const locale = useLocale();
+  const { quit } = useAdminMode();
 
   const t = useT();
   const organizerId = useOrganizerId();
@@ -108,7 +110,10 @@ export const useEntryHeader = (
                       loadingScreen(category?.options?.deleting, async () => {
                         switch (category.name) {
                           case Categories.organizer: {
-                            return await deleteOrganizer(entry?.data?.id);
+                            const deleteResp = await deleteOrganizer(entry?.data?.id);
+                            quit();
+
+                            return deleteResp;
                           }
                           case Categories.offer: {
                             return await deleteOffer(entry?.data?.id);
