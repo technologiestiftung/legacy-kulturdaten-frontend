@@ -58,7 +58,7 @@ const OrganizerSlot = styled.div<{ adminModeActive: boolean }>`
   ${({ adminModeActive }) =>
     adminModeActive &&
     css`
-      background: var(--blue);
+      background: var(--black);
     `}
 `;
 

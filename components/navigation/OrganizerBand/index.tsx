@@ -16,6 +16,8 @@ import { defaultLanguage } from '../../../config/locale';
 import { useAdminMode } from '../../Admin/AdminContext';
 import { mq } from '../../globals/Constants';
 import { Breakpoint } from '../../../lib/WindowService';
+import { StandardLink } from '../../StandardLink';
+import { StandardLinkType } from '../../../lib/generalTypes';
 
 const StyledOrganizerBand = styled.div<{ adminModeActive: boolean }>`
   width: 100%;
@@ -81,7 +83,11 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
 
   const renderedAdminMark = (
     <StyledOrganizerBandAdminMark>
-      <StyledOrganizerBandAdminMarkText>Adminmodus</StyledOrganizerBandAdminMarkText>
+      <StyledOrganizerBandAdminMarkText>
+        <StandardLink type={StandardLinkType.internal} href={routes.admin({ locale })}>
+          Adminmodus
+        </StandardLink>
+      </StyledOrganizerBandAdminMarkText>
     </StyledOrganizerBandAdminMark>
   );
 

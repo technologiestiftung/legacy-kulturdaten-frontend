@@ -56,6 +56,7 @@ export interface OrganizerListProps {
   enableUltraWideLayout?: boolean;
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
+  title?: string;
 }
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({
@@ -64,6 +65,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
   enableUltraWideLayout = true,
   customEntryOnClick,
   activeEntryId,
+  title,
 }: OrganizerListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -225,20 +227,19 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
 
   return (
     <StyledOrganizerList>
-      <EntryListHead
-        title={t('categories.organizer.title.plural') as string}
-        expanded={expanded}
-        setExpanded={setMenuExpanded}
-        expandable={expandable}
-        // noPadding
-      />
-
+      {title && (
+        <EntryListHead
+          title={title}
+          expanded={expanded}
+          setExpanded={setMenuExpanded}
+          expandable={expandable}
+        />
+      )}
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
         expanded={expanded}
         activeFiltersCount={activeFiltersCount}
-        // noPadding
       >
         <StyledFilters expanded={expanded}>
           <Select
