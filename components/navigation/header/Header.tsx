@@ -278,9 +278,7 @@ const HeaderOrganizerMenu: React.FC<HeaderOrganizerMenuProps> = ({
         isCollapsed={headerOrganizerBandCollapsed}
         aria-label={
           t(
-            headerOrganizerBandCollapsed
-              ? 'menu.organizerBandShowAriaLabel'
-              : 'menu.organizerBandCollapseAriaLabel'
+            headerOrganizerBandCollapsed ? 'menu.organizerBand.show' : 'menu.organizerBand.collapse'
           ) as string
         }
       >
