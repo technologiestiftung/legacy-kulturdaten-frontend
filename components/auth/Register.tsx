@@ -72,7 +72,7 @@ export const RegisterForm: React.FC = () => {
         t('register.loading'),
         async () => {
           try {
-            const resp = await call<AuthRegister>(authRegisterFactory, {
+            await call<AuthRegister>(authRegisterFactory, {
               body: {
                 email,
                 password,

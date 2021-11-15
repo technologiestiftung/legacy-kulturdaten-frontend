@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
-import { useRouter } from 'next/router';
 import { Link } from 'react-feather';
 import { Categories } from '../../../config/categories';
 import { ApiCall } from '../../../lib/api';
-import { CategoryEntry, PublishedStatus, Translation } from '../../../lib/api/types/general';
+import { CategoryEntry, Translation } from '../../../lib/api/types/general';
 import { useDeleteEntry, useEntry, useTabs } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useLanguage, useLocale } from '../../../lib/routing';
@@ -16,7 +15,6 @@ import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '..
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
-import { Publish } from '../../Publish';
 import { EntryFormProps } from './form';
 
 const StyledA = styled.a`

@@ -88,23 +88,11 @@ const StyledEntryFormHeadBorder = styled.div`
   border-bottom: 1px solid var(--grey-400);
 `;
 
-const StyledEntryFormHeadAlert = styled.div<{ showInline?: boolean }>`
+const StyledEntryFormHeadAlert = styled.div`
   position: relative;
   margin: 0 0.75rem 0 0;
   width: 1.5rem;
   height: 1.5rem;
-
-  ${({ showInline }) =>
-    showInline
-      ? css``
-      : css`
-          ${mq(Breakpoint.widish)} {
-            position: absolute;
-            top: 0.75rem;
-            left: -2.25rem;
-            margin: 0;
-          }
-        `}
 `;
 
 const StyledTooltip = styled.div`
@@ -122,7 +110,6 @@ interface EntryFormHeadProps {
   id?: string;
   valid?: boolean;
   hint?: boolean;
-  showHintInline?: boolean;
   expander?: {
     onClick: () => void;
     isExpanded: boolean;
@@ -136,7 +123,6 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
   tooltip,
   id,
   valid = true,
-  showHintInline = false,
   expander,
   size,
   addPadding,
@@ -159,7 +145,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       addPadding={addPadding}
     >
       {valid === false ? (
-        <StyledEntryFormHeadAlert showInline={true}>
+        <StyledEntryFormHeadAlert>
           <AlertSymbol />
         </StyledEntryFormHeadAlert>
       ) : (
