@@ -6,7 +6,7 @@ import { routes } from '../../../config/routes';
 import { useAppTitle } from '../../../config/structure';
 import { useT } from '../../../lib/i18n';
 import { useLocale } from '../../../lib/routing';
-import { useOrganizerId, useSetOrganizerId } from '../../../lib/useOrganizer';
+import { useOrganizerId } from '../../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { useAdminMode } from '../../Admin/AdminContext';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
@@ -22,7 +22,6 @@ export const AdminOrganizersPage: React.FC = () => {
   const locale = useLocale();
   const organizerId = useOrganizerId();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
-  const setOrganizerId = useSetOrganizerId();
   const appTitle = useAppTitle();
   const { start } = useAdminMode();
 
@@ -42,9 +41,10 @@ export const AdminOrganizersPage: React.FC = () => {
         title={t('admin.title') as string}
         subTitle={t('admin.organizers.subtitle') as string}
         minimalVariant
+        wideLayout
       />
       <EntryFormWrapper>
-        <EntryFormContainer>
+        <EntryFormContainer noPadding={!isMidOrWider}>
           <EntryListContextProvider listNames={[Categories.organizer]}>
             <OrganizerList
               expandable={false}

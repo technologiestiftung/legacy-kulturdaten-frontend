@@ -193,7 +193,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
 
   return (
     <StyledDateCreateFormWrapper>
-      <EntryFormWrapper fullWidth reducedVerticalpadding>
+      <EntryFormWrapper fullWidth reducedVerticalPadding>
         <EntryFormContainer noPadding fullWidth>
           <DateFormTime
             {...{

@@ -32,12 +32,15 @@ const StyledEntryListHeadTitleRowRight = styled.div`
   flex-direction: row;
 `;
 
-const StyledEntryListHeadTitle = styled.div`
+const StyledEntryListHeadTitle = styled.div<{ noPadding?: boolean }>`
   margin: 0 0.75rem;
 
-  ${mq(Breakpoint.wide)} {
-    margin: 0 1.5rem;
-  }
+  ${({ noPadding }) => css`
+    margin: ${noPadding ? '0' : '0 0.75rem'};
+
+    ${mq(Breakpoint.wide)} {
+    margin: ${noPadding ? '0' : '0 1.5rem'};
+  `}
 `;
 
 const StyledEntryListHeadActions = styled.div``;
@@ -94,6 +97,7 @@ interface EntryListHeadProps {
   expandable?: boolean;
   actionButton?: React.ReactNode;
   actions?: React.ReactElement[];
+  noPadding?: boolean;
 }
 
 export const EntryListHead: React.FC<EntryListHeadProps> = ({
@@ -103,6 +107,7 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
   expanded,
   setExpanded,
   expandable,
+  noPadding,
 }: EntryListHeadProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const t = useT();
@@ -111,7 +116,7 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
     <StyledEntryListHead>
       <StyledEntryListHeadTop>
         <StyledEntryListHeadTitleRow>
-          <StyledEntryListHeadTitle>
+          <StyledEntryListHeadTitle noPadding={noPadding}>
             <span>{title}</span>
           </StyledEntryListHeadTitle>
           <StyledEntryListHeadTitleRowRight>

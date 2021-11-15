@@ -5,14 +5,14 @@ import { contentGrid, mq } from '../globals/Constants';
 
 export const EntryFormWrapper = styled.div<{
   fullWidth?: boolean;
-  reducedVerticalpadding?: boolean;
+  reducedVerticalPadding?: boolean;
 }>`
-  padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '0.75rem' : '1.5rem')} 0;
+  padding: ${({ reducedVerticalPadding }) => (reducedVerticalPadding ? '0.75rem' : '1.5rem')} 0;
   ${contentGrid(1)}
   row-gap: 1.5rem;
 
   ${mq(Breakpoint.mid)} {
-    padding: ${({ reducedVerticalpadding }) => (reducedVerticalpadding ? '1.5rem' : '3rem')} 0;
+    padding: ${({ reducedVerticalPadding }) => (reducedVerticalPadding ? '1.5rem' : '3rem')} 0;
     row-gap: 3rem;
     ${contentGrid(8)}
     justify-items: center;

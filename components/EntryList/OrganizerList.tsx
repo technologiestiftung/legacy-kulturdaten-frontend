@@ -21,23 +21,26 @@ import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
 import { EntryCardGrid } from './EntryCard';
 import { RadioSwitch } from '../RadioSwitch';
-import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
+import { EntryListContext, FiltersActions } from './EntryListContext';
 import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
+import { mq } from '../globals/Constants';
+import { Breakpoint } from '../../lib/WindowService';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
   min-height: 100%;
   background: var(--white);
-`;
 
-const viewEntriesPerPageMap = {
-  cards: 8,
-  table: 16,
-};
+  ${mq(Breakpoint.mid)} {
+    border: 1px solid var(--grey-400);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+`;
 
 const StyledEntryListTable = styled.div`
   padding: 0 0 1.5rem;
@@ -227,6 +230,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={expandable}
+        // noPadding
       />
 
       <EntryListFiltersBox
@@ -234,6 +238,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
         expanded={expanded}
         activeFiltersCount={activeFiltersCount}
+        // noPadding
       >
         <StyledFilters expanded={expanded}>
           <Select
