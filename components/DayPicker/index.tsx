@@ -161,12 +161,7 @@ export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min }: DayPick
 
   return (
     <div>
-      <StyledDayPicker
-        aria-label={t('dayPicker.ariaLabel') as string}
-        role="group"
-        aria-invalid={!valid}
-        valid={valid}
-      >
+      <StyledDayPicker aria-label={t('dayPicker.ariaLabel') as string} role="group" valid={valid}>
         {weekdays.map(({ name: { short, long } }, index) => (
           <StyledDayPickerDay
             key={index}

@@ -6,7 +6,6 @@ import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
 import { CheckSvg } from '../assets/CheckSvg';
 import { ExclamationMarkSvg } from '../assets/ExclamationMarkSvg';
-import { InfoSymbol } from '../assets/InfoSymbol';
 import { UploadCloudSvg } from '../assets/UploadCloudSvg';
 import { contentGrid, mq } from '../globals/Constants';
 

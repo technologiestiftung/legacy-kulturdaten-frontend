@@ -16,9 +16,11 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
+    "next"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off"
-  }
+  },
+  "ignorePatterns": ["story.tsx", "*.story.tsx", "story.ts", "*.story.tsx", "stories.tsx", "*.stories.tsx", "*.config.ts"]
 }

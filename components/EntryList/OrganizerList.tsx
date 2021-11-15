@@ -19,26 +19,28 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
-import { PublishedStatus } from '../../lib/api/types/general';
+import { EntryCardGrid } from './EntryCard';
 import { RadioSwitch } from '../RadioSwitch';
-import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
+import { EntryListContext, FiltersActions } from './EntryListContext';
 import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
+import { mq } from '../globals/Constants';
+import { Breakpoint } from '../../lib/WindowService';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
   min-height: 100%;
   background: var(--white);
-`;
 
-const viewEntriesPerPageMap = {
-  cards: 8,
-  table: 16,
-};
+  ${mq(Breakpoint.mid)} {
+    border: 1px solid var(--grey-400);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+`;
 
 const StyledEntryListTable = styled.div`
   padding: 0 0 1.5rem;
@@ -54,6 +56,7 @@ export interface OrganizerListProps {
   enableUltraWideLayout?: boolean;
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
+  title?: string;
 }
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({
@@ -62,6 +65,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
   enableUltraWideLayout = true,
   customEntryOnClick,
   activeEntryId,
+  title,
 }: OrganizerListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -74,16 +78,12 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
   const {
     getCurrentPage,
     setCurrentPage,
-    getEntriesPerPage,
-    setEntriesPerPage,
     getSortKey,
     setSortKey,
     getOrder,
     setOrder,
     getFilters,
     getDispatchFilters,
-    getView,
-    setView,
     getFiltersBoxExpanded,
     setFiltersBoxExpanded,
     setLastEntryId,
@@ -95,10 +95,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
   const listName = Categories.organizer;
   const filters = useMemo(() => getFilters(listName), [getFilters, listName]);
   const currentPage = useMemo(() => getCurrentPage(listName), [getCurrentPage, listName]);
-  const entriesPerPage = useMemo(() => getEntriesPerPage(listName), [getEntriesPerPage, listName]);
+  const entriesPerPage = 20;
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
-  const view = useMemo(() => getView(listName), [getView, listName]);
   const filtersBoxExpanded = useMemo(
     () => getFiltersBoxExpanded(listName),
     [getFiltersBoxExpanded, listName]
@@ -140,74 +139,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     }
   }, [list?.meta?.pages?.total]);
 
-  useEffect(() => {
-    if (viewEntriesPerPageMap[view] !== entriesPerPage) {
-      setEntriesPerPage(listName, viewEntriesPerPageMap[view]);
-      setCurrentPage(listName, 1);
-    }
-  }, [view, setEntriesPerPage, entriesPerPage, setCurrentPage, listName]);
-
   const date = useDate();
-
-  const cards = useMemo(
-    () =>
-      list?.data
-        ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
-            ({ attributes, relations, id }, index) => {
-              const href = (sub?: string) =>
-                routes[Routes.organizer]({
-                  locale,
-                  query: { organizer: id, sub },
-                });
-
-              const translations = relations?.translations;
-              const currentTranslation = translations
-                ? getTranslation<OrganizerTranslation>(language, translations)
-                : undefined;
-              const typeNames = relations?.types?.map((type) => {
-                const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return typeTranslation?.attributes.name;
-              });
-
-              return (
-                <EntryCard
-                  onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.organizer, id);
-
-                    if (typeof customEntryOnClick === 'function') {
-                      customEntryOnClick(Categories.organizer, id);
-                    }
-                  }}
-                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
-                  menuExpanded={expanded}
-                  key={index}
-                  title={currentTranslation?.attributes?.name}
-                  status={attributes?.status || PublishedStatus.draft}
-                  active={router.asPath.includes(href()) || activeEntryId === id}
-                  meta={<EntryCardTypesSubjects types={typeNames} />}
-                  createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
-                  updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
-                />
-              );
-            }
-          )
-        : undefined,
-    [
-      activeEntryId,
-      expanded,
-      language,
-      list.data,
-      locale,
-      router.asPath,
-      setMenuExpanded,
-      setLastEntryId,
-      customEntryOnClick,
-    ]
-  );
 
   const rows: TableProps['content'] = useMemo(
     () =>
@@ -295,13 +227,14 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
 
   return (
     <StyledOrganizerList>
-      <EntryListHead
-        title={t('categories.organizer.title.plural') as string}
-        expanded={expanded}
-        setExpanded={setMenuExpanded}
-        expandable={expandable}
-      />
-
+      {title && (
+        <EntryListHead
+          title={title}
+          expanded={expanded}
+          setExpanded={setMenuExpanded}
+          expandable={expandable}
+        />
+      )}
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
@@ -438,75 +371,38 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               },
             ]}
           />
-          <RadioSwitch
-            value={view}
-            name={`entry-view-${pseudoUID}`}
-            onChange={(value) => {
-              setView(listName, value as EntryListView);
-            }}
-            label={t('categories.organizer.view.label') as string}
-            options={[
-              {
-                value: EntryListView.cards,
-                label: t('categories.organizer.view.cards') as string,
-                icon: 'Grid',
-              },
-              {
-                value: EntryListView.table,
-                label: t('categories.organizer.view.table') as string,
-                icon: 'AlignJustify',
-              },
-            ]}
-          />
         </StyledFilters>
       </EntryListFiltersBox>
       <StyledEntryListBody>
-        {view === EntryListView.cards ? (
-          <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-            {cards && cards.length > 0 ? (
-              cards
-            ) : cards && cards.length === 0 ? (
+        <StyledEntryListTable>
+          {rows && rows.length > 0 ? (
+            <Table
+              columns={[
+                { title: t('forms.name') as string, bold: true, width: 5 },
+                { title: t('forms.type') as string, width: 4 },
+                { title: t('forms.subjects') as string, width: 4 },
+                { title: t('statusBar.status') as string, width: 3 },
+                { title: t('categories.organizer.table.updated') as string, width: 2 },
+                { title: t('categories.organizer.table.created') as string, width: 2 },
+              ].slice(0, !expanded ? 2 : undefined)}
+              content={rows}
+              narrow={!expanded}
+            />
+          ) : rows && rows.length === 0 ? (
+            <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
               <EntryListPlaceholder>
                 {activeFiltersCount === 0
                   ? t('categories.organizer.list.nothing')
                   : t('categories.organizer.list.nothingFilter')}
               </EntryListPlaceholder>
-            ) : (
+            </EntryCardGrid>
+          ) : (
+            <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
               <EntryListPlaceholder>{t('categories.organizer.list.loading')}</EntryListPlaceholder>
-            )}
-          </EntryCardGrid>
-        ) : (
-          <StyledEntryListTable>
-            {rows && rows.length > 0 ? (
-              <Table
-                columns={[
-                  { title: t('forms.name') as string, bold: true, width: 5 },
-                  { title: t('forms.type') as string, width: 4 },
-                  { title: t('forms.subjects') as string, width: 4 },
-                  { title: t('statusBar.status') as string, width: 3 },
-                  { title: t('categories.organizer.table.updated') as string, width: 2 },
-                  { title: t('categories.organizer.table.created') as string, width: 2 },
-                ].slice(0, !expanded ? 2 : undefined)}
-                content={rows}
-                narrow={!expanded}
-              />
-            ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>
-                  {activeFiltersCount === 0
-                    ? t('categories.organizer.list.nothing')
-                    : t('categories.organizer.list.nothingFilter')}
-                </EntryListPlaceholder>
-              </EntryCardGrid>
-            ) : (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>
-                  {t('categories.organizer.list.loading')}
-                </EntryListPlaceholder>
-              </EntryCardGrid>
-            )}
-          </StyledEntryListTable>
-        )}
+            </EntryCardGrid>
+          )}
+        </StyledEntryListTable>
+
         {lastPage > 1 && (
           <EntryListPagination
             currentPage={currentPage}

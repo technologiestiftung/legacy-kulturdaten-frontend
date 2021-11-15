@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { getDay } from 'date-fns';
 import { ArrowRight, ChevronDown } from 'react-feather';
 import { OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
@@ -8,7 +7,6 @@ import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Checkbox } from '../checkbox';
 import { useCollapsable } from '../collapsable';
-import { weekdays } from '../DayPicker';
 import { mq } from '../globals/Constants';
 import { DateStatusFlag } from './DateStatusFlag';
 

@@ -124,7 +124,7 @@ export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children, image }: Aut
     <StyledAuthWrapper>
       <StyledAuthWrapperContent>{children}</StyledAuthWrapperContent>
       <StyledAuthWrapperImage>
-        <Image src={image.src} layout="fill" objectFit="cover" />
+        <Image src={image.src} layout="fill" objectFit="cover" alt="" />
       </StyledAuthWrapperImage>
     </StyledAuthWrapper>
   );

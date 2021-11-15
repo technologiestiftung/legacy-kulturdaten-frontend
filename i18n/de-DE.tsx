@@ -10,6 +10,15 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  admin: {
+    title: () => 'Administration',
+    organizers: {
+      subtitle: () => 'Anbieter:innen',
+    },
+    start: () => 'Starte Adminmodus',
+    quit: () => 'Beende Adminmodus',
+    leave: () => 'Adminmodus beenden',
+  },
   dashboard: {
     info: {
       start: {
@@ -285,6 +294,7 @@ export const deDE: Localization = {
     logOut: () => 'Abmelden',
     ariaLabelOpen: () => 'Nutzer:innen Menü anzeigen',
     ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
+    admin: () => 'Administration',
   },
   settings: {
     title: () => 'Einstellungen',
@@ -1037,6 +1047,7 @@ export const deDE: Localization = {
     start: {
       title: () => 'Start',
       items: {
+        back: () => 'zurück zum Dashboard',
         dashboard: () => 'Dashboard',
         notifications: () => 'Benachrichtigungen',
         profile: () => 'Profil',

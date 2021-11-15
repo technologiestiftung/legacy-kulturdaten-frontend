@@ -20,19 +20,22 @@ const StyledFiltersBox = styled.div<{ expanded: boolean }>`
         `}
 `;
 
-const StyledFiltersBoxTitle = styled.div`
+const StyledFiltersBoxTitle = styled.div<{ noPadding?: boolean }>`
   border-bottom: 1px solid var(--grey-400);
   font-weight: 700;
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   padding: 1.125rem 0;
-  margin: 0 0.75rem;
-  width: calc(100% - 1.5rem);
 
-  ${mq(Breakpoint.wide)} {
-    margin: 0 1.5rem;
-    width: calc(100% - 3rem);
-  }
+  ${({ noPadding }) => css`
+    margin: ${noPadding ? '0' : '0 0.75rem'};
+    width: ${noPadding ? '100%' : 'calc(100% - 1.5rem)'};
+
+    ${mq(Breakpoint.wide)} {
+      margin: ${noPadding ? '0' : '0 1.5rem'};
+      width: ${noPadding ? '100%' : 'calc(100% - 3rem)'};
+    }
+  `}
 `;
 
 const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
@@ -47,20 +50,20 @@ const StyledFiltersBoxChildren = styled.div<{ expanded: boolean }>`
         `}
 `;
 
-export const StyledFilters = styled.div<{ expanded: boolean }>`
+export const StyledFilters = styled.div<{ expanded: boolean; noPadding?: boolean }>`
   display: flex;
   background: var(--white);
   flex-direction: column;
 
-  ${({ expanded }) =>
+  ${({ expanded, noPadding }) =>
     expanded
       ? css`
-          padding: 0.75rem;
+          padding: ${noPadding ? '0.75rem 0' : '0.75rem'};
           flex-direction: row;
           align-items: flex-end;
 
           ${mq(Breakpoint.wide)} {
-            padding: 0.75rem 1.5rem;
+            padding: ${noPadding ? '0.75rem 0' : '0.75rem 1.5rem'};
           }
 
           > div {
@@ -133,6 +136,7 @@ interface FiltersBoxProps {
   activeFiltersCount?: number;
   isCollapsed: boolean;
   setIsCollapsed: (isCollapsed: boolean) => void;
+  noPadding?: boolean;
 }
 
 export const EntryListFiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> = ({
@@ -141,6 +145,7 @@ export const EntryListFiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> =
   activeFiltersCount,
   isCollapsed,
   setIsCollapsed,
+  noPadding,
 }: PropsWithChildren<FiltersBoxProps>) => {
   const t = useT();
 
@@ -154,7 +159,7 @@ export const EntryListFiltersBox: React.FC<PropsWithChildren<FiltersBoxProps>> =
     <StyledFiltersBox expanded={expanded}>
       {expanded ? (
         <>
-          <StyledFiltersBoxTitle>{t('general.filter')}</StyledFiltersBoxTitle>
+          <StyledFiltersBoxTitle noPadding={noPadding}>{t('general.filter')}</StyledFiltersBoxTitle>
           {renderedChildren}
         </>
       ) : (

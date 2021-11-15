@@ -5,6 +5,5 @@ exports[`Header renders 1`] = `
   <div>
     header test
   </div>
-   
 </div>
 `;

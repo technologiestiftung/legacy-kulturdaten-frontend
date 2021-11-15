@@ -1,6 +1,6 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { EntryFormHook, EntryFormHookProps } from '.';
+import { EntryFormHook } from '.';
 import { Categories } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';

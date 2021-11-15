@@ -39,6 +39,17 @@ const StyledTestContentBox = styled.div`
 
 const testMenuStructure: NavigationStructure = {
   header: {
+    loggedInMeta: {
+      menuItems: [
+        {
+          type: MenuItemType.link,
+          action: {
+            href: '#',
+            title: 'zurück zum Dashboard',
+          },
+        },
+      ],
+    },
     loggedIn: {
       menuItems: [
         {

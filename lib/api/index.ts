@@ -102,10 +102,10 @@ export const apiRoutes: {
       query?.size ? `&size=${query.size}` : ''
     }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
   locationShow: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
   locationAccessibilityUpdate: ({ id }) => `/${apiVersion}/location/${id}/accessibility`,
   locationServiceUpdate: ({ id }) => `/${apiVersion}/location/${id}/service`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,

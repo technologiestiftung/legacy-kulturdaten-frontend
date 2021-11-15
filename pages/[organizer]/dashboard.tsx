@@ -7,7 +7,7 @@ import { routes, useLanguage, useLocale } from '../../lib/routing';
 import { useUser } from '../../components/user/useUser';
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
 import { useT } from '../../lib/i18n';
-import { defaultOrganizerId, useOrganizerId } from '../../lib/useOrganizer';
+import { useOrganizerId } from '../../lib/useOrganizer';
 import { ContentContainer, ContentWrapper } from '../../components/wrappers/ContentWrappers';
 import { DashbaordGreeting, DashboardWrapper } from '../../components/Dasboard';
 import { useRandomInt } from '../../lib/random';
@@ -39,6 +39,7 @@ import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { DateFormat, useDate } from '../../lib/date';
 import { DateStatusFlag } from '../../components/DateList/DateStatusFlag';
 import { useLoadingScreen } from '../../components/Loading/LoadingScreen';
+import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
 
 const StyledDashboardTileDate = styled.div`
   display: flex;
@@ -263,7 +264,11 @@ const DashboardPage: NextPage = () => {
   ]);
 
   useEffect(() => {
-    if (organizerId !== defaultOrganizerId && router?.query?.organizer !== organizerId) {
+    if (
+      organizerId !== defaultOrganizerId &&
+      router?.query?.organizer !== organizerId &&
+      organizerId
+    ) {
       router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
     }
   }, [locale, organizerId, router]);

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import React from 'react';
-import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Checkbox } from '../checkbox';
 import { ChevronDown } from 'react-feather';
@@ -85,7 +84,6 @@ export const FormListConditional: React.FC<FormListConditionalProps> = ({
   id,
   last,
 }: FormListConditionalProps) => {
-  const t = useT();
   const uid = usePseudoUID();
   const childrenArray = React.Children.toArray(children);
 
