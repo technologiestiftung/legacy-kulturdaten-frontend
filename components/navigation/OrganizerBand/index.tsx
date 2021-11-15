@@ -62,6 +62,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
           noBorder
           asButton
           onClick={() => quitAdminMode()}
+          adminModeActive
         >
           {t('admin.leave') as string}
         </OrganizerBandItem>

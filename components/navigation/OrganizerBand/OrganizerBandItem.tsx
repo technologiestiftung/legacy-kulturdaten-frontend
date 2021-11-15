@@ -44,6 +44,7 @@ const StyledOrganizerBandItem = styled.a<{
   active: boolean;
   layout: OrganizerBandLayout;
   noBorder?: boolean;
+  adminModeActive?: boolean;
 }>`
   text-decoration: none;
   width: 100%;
@@ -53,12 +54,13 @@ const StyledOrganizerBandItem = styled.a<{
   flex-direction: row;
   justify-content: center;
   column-gap: 0.75rem;
-  background: var(--grey-200);
+  background: ${({ adminModeActive }) =>
+    adminModeActive ? 'rgba(255,255,255,0.25)' : 'var(--grey-200)'};
   border-radius: 0.75rem;
   padding: 0;
   margin: 0;
   appearance: none;
-  color: var(--grey-600);
+  color: ${({ adminModeActive }) => (adminModeActive ? 'var(--white)' : 'var(--grey-600)')};
   transition: background var(--transition-duration-fast), color var(--transition-duration-fast),
     border-color var(--transition-duration-fast), box-shadow var(--transition-duration-fast);
 
@@ -75,11 +77,13 @@ const StyledOrganizerBandItem = styled.a<{
 
           &:hover {
             background: var(--white);
+            color: var(--grey-600);
           }
 
           ${active &&
           css`
             background: var(--white);
+            color: var(--grey-600);
           `}
         `
       : css`
@@ -88,6 +92,7 @@ const StyledOrganizerBandItem = styled.a<{
           &:hover {
             box-shadow: var(--shadow-sharp-hover);
             border-color: var(--grey-600);
+            color: var(--grey-600);
 
             ${StyledOrganizerBandItemLogo} {
               border-color: var(--grey-600);
@@ -147,6 +152,7 @@ interface OrganizerBandItemProps {
   onClick?: React.MouseEventHandler;
   logo?: Media['data'];
   asButton?: boolean;
+  adminModeActive?: boolean;
 }
 
 const OrganizerBandItemForwarded = (
@@ -160,6 +166,7 @@ const OrganizerBandItemForwarded = (
     noBorder,
     logo,
     asButton,
+    adminModeActive,
   }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
@@ -194,6 +201,7 @@ const OrganizerBandItemForwarded = (
           }
         }}
         as={asButton ? 'button' : undefined}
+        adminModeActive={adminModeActive}
       >
         <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
           {icon && feather[icon] ? (
