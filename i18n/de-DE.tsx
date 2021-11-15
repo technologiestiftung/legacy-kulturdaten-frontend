@@ -1090,8 +1090,11 @@ export const deDE: Localization = {
       label: () => 'Sprache / Language',
       description: () => 'Sprache wählen, choose Language',
     },
-    organizerBandShowAriaLabel: () => 'Liste meiner Anbieter:innen ausklappen',
-    organizerBandCollapseAriaLabel: () => 'Liste meiner Anbieter:innen einklappen',
-    createOrganizer: () => 'Neue Anbieter:in erstellen',
+    organizerBand: {
+      show: () => 'Liste meiner Anbieter:innen ausklappen',
+      collapse: () => 'Liste meiner Anbieter:innen einklappen',
+      create: () => 'Neue Anbieter:in erstellen',
+      loading: () => 'Wechsle aktive Anbieter:in',
+    },
   },
 };

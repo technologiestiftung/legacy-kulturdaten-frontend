@@ -1084,8 +1084,11 @@ export const enDE: Localization = {
       label: () => 'Language / Sprache',
       description: () => 'Choose Language, Sprache wählen',
     },
-    organizerBandShowAriaLabel: () => 'Show list of my Organizers',
-    organizerBandCollapseAriaLabel: () => 'Hide list of my Organizers',
-    createOrganizer: () => 'Create new Organizer',
+    organizerBand: {
+      show: () => 'Show list of my organizers',
+      collapse: () => 'Hide list of my organizers',
+      create: () => 'Create new organizer',
+      loading: () => 'Changing active organizer',
+    },
   },
 };

@@ -118,26 +118,23 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
             );
 
             return (
-              <Link
-                key={index}
-                href={routes.dashboard({ locale, query: { organizer: organizer.id } })}
-                passHref
-              >
-                <OrganizerBandItem
-                  active={router?.query?.organizer === organizer.id}
-                  layout={layout}
-                  logo={organizer.relations?.logo}
-                  onClick={(e) => {
+              <OrganizerBandItem
+                asButton
+                active={router?.query?.organizer === organizer.id}
+                layout={layout}
+                logo={organizer.relations?.logo}
+                onClick={(e) => {
+                  loadingScreen(t('menu.organizerBand.loading'), async () => {
                     setOrganizerId(organizer.id);
 
-                    if (onClick) {
-                      onClick(e);
-                    }
-                  }}
-                >
-                  {translation?.attributes?.name || defaultTranslation?.attributes?.name}
-                </OrganizerBandItem>
-              </Link>
+                    router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
+
+                    return { success: true };
+                  });
+                }}
+              >
+                {translation?.attributes?.name || defaultTranslation?.attributes?.name}
+              </OrganizerBandItem>
             );
           })}
           <OrganizerBandItem
@@ -148,13 +145,13 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
             asButton
             onClick={async () => {
               loadingScreen(
-                t('menu.createOrganizer'),
+                t('menu.organizerBand.create'),
                 async () => await createOrganizer(),
                 t('general.takeAFewSeconds')
               );
             }}
           >
-            {t('menu.createOrganizer') as string}
+            {t('menu.organizerBand.create') as string}
           </OrganizerBandItem>
         </>
       )}
