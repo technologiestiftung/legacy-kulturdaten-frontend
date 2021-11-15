@@ -15,6 +15,9 @@ export const deDE: Localization = {
     organizers: {
       subtitle: () => 'Anbieter:innen',
     },
+    start: () => 'Starte Adminmodus',
+    quit: () => 'Beende Adminmodus',
+    leave: () => 'Adminmodus verlassen',
   },
   dashboard: {
     info: {

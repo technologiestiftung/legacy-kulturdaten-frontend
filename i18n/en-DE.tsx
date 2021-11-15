@@ -15,6 +15,9 @@ export const enDE: Localization = {
     organizers: {
       subtitle: () => 'Organizers',
     },
+    start: () => 'Start admin mode',
+    quit: () => 'Quit admin mode',
+    leave: () => 'Leave admin mode',
   },
   dashboard: {
     info: {

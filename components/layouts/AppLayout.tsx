@@ -6,6 +6,7 @@ import { useBodyLock } from '../../lib/BodyLock';
 import { useActiveRoute } from '../../lib/routing';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
+import { useAdminMode } from '../Admin/AdminContext';
 import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
@@ -42,7 +43,7 @@ const Container = styled.div<{ hasOrganizerBand: boolean }>`
   }
 `;
 
-const OrganizerSlot = styled.div`
+const OrganizerSlot = styled.div<{ adminModeActive: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -53,6 +54,12 @@ const OrganizerSlot = styled.div`
   box-shadow: inset -1.75rem 0 0.75rem -2rem var(--black-o25);
   overflow-x: hidden;
   overflow-y: auto;
+
+  ${({ adminModeActive }) =>
+    adminModeActive &&
+    css`
+      background: var(--blue);
+    `}
 `;
 
 const HeaderSlot = styled.div<{ locked: boolean; hasOrganizerBand: boolean }>`
@@ -87,9 +94,14 @@ const HeaderSlot = styled.div<{ locked: boolean; hasOrganizerBand: boolean }>`
   }
 `;
 
-const HeaderSlotSecondary = styled.div<{ hasOrganizerBand: boolean }>`
-  ${({ hasOrganizerBand }) => css`
-    background: ${hasOrganizerBand ? 'var(--grey-200)' : 'var(--white)'};
+const HeaderSlotSecondary = styled.div<{ hasOrganizerBand: boolean; adminModeActive: boolean }>`
+  ${({ hasOrganizerBand, adminModeActive }) => css`
+    background: ${hasOrganizerBand
+      ? adminModeActive
+        ? 'var(--blue)'
+        : 'var(--grey-200)'
+      : 'var(--white)'};
+    color: ${hasOrganizerBand && adminModeActive ? 'var(--white)' : 'var(--black)'};
     box-shadow: ${hasOrganizerBand
       ? 'inset 0 -1.75rem 0.75rem -2rem var(--black-o25)'
       : 'inset 0 -1px 0 var(--grey-400)'};
@@ -243,6 +255,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     [enableMenuExpanded, menuExpanded, overlayOpen]
   );
   const { bodyLock, locked } = useBodyLock(bodyLockConditions);
+  const { adminModeActive } = useAdminMode();
 
   const hasSidebar = useMemo(() => typeof sidebar !== 'undefined', [sidebar]);
 
@@ -292,12 +305,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         </HeaderSlot>
       )}
       {headerSecondary && (
-        <HeaderSlotSecondary role="navigation" hasOrganizerBand={activeLayout?.hasOrganizerBand}>
+        <HeaderSlotSecondary
+          role="navigation"
+          hasOrganizerBand={activeLayout?.hasOrganizerBand}
+          adminModeActive={adminModeActive}
+        >
           {headerSecondary}
         </HeaderSlotSecondary>
       )}
       {activeLayout?.hasOrganizerBand && isMidOrWider && (
-        <OrganizerSlot>
+        <OrganizerSlot adminModeActive={adminModeActive}>
           <OrganizerBand layout={OrganizerBandLayout.narrow} />
         </OrganizerSlot>
       )}

@@ -36,6 +36,7 @@ const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   ${({ isSecondary }) =>
     isSecondary &&
     css`
+      color: inherit;
       background: transparent;
     `}
 `;
@@ -207,7 +208,7 @@ const StyledHeaderOrganizerMenuButton = styled.button<{ isCollapsed: boolean }>`
   margin: 0;
   display: flex;
   flex-grow: 1;
-  color: var(--black);
+  color: inherit;
   max-width: calc(100% - 0.75rem - 2.25rem);
   justify-content: flex-start;
   text-align: left;

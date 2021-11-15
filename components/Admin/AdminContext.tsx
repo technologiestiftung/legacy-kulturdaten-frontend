@@ -7,6 +7,7 @@ import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useUser } from '../user/useUser';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { defaultOrganizerId } from '../navigation/NavigationContext';
+import { useT } from '../../lib/i18n';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 const adminOrganizerCookieName =
@@ -100,13 +101,13 @@ export const useAdminMode = (): {
 } => {
   const { adminModeActive, activeOrganizerId, setActiveOrganizerId, setAdminModeActive } =
     useContext(AdminContext);
-
+  const t = useT();
   const router = useRouter();
   const locale = useLocale();
   const loadingScreen = useLoadingScreen();
 
   const quit = useCallback(() => {
-    loadingScreen('Beende Admin Modus', async () => {
+    loadingScreen(t('admin.quit'), async () => {
       setActiveOrganizerId(undefined);
       setAdminModeActive(false);
 
@@ -114,11 +115,11 @@ export const useAdminMode = (): {
 
       return { success: true };
     });
-  }, [loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]);
+  }, [t, loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]);
 
   const start = useCallback(
     (organizerId: string) => {
-      loadingScreen('Starte Admin Modus', async () => {
+      loadingScreen(t('admin.start'), async () => {
         setAdminModeActive(true);
         setActiveOrganizerId(organizerId);
 
@@ -133,7 +134,7 @@ export const useAdminMode = (): {
         return { success: true };
       });
     },
-    [loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]
+    [t, loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]
   );
 
   return {

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useLanguage, useLocale } from '../../../lib/routing';
@@ -13,15 +14,16 @@ import { useUserOrganizerLists } from '../../user/useUser';
 import { useCreateOrganizer } from '../../../lib/categories';
 import { defaultLanguage } from '../../../config/locale';
 import { useAdminMode } from '../../Admin/AdminContext';
-import { Button } from '../../button';
 
-const StyledOrganizerBand = styled.div<{ layout: OrganizerBandLayout }>`
+const StyledOrganizerBand = styled.div<{ adminModeActive: boolean }>`
   width: 100%;
   min-height: 100%;
   display: flex;
   flex-direction: column;
   row-gap: 0.75rem;
   padding: 0.75rem;
+
+  ${({ adminModeActive }) => adminModeActive && css``}
 `;
 
 export enum OrganizerBandLayout {
@@ -51,9 +53,18 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
     useUserOrganizerLists();
 
   return (
-    <StyledOrganizerBand layout={layout}>
+    <StyledOrganizerBand adminModeActive={adminModeActive}>
       {adminModeActive ? (
-        <Button onClick={() => quitAdminMode()}>AM</Button>
+        <OrganizerBandItem
+          active={router?.asPath === routes.createOrganizer({ locale })}
+          layout={layout}
+          icon="X"
+          noBorder
+          asButton
+          onClick={() => quitAdminMode()}
+        >
+          {t('admin.leave') as string}
+        </OrganizerBandItem>
       ) : (
         <>
           {[...organizerOwnerList, ...organizerContributorList]?.map((organizer, index) => {
