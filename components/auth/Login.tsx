@@ -8,7 +8,6 @@ import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../user/useUser';
 import { Locale } from '../../config/locales';
 import { useT } from '../../lib/i18n';
-import { defaultOrganizerId } from '../../lib/useOrganizer';
 import { Anchor } from '../anchor';
 import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
@@ -17,6 +16,7 @@ import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { Info } from '../info';
 import { StandardLinkType } from '../../lib/generalTypes';
+import { defaultOrganizerId } from '../navigation/NavigationContext';
 
 const {
   publicRuntimeConfig: { authTokenCookieName },

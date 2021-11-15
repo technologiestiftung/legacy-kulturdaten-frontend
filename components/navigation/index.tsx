@@ -3,15 +3,15 @@ import { useContext, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
 import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
-import { defaultOrganizerId, useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
+import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { appLayouts, Layouts, useLayout } from '../layouts/AppLayout';
+import { appLayouts, Layouts } from '../layouts/AppLayout';
 import { useUser } from '../user/useUser';
 import { HeaderMain, HeaderSecondary } from './header/Header';
 import { HeaderBackLink } from './header/HeaderBackLink';
 import { HeaderLinkProps } from './header/HeaderLink';
 import { Menu, MenuData, MenuItem } from './Menu';
-import { NavigationContext } from './NavigationContext';
+import { defaultOrganizerId, NavigationContext } from './NavigationContext';
 
 export interface NavigationProps {
   menus: {

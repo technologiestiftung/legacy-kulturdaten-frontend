@@ -6,7 +6,7 @@ import { useLocale } from '../../lib/routing';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useUser } from '../user/useUser';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
-import { defaultOrganizerId } from '../../lib/useOrganizer';
+import { defaultOrganizerId } from '../navigation/NavigationContext';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 const adminOrganizerCookieName =

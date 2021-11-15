@@ -13,7 +13,8 @@ import { LocationList } from '../components/EntryList/LocationList';
 import { LocaleSwitch } from '../components/navigation/LocaleSwitch';
 import { OfferList } from '../components/EntryList/OfferList';
 import { useRouter } from 'next/router';
-import { defaultOrganizerId, useOrganizerId } from '../lib/useOrganizer';
+import { useOrganizerId } from '../lib/useOrganizer';
+import { defaultOrganizerId } from '../components/navigation/NavigationContext';
 
 export const useAppTitle = (): string => {
   const t = useT();

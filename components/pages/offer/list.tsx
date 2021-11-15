@@ -6,10 +6,11 @@ import { OfferList as OfferListCall } from '../../../lib/api';
 import { Offer } from '../../../lib/api/types/offer';
 import { CategoryPage, useList } from '../../../lib/categories';
 import { useLocale } from '../../../lib/routing';
-import { defaultOrganizerId, useOrganizerId } from '../../../lib/useOrganizer';
+import { useOrganizerId } from '../../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
 import { OfferList } from '../../EntryList/OfferList';
+import { defaultOrganizerId } from '../../navigation/NavigationContext';
 import { AppWrapper } from '../../wrappers/AppWrapper';
 
 export const OfferListPage: React.FC<CategoryPage> = () => {
