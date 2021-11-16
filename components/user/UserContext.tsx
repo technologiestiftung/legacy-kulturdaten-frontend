@@ -133,8 +133,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   useEffect(() => {
     const userObject = userResponse?.body as unknown as AuthInfo['response']['body'];
 
-    console.log({ userObject, authTokenFromStateOrCookie, userTokenIsValid, userIsAuthenticated });
-
     if (authTokenFromStateOrCookie) {
       if (userTokenIsValid === false) {
         logoutUser();
