@@ -12,6 +12,7 @@ export type User = {
   attributes: {
     email: string;
     rememberMeToken: string;
+    isSuperuser: boolean;
     status: UserStatus;
     createdAt: string;
     updatedAt: string;

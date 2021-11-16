@@ -1,9 +1,25 @@
+import { title } from 'process';
 import { InputType } from '../components/input';
 import { GenericFormCategory, GenericFormFieldType } from '../lib/genericForm';
 import { Language } from './locale';
 
 export const locationArrival: GenericFormCategory[] = [
   {
+    translations: [
+      {
+        attributes: {
+          language: Language.de,
+          name: 'Anreiseinformationen',
+        },
+      },
+      {
+        attributes: {
+          language: Language.en,
+          name: 'Travel information',
+        },
+      },
+    ],
+    collapsable: false,
     children: [
       {
         translations: [

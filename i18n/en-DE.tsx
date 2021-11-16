@@ -10,6 +10,15 @@ export const enDE: Localization = {
   test: {
     content: () => 'Test Content',
   },
+  admin: {
+    title: () => 'Administration',
+    organizers: {
+      subtitle: () => 'Organizers',
+    },
+    start: () => 'Start admin mode',
+    quit: () => 'Quit admin mode',
+    leave: () => 'Quit admin mode',
+  },
   dashboard: {
     info: {
       start: {
@@ -284,6 +293,7 @@ export const enDE: Localization = {
     logOut: () => 'Log out',
     ariaLabelOpen: () => 'Show user menu',
     ariaLabelClose: () => 'Hide user menu',
+    admin: () => 'Administration',
   },
   settings: {
     title: () => 'Settings',
@@ -344,7 +354,6 @@ export const enDE: Localization = {
     create: () => 'Create new Organizer',
     baseInfo: () => 'Basic information',
     address: () => 'Address data',
-    arrival: () => 'Travel information',
     name: () => 'Name',
     labelGerman: () => 'German',
     labelGermanEasy: () => 'German: simple Language',
@@ -1031,6 +1040,7 @@ export const enDE: Localization = {
     start: {
       title: () => 'Start',
       items: {
+        back: () => 'back to Dashboard',
         dashboard: () => 'Dashboard',
         notifications: () => 'Notifications',
         profile: () => 'Profile',
@@ -1073,8 +1083,11 @@ export const enDE: Localization = {
       label: () => 'Language / Sprache',
       description: () => 'Choose Language, Sprache wählen',
     },
-    organizerBandShowAriaLabel: () => 'Show list of my Organizers',
-    organizerBandCollapseAriaLabel: () => 'Hide list of my Organizers',
-    createOrganizer: () => 'Create new Organizer',
+    organizerBand: {
+      show: () => 'Show list of my organizers',
+      collapse: () => 'Hide list of my organizers',
+      create: () => 'Create new organizer',
+      loading: () => 'Changing active organizer',
+    },
   },
 };

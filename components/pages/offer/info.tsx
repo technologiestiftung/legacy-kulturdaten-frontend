@@ -275,7 +275,6 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
       <EntryFormHead
         title={t('categories.offer.form.location.label') as string}
         hint={typeof locationId === 'undefined'}
-        showHintInline
       />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
@@ -544,7 +543,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
       {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
-        <div role="form" aria-invalid={!valid}>
+        <div role="form">
           <Save
             onClick={onSave}
             date={formattedDate}

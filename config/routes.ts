@@ -22,6 +22,7 @@ export enum Routes {
   location = 'location',
   createLocation = 'createLocation',
   imprint = 'imprint',
+  admin = 'admin',
 }
 
 /**
@@ -59,6 +60,7 @@ export const routes: { [key in Routes]: Route } = {
   createLocation: ({ query, locale }) =>
     `/${query.organizer}/${localizedRoutes[Routes.createLocation][locale]}/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
+  admin: ({ locale }) => `/${localizedRoutes[Routes.admin][locale]}/organizers/`,
 };
 
 export const internalRoutes = [
@@ -73,6 +75,7 @@ export const internalRoutes = [
   Routes.createLocation,
   Routes.createOffer,
   Routes.createOrganizer,
+  Routes.admin,
 ];
 
 /**
@@ -139,6 +142,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'impressum',
     'en-DE': 'imprint',
   },
+  admin: {
+    'de-DE': 'admin',
+    'en-DE': 'admin',
+  },
 };
 
 export const routesLayouts: { [key in Routes]: Layouts } = {
@@ -154,7 +161,8 @@ export const routesLayouts: { [key in Routes]: Layouts } = {
   organizer: Layouts.loggedIn,
   register: Layouts.loggedOut,
   team: Layouts.loggedIn,
-  userNotifications: Layouts.loggedIn,
-  userProfile: Layouts.loggedIn,
-  userSettings: Layouts.loggedIn,
+  userNotifications: Layouts.loggedInMeta,
+  userProfile: Layouts.loggedInMeta,
+  userSettings: Layouts.loggedInMeta,
+  admin: Layouts.loggedInMeta,
 };

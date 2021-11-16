@@ -10,6 +10,15 @@ export const deDE: Localization = {
   test: {
     content: () => 'Test Inhalt',
   },
+  admin: {
+    title: () => 'Administration',
+    organizers: {
+      subtitle: () => 'Anbieter:innen',
+    },
+    start: () => 'Starte Adminmodus',
+    quit: () => 'Beende Adminmodus',
+    leave: () => 'Adminmodus beenden',
+  },
   dashboard: {
     info: {
       start: {
@@ -285,6 +294,7 @@ export const deDE: Localization = {
     logOut: () => 'Abmelden',
     ariaLabelOpen: () => 'Nutzer:innen Menü anzeigen',
     ariaLabelClose: () => 'Nutzer:innen Menü ausblenden',
+    admin: () => 'Administration',
   },
   settings: {
     title: () => 'Einstellungen',
@@ -346,7 +356,6 @@ export const deDE: Localization = {
     create: () => 'Neue Anbieter:in anlegen',
     baseInfo: () => 'Grundlagen',
     address: () => 'Adressdaten',
-    arrival: () => 'Anreiseinformationen',
     name: () => 'Bezeichnung / Name',
     labelGerman: () => 'Deutsch',
     labelGermanEasy: () => 'Deutsch: einfache Sprache',
@@ -1037,6 +1046,7 @@ export const deDE: Localization = {
     start: {
       title: () => 'Start',
       items: {
+        back: () => 'zurück zum Dashboard',
         dashboard: () => 'Dashboard',
         notifications: () => 'Benachrichtigungen',
         profile: () => 'Profil',
@@ -1079,8 +1089,11 @@ export const deDE: Localization = {
       label: () => 'Sprache / Language',
       description: () => 'Sprache wählen, choose Language',
     },
-    organizerBandShowAriaLabel: () => 'Liste meiner Anbieter:innen ausklappen',
-    organizerBandCollapseAriaLabel: () => 'Liste meiner Anbieter:innen einklappen',
-    createOrganizer: () => 'Neue Anbieter:in erstellen',
+    organizerBand: {
+      show: () => 'Liste meiner Anbieter:innen ausklappen',
+      collapse: () => 'Liste meiner Anbieter:innen einklappen',
+      create: () => 'Neue Anbieter:in erstellen',
+      loading: () => 'Wechsle aktive Anbieter:in',
+    },
   },
 };

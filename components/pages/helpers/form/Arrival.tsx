@@ -134,7 +134,6 @@ export const useArrivalForm: EntryFormHook = ({ category, query }) => {
           e.stopPropagation();
         }}
       >
-        <EntryFormHead title={t('forms.arrival') as string} />
         {renderedForm}
       </form>
     ),

@@ -20,12 +20,13 @@ import { OrganizerType } from './api/types/organizer';
 import { EntryType } from './api/types/typeSubject';
 import { useT } from './i18n';
 import { Route, useLocale } from './routing';
-import { defaultOrganizerId, useOrganizerId, useSetOrganizerId } from './useOrganizer';
+import { useOrganizerId, useSetOrganizerId } from './useOrganizer';
 import { routes } from '../config/routes';
 import { MediaLicense } from './api/types/media';
 import { MediaLicenseList, mediaLicenseListFactory } from './api/routes/mediaLicense/list';
 import { District } from './api/types/district';
 import { DistrictList, districtListFactory } from './api/routes/district/list';
+import { defaultOrganizerId } from '../components/navigation/NavigationContext';
 
 export type categoryApi = {
   route: ApiRoutes;

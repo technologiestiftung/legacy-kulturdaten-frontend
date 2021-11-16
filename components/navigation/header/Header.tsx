@@ -36,6 +36,7 @@ const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   ${({ isSecondary }) =>
     isSecondary &&
     css`
+      color: inherit;
       background: transparent;
     `}
 `;
@@ -111,6 +112,9 @@ const StyledHeaderUserMenu = styled.div`
   ${mq(Breakpoint.mid)} {
     top: 0.75rem;
     position: fixed;
+  }
+
+  ${mq(Breakpoint.wide)} {
     padding: 0 1.5rem;
   }
 `;
@@ -207,7 +211,7 @@ const StyledHeaderOrganizerMenuButton = styled.button<{ isCollapsed: boolean }>`
   margin: 0;
   display: flex;
   flex-grow: 1;
-  color: var(--black);
+  color: inherit;
   max-width: calc(100% - 0.75rem - 2.25rem);
   justify-content: flex-start;
   text-align: left;
@@ -274,9 +278,7 @@ const HeaderOrganizerMenu: React.FC<HeaderOrganizerMenuProps> = ({
         isCollapsed={headerOrganizerBandCollapsed}
         aria-label={
           t(
-            headerOrganizerBandCollapsed
-              ? 'menu.organizerBandShowAriaLabel'
-              : 'menu.organizerBandCollapseAriaLabel'
+            headerOrganizerBandCollapsed ? 'menu.organizerBand.show' : 'menu.organizerBand.collapse'
           ) as string
         }
       >

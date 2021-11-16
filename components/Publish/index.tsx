@@ -216,14 +216,17 @@ export const Publish: React.FC<PublishProps> = ({
             css={css`
               box-shadow: 0.125rem 0.125rem 1.75rem -0.25rem rgba(0, 131, 92, 0.35);
 
-              &:hover {
-                box-shadow: 0.125rem 0.125rem 2.25rem -0.25rem rgba(0, 131, 92, 0.55);
-                transform: translateY(-0.125rem);
-              }
+              ${publishable &&
+              css`
+                &:hover {
+                  box-shadow: 0.125rem 0.125rem 2.25rem -0.25rem rgba(0, 131, 92, 0.55);
+                  transform: translateY(-0.125rem);
+                }
 
-              &:active {
-                transform: translateY(0.125rem);
-              }
+                &:active {
+                  transform: translateY(0.125rem);
+                }
+              `}
             `}
             onClick={async () => {
               loadingScreen(

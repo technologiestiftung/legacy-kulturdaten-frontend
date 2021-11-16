@@ -1,20 +1,20 @@
 import styled from '@emotion/styled';
-import { useRouter } from 'next/router';
 import { Link } from 'react-feather';
 import { Categories } from '../../../config/categories';
 import { ApiCall } from '../../../lib/api';
-import { CategoryEntry, PublishedStatus, Translation } from '../../../lib/api/types/general';
+import { CategoryEntry, Translation } from '../../../lib/api/types/general';
 import { useDeleteEntry, useEntry, useTabs } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { useOrganizerId } from '../../../lib/useOrganizer';
+import { useUserIsOwner } from '../../../lib/useUserIsOwner';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
+import { useAdminMode } from '../../Admin/AdminContext';
 import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '../../button';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
-import { Publish } from '../../Publish';
 import { EntryFormProps } from './form';
 
 const StyledA = styled.a`
@@ -28,9 +28,9 @@ export const useEntryHeader = (
   minimalVariant?: boolean
 ): React.ReactElement => {
   const tabs = useTabs(category);
-  const router = useRouter();
   const language = useLanguage();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const userIsOwner = useUserIsOwner();
 
   const { entry } = useEntry<CategoryEntry, ApiCall>(category, query);
 
@@ -42,6 +42,7 @@ export const useEntryHeader = (
   const subTitle = title ? currentTranslation?.attributes.name : undefined;
 
   const locale = useLocale();
+  const { quit } = useAdminMode();
 
   const t = useT();
   const organizerId = useOrganizerId();
@@ -97,30 +98,35 @@ export const useEntryHeader = (
               >
                 {category?.options?.exportXls}
               </Button>
-              <Button
-                variant={ButtonVariant.minimal}
-                size={ButtonSize.default}
-                color={ButtonColor.black}
-                onClick={async () => {
-                  if (confirm(category?.options?.deleteConfirm)) {
-                    loadingScreen(category?.options?.deleting, async () => {
-                      switch (category.name) {
-                        case Categories.organizer: {
-                          return await deleteOrganizer(entry?.data?.id);
+              {userIsOwner && (
+                <Button
+                  variant={ButtonVariant.minimal}
+                  size={ButtonSize.default}
+                  color={ButtonColor.black}
+                  onClick={async () => {
+                    if (confirm(category?.options?.deleteConfirm)) {
+                      loadingScreen(category?.options?.deleting, async () => {
+                        switch (category.name) {
+                          case Categories.organizer: {
+                            const deleteResp = await deleteOrganizer(entry?.data?.id);
+                            quit();
+
+                            return deleteResp;
+                          }
+                          case Categories.offer: {
+                            return await deleteOffer(entry?.data?.id);
+                          }
+                          case Categories.location: {
+                            return await deleteLocation(entry?.data?.id);
+                          }
                         }
-                        case Categories.offer: {
-                          return await deleteOffer(entry?.data?.id);
-                        }
-                        case Categories.location: {
-                          return await deleteLocation(entry?.data?.id);
-                        }
-                      }
-                    });
-                  }
-                }}
-              >
-                {category?.options?.delete}
-              </Button>
+                      });
+                    }
+                  }}
+                >
+                  {category?.options?.delete}
+                </Button>
+              )}
             </DropdownMenu>
           )
         }

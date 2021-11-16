@@ -221,7 +221,7 @@ export const LocationServicePage: React.FC<CategoryEntryPage> = ({
       {renderedPublish}
       {renderedEntryHeader}
       <div role="tabpanel">
-        <div role="form" aria-invalid={!valid}>
+        <div role="form">
           <Save
             onClick={onSave}
             date={formattedDate}

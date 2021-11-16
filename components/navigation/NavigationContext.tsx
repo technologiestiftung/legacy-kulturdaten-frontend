@@ -1,6 +1,7 @@
 import React, { ReactNode, Reducer, useCallback, useMemo, useReducer, useState } from 'react';
 import { getPseudoUID } from '../../lib/uid';
-import { defaultOrganizerId } from '../../lib/useOrganizer';
+
+export const defaultOrganizerId = 'default';
 
 type NavigationContext = {
   registerOverlay: (open?: boolean) => { id: string };

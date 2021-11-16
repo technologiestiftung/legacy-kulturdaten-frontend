@@ -15,6 +15,8 @@ import { useNavigation } from '../components/navigation';
 import { useAppTitle, useMenuStructure } from '../config/structure';
 import { HeaderLink } from '../components/navigation/header/HeaderLink';
 import { LoadingContextProvider } from '../components/Loading/LoadingContext';
+import { AdminContextProvider } from '../components/Admin/AdminContext';
+import { useHandleActiveOrganizer } from '../lib/useOrganizer';
 
 const EmbeddedAppLayout: React.FC<{ content: React.ReactElement }> = ({
   content,
@@ -26,6 +28,8 @@ const EmbeddedAppLayout: React.FC<{ content: React.ReactElement }> = ({
   const { rendered } = useContext(WindowContext);
   const layout = useLayout();
   const { header, sidebar } = useNavigation(NavigationStructure, appTitle, HeaderLink, layout);
+
+  useHandleActiveOrganizer();
 
   return rendered ? (
     <AppLayout header={header} sidebar={sidebar} content={content} layout={layout} />
@@ -41,12 +45,14 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
             listNames={[Categories.organizer, Categories.location, Categories.offer]}
           >
             <UserContextProvider>
-              <Reset />
-              <CSSVars />
-              <Global />
-              <Typography />
+              <AdminContextProvider>
+                <Reset />
+                <CSSVars />
+                <Global />
+                <Typography />
 
-              <EmbeddedAppLayout content={<Component {...pageProps} />} />
+                <EmbeddedAppLayout content={<Component {...pageProps} />} />
+              </AdminContextProvider>
             </UserContextProvider>
           </EntryListContextProvider>
         </LoadingContextProvider>

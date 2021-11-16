@@ -19,11 +19,11 @@ import { usePseudoUID } from '../../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../../button';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { ParsedUrlQuery } from 'querystring';
-import { Role, RoleName } from '../../../lib/api/types/role';
+import { Role } from '../../../lib/api/types/role';
 import { User } from '../../../lib/api/types/user';
-import { useUser } from '../../user/useUser';
 import { Info, InfoColor } from '../../info';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { useUserIsOwner } from '../../../lib/useUserIsOwner';
 
 const maxInvites = 50;
 
@@ -129,16 +129,8 @@ const useTeamForm: EntryFormHook = ({ category, query }) => {
 
   const [roles, setRoles] = useState<OrganizerRole[]>([]);
   const [rolesFromApi, setRolesFromApi] = useState<OrganizerRole[]>([]);
-  const { user } = useUser();
 
-  const userIsOwner = useMemo(
-    () =>
-      rolesFromApi?.find(
-        (role) =>
-          role.attributes.isActive && ((role as Role).relations.user as User)?.id === user?.id
-      )?.attributes.role === RoleName.owner,
-    [rolesFromApi, user?.id]
-  );
+  const userIsOwner = useUserIsOwner();
 
   const initialRoles = useMemo(
     () => entry?.data?.relations?.roles,
@@ -233,16 +225,8 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
   );
   const { entry } = useEntry<Organizer, OrganizerShow>(category, query);
   const formattedDate = useSaveDate(entry);
-  const { user } = useUser();
 
-  const userIsOwner = useMemo(
-    () =>
-      entry?.data?.relations?.roles?.find(
-        (role) =>
-          role.attributes.isActive && ((role as Role).relations.user as User)?.id === user?.id
-      )?.attributes.role === RoleName.owner,
-    [entry?.data?.relations?.roles, user?.id]
-  );
+  const userIsOwner = useUserIsOwner();
 
   const {
     renderedForm: teamForm,
