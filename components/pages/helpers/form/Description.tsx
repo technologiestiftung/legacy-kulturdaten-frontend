@@ -136,11 +136,15 @@ export const useDescription = ({
   });
 
   const pristine = useMemo(() => {
-    return (
-      (serializedMarkdown && cachedApiText && serializedMarkdown === cachedApiText) ||
-      !cachedApiText ||
-      !serializedMarkdown
-    );
+    if (typeof cachedApiText === 'undefined' || typeof serializedMarkdown === 'undefined') {
+      return true;
+    }
+
+    if (serializedMarkdown !== cachedApiText) {
+      return false;
+    }
+
+    return true;
   }, [cachedApiText, serializedMarkdown]);
 
   useEffect(() => {
