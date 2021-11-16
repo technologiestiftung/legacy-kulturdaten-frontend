@@ -7,7 +7,7 @@ import { routes, useLanguage, useLocale } from '../../lib/routing';
 import { useUser } from '../../components/user/useUser';
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
 import { useT } from '../../lib/i18n';
-import { useOrganizerId } from '../../lib/useOrganizer';
+import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { ContentContainer, ContentWrapper } from '../../components/wrappers/ContentWrappers';
 import { DashbaordGreeting, DashboardWrapper } from '../../components/Dasboard';
 import { useRandomInt } from '../../lib/random';
@@ -16,6 +16,7 @@ import {
   DashboardTile,
   DashboardTileText,
   DashboardTileTextP,
+  DashboardTileVariant,
 } from '../../components/Dasboard/DashboardTile';
 import {
   DashboardTileButton,
@@ -40,6 +41,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { DateStatusFlag } from '../../components/DateList/DateStatusFlag';
 import { useLoadingScreen } from '../../components/Loading/LoadingScreen';
 import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
+import { PublishedStatus } from '../../lib/api/types/general';
 
 const StyledDashboardTileDate = styled.div`
   display: flex;
@@ -246,8 +248,10 @@ const greetings: {
 const DashboardPage: NextPage = () => {
   useUser();
   const locale = useLocale();
+  const language = useLanguage();
   const t = useT();
   const organizerId = useOrganizerId();
+  const organizer = useOrganizer();
   const router = useRouter();
   const categories = useCategories();
   const userHasNoOrganizer = useMemo(() => organizerId === defaultOrganizerId, [organizerId]);
@@ -262,6 +266,16 @@ const DashboardPage: NextPage = () => {
   const offers = useList<OfferList, Offer>(categories.offer, 1, isUltraOrWider ? 3 : 2, [
     ['organizers', organizerId],
   ]);
+
+  const isPublished = useMemo(
+    () => organizer?.data?.attributes?.status === PublishedStatus.published,
+    [organizer?.data?.attributes?.status]
+  );
+
+  const currentTranslation = useMemo(
+    () => getTranslation(language, organizer?.data?.relations?.translations, true),
+    [language, organizer?.data?.relations?.translations]
+  );
 
   useEffect(() => {
     if (
@@ -281,6 +295,29 @@ const DashboardPage: NextPage = () => {
             <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
           </ContentContainer>
           <ContentContainer>
+            {!isPublished && (
+              <DashboardRow>
+                <DashboardTile
+                  gridColumn="span 12"
+                  title={
+                    t('dashboard.info.hint.title', {
+                      name: currentTranslation?.attributes?.name || '',
+                    }) as string
+                  }
+                  variant={DashboardTileVariant.hint}
+                >
+                  {t('dashboard.info.hint.content')}
+                  <DashboardTileLink
+                    type={StandardLinkType.internal}
+                    href={routes.organizer({
+                      locale,
+                      query: { organizer: organizerId, sub: 'info' },
+                    })}
+                    title={t('dashboard.info.hint.link') as string}
+                  />
+                </DashboardTile>
+              </DashboardRow>
+            )}
             {organizerId !== defaultOrganizerId && offers?.data?.length > 0 && (
               <DashboardRow title={t('dashboard.info.offers.title') as string}>
                 {offers?.data?.map((offer, index) => (

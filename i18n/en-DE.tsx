@@ -21,6 +21,18 @@ export const enDE: Localization = {
   },
   dashboard: {
     info: {
+      hint: {
+        title: ({ name }) => `Publish “${name}”`,
+        content: () => (
+          <DashboardTileText>
+            <DashboardTileTextP>
+              Your profile is not yet public. Publish it so your dates, offers, and places are
+              publicly available.
+            </DashboardTileTextP>
+          </DashboardTileText>
+        ),
+        link: () => `Edit and publish profile`,
+      },
       start: {
         title: () => 'How to get started',
         organizer: {
