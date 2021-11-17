@@ -106,6 +106,7 @@ export const useDescription = ({
   const [cachedApiText, setCachedApiText] = useState<string>();
   const { rendered } = useContext(WindowContext);
   const t = useT();
+  const [touched, setTouched] = useState(false);
 
   const entryTranslation = getTranslation<
     { attributes: { description: string; teaser: string } } & Translation
@@ -127,6 +128,7 @@ export const useDescription = ({
   } = useRichText({
     onChange: () => {
       if (richTextRef.current) {
+        setTouched(true);
         setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
       }
     },
@@ -136,12 +138,24 @@ export const useDescription = ({
   });
 
   const pristine = useMemo(() => {
-    return (
-      (serializedMarkdown && cachedApiText && serializedMarkdown === cachedApiText) ||
-      !cachedApiText ||
-      !serializedMarkdown
-    );
+    if (typeof cachedApiText === 'undefined' || typeof serializedMarkdown === 'undefined') {
+      return true;
+    }
+
+    if (serializedMarkdown != cachedApiText) {
+      return false;
+    }
+
+    return true;
   }, [cachedApiText, serializedMarkdown]);
+
+  useEffect(() => {
+    if (!touched && serializedMarkdown === '' && cachedApiText) {
+      setSerializedMarkdown(cachedApiText);
+    }
+
+    return () => setTouched(false);
+  }, [touched, cachedApiText, serializedMarkdown]);
 
   useEffect(() => {
     if (textFromApi !== cachedApiText) {
