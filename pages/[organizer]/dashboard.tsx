@@ -295,7 +295,7 @@ const DashboardPage: NextPage = () => {
             <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
           </ContentContainer>
           <ContentContainer>
-            {!isPublished && (
+            {organizerId !== defaultOrganizerId && !isPublished && (
               <DashboardRow>
                 <DashboardTile
                   gridColumn="span 12"
