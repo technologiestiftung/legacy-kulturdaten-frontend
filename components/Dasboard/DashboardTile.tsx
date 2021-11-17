@@ -127,15 +127,19 @@ const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean; variant: Dashbo
 
   > svg {
     margin-right: 0.75rem;
+    flex-shrink: 0;
   }
 
   ${mq(Breakpoint.mid)} {
     font-size: var(--font-size-500);
     line-height: var(--line-height-500);
     padding: 1.125rem 1.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+    > span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   ${({ hasDigit, variant }) =>
@@ -144,10 +148,13 @@ const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean; variant: Dashbo
           background: var(--white);
           font-size: var(--font-size-600);
           line-height: var(--line-height-600);
-          white-space: inherit;
-          overflow: inherit;
-          text-overflow: inherit;
           padding: 1.125rem 1.125rem 0;
+
+          > span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
 
           ${mq(Breakpoint.mid)} {
             font-size: var(--font-size-600);
