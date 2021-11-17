@@ -1,6 +1,9 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
+import { ArrowDown, ArrowUp } from 'react-feather';
+import { Order } from '../../lib/categories';
+import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { insetBorder, mq, insetBorderColored } from '../globals/Constants';
 
@@ -68,6 +71,8 @@ const StyledRowContainer = styled.div<{ narrow?: boolean }>`
   }
 `;
 
+const StyledSortCell = styled.button``;
+
 const StyledCell = styled.div<{
   isTitleRow?: boolean;
   bold?: boolean;
@@ -96,6 +101,11 @@ export interface TableProps {
     title: string;
     bold?: boolean;
     width?: number;
+    sort?: {
+      order: Order;
+      onClick: () => void;
+      active: boolean;
+    };
   }[];
   content: {
     contents: (string | React.ReactElement)[];
@@ -135,6 +145,7 @@ export const TableContextProvider: React.FC<TableContextProviderProps> = ({
 export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }: TableProps) => {
   const columnCount = columns.reduce((count, { width = 1 }) => count + width, 0);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const t = useT();
 
   return (
     <StyledTable role="table">
@@ -143,17 +154,41 @@ export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }
           <StyledRowWrapper narrow={narrow} isTitleRow>
             <StyledRowContainer narrow={narrow}>
               <StyledRow columnCount={columnCount} isTitleRow role="row" narrow={narrow}>
-                {columns.map((cell, index) => (
-                  <StyledCell
-                    width={columns[index].width}
-                    key={index}
-                    isTitleRow
-                    role="columnheader"
-                    narrow={narrow}
-                  >
-                    {cell.title}
-                  </StyledCell>
-                ))}
+                {columns.map((cell, index) => {
+                  return (
+                    <StyledCell
+                      width={columns[index].width}
+                      key={index}
+                      isTitleRow
+                      role="columnheader"
+                      narrow={narrow}
+                    >
+                      {cell.sort ? (
+                        <StyledSortCell
+                          key={index}
+                          onClick={cell.sort.onClick}
+                          aria-label={
+                            t('general.sorting', {
+                              order: cell.sort.active
+                                ? cell.sort.order === Order.ASC
+                                  ? Order.DESC
+                                  : Order.ASC
+                                : cell.sort.order,
+                              attribute: cell.title,
+                            }) as string
+                          }
+                        >
+                          <span>{cell.title}</span>
+                          {cell.sort.active && (
+                            <>{cell.sort.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}</>
+                          )}
+                        </StyledSortCell>
+                      ) : (
+                        cell.title
+                      )}
+                    </StyledCell>
+                  );
+                })}
               </StyledRow>
             </StyledRowContainer>
           </StyledRowWrapper>

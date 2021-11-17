@@ -4,6 +4,7 @@ import { InfoLi, InfoP, InfoUl } from '../components/info';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
+import { Order } from '../lib/categories';
 import { Localization } from '../lib/i18n';
 
 export const enDE: Localization = {
@@ -694,6 +695,8 @@ export const enDE: Localization = {
       'Unfortunately there is a problem with our server. We are sorry about this. Please try again later.',
     remove: () => 'remove',
     telPlaceholder: () => 'e.g. +49301234567',
+    sorting: ({ order, attribute }) =>
+      `Sort in ${order === Order.ASC ? 'ascending' : 'descending'} order by ${attribute}`,
   },
   tags: {
     boxLabel: () => 'Already added keywords',

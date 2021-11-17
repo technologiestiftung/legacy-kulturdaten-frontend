@@ -4,6 +4,7 @@ import { InfoLi, InfoP, InfoUl } from '../components/info';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
+import { Order } from '../lib/categories';
 import { Localization } from '../lib/i18n';
 
 export const deDE: Localization = {
@@ -698,6 +699,8 @@ export const deDE: Localization = {
       'Es gibt leider ein Problem mit dem Server. Das tut uns leid. Versuche es bitte später noch einmal.',
     remove: () => 'entfernen',
     telPlaceholder: () => 'z.B. +49301234567',
+    sorting: ({ order, attribute }) =>
+      `${order === Order.ASC ? 'Aufsteigend' : 'Absteigend'} nach ${attribute} sortieren`,
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
