@@ -71,7 +71,51 @@ const StyledRowContainer = styled.div<{ narrow?: boolean }>`
   }
 `;
 
-const StyledSortCell = styled.button``;
+const StyledCellSort = styled.button<{ active: boolean }>`
+  padding: 0.1875rem 0.375rem;
+  background: var(--grey-200);
+  border: none;
+  appearance: none;
+  display: flex;
+  align-items: center;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+  border-radius: 0.375rem;
+  margin-left: -0.375rem;
+  cursor: pointer;
+  transform: translateZ(0);
+  transition: transform var(--transition-duration-fast), color var(--transition-duration-fast),
+    background var(--transition-duration-fast), box-shadow var(--transition-duration-fast);
+  box-shadow: none;
+
+  svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-left: 0.1875rem;
+  }
+
+  &:hover {
+    transform: perspective(40px) translateZ(1px);
+    box-shadow: 0 0 1.5rem -0.5rem rgba(0, 0, 0, 0.25);
+    background: var(--grey-100);
+    color: var(--black);
+  }
+
+  ${({ active }) =>
+    active &&
+    css`
+      background: var(--black);
+      color: var(--white);
+
+      &:hover {
+        transform: perspective(40px) translateZ(1px);
+        box-shadow: 0 0 1.5rem -0.5rem rgba(0, 0, 0, 0.25);
+        background: var(--grey-700);
+        color: var(--white);
+      }
+    `}
+`;
 
 const StyledCell = styled.div<{
   isTitleRow?: boolean;
@@ -82,7 +126,7 @@ const StyledCell = styled.div<{
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: ${({ isTitleRow, bold }) => (isTitleRow || bold ? '700' : '400')};
-  padding: 0;
+  padding: 0 0.375rem 0 0;
   word-wrap: break-word;
   grid-column: span ${({ width }) => width || 1};
 
@@ -90,10 +134,15 @@ const StyledCell = styled.div<{
     narrow !== true
       ? css`
           ${mq(Breakpoint.mid)} {
-            padding: 0.75rem 0;
+            padding: 0.75rem 0.375rem 0.75rem 0;
           }
         `
       : ''}
+`;
+
+const StyledCellText = styled.span`
+  padding: 0.1875rem 0;
+  display: block;
 `;
 
 export interface TableProps {
@@ -164,7 +213,8 @@ export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }
                       narrow={narrow}
                     >
                       {cell.sort ? (
-                        <StyledSortCell
+                        <StyledCellSort
+                          active={cell.sort.active}
                           key={index}
                           onClick={cell.sort.onClick}
                           aria-label={
@@ -179,12 +229,10 @@ export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }
                           }
                         >
                           <span>{cell.title}</span>
-                          {cell.sort.active && (
-                            <>{cell.sort.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}</>
-                          )}
-                        </StyledSortCell>
+                          {cell.sort.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}
+                        </StyledCellSort>
                       ) : (
-                        cell.title
+                        <StyledCellText>{cell.title}</StyledCellText>
                       )}
                     </StyledCell>
                   );

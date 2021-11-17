@@ -335,55 +335,100 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
           </Select>
         </StyledFilters>
 
-        <StyledFilters expanded={expanded}>
-          <Select
-            id={`entry-sort-${pseudoUID}`}
-            label={t('general.sort') as string}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              setSortKey(listName, e.target.value);
-            }}
-            value={sortKey}
-          >
-            <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
-            <option value="createdAt">{t('categories.organizer.sort.created')}</option>
-            <option value="name">{t('categories.organizer.sort.name')}</option>
-          </Select>
-          <RadioSwitch
-            value={order}
-            name={`entry-order-${pseudoUID}`}
-            onChange={(value) => {
-              setCurrentPage(listName, 1);
-              setOrder(listName, value as Order);
-            }}
-            options={[
-              {
-                value: Order.ASC,
-                label: t('general.ascending') as string,
-                ariaLabel: t('general.ascendingAriaLabel') as string,
-                icon: 'ArrowUp',
-              },
-              {
-                value: Order.DESC,
-                label: t('general.descending') as string,
-                ariaLabel: t('general.descendingAriaLabel') as string,
-                icon: 'ArrowDown',
-              },
-            ]}
-          />
-        </StyledFilters>
+        {!expanded && (
+          <StyledFilters expanded={expanded}>
+            <Select
+              id={`entry-sort-${pseudoUID}`}
+              label={t('general.sort') as string}
+              onChange={(e) => {
+                setCurrentPage(listName, 1);
+                setSortKey(listName, e.target.value);
+              }}
+              value={sortKey}
+            >
+              <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
+              <option value="createdAt">{t('categories.organizer.sort.created')}</option>
+              <option value="name">{t('categories.organizer.sort.name')}</option>
+            </Select>
+            <RadioSwitch
+              value={order}
+              name={`entry-order-${pseudoUID}`}
+              onChange={(value) => {
+                setCurrentPage(listName, 1);
+                setOrder(listName, value as Order);
+              }}
+              options={[
+                {
+                  value: Order.ASC,
+                  label: t('general.ascending') as string,
+                  ariaLabel: t('general.ascendingAriaLabel') as string,
+                  icon: 'ArrowUp',
+                },
+                {
+                  value: Order.DESC,
+                  label: t('general.descending') as string,
+                  ariaLabel: t('general.descendingAriaLabel') as string,
+                  icon: 'ArrowDown',
+                },
+              ]}
+            />
+          </StyledFilters>
+        )}
       </EntryListFiltersBox>
       <StyledEntryListBody>
         <StyledEntryListTable>
           {rows && rows.length > 0 ? (
             <Table
               columns={[
-                { title: t('forms.name') as string, bold: true, width: 5 },
+                {
+                  title: t('forms.name') as string,
+                  bold: true,
+                  width: 5,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'name') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'name');
+                    },
+                    active: sortKey === 'name',
+                  },
+                },
                 { title: t('forms.type') as string, width: 4 },
                 { title: t('forms.subjects') as string, width: 4 },
                 { title: t('statusBar.status') as string, width: 3 },
-                { title: t('categories.organizer.table.updated') as string, width: 2 },
-                { title: t('categories.organizer.table.created') as string, width: 2 },
+                {
+                  title: t('categories.organizer.table.updated') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'updatedAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'updatedAt');
+                    },
+                    active: sortKey === 'updatedAt',
+                  },
+                },
+                {
+                  title: t('categories.organizer.table.created') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'createdAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'createdAt');
+                    },
+                    active: sortKey === 'createdAt',
+                  },
+                },
               ].slice(0, !expanded ? 2 : undefined)}
               content={rows}
               narrow={!expanded}
