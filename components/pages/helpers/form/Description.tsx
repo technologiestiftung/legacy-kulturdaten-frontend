@@ -16,6 +16,8 @@ import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
 import { FormContainer, FormWrapper } from '../formComponents';
 
+const defaultTextLimit = 1500;
+
 const StyledDescription = styled.div`
   display: flex;
   flex-direction: column;
@@ -75,6 +77,7 @@ interface DescriptionProps extends EntryFormProps {
   required?: boolean;
   softRequired?: boolean;
   key?: string;
+  textLimit?: number;
 }
 
 export const useDescription = ({
@@ -85,6 +88,7 @@ export const useDescription = ({
   required,
   softRequired,
   key = 'description',
+  textLimit,
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
@@ -135,6 +139,7 @@ export const useDescription = ({
     contentRef: richTextRef,
     required,
     softRequired,
+    textLimit,
   });
 
   const pristine = useMemo(() => {
@@ -182,7 +187,7 @@ export const useDescription = ({
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
             <StyledDescriptionRichTextWrapper
-              valid={softRequired ? valid && textLength > 0 : valid}
+              valid={softRequired ? valid && textLength > 0 && textLength < textLimit : valid}
             >
               <StyledDescriptionRichTextContainer>
                 {renderedRichText}
@@ -249,6 +254,7 @@ export const useDescriptionForm: EntryFormHook = ({
     title: t('forms.labelGerman') as string,
     required,
     softRequired: true,
+    textLimit: defaultTextLimit,
   });
 
   const {
@@ -262,6 +268,7 @@ export const useDescriptionForm: EntryFormHook = ({
     language: Language.en,
     title: t('forms.labelEnglish') as string,
     required: false,
+    textLimit: defaultTextLimit,
   });
 
   const {
@@ -275,6 +282,7 @@ export const useDescriptionForm: EntryFormHook = ({
     language: 'de-easy' as Language,
     title: t('forms.labelGermanEasy') as string,
     required: false,
+    textLimit: defaultTextLimit,
   });
 
   const pristine = useMemo(
@@ -288,7 +296,7 @@ export const useDescriptionForm: EntryFormHook = ({
   );
 
   const fulfilled = useMemo(
-    () => textLengthGerman > 0 && validGerman,
+    () => textLengthGerman > 0 && textLengthGerman <= defaultTextLimit && validGerman,
     [textLengthGerman, validGerman]
   );
 
