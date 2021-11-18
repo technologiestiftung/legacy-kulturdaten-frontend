@@ -14,6 +14,8 @@ import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
 import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 
+const defaultMaxLength = 100;
+
 interface SetNameProps {
   label: string;
   ariaLabel?: string;
@@ -60,6 +62,7 @@ const Name: React.FC<SetNameProps> = ({
         required={required}
         hint={hint}
         softRequired={softRequired}
+        maxLength={defaultMaxLength}
       />
     </form>
   );

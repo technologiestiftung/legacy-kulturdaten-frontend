@@ -1,4 +1,3 @@
-import { title } from 'process';
 import { InputType } from '../components/input';
 import { GenericFormCategory, GenericFormFieldType } from '../lib/genericForm';
 import { Language } from './locale';
