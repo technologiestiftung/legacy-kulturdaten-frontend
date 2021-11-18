@@ -61,7 +61,7 @@ const StyledTextLimitDisplay = styled.div<{ textLength: number; textLimit: numbe
   font-size: var(--font-size-200);
   line-height: var(--line-height-200);
   text-align: right;
-  margin-right: 8px;
+  margin-right: 0.5rem;
 
   ${({ textLength, textLimit }) =>
     css`
