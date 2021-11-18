@@ -78,7 +78,6 @@ export const useTeaser = <
   label: string;
   ariaLabel?: string;
   loaded: boolean;
-  showHint: boolean;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -166,12 +165,7 @@ export const useTeaser = <
   };
 };
 
-export const useTeaserForm: EntryFormHook = (
-  { category, query },
-  loaded,
-  showHint,
-  title?: string
-) => {
+export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title }) => {
   const t = useT();
 
   const {
@@ -180,7 +174,6 @@ export const useTeaserForm: EntryFormHook = (
     pristine: pristineGerman,
     reset: resetGerman,
     valid: validGerman,
-    value: valueGerman,
   } = useTeaser({
     category,
     query,
@@ -190,7 +183,6 @@ export const useTeaserForm: EntryFormHook = (
       ? `${title} ${t('forms.labelGerman')}`
       : `${t('forms.teaser')} ${t('forms.labelGerman')}`,
     loaded,
-    showHint,
   });
 
   const {
@@ -199,7 +191,6 @@ export const useTeaserForm: EntryFormHook = (
     pristine: pristineGermanEasy,
     reset: resetGermanEasy,
     valid: validGermanEasy,
-    value: valueGermanEasy,
   } = useTeaser({
     category,
     query,
@@ -209,7 +200,6 @@ export const useTeaserForm: EntryFormHook = (
       ? `${title} ${t('forms.labelGermanEasy')}`
       : `${t('forms.teaser')} ${t('forms.labelGermanEasy')}`,
     loaded,
-    showHint,
   });
 
   const {
@@ -218,7 +208,6 @@ export const useTeaserForm: EntryFormHook = (
     pristine: pristineEnglish,
     reset: resetEnglish,
     valid: validEnglish,
-    value: valueEnglish,
   } = useTeaser({
     category,
     query,
@@ -228,7 +217,6 @@ export const useTeaserForm: EntryFormHook = (
       ? `${title} ${t('forms.labelEnglish')}`
       : `${t('forms.teaser')} ${t('forms.labelEnglish')}`,
     loaded,
-    showHint,
   });
 
   const pristine = useMemo(
@@ -241,27 +229,10 @@ export const useTeaserForm: EntryFormHook = (
     [loaded, validEnglish, validGerman, validGermanEasy]
   );
 
-  const hint = useMemo(
-    () =>
-      showHint &&
-      loaded &&
-      (typeof valueEnglish === 'undefined' ||
-        typeof valueGerman === 'undefined' ||
-        typeof valueGermanEasy === 'undefined' ||
-        valueEnglish.length < 1 ||
-        valueGermanEasy.length < 1 ||
-        valueGerman.length < 1),
-    [showHint, loaded, valueEnglish, valueGerman, valueGermanEasy]
-  );
-
   return {
     renderedForm: (
       <div>
-        <EntryFormHead
-          title={title || `${t('forms.teaser') as string}`}
-          valid={valid}
-          hint={hint}
-        />
+        <EntryFormHead title={title || `${t('forms.teaser') as string}`} valid={valid} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>{setTeaserGerman}</FormItem>
           <FormItem width={FormItemWidth.full}>{setTeaserEnglish}</FormItem>
@@ -281,6 +252,5 @@ export const useTeaserForm: EntryFormHook = (
       resetGermanEasy();
     },
     valid,
-    hint,
   };
 };

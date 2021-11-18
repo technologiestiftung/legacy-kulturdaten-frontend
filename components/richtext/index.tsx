@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 import { Editable, withReact, Slate, ReactEditor, RenderElementProps } from 'slate-react';
 import { createEditor, Editor } from 'slate';
 import { withHistory } from 'slate-history';
@@ -57,18 +56,6 @@ const StyledEditable = styled.div`
   }
 `;
 
-const StyledTextLimitDisplay = styled.div<{ textLength: number; textLimit: number }>`
-  font-size: var(--font-size-200);
-  line-height: var(--line-height-200);
-  text-align: right;
-  margin-right: 0.5rem;
-
-  ${({ textLength, textLimit }) =>
-    css`
-      ${textLength > textLimit ? 'color: var(--error);' : ''}
-    `}
-`;
-
 type RichTextProps = {
   value?: CustomDescendant[];
   onChange?: (value: CustomDescendant[]) => void;
@@ -80,7 +67,7 @@ type RichTextProps = {
   softRequired?: boolean;
   valid: boolean;
   textLength: number;
-  textLimit?: number;
+  maxLength?: number;
 };
 
 export const emptyRichTextValue = [{ type: ElementType.paragraph, children: [{ text: '' }] }];
@@ -93,8 +80,7 @@ const RichText: React.FC<RichTextProps> = ({
   setIntValue,
   required,
   valid,
-  textLength,
-  textLimit,
+  maxLength,
 }: RichTextProps) => {
   const renderElement = useCallback(
     (props: CustomRenderElementProps) => <Element {...props} />,
@@ -102,8 +88,8 @@ const RichText: React.FC<RichTextProps> = ({
   );
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(
-    () => withHistory(withTextLimit(textLimit)(withReact(createEditor() as ReactEditor))),
-    [textLimit]
+    () => withHistory(withMaxLength(maxLength)(withReact(createEditor() as ReactEditor))),
+    [maxLength]
   );
   const t = useT();
   const debouncer = useDebounce();
@@ -225,11 +211,6 @@ const RichText: React.FC<RichTextProps> = ({
           </StyledEditable>
         </StyledEditableContainer>
       </Slate>
-      {textLimit && (
-        <StyledTextLimitDisplay textLength={textLength} textLimit={textLimit}>
-          {textLength}/{textLimit}
-        </StyledTextLimitDisplay>
-      )}
     </StyledRichText>
   );
 };
@@ -252,7 +233,7 @@ const hasDescendantText = (descendant: CustomDescendant): boolean => {
   return false;
 };
 
-const withTextLimit = (maxLength: number) => {
+const withMaxLength = (maxLength: number) => {
   return function Plugin(editor) {
     const { insertText } = editor;
 
@@ -311,7 +292,7 @@ const getDescendantsTextLength = (descendants: CustomDescendant[]): number => {
 export const useRichText = (
   props: Pick<
     RichTextProps,
-    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired' | 'textLimit'
+    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired' | 'maxLength'
   >
 ): {
   renderedRichText: React.ReactElement<RichTextProps>;

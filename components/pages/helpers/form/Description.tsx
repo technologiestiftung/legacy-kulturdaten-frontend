@@ -16,7 +16,7 @@ import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
 import { FormContainer, FormWrapper } from '../formComponents';
 
-const defaultTextLimit = 1500;
+const defaultMaxLength = 1500;
 
 const StyledDescription = styled.div`
   display: flex;
@@ -39,6 +39,7 @@ const StyledDescriptionRichTextWrapper = styled.div<{ valid?: boolean; hint?: bo
   border: 1px solid var(--grey-600);
   border-radius: 0.375rem;
   overflow: hidden;
+  position: relative;
 
   ${({ hint }) =>
     hint
@@ -71,13 +72,49 @@ const StyledDescriptionRichTextContainer = styled.div`
   }
 `;
 
+const StyledMaxLengthDisplay = styled.div<{ textLength: number; maxLength: number }>`
+  font-size: var(--font-size-200);
+  line-height: var(--line-height-200);
+  text-align: right;
+
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 0.375rem;
+
+  pointer-events: none;
+  display: flex;
+  justify-content: flex-end;
+
+  ${({ textLength, maxLength }) =>
+    css`
+      ${textLength > maxLength ? 'color: var(--error);' : ''}
+    `}
+`;
+
+const StyledMaxLengthDisplayText = styled.div`
+  background: var(--white-o85);
+  border-radius: 0.375rem;
+  padding: 0.1875rem 0.375rem;
+
+  @supports (backdrop-filter: blur(16px)) {
+    background: var(--white-o50);
+    backdrop-filter: blur(16px);
+  }
+
+  @supports (-webkit-backdrop-filter: blur(16px)) {
+    background: var(--white-o50);
+    -webkit-backdrop-filter: blur(16px);
+  }
+`;
+
 interface DescriptionProps extends EntryFormProps {
   language: Language;
   title: string;
   required?: boolean;
   softRequired?: boolean;
   key?: string;
-  textLimit?: number;
+  maxLength?: number;
 }
 
 export const useDescription = ({
@@ -88,7 +125,7 @@ export const useDescription = ({
   required,
   softRequired,
   key = 'description',
-  textLimit,
+  maxLength,
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
@@ -139,7 +176,7 @@ export const useDescription = ({
     contentRef: richTextRef,
     required,
     softRequired,
-    textLimit,
+    maxLength,
   });
 
   const pristine = useMemo(() => {
@@ -187,11 +224,18 @@ export const useDescription = ({
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
             <StyledDescriptionRichTextWrapper
-              valid={softRequired ? valid && textLength > 0 && textLength < textLimit : valid}
+              valid={softRequired ? valid && textLength > 0 && textLength <= maxLength : valid}
             >
               <StyledDescriptionRichTextContainer>
                 {renderedRichText}
               </StyledDescriptionRichTextContainer>
+              {maxLength && (
+                <StyledMaxLengthDisplay textLength={textLength} maxLength={maxLength}>
+                  <StyledMaxLengthDisplayText>
+                    {textLength} / {maxLength}
+                  </StyledMaxLengthDisplayText>
+                </StyledMaxLengthDisplay>
+              )}
             </StyledDescriptionRichTextWrapper>
           </>
         )}
@@ -254,7 +298,7 @@ export const useDescriptionForm: EntryFormHook = ({
     title: t('forms.labelGerman') as string,
     required,
     softRequired: true,
-    textLimit: defaultTextLimit,
+    maxLength: defaultMaxLength,
   });
 
   const {
@@ -268,7 +312,7 @@ export const useDescriptionForm: EntryFormHook = ({
     language: Language.en,
     title: t('forms.labelEnglish') as string,
     required: false,
-    textLimit: defaultTextLimit,
+    maxLength: defaultMaxLength,
   });
 
   const {
@@ -282,7 +326,7 @@ export const useDescriptionForm: EntryFormHook = ({
     language: 'de-easy' as Language,
     title: t('forms.labelGermanEasy') as string,
     required: false,
-    textLimit: defaultTextLimit,
+    maxLength: defaultMaxLength,
   });
 
   const pristine = useMemo(
@@ -296,7 +340,7 @@ export const useDescriptionForm: EntryFormHook = ({
   );
 
   const fulfilled = useMemo(
-    () => textLengthGerman > 0 && textLengthGerman <= defaultTextLimit && validGerman,
+    () => textLengthGerman > 0 && textLengthGerman <= defaultMaxLength && validGerman,
     [textLengthGerman, validGerman]
   );
 
