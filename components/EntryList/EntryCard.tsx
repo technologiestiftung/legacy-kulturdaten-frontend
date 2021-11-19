@@ -214,6 +214,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   href,
   active,
   onClick,
+  image,
 }: EntryCardProps) => {
   const date = useDate();
   const t = useT();
@@ -228,7 +229,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
             </StyledEntryCardTitle>
             <StyledEntryCardMeta menuExpanded={menuExpanded}>{meta}</StyledEntryCardMeta>
           </StyledEntryCardTopLeft>
-          <StyledEntryCardImage menuExpanded={menuExpanded}></StyledEntryCardImage>
+          {image && <StyledEntryCardImage menuExpanded={menuExpanded}></StyledEntryCardImage>}
         </StyledEntryCardTop>
         <StyledEntryCardBottom>
           <StyledEntryCardDates menuExpanded={menuExpanded}>
