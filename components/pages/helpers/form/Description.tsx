@@ -91,6 +91,7 @@ export const useDescription = ({
   pristine: boolean;
   valid: boolean;
   textLength: number;
+  reset: () => void;
 } => {
   const { entry, mutate } = useEntry<
     {
@@ -142,6 +143,15 @@ export const useDescription = ({
       return true;
     }
 
+    if (
+      typeof cachedApiText === 'string' &&
+      typeof serializedMarkdown === 'string' &&
+      cachedApiText.length === 0 &&
+      serializedMarkdown.length === 0
+    ) {
+      return true;
+    }
+
     if (serializedMarkdown != cachedApiText) {
       return false;
     }
@@ -159,7 +169,9 @@ export const useDescription = ({
 
   useEffect(() => {
     if (textFromApi !== cachedApiText) {
+      setTouched(false);
       setCachedApiText(textFromApi);
+      setSerializedMarkdown(textFromApi);
       requestAnimationFrame(() =>
         initRichText(
           textFromApi && textFromApi.length > 0 ? markdownToSlate(textFromApi) : emptyRichTextValue
@@ -222,6 +234,11 @@ export const useDescription = ({
     pristine,
     valid,
     textLength,
+    reset: () => {
+      setSerializedMarkdown('');
+      setCachedApiText(undefined);
+      setTouched(false);
+    },
   };
 };
 
@@ -242,6 +259,7 @@ export const useDescriptionForm: EntryFormHook = ({
     pristine: pristineGerman,
     valid: validGerman,
     textLength: textLengthGerman,
+    reset: resetGerman,
   } = useDescription({
     category,
     query,
@@ -256,6 +274,7 @@ export const useDescriptionForm: EntryFormHook = ({
     submit: submitEnglish,
     pristine: pristineEnglish,
     valid: validEnglish,
+    reset: resetEnglish,
   } = useDescription({
     category,
     query,
@@ -269,6 +288,7 @@ export const useDescriptionForm: EntryFormHook = ({
     submit: submitGermanEasy,
     pristine: pristineGermanEasy,
     valid: validGermanEasy,
+    reset: resetGermanEasy,
   } = useDescription({
     category,
     query,
@@ -314,7 +334,11 @@ export const useDescriptionForm: EntryFormHook = ({
       submitGermanEasy();
     },
     pristine,
-    reset: () => undefined,
+    reset: () => {
+      resetGerman();
+      resetEnglish();
+      resetGermanEasy();
+    },
     valid,
     requirementFulfillment: {
       requirementKey: 'description',
