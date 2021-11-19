@@ -111,9 +111,11 @@ export const apiRoutes: {
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerAudienceUpdate: ({ id }) => `/${apiVersion}/offer/${id}/audience`,
   offerList: (query) =>
-    `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${
-      query?.size ? `&size=${query.size}` : ''
-    }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
+    `/${apiVersion}/offer?include=translations,types,mainType${
+      query?.page ? `&page=${query.page}` : ''
+    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
+      query?.sort ? `&sort=${query.sort}` : ''
+    }`,
   offerShow: ({ id }) =>
     `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
   offerCreate: () => `/${apiVersion}/offer`,

@@ -895,6 +895,23 @@ export const deDE: Localization = {
           öffentlich verfügbar.
         </>
       ),
+      filters: {
+        status: {
+          label: () => 'Status',
+          all: () => 'alle',
+          published: () => 'öffentlich',
+          draft: () => 'Entwurf',
+        },
+        type: {
+          label: () => 'Themen-Kategorie',
+          all: () => 'alle',
+        },
+        mainType: {
+          label: () => 'Angebotsart',
+          all: () => 'alle',
+        },
+        activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} ausgewählt`,
+      },
       form: {
         create: () => 'Neues Angebot anlegen',
         name: () => 'Angebotstitel',

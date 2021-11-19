@@ -879,6 +879,23 @@ export const enDE: Localization = {
           available.
         </>
       ),
+      filters: {
+        status: {
+          label: () => 'Status',
+          all: () => 'all',
+          published: () => 'public',
+          draft: () => 'draft',
+        },
+        type: {
+          label: () => 'Topic category',
+          all: () => 'all',
+        },
+        mainType: {
+          label: () => 'Event type',
+          all: () => 'all',
+        },
+        activeFilters: ({ activeFiltersCount }) => `${activeFiltersCount} active`,
+      },
       requirements: {
         name: () => 'Offer title',
         description: () => 'Description',

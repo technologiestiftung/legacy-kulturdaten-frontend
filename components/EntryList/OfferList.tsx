@@ -4,8 +4,14 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall } from '../../lib/api';
-import { Offer, OfferTranslation } from '../../lib/api/types/offer';
-import { Order, useCreateOffer, useList } from '../../lib/categories';
+import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
+import {
+  Order,
+  useCreateOffer,
+  useList,
+  useOfferMainTypeList,
+  useOfferTypeList,
+} from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -14,7 +20,7 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardGrid } from './EntryCard';
+import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
@@ -102,6 +108,8 @@ export const OfferList: React.FC<OfferListProps> = ({
   const loadingScreen = useLoadingScreen();
   const createOffer = useCreateOffer();
   const organizerId = useOrganizerId();
+  const mainTypeOptions = useOfferMainTypeList();
+  const typeOptions = useOfferTypeList();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -149,6 +157,20 @@ export const OfferList: React.FC<OfferListProps> = ({
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
             ({ attributes, relations, id }, index) => {
+              const typeNames = relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              });
+              const mainTypeNames = relations?.mainType?.map((type) => {
+                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return mainTypeTranslation?.attributes.name;
+              });
               const href = (sub?: string) =>
                 routes[Routes.offer]({
                   locale,
@@ -174,6 +196,7 @@ export const OfferList: React.FC<OfferListProps> = ({
                   active={router.asPath.includes(href())}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                  meta={<EntryCardTypesSubjects types={[...mainTypeNames, ...typeNames]} />}
                 />
               );
             }
@@ -221,11 +244,29 @@ export const OfferList: React.FC<OfferListProps> = ({
                 </TableLink>
               );
 
+              const typeNames = relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              });
+
+              const mainTypeNames = relations?.mainType?.map((type) => {
+                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return mainTypeTranslation?.attributes.name;
+              });
+
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
                     {currentTranslation?.attributes?.name}
                   </StyledTableLinkText>,
+                  mainTypeNames?.join(', '),
+                  typeNames?.join(', '),
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
                     ? date(new Date(attributes?.updatedAt), DateFormat.date)
@@ -301,6 +342,64 @@ export const OfferList: React.FC<OfferListProps> = ({
             <option value="">{t('categories.organizer.filters.status.all')}</option>
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
+          </Select>
+          <Select
+            label={t('categories.offer.filters.mainType.label') as string}
+            id={`entry-filter-mainType-${pseudoUID}`}
+            value={filters?.mainType}
+            onChange={(e) => {
+              setCurrentPage(listName, 1);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: {
+                  key: 'mainType',
+                  value: e.target.value !== '' ? e.target.value : undefined,
+                },
+              });
+            }}
+          >
+            <option value="">{t('categories.offer.filters.mainType.all')}</option>
+            {mainTypeOptions?.map(({ id, relations }, index) => {
+              const typeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                relations.translations
+              );
+
+              return (
+                <option key={index} value={String(id)}>
+                  {typeTranslation?.attributes?.name}
+                </option>
+              );
+            })}
+          </Select>
+          <Select
+            label={t('categories.offer.filters.type.label') as string}
+            id={`entry-filter-type-${pseudoUID}`}
+            value={filters?.types}
+            onChange={(e) => {
+              setCurrentPage(listName, 1);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: {
+                  key: 'types',
+                  value: e.target.value !== '' ? e.target.value : undefined,
+                },
+              });
+            }}
+          >
+            <option value="">{t('categories.offer.filters.type.all')}</option>
+            {typeOptions?.map(({ id, relations }, index) => {
+              const typeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                relations.translations
+              );
+
+              return (
+                <option key={index} value={String(id)}>
+                  {typeTranslation?.attributes?.name}
+                </option>
+              );
+            })}
           </Select>
         </StyledFilters>
         {!menuExpanded && (
@@ -386,7 +485,7 @@ export const OfferList: React.FC<OfferListProps> = ({
                   {
                     title: t('categories.offer.form.name') as string,
                     bold: true,
-                    width: 6,
+                    width: 4,
                     sort: {
                       order,
                       onClick: () => {
@@ -399,6 +498,8 @@ export const OfferList: React.FC<OfferListProps> = ({
                       active: sortKey === 'name',
                     },
                   },
+                  { title: t('categories.offer.filters.mainType.label') as string, width: 4 },
+                  { title: t('categories.offer.filters.type.label') as string, width: 4 },
                   { title: t('statusBar.status') as string, width: 4 },
                   {
                     title: t('categories.organizer.table.updated') as string,

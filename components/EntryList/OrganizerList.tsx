@@ -295,37 +295,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
       >
         <StyledFilters expanded={expanded}>
           <Select
-            label={t('categories.organizer.filters.type.label') as string}
-            id={`entry-filter-type-${pseudoUID}`}
-            value={filters?.type}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
-              });
-
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: { key: 'subject', value: undefined },
-              });
-            }}
-          >
-            <option value="">{t('categories.organizer.filters.type.all')}</option>
-            {typeOptions?.map(({ id, relations }, index) => {
-              const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                language,
-                relations.translations
-              );
-
-              return (
-                <option key={index} value={String(id)}>
-                  {typeTranslation?.attributes?.name}
-                </option>
-              );
-            })}
-          </Select>
-          <Select
             label={t('categories.organizer.filters.status.label') as string}
             id={`entry-filter-status-${pseudoUID}`}
             value={filters?.status}
@@ -343,6 +312,32 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             <option value="">{t('categories.organizer.filters.status.all')}</option>
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
+          </Select>
+          <Select
+            label={t('categories.organizer.filters.type.label') as string}
+            id={`entry-filter-type-${pseudoUID}`}
+            value={filters?.type}
+            onChange={(e) => {
+              setCurrentPage(listName, 1);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
+              });
+            }}
+          >
+            <option value="">{t('categories.organizer.filters.type.all')}</option>
+            {typeOptions?.map(({ id, relations }, index) => {
+              const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                language,
+                relations.translations
+              );
+
+              return (
+                <option key={index} value={String(id)}>
+                  {typeTranslation?.attributes?.name}
+                </option>
+              );
+            })}
           </Select>
         </StyledFilters>
 
