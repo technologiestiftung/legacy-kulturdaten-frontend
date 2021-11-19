@@ -16,7 +16,6 @@ import {
   LocationServiceUpdate,
   locationServiceUpdateFactory,
 } from '../../../../lib/api/routes/location/service/update';
-import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 
 export const useArrivalForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);

@@ -21,6 +21,18 @@ export const deDE: Localization = {
   },
   dashboard: {
     info: {
+      hint: {
+        title: ({ name }) => `„${name}“ veröffentlichen`,
+        content: () => (
+          <DashboardTileText>
+            <DashboardTileTextP>
+              Dein Profil ist noch nicht öffentlich. Veröffentliche es, damit deine Daten, Angebote
+              und Orte öffentlich verfügbar sind.
+            </DashboardTileTextP>
+          </DashboardTileText>
+        ),
+        link: () => `Profil bearbeiten und veröffentlichen`,
+      },
       start: {
         title: () => 'So legst du los',
         organizer: {
@@ -362,7 +374,7 @@ export const deDE: Localization = {
     labelEnglish: () => 'Englisch',
     labelEnglishEasy: () => 'Englisch: einfache Sprache',
     description: () => 'Beschreibung',
-    teaser: () => 'Teaser',
+    teaser: () => 'Kurzbeschreibung (optional, max. 150 Zeichen)',
     classification: () => ' Art der Anbieter:in / Arbeitsschwerpunkt (mind. 1)',
     type: () => 'Typ(en)',
     subjects: () => 'Eingrenzung (optional)',

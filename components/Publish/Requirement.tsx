@@ -18,7 +18,7 @@ const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
     hasLink &&
     css`
       box-shadow: none;
-      transform: scale(1);
+      transform: translateZ(0);
       transform-origin: 50% 50%;
       transition: color var(--transition-duration-fast), background var(--transition-duration-fast),
         box-shadow var(--transition-duration-fast), transform var(--transition-duration-fast);
@@ -26,14 +26,14 @@ const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
       &:hover {
         background: var(--white);
         box-shadow: 0 0 1.5rem -0.5rem rgba(0, 0, 0, 0.25);
-        transform: scale(1.025);
+        transform: perspective(40px) translateZ(1px);
         color: var(--black);
       }
 
       &:active {
         background: var(--white);
         box-shadow: 0 0 0.75rem -0.5rem rgba(0, 0, 0, 0.25);
-        transform: scale(1);
+        transform: translateZ(0);
       }
     `}
 `;

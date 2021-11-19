@@ -21,6 +21,18 @@ export const enDE: Localization = {
   },
   dashboard: {
     info: {
+      hint: {
+        title: ({ name }) => `Publish “${name}”`,
+        content: () => (
+          <DashboardTileText>
+            <DashboardTileTextP>
+              Your profile is not yet public. Publish it so your dates, offers, and places are
+              publicly available.
+            </DashboardTileTextP>
+          </DashboardTileText>
+        ),
+        link: () => `Edit and publish profile`,
+      },
       start: {
         title: () => 'How to get started',
         organizer: {
@@ -360,7 +372,7 @@ export const enDE: Localization = {
     labelEnglish: () => 'English',
     labelEnglishEasy: () => 'English: simple Language',
     description: () => 'Description',
-    teaser: () => 'Teaser',
+    teaser: () => 'Short description (optional, max. 150 characters)',
     classification: () => 'Type of organizer / field of focus (min. 1)',
     type: () => 'Type(s)',
     subjects: () => 'additional options',

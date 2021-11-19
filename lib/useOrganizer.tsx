@@ -42,8 +42,6 @@ export const useSetOrganizerId = (): ((organizerId: string) => void) => {
       'max-age': 1209600,
     });
 
-    console.log('set', { organizerId });
-
     setActiveOrganizerId(organizerId);
   };
 };
@@ -73,10 +71,8 @@ export const useHandleActiveOrganizer = () => {
       userOrganizerIds?.length > 0 &&
       !userOrganizerIds.includes(activeOrganizerId)
     ) {
-      console.log({ set: userOrganizerIds[0] });
       setActiveOrganizerId(userOrganizerIds[0]);
     } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
-      console.log({ set: defaultOrganizerId });
       setActiveOrganizerId(defaultOrganizerId);
     }
   }, [activeOrganizerId, setActiveOrganizerId, user?.relations?.organizers]);

@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
 import React from 'react';
-import { useSetOrganizerId } from '../../../lib/useOrganizer';
+import { useOrganizerId, useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
@@ -65,13 +64,11 @@ export interface OrganizerBandProps {
   onClick?: React.MouseEventHandler;
 }
 
-export const OrganizerBand: React.FC<OrganizerBandProps> = ({
-  layout,
-  onClick,
-}: OrganizerBandProps) => {
+export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: OrganizerBandProps) => {
   const language = useLanguage();
   const locale = useLocale();
   const router = useRouter();
+  const activeOrganizerId = useOrganizerId();
   const setOrganizerId = useSetOrganizerId();
   const t = useT();
   const loadingScreen = useLoadingScreen();
@@ -124,14 +121,15 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({
                 active={router?.query?.organizer === organizer.id}
                 layout={layout}
                 logo={organizer.relations?.logo}
-                onClick={(e) => {
-                  loadingScreen(t('menu.organizerBand.loading'), async () => {
-                    setOrganizerId(organizer.id);
+                onClick={() => {
+                  if (organizer.id !== activeOrganizerId)
+                    loadingScreen(t('menu.organizerBand.loading'), async () => {
+                      setOrganizerId(organizer.id);
 
-                    router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
+                      router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
 
-                    return { success: true };
-                  });
+                      return { success: true };
+                    });
                 }}
               >
                 {translation?.attributes?.name || defaultTranslation?.attributes?.name}

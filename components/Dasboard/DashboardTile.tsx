@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { StandardLink } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
-import { Check } from 'react-feather';
+import { Check, Info } from 'react-feather';
 
 const StyledDashboardTile = styled.div<{
   gridColumn?: string;
@@ -117,32 +117,44 @@ const StyledDashboardTileContainerChildren = styled.div`
   }
 `;
 
-const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean }>`
+const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean; variant: DashboardTileVariant }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: 700;
   padding: 0.75rem 1.125rem;
   color: var(--black);
+  display: flex;
+
+  > svg {
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+  }
 
   ${mq(Breakpoint.mid)} {
     font-size: var(--font-size-500);
     line-height: var(--line-height-500);
     padding: 1.125rem 1.5rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+    > span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
-  ${({ hasDigit }) =>
+  ${({ hasDigit, variant }) =>
     hasDigit
       ? css`
           background: var(--white);
           font-size: var(--font-size-600);
           line-height: var(--line-height-600);
-          white-space: inherit;
-          overflow: inherit;
-          text-overflow: inherit;
           padding: 1.125rem 1.125rem 0;
+
+          > span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
 
           ${mq(Breakpoint.mid)} {
             font-size: var(--font-size-600);
@@ -151,7 +163,9 @@ const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean }>`
           }
         `
       : css`
-          background: var(--grey-200);
+          background: ${variant === DashboardTileVariant.hint
+            ? 'var(--yellow-light)'
+            : 'var(--grey-200)'};
         `}
 `;
 
@@ -184,6 +198,11 @@ export const DashboardTileTextP = styled.p`
   }
 `;
 
+export enum DashboardTileVariant {
+  default = 'default',
+  hint = 'hint',
+}
+
 interface DashboardTileProps {
   title: string;
   children: React.ReactNode;
@@ -191,6 +210,7 @@ interface DashboardTileProps {
   gridColumn?: string;
   digit?: number;
   disabled?: boolean;
+  variant?: DashboardTileVariant;
   done?: {
     text: string;
   };
@@ -204,6 +224,7 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
   digit,
   disabled,
   done,
+  variant = DashboardTileVariant.default,
 }: DashboardTileProps) => {
   const isDone = typeof done !== 'undefined';
 
@@ -212,8 +233,9 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
       <StyledDashboardTileContainer>
         {digit && <StyledDashboardTileDigit>{digit}</StyledDashboardTileDigit>}
         <StyledDashboardTileContainerChildren>
-          <StyledDashboardTileTitle hasDigit={typeof digit !== 'undefined'}>
-            {title}
+          <StyledDashboardTileTitle hasDigit={typeof digit !== 'undefined'} variant={variant}>
+            {variant === DashboardTileVariant.hint && <Info />}
+            <span>{title}</span>
           </StyledDashboardTileTitle>
           <StyledDashboardTileContent>{children}</StyledDashboardTileContent>
           {link}
