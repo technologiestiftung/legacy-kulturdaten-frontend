@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Categories } from '../../../../config/categories';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { Address } from '../../../../lib/api/types/address';
 import { CategoryEntry, PublishedStatus } from '../../../../lib/api/types/general';
-import { useDistrictList, useEntry } from '../../../../lib/categories';
+import { useDistrictList, useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { usePseudoUID } from '../../../../lib/uid';
+import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { Select, SelectSize } from '../../../select';
@@ -44,9 +46,18 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
     [entry?.data?.relations?.address]
   );
 
+  const organizerId = useOrganizerId();
   const [address, setAddress] = useState<Address>(initialAddress);
   const [pristine, setPristine] = useState(true);
   const districtList = useDistrictList();
+  const mutateList = useMutateList(
+    category,
+    category.name === Categories.location
+      ? [['organizer', organizerId]]
+      : category.name === Categories.offer
+      ? [['organizers', organizerId]]
+      : undefined
+  );
 
   const required = useMemo(
     () =>
@@ -253,6 +264,11 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
 
           if (resp.status === 200) {
             mutate();
+
+            if (category.name === Categories.location) {
+              mutateList();
+            }
+
             setTimeout(() => setPristine(true), 500);
           }
         } catch (e) {
