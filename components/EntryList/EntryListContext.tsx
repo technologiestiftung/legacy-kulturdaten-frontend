@@ -62,6 +62,7 @@ type EntryListContext = {
   setFiltersBoxExpanded: (listName: string, filtersBoxExpanded: boolean) => void;
   getLastEntryId: (listName: string) => string;
   setLastEntryId: (listName: string, id: string) => void;
+  resetLastEntryIds: () => void;
 };
 
 export const EntryListContext = React.createContext<EntryListContext>({
@@ -81,6 +82,7 @@ export const EntryListContext = React.createContext<EntryListContext>({
   setFiltersBoxExpanded: undefined,
   getLastEntryId: undefined,
   setLastEntryId: undefined,
+  resetLastEntryIds: undefined,
 });
 
 interface EntryListContextProviderProps {
@@ -139,7 +141,19 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
         getSortKey: (listName) => sortKeys[listName],
         setSortKey: (listName, sortKey) => setSortKeys({ ...sortKeys, [listName]: sortKey }),
         getLastEntryId: (listName) => lastEntryIds[listName],
-        setLastEntryId: (listName, id) => setLastEntryIds({ ...lastEntryIds, [listName]: id }),
+        setLastEntryId: (listName, id) => {
+          console.log(listName, id);
+          const newListEntryIds = { ...lastEntryIds };
+          delete newListEntryIds[listName];
+          console.log(newListEntryIds);
+          newListEntryIds[listName] = id;
+          console.log(newListEntryIds);
+          setLastEntryIds(newListEntryIds);
+        },
+        resetLastEntryIds: () =>
+          setLastEntryIds(
+            listNames.reduce((combined, listName) => ({ ...combined, [listName]: undefined }), {})
+          ),
         getFilters: (listName) => filters[listName],
         getDispatchFilters: (listName) => (action) => dispatchFilters({ ...action, listName }),
         getView: (listName) => views[listName],

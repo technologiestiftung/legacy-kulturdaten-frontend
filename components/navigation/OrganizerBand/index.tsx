@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useOrganizerId, useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
@@ -17,6 +17,7 @@ import { mq } from '../../globals/Constants';
 import { Breakpoint } from '../../../lib/WindowService';
 import { StandardLink } from '../../StandardLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
+import { EntryListContext } from '../../EntryList/EntryListContext';
 
 const StyledOrganizerBand = styled.div<{ adminModeActive: boolean }>`
   width: 100%;
@@ -74,6 +75,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
   const loadingScreen = useLoadingScreen();
   const createOrganizer = useCreateOrganizer();
   const { adminModeActive, quit: quitAdminMode } = useAdminMode();
+  const { resetLastEntryIds } = useContext(EntryListContext);
 
   const { owner: organizerOwnerList, contributor: organizerContributorList } =
     useUserOrganizerLists();
@@ -125,6 +127,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                   if (organizer.id !== activeOrganizerId)
                     loadingScreen(t('menu.organizerBand.loading'), async () => {
                       setOrganizerId(organizer.id);
+                      resetLastEntryIds();
 
                       router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
 
