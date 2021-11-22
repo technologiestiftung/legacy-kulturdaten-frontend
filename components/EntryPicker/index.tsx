@@ -12,6 +12,7 @@ import { OverlayContainer } from '../overlay/OverlayContainer';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
 
 const StyledEntryPicker = styled.div``;
+const defaultShadow = '0px 0px 0px 0.125rem rgba(0, 0, 0, 0.25)';
 const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
 
 const StyledEntryPickerSlot = styled.button<{ showHint?: boolean }>`
@@ -35,6 +36,7 @@ const StyledEntryPickerSlot = styled.button<{ showHint?: boolean }>`
   line-height: var(--line-height-300);
   font-weight: 400;
   transition: box-shadow var(--transition-duration-fast);
+  box-shadow: ${defaultShadow};
 
   ${({ showHint }) =>
     showHint

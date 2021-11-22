@@ -272,10 +272,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
 
   const renderedForm = (
     <div>
-      <EntryFormHead
-        title={t('categories.offer.form.location.label') as string}
-        hint={typeof locationId === 'undefined'}
-      />
+      <EntryFormHead title={t('categories.offer.form.location.label') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           <EntryPicker
@@ -289,7 +286,6 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
             value={locationId}
             onChange={(value) => setLocationId(value)}
             categoryName={Categories.location}
-            showHint={typeof locationId === 'undefined'}
             list={
               <LocationList
                 expanded={isMidOrWider}
