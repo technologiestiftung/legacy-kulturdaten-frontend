@@ -13,11 +13,13 @@ export const CSSVars: React.FC = () => (
         --white-red: rgb(247, 244, 244);
         --white-green: rgb(243, 246, 245);
         --white-green-o50: rgba(243, 246, 245, 0.5);
+        --grey-100: #eaeaea;
         --grey-200: #e6e6e6;
         --grey-350: #c8c8c8;
         --grey-400: #cbcbcb;
         --grey-500: #808080;
         --grey-600: #474747;
+        --grey-700: #2d2d2d;
         --black: #1a1a1a;
         --black-o25: rgba(0, 0, 0, 0.25);
         --black-o40: rgba(0, 0, 0, 0.4);

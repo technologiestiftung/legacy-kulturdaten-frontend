@@ -98,9 +98,11 @@ export const apiRoutes: {
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   locationList: (query) =>
-    `/${apiVersion}/location?include=translations${query?.page ? `&page=${query.page}` : ''}${
-      query?.size ? `&size=${query.size}` : ''
-    }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
+    `/${apiVersion}/location?include=translations,address${
+      query?.page ? `&page=${query.page}` : ''
+    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
+      query?.sort ? `&sort=${query.sort}` : ''
+    }`,
   locationShow: ({ id }) =>
     `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
   locationCreate: () => `/${apiVersion}/location`,
@@ -111,9 +113,11 @@ export const apiRoutes: {
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   offerAudienceUpdate: ({ id }) => `/${apiVersion}/offer/${id}/audience`,
   offerList: (query) =>
-    `/${apiVersion}/offer?include=translations${query?.page ? `&page=${query.page}` : ''}${
-      query?.size ? `&size=${query.size}` : ''
-    }${query?.filter ? `&filter=${query.filter}` : ''}${query?.sort ? `&sort=${query.sort}` : ''}`,
+    `/${apiVersion}/offer?include=translations,types,mainType${
+      query?.page ? `&page=${query.page}` : ''
+    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
+      query?.sort ? `&sort=${query.sort}` : ''
+    }`,
   offerShow: ({ id }) =>
     `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
   offerCreate: () => `/${apiVersion}/offer`,

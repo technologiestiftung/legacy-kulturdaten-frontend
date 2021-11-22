@@ -48,7 +48,6 @@ const StyledEntryCardTop = styled.div`
 const StyledEntryCardTopLeft = styled.div`
   display: flex;
   flex-direction: column;
-  width: 75%;
 `;
 
 const StyledEntryCardTitle = styled.div<{ menuExpanded: boolean; active: boolean }>`
@@ -158,6 +157,11 @@ const StyledEntryCardDate = styled.div`
   text-transform: capitalize;
 `;
 
+export const EntryCardText = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+`;
+
 export const EntryCardGrid = styled.div<{ expanded: boolean; enableUltraWideLayout: boolean }>`
   display: grid;
   grid-template-columns: auto;
@@ -214,6 +218,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   href,
   active,
   onClick,
+  image,
 }: EntryCardProps) => {
   const date = useDate();
   const t = useT();
@@ -228,7 +233,7 @@ export const EntryCard: React.FC<EntryCardProps> = ({
             </StyledEntryCardTitle>
             <StyledEntryCardMeta menuExpanded={menuExpanded}>{meta}</StyledEntryCardMeta>
           </StyledEntryCardTopLeft>
-          <StyledEntryCardImage menuExpanded={menuExpanded}></StyledEntryCardImage>
+          {image && <StyledEntryCardImage menuExpanded={menuExpanded}></StyledEntryCardImage>}
         </StyledEntryCardTop>
         <StyledEntryCardBottom>
           <StyledEntryCardDates menuExpanded={menuExpanded}>

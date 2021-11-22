@@ -4,6 +4,7 @@ import { Order } from '../../lib/categories';
 export enum FiltersActions {
   init = 'init',
   set = 'set',
+  reset = 'reset',
 }
 
 type FiltersState = { [key: string]: string };
@@ -34,6 +35,13 @@ const filtersReducer: Reducer<{ [key: string]: FiltersState }, FiltersAction> = 
       };
     }
 
+    case FiltersActions.reset: {
+      return Object.keys(state).reduce(
+        (combined, listName) => ({ ...combined, [listName]: {} }),
+        {}
+      );
+    }
+
     default: {
       break;
     }
@@ -56,12 +64,11 @@ type EntryListContext = {
   setSortKey: (listName: string, sortKey: string) => void;
   getFilters: (listName: string) => FiltersState;
   getDispatchFilters: (listName: string) => Dispatch<FiltersAction>;
-  getView: (listName: string) => EntryListView;
-  setView: (listName: string, view: EntryListView) => void;
   getFiltersBoxExpanded: (listName: string) => boolean;
   setFiltersBoxExpanded: (listName: string, filtersBoxExpanded: boolean) => void;
   getLastEntryId: (listName: string) => string;
   setLastEntryId: (listName: string, id: string) => void;
+  reset: () => void;
 };
 
 export const EntryListContext = React.createContext<EntryListContext>({
@@ -75,12 +82,11 @@ export const EntryListContext = React.createContext<EntryListContext>({
   setSortKey: undefined,
   getFilters: undefined,
   getDispatchFilters: undefined,
-  getView: undefined,
-  setView: undefined,
   getFiltersBoxExpanded: undefined,
   setFiltersBoxExpanded: undefined,
   getLastEntryId: undefined,
   setLastEntryId: undefined,
+  reset: undefined,
 });
 
 interface EntryListContextProviderProps {
@@ -117,10 +123,6 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
     listNames.reduce((pages, listName) => ({ ...pages, [listName]: Order.DESC }), {})
   );
 
-  const [views, setViews] = useState(
-    listNames.reduce((pages, listName) => ({ ...pages, [listName]: EntryListView.cards }), {})
-  );
-
   const [filtersBoxExpandeds, setFiltersBoxExpandeds] = useState(
     listNames.reduce((pages, listName) => ({ ...pages, [listName]: true }), {})
   );
@@ -139,11 +141,29 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
         getSortKey: (listName) => sortKeys[listName],
         setSortKey: (listName, sortKey) => setSortKeys({ ...sortKeys, [listName]: sortKey }),
         getLastEntryId: (listName) => lastEntryIds[listName],
-        setLastEntryId: (listName, id) => setLastEntryIds({ ...lastEntryIds, [listName]: id }),
+        setLastEntryId: (listName, id) => {
+          const newListEntryIds = { ...lastEntryIds };
+          delete newListEntryIds[listName];
+          newListEntryIds[listName] = id;
+          setLastEntryIds(newListEntryIds);
+        },
+        reset: () => {
+          setLastEntryIds(
+            listNames.reduce((combined, listName) => ({ ...combined, [listName]: undefined }), {})
+          );
+
+          dispatchFilters({ type: FiltersActions.reset });
+
+          setFiltersBoxExpandeds(
+            listNames.reduce((pages, listName) => ({ ...pages, [listName]: true }), {})
+          );
+
+          setSortKeys(
+            listNames.reduce((pages, listName) => ({ ...pages, [listName]: 'updatedAt' }), {})
+          );
+        },
         getFilters: (listName) => filters[listName],
         getDispatchFilters: (listName) => (action) => dispatchFilters({ ...action, listName }),
-        getView: (listName) => views[listName],
-        setView: (listName, view) => setViews({ ...views, [listName]: view }),
         getFiltersBoxExpanded: (listName) => filtersBoxExpandeds[listName],
         setFiltersBoxExpanded: (listName, filtersBoxExpanded) =>
           setFiltersBoxExpandeds({ ...filtersBoxExpandeds, [listName]: filtersBoxExpanded }),
