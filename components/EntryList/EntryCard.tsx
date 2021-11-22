@@ -157,6 +157,11 @@ const StyledEntryCardDate = styled.div`
   text-transform: capitalize;
 `;
 
+export const EntryCardText = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+`;
+
 export const EntryCardGrid = styled.div<{ expanded: boolean; enableUltraWideLayout: boolean }>`
   display: grid;
   grid-template-columns: auto;

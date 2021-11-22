@@ -990,6 +990,7 @@ export const enDE: Localization = {
         allOrMy: () => 'Show selection',
         allLocations: () => 'All public Locations',
         myLocations: () => 'Only my Locations',
+        address: () => 'address',
       },
       title: {
         plural: () => 'Locations',

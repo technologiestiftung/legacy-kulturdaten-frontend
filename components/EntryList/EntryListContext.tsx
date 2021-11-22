@@ -142,12 +142,9 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
         setSortKey: (listName, sortKey) => setSortKeys({ ...sortKeys, [listName]: sortKey }),
         getLastEntryId: (listName) => lastEntryIds[listName],
         setLastEntryId: (listName, id) => {
-          console.log(listName, id);
           const newListEntryIds = { ...lastEntryIds };
           delete newListEntryIds[listName];
-          console.log(newListEntryIds);
           newListEntryIds[listName] = id;
-          console.log(newListEntryIds);
           setLastEntryIds(newListEntryIds);
         },
         reset: () => {

@@ -996,6 +996,7 @@ export const deDE: Localization = {
         allOrMy: () => 'Zeige Auswahl',
         allLocations: () => 'Alle öffentlichen Orte',
         myLocations: () => 'Nur meine Orte',
+        address: () => 'Adresse',
       },
       title: {
         plural: () => 'Orte',

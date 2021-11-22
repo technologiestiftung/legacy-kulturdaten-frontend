@@ -14,7 +14,7 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardGrid } from './EntryCard';
+import { EntryCard, EntryCardGrid, EntryCardText } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
@@ -181,6 +181,8 @@ export const LocationList: React.FC<LocationListProps> = ({
                 ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
 
+              const address = relations?.address;
+
               return (
                 <EntryCard
                   onClick={() => {
@@ -199,6 +201,20 @@ export const LocationList: React.FC<LocationListProps> = ({
                   active={router.asPath.includes(href()) || activeEntryId === id}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                  meta={
+                    address && (
+                      <EntryCardText>
+                        {[
+                          address.attributes.street1,
+                          address.attributes.street2,
+                          address.attributes.zipCode,
+                          address.attributes.city,
+                        ]
+                          .filter((text) => text?.length > 0)
+                          .join(', ')}
+                      </EntryCardText>
+                    )
+                  }
                 />
               );
             }
@@ -252,11 +268,25 @@ export const LocationList: React.FC<LocationListProps> = ({
                 </TableLink>
               );
 
+              const address = relations?.address;
+
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
                     {currentTranslation?.attributes?.name}
                   </StyledTableLinkText>,
+                  `${
+                    address
+                      ? [
+                          address.attributes.street1,
+                          address.attributes.street2,
+                          address.attributes.zipCode,
+                          address.attributes.city,
+                        ]
+                          .filter((text) => text?.length > 0 && text !== 'undefined')
+                          .join(', ')
+                      : ''
+                  }`,
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
                     ? date(new Date(attributes?.updatedAt), DateFormat.date)
@@ -447,6 +477,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                     active: sortKey === 'name',
                   },
                 },
+                { title: t('categories.location.list.address') as string, width: 4 },
                 { title: t('statusBar.status') as string, width: 4 },
                 {
                   title: t('categories.organizer.table.updated') as string,
