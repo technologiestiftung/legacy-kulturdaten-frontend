@@ -429,73 +429,66 @@ export const LocationList: React.FC<LocationListProps> = ({
           </EntryCardGrid>
         ) : (
           <StyledEntryListTable>
-            {rows && rows.length > 0 ? (
-              <Table
-                columns={[
-                  {
-                    title: t('categories.location.form.name') as string,
-                    bold: true,
-                    width: 6,
-                    sort: {
-                      order,
-                      onClick: () => {
-                        if (sortKey === 'name') {
-                          setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
-                        }
-                        setCurrentPage(listName, 1);
-                        setSortKey(listName, 'name');
-                      },
-                      active: sortKey === 'name',
+            <Table
+              columns={[
+                {
+                  title: t('categories.location.form.name') as string,
+                  bold: true,
+                  width: 6,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'name') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'name');
                     },
+                    active: sortKey === 'name',
                   },
-                  { title: t('statusBar.status') as string, width: 4 },
-                  {
-                    title: t('categories.organizer.table.updated') as string,
-                    width: 4,
-                    sort: {
-                      order,
-                      onClick: () => {
-                        if (sortKey === 'updatedAt') {
-                          setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
-                        }
-                        setCurrentPage(listName, 1);
-                        setSortKey(listName, 'updatedAt');
-                      },
-                      active: sortKey === 'updatedAt',
+                },
+                { title: t('statusBar.status') as string, width: 4 },
+                {
+                  title: t('categories.organizer.table.updated') as string,
+                  width: 4,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'updatedAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'updatedAt');
                     },
+                    active: sortKey === 'updatedAt',
                   },
-                  {
-                    title: t('categories.organizer.table.created') as string,
-                    width: 4,
-                    sort: {
-                      order,
-                      onClick: () => {
-                        if (sortKey === 'createdAt') {
-                          setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
-                        }
-                        setCurrentPage(listName, 1);
-                        setSortKey(listName, 'createdAt');
-                      },
-                      active: sortKey === 'createdAt',
+                },
+                {
+                  title: t('categories.organizer.table.created') as string,
+                  width: 4,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'createdAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'createdAt');
                     },
+                    active: sortKey === 'createdAt',
                   },
-                ].slice(0, !expanded ? 2 : undefined)}
-                content={rows}
-                narrow={!expanded}
-              />
-            ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>
-                  {activeFiltersCount === 0
-                    ? t('categories.location.list.nothing')
-                    : t('categories.location.list.nothingFilter')}
-                </EntryListPlaceholder>
-              </EntryCardGrid>
-            ) : (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>{t('categories.location.list.loading')}</EntryListPlaceholder>
-              </EntryCardGrid>
-            )}
+                },
+              ].slice(0, !expanded ? 2 : undefined)}
+              content={rows}
+              narrow={!expanded}
+              placeholder={
+                rows && rows.length === 0
+                  ? activeFiltersCount === 0
+                    ? t('categories.offer.list.nothing')
+                    : t('categories.offer.list.nothingFilter')
+                  : t('categories.offer.list.loading')
+              }
+            />
           </StyledEntryListTable>
         )}
         {lastPage > 1 && (

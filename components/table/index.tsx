@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ArrowDown, ArrowUp } from 'react-feather';
 import { Order } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
@@ -56,8 +56,9 @@ const StyledRowWrapper = styled.div<{ narrow?: boolean; isTitleRow?: boolean }>`
           position: sticky;
           top: 0;
           left: 0;
-          background: var(--white);
-          box-shadow: ${insetBorderColored('var(--black)', false, false, true)};
+          background: var(--grey-200);
+          /* box-shadow: ${insetBorderColored('var(--black)', false, false, true)}; */
+          /* border-bottom: 0.1875rem solid var(--grey-400); */
           z-index: 1;
         `
       : ''}
@@ -73,7 +74,7 @@ const StyledRowContainer = styled.div<{ narrow?: boolean }>`
 
 const StyledCellSort = styled.button<{ active: boolean }>`
   padding: 0.1875rem 0.375rem;
-  background: var(--grey-200);
+  background: var(--white);
   border: none;
   appearance: none;
   display: flex;
@@ -98,7 +99,7 @@ const StyledCellSort = styled.button<{ active: boolean }>`
   &:hover {
     transform: perspective(40px) translateZ(1px);
     box-shadow: 0 0 1.5rem -0.5rem rgba(0, 0, 0, 0.25);
-    background: var(--grey-100);
+    /* background: var(--grey-100); */
     color: var(--black);
   }
 
@@ -111,10 +112,20 @@ const StyledCellSort = styled.button<{ active: boolean }>`
       &:hover {
         transform: perspective(40px) translateZ(1px);
         box-shadow: 0 0 1.5rem -0.5rem rgba(0, 0, 0, 0.25);
-        background: var(--grey-700);
+        /* background: var(--grey-700); */
         color: var(--white);
       }
     `}
+`;
+
+const StyledTablePlaceholder = styled.div`
+  font-size: var(--font-size-400);
+  line-height: var(--line-height-400);
+  padding: 1.125rem 0.75rem;
+
+  ${mq(Breakpoint.wide)} {
+    padding: 1.5rem;
+  }
 `;
 
 const StyledCell = styled.div<{
@@ -161,6 +172,7 @@ export interface TableProps {
     Wrapper?: React.FC<{ children: React.ReactNode }>;
   }[];
   narrow?: boolean;
+  placeholder?: string | React.ReactNode;
 }
 
 type TableContext = {
@@ -191,8 +203,16 @@ export const TableContextProvider: React.FC<TableContextProviderProps> = ({
   );
 };
 
-export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }: TableProps) => {
-  const columnCount = columns.reduce((count, { width = 1 }) => count + width, 0);
+export const Table: React.FC<TableProps> = ({
+  columns,
+  content,
+  narrow = false,
+  placeholder,
+}: TableProps) => {
+  const columnCount = useMemo(
+    () => columns?.reduce((count, { width = 1 }) => count + width, 0),
+    [columns]
+  );
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const t = useT();
 
@@ -203,7 +223,7 @@ export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }
           <StyledRowWrapper narrow={narrow} isTitleRow>
             <StyledRowContainer narrow={narrow}>
               <StyledRow columnCount={columnCount} isTitleRow role="row" narrow={narrow}>
-                {columns.map((cell, index) => {
+                {columns?.map((cell, index) => {
                   return (
                     <StyledCell
                       width={columns[index].width}
@@ -241,31 +261,33 @@ export const Table: React.FC<TableProps> = ({ columns, content, narrow = false }
             </StyledRowContainer>
           </StyledRowWrapper>
         )}
-        {content.map(({ contents, Wrapper }, rowIndex) => {
-          const renderedRow = (
-            <StyledRowContainer narrow={narrow}>
-              <StyledRow columnCount={columnCount} role="row" narrow={narrow}>
-                {contents.map((cell, cellIndex) => (
-                  <StyledCell
-                    width={columns[cellIndex].width}
-                    bold={columns[cellIndex].bold}
-                    key={cellIndex}
-                    role="cell"
-                    narrow={narrow}
-                  >
-                    {cell}
-                  </StyledCell>
-                ))}
-              </StyledRow>
-            </StyledRowContainer>
-          );
+        {content?.length > 0
+          ? content.map(({ contents, Wrapper }, rowIndex) => {
+              const renderedRow = (
+                <StyledRowContainer narrow={narrow}>
+                  <StyledRow columnCount={columnCount} role="row" narrow={narrow}>
+                    {contents?.map((cell, cellIndex) => (
+                      <StyledCell
+                        width={columns[cellIndex].width}
+                        bold={columns[cellIndex].bold}
+                        key={cellIndex}
+                        role="cell"
+                        narrow={narrow}
+                      >
+                        {cell}
+                      </StyledCell>
+                    ))}
+                  </StyledRow>
+                </StyledRowContainer>
+              );
 
-          return (
-            <StyledRowWrapper key={rowIndex} narrow={narrow}>
-              {Wrapper ? <Wrapper>{renderedRow}</Wrapper> : renderedRow}
-            </StyledRowWrapper>
-          );
-        })}
+              return (
+                <StyledRowWrapper key={rowIndex} narrow={narrow}>
+                  {Wrapper ? <Wrapper>{renderedRow}</Wrapper> : renderedRow}
+                </StyledRowWrapper>
+              );
+            })
+          : placeholder && <StyledTablePlaceholder>{placeholder}</StyledTablePlaceholder>}
       </TableContextProvider>
     </StyledTable>
   );

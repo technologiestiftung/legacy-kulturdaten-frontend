@@ -375,13 +375,13 @@ export const OfferList: React.FC<OfferListProps> = ({
           <Select
             label={t('categories.offer.filters.type.label') as string}
             id={`entry-filter-type-${pseudoUID}`}
-            value={filters?.types}
+            value={filters?.type}
             onChange={(e) => {
               setCurrentPage(listName, 1);
               dispatchFilters({
                 type: FiltersActions.set,
                 payload: {
-                  key: 'types',
+                  key: 'type',
                   value: e.target.value !== '' ? e.target.value : undefined,
                 },
               });
@@ -479,75 +479,69 @@ export const OfferList: React.FC<OfferListProps> = ({
           </EntryCardGrid>
         ) : (
           <StyledEntryListTable>
-            {rows && rows.length > 0 ? (
-              <Table
-                columns={[
-                  {
-                    title: t('categories.offer.form.name') as string,
-                    bold: true,
-                    width: 4,
-                    sort: {
-                      order,
-                      onClick: () => {
-                        if (sortKey === 'name') {
-                          setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
-                        }
-                        setCurrentPage(listName, 1);
-                        setSortKey(listName, 'name');
-                      },
-                      active: sortKey === 'name',
+            {/* {rows && rows.length > 0 ? ( */}
+            <Table
+              columns={[
+                {
+                  title: t('categories.offer.form.name') as string,
+                  bold: true,
+                  width: 4,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'name') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'name');
                     },
+                    active: sortKey === 'name',
                   },
-                  { title: t('categories.offer.filters.mainType.label') as string, width: 4 },
-                  { title: t('categories.offer.filters.type.label') as string, width: 4 },
-                  { title: t('statusBar.status') as string, width: 4 },
-                  {
-                    title: t('categories.organizer.table.updated') as string,
-                    width: 2,
-                    sort: {
-                      order,
-                      onClick: () => {
-                        if (sortKey === 'updatedAt') {
-                          setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
-                        }
-                        setCurrentPage(listName, 1);
-                        setSortKey(listName, 'updatedAt');
-                      },
-                      active: sortKey === 'updatedAt',
+                },
+                { title: t('categories.offer.filters.mainType.label') as string, width: 4 },
+                { title: t('categories.offer.filters.type.label') as string, width: 4 },
+                { title: t('statusBar.status') as string, width: 4 },
+                {
+                  title: t('categories.organizer.table.updated') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'updatedAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'updatedAt');
                     },
+                    active: sortKey === 'updatedAt',
                   },
-                  {
-                    title: t('categories.organizer.table.created') as string,
-                    width: 2,
-                    sort: {
-                      order,
-                      onClick: () => {
-                        if (sortKey === 'createdAt') {
-                          setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
-                        }
-                        setCurrentPage(listName, 1);
-                        setSortKey(listName, 'createdAt');
-                      },
-                      active: sortKey === 'createdAt',
+                },
+                {
+                  title: t('categories.organizer.table.created') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'createdAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'createdAt');
                     },
+                    active: sortKey === 'createdAt',
                   },
-                ].slice(0, !expanded ? 2 : undefined)}
-                content={rows}
-                narrow={!expanded}
-              />
-            ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>
-                  {activeFiltersCount === 0
+                },
+              ].slice(0, !expanded ? 2 : undefined)}
+              content={rows}
+              narrow={!expanded}
+              placeholder={
+                rows && rows.length === 0
+                  ? activeFiltersCount === 0
                     ? t('categories.offer.list.nothing')
-                    : t('categories.offer.list.nothingFilter')}
-                </EntryListPlaceholder>
-              </EntryCardGrid>
-            ) : (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>{t('categories.offer.list.loading')}</EntryListPlaceholder>
-              </EntryCardGrid>
-            )}
+                    : t('categories.offer.list.nothingFilter')
+                  : t('categories.offer.list.loading')
+              }
+            />
           </StyledEntryListTable>
         )}
         {lastPage > 1 && (
