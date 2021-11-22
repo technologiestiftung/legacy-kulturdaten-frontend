@@ -75,7 +75,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
   const loadingScreen = useLoadingScreen();
   const createOrganizer = useCreateOrganizer();
   const { adminModeActive, quit: quitAdminMode } = useAdminMode();
-  const { resetLastEntryIds } = useContext(EntryListContext);
+  const { reset } = useContext(EntryListContext);
 
   const { owner: organizerOwnerList, contributor: organizerContributorList } =
     useUserOrganizerLists();
@@ -127,7 +127,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                   if (organizer.id !== activeOrganizerId)
                     loadingScreen(t('menu.organizerBand.loading'), async () => {
                       setOrganizerId(organizer.id);
-                      resetLastEntryIds();
+                      reset();
 
                       router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
 
