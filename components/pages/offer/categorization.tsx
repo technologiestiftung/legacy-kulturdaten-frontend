@@ -7,7 +7,7 @@ import { Save } from '../../EntryForm/Save';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
-import { Offer, OfferMainType } from '../../../lib/api/types/offer';
+import { Offer } from '../../../lib/api/types/offer';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { useEntryTypeSubjectForm } from '../helpers/form/TypeSubject';
 import { useEntryTags } from '../helpers/form/Tags';
@@ -19,7 +19,6 @@ import { Select, SelectSize } from '../../select';
 import { usePseudoUID } from '../../../lib/uid';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
-import { sortByTranslation } from '../../../lib/sortTranslations';
 import { usePublish } from '../../Publish';
 
 const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
@@ -92,21 +91,19 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
                 <option key={'-1'} value="undefined">
                   {t('categories.offer.form.mainType.choose')}
                 </option>
-                {sortByTranslation<OfferMainType>(typeOptions, language).map(
-                  (typeOption, typeOptionIndex) => {
-                    const currentTranslation = getTranslation(
-                      language,
-                      typeOption.relations.translations,
-                      true
-                    );
+                {typeOptions.map((typeOption, typeOptionIndex) => {
+                  const currentTranslation = getTranslation(
+                    language,
+                    typeOption.relations.translations,
+                    true
+                  );
 
-                    return (
-                      <option key={typeOptionIndex} value={String(typeOption.id)}>
-                        {currentTranslation.attributes.name}
-                      </option>
-                    );
-                  }
-                )}
+                  return (
+                    <option key={typeOptionIndex} value={String(typeOption.id)}>
+                      {currentTranslation.attributes.name}
+                    </option>
+                  );
+                })}
               </Select>
             )}
           </FormItem>

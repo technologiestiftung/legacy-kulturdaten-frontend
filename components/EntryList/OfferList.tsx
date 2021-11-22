@@ -4,8 +4,14 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall } from '../../lib/api';
-import { Offer, OfferTranslation } from '../../lib/api/types/offer';
-import { Order, useCreateOffer, useList } from '../../lib/categories';
+import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
+import {
+  Order,
+  useCreateOffer,
+  useList,
+  useOfferMainTypeList,
+  useOfferTypeList,
+} from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -14,7 +20,7 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardGrid } from './EntryCard';
+import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
@@ -64,7 +70,7 @@ export const OfferList: React.FC<OfferListProps> = ({
   const locale = useLocale();
   const language = useLanguage();
   const t = useT();
-  const { setMenuExpanded } = useContext(NavigationContext);
+  const { setMenuExpanded, menuExpanded } = useContext(NavigationContext);
   const {
     getCurrentPage,
     setCurrentPage,
@@ -76,8 +82,6 @@ export const OfferList: React.FC<OfferListProps> = ({
     setOrder,
     getFilters,
     getDispatchFilters,
-    getView,
-    setView,
     getFiltersBoxExpanded,
     setFiltersBoxExpanded,
     setLastEntryId,
@@ -89,18 +93,23 @@ export const OfferList: React.FC<OfferListProps> = ({
   const entriesPerPage = useMemo(() => getEntriesPerPage(listName), [getEntriesPerPage, listName]);
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
-  const view = useMemo(() => getView(listName), [getView, listName]);
-  const filtersBoxExpanded = useMemo(() => getFiltersBoxExpanded(listName), [
-    getFiltersBoxExpanded,
-    listName,
-  ]);
-  const dispatchFilters = useMemo(() => getDispatchFilters(listName), [
-    getDispatchFilters,
-    listName,
-  ]);
+  const view = useMemo(
+    () => (menuExpanded ? EntryListView.table : EntryListView.cards),
+    [menuExpanded]
+  );
+  const filtersBoxExpanded = useMemo(
+    () => getFiltersBoxExpanded(listName),
+    [getFiltersBoxExpanded, listName]
+  );
+  const dispatchFilters = useMemo(
+    () => getDispatchFilters(listName),
+    [getDispatchFilters, listName]
+  );
   const loadingScreen = useLoadingScreen();
   const createOffer = useCreateOffer();
   const organizerId = useOrganizerId();
+  const mainTypeOptions = useOfferMainTypeList();
+  const typeOptions = useOfferTypeList();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -148,6 +157,20 @@ export const OfferList: React.FC<OfferListProps> = ({
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
             ({ attributes, relations, id }, index) => {
+              const typeNames = relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              });
+              const mainTypeNames = relations?.mainType?.map((type) => {
+                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return mainTypeTranslation?.attributes.name;
+              });
               const href = (sub?: string) =>
                 routes[Routes.offer]({
                   locale,
@@ -173,6 +196,7 @@ export const OfferList: React.FC<OfferListProps> = ({
                   active={router.asPath.includes(href())}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                  meta={<EntryCardTypesSubjects types={[...mainTypeNames, ...typeNames]} />}
                 />
               );
             }
@@ -220,11 +244,29 @@ export const OfferList: React.FC<OfferListProps> = ({
                 </TableLink>
               );
 
+              const typeNames = relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              });
+
+              const mainTypeNames = relations?.mainType?.map((type) => {
+                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return mainTypeTranslation?.attributes.name;
+              });
+
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
                     {currentTranslation?.attributes?.name}
                   </StyledTableLinkText>,
+                  mainTypeNames?.join(', '),
+                  typeNames?.join(', '),
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
                     ? date(new Date(attributes?.updatedAt), DateFormat.date)
@@ -301,64 +343,104 @@ export const OfferList: React.FC<OfferListProps> = ({
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
           </Select>
-        </StyledFilters>
-        <StyledFilters expanded={expanded}>
           <Select
-            id={`entry-sort-${pseudoUID}`}
-            label={t('general.sort') as string}
+            label={t('categories.offer.filters.mainType.label') as string}
+            id={`entry-filter-mainType-${pseudoUID}`}
+            value={filters?.mainType}
             onChange={(e) => {
               setCurrentPage(listName, 1);
-              setSortKey(listName, e.target.value);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: {
+                  key: 'mainType',
+                  value: e.target.value !== '' ? e.target.value : undefined,
+                },
+              });
             }}
-            value={sortKey}
           >
-            <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
-            <option value="createdAt">{t('categories.organizer.sort.created')}</option>
-            <option value="name">{t('categories.organizer.sort.name')}</option>
+            <option value="">{t('categories.offer.filters.mainType.all')}</option>
+            {mainTypeOptions?.map(({ id, relations }, index) => {
+              const typeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                relations.translations
+              );
+
+              return (
+                <option key={index} value={String(id)}>
+                  {typeTranslation?.attributes?.name}
+                </option>
+              );
+            })}
           </Select>
-          <RadioSwitch
-            value={order}
-            name={`entry-order-${pseudoUID}`}
-            onChange={(value) => {
+          <Select
+            label={t('categories.offer.filters.type.label') as string}
+            id={`entry-filter-type-${pseudoUID}`}
+            value={filters?.type}
+            onChange={(e) => {
               setCurrentPage(listName, 1);
-              setOrder(listName, value as Order);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: {
+                  key: 'type',
+                  value: e.target.value !== '' ? e.target.value : undefined,
+                },
+              });
             }}
-            options={[
-              {
-                value: Order.ASC,
-                label: t('general.ascending') as string,
-                ariaLabel: t('general.ascendingAriaLabel') as string,
-                icon: 'ArrowUp',
-              },
-              {
-                value: Order.DESC,
-                label: t('general.descending') as string,
-                ariaLabel: t('general.descendingAriaLabel') as string,
-                icon: 'ArrowDown',
-              },
-            ]}
-          />
-          <RadioSwitch
-            value={view}
-            name={`entry-view-${pseudoUID}`}
-            onChange={(value) => {
-              setView(listName, value as EntryListView);
-            }}
-            label={t('categories.organizer.view.label') as string}
-            options={[
-              {
-                value: EntryListView.cards,
-                label: t('categories.organizer.view.cards') as string,
-                icon: 'Grid',
-              },
-              {
-                value: EntryListView.table,
-                label: t('categories.organizer.view.table') as string,
-                icon: 'AlignJustify',
-              },
-            ]}
-          />
+          >
+            <option value="">{t('categories.offer.filters.type.all')}</option>
+            {typeOptions?.map(({ id, relations }, index) => {
+              const typeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                relations.translations
+              );
+
+              return (
+                <option key={index} value={String(id)}>
+                  {typeTranslation?.attributes?.name}
+                </option>
+              );
+            })}
+          </Select>
         </StyledFilters>
+        {!menuExpanded && (
+          <StyledFilters expanded={expanded}>
+            <Select
+              id={`entry-sort-${pseudoUID}`}
+              label={t('general.sort') as string}
+              onChange={(e) => {
+                setCurrentPage(listName, 1);
+                setSortKey(listName, e.target.value);
+              }}
+              value={sortKey}
+            >
+              <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
+              <option value="createdAt">{t('categories.organizer.sort.created')}</option>
+              <option value="name">{t('categories.organizer.sort.name')}</option>
+            </Select>
+            <RadioSwitch
+              value={order}
+              name={`entry-order-${pseudoUID}`}
+              onChange={(value) => {
+                setCurrentPage(listName, 1);
+                setOrder(listName, value as Order);
+              }}
+              options={[
+                {
+                  value: Order.ASC,
+                  label: t('general.ascending') as string,
+                  ariaLabel: t('general.ascendingAriaLabel') as string,
+                  icon: 'ArrowUp',
+                },
+                {
+                  value: Order.DESC,
+                  label: t('general.descending') as string,
+                  ariaLabel: t('general.descendingAriaLabel') as string,
+                  icon: 'ArrowDown',
+                },
+              ]}
+            />
+          </StyledFilters>
+        )}
       </EntryListFiltersBox>
       <StyledEntryListBody>
         {view === EntryListView.cards ? (
@@ -377,30 +459,69 @@ export const OfferList: React.FC<OfferListProps> = ({
           </EntryCardGrid>
         ) : (
           <StyledEntryListTable>
-            {rows && rows.length > 0 ? (
-              <Table
-                columns={[
-                  { title: t('categories.offer.form.name') as string, bold: true, width: 6 },
-                  { title: t('statusBar.status') as string, width: 4 },
-                  { title: t('categories.organizer.table.updated') as string, width: 2 },
-                  { title: t('categories.organizer.table.created') as string, width: 2 },
-                ].slice(0, !expanded ? 2 : undefined)}
-                content={rows}
-                narrow={!expanded}
-              />
-            ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>
-                  {activeFiltersCount === 0
+            {/* {rows && rows.length > 0 ? ( */}
+            <Table
+              columns={[
+                {
+                  title: t('categories.offer.form.name') as string,
+                  bold: true,
+                  width: 4,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'name') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'name');
+                    },
+                    active: sortKey === 'name',
+                  },
+                },
+                { title: t('categories.offer.filters.mainType.label') as string, width: 4 },
+                { title: t('categories.offer.filters.type.label') as string, width: 4 },
+                { title: t('statusBar.status') as string, width: 4 },
+                {
+                  title: t('categories.organizer.table.updated') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'updatedAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'updatedAt');
+                    },
+                    active: sortKey === 'updatedAt',
+                  },
+                },
+                {
+                  title: t('categories.organizer.table.created') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'createdAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'createdAt');
+                    },
+                    active: sortKey === 'createdAt',
+                  },
+                },
+              ].slice(0, !expanded ? 2 : undefined)}
+              content={rows}
+              narrow={!expanded}
+              placeholder={
+                rows && rows.length === 0
+                  ? activeFiltersCount === 0
                     ? t('categories.offer.list.nothing')
-                    : t('categories.offer.list.nothingFilter')}
-                </EntryListPlaceholder>
-              </EntryCardGrid>
-            ) : (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>{t('categories.offer.list.loading')}</EntryListPlaceholder>
-              </EntryCardGrid>
-            )}
+                    : t('categories.offer.list.nothingFilter')
+                  : t('categories.offer.list.loading')
+              }
+            />
           </StyledEntryListTable>
         )}
         {lastPage > 1 && (

@@ -6,7 +6,6 @@ import { Categories, useCategories } from '../../config/categories';
 import { OrganizerList as OrganizerListCall } from '../../lib/api';
 import {
   Organizer,
-  OrganizerSubjectTranslation,
   OrganizerTranslation,
   OrganizerTypeTranslation,
 } from '../../lib/api/types/organizer';
@@ -19,9 +18,9 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCardGrid } from './EntryCard';
+import { EntryCard, EntryCardGrid, EntryCardTypesSubjects } from './EntryCard';
 import { RadioSwitch } from '../RadioSwitch';
-import { EntryListContext, FiltersActions } from './EntryListContext';
+import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
 import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
@@ -29,6 +28,7 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
+import { PublishedStatus } from '../../lib/api/types/general';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -89,6 +89,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     setLastEntryId,
   } = useContext(EntryListContext);
   const pseudoUID = usePseudoUID();
+  const view = useMemo(() => (expanded ? EntryListView.table : EntryListView.cards), [expanded]);
 
   const typeOptions = useOrganizerTypeList();
 
@@ -160,14 +161,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
                 return typeTranslation?.attributes.name;
               });
 
-              const subjectNames = relations?.subjects?.map((subject) => {
-                const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                  language,
-                  subject.relations.translations
-                );
-                return subjectTranslation?.attributes.name;
-              });
-
               const href = (sub?: string) =>
                 routes[Routes.organizer]({
                   locale,
@@ -197,7 +190,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
                     {currentTranslation?.attributes?.name}
                   </StyledTableLinkText>,
                   typeNames.join(', '),
-                  subjectNames.join(', '),
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
                     ? date(new Date(attributes?.updatedAt), DateFormat.date)
@@ -225,6 +217,66 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     ]
   );
 
+  const cards = useMemo(
+    () =>
+      list?.data
+        ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
+            ({ attributes, relations, id }, index) => {
+              const href = (sub?: string) =>
+                routes[Routes.organizer]({
+                  locale,
+                  query: { organizer: id, sub },
+                });
+
+              const translations = relations?.translations;
+              const currentTranslation = translations
+                ? getTranslation<OrganizerTranslation>(language, translations)
+                : undefined;
+              const typeNames = relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              });
+
+              return (
+                <EntryCard
+                  onClick={() => {
+                    setMenuExpanded(false);
+                    setLastEntryId(Categories.organizer, id);
+
+                    if (typeof customEntryOnClick === 'function') {
+                      customEntryOnClick(Categories.organizer, id);
+                    }
+                  }}
+                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
+                  menuExpanded={expanded}
+                  key={index}
+                  title={currentTranslation?.attributes?.name}
+                  status={attributes?.status || PublishedStatus.draft}
+                  active={router.asPath.includes(href()) || activeEntryId === id}
+                  meta={<EntryCardTypesSubjects types={typeNames} />}
+                  createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
+                  updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                />
+              );
+            }
+          )
+        : undefined,
+    [
+      activeEntryId,
+      expanded,
+      language,
+      list.data,
+      locale,
+      router.asPath,
+      setMenuExpanded,
+      setLastEntryId,
+      customEntryOnClick,
+    ]
+  );
+
   return (
     <StyledOrganizerList>
       {title && (
@@ -242,78 +294,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
         activeFiltersCount={activeFiltersCount}
       >
         <StyledFilters expanded={expanded}>
-          <Select
-            label={t('categories.organizer.filters.type.label') as string}
-            id={`entry-filter-type-${pseudoUID}`}
-            value={filters?.type}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
-              });
-
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: { key: 'subject', value: undefined },
-              });
-            }}
-          >
-            <option value="">{t('categories.organizer.filters.type.all')}</option>
-            {typeOptions?.map(({ id, relations }, index) => {
-              const typeTranslation = getTranslation<OrganizerTypeTranslation>(
-                language,
-                relations.translations
-              );
-
-              return (
-                <option key={index} value={String(id)}>
-                  {typeTranslation?.attributes?.name}
-                </option>
-              );
-            })}
-          </Select>
-          <Select
-            label={t('categories.organizer.filters.subject.label') as string}
-            id={`entry-filter-subject-${pseudoUID}`}
-            value={filters?.subject}
-            disabled={!filters?.type}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              dispatchFilters({
-                type: FiltersActions.set,
-                payload: {
-                  key: 'subject',
-                  value: e.target.value !== '' ? e.target.value : undefined,
-                },
-              });
-            }}
-          >
-            <option value="">
-              {!filters?.type
-                ? t('categories.organizer.filters.subject.typeFirst')
-                : t('categories.organizer.filters.subject.all')}
-            </option>
-            {typeOptions
-              ?.filter((typeOption) => typeOption.id === parseInt(filters?.type, 10))
-              .map(({ relations }) => {
-                const subjects = relations?.subjects?.map(
-                  ({ relations: subjectRelations, id: subjectId }, index) => {
-                    const subjectTranslation = getTranslation<OrganizerSubjectTranslation>(
-                      language,
-                      subjectRelations?.translations
-                    );
-                    return (
-                      <option key={index} value={String(subjectId)}>
-                        {subjectTranslation?.attributes?.name}
-                      </option>
-                    );
-                  }
-                );
-
-                return subjects;
-              })}
-          </Select>
           <Select
             label={t('categories.organizer.filters.status.label') as string}
             id={`entry-filter-status-${pseudoUID}`}
@@ -333,75 +313,154 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
           </Select>
-        </StyledFilters>
-
-        <StyledFilters expanded={expanded}>
           <Select
-            id={`entry-sort-${pseudoUID}`}
-            label={t('general.sort') as string}
+            label={t('categories.organizer.filters.type.label') as string}
+            id={`entry-filter-type-${pseudoUID}`}
+            value={filters?.type}
             onChange={(e) => {
               setCurrentPage(listName, 1);
-              setSortKey(listName, e.target.value);
+              dispatchFilters({
+                type: FiltersActions.set,
+                payload: { key: 'type', value: e.target.value !== '' ? e.target.value : undefined },
+              });
             }}
-            value={sortKey}
           >
-            <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
-            <option value="createdAt">{t('categories.organizer.sort.created')}</option>
-            <option value="name">{t('categories.organizer.sort.name')}</option>
+            <option value="">{t('categories.organizer.filters.type.all')}</option>
+            {typeOptions?.map(({ id, relations }, index) => {
+              const typeTranslation = getTranslation<OrganizerTypeTranslation>(
+                language,
+                relations.translations
+              );
+
+              return (
+                <option key={index} value={String(id)}>
+                  {typeTranslation?.attributes?.name}
+                </option>
+              );
+            })}
           </Select>
-          <RadioSwitch
-            value={order}
-            name={`entry-order-${pseudoUID}`}
-            onChange={(value) => {
-              setCurrentPage(listName, 1);
-              setOrder(listName, value as Order);
-            }}
-            options={[
-              {
-                value: Order.ASC,
-                label: t('general.ascending') as string,
-                ariaLabel: t('general.ascendingAriaLabel') as string,
-                icon: 'ArrowUp',
-              },
-              {
-                value: Order.DESC,
-                label: t('general.descending') as string,
-                ariaLabel: t('general.descendingAriaLabel') as string,
-                icon: 'ArrowDown',
-              },
-            ]}
-          />
         </StyledFilters>
+
+        {!expanded && (
+          <StyledFilters expanded={expanded}>
+            <Select
+              id={`entry-sort-${pseudoUID}`}
+              label={t('general.sort') as string}
+              onChange={(e) => {
+                setCurrentPage(listName, 1);
+                setSortKey(listName, e.target.value);
+              }}
+              value={sortKey}
+            >
+              <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
+              <option value="createdAt">{t('categories.organizer.sort.created')}</option>
+              <option value="name">{t('categories.organizer.sort.name')}</option>
+            </Select>
+            <RadioSwitch
+              value={order}
+              name={`entry-order-${pseudoUID}`}
+              onChange={(value) => {
+                setCurrentPage(listName, 1);
+                setOrder(listName, value as Order);
+              }}
+              options={[
+                {
+                  value: Order.ASC,
+                  label: t('general.ascending') as string,
+                  ariaLabel: t('general.ascendingAriaLabel') as string,
+                  icon: 'ArrowUp',
+                },
+                {
+                  value: Order.DESC,
+                  label: t('general.descending') as string,
+                  ariaLabel: t('general.descendingAriaLabel') as string,
+                  icon: 'ArrowDown',
+                },
+              ]}
+            />
+          </StyledFilters>
+        )}
       </EntryListFiltersBox>
       <StyledEntryListBody>
-        <StyledEntryListTable>
-          {rows && rows.length > 0 ? (
+        {view === EntryListView.cards ? (
+          <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
+            {cards && cards.length > 0 ? (
+              cards
+            ) : cards && cards.length === 0 ? (
+              <EntryListPlaceholder>
+                {activeFiltersCount === 0
+                  ? t('categories.offer.list.nothing')
+                  : t('categories.offer.list.nothingFilter')}
+              </EntryListPlaceholder>
+            ) : (
+              <EntryListPlaceholder>{t('categories.offer.list.loading')}</EntryListPlaceholder>
+            )}
+          </EntryCardGrid>
+        ) : (
+          <StyledEntryListTable>
             <Table
               columns={[
-                { title: t('forms.name') as string, bold: true, width: 5 },
+                {
+                  title: t('forms.name') as string,
+                  bold: true,
+                  width: 5,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'name') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'name');
+                    },
+                    active: sortKey === 'name',
+                  },
+                },
                 { title: t('forms.type') as string, width: 4 },
-                { title: t('forms.subjects') as string, width: 4 },
                 { title: t('statusBar.status') as string, width: 3 },
-                { title: t('categories.organizer.table.updated') as string, width: 2 },
-                { title: t('categories.organizer.table.created') as string, width: 2 },
+                {
+                  title: t('categories.organizer.table.updated') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'updatedAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'updatedAt');
+                    },
+                    active: sortKey === 'updatedAt',
+                  },
+                },
+                {
+                  title: t('categories.organizer.table.created') as string,
+                  width: 2,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'createdAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'createdAt');
+                    },
+                    active: sortKey === 'createdAt',
+                  },
+                },
               ].slice(0, !expanded ? 2 : undefined)}
               content={rows}
               narrow={!expanded}
+              placeholder={
+                rows && rows.length === 0
+                  ? activeFiltersCount === 0
+                    ? t('categories.offer.list.nothing')
+                    : t('categories.offer.list.nothingFilter')
+                  : t('categories.offer.list.loading')
+              }
             />
-          ) : rows && rows.length === 0 ? (
-            <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-              <EntryListPlaceholder>
-                {activeFiltersCount === 0
-                  ? t('categories.organizer.list.nothing')
-                  : t('categories.organizer.list.nothingFilter')}
-              </EntryListPlaceholder>
-            </EntryCardGrid>
-          ) : (
-            <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-              <EntryListPlaceholder>{t('categories.organizer.list.loading')}</EntryListPlaceholder>
-            </EntryCardGrid>
-          )}
-        </StyledEntryListTable>
+          </StyledEntryListTable>
+        )}
 
         {lastPage > 1 && (
           <EntryListPagination

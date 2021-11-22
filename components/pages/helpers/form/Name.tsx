@@ -116,7 +116,6 @@ export const useName = <
   );
   const [value, setValue] = useState(name || '');
   const [valueFromApi, setValueFromApi] = useState(name || '');
-  // const [pristine, setPristine] = useState(true);
   const { mutateUserInfo } = useUser();
 
   const pristine = useMemo(() => value === valueFromApi, [value, valueFromApi]);

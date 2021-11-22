@@ -14,7 +14,7 @@ import { NavigationContext } from '../navigation/NavigationContext';
 import { Select } from '../select';
 import { EntryListHead } from './EntryListHead';
 import { EntryListPagination } from './EntryListPagination';
-import { EntryCard, EntryCardGrid } from './EntryCard';
+import { EntryCard, EntryCardGrid, EntryCardText } from './EntryCard';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { RadioSwitch } from '../RadioSwitch';
 import { EntryListContext, EntryListView, FiltersActions } from './EntryListContext';
@@ -82,8 +82,6 @@ export const LocationList: React.FC<LocationListProps> = ({
     setOrder,
     getFilters,
     getDispatchFilters,
-    getView,
-    setView,
     getFiltersBoxExpanded,
     setFiltersBoxExpanded,
     setLastEntryId,
@@ -95,7 +93,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   const entriesPerPage = useMemo(() => getEntriesPerPage(listName), [getEntriesPerPage, listName]);
   const sortKey = useMemo(() => getSortKey(listName), [getSortKey, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
-  const view = useMemo(() => getView(listName), [getView, listName]);
+  const view = useMemo(() => (expanded ? EntryListView.table : EntryListView.cards), [expanded]);
   const filtersBoxExpanded = useMemo(
     () => getFiltersBoxExpanded(listName),
     [getFiltersBoxExpanded, listName]
@@ -183,6 +181,8 @@ export const LocationList: React.FC<LocationListProps> = ({
                 ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
 
+              const address = relations?.address;
+
               return (
                 <EntryCard
                   onClick={() => {
@@ -201,6 +201,20 @@ export const LocationList: React.FC<LocationListProps> = ({
                   active={router.asPath.includes(href()) || activeEntryId === id}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                  meta={
+                    address && (
+                      <EntryCardText>
+                        {[
+                          address.attributes.street1,
+                          address.attributes.street2,
+                          address.attributes.zipCode,
+                          address.attributes.city,
+                        ]
+                          .filter((text) => text?.length > 0)
+                          .join(', ')}
+                      </EntryCardText>
+                    )
+                  }
                 />
               );
             }
@@ -254,11 +268,25 @@ export const LocationList: React.FC<LocationListProps> = ({
                 </TableLink>
               );
 
+              const address = relations?.address;
+
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
                     {currentTranslation?.attributes?.name}
                   </StyledTableLinkText>,
+                  `${
+                    address
+                      ? [
+                          address.attributes.street1,
+                          address.attributes.street2,
+                          address.attributes.zipCode,
+                          address.attributes.city,
+                        ]
+                          .filter((text) => text?.length > 0 && text !== 'undefined')
+                          .join(', ')
+                      : ''
+                  }`,
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
                     ? date(new Date(attributes?.updatedAt), DateFormat.date)
@@ -374,63 +402,45 @@ export const LocationList: React.FC<LocationListProps> = ({
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
           </Select>
         </StyledFilters>
-        <StyledFilters expanded={expanded}>
-          <Select
-            id={`entry-sort-${pseudoUID}`}
-            label={t('general.sort') as string}
-            onChange={(e) => {
-              setCurrentPage(listName, 1);
-              setSortKey(listName, e.target.value);
-            }}
-            value={sortKey}
-          >
-            <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
-            <option value="createdAt">{t('categories.organizer.sort.created')}</option>
-            <option value="name">{t('categories.organizer.sort.name')}</option>
-          </Select>
-          <RadioSwitch
-            value={order}
-            name={`entry-order-${pseudoUID}`}
-            onChange={(value) => {
-              setCurrentPage(listName, 1);
-              setOrder(listName, value as Order);
-            }}
-            options={[
-              {
-                value: Order.ASC,
-                label: t('general.ascending') as string,
-                ariaLabel: t('general.ascendingAriaLabel') as string,
-                icon: 'ArrowUp',
-              },
-              {
-                value: Order.DESC,
-                label: t('general.descending') as string,
-                ariaLabel: t('general.descendingAriaLabel') as string,
-                icon: 'ArrowDown',
-              },
-            ]}
-          />
-          <RadioSwitch
-            value={view}
-            name={`entry-view-${pseudoUID}`}
-            onChange={(value) => {
-              setView(listName, value as EntryListView);
-            }}
-            label={t('categories.organizer.view.label') as string}
-            options={[
-              {
-                value: EntryListView.cards,
-                label: t('categories.organizer.view.cards') as string,
-                icon: 'Grid',
-              },
-              {
-                value: EntryListView.table,
-                label: t('categories.organizer.view.table') as string,
-                icon: 'AlignJustify',
-              },
-            ]}
-          />
-        </StyledFilters>
+        {!expanded && (
+          <StyledFilters expanded={expanded}>
+            <Select
+              id={`entry-sort-${pseudoUID}`}
+              label={t('general.sort') as string}
+              onChange={(e) => {
+                setCurrentPage(listName, 1);
+                setSortKey(listName, e.target.value);
+              }}
+              value={sortKey}
+            >
+              <option value="updatedAt">{t('categories.organizer.sort.updated')}</option>
+              <option value="createdAt">{t('categories.organizer.sort.created')}</option>
+              <option value="name">{t('categories.organizer.sort.name')}</option>
+            </Select>
+            <RadioSwitch
+              value={order}
+              name={`entry-order-${pseudoUID}`}
+              onChange={(value) => {
+                setCurrentPage(listName, 1);
+                setOrder(listName, value as Order);
+              }}
+              options={[
+                {
+                  value: Order.ASC,
+                  label: t('general.ascending') as string,
+                  ariaLabel: t('general.ascendingAriaLabel') as string,
+                  icon: 'ArrowUp',
+                },
+                {
+                  value: Order.DESC,
+                  label: t('general.descending') as string,
+                  ariaLabel: t('general.descendingAriaLabel') as string,
+                  icon: 'ArrowDown',
+                },
+              ]}
+            />
+          </StyledFilters>
+        )}
       </EntryListFiltersBox>
       <StyledEntryListBody>
         {view === EntryListView.cards ? (
@@ -449,30 +459,67 @@ export const LocationList: React.FC<LocationListProps> = ({
           </EntryCardGrid>
         ) : (
           <StyledEntryListTable>
-            {rows && rows.length > 0 ? (
-              <Table
-                columns={[
-                  { title: t('categories.location.form.name') as string, bold: true, width: 6 },
-                  { title: t('statusBar.status') as string, width: 4 },
-                  { title: t('categories.organizer.table.updated') as string, width: 4 },
-                  { title: t('categories.organizer.table.created') as string, width: 4 },
-                ].slice(0, !expanded ? 2 : undefined)}
-                content={rows}
-                narrow={!expanded}
-              />
-            ) : rows && rows.length === 0 ? (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>
-                  {activeFiltersCount === 0
-                    ? t('categories.location.list.nothing')
-                    : t('categories.location.list.nothingFilter')}
-                </EntryListPlaceholder>
-              </EntryCardGrid>
-            ) : (
-              <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
-                <EntryListPlaceholder>{t('categories.location.list.loading')}</EntryListPlaceholder>
-              </EntryCardGrid>
-            )}
+            <Table
+              columns={[
+                {
+                  title: t('categories.location.form.name') as string,
+                  bold: true,
+                  width: 6,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'name') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'name');
+                    },
+                    active: sortKey === 'name',
+                  },
+                },
+                { title: t('categories.location.list.address') as string, width: 4 },
+                { title: t('statusBar.status') as string, width: 4 },
+                {
+                  title: t('categories.organizer.table.updated') as string,
+                  width: 4,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'updatedAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'updatedAt');
+                    },
+                    active: sortKey === 'updatedAt',
+                  },
+                },
+                {
+                  title: t('categories.organizer.table.created') as string,
+                  width: 4,
+                  sort: {
+                    order,
+                    onClick: () => {
+                      if (sortKey === 'createdAt') {
+                        setOrder(listName, order === Order.ASC ? Order.DESC : Order.ASC);
+                      }
+                      setCurrentPage(listName, 1);
+                      setSortKey(listName, 'createdAt');
+                    },
+                    active: sortKey === 'createdAt',
+                  },
+                },
+              ].slice(0, !expanded ? 2 : undefined)}
+              content={rows}
+              narrow={!expanded}
+              placeholder={
+                rows && rows.length === 0
+                  ? activeFiltersCount === 0
+                    ? t('categories.offer.list.nothing')
+                    : t('categories.offer.list.nothingFilter')
+                  : t('categories.offer.list.loading')
+              }
+            />
           </StyledEntryListTable>
         )}
         {lastPage > 1 && (

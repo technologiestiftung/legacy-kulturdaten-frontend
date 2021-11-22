@@ -44,12 +44,12 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
   ${({ isActive }) =>
     isActive
       ? css`
-          background: var(--black);
-          color: var(--white);
-
-          &:hover {
+          &::before {
+            content: '';
+            height: 100%;
+            width: 0.1875rem;
+            position: absolute;
             background: var(--black);
-            color: var(--white);
           }
 
           ${StyledTableLinkText} {
