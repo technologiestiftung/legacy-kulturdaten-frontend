@@ -15,11 +15,14 @@ import {
   getApiUrlString,
   useApiCall,
 } from '../../lib/api';
-import { internalRoutes, routes } from '../../config/routes';
+import { internalRoutes, Routes, routes } from '../../config/routes';
 import { useActiveRoute, useLocale } from '../../lib/routing';
 import { useRouter } from 'next/router';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useT } from '../../lib/i18n';
+import { add, sub, compareAsc } from 'date-fns';
+
+const termsDate = add(new Date(), { hours: 1 });
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -38,6 +41,7 @@ type UserContext = {
   login: (cookie: Cookie, redirectRoute: string) => void;
   logout: () => Promise<void>;
   mutate: () => void;
+  acceptedTerms: boolean;
 };
 
 export const UserContext = React.createContext<UserContext>({
@@ -52,6 +56,7 @@ export const UserContext = React.createContext<UserContext>({
   login: () => undefined,
   logout: () => undefined,
   mutate: () => undefined,
+  acceptedTerms: true,
 });
 
 type UserContextProviderProps = {
@@ -71,6 +76,25 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   const router = useRouter();
   const loadingScreen = useLoadingScreen();
   const t = useT();
+
+  const isInternalRoute = useMemo(() => internalRoutes.includes(activeRoute), [activeRoute]);
+
+  const acceptedTerms = useMemo(() => {
+    if (termsDate && stateUser) {
+      const compareDates = compareAsc(
+        termsDate,
+        stateUser?.attributes?.acceptedTermsArt
+          ? new Date(stateUser?.attributes?.acceptedTermsArt)
+          : new Date()
+      );
+
+      console.log(compareDates);
+
+      return compareDates !== 1;
+    }
+
+    return undefined;
+  }, [stateUser]);
 
   useEffect(() => {
     setAuthToken(getCookie(authTokenCookieName)?.value);
@@ -150,12 +174,12 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
     } else if (userIsAuthenticated) {
       logoutUser();
     } else {
-      if (locale && internalRoutes.includes(activeRoute)) {
+      if (locale && isInternalRoute) {
         router.replace(routes.login({ locale }));
       }
     }
   }, [
-    activeRoute,
+    isInternalRoute,
     authTokenFromStateOrCookie,
     authenticateUser,
     locale,
@@ -166,6 +190,17 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
     userResponse?.body,
     userTokenIsValid,
   ]);
+
+  useEffect(() => {
+    if (
+      userIsAuthenticated &&
+      isInternalRoute &&
+      acceptedTerms === false &&
+      activeRoute !== Routes.userSettings
+    ) {
+      router.replace(routes.userSettings({ locale }));
+    }
+  }, [userIsAuthenticated, acceptedTerms, locale, router, isInternalRoute, activeRoute]);
 
   const login = useCallback(
     (cookie: Cookie, redirectRoute: string) => {
@@ -208,6 +243,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
         login,
         logout,
         mutate: mutateUserInfo,
+        acceptedTerms: acceptedTerms !== false,
       }}
     >
       {children}

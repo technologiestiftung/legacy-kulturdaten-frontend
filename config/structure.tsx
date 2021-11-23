@@ -15,6 +15,8 @@ import { OfferList } from '../components/EntryList/OfferList';
 import { useRouter } from 'next/router';
 import { useOrganizerId } from '../lib/useOrganizer';
 import { defaultOrganizerId } from '../components/navigation/NavigationContext';
+import { useContext } from 'react';
+import { UserContext } from '../components/user/UserContext';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -28,6 +30,7 @@ export const useMenuStructure = (): NavigationStructure => {
   const { logout } = useUser();
   const router = useRouter();
   const organizerId = useOrganizerId();
+  const { acceptedTerms } = useContext(UserContext);
 
   return {
     header: {
@@ -53,7 +56,7 @@ export const useMenuStructure = (): NavigationStructure => {
         menuItems: [
           {
             type: MenuItemType.link,
-            disabled: false,
+            disabled: !acceptedTerms,
             action: {
               title: t('menu.start.items.back') as string,
               href: routes.dashboard({

@@ -10,7 +10,7 @@ import { DashboardLinkList } from '../../Dasboard/DashboardLinkList';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { Info, InfoColor } from '../../info';
 import { Input, InputType } from '../../input';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, ButtonColor, ButtonSize } from '../../button';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import {
@@ -26,6 +26,10 @@ import styled from '@emotion/styled';
 import { mq } from '../../globals/Constants';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { Textarea } from '../../textarea';
+import { UserContext } from '../../user/UserContext';
+import { Tabs } from '../../navigation/tabs';
+import { routes } from '../../../config/routes';
+import { useLocale } from '../../../lib/routing';
 
 const CustomListTitleRow = styled(StyledTeamListListTitleRow)`
   grid-template-columns: 100%;
@@ -49,6 +53,8 @@ export const UserSettingsPage: React.FC = () => {
   const uid = usePseudoUID();
   const loadingScreen = useLoadingScreen();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const { acceptedTerms } = useContext(UserContext);
+  const locale = useLocale();
 
   const [dummyInput1, setDummyInput1] = useState('');
   const [dummyInput2, setDummyInput2] = useState('');
@@ -60,9 +66,25 @@ export const UserSettingsPage: React.FC = () => {
         title={t('settings.title') as string}
         subTitle={user?.attributes.email}
         minimalVariant
+        tabs={
+          <Tabs
+            links={[
+              {
+                title: 'Persönlich',
+                href: routes.userSettings({ locale }),
+              },
+            ]}
+          />
+        }
       />
       <div>
         <EntryFormWrapper>
+          {!acceptedTerms && (
+            <EntryFormContainer>
+              <EntryFormHead title="TERMS" />
+              <FormGrid></FormGrid>
+            </EntryFormContainer>
+          )}
           <EntryFormContainer>
             <EntryFormHead
               title={`${t('settings.personal.title')} (${t('forms.optional')})`}

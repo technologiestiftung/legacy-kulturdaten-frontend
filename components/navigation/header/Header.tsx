@@ -18,6 +18,7 @@ import { NavigationContext } from '../NavigationContext';
 import { useRouter } from 'next/router';
 import { appLayouts, Layouts } from '../../layouts/AppLayout';
 import { useAppTitle } from '../../../config/structure';
+import { UserContext } from '../../user/UserContext';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -75,6 +76,10 @@ const StyledHeaderTitleText = styled.div`
   line-height: var(--line-height-300);
   font-weight: 700;
   padding: 0.75rem;
+
+  ${mq(Breakpoint.wide)} {
+    padding: 0.75rem 1.5rem;
+  }
 `;
 
 const StyledHeaderMenuItems = styled.div`
@@ -139,6 +144,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const appTitle = useAppTitle();
+  const { acceptedTerms } = useContext(UserContext);
 
   const renderedLink = (
     <Link>
@@ -178,7 +184,14 @@ export const HeaderMain: React.FC<HeaderProps> = ({
       <Head>
         <title>{title !== appTitle ? `${title} – ${appTitle}` : appTitle}</title>
       </Head>
-      <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
+      <StyledHeaderTitle>
+        {rendered &&
+          (acceptedTerms ? (
+            renderedLink
+          ) : (
+            <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
+          ))}
+      </StyledHeaderTitle>
       <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
       {user?.isLoggedIn && (
         <StyledHeaderUserMenu>
@@ -295,10 +308,12 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
   customLink,
   user,
   layout,
+  Link,
 }: HeaderProps) => {
   const { rendered } = useContext(WindowContext);
   const activeLayout = appLayouts[layout];
   const appTitle = useAppTitle();
+  const { acceptedTerms } = useContext(UserContext);
 
   const renderedLink = activeLayout?.hasOrganizerBand ? (
     customLink ? (
@@ -308,7 +323,13 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
     )
   ) : (
     <StyledHeaderTitle>
-      <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
+      {acceptedTerms ? (
+        <Link>
+          <StyledLink>{appTitle}</StyledLink>
+        </Link>
+      ) : (
+        <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
+      )}
     </StyledHeaderTitle>
   );
 
