@@ -161,7 +161,7 @@ export const RegisterForm: React.FC = () => {
             <AuthFormItem>
               <Checkbox
                 id="register-confirmation"
-                label={t('register.confirmationText') as string}
+                label={t('register.confirmationText')}
                 required
               />
             </AuthFormItem>

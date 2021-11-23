@@ -319,6 +319,12 @@ export const deDE: Localization = {
       firstname: () => 'Vorname',
       lastname: () => 'Nachname',
     },
+    terms: {
+      title: () => 'Aktualisierte Nutzungsbedinungen',
+      text: () =>
+        'Wir haben die Nutzungsbedingungen für kulturdaten.berlin aktualisiert. Um die Plattform weiterzunutzen, musst du diese bitte lesen und ihnen zustimmen.',
+      button: () => 'zustimmen',
+    },
     api: {
       titleCreate: () => 'API Token erstellen (für Entwickler:innen)',
       titleCreateTooltip: () =>

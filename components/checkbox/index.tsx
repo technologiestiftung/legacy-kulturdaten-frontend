@@ -98,7 +98,7 @@ const StyledCheckboxLabel = styled.label<{ disabled?: boolean }>`
 
 export interface CheckboxProps {
   id: string;
-  label?: string;
+  label?: string | React.ReactNode;
   ariaLabel?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   checked?: boolean;

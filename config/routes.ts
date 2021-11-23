@@ -15,6 +15,7 @@ export enum Routes {
   userProfile = 'userProfile',
   userSettings = 'userSettings',
   userNotifications = 'userNotifications',
+  developer = 'developer',
   organizer = 'organizer',
   createOrganizer = 'createOrganizer',
   offer = 'offer',
@@ -35,6 +36,7 @@ export const routes: { [key in Routes]: Route } = {
   team: ({ query, locale }) => `/${query?.organizer}/${localizedRoutes[Routes.team][locale]}/`,
   userProfile: ({ locale }) => `/${localizedRoutes[Routes.userProfile][locale]}/`,
   userSettings: ({ locale }) => `/${localizedRoutes[Routes.userSettings][locale]}/`,
+  developer: ({ locale }) => `/${localizedRoutes[Routes.developer][locale]}/`,
   userNotifications: ({ locale }) => `/${localizedRoutes[Routes.userNotifications][locale]}/`,
   login: ({ locale }) => `/${localizedRoutes[Routes.login][locale]}/`,
   register: ({ locale }) => `/${localizedRoutes[Routes.register][locale]}/`,
@@ -69,6 +71,7 @@ export const internalRoutes = [
   Routes.userProfile,
   Routes.userNotifications,
   Routes.userSettings,
+  Routes.developer,
   Routes.organizer,
   Routes.offer,
   Routes.location,
@@ -101,6 +104,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   userSettings: {
     'de-DE': 'user/settings',
     'en-DE': 'user/settings',
+  },
+  developer: {
+    'de-DE': 'user/developer',
+    'en-DE': 'user/developer',
   },
   userNotifications: {
     'de-DE': 'user/notifications',
@@ -164,5 +171,6 @@ export const routesLayouts: { [key in Routes]: Layouts } = {
   userNotifications: Layouts.loggedInMeta,
   userProfile: Layouts.loggedInMeta,
   userSettings: Layouts.loggedInMeta,
+  developer: Layouts.loggedInMeta,
   admin: Layouts.loggedInMeta,
 };

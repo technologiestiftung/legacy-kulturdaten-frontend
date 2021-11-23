@@ -365,7 +365,7 @@ const DashboardPage: NextPage = () => {
                 title={t('dashboard.info.data.api.title') as string}
                 link={
                   <DashboardTileLink
-                    href={routes.userSettings({ locale })}
+                    href={routes.developer({ locale })}
                     type={StandardLinkType.internal}
                     title={t('dashboard.info.data.api.link') as string}
                   />

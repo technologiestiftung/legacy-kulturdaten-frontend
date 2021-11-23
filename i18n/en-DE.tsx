@@ -318,6 +318,12 @@ export const enDE: Localization = {
       firstname: () => 'First name',
       lastname: () => 'Last name',
     },
+    terms: {
+      title: () => 'Updates terms of use',
+      text: () =>
+        'We have updated the terms of use for kulturdaten.berlin. In order to continue using the platform, please read them and agree to them. ',
+      button: () => 'agree',
+    },
     api: {
       titleCreate: () => 'Create API token (for developers)',
       titleCreateTooltip: () =>
