@@ -16,7 +16,7 @@ export type User = {
     status: UserStatus;
     createdAt: string;
     updatedAt: string;
-    acceptedTermsArt: string;
+    acceptedTermsAt: string;
   };
   relations?: {
     [key in CategoriesPlural]?: Role[];

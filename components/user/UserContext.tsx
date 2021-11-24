@@ -83,8 +83,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
     if (termsDate && stateUser) {
       const compareDates = compareAsc(
         termsDate,
-        stateUser?.attributes?.acceptedTermsArt
-          ? new Date(stateUser?.attributes?.acceptedTermsArt)
+        stateUser?.attributes?.acceptedTermsAt
+          ? new Date(stateUser?.attributes?.acceptedTermsAt)
           : new Date()
       );
 
