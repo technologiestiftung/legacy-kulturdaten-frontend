@@ -49,7 +49,7 @@ export const useEntryHeader = (
     : undefined;
 
   const locale = useLocale();
-  const { quit } = useAdminMode();
+  const { quit, adminModeActive } = useAdminMode();
 
   const organizerId = useOrganizerId();
   const loadingScreen = useLoadingScreen();
@@ -115,7 +115,9 @@ export const useEntryHeader = (
                         switch (category.name) {
                           case Categories.organizer: {
                             const deleteResp = await deleteOrganizer(entry?.data?.id);
-                            quit();
+                            if (adminModeActive) {
+                              quit();
+                            }
 
                             return deleteResp;
                           }
