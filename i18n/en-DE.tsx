@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { InfoLi, InfoP, InfoUl } from '../components/info';
+import { FormText, FormTextP } from '../components/pages/helpers/formComponents';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
@@ -292,7 +293,8 @@ export const enDE: Localization = {
     },
   },
   dateCreate: {
-    overlayTitle: ({ offerTitle }) => `Create date for ‘${offerTitle}’`,
+    overlayTitle: ({ offerTitle }) =>
+      `Create date for ${offerTitle ? `‘${offerTitle}’` : 'unnamed offer'}`,
     create: () => 'Create date',
     loading: () => 'Creating date',
   },
@@ -323,6 +325,47 @@ export const enDE: Localization = {
       text: () =>
         'We have updated the terms of use for kulturdaten.berlin. In order to continue using the platform, please read them and agree to them. ',
       button: () => 'agree',
+    },
+    deletion: {
+      title: () => 'Nutzer:innenkonto löschen',
+      text: () => (
+        <FormText>
+          <FormTextP>
+            If you request the deletion of your account, all your data will be irretrievably deleted
+            after two weeks. You can cancel the deletion within this period.
+          </FormTextP>
+        </FormText>
+      ),
+      button: () => 'Löschung beantragen',
+      confirm: () => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            If you request the deletion of your account, all your data will be irretrievably deleted
+            after two weeks. You can cancel the deletion within this period.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            To confirm the deletion, please enter the email address of your account in this field
+            and press the {'“'}Request deletion{'”'} button.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      confirmInputLabel: () => 'E-Mail zur Bestätigung',
+      confirmButton: () => 'Löschung beantragen',
+    },
+    requestedDeletion: {
+      title: () => 'User account deletion requested',
+      text: ({ date, email }) => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            You have requested the deletion of your user account (email: {email}). Your account will
+            be finally deleted on the {date}.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            Before this date, you can cancel the deletion by clicking on the button below.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      button: () => 'Cancel deletion',
     },
     api: {
       titleCreate: () => 'Create API token (for developers)',
@@ -957,7 +1000,7 @@ export const enDE: Localization = {
           label: () => 'Location',
           choose: () => 'Choose location',
           edit: () => 'Change location',
-          title: ({ name }) => `Choose location for ‘${name}’`,
+          title: ({ name }) => `Choose location for ${name ? `‘${name}’` : 'unnamed offer'}`,
         },
         topics: () => 'Topic category (required)',
         topicsTooltip: () => (

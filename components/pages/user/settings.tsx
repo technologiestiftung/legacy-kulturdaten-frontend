@@ -126,6 +126,15 @@ export const UserSettingsPage: React.FC = () => {
               </FormItem>
             </FormGrid>
           </EntryFormContainer>
+          <EntryFormContainer>
+            <EntryFormHead title={t('settings.legal.title') as string} />
+            <FormGrid>
+              <FormItem width={FormItemWidth.full}>{t('settings.deletion.text')}</FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Button size={ButtonSize.big}>{t('settings.deletion.button')}</Button>
+              </FormItem>
+            </FormGrid>
+          </EntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

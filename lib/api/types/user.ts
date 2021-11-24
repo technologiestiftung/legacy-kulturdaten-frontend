@@ -17,6 +17,7 @@ export type User = {
     createdAt: string;
     updatedAt: string;
     acceptedTermsAt: string;
+    requestedDeletionAt?: string;
   };
   relations?: {
     [key in CategoriesPlural]?: Role[];

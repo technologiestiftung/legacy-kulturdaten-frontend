@@ -144,7 +144,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   const { rendered } = useContext(WindowContext);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const appTitle = useAppTitle();
-  const { acceptedTerms } = useContext(UserContext);
+  const { userInactive } = useContext(UserContext);
 
   const renderedLink = (
     <Link>
@@ -188,7 +188,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
         <StyledHeader>
           <StyledHeaderTitle>
             {rendered &&
-              (acceptedTerms ? (
+              (!userInactive ? (
                 renderedLink
               ) : (
                 <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
@@ -317,7 +317,7 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
   const { rendered } = useContext(WindowContext);
   const activeLayout = appLayouts[layout];
   const appTitle = useAppTitle();
-  const { acceptedTerms } = useContext(UserContext);
+  const { userInactive } = useContext(UserContext);
 
   const renderedLink = activeLayout?.hasOrganizerBand ? (
     customLink ? (
@@ -327,7 +327,7 @@ export const HeaderSecondary: React.FC<HeaderProps> = ({
     )
   ) : (
     <StyledHeaderTitle>
-      {acceptedTerms ? (
+      {!userInactive ? (
         <Link>
           <StyledLink>{appTitle}</StyledLink>
         </Link>

@@ -30,7 +30,7 @@ export const useMenuStructure = (): NavigationStructure => {
   const { logout } = useUser();
   const router = useRouter();
   const organizerId = useOrganizerId();
-  const { acceptedTerms } = useContext(UserContext);
+  const { userInactive } = useContext(UserContext);
 
   return {
     header: {
@@ -56,7 +56,7 @@ export const useMenuStructure = (): NavigationStructure => {
         menuItems: [
           {
             type: MenuItemType.link,
-            disabled: !acceptedTerms,
+            disabled: userInactive,
             action: {
               title: t('menu.start.items.back') as string,
               href: routes.dashboard({

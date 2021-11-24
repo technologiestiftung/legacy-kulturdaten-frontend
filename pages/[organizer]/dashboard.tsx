@@ -70,7 +70,7 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
 
   return (
     <DashboardTile
-      title={currentTranslation?.attributes?.name}
+      title={currentTranslation?.attributes?.name || (t('general.placeholderOffer') as string)}
       gridColumn={isUltraOrWider ? 'span 4' : undefined}
       link={
         <DashboardTileLink

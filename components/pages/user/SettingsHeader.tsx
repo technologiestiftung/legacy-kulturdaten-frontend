@@ -12,7 +12,7 @@ export const SettingsHeader: React.FC = () => {
   const t = useT();
   const locale = useLocale();
   const activeRoute = useActiveRoute();
-  const { acceptedTerms } = useContext(UserContext);
+  const { userInactive } = useContext(UserContext);
 
   return (
     <EntryHeader
@@ -30,7 +30,7 @@ export const SettingsHeader: React.FC = () => {
               title: 'Entwickler:innen-Einstellungen',
               href: routes.developer({ locale }),
               isActive: activeRoute === Routes.developer,
-              disabled: !acceptedTerms,
+              disabled: userInactive,
             },
           ]}
         />

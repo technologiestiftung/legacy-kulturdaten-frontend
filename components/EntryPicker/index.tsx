@@ -133,7 +133,9 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
           <>
             <StyledEntryPickerSlotActiveEntry>
               <StyledEntryPickerSlotActiveEntryTitle>
-                {translation?.attributes?.name || `${t('general.loading')}...`}
+                {entry?.data?.id
+                  ? translation?.attributes?.name || categories[categoryName].placeholderName
+                  : `${t('general.loading')}...`}
               </StyledEntryPickerSlotActiveEntryTitle>
             </StyledEntryPickerSlotActiveEntry>
             <StyledEntryPickerSlotEdit>{editText}</StyledEntryPickerSlotEdit>

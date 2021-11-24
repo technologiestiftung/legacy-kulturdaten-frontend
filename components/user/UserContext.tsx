@@ -22,7 +22,7 @@ import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useT } from '../../lib/i18n';
 import { add, sub, compareAsc } from 'date-fns';
 
-const termsDate = add(new Date(), { hours: 1 });
+const termsDate = sub(new Date(), { hours: 1 });
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -42,6 +42,8 @@ type UserContext = {
   logout: () => Promise<void>;
   mutate: () => void;
   acceptedTerms: boolean;
+  requestedDeletion: boolean;
+  userInactive: boolean;
 };
 
 export const UserContext = React.createContext<UserContext>({
@@ -57,6 +59,8 @@ export const UserContext = React.createContext<UserContext>({
   logout: () => undefined,
   mutate: () => undefined,
   acceptedTerms: true,
+  requestedDeletion: false,
+  userInactive: false,
 });
 
 type UserContextProviderProps = {
@@ -95,6 +99,11 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 
     return undefined;
   }, [stateUser]);
+
+  const requestedDeletion = useMemo(
+    () => stateUser?.id && stateUser?.attributes.requestedDeletionAt?.length > 0,
+    [stateUser?.attributes?.requestedDeletionAt?.length, stateUser?.id]
+  );
 
   useEffect(() => {
     setAuthToken(getCookie(authTokenCookieName)?.value);
@@ -193,6 +202,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 
   useEffect(() => {
     if (
+      !requestedDeletion &&
       userIsAuthenticated &&
       isInternalRoute &&
       acceptedTerms === false &&
@@ -200,7 +210,26 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
     ) {
       router.replace(routes.userSettings({ locale }));
     }
-  }, [userIsAuthenticated, acceptedTerms, locale, router, isInternalRoute, activeRoute]);
+  }, [
+    requestedDeletion,
+    userIsAuthenticated,
+    acceptedTerms,
+    locale,
+    router,
+    isInternalRoute,
+    activeRoute,
+  ]);
+
+  useEffect(() => {
+    if (
+      requestedDeletion &&
+      userIsAuthenticated &&
+      isInternalRoute &&
+      activeRoute !== Routes.userDeletion
+    ) {
+      router.replace(routes.userDeletion({ locale }));
+    }
+  }, [activeRoute, isInternalRoute, locale, requestedDeletion, router, userIsAuthenticated]);
 
   const login = useCallback(
     (cookie: Cookie, redirectRoute: string) => {
@@ -244,6 +273,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
         logout,
         mutate: mutateUserInfo,
         acceptedTerms: acceptedTerms !== false,
+        requestedDeletion,
+        userInactive: acceptedTerms === false || requestedDeletion,
       }}
     >
       {children}

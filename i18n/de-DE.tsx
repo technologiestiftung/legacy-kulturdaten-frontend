@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { InfoLi, InfoP, InfoUl } from '../components/info';
+import { FormText, FormTextP } from '../components/pages/helpers/formComponents';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
@@ -293,7 +294,8 @@ export const deDE: Localization = {
     },
   },
   dateCreate: {
-    overlayTitle: ({ offerTitle }) => `Termin für ‚${offerTitle}‘ erstellen`,
+    overlayTitle: ({ offerTitle }) =>
+      `Termin für ${offerTitle ? `‚${offerTitle}‘` : 'unbenanntes Angebot'} erstellen`,
     create: () => 'Termin erstellen',
     loading: () => ' Erstelle Termin',
   },
@@ -324,6 +326,49 @@ export const deDE: Localization = {
       text: () =>
         'Wir haben die Nutzungsbedingungen für kulturdaten.berlin aktualisiert. Um die Plattform weiterzunutzen, musst du diese bitte lesen und ihnen zustimmen.',
       button: () => 'zustimmen',
+    },
+    deletion: {
+      title: () => 'Nutzer:innenkonto löschen',
+      text: () => (
+        <FormText>
+          <FormTextP>
+            Du kannst jederzeit die Löschung deines Nutzer:innenkontos beantragen. Nach einer Dauer
+            von zwei Wochen werden alle deine Daten unwiederbringlich gelöscht. Innerhalb dieses
+            Zeitraums kannst du die Löschung abbrechen.
+          </FormTextP>
+        </FormText>
+      ),
+      button: () => 'Löschung beantragen',
+      confirm: () => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            Wenn du die Löschung deines Kontos beantragst, werden alle deine Daten nach zwei Wochen
+            unwiederbringlich gelöscht. Innerhalb dieses Zeitraums kannst du die Löschung abbrechen.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            Um die Löschung zu bestätigen, gib bitte die E-Mail-Adresse deines Kontos in dieses Feld
+            ein und drücke den {'‚'}Löschung beantragen{'‘'}-Button.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      confirmInputLabel: () => 'E-Mail zur Bestätigung',
+      confirmButton: () => 'Löschung beantragen',
+    },
+    requestedDeletion: {
+      title: () => 'Löschung des Nutzer:innekontos beantragt',
+      text: ({ date, email }) => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            Du hast die Löschung deines Nutzer:innenkontos (E-Mail: {email}) beantragt. Dein Konto
+            wird endgültig am <b>{date}</b> gelöscht.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            Vor diesem Datum kannst du die Löschung abbrechen, indem du auf den unten stehenden
+            Button drückst.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      button: () => 'Löschung abbrechen',
     },
     api: {
       titleCreate: () => 'API Token erstellen (für Entwickler:innen)',
@@ -963,7 +1008,7 @@ export const deDE: Localization = {
           label: () => 'Veranstaltungsort',
           choose: () => 'Ort auswählen',
           edit: () => 'Ort ändern',
-          title: ({ name }) => `Ort für ‚${name}‘ wählen`,
+          title: ({ name }) => `Ort für ${name ? `‚${name}‘` : 'unbenanntes Angebot'} wählen`,
         },
         topics: () => 'Themen-Kategorie (Pflichtfeld)',
         topicsTooltip: () => (
