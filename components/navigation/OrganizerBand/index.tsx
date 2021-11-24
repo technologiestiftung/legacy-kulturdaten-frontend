@@ -135,7 +135,9 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                     });
                 }}
               >
-                {translation?.attributes?.name || defaultTranslation?.attributes?.name}
+                {translation?.attributes?.name ||
+                  defaultTranslation?.attributes?.name ||
+                  (t('general.placeholderOrganizer') as string)}
               </OrganizerBandItem>
             );
           })}

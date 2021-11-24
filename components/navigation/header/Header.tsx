@@ -173,22 +173,26 @@ export const HeaderMain: React.FC<HeaderProps> = ({
     }
   });
 
-  return isMidOrWider ? (
-    <StyledHeader>
+  return (
+    <>
       <Head>
         <title>{title !== appTitle ? `${title} – ${appTitle}` : appTitle}</title>
       </Head>
-      <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
-      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
-      {user?.isLoggedIn && (
-        <StyledHeaderUserMenu>
-          <UserMenu user={user} />
-        </StyledHeaderUserMenu>
+      {isMidOrWider ? (
+        <StyledHeader>
+          <StyledHeaderTitle>{rendered && renderedLink}</StyledHeaderTitle>
+          <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+          {user?.isLoggedIn && (
+            <StyledHeaderUserMenu>
+              <UserMenu user={user} />
+            </StyledHeaderUserMenu>
+          )}
+          {!user?.isLoggedIn && <LocaleSwitch switchVariant={LocaleSwitchVariant.minimal} />}
+        </StyledHeader>
+      ) : (
+        <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
       )}
-      {!user?.isLoggedIn && <LocaleSwitch switchVariant={LocaleSwitchVariant.minimal} />}
-    </StyledHeader>
-  ) : (
-    <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+    </>
   );
 };
 
