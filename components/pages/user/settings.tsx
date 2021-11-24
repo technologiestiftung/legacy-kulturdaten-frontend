@@ -19,6 +19,7 @@ import {
 import { Checkbox } from '../../checkbox';
 import { SettingsHeader } from './SettingsHeader';
 import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
+import { useUser } from '../../user/useUser';
 
 const TermsComponent: React.FC = () => {
   const [accepted, setAccepted] = useState(false);
@@ -60,6 +61,7 @@ const TermsComponent: React.FC = () => {
 export const UserSettingsPage: React.FC = () => {
   const t = useT();
   const uid = usePseudoUID();
+  const { user } = useUser();
   const { acceptedTerms } = useContext(UserContext);
   const confirmScreen = useConfirmScreen();
 
@@ -141,6 +143,10 @@ export const UserSettingsPage: React.FC = () => {
                       message: 'Really?',
                       confirmText: 'Confirm',
                       onConfirm: async () => await console.log('click'),
+                      condition: {
+                        label: 'E-Mail',
+                        value: user?.attributes?.email,
+                      },
                     })
                   }
                 >

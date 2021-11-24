@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { ConfirmContext } from './ConfirmContext';
 import { Button } from '../button';
+import { Input, InputType } from '../input';
 
 const StyledConfirmScreen = styled.div<{ visible: boolean }>`
   position: fixed;
@@ -82,6 +83,10 @@ interface ConfirmScreenProps {
   onCancel: () => void;
   message: React.ReactNode | string;
   confirmText: string;
+  condition?: {
+    label: string;
+    value: string;
+  };
 }
 
 export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
@@ -91,7 +96,10 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
   onCancel,
   message,
   confirmText,
+  condition,
 }: ConfirmScreenProps) => {
+  const [conditionValue, setConditionValue] = useState('');
+
   return (
     <StyledConfirmScreen visible={visible}>
       <StyledConfirmScreenContent visible={visible} role="alert">
@@ -99,8 +107,23 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
           <StyledConfirmScreenTitle>{title}</StyledConfirmScreenTitle>
         </StyledConfirmScreenHead>
         <StyledConfirmScreenMessage>{message}</StyledConfirmScreenMessage>
+        {condition && (
+          <div>
+            <Input
+              type={InputType.text}
+              value={conditionValue}
+              label={condition.label}
+              onChange={(e) => setConditionValue(e.target.value)}
+            />
+          </div>
+        )}
         <div>
-          <Button onClick={onConfirm}>{confirmText}</Button>
+          <Button
+            onClick={onConfirm}
+            disabled={!(!condition || conditionValue === condition.value)}
+          >
+            {confirmText}
+          </Button>
           <Button onClick={onCancel}>cancel</Button>
         </div>
       </StyledConfirmScreenContent>
@@ -113,6 +136,10 @@ export const useConfirmScreen = (): ((props: {
   message: React.ReactNode | string;
   confirmText: string;
   onConfirm: () => Promise<void>;
+  condition?: {
+    label: string;
+    value: string;
+  };
 }) => void) => {
   const {
     confirmScreen: {
@@ -123,11 +150,12 @@ export const useConfirmScreen = (): ((props: {
       setOnConfirm,
       setConfirmText,
       setTitle,
+      setCondition,
     },
   } = useContext(ConfirmContext);
 
   const callback = useCallback(
-    async ({ title, message, confirmText, onConfirm }) => {
+    async ({ title, message, confirmText, onConfirm, condition }) => {
       if (!render) {
         setRender(true);
         setTitle(title);
@@ -135,9 +163,21 @@ export const useConfirmScreen = (): ((props: {
         setMessage(message);
         setOnConfirm(() => onConfirm);
         setConfirmText(confirmText);
+        if (condition) {
+          setCondition(condition);
+        }
       }
     },
-    [render, setMessage, setVisible, setOnConfirm, setConfirmText, setRender, setTitle]
+    [
+      render,
+      setRender,
+      setTitle,
+      setVisible,
+      setMessage,
+      setOnConfirm,
+      setConfirmText,
+      setCondition,
+    ]
   );
 
   return callback;

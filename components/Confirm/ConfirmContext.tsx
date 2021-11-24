@@ -10,6 +10,11 @@ type ConfirmContext = {
     setVisible: (visible: boolean) => void;
     confirmText: string;
     setConfirmText: (confirmText: string) => void;
+    condition: {
+      label: string;
+      value: string;
+    };
+    setCondition: (condition: { label: string; value: string }) => void;
     onConfirm: () => Promise<void>;
     setOnConfirm: (onConfirm: () => Promise<void>) => void;
     title: React.ReactNode | string;
@@ -29,6 +34,8 @@ export const ConfirmContext = React.createContext<ConfirmContext>({
     setConfirmText: () => undefined,
     onConfirm: () => undefined,
     setOnConfirm: () => undefined,
+    condition: undefined,
+    setCondition: () => undefined,
     title: undefined,
     setTitle: () => undefined,
     message: undefined,
@@ -50,6 +57,10 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
   const [title, setTitle] = useState<React.ReactNode | string>('');
   const [message, setMessage] = useState<React.ReactNode | string>('');
   const router = useRouter();
+  const [condition, setCondition] = useState<{
+    label: string;
+    value: string;
+  }>();
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -81,6 +92,8 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
           setTitle,
           message,
           setMessage,
+          condition,
+          setCondition,
         },
       }}
     >
@@ -106,6 +119,7 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
           }}
           title={title}
           confirmText={confirmText}
+          condition={condition}
         />
       )}
     </ConfirmContext.Provider>
