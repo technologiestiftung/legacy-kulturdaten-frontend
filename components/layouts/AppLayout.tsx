@@ -7,6 +7,7 @@ import { useActiveRoute } from '../../lib/routing';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../lib/WindowService';
 import { useAdminMode } from '../Admin/AdminContext';
+import { ConfirmContext } from '../Confirm/ConfirmContext';
 import { mq, overlayStyles } from '../globals/Constants';
 import { NavigationProps, useNavigationOverlayVisible } from '../navigation';
 import { NavigationContext } from '../navigation/NavigationContext';
@@ -250,9 +251,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const isMainMenuOverlayVisible = useNavigationOverlayVisible();
   const enableMenuExpanded = useMemo(() => typeof sidebar !== 'undefined', [sidebar]);
+  const {
+    confirmScreen: { visible: confirmVisible },
+  } = useContext(ConfirmContext);
   const bodyLockConditions = useMemo(
-    () => [menuExpanded && enableMenuExpanded, overlayOpen],
-    [enableMenuExpanded, menuExpanded, overlayOpen]
+    () => [menuExpanded && enableMenuExpanded, overlayOpen, confirmVisible],
+    [enableMenuExpanded, menuExpanded, overlayOpen, confirmVisible]
   );
   const { bodyLock, locked } = useBodyLock(bodyLockConditions);
   const { adminModeActive } = useAdminMode();

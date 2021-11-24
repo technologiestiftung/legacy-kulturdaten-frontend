@@ -18,6 +18,7 @@ import {
 } from '../../Dasboard/DashboardTile';
 import { Checkbox } from '../../checkbox';
 import { SettingsHeader } from './SettingsHeader';
+import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 
 const TermsComponent: React.FC = () => {
   const [accepted, setAccepted] = useState(false);
@@ -60,6 +61,7 @@ export const UserSettingsPage: React.FC = () => {
   const t = useT();
   const uid = usePseudoUID();
   const { acceptedTerms } = useContext(UserContext);
+  const confirmScreen = useConfirmScreen();
 
   return (
     <>
@@ -131,7 +133,19 @@ export const UserSettingsPage: React.FC = () => {
             <FormGrid>
               <FormItem width={FormItemWidth.full}>{t('settings.deletion.text')}</FormItem>
               <FormItem width={FormItemWidth.full}>
-                <Button size={ButtonSize.big}>{t('settings.deletion.button')}</Button>
+                <Button
+                  size={ButtonSize.big}
+                  onClick={() =>
+                    confirmScreen({
+                      title: 'test',
+                      message: 'Really?',
+                      confirmText: 'Confirm',
+                      onConfirm: async () => await console.log('click'),
+                    })
+                  }
+                >
+                  {t('settings.deletion.button')}
+                </Button>
               </FormItem>
             </FormGrid>
           </EntryFormContainer>
