@@ -1,4 +1,5 @@
-import React, { ReactNode, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { ConfirmScreen } from './ConfirmScreen';
 
 type ConfirmContext = {
@@ -48,6 +49,21 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
   const [onConfirm, setOnConfirm] = useState<() => Promise<void>>();
   const [title, setTitle] = useState<React.ReactNode | string>('');
   const [message, setMessage] = useState<React.ReactNode | string>('');
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setVisible(false);
+      setRender(false);
+      setOnConfirm(undefined);
+    };
+
+    router?.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      router?.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router?.events]);
 
   return (
     <ConfirmContext.Provider
