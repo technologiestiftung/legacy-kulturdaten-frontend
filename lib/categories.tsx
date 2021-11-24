@@ -81,6 +81,7 @@ export type Category = {
   };
   requirements?: Requirement[];
   publishText: string;
+  placeholderName: string;
 };
 
 export const useCategory = (): Category => {
@@ -400,15 +401,10 @@ export const useCreateEntry = (
   const entry = useMemo(
     () =>
       categoryName === Categories.organizer
-        ? {
-            relations: {
-              translations: [{ attributes: { language: Language.de, name: 'Neue Anbieter:in' } }],
-            },
-          }
+        ? {}
         : categoryName === Categories.offer
         ? {
             relations: {
-              translations: [{ attributes: { language: Language.de, name: 'Neues Angebot' } }],
               organizers: [organizerId],
             },
           }
@@ -417,7 +413,6 @@ export const useCreateEntry = (
               type: LocationType.physical,
             },
             relations: {
-              translations: [{ attributes: { language: Language.de, name: 'Neuer Ort' } }],
               organizer: organizerId,
             },
           },

@@ -31,6 +31,7 @@ export const useEntryHeader = (
   const language = useLanguage();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const userIsOwner = useUserIsOwner();
+  const t = useT();
 
   const { entry } = useEntry<CategoryEntry, ApiCall>(category, query);
 
@@ -38,13 +39,18 @@ export const useEntryHeader = (
     ? getTranslation<Translation>(language, entry?.data?.relations?.translations)
     : undefined;
 
-  const mainTitle = title || currentTranslation?.attributes.name;
-  const subTitle = title ? currentTranslation?.attributes.name : undefined;
+  const mainTitle =
+    title ||
+    (entry?.data?.id
+      ? currentTranslation?.attributes.name || category?.placeholderName
+      : undefined);
+  const subTitle = title
+    ? currentTranslation?.attributes.name || category?.placeholderName
+    : undefined;
 
   const locale = useLocale();
   const { quit } = useAdminMode();
 
-  const t = useT();
   const organizerId = useOrganizerId();
   const loadingScreen = useLoadingScreen();
 

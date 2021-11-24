@@ -191,7 +191,7 @@ export const OfferList: React.FC<OfferListProps> = ({
                   href={href('info')}
                   menuExpanded={expanded}
                   key={index}
-                  title={currentTranslation?.attributes?.name}
+                  title={currentTranslation?.attributes?.name || categories?.offer?.placeholderName}
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href())}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
@@ -211,6 +211,7 @@ export const OfferList: React.FC<OfferListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       organizerId,
+      categories?.offer?.placeholderName,
     ]
   );
 
@@ -263,7 +264,7 @@ export const OfferList: React.FC<OfferListProps> = ({
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name}
+                    {currentTranslation?.attributes?.name || categories?.offer?.placeholderName}
                   </StyledTableLinkText>,
                   mainTypeNames?.join(', '),
                   typeNames?.join(', '),
@@ -290,6 +291,7 @@ export const OfferList: React.FC<OfferListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       organizerId,
+      categories?.offer?.placeholderName,
     ]
   );
 

@@ -81,6 +81,7 @@ export const useCategories: () => {
 
   return {
     organizer: {
+      placeholderName: t('general.placeholderOrganizer') as string,
       name: Categories.organizer,
       title: {
         singular: t('categories.organizer.title.singular') as string,
@@ -235,6 +236,7 @@ export const useCategories: () => {
       ],
     },
     offer: {
+      placeholderName: t('general.placeholderOffer') as string,
       name: Categories.offer,
       title: {
         singular: t('categories.offer.title.singular') as string,
@@ -380,6 +382,7 @@ export const useCategories: () => {
       ],
     },
     location: {
+      placeholderName: t('general.placeholderLocation') as string,
       name: Categories.location,
       title: {
         singular: t('categories.location.title.singular') as string,
