@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
+import { useKeyboard } from '../../lib/useKeyboard';
 import { ConfirmScreen } from './ConfirmScreen';
 
 type ConfirmContext = {
@@ -61,6 +62,14 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
     label: string;
     value: string;
   }>();
+
+  useKeyboard(() => {
+    if (render && visible) {
+      setVisible(false);
+      setRender(false);
+      setOnConfirm(undefined);
+    }
+  }, ['Escape']);
 
   useEffect(() => {
     const handleRouteChange = () => {
