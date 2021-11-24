@@ -145,9 +145,11 @@ const StyledTooltipOverlay = styled.div<{
     ${({ xPosition }) =>
       xPosition === XPosition.right
         ? css`
+            right: unset;
             left: 0;
           `
         : css`
+            left: unset;
             right: 0;
           `}
   }

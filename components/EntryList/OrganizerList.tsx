@@ -187,7 +187,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name}
+                    {currentTranslation?.attributes?.name || categories?.organizer?.placeholderName}
                   </StyledTableLinkText>,
                   typeNames.join(', '),
                   <StatusFlag status={attributes?.status} key={1} />,
@@ -214,6 +214,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       customEntryOnClick,
+      categories?.organizer?.placeholderName,
     ]
   );
 
@@ -253,7 +254,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
                   href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
                   menuExpanded={expanded}
                   key={index}
-                  title={currentTranslation?.attributes?.name}
+                  title={
+                    currentTranslation?.attributes?.name || categories?.organizer?.placeholderName
+                  }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href()) || activeEntryId === id}
                   meta={<EntryCardTypesSubjects types={typeNames} />}
@@ -274,6 +277,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       customEntryOnClick,
+      categories?.organizer?.placeholderName,
     ]
   );
 

@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useContext, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
+import { useT } from '../../lib/i18n';
 import { useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
@@ -56,7 +57,7 @@ export const useNavigation = (
   const locale = useLocale();
   const router = useRouter();
   const language = useLanguage();
-
+  const t = useT();
   const activeLayout = useMemo(() => appLayouts[layout], [layout]);
 
   const activeHeader = useMemo(
@@ -107,7 +108,8 @@ export const useNavigation = (
 
   const headerTitle =
     appLayouts[layout].hasOrganizerBand && organizer
-      ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name
+      ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name ||
+        (t('general.placeholderOrganizer') as string)
       : title;
 
   const renderedHeaderMain = (

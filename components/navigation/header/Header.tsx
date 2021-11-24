@@ -179,29 +179,33 @@ export const HeaderMain: React.FC<HeaderProps> = ({
     }
   });
 
-  return isMidOrWider ? (
-    <StyledHeader>
+  return (
+    <>
       <Head>
         <title>{title !== appTitle ? `${title} – ${appTitle}` : appTitle}</title>
       </Head>
-      <StyledHeaderTitle>
-        {rendered &&
-          (acceptedTerms ? (
-            renderedLink
-          ) : (
-            <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
-          ))}
-      </StyledHeaderTitle>
-      <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
-      {user?.isLoggedIn && (
-        <StyledHeaderUserMenu>
-          <UserMenu user={user} />
-        </StyledHeaderUserMenu>
+      {isMidOrWider ? (
+        <StyledHeader>
+          <StyledHeaderTitle>
+            {rendered &&
+              (acceptedTerms ? (
+                renderedLink
+              ) : (
+                <StyledHeaderTitleText>{appTitle}</StyledHeaderTitleText>
+              ))}
+          </StyledHeaderTitle>
+          <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+          {user?.isLoggedIn && (
+            <StyledHeaderUserMenu>
+              <UserMenu user={user} />
+            </StyledHeaderUserMenu>
+          )}
+          {!user?.isLoggedIn && <LocaleSwitch switchVariant={LocaleSwitchVariant.minimal} />}
+        </StyledHeader>
+      ) : (
+        <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
       )}
-      {!user?.isLoggedIn && <LocaleSwitch switchVariant={LocaleSwitchVariant.minimal} />}
-    </StyledHeader>
-  ) : (
-    <StyledHeaderMenuItems>{rendered && renderedMenuSection}</StyledHeaderMenuItems>
+    </>
   );
 };
 
