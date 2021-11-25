@@ -15,18 +15,20 @@ import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../helpers/formComponents';
-import { Select, SelectSize } from '../../select';
 import { usePseudoUID } from '../../../lib/uid';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
 import { usePublish } from '../../Publish';
+import { Tags } from '../../tags';
+import { Tag } from '../../../lib/api/types/tag';
+import { Language } from '../../../config/locale';
 
 const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
-  const [types, setTypes] = useState<string[]>([]);
-  const [typesFromApi, setTypesFromApi] = useState<string[]>([]);
+  const [types, setTypes] = useState<Tag['id'][]>();
+  const [typesFromApi, setTypesFromApi] = useState<Tag['id'][]>();
   const uid = usePseudoUID();
   const language = useLanguage();
 
@@ -39,7 +41,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
   );
 
   const initialTypes = useMemo(
-    () => entry?.data?.relations?.mainType?.map((type) => String(type.id)),
+    () => entry?.data?.relations?.mainType?.map((type) => type.id),
     [entry?.data?.relations?.mainType]
   );
 
@@ -51,17 +53,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
   const fulfilled = useMemo(() => types?.length > 0 && types[0] !== 'undefined', [types]);
 
   useEffect(() => {
-    if (pristine) {
-      setTypes(initialTypes);
-    }
-  }, [pristine, initialTypes]);
-
-  useEffect(() => {
     if (initialTypes) {
-      if (!types || types.length === 0) {
-        setTypes(initialTypes);
-      }
-
       if (!typesFromApi || initialTypes !== typesFromApi) {
         setTypesFromApi(initialTypes);
       }
@@ -78,33 +70,37 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             {typeOptions?.length > 0 && (
-              <Select
-                value={
-                  types?.length > 0 ? types[0] : initialTypes?.length > 0 ? initialTypes[0] : ''
-                }
+              <Tags
                 id={`${uid}-select`}
-                onChange={(e) => setTypes([e.target.value])}
-                size={SelectSize.big}
-                required={required}
-                valid={valid}
-              >
-                <option key={'-1'} value="undefined">
-                  {t('categories.offer.form.mainType.choose')}
-                </option>
-                {typeOptions.map((typeOption, typeOptionIndex) => {
-                  const currentTranslation = getTranslation(
-                    language,
-                    typeOption.relations.translations,
-                    true
-                  );
-
-                  return (
-                    <option key={typeOptionIndex} value={String(typeOption.id)}>
-                      {currentTranslation.attributes.name}
-                    </option>
-                  );
-                })}
-              </Select>
+                value={types?.length > 0 ? types : initialTypes?.length > 0 ? initialTypes : []}
+                onChange={setTypes}
+                i18nKeys={{
+                  addButton: 'mainTypeTags.addButton',
+                  addLabel: 'mainTypeTags.addLabel',
+                  addPlaceholder: 'mainTypeTags.addPlaceholder',
+                  listDelete: 'mainTypeTags.listDelete',
+                  listLabel: 'mainTypeTags.listLabel',
+                  listPlaceholder: 'mainTypeTags.listPlaceholder',
+                  noMatch: 'mainTypeTags.noMatch',
+                }}
+                options={typeOptions?.map<Tag>((typeOption) => ({
+                  id: typeOption.id,
+                  type: 'tag',
+                  relations: {
+                    translations: [
+                      {
+                        id: typeOption.id,
+                        type: 'TagTranslation',
+                        attributes: {
+                          language: Language.de,
+                          name: getTranslation(language, typeOption.relations.translations, true)
+                            .attributes.name,
+                        },
+                      },
+                    ],
+                  },
+                }))}
+              />
             )}
           </FormItem>
         </FormGrid>
