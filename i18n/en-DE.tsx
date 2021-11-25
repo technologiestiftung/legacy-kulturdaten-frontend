@@ -528,6 +528,7 @@ export const enDE: Localization = {
     altTooltip: () =>
       'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
     license: () => 'License',
+    deleteTitle: () => 'Delete image',
     licenses: {
       '1': {
         name: () => 'with attribution (CC BY)',
@@ -709,6 +710,7 @@ export const enDE: Localization = {
       },
     },
     cancel: () => 'cancel',
+    confirmDelete: () => 'Löschen bestätigen',
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',
@@ -924,7 +926,6 @@ export const enDE: Localization = {
           </>
         ),
         deleting: () => 'Deleting organizer',
-        deleteButton: () => 'Confirm deletion',
       },
     },
     offer: {
@@ -1041,7 +1042,6 @@ export const enDE: Localization = {
         exportXls: () => 'Export as Excel',
         delete: () => 'Delete offer',
         deleting: () => 'Deleting offer',
-        deleteButton: () => 'Confirm deletion',
         deleteConfirm: ({ name }) => (
           <>
             <p>Are you sure you want to delete the offer “{name}”? This cannot be undone.</p>
@@ -1131,7 +1131,6 @@ export const enDE: Localization = {
           </>
         ),
         deleting: () => 'Deleting location',
-        deleteButton: () => 'Confirm deletion',
       },
     },
   },

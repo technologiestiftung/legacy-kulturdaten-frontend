@@ -24,6 +24,7 @@ import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/d
 import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
+import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 
 const maxLogoSize = 10240;
 
@@ -119,6 +120,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
   const call = useApiCall();
   const t = useT();
   const loadingScreen = useLoadingScreen();
+  const confirmScreen = useConfirmScreen();
   const { mutateUserInfo } = useUser();
 
   const initialLogo = useMemo<Media['data']>(
@@ -189,44 +191,45 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
               }}
               setValid={(valid) => setValid(valid)}
               onDelete={async (mediaItemId) => {
-                if (
-                  confirm(
-                    t('general.deleting.confirm', {
-                      name: t('general.deleting.logo.singular') as string,
-                    }) as string
-                  )
-                ) {
-                  loadingScreen(
-                    t('general.deleting.loading'),
-                    async () => {
-                      try {
-                        const resp = await call<MediaDelete>(mediaDeleteFactory, {
-                          id: mediaItemId,
-                          entry: {
-                            attributes: {
-                              id: mediaItemId,
+                confirmScreen({
+                  title: t('media.deleteTitle') as string,
+                  message: t('general.deleting.confirm', {
+                    name: t('general.deleting.logo.singular') as string,
+                  }),
+                  confirmText: t('general.confirmDelete') as string,
+                  onConfirm: async () => {
+                    loadingScreen(
+                      t('general.deleting.loading'),
+                      async () => {
+                        try {
+                          const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                            id: mediaItemId,
+                            entry: {
+                              attributes: {
+                                id: mediaItemId,
+                              },
                             },
-                          },
-                        });
+                          });
 
-                        if (resp.status === 200) {
-                          setTimeout(() => {
-                            mutate();
-                            mutateUserInfo();
-                          }, 1000);
-                          return { success: true };
+                          if (resp.status === 200) {
+                            setTimeout(() => {
+                              mutate();
+                              mutateUserInfo();
+                            }, 1000);
+                            return { success: true };
+                          }
+
+                          return { success: false, error: t('general.serverProblem') };
+                        } catch (e) {
+                          console.error(e);
+
+                          return { success: false, error: t('general.serverProblem') };
                         }
-
-                        return { success: false, error: t('general.serverProblem') };
-                      } catch (e) {
-                        console.error(e);
-
-                        return { success: false, error: t('general.serverProblem') };
-                      }
-                    },
-                    t('general.takeAFewSeconds')
-                  );
-                }
+                      },
+                      t('general.takeAFewSeconds')
+                    );
+                  },
+                });
               }}
             />
           </FormItem>
