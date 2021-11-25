@@ -131,7 +131,7 @@ export const UserSettingsPage: React.FC = () => {
             </FormGrid>
           </EntryFormContainer>
           <EntryFormContainer>
-            <EntryFormHead title={t('settings.legal.title') as string} />
+            <EntryFormHead title={t('settings.deletion.title') as string} />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>{t('settings.deletion.text')}</FormItem>
               <FormItem width={FormItemWidth.full}>
