@@ -28,6 +28,7 @@ import { Tags } from '../../tags';
 import { Tag } from '../../../lib/api/types/tag';
 import { Language } from '../../../config/locale';
 import { useOrganizerId } from '../../../lib/useOrganizer';
+import { PublishedStatus } from '../../../lib/api/types/general';
 
 const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -165,6 +166,21 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
 
+  const isPublished = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
+
+  const mainTypeRequired = useMemo(
+    () => isPublished || entry?.data?.relations?.mainType?.length >= 1,
+    [isPublished, entry?.data?.relations?.mainType?.length]
+  );
+
+  const typeSubjectRequired = useMemo(
+    () => isPublished || entry?.data?.relations?.types?.length >= 1,
+    [isPublished, entry?.data?.relations?.types?.length]
+  );
+
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
       setTimeout(() => setLoaded(true), 150);
@@ -187,7 +203,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.offer.form.topics') as string,
-    required: true,
+    required: typeSubjectRequired,
     id: 'offer-types',
   });
 
@@ -204,7 +220,13 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
     valid: mainTypeValid,
     requirementFulfillment: requirementFulfillmentMainType,
     reset: resetMainType,
-  } = useOfferMainTypeForm({ category, query, loaded, required: true, id: 'offer-main-type' });
+  } = useOfferMainTypeForm({
+    category,
+    query,
+    loaded,
+    required: mainTypeRequired,
+    id: 'offer-main-type',
+  });
 
   const pristine = useMemo(
     () => pristineTags && pristineTypeSubject && mainTypePristine,
