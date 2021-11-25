@@ -146,16 +146,35 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
       const id = mediaItem.id;
 
       if (mediaNotPristineList.includes(id)) {
+        const existingRelations = { ...mediaItem.relations };
+        delete existingRelations.renditions;
+
+        const newRelations = {
+          ...existingRelations,
+          license: (mediaItem.relations?.license as MediaLicense)?.id,
+          translations: mediaItem.relations?.translations,
+        };
+
+        if (!newRelations.license) {
+          delete newRelations.license;
+        }
+
+        if (!newRelations.translations || newRelations.translations.length < 1) {
+          delete newRelations.translations;
+        }
+
+        const media = {
+          ...mediaItem,
+          relations: newRelations,
+        };
+
+        if (Object.keys(newRelations).length < 1) {
+          delete media.relations;
+        }
+
         const resp = await call<MediaUpdate>(mediaUpdateFactory, {
           id,
-          media: {
-            ...mediaItem,
-            relations: {
-              ...mediaItem.relations,
-              license: (mediaItem.relations.license as MediaLicense).id,
-              translations: mediaItem.relations?.translations,
-            },
-          },
+          media,
         });
 
         if (resp.status !== 200) {

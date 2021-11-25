@@ -12,6 +12,7 @@ import { useSaveDate } from '../helpers/useSaveDate';
 import { useEntryTypeSubjectForm } from '../helpers/form/TypeSubject';
 import { useEntryTags } from '../helpers/form/Tags';
 import { usePublish } from '../../Publish';
+import { PublishedStatus } from '../../../lib/api/types/general';
 
 export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   category,
@@ -27,6 +28,16 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
   );
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
+
+  const isPublished = useMemo(
+    () => entry?.data?.attributes?.status === PublishedStatus.published,
+    [entry?.data?.attributes?.status]
+  );
+
+  const typeSubjectRequired = useMemo(
+    () => isPublished || entry?.data?.relations?.types?.length >= 1,
+    [entry?.data?.relations?.types?.length, isPublished]
+  );
 
   useEffect(() => {
     if (rendered && typeof entry !== 'undefined') {
@@ -45,7 +56,13 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
     reset: resetTypeSubject,
     valid: validTypeSubject,
     requirementFulfillment: requiredFulfillmentTypeSubject,
-  } = useEntryTypeSubjectForm({ category, query, loaded, required: true, id: 'organizer-types' });
+  } = useEntryTypeSubjectForm({
+    category,
+    query,
+    loaded,
+    required: typeSubjectRequired,
+    id: 'organizer-types',
+  });
 
   const {
     renderedForm: formTags,

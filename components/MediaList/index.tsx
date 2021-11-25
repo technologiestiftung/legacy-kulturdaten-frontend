@@ -569,14 +569,7 @@ export const MediaList: React.FC<MediaListProps> = ({
   const itemsValidList = useMemo(
     () =>
       media?.map((mediaItem) => {
-        const requiredAttributes = [
-          mediaItem.relations.translations?.find(
-            (translation) => translation.attributes?.language === defaultLanguage
-          )?.attributes?.alternativeText,
-          mediaItem.attributes.copyright,
-          (mediaItem.relations?.license as MediaLicense)?.id,
-          mediaItem.attributes.acceptedTermsAt,
-        ];
+        const requiredAttributes = [mediaItem.attributes.acceptedTermsAt];
 
         for (let i = 0; i < requiredAttributes.length; i += 1) {
           const attribute = requiredAttributes[i];
