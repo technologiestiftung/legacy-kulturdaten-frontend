@@ -1,5 +1,10 @@
 import React, { useContext, useEffect, useMemo, useState, useCallback } from 'react';
-import { CategoryEntryPage, useEntry, useOfferMainTypeList } from '../../../lib/categories';
+import {
+  CategoryEntryPage,
+  useEntry,
+  useMutateList,
+  useOfferMainTypeList,
+} from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { WindowContext } from '../../../lib/WindowService';
@@ -22,6 +27,7 @@ import { usePublish } from '../../Publish';
 import { Tags } from '../../tags';
 import { Tag } from '../../../lib/api/types/tag';
 import { Language } from '../../../config/locale';
+import { useOrganizerId } from '../../../lib/useOrganizer';
 
 const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -31,6 +37,12 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
   const [typesFromApi, setTypesFromApi] = useState<Tag['id'][]>();
   const uid = usePseudoUID();
   const language = useLanguage();
+  const organizerId = useOrganizerId();
+  const mutateList = useMutateList(
+    category,
+
+    [['organizers', organizerId]]
+  );
 
   const typeOptions = useOfferMainTypeList();
 
@@ -123,6 +135,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
 
           if (resp.status === 200) {
             mutate();
+            mutateList();
           }
         } catch (e) {
           console.error(e);
