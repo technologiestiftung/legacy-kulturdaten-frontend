@@ -710,7 +710,7 @@ export const enDE: Localization = {
       },
     },
     cancel: () => 'cancel',
-    confirmDelete: () => 'Löschen bestätigen',
+    confirmDelete: () => 'Confirm deletion',
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',
