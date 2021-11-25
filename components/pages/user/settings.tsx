@@ -139,13 +139,14 @@ export const UserSettingsPage: React.FC = () => {
                   size={ButtonSize.big}
                   onClick={() =>
                     confirmScreen({
-                      title: 'test',
-                      message: 'Really?',
-                      confirmText: 'Confirm',
+                      title: t('settings.deletion.title') as string,
+                      message: t('settings.deletion.confirm', { email: user?.attributes?.email }),
+                      confirmText: t('settings.deletion.confirmButton') as string,
                       onConfirm: async () => await console.log('click'),
                       condition: {
-                        label: 'E-Mail',
+                        label: t('settings.deletion.confirmInputLabel') as string,
                         value: user?.attributes?.email,
+                        error: t('settings.deletion.confirmError') as string,
                       },
                     })
                   }

@@ -327,7 +327,7 @@ export const enDE: Localization = {
       button: () => 'agree',
     },
     deletion: {
-      title: () => 'Nutzer:innenkonto löschen',
+      title: () => 'Delete user account',
       text: () => (
         <FormText>
           <FormTextP>
@@ -336,21 +336,22 @@ export const enDE: Localization = {
           </FormTextP>
         </FormText>
       ),
-      button: () => 'Löschung beantragen',
-      confirm: () => (
+      button: () => 'Request deletion',
+      confirm: ({ email }) => (
         <DashboardTileText>
           <DashboardTileTextP>
             If you request the deletion of your account, all your data will be irretrievably deleted
             after two weeks. You can cancel the deletion within this period.
           </DashboardTileTextP>
           <DashboardTileTextP>
-            To confirm the deletion, please enter the email address of your account in this field
-            and press the {'“'}Request deletion{'”'} button.
+            To confirm the deletion, please enter the email address of your account ({email}) in
+            this field and press the {'“'}Request deletion{'”'} button.
           </DashboardTileTextP>
         </DashboardTileText>
       ),
-      confirmInputLabel: () => 'E-Mail zur Bestätigung',
-      confirmButton: () => 'Löschung beantragen',
+      confirmInputLabel: () => 'Email for verification',
+      confirmButton: () => 'Request deletion',
+      confirmError: () => 'The entered email address is not correct',
     },
     requestedDeletion: {
       title: () => 'User account deletion requested',
@@ -707,6 +708,7 @@ export const enDE: Localization = {
         plural: () => 'these dates',
       },
     },
+    cancel: () => 'cancel',
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',

@@ -339,20 +339,21 @@ export const deDE: Localization = {
         </FormText>
       ),
       button: () => 'Löschung beantragen',
-      confirm: () => (
-        <DashboardTileText>
-          <DashboardTileTextP>
+      confirm: ({ email }) => (
+        <>
+          <p>
             Wenn du die Löschung deines Kontos beantragst, werden alle deine Daten nach zwei Wochen
             unwiederbringlich gelöscht. Innerhalb dieses Zeitraums kannst du die Löschung abbrechen.
-          </DashboardTileTextP>
-          <DashboardTileTextP>
-            Um die Löschung zu bestätigen, gib bitte die E-Mail-Adresse deines Kontos in dieses Feld
-            ein und drücke den {'‚'}Löschung beantragen{'‘'}-Button.
-          </DashboardTileTextP>
-        </DashboardTileText>
+          </p>
+          <p>
+            Um die Löschung zu bestätigen, gib bitte die E-Mail-Adresse deines Kontos ({email}) in
+            dieses Feld ein und drücke den {'‚'}Löschung beantragen{'‘'}-Button.
+          </p>
+        </>
       ),
       confirmInputLabel: () => 'E-Mail zur Bestätigung',
       confirmButton: () => 'Löschung beantragen',
+      confirmError: () => 'Die eingegebene E-Mail-Adresse ist nicht korrekt',
     },
     requestedDeletion: {
       title: () => 'Löschung des Nutzer:innekontos beantragt',
@@ -713,6 +714,7 @@ export const deDE: Localization = {
         plural: () => 'diese Termine',
       },
     },
+    cancel: () => 'abbrechen',
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
     created: () => 'erstellt',

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useKeyboard } from '../../lib/useKeyboard';
-import { ConfirmScreen } from './ConfirmScreen';
+import { ConfirmCondition, ConfirmScreen } from './ConfirmScreen';
 
 type ConfirmContext = {
   confirmScreen: {
@@ -11,11 +11,8 @@ type ConfirmContext = {
     setVisible: (visible: boolean) => void;
     confirmText: string;
     setConfirmText: (confirmText: string) => void;
-    condition: {
-      label: string;
-      value: string;
-    };
-    setCondition: (condition: { label: string; value: string }) => void;
+    condition: ConfirmCondition;
+    setCondition: (condition: ConfirmCondition) => void;
     onConfirm: () => Promise<void>;
     setOnConfirm: (onConfirm: () => Promise<void>) => void;
     title: React.ReactNode | string;
@@ -58,10 +55,7 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
   const [title, setTitle] = useState<React.ReactNode | string>('');
   const [message, setMessage] = useState<React.ReactNode | string>('');
   const router = useRouter();
-  const [condition, setCondition] = useState<{
-    label: string;
-    value: string;
-  }>();
+  const [condition, setCondition] = useState<ConfirmCondition>();
 
   useKeyboard(() => {
     if (render && visible) {
