@@ -202,6 +202,15 @@ export const enDE: Localization = {
     listPlaceholder: () => 'No language has been added yet',
     noMatch: () => 'No languages found',
   },
+  mainTypeTags: {
+    addButton: () => 'Add event type',
+    addLabel: () => 'Add new event type',
+    addPlaceholder: () => 'Just type away, e.g. exhibition, concert, tour...',
+    listDelete: () => 'Remove event type',
+    listLabel: () => 'Already added event types',
+    listPlaceholder: () => 'No event type has been added yet',
+    noMatch: () => 'No event types found',
+  },
   team: {
     list: {
       title: () => 'Team members',

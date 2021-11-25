@@ -203,6 +203,15 @@ export const deDE: Localization = {
     listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
     noMatch: () => 'Keine passende Sprache gefunden',
   },
+  mainTypeTags: {
+    addButton: () => 'Angebotsart hinzufügen',
+    addLabel: () => 'Neue Angebotsart hinzufügen',
+    addPlaceholder: () => 'Tippe einfach drauf los, z.B. Ausstellung, Konzert, Führung...',
+    listDelete: () => 'Angebotsart entfernen',
+    listLabel: () => 'Bereits hinzugefügte Angebotsarten',
+    listPlaceholder: () => 'Noch keine Angebotsarten hinzugefügt',
+    noMatch: () => 'Keine passende Angebotsart gefunden',
+  },
   team: {
     list: {
       title: () => 'Teammitglieder',
