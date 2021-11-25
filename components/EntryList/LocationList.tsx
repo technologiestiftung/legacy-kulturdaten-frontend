@@ -196,7 +196,9 @@ export const LocationList: React.FC<LocationListProps> = ({
                   href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
                   menuExpanded={expanded}
                   key={index}
-                  title={currentTranslation?.attributes?.name}
+                  title={
+                    currentTranslation?.attributes?.name || categories?.location?.placeholderName
+                  }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href()) || activeEntryId === id}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
@@ -231,6 +233,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       organizerId,
       setMenuExpanded,
       setLastEntryId,
+      categories?.location?.placeholderName,
     ]
   );
 
@@ -273,7 +276,7 @@ export const LocationList: React.FC<LocationListProps> = ({
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name}
+                    {currentTranslation?.attributes?.name || categories?.location?.placeholderName}
                   </StyledTableLinkText>,
                   `${
                     address
@@ -312,6 +315,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       organizerId,
+      categories?.location?.placeholderName,
     ]
   );
 

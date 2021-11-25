@@ -23,7 +23,7 @@ export const deDE: Localization = {
   dashboard: {
     info: {
       hint: {
-        title: ({ name }) => `„${name}“ veröffentlichen`,
+        title: ({ name }) => `${name ? `„${name}“` : 'Profil'} veröffentlichen`,
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
@@ -710,6 +710,9 @@ export const deDE: Localization = {
     telPlaceholder: () => 'z.B. +49301234567',
     sorting: ({ order, attribute }) =>
       `${order === Order.ASC ? 'Aufsteigend' : 'Absteigend'} nach ${attribute} sortieren`,
+    placeholderOffer: () => 'Unbenanntes Angebot',
+    placeholderLocation: () => 'Unbenannter Ort',
+    placeholderOrganizer: () => 'Unbenanntes Profil',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',

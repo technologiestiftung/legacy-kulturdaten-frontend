@@ -301,7 +301,9 @@ const DashboardPage: NextPage = () => {
                   gridColumn="span 12"
                   title={
                     t('dashboard.info.hint.title', {
-                      name: currentTranslation?.attributes?.name || '',
+                      name: organizer?.data?.id
+                        ? currentTranslation?.attributes?.name || undefined
+                        : '',
                     }) as string
                   }
                   variant={DashboardTileVariant.hint}
