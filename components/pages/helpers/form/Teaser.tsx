@@ -194,7 +194,7 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
   } = useTeaser({
     category,
     query,
-    language: Language.de,
+    language: 'de-easy' as Language,
     label: t('forms.labelGermanEasy') as string,
     ariaLabel: title
       ? `${title} ${t('forms.labelGermanEasy')}`
