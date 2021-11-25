@@ -922,9 +922,22 @@ export const deDE: Localization = {
         exportCsv: () => 'Export als CSV',
         exportXls: () => 'Export als Excel',
         delete: () => 'Anbieter:in löschen',
-        deleteConfirm: () =>
-          'Bist du sicher, dass du diese Anbieter:in löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>
+              Bist du sicher, dass du die Anbieter:in ‚{name}‘ löschen möchtest? Dies kann nicht
+              rückgängig gemacht werden.
+            </p>
+            <p>
+              Um die Löschung zu bestätigen, gib bitte den Namen der Anbieter:in in dieses Feld ein
+              und drücke den {'‚'}Löschung bestätigen{'‘'}-Button.
+            </p>
+          </>
+        ),
         deleting: () => 'Lösche Anbieter:in',
+        deleteButton: () => 'Löschung bestätigen',
+        deleteConditionLabel: () => 'Name der Anbieter:in zur Bestätigung',
+        deleteConditionError: () => 'Der eingebene Name ist nicht korrekt',
       },
     },
     offer: {
@@ -1042,6 +1055,7 @@ export const deDE: Localization = {
         deleteConfirm: () =>
           'Bist du sicher, dass du dieses Angebot löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
         deleting: () => 'Lösche Angebot',
+        deleteButton: () => 'Löschung bestätigen',
       },
     },
     location: {
@@ -1122,6 +1136,7 @@ export const deDE: Localization = {
         deleteConfirm: () =>
           'Bist du sicher, dass du diesen Ort löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
         deleting: () => 'Lösche Ort',
+        deleteButton: () => 'Löschung bestätigen',
       },
     },
   },

@@ -133,6 +133,8 @@ const StyledConfirmScreenAction = styled.button<{ disabled?: boolean }>`
   background: var(--grey-200);
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
+  font-weight: 700;
+  text-align: center;
   padding: 0.75rem;
   margin: 0;
   cursor: pointer;
@@ -188,8 +190,8 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
   const [inputPristine, setInputPristine] = useState(true);
 
   const conditionValid = useMemo(
-    () => conditionValue === condition.value,
-    [condition.value, conditionValue]
+    () => conditionValue === condition?.value,
+    [condition?.value, conditionValue]
   );
 
   return (
@@ -256,9 +258,7 @@ export const useConfirmScreen = (): ((props: {
         setMessage(message);
         setOnConfirm(() => onConfirm);
         setConfirmText(confirmText);
-        if (condition) {
-          setCondition(condition);
-        }
+        setCondition(condition);
       }
     },
     [

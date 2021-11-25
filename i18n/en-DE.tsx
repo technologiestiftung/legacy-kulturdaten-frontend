@@ -914,9 +914,17 @@ export const enDE: Localization = {
         exportCsv: () => 'Export as CSV',
         exportXls: () => 'Export as Excel',
         delete: () => 'Delete organizer',
-        deleteConfirm: () =>
-          'Are you sure you want to delete this organizer? This cannot be undone.',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>Are you sure you want to delete the offer “{name}”? This cannot be undone.</p>
+            <p>
+              To confirm the deletion, please enter the name of the organizer in this field and
+              press the {'“'}Confirm deletion{'”'} button.
+            </p>
+          </>
+        ),
         deleting: () => 'Deleting organizer',
+        deleteButton: () => 'Confirm deletion',
       },
     },
     offer: {
@@ -1032,8 +1040,14 @@ export const enDE: Localization = {
         exportCsv: () => 'Export as CSV',
         exportXls: () => 'Export as Excel',
         delete: () => 'Delete offer',
-        deleteConfirm: () => 'Are you sure you want to delete this offer? This cannot be undone.',
         deleting: () => 'Deleting offer',
+        deleteButton: () => 'Confirm deletion',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>Are you sure you want to delete the offer “{name}”? This cannot be undone.</p>
+          </>
+        ),
+        deleteConditionLabel: () => 'Name der Anbieter:in zur Bestätigung',
       },
     },
     location: {
@@ -1111,9 +1125,13 @@ export const enDE: Localization = {
         exportCsv: () => 'Export as CSV',
         exportXls: () => 'Export as Excel',
         delete: () => 'Delete location',
-        deleteConfirm: () =>
-          'Are you sure you want to delete this location? This cannot be undone.',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>Are you sure you want to delete the location “{name}”? This cannot be undone.</p>
+          </>
+        ),
         deleting: () => 'Deleting location',
+        deleteButton: () => 'Confirm deletion',
       },
     },
   },
