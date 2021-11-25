@@ -45,10 +45,13 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
     [entry?.data?.relations?.mainType]
   );
 
-  const pristine = useMemo(
-    () => JSON.stringify(initialTypes) === JSON.stringify(types),
-    [initialTypes, types]
-  );
+  const pristine = useMemo(() => {
+    if (!Array.isArray(initialTypes) || !Array.isArray(types)) {
+      return true;
+    }
+
+    return JSON.stringify([...initialTypes].sort()) === JSON.stringify([...types].sort());
+  }, [initialTypes, types]);
 
   const fulfilled = useMemo(() => types?.length > 0 && types[0] !== 'undefined', [types]);
 
@@ -113,7 +116,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
             id: entry.data.id,
             entry: {
               relations: {
-                mainType: types.map((type) => parseInt(type, 10)),
+                mainType: types,
               },
             },
           });
