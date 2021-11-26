@@ -356,7 +356,7 @@ export const deDE: Localization = {
       confirmError: () => 'Die eingegebene E-Mail-Adresse ist nicht korrekt',
     },
     requestedDeletion: {
-      title: () => 'Löschung des Nutzer:innekontos beantragt',
+      title: () => 'Löschung des Nutzer:innenkontos beantragt',
       text: ({ date, email }) => (
         <DashboardTileText>
           <DashboardTileTextP>
