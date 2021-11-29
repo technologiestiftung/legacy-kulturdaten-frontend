@@ -101,8 +101,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   }, [stateUser]);
 
   const requestedDeletion = useMemo(
-    () => stateUser?.id && stateUser?.attributes.requestedDeletionAt?.length > 0,
-    [stateUser?.attributes?.requestedDeletionAt?.length, stateUser?.id]
+    () => stateUser?.id && stateUser?.attributes.deletionRequestedAt?.length > 0,
+    [stateUser?.attributes?.deletionRequestedAt?.length, stateUser?.id]
   );
 
   useEffect(() => {

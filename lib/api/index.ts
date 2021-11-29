@@ -71,6 +71,7 @@ export enum ApiRoutes {
   mediaDelete = 'mediaDelete',
   mediaLicenseList = 'mediaLicenseList',
   tagList = 'tagList',
+  userUpdate = 'userUpdate',
 }
 
 export type ApiRoute = (query?: ParsedUrlQuery) => string;
@@ -140,6 +141,7 @@ export const apiRoutes: {
   mediaDelete: ({ id }) => `/${apiVersion}/media/${id}`,
   mediaLicenseList: () => `/${apiVersion}/mediaLicense`,
   tagList: () => `/${apiVersion}/tag?include=translations`,
+  userUpdate: () => `/user`,
 };
 
 const addUrlParam = (url: string, param: string): string =>

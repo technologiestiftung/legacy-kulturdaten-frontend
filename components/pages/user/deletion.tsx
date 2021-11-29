@@ -18,6 +18,10 @@ import { Button, ButtonColor, ButtonSize } from '../../button';
 import { useUser } from '../../user/useUser';
 import { add } from 'date-fns';
 import { DateFormat, useDate } from '../../../lib/date';
+import { useApiCall } from '../../../lib/api';
+import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { UserUpdate, userUpdateFactory } from '../../../lib/api/routes/user/update';
+import { UserDelete, userDeleteFactory } from '../../../lib/api/routes/user/delete';
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -31,16 +35,18 @@ const CancelDeletionComponent: React.FC = () => {
   const t = useT();
   const { user, logout } = useUser();
   const formatDate = useDate();
+  const call = useApiCall();
+  const loadingScreen = useLoadingScreen();
 
   const dateOfDeletion = useMemo(
     () =>
       add(
-        user?.attributes?.requestedDeletionAt
-          ? new Date(user?.attributes?.requestedDeletionAt)
+        user?.attributes?.deletionRequestedAt
+          ? new Date(user?.attributes?.deletionRequestedAt)
           : new Date(),
         { weeks: 2 }
       ),
-    [user?.attributes?.requestedDeletionAt]
+    [user?.attributes?.deletionRequestedAt]
   );
 
   return (
@@ -56,7 +62,33 @@ const CancelDeletionComponent: React.FC = () => {
           })}
           <DashboardTileText>
             <StyledButtonWrapper>
-              <Button size={ButtonSize.big} color={ButtonColor.black}>
+              <Button
+                size={ButtonSize.big}
+                color={ButtonColor.black}
+                onClick={() => {
+                  loadingScreen('Löschung abbrechen', async () => {
+                    try {
+                      const resp = await call<UserDelete>(userDeleteFactory, {
+                        user: {
+                          attributes: {
+                            deletionRequestedAt: null,
+                          },
+                        },
+                      });
+
+                      if (resp.status === 200) {
+                        return { success: true };
+                      }
+
+                      return { success: false, error: t('general.serverProblem') };
+                    } catch (e) {
+                      console.error(e);
+
+                      return { success: false, error: t('general.serverProblem') };
+                    }
+                  });
+                }}
+              >
                 {t('settings.requestedDeletion.button')}
               </Button>
             </StyledButtonWrapper>
