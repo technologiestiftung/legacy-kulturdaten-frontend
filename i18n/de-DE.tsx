@@ -191,8 +191,9 @@ export const deDE: Localization = {
     },
   },
   language: {
-    de: () => 'Deutsch',
-    en: () => 'Englisch',
+    'de': () => 'Deutsch',
+    'en': () => 'Englisch',
+    'de-easy': () => 'Deutsch: einfache Sprache',
   },
   languageTags: {
     addButton: () => 'Sprache hinzufügen',
