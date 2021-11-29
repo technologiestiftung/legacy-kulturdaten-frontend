@@ -392,10 +392,9 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       {t('dateCreate.create')}
     </Button>
   );
-
-  const earliestDate = new Date();
+  const now = new Date();
+  const earliestDate = now;
   const latestDate = add(earliestDate, { years: 1 });
-
   const [ticketUrl, setTicketUrl] = useState('');
   const [registrationUrl, setRegistrationUrl] = useState('');
   const [titleGerman, setTitleGerman] = useState('');
@@ -407,8 +406,8 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const [roomEnglish, setRoomEnglish] = useState('');
   const [recurrence, setRecurrence] = useState<string>();
 
-  const [fromDate, setFromDate] = useState<Date>(new Date());
-  const [toDate, setToDate] = useState<Date>(add(new Date(), { hours: 1 }));
+  const [fromDate, setFromDate] = useState<Date>(now);
+  const [toDate, setToDate] = useState<Date>(add(now, { hours: 1 }));
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
@@ -524,6 +523,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     onSubmit(date?.data, recurrence);
 
     setTimeout(() => {
+      const now = new Date();
       setIsOpen(false);
       setTicketUrl('');
       setRegistrationUrl('');
@@ -535,8 +535,8 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       setRoomGerman('');
       setRoomEnglish('');
       setRecurrence(undefined);
-      setFromDate(new Date());
-      setToDate(add(new Date(), { hours: 1 }));
+      setFromDate(now);
+      setToDate(add(now, { hours: 1 }));
     }, submitDelay);
   }, [recurrence, date, onSubmit, setIsOpen, submitDelay]);
 
