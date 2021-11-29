@@ -290,8 +290,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               variant={props?.variant}
               aria-label={props?.ariaLabel}
               onChange={(e) => {
-                if (props?.debounce) {
-                  if (props?.type !== InputType.date || e.target.value) {
+                if (props?.type !== InputType.date || e.target.value) {
+                  if (props?.debounce) {
                     setTouched(true);
                     setInternalState(e.target.value);
 
@@ -301,11 +301,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                         setNormalized(false);
                       }
                     });
-                  }
-                } else {
-                  if (typeof props?.onChange === 'function') {
-                    props?.onChange(e);
-                    setNormalized(false);
+                  } else {
+                    if (typeof props?.onChange === 'function') {
+                      props?.onChange(e);
+                      setNormalized(false);
+                    }
                   }
                 }
               }}
