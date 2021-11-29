@@ -375,7 +375,8 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                             const filteredTranslations = date.relations?.translations?.filter(
                               (translation) =>
                                 translation?.attributes.name?.length > 0 ||
-                                translation?.attributes.roomDescription?.length > 0
+                                translation?.attributes.roomDescription?.length > 0 ||
+                                translation?.attributes.teaser?.length > 0
                             );
 
                             const resp = await call<OfferDateCreate>(offerDateCreateFactory, {

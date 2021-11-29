@@ -2,7 +2,11 @@ import styled from '@emotion/styled';
 import { add, compareAsc, format, formatISO9075, parseISO } from 'date-fns';
 import { useMemo } from 'react';
 import { Language } from '../../config/locale';
-import { contentLanguages, languageTranslationKeys } from '../../config/locales';
+import {
+  contentLanguages,
+  contentLanguagesWithEasy,
+  languageTranslationKeys,
+} from '../../config/locales';
 import { OfferDate, OfferDateStatus, OfferDateTranslation } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
@@ -14,8 +18,10 @@ import { EntryFormHead, EntryFormHeadSize } from '../EntryForm/EntryFormHead';
 import { mq } from '../globals/Constants';
 import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
+import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 import { Select, SelectSize } from '../select';
+import { Textarea } from '../textarea';
 import { DateListRow } from './DateListRow';
 
 const StyledDateListItemBody = styled.div`
@@ -269,8 +275,10 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                 return (
                   <FormItem width={FormItemWidth.half} key={index}>
                     <Input
+                      debounce
                       type={InputType.text}
-                      label={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
+                      label={t(languageTranslationKeys[language]) as string}
+                      ariaLabel={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.name || ''}
                       onChange={(e) => {
                         const updatedTranslation = {
@@ -308,27 +316,85 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               })}
               <FormItem width={FormItemWidth.full}>
                 <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                  {contentLanguages.map((language: Language, index) => {
-                    const currentTranslation = date.relations?.translations
-                      ? getTranslation<OfferDateTranslation>(
-                          language,
-                          date.relations.translations,
-                          false
-                        )
-                      : undefined;
+                  <div>
+                    {contentLanguages.map((language: Language, index) => {
+                      const currentTranslation = date.relations?.translations
+                        ? getTranslation<OfferDateTranslation>(
+                            language,
+                            date.relations.translations,
+                            false
+                          )
+                        : undefined;
 
-                    return (
-                      <span key={index}>
-                        {t(languageTranslationKeys[language])}: {offerTitles[language]}
-                        {currentTranslation?.attributes?.name
-                          ? ` - ${currentTranslation?.attributes?.name}`
-                          : ''}
-                        <br />
-                      </span>
-                    );
-                  })}
+                      return (
+                        <div key={index}>
+                          {t(languageTranslationKeys[language])}: {offerTitles[language]}
+                          {currentTranslation?.attributes?.name
+                            ? ` - ${currentTranslation?.attributes?.name}`
+                            : ''}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </Info>
               </FormItem>
+            </FormGrid>
+          </StyledDateListItemContainer>
+          <StyledDateListItemContainer columns={3}>
+            <EntryFormHead title={`${t('forms.teaser')}`} size={EntryFormHeadSize.small} />
+            <FormGrid>
+              {contentLanguagesWithEasy.map((language: Language, index) => {
+                const currentTranslation = date.relations?.translations
+                  ? getTranslation<OfferDateTranslation>(
+                      language,
+                      date.relations.translations,
+                      false
+                    )
+                  : undefined;
+
+                return (
+                  <FormItem width={FormItemWidth.full} key={index}>
+                    <Textarea
+                      debounce
+                      id={`${uid}-textarea-${language}`}
+                      label={t(languageTranslationKeys[language]) as string}
+                      ariaLabel={t(languageTranslationKeys[language]) as string}
+                      value={currentTranslation?.attributes?.teaser || ''}
+                      onChange={(e) => {
+                        const updatedTranslation = {
+                          ...currentTranslation,
+                          attributes: {
+                            ...currentTranslation?.attributes,
+                            language,
+                            teaser: e.target.value,
+                          },
+                        };
+
+                        const filteredTranslations =
+                          date?.relations?.translations?.filter(
+                            (translation) => translation.attributes?.language !== language
+                          ) || [];
+
+                        onChange({
+                          attributes: date?.attributes,
+                          id: date?.id,
+                          type: date?.type,
+                          relations: date?.relations
+                            ? {
+                                ...date.relations,
+                                translations: [...filteredTranslations, updatedTranslation],
+                              }
+                            : {
+                                translations: [updatedTranslation],
+                              },
+                        });
+                      }}
+                      rows={5}
+                      maxLength={defaultTeaserTextLimit}
+                    />
+                  </FormItem>
+                );
+              })}
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
@@ -349,6 +415,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                 return (
                   <FormItem width={FormItemWidth.half} key={index}>
                     <Input
+                      debounce
                       type={InputType.text}
                       label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.roomDescription || ''}

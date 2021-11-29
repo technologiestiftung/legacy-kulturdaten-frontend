@@ -18,6 +18,9 @@ import { Language } from '../../config/locale';
 import { Info, InfoColor } from '../info';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
+import { Textarea } from '../textarea';
+import { usePseudoUID } from '../../lib/uid';
+import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
 
 interface DateFormTimeProps {
   earliestDate: Date;
@@ -127,10 +130,18 @@ interface DateCreateFormProps {
   offerTitles: { [key in Language]: string };
   ticketUrl: string;
   setTicketUrl: (ticketUrl: string) => void;
+  registrationUrl: string;
+  setRegistrationUrl: (ticketUrl: string) => void;
   titleGerman: string;
   setTitleGerman: (title: string) => void;
   titleEnglish: string;
   setTitleEnglish: (title: string) => void;
+  teaserGerman: string;
+  setTeaserGerman: (teaser: string) => void;
+  teaserGermanEasy: string;
+  setTeaserGermanEasy: (teaser: string) => void;
+  teaserEnglish: string;
+  setTeaserEnglish: (teaser: string) => void;
   roomGerman: string;
   setRoomGerman: (room: string) => void;
   roomEnglish: string;
@@ -157,10 +168,18 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   offerTitles,
   ticketUrl,
   setTicketUrl,
+  registrationUrl,
+  setRegistrationUrl,
   titleGerman,
   setTitleGerman,
   titleEnglish,
   setTitleEnglish,
+  teaserGerman,
+  setTeaserGerman,
+  teaserGermanEasy,
+  setTeaserGermanEasy,
+  teaserEnglish,
+  setTeaserEnglish,
   roomGerman,
   setRoomGerman,
   roomEnglish,
@@ -183,6 +202,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   toTimeValid,
 }: DateCreateFormProps) => {
   const t = useT();
+  const uid = usePseudoUID();
 
   const { renderedDateRecurrence } = useDateRecurrence({
     startDate: fromDate,
@@ -246,12 +266,55 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             </FormItem>
             <FormItem width={FormItemWidth.full}>
               <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                {t('general.german')}: {offerTitles[Language.de]}
-                {titleGerman ? ` - ${titleGerman}` : ''}
-                <br />
-                {t('general.english')}: {offerTitles[Language.en]}
-                {titleEnglish ? ` - ${titleEnglish}` : ''}
+                <div>
+                  <div>
+                    {t('general.german')}: {offerTitles[Language.de]}
+                    {titleGerman ? ` - ${titleGerman}` : ''}
+                  </div>
+                  <div>
+                    {t('general.english')}: {offerTitles[Language.en]}
+                    {titleEnglish ? ` - ${titleEnglish}` : ''}
+                  </div>
+                </div>
               </Info>
+            </FormItem>
+          </FormGrid>
+        </EntryFormContainer>
+        <EntryFormContainer noPadding fullWidth>
+          <EntryFormHead title={`${t('forms.teaser')}`} />
+          <FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <Textarea
+                id={`${uid}-textarea-german`}
+                label={t('general.german') as string}
+                ariaLabel={t('general.german') as string}
+                value={teaserGerman || ''}
+                onChange={(e) => setTeaserGerman(e.target.value)}
+                rows={5}
+                maxLength={defaultTeaserTextLimit}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <Textarea
+                id={`${uid}-textarea-german-easy`}
+                label={t('forms.labelGermanEasy') as string}
+                ariaLabel={t('forms.labelGermanEasy') as string}
+                value={teaserGermanEasy || ''}
+                onChange={(e) => setTeaserGermanEasy(e.target.value)}
+                rows={5}
+                maxLength={defaultTeaserTextLimit}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <Textarea
+                id={`${uid}-textarea-english`}
+                label={t('general.english') as string}
+                ariaLabel={t('general.english') as string}
+                value={teaserEnglish || ''}
+                onChange={(e) => setTeaserEnglish(e.target.value)}
+                rows={5}
+                maxLength={defaultTeaserTextLimit}
+              />
             </FormItem>
           </FormGrid>
         </EntryFormContainer>
@@ -287,6 +350,18 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 label={t('date.ticketLink') as string}
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
+                placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Input
+                type={InputType.url}
+                label={t('categories.offer.form.pricing.registrationUrl') as string}
+                value={registrationUrl}
+                onChange={(e) => setRegistrationUrl(e.target.value)}
+                placeholder={
+                  t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
+                }
               />
             </FormItem>
           </FormGrid>
@@ -337,8 +412,12 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const startPlusOneHourTimeISOString = format(add(earliestDate, { hours: 1 }), 'HH:mm');
 
   const [ticketUrl, setTicketUrl] = useState('');
+  const [registrationUrl, setRegistrationUrl] = useState('');
   const [titleGerman, setTitleGerman] = useState('');
   const [titleEnglish, setTitleEnglish] = useState('');
+  const [teaserGerman, setTeaserGerman] = useState('');
+  const [teaserGermanEasy, setTeaserGermanEasy] = useState('');
+  const [teaserEnglish, setTeaserEnglish] = useState('');
   const [roomGerman, setRoomGerman] = useState('');
   const [roomEnglish, setRoomEnglish] = useState('');
   const [recurrence, setRecurrence] = useState<string>();
@@ -367,14 +446,15 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     [fromDateTime, toDateTime]
   );
 
-  const date = useMemo<OfferDate>(
-    () => ({
+  const date = useMemo<OfferDate>(() => {
+    const newDate = {
       data: {
         attributes: {
           startsAt: fromDateTime?.toISOString(),
           endsAt: toDateTime?.toISOString(),
           status: OfferDateStatus.scheduled,
-          ticketLink: ticketUrl,
+          ticketUrl: ticketUrl,
+          registrationUrl: registrationUrl,
         },
         relations: {
           translations: [
@@ -383,6 +463,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.de,
                 name: titleGerman,
+                teaser: teaserGerman,
                 roomDescription: roomGerman,
               },
             },
@@ -391,15 +472,41 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.en,
                 name: titleEnglish,
+                teaser: teaserEnglish,
                 roomDescription: roomEnglish,
               },
             },
           ],
         },
       },
-    }),
-    [fromDateTime, roomEnglish, roomGerman, ticketUrl, titleEnglish, titleGerman, toDateTime]
-  );
+    } as OfferDate;
+
+    if (teaserGermanEasy?.length > 0) {
+      newDate.data.relations.translations.push({
+        type: 'offerdatetranslation',
+        attributes: {
+          language: 'de-easy' as Language,
+          teaser: teaserGermanEasy,
+        },
+      });
+    }
+
+    console.log(newDate);
+
+    return newDate;
+  }, [
+    fromDateTime,
+    roomEnglish,
+    roomGerman,
+    ticketUrl,
+    registrationUrl,
+    titleEnglish,
+    titleGerman,
+    toDateTime,
+    teaserGerman,
+    teaserGermanEasy,
+    teaserEnglish,
+  ]);
 
   const { renderedOverlay, setIsOpen } = useOverlay(
     <>
@@ -412,10 +519,18 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           offerTitles,
           ticketUrl,
           setTicketUrl,
+          registrationUrl,
+          setRegistrationUrl,
           titleGerman,
           setTitleGerman,
           titleEnglish,
           setTitleEnglish,
+          teaserGerman,
+          setTeaserGerman,
+          teaserGermanEasy,
+          setTeaserGermanEasy,
+          teaserEnglish,
+          setTeaserEnglish,
           roomGerman,
           setRoomGerman,
           roomEnglish,
@@ -450,8 +565,12 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     setTimeout(() => {
       setIsOpen(false);
       setTicketUrl('');
+      setRegistrationUrl('');
       setTitleGerman('');
       setTitleEnglish('');
+      setTeaserGerman('');
+      setTeaserGermanEasy('');
+      setTeaserEnglish('');
       setRoomGerman('');
       setRoomEnglish('');
       setFromDateISOString(earliestDateISOString);

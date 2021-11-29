@@ -13,7 +13,7 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Textarea } from '../../../textarea';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
-const defaultTextLimit = 150;
+export const defaultTeaserTextLimit = 150;
 
 interface SetTeaserProps {
   label: string;
@@ -61,7 +61,7 @@ const Teaser: React.FC<SetTeaserProps> = ({
         }}
         required={required}
         rows={5}
-        maxLength={defaultTextLimit}
+        maxLength={defaultTeaserTextLimit}
       />
     </form>
   );

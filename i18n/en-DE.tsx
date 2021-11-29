@@ -190,8 +190,9 @@ export const enDE: Localization = {
     },
   },
   language: {
-    de: () => 'German',
-    en: () => 'English',
+    'de': () => 'German',
+    'en': () => 'English',
+    'de-easy': () => 'German: simple Language',
   },
   languageTags: {
     addButton: () => 'Add language',
