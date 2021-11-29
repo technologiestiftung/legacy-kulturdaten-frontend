@@ -290,7 +290,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               variant={props?.variant}
               aria-label={props?.ariaLabel}
               onChange={(e) => {
-                if (props?.type !== InputType.date || e.target.value) {
+                if (
+                  (props?.type !== InputType.date && props?.type !== InputType.time) ||
+                  e.target.value
+                ) {
                   if (props?.debounce) {
                     setTouched(true);
                     setInternalState(e.target.value);

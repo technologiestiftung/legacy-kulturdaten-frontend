@@ -25,16 +25,10 @@ import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
 interface DateFormTimeProps {
   earliestDate: Date;
   latestDate: Date;
-  fromDateISOString: string;
-  setFromDateISOString: (dateISOString: string) => void;
-  fromTimeISOString: string;
-  setFromTimeISOString: (timeISOString: string) => void;
-  toDateISOString: string;
-  setToDateISOString: (dateISOString: string) => void;
-  toTimeISOString: string;
-  setToTimeISOString: (timeISOString: string) => void;
-  fromDateTime: Date;
   fromDate: Date;
+  setFromDate: (date: Date) => void;
+  toDate: Date;
+  setToDate: (date: Date) => void;
   toDateValid: boolean;
   toTimeValid: boolean;
 }
@@ -42,16 +36,10 @@ interface DateFormTimeProps {
 export const DateFormTime: React.FC<DateFormTimeProps> = ({
   earliestDate,
   latestDate,
-  fromDateISOString,
-  setFromDateISOString,
-  fromTimeISOString,
-  setFromTimeISOString,
-  toDateISOString,
-  setToDateISOString,
-  toTimeISOString,
-  setToTimeISOString,
   fromDate,
-  fromDateTime,
+  setFromDate,
+  toDate,
+  setToDate,
   toDateValid,
   toTimeValid,
 }: DateFormTimeProps) => {
@@ -68,50 +56,68 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
           <Input
             type={InputType.date}
             label={t('date.from') as string}
-            value={fromDateISOString}
-            onChange={(e) => setFromDateISOString(e.target.value)}
+            value={formatISO(fromDate, { representation: 'date' })}
+            onChange={(e) => {
+              const newDate = parseISO(`${e.target.value}T${format(fromDate, 'HH:mm')}`);
+
+              setFromDate(newDate);
+
+              if (compareAsc(newDate, toDate) >= 0) {
+                setToDate(add(newDate, { hours: 1 }));
+              }
+            }}
             min={earliestDateISOString}
             max={latestDateISOString}
           />
-          {
-            <Input
-              type={InputType.time}
-              label={t('date.clock') as string}
-              value={fromTimeISOString}
-              onChange={(e) => {
-                if (e.target.value) {
-                  setFromTimeISOString(e.target.value);
-                }
-              }}
-            />
-          }
+
+          <Input
+            type={InputType.time}
+            label={t('date.clock') as string}
+            value={format(fromDate, 'HH:mm')}
+            onChange={(e) => {
+              const newDate = parseISO(
+                `${formatISO(fromDate, { representation: 'date' })}T${e.target.value}`
+              );
+
+              setFromDate(newDate);
+
+              if (compareAsc(newDate, toDate) >= 0) {
+                setToDate(add(newDate, { hours: 1 }));
+              }
+            }}
+          />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
             label={t('date.to') as string}
-            value={toDateISOString}
-            onChange={(e) => setToDateISOString(e.target.value)}
+            value={formatISO(toDate, { representation: 'date' })}
+            onChange={(e) => {
+              setToDate(parseISO(`${e.target.value}T${format(toDate, 'HH:mm')}`));
+            }}
             min={formatISO(max([earliestDate, fromDate]), { representation: 'date' })}
             max={latestDateISOString}
             valid={toDateValid}
             error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
           />
-          {
-            <Input
-              type={InputType.time}
-              label={t('date.clock') as string}
-              value={toTimeISOString}
-              onChange={(e) => setToTimeISOString(e.target.value)}
-              min={
-                compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
-                  ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
-                  : undefined
-              }
-              valid={toTimeValid}
-              error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
-            />
-          }
+
+          <Input
+            type={InputType.time}
+            label={t('date.clock') as string}
+            value={format(toDate, 'HH:mm')}
+            onChange={(e) =>
+              setToDate(
+                parseISO(`${formatISO(toDate, { representation: 'date' })}T${e.target.value}`)
+              )
+            }
+            min={
+              compareAsc(fromDate, toDate) === 0
+                ? format(add(fromDate, { minutes: 1 }), 'HH:mm')
+                : undefined
+            }
+            valid={toTimeValid}
+            error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
+          />
         </FormItem>
       </FormGrid>
     </>
@@ -146,20 +152,14 @@ interface DateCreateFormProps {
   setRoomGerman: (room: string) => void;
   roomEnglish: string;
   setRoomEnglish: (room: string) => void;
-  fromDateISOString: string;
-  setFromDateISOString: (dateISOString: string) => void;
-  fromTimeISOString: string;
-  setFromTimeISOString: (timeISOString: string) => void;
-  toDateISOString: string;
-  setToDateISOString: (dateISOString: string) => void;
-  toTimeISOString: string;
-  setToTimeISOString: (timeISOString: string) => void;
   recurrence: string;
   setRecurrence: (recurrence: string) => void;
   earliestDate: Date;
   latestDate: Date;
-  fromDateTime: Date;
   fromDate: Date;
+  setFromDate: (date: Date) => void;
+  toDate: Date;
+  setToDate: (date: Date) => void;
   toDateValid: boolean;
   toTimeValid: boolean;
 }
@@ -184,20 +184,14 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   setRoomGerman,
   roomEnglish,
   setRoomEnglish,
-  fromDateISOString,
-  setFromTimeISOString,
-  fromTimeISOString,
-  setFromDateISOString,
-  toDateISOString,
-  setToDateISOString,
-  toTimeISOString,
-  setToTimeISOString,
   recurrence,
   setRecurrence,
   earliestDate,
   latestDate,
-  fromDateTime,
   fromDate,
+  setFromDate,
+  toDate,
+  setToDate,
   toDateValid,
   toTimeValid,
 }: DateCreateFormProps) => {
@@ -219,16 +213,10 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             {...{
               earliestDate,
               latestDate,
-              fromDateISOString,
-              setFromDateISOString,
-              fromTimeISOString,
-              setFromTimeISOString,
-              toDateISOString,
-              setToDateISOString,
-              toTimeISOString,
-              setToTimeISOString,
               fromDate,
-              fromDateTime,
+              setFromDate,
+              toDate,
+              setToDate,
               toDateValid,
               toTimeValid,
             }}
@@ -407,9 +395,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
 
   const earliestDate = new Date();
   const latestDate = add(earliestDate, { years: 1 });
-  const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
-  const startTimeISOString = format(earliestDate, 'HH:mm');
-  const startPlusOneHourTimeISOString = format(add(earliestDate, { hours: 1 }), 'HH:mm');
 
   const [ticketUrl, setTicketUrl] = useState('');
   const [registrationUrl, setRegistrationUrl] = useState('');
@@ -421,37 +406,20 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const [roomGerman, setRoomGerman] = useState('');
   const [roomEnglish, setRoomEnglish] = useState('');
   const [recurrence, setRecurrence] = useState<string>();
-  const [fromDateISOString, setFromDateISOString] = useState<string>(earliestDateISOString);
-  const [fromTimeISOString, setFromTimeISOString] = useState<string>(startTimeISOString);
-  const [toDateISOString, setToDateISOString] = useState<string>(earliestDateISOString);
-  const [toTimeISOString, setToTimeISOString] = useState<string>(startPlusOneHourTimeISOString);
 
-  const fromDateTime = useMemo(
-    () => parseISO(`${fromDateISOString}T${fromTimeISOString}`),
-    [fromDateISOString, fromTimeISOString]
-  );
-
-  const toDateTime = useMemo(
-    () => parseISO(`${toDateISOString}T${toTimeISOString}`),
-    [toDateISOString, toTimeISOString]
-  );
-
-  const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
-  const toDate = useMemo(() => new Date(toDateISOString), [toDateISOString]);
+  const [fromDate, setFromDate] = useState<Date>(new Date());
+  const [toDate, setToDate] = useState<Date>(add(new Date(), { hours: 1 }));
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
-  const toTimeValid = useMemo(
-    () => compareAsc(fromDateTime, toDateTime) === -1,
-    [fromDateTime, toDateTime]
-  );
+  const toTimeValid = useMemo(() => compareAsc(fromDate, toDate) === -1, [fromDate, toDate]);
 
   const date = useMemo<OfferDate>(() => {
     const newDate = {
       data: {
         attributes: {
-          startsAt: fromDateTime?.toISOString(),
-          endsAt: toDateTime?.toISOString(),
+          startsAt: fromDate?.toISOString(),
+          endsAt: toDate?.toISOString(),
           status: OfferDateStatus.scheduled,
           ticketUrl: ticketUrl,
           registrationUrl: registrationUrl,
@@ -495,17 +463,17 @@ export const DateCreate: React.FC<DateCreateProps> = ({
 
     return newDate;
   }, [
-    fromDateTime,
-    roomEnglish,
-    roomGerman,
+    fromDate,
+    toDate,
     ticketUrl,
     registrationUrl,
-    titleEnglish,
     titleGerman,
-    toDateTime,
     teaserGerman,
-    teaserGermanEasy,
+    roomGerman,
+    titleEnglish,
     teaserEnglish,
+    roomEnglish,
+    teaserGermanEasy,
   ]);
 
   const { renderedOverlay, setIsOpen } = useOverlay(
@@ -535,23 +503,16 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           setRoomGerman,
           roomEnglish,
           setRoomEnglish,
-          fromDateISOString,
-          setFromDateISOString,
-          fromTimeISOString,
-          setFromTimeISOString,
-          toDateISOString,
-          setToDateISOString,
-          toTimeISOString,
-          setToTimeISOString,
           recurrence,
           setRecurrence,
           earliestDate,
           latestDate,
-          fromDateTime,
-          toDateTime,
           toDateValid,
           toTimeValid,
           fromDate,
+          setFromDate,
+          toDate,
+          setToDate,
         }}
       />
       <StyledDateCreateBottomBar>{createButton}</StyledDateCreateBottomBar>
@@ -573,22 +534,11 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       setTeaserEnglish('');
       setRoomGerman('');
       setRoomEnglish('');
-      setFromDateISOString(earliestDateISOString);
-      setFromTimeISOString(startTimeISOString);
-      setToDateISOString(earliestDateISOString);
-      setToTimeISOString(startPlusOneHourTimeISOString);
       setRecurrence(undefined);
+      setFromDate(new Date());
+      setToDate(add(new Date(), { hours: 1 }));
     }, submitDelay);
-  }, [
-    recurrence,
-    date,
-    onSubmit,
-    setIsOpen,
-    earliestDateISOString,
-    startTimeISOString,
-    startPlusOneHourTimeISOString,
-    submitDelay,
-  ]);
+  }, [recurrence, date, onSubmit, setIsOpen, submitDelay]);
 
   return (
     <div>
