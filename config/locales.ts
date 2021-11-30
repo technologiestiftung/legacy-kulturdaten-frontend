@@ -28,9 +28,11 @@ export const languages: {
 };
 
 export const contentLanguages = Object.values(Language);
-export const languageTranslationKeys: { [key in Language]: string } = {
-  de: 'language.de',
-  en: 'language.en',
+export const contentLanguagesWithEasy = [...contentLanguages, 'de-easy'];
+export const languageTranslationKeys: { [key in Language | 'de-easy']: string } = {
+  'de': 'language.de',
+  'en': 'language.en',
+  'de-easy': 'language.de-easy',
 };
 
 export const localeLanguageMap: { [key in Locale]: Language } = {

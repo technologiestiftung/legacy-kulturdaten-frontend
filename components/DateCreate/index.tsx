@@ -18,20 +18,17 @@ import { Language } from '../../config/locale';
 import { Info, InfoColor } from '../info';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
+import { Textarea } from '../textarea';
+import { usePseudoUID } from '../../lib/uid';
+import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
 
 interface DateFormTimeProps {
   earliestDate: Date;
   latestDate: Date;
-  fromDateISOString: string;
-  setFromDateISOString: (dateISOString: string) => void;
-  fromTimeISOString: string;
-  setFromTimeISOString: (timeISOString: string) => void;
-  toDateISOString: string;
-  setToDateISOString: (dateISOString: string) => void;
-  toTimeISOString: string;
-  setToTimeISOString: (timeISOString: string) => void;
-  fromDateTime: Date;
   fromDate: Date;
+  setFromDate: (date: Date) => void;
+  toDate: Date;
+  setToDate: (date: Date) => void;
   toDateValid: boolean;
   toTimeValid: boolean;
 }
@@ -39,16 +36,10 @@ interface DateFormTimeProps {
 export const DateFormTime: React.FC<DateFormTimeProps> = ({
   earliestDate,
   latestDate,
-  fromDateISOString,
-  setFromDateISOString,
-  fromTimeISOString,
-  setFromTimeISOString,
-  toDateISOString,
-  setToDateISOString,
-  toTimeISOString,
-  setToTimeISOString,
   fromDate,
-  fromDateTime,
+  setFromDate,
+  toDate,
+  setToDate,
   toDateValid,
   toTimeValid,
 }: DateFormTimeProps) => {
@@ -65,50 +56,68 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
           <Input
             type={InputType.date}
             label={t('date.from') as string}
-            value={fromDateISOString}
-            onChange={(e) => setFromDateISOString(e.target.value)}
+            value={formatISO(fromDate, { representation: 'date' })}
+            onChange={(e) => {
+              const newDate = parseISO(`${e.target.value}T${format(fromDate, 'HH:mm')}`);
+
+              setFromDate(newDate);
+
+              if (compareAsc(newDate, toDate) >= 0) {
+                setToDate(add(newDate, { hours: 1 }));
+              }
+            }}
             min={earliestDateISOString}
             max={latestDateISOString}
           />
-          {
-            <Input
-              type={InputType.time}
-              label={t('date.clock') as string}
-              value={fromTimeISOString}
-              onChange={(e) => {
-                if (e.target.value) {
-                  setFromTimeISOString(e.target.value);
-                }
-              }}
-            />
-          }
+
+          <Input
+            type={InputType.time}
+            label={t('date.clock') as string}
+            value={format(fromDate, 'HH:mm')}
+            onChange={(e) => {
+              const newDate = parseISO(
+                `${formatISO(fromDate, { representation: 'date' })}T${e.target.value}`
+              );
+
+              setFromDate(newDate);
+
+              if (compareAsc(newDate, toDate) >= 0) {
+                setToDate(add(newDate, { hours: 1 }));
+              }
+            }}
+          />
         </FormItem>
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
             label={t('date.to') as string}
-            value={toDateISOString}
-            onChange={(e) => setToDateISOString(e.target.value)}
+            value={formatISO(toDate, { representation: 'date' })}
+            onChange={(e) => {
+              setToDate(parseISO(`${e.target.value}T${format(toDate, 'HH:mm')}`));
+            }}
             min={formatISO(max([earliestDate, fromDate]), { representation: 'date' })}
             max={latestDateISOString}
             valid={toDateValid}
             error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
           />
-          {
-            <Input
-              type={InputType.time}
-              label={t('date.clock') as string}
-              value={toTimeISOString}
-              onChange={(e) => setToTimeISOString(e.target.value)}
-              min={
-                compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
-                  ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
-                  : undefined
-              }
-              valid={toTimeValid}
-              error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
-            />
-          }
+
+          <Input
+            type={InputType.time}
+            label={t('date.clock') as string}
+            value={format(toDate, 'HH:mm')}
+            onChange={(e) =>
+              setToDate(
+                parseISO(`${formatISO(toDate, { representation: 'date' })}T${e.target.value}`)
+              )
+            }
+            min={
+              compareAsc(fromDate, toDate) === 0
+                ? format(add(fromDate, { minutes: 1 }), 'HH:mm')
+                : undefined
+            }
+            valid={toTimeValid}
+            error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
+          />
         </FormItem>
       </FormGrid>
     </>
@@ -127,28 +136,30 @@ interface DateCreateFormProps {
   offerTitles: { [key in Language]: string };
   ticketUrl: string;
   setTicketUrl: (ticketUrl: string) => void;
+  registrationUrl: string;
+  setRegistrationUrl: (ticketUrl: string) => void;
   titleGerman: string;
   setTitleGerman: (title: string) => void;
   titleEnglish: string;
   setTitleEnglish: (title: string) => void;
+  teaserGerman: string;
+  setTeaserGerman: (teaser: string) => void;
+  teaserGermanEasy: string;
+  setTeaserGermanEasy: (teaser: string) => void;
+  teaserEnglish: string;
+  setTeaserEnglish: (teaser: string) => void;
   roomGerman: string;
   setRoomGerman: (room: string) => void;
   roomEnglish: string;
   setRoomEnglish: (room: string) => void;
-  fromDateISOString: string;
-  setFromDateISOString: (dateISOString: string) => void;
-  fromTimeISOString: string;
-  setFromTimeISOString: (timeISOString: string) => void;
-  toDateISOString: string;
-  setToDateISOString: (dateISOString: string) => void;
-  toTimeISOString: string;
-  setToTimeISOString: (timeISOString: string) => void;
   recurrence: string;
   setRecurrence: (recurrence: string) => void;
   earliestDate: Date;
   latestDate: Date;
-  fromDateTime: Date;
   fromDate: Date;
+  setFromDate: (date: Date) => void;
+  toDate: Date;
+  setToDate: (date: Date) => void;
   toDateValid: boolean;
   toTimeValid: boolean;
 }
@@ -157,32 +168,35 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   offerTitles,
   ticketUrl,
   setTicketUrl,
+  registrationUrl,
+  setRegistrationUrl,
   titleGerman,
   setTitleGerman,
   titleEnglish,
   setTitleEnglish,
+  teaserGerman,
+  setTeaserGerman,
+  teaserGermanEasy,
+  setTeaserGermanEasy,
+  teaserEnglish,
+  setTeaserEnglish,
   roomGerman,
   setRoomGerman,
   roomEnglish,
   setRoomEnglish,
-  fromDateISOString,
-  setFromTimeISOString,
-  fromTimeISOString,
-  setFromDateISOString,
-  toDateISOString,
-  setToDateISOString,
-  toTimeISOString,
-  setToTimeISOString,
   recurrence,
   setRecurrence,
   earliestDate,
   latestDate,
-  fromDateTime,
   fromDate,
+  setFromDate,
+  toDate,
+  setToDate,
   toDateValid,
   toTimeValid,
 }: DateCreateFormProps) => {
   const t = useT();
+  const uid = usePseudoUID();
 
   const { renderedDateRecurrence } = useDateRecurrence({
     startDate: fromDate,
@@ -199,16 +213,10 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             {...{
               earliestDate,
               latestDate,
-              fromDateISOString,
-              setFromDateISOString,
-              fromTimeISOString,
-              setFromTimeISOString,
-              toDateISOString,
-              setToDateISOString,
-              toTimeISOString,
-              setToTimeISOString,
               fromDate,
-              fromDateTime,
+              setFromDate,
+              toDate,
+              setToDate,
               toDateValid,
               toTimeValid,
             }}
@@ -246,12 +254,55 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             </FormItem>
             <FormItem width={FormItemWidth.full}>
               <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                {t('general.german')}: {offerTitles[Language.de]}
-                {titleGerman ? ` - ${titleGerman}` : ''}
-                <br />
-                {t('general.english')}: {offerTitles[Language.en]}
-                {titleEnglish ? ` - ${titleEnglish}` : ''}
+                <div>
+                  <div>
+                    {t('general.german')}: {offerTitles[Language.de]}
+                    {titleGerman ? ` - ${titleGerman}` : ''}
+                  </div>
+                  <div>
+                    {t('general.english')}: {offerTitles[Language.en]}
+                    {titleEnglish ? ` - ${titleEnglish}` : ''}
+                  </div>
+                </div>
               </Info>
+            </FormItem>
+          </FormGrid>
+        </EntryFormContainer>
+        <EntryFormContainer noPadding fullWidth>
+          <EntryFormHead title={`${t('forms.teaser')}`} />
+          <FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <Textarea
+                id={`${uid}-textarea-german`}
+                label={t('general.german') as string}
+                ariaLabel={t('general.german') as string}
+                value={teaserGerman || ''}
+                onChange={(e) => setTeaserGerman(e.target.value)}
+                rows={5}
+                maxLength={defaultTeaserTextLimit}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <Textarea
+                id={`${uid}-textarea-german-easy`}
+                label={t('forms.labelGermanEasy') as string}
+                ariaLabel={t('forms.labelGermanEasy') as string}
+                value={teaserGermanEasy || ''}
+                onChange={(e) => setTeaserGermanEasy(e.target.value)}
+                rows={5}
+                maxLength={defaultTeaserTextLimit}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <Textarea
+                id={`${uid}-textarea-english`}
+                label={t('general.english') as string}
+                ariaLabel={t('general.english') as string}
+                value={teaserEnglish || ''}
+                onChange={(e) => setTeaserEnglish(e.target.value)}
+                rows={5}
+                maxLength={defaultTeaserTextLimit}
+              />
             </FormItem>
           </FormGrid>
         </EntryFormContainer>
@@ -287,6 +338,18 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 label={t('date.ticketLink') as string}
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
+                placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Input
+                type={InputType.url}
+                label={t('categories.offer.form.pricing.registrationUrl') as string}
+                value={registrationUrl}
+                onChange={(e) => setRegistrationUrl(e.target.value)}
+                placeholder={
+                  t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
+                }
               />
             </FormItem>
           </FormGrid>
@@ -329,52 +392,36 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       {t('dateCreate.create')}
     </Button>
   );
-
-  const earliestDate = new Date();
+  const now = new Date();
+  const earliestDate = now;
   const latestDate = add(earliestDate, { years: 1 });
-  const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
-  const startTimeISOString = format(earliestDate, 'HH:mm');
-  const startPlusOneHourTimeISOString = format(add(earliestDate, { hours: 1 }), 'HH:mm');
-
   const [ticketUrl, setTicketUrl] = useState('');
+  const [registrationUrl, setRegistrationUrl] = useState('');
   const [titleGerman, setTitleGerman] = useState('');
   const [titleEnglish, setTitleEnglish] = useState('');
+  const [teaserGerman, setTeaserGerman] = useState('');
+  const [teaserGermanEasy, setTeaserGermanEasy] = useState('');
+  const [teaserEnglish, setTeaserEnglish] = useState('');
   const [roomGerman, setRoomGerman] = useState('');
   const [roomEnglish, setRoomEnglish] = useState('');
   const [recurrence, setRecurrence] = useState<string>();
-  const [fromDateISOString, setFromDateISOString] = useState<string>(earliestDateISOString);
-  const [fromTimeISOString, setFromTimeISOString] = useState<string>(startTimeISOString);
-  const [toDateISOString, setToDateISOString] = useState<string>(earliestDateISOString);
-  const [toTimeISOString, setToTimeISOString] = useState<string>(startPlusOneHourTimeISOString);
 
-  const fromDateTime = useMemo(
-    () => parseISO(`${fromDateISOString}T${fromTimeISOString}`),
-    [fromDateISOString, fromTimeISOString]
-  );
-
-  const toDateTime = useMemo(
-    () => parseISO(`${toDateISOString}T${toTimeISOString}`),
-    [toDateISOString, toTimeISOString]
-  );
-
-  const fromDate = useMemo(() => new Date(fromDateISOString), [fromDateISOString]);
-  const toDate = useMemo(() => new Date(toDateISOString), [toDateISOString]);
+  const [fromDate, setFromDate] = useState<Date>(now);
+  const [toDate, setToDate] = useState<Date>(add(now, { hours: 1 }));
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
-  const toTimeValid = useMemo(
-    () => compareAsc(fromDateTime, toDateTime) === -1,
-    [fromDateTime, toDateTime]
-  );
+  const toTimeValid = useMemo(() => compareAsc(fromDate, toDate) === -1, [fromDate, toDate]);
 
-  const date = useMemo<OfferDate>(
-    () => ({
+  const date = useMemo<OfferDate>(() => {
+    const newDate = {
       data: {
         attributes: {
-          startsAt: fromDateTime?.toISOString(),
-          endsAt: toDateTime?.toISOString(),
+          startsAt: fromDate?.toISOString(),
+          endsAt: toDate?.toISOString(),
           status: OfferDateStatus.scheduled,
-          ticketLink: ticketUrl,
+          ticketUrl: ticketUrl,
+          registrationUrl: registrationUrl,
         },
         relations: {
           translations: [
@@ -383,6 +430,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.de,
                 name: titleGerman,
+                teaser: teaserGerman,
                 roomDescription: roomGerman,
               },
             },
@@ -391,15 +439,41 @@ export const DateCreate: React.FC<DateCreateProps> = ({
               attributes: {
                 language: Language.en,
                 name: titleEnglish,
+                teaser: teaserEnglish,
                 roomDescription: roomEnglish,
               },
             },
           ],
         },
       },
-    }),
-    [fromDateTime, roomEnglish, roomGerman, ticketUrl, titleEnglish, titleGerman, toDateTime]
-  );
+    } as OfferDate;
+
+    if (teaserGermanEasy?.length > 0) {
+      newDate.data.relations.translations.push({
+        type: 'offerdatetranslation',
+        attributes: {
+          language: 'de-easy' as Language,
+          teaser: teaserGermanEasy,
+        },
+      });
+    }
+
+    console.log(newDate);
+
+    return newDate;
+  }, [
+    fromDate,
+    toDate,
+    ticketUrl,
+    registrationUrl,
+    titleGerman,
+    teaserGerman,
+    roomGerman,
+    titleEnglish,
+    teaserEnglish,
+    roomEnglish,
+    teaserGermanEasy,
+  ]);
 
   const { renderedOverlay, setIsOpen } = useOverlay(
     <>
@@ -412,31 +486,32 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           offerTitles,
           ticketUrl,
           setTicketUrl,
+          registrationUrl,
+          setRegistrationUrl,
           titleGerman,
           setTitleGerman,
           titleEnglish,
           setTitleEnglish,
+          teaserGerman,
+          setTeaserGerman,
+          teaserGermanEasy,
+          setTeaserGermanEasy,
+          teaserEnglish,
+          setTeaserEnglish,
           roomGerman,
           setRoomGerman,
           roomEnglish,
           setRoomEnglish,
-          fromDateISOString,
-          setFromDateISOString,
-          fromTimeISOString,
-          setFromTimeISOString,
-          toDateISOString,
-          setToDateISOString,
-          toTimeISOString,
-          setToTimeISOString,
           recurrence,
           setRecurrence,
           earliestDate,
           latestDate,
-          fromDateTime,
-          toDateTime,
           toDateValid,
           toTimeValid,
           fromDate,
+          setFromDate,
+          toDate,
+          setToDate,
         }}
       />
       <StyledDateCreateBottomBar>{createButton}</StyledDateCreateBottomBar>
@@ -448,28 +523,22 @@ export const DateCreate: React.FC<DateCreateProps> = ({
     onSubmit(date?.data, recurrence);
 
     setTimeout(() => {
+      const now = new Date();
       setIsOpen(false);
       setTicketUrl('');
+      setRegistrationUrl('');
       setTitleGerman('');
       setTitleEnglish('');
+      setTeaserGerman('');
+      setTeaserGermanEasy('');
+      setTeaserEnglish('');
       setRoomGerman('');
       setRoomEnglish('');
-      setFromDateISOString(earliestDateISOString);
-      setFromTimeISOString(startTimeISOString);
-      setToDateISOString(earliestDateISOString);
-      setToTimeISOString(startPlusOneHourTimeISOString);
       setRecurrence(undefined);
+      setFromDate(now);
+      setToDate(add(now, { hours: 1 }));
     }, submitDelay);
-  }, [
-    recurrence,
-    date,
-    onSubmit,
-    setIsOpen,
-    earliestDateISOString,
-    startTimeISOString,
-    startPlusOneHourTimeISOString,
-    submitDelay,
-  ]);
+  }, [recurrence, date, onSubmit, setIsOpen, submitDelay]);
 
   return (
     <div>

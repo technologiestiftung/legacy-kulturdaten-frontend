@@ -192,8 +192,9 @@ export const deDE: Localization = {
     },
   },
   language: {
-    de: () => 'Deutsch',
-    en: () => 'Englisch',
+    'de': () => 'Deutsch',
+    'en': () => 'Englisch',
+    'de-easy': () => 'Deutsch: einfache Sprache',
   },
   languageTags: {
     addButton: () => 'Sprache hinzufügen',
@@ -203,6 +204,15 @@ export const deDE: Localization = {
     listLabel: () => 'Bereits hinzugefügte Sprachen',
     listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
     noMatch: () => 'Keine passende Sprache gefunden',
+  },
+  mainTypeTags: {
+    addButton: () => 'Angebotsart hinzufügen',
+    addLabel: () => 'Neue Angebotsart hinzufügen',
+    addPlaceholder: () => 'Tippe einfach drauf los, z.B. Ausstellung, Konzert, Führung...',
+    listDelete: () => 'Angebotsart entfernen',
+    listLabel: () => 'Bereits hinzugefügte Angebotsarten',
+    listPlaceholder: () => 'Noch keine Angebotsarten hinzugefügt',
+    noMatch: () => 'Keine passende Angebotsart gefunden',
   },
   team: {
     list: {

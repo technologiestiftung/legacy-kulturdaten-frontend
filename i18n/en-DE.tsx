@@ -191,8 +191,9 @@ export const enDE: Localization = {
     },
   },
   language: {
-    de: () => 'German',
-    en: () => 'English',
+    'de': () => 'German',
+    'en': () => 'English',
+    'de-easy': () => 'German: simple Language',
   },
   languageTags: {
     addButton: () => 'Add language',
@@ -202,6 +203,15 @@ export const enDE: Localization = {
     listLabel: () => 'Already added languages',
     listPlaceholder: () => 'No language has been added yet',
     noMatch: () => 'No languages found',
+  },
+  mainTypeTags: {
+    addButton: () => 'Add event type',
+    addLabel: () => 'Add new event type',
+    addPlaceholder: () => 'Just type away, e.g. exhibition, concert, tour...',
+    listDelete: () => 'Remove event type',
+    listLabel: () => 'Already added event types',
+    listPlaceholder: () => 'No event type has been added yet',
+    noMatch: () => 'No event types found',
   },
   team: {
     list: {

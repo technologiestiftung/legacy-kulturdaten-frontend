@@ -92,6 +92,12 @@ export const weekdays: {
 }[] = [
   {
     name: {
+      long: 'days.sunday.long',
+      short: 'days.sunday.short',
+    },
+  },
+  {
+    name: {
       long: 'days.monday.long',
       short: 'days.monday.short',
     },
@@ -124,12 +130,6 @@ export const weekdays: {
     name: {
       long: 'days.saturday.long',
       short: 'days.saturday.short',
-    },
-  },
-  {
-    name: {
-      long: 'days.sunday.long',
-      short: 'days.sunday.short',
     },
   },
 ];
