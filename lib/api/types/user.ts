@@ -20,6 +20,7 @@ export type User = {
     createdAt: string;
     updatedAt: string;
     acceptedTermsAt: string;
+    hasAcceptedCurrentTerms: boolean;
     deletionRequestedAt?: string;
   };
   relations?: {

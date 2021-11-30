@@ -355,9 +355,10 @@ export const deDE: Localization = {
       confirmInputLabel: () => 'E-Mail zur Bestätigung',
       confirmButton: () => 'Löschung beantragen',
       confirmError: () => 'Die eingegebene E-Mail-Adresse ist nicht korrekt',
+      loading: () => 'Beantrage Löschung',
     },
     requestedDeletion: {
-      title: () => 'Löschung des Nutzer:innenkontos beantragt',
+      title: () => 'Löschung deines Nutzer:innenkontos beantragt',
       text: ({ date, email }) => (
         <DashboardTileText>
           <DashboardTileTextP>

@@ -21,7 +21,7 @@ import { DateFormat, useDate } from '../../../lib/date';
 import { useApiCall } from '../../../lib/api';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { UserUpdate, userUpdateFactory } from '../../../lib/api/routes/user/update';
-import { UserDelete, userDeleteFactory } from '../../../lib/api/routes/user/delete';
+import { useOrganizerId } from '../../../lib/useOrganizer';
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -33,10 +33,13 @@ const StyledButtonWrapper = styled.div`
 
 const CancelDeletionComponent: React.FC = () => {
   const t = useT();
-  const { user, logout } = useUser();
+  const { user, logout, mutateUserInfo } = useUser();
   const formatDate = useDate();
   const call = useApiCall();
   const loadingScreen = useLoadingScreen();
+  const router = useRouter();
+  const locale = useLocale();
+  const organizerId = useOrganizerId();
 
   const dateOfDeletion = useMemo(
     () =>
@@ -68,15 +71,29 @@ const CancelDeletionComponent: React.FC = () => {
                 onClick={() => {
                   loadingScreen('Löschung abbrechen', async () => {
                     try {
-                      const resp = await call<UserDelete>(userDeleteFactory, {
+                      const resp = await call<UserUpdate>(userUpdateFactory, {
                         user: {
-                          attributes: {
-                            deletionRequestedAt: null,
+                          attributes: {},
+                          meta: {
+                            abortDeletionRequest: true,
                           },
                         },
                       });
 
                       if (resp.status === 200) {
+                        mutateUserInfo();
+                        setTimeout(() => {
+                          setTimeout(() => {
+                            router.replace(
+                              routes.dashboard({
+                                locale,
+                                query: {
+                                  organizer: organizerId,
+                                },
+                              })
+                            );
+                          }, 250);
+                        }, 250);
                         return { success: true };
                       }
 

@@ -353,6 +353,7 @@ export const enDE: Localization = {
       confirmInputLabel: () => 'Email for verification',
       confirmButton: () => 'Request deletion',
       confirmError: () => 'The entered email address is not correct',
+      loading: () => 'Requesting deletion',
     },
     requestedDeletion: {
       title: () => 'User account deletion requested',

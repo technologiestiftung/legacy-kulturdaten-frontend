@@ -20,9 +20,6 @@ import { useActiveRoute, useLocale } from '../../lib/routing';
 import { useRouter } from 'next/router';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useT } from '../../lib/i18n';
-import { add, sub, compareAsc } from 'date-fns';
-
-const termsDate = sub(new Date(), { minutes: 1 });
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -83,25 +80,13 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
 
   const isInternalRoute = useMemo(() => internalRoutes.includes(activeRoute), [activeRoute]);
 
-  const acceptedTerms = useMemo(() => {
-    if (termsDate && stateUser) {
-      const compareDates = compareAsc(
-        termsDate,
-        stateUser?.attributes?.acceptedTermsAt
-          ? new Date(stateUser?.attributes?.acceptedTermsAt)
-          : new Date()
-      );
-
-      console.log(compareDates);
-
-      return compareDates !== 1;
-    }
-
-    return undefined;
-  }, [stateUser]);
+  const acceptedTerms = useMemo(
+    () => !stateUser?.id || stateUser?.attributes?.hasAcceptedCurrentTerms,
+    [stateUser]
+  );
 
   const requestedDeletion = useMemo(
-    () => false && stateUser?.id && stateUser?.attributes.deletionRequestedAt?.length > 0,
+    () => stateUser?.id && stateUser?.attributes.deletionRequestedAt?.length > 0,
     [stateUser?.attributes?.deletionRequestedAt?.length, stateUser?.id]
   );
 
