@@ -6,8 +6,8 @@ import { DashboardLinkList } from '../../Dasboard/DashboardLinkList';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { Info, InfoColor } from '../../info';
 import { Input, InputType } from '../../input';
-import { useState } from 'react';
-import { Button, ButtonColor, ButtonSize } from '../../button';
+import { useMemo, useState } from 'react';
+import { Button, ButtonColor, ButtonSize, ButtonType } from '../../button';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import {
   StyledTeamList,
@@ -23,6 +23,9 @@ import { mq } from '../../globals/Constants';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { Textarea } from '../../textarea';
 import { SettingsHeader } from './SettingsHeader';
+import { useApiCall } from '../../../lib/api';
+import { AppTokenCreate, appTokenCreateFactory } from '../../../lib/api/routes/appToken/create';
+import { useAppTokenList } from '../../../lib/appTokenList';
 
 const CustomListTitleRow = styled(StyledTeamListListTitleRow)`
   grid-template-columns: 100%;
@@ -45,9 +48,21 @@ export const UserDeveloperPage: React.FC = () => {
   const loadingScreen = useLoadingScreen();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
-  const [dummyInput1, setDummyInput1] = useState('');
-  const [dummyInput2, setDummyInput2] = useState('');
-  const [dummyInput3, setDummyInput3] = useState('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [url, setUrl] = useState('');
+
+  const { appTokens, mutate } = useAppTokenList();
+
+  const tokenNameValid = useMemo(() => {
+    if (name?.length === 0 || appTokens?.find((token) => token.name.trim() === name.trim())) {
+      return false;
+    }
+
+    return true;
+  }, [appTokens, name]);
+
+  const call = useApiCall();
 
   return (
     <>
@@ -59,55 +74,87 @@ export const UserDeveloperPage: React.FC = () => {
               title={t('settings.api.titleCreate') as string}
               tooltip={t('settings.api.titleCreateTooltip')}
             />
-            <FormGrid>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={t('settings.api.projectTitle') as string}
-                  value={dummyInput1}
-                  placeholder={t('settings.api.projectTitlePlaceholder') as string}
-                  onChange={(e) => setDummyInput1(e.target.value)}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={`${t('settings.api.projectUrl')} (${t('forms.optional')})`}
-                  value={dummyInput2}
-                  placeholder={t('forms.urlPlaceholder') as string}
-                  onChange={(e) => setDummyInput2(e.target.value)}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Textarea
-                  id={'project-description'}
-                  value={dummyInput3}
-                  label={`${t('settings.api.projectDescription')} (${t('forms.optional')})`}
-                  placeholder={t('settings.api.projectDescriptionPlaceholder') as string}
-                  onChange={(e) => setDummyInput3(e.target.value)}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.full}>
-                <Button
-                  color={ButtonColor.black}
-                  size={ButtonSize.big}
-                  onClick={() =>
-                    loadingScreen(t('settings.loading'), async () => {
-                      setDummyInput1('');
-                      setDummyInput2('');
-                      setDummyInput3('');
-                      return { success: true };
-                    })
-                  }
-                >
-                  {t('settings.api.createButton') as string}
-                </Button>
-              </FormItem>
-              <FormItem width={FormItemWidth.full}>
-                <Info color={InfoColor.white}>{t('settings.api.info')}</Info>
-              </FormItem>
-            </FormGrid>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (tokenNameValid) {
+                  loadingScreen(t('settings.loading'), async () => {
+                    try {
+                      const resp = await call<AppTokenCreate>(appTokenCreateFactory, {
+                        appToken: {
+                          attributes: {
+                            name,
+                            description,
+                          },
+                        },
+                      });
+
+                      if (resp.status === 200) {
+                        mutate();
+                        return { success: true };
+                      }
+                    } catch (e) {
+                      console.error(e);
+
+                      return { success: false, error: t('general.serverProblem') };
+                    }
+                  });
+                }
+              }}
+            >
+              <FormGrid>
+                <FormItem width={FormItemWidth.half}>
+                  <Input
+                    type={InputType.text}
+                    label={t('settings.api.projectTitle') as string}
+                    value={name}
+                    placeholder={t('settings.api.projectTitlePlaceholder') as string}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    valid={tokenNameValid}
+                    error={
+                      !tokenNameValid ? (t('settings.api.uniqueNameError') as string) : undefined
+                    }
+                  />
+                </FormItem>
+                <FormItem width={FormItemWidth.half}>
+                  <Input
+                    type={InputType.text}
+                    label={`${t('settings.api.projectUrl')} (${t('forms.optional')})`}
+                    value={url}
+                    placeholder={t('forms.urlPlaceholder') as string}
+                    onChange={(e) => setUrl(e.target.value)}
+                  />
+                </FormItem>
+                <FormItem width={FormItemWidth.half}>
+                  <Textarea
+                    id={'project-description'}
+                    label={`${t('settings.api.projectDescription')} (${t('forms.optional')})`}
+                    placeholder={t('settings.api.projectDescriptionPlaceholder') as string}
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    maxLength={100}
+                  />
+                </FormItem>
+                <FormItem width={FormItemWidth.full}>
+                  <Button
+                    color={ButtonColor.black}
+                    size={ButtonSize.big}
+                    type={ButtonType.submit}
+                    disabled={!tokenNameValid}
+                  >
+                    {t('settings.api.createButton') as string}
+                  </Button>
+                </FormItem>
+                <FormItem width={FormItemWidth.full}>
+                  <Info color={InfoColor.white}>{t('settings.api.info')}</Info>
+                </FormItem>
+              </FormGrid>
+            </form>
           </EntryFormContainer>
+          <EntryFormContainer>{JSON.stringify(appTokens)}</EntryFormContainer>
           <EntryFormContainer>
             <EntryFormHead title={t('settings.api.titleList') as string} />
             <FormGrid>

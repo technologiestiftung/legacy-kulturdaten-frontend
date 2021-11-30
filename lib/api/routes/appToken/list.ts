@@ -1,38 +1,39 @@
 import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..';
-import { Offer, CreateOffer } from '../../types/offer';
+import { AppToken } from '../../types/appToken';
 
 /**
- * /offer
+ * /appToken
  */
 
-export interface OfferCreate extends ApiCall {
+export interface AppTokenList extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
-    method: 'POST';
+    method: 'GET';
     headers: {
       'Authorization': string;
       'Content-Type': 'application/json';
     };
-    body: CreateOffer;
   };
   response: {
     status: 200;
-    body: Offer;
+    body: {
+      meta: {
+        tokens: AppToken[];
+      };
+    };
   };
 }
 
-export const offerCreateFactory: ApiCallFactory = (
-  token: OfferCreate['request']['headers']['Authorization'],
-  query: { entry: CreateOffer }
-): OfferCreate => ({
+export const appTokenListFactory: ApiCallFactory = (
+  token: AppTokenList['request']['headers']['Authorization']
+): AppTokenList => ({
   request: {
-    route: apiRoutes.offerCreate(),
-    method: 'POST',
+    route: apiRoutes.appToken(),
+    method: 'GET',
     headers: {
       'Authorization': makeBearer(token),
       'Content-Type': 'application/json',
     },
-    body: query.entry,
   },
   response: {
     status: 200,

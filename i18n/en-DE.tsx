@@ -394,9 +394,10 @@ export const enDE: Localization = {
       tokenTitle: () => 'Token',
       tokenName: () => 'Project name',
       tokenUrl: () => 'Url',
+      uniqueNameError: () => 'This name already exists. Please choose another one.',
       createButton: () => 'create API token',
       info: () => (
-        <>
+        <div>
           This is a function for developers. To use the kulturdaten.berlin API, you need an API
           token. Requests made with this token are connected to your user account. To find out how
           you can use the token to get data via the API, please read our{' '}
@@ -407,7 +408,7 @@ export const enDE: Localization = {
           >
             API docs.
           </a>
-        </>
+        </div>
       ),
     },
     docs: {
