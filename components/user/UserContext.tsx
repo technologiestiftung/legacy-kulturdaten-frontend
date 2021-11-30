@@ -22,7 +22,7 @@ import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useT } from '../../lib/i18n';
 import { add, sub, compareAsc } from 'date-fns';
 
-const termsDate = sub(new Date(), { hours: 1 });
+const termsDate = sub(new Date(), { minutes: 1 });
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -101,7 +101,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   }, [stateUser]);
 
   const requestedDeletion = useMemo(
-    () => stateUser?.id && stateUser?.attributes.deletionRequestedAt?.length > 0,
+    () => false && stateUser?.id && stateUser?.attributes.deletionRequestedAt?.length > 0,
     [stateUser?.attributes?.deletionRequestedAt?.length, stateUser?.id]
   );
 

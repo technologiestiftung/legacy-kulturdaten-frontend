@@ -20,11 +20,24 @@ import { Checkbox } from '../../checkbox';
 import { SettingsHeader } from './SettingsHeader';
 import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { useUser } from '../../user/useUser';
+import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { useApiCall } from '../../../lib/api';
+import { UserUpdate, userUpdateFactory } from '../../../lib/api/routes/user/update';
+import { useRouter } from 'next/router';
+import { useLocale } from '../../../lib/routing';
+import { useOrganizerId } from '../../../lib/useOrganizer';
+import { routes } from '../../../config/routes';
 
 const TermsComponent: React.FC = () => {
   const [accepted, setAccepted] = useState(false);
   const uid = usePseudoUID();
   const t = useT();
+  const loadingScreen = useLoadingScreen();
+  const call = useApiCall();
+  const { mutateUserInfo } = useUser();
+  const router = useRouter();
+  const locale = useLocale();
+  const organizerId = useOrganizerId();
 
   return (
     <EntryFormContainer>
@@ -46,7 +59,46 @@ const TermsComponent: React.FC = () => {
                 />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
-                <Button size={ButtonSize.big} color={ButtonColor.black} disabled={!accepted}>
+                <Button
+                  size={ButtonSize.big}
+                  color={ButtonColor.black}
+                  disabled={!accepted}
+                  onClick={() => {
+                    if (accepted) {
+                      loadingScreen(t('settings.terms.loading'), async () => {
+                        try {
+                          const resp = await call<UserUpdate>(userUpdateFactory, {
+                            user: {
+                              attributes: {
+                                acceptedTermsAt: new Date().toISOString(),
+                              },
+                            },
+                          });
+
+                          if (resp.status === 200) {
+                            mutateUserInfo();
+                            setTimeout(() => {
+                              router.push(
+                                routes.dashboard({
+                                  locale,
+                                  query: {
+                                    organizer: organizerId,
+                                  },
+                                })
+                              );
+                            }, 250);
+                            return { success: true };
+                          }
+
+                          return { success: false, error: t('general.serverProblem') };
+                        } catch (e) {
+                          console.error(e);
+                          return { success: false, error: t('general.serverProblem') };
+                        }
+                      });
+                    }
+                  }}
+                >
                   {t('settings.terms.button')}
                 </Button>
               </FormItem>

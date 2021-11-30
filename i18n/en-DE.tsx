@@ -325,6 +325,7 @@ export const enDE: Localization = {
       text: () =>
         'We have updated the terms of use for kulturdaten.berlin. In order to continue using the platform, please read them and agree to them. ',
       button: () => 'agree',
+      loading: () => 'Accepting terms of use',
     },
     deletion: {
       title: () => 'Delete user account',

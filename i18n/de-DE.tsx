@@ -326,6 +326,7 @@ export const deDE: Localization = {
       text: () =>
         'Wir haben die Nutzungsbedingungen für kulturdaten.berlin aktualisiert. Um die Plattform weiterzunutzen, musst du diese bitte lesen und ihnen zustimmen.',
       button: () => 'zustimmen',
+      loading: () => 'Stimme Nutzungsbedingungen zu',
     },
     deletion: {
       title: () => 'Nutzer:innenkonto löschen',
