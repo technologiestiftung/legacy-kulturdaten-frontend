@@ -471,6 +471,8 @@ export const deDE: Localization = {
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
     registerReference: () => 'Du bis neu hier?',
     registerReferenceLinkText: () => 'Registriere dich jetzt.',
+    verificationError: () =>
+      'Dieser Account ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
   },
   logout: {
     loading: () => 'Abmeldung läuft',

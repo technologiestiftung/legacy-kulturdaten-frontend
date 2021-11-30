@@ -484,6 +484,8 @@ export const enDE: Localization = {
     passwordError: () => 'The entered passwords do not match.',
     requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
     uniqueEmailError: () => 'This account already exists.',
+    verificationError: () =>
+      "This account wasn't verified yet. Please check your emails for a confirmation email we've sent you.",
     successHeadline: () => 'Great, that worked!',
     successSubline: () => 'We sent you an email. Check your inbox to activate your account.',
     confirmationText: () => (
