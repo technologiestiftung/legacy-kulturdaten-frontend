@@ -136,9 +136,16 @@ export const useCategories: () => {
       options: {
         exportCsv: t('categories.organizer.options.exportCsv') as string,
         exportXls: t('categories.organizer.options.exportXls') as string,
-        delete: t('categories.organizer.options.delete') as string,
-        deleteConfirm: t('categories.organizer.options.deleteConfirm') as string,
-        deleting: t('categories.organizer.options.deleting') as string,
+        deletion: {
+          title: t('categories.organizer.options.delete') as string,
+          message: (name) => t('categories.organizer.options.deleteConfirm', { name }) as string,
+          deleting: t('categories.organizer.options.deleting') as string,
+          button: t('general.confirmDelete') as string,
+          condition: {
+            label: 'Name der Anbieter:in',
+            error: 'nicht korrekt',
+          },
+        },
       },
       publishText: t('categories.organizer.publishText') as string,
       requirements: [
@@ -293,9 +300,12 @@ export const useCategories: () => {
       options: {
         exportCsv: t('categories.offer.options.exportCsv') as string,
         exportXls: t('categories.offer.options.exportXls') as string,
-        delete: t('categories.offer.options.delete') as string,
-        deleteConfirm: t('categories.offer.options.deleteConfirm') as string,
-        deleting: t('categories.offer.options.deleting') as string,
+        deletion: {
+          title: t('categories.offer.options.delete') as string,
+          message: (name) => t('categories.offer.options.deleteConfirm', { name }) as string,
+          deleting: t('categories.offer.options.deleting') as string,
+          button: t('general.confirmDelete') as string,
+        },
       },
       publishText: t('categories.offer.publishText') as string,
       requirements: [
@@ -432,9 +442,12 @@ export const useCategories: () => {
       options: {
         exportCsv: t('categories.location.options.exportCsv') as string,
         exportXls: t('categories.location.options.exportXls') as string,
-        delete: t('categories.location.options.delete') as string,
-        deleteConfirm: t('categories.location.options.deleteConfirm') as string,
-        deleting: t('categories.location.options.deleting') as string,
+        deletion: {
+          title: t('categories.location.options.delete') as string,
+          message: (name) => t('categories.location.options.deleteConfirm', { name }) as string,
+          deleting: t('categories.location.options.deleting') as string,
+          button: t('general.confirmDelete') as string,
+        },
       },
       publishText: t('categories.location.publishText') as string,
       requirements: [

@@ -11,11 +11,17 @@ export type User = {
   type: 'user';
   attributes: {
     email: string;
+    emailConfirmation?: string;
+    password?: string;
+    passwordConfirmation?: string;
     rememberMeToken: string;
     isSuperuser: boolean;
     status: UserStatus;
     createdAt: string;
     updatedAt: string;
+    acceptedTermsAt: string;
+    hasAcceptedCurrentTerms: boolean;
+    deletionRequestedAt?: string;
   };
   relations?: {
     [key in CategoriesPlural]?: Role[];

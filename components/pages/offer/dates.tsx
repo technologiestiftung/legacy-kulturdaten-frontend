@@ -17,6 +17,7 @@ import { usePseudoUID } from '../../../lib/uid';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { Breakpoint, WindowContext } from '../../../lib/WindowService';
 import { useCollapsable } from '../../collapsable';
+import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -152,6 +153,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const pseudoUID = usePseudoUID();
   const loadingScreen = useLoadingScreen();
+  const confirmScreen = useConfirmScreen();
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
   const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
   const [sortKey, setSortKey] = useState('startsAt');
@@ -223,48 +225,47 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
       ]);
     },
     onDelete: (dateIds) => {
-      if (
-        confirm(
-          t('general.deleting.confirm', {
-            name: t(
-              dateIds?.length > 1
-                ? 'general.deleting.date.plural'
-                : 'general.deleting.date.singular'
-            ) as string,
-          }) as string
-        )
-      ) {
-        loadingScreen(
-          t('general.deleting.loading'),
-          async () => {
-            try {
-              const resp = await call<OfferDelete>(offerDeleteFactory, {
-                id: entry.data.id,
-                entry: {
-                  relations: {
-                    dates: dateIds,
+      confirmScreen({
+        title: t('date.delete') as string,
+        message: t('general.deleting.confirm', {
+          name: t(
+            dateIds?.length > 1 ? 'general.deleting.date.plural' : 'general.deleting.date.singular'
+          ) as string,
+        }),
+        confirmText: t('general.confirmDelete') as string,
+        onConfirm: async () => {
+          loadingScreen(
+            t('general.deleting.loading'),
+            async () => {
+              try {
+                const resp = await call<OfferDelete>(offerDeleteFactory, {
+                  id: entry.data.id,
+                  entry: {
+                    relations: {
+                      dates: dateIds,
+                    },
                   },
-                },
-              });
+                });
 
-              if (resp.status === 200) {
-                setCheckedDateIds(
-                  checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
-                );
-                mutateDateList();
-                return { success: true };
+                if (resp.status === 200) {
+                  setCheckedDateIds(
+                    checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
+                  );
+                  mutateDateList();
+                  return { success: true };
+                }
+
+                return { success: false, error: t('general.serverProblem') };
+              } catch (e) {
+                console.error(e);
+
+                return { success: false, error: t('general.serverProblem') };
               }
-
-              return { success: false, error: t('general.serverProblem') };
-            } catch (e) {
-              console.error(e);
-
-              return { success: false, error: t('general.serverProblem') };
-            }
-          },
-          t('general.takeAFewSeconds')
-        );
-      }
+            },
+            t('general.takeAFewSeconds')
+          );
+        },
+      });
     },
   });
 

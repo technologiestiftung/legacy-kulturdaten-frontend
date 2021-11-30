@@ -12,6 +12,7 @@ import { useUserIsOwner } from '../../../lib/useUserIsOwner';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { useAdminMode } from '../../Admin/AdminContext';
 import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '../../button';
+import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
@@ -49,11 +50,11 @@ export const useEntryHeader = (
     : undefined;
 
   const locale = useLocale();
-  const { quit } = useAdminMode();
+  const { quit, adminModeActive } = useAdminMode();
 
   const organizerId = useOrganizerId();
   const loadingScreen = useLoadingScreen();
-
+  const confirmScreen = useConfirmScreen();
   const deleteOrganizer = useDeleteEntry(Categories.organizer);
   const deleteOffer = useDeleteEntry(Categories.offer);
   const deleteLocation = useDeleteEntry(Categories.location);
@@ -109,28 +110,44 @@ export const useEntryHeader = (
                   variant={ButtonVariant.minimal}
                   size={ButtonSize.default}
                   color={ButtonColor.black}
-                  onClick={async () => {
-                    if (confirm(category?.options?.deleteConfirm)) {
-                      loadingScreen(category?.options?.deleting, async () => {
-                        switch (category.name) {
-                          case Categories.organizer: {
-                            const deleteResp = await deleteOrganizer(entry?.data?.id);
-                            quit();
+                  onClick={() => {
+                    confirmScreen({
+                      title: category?.options?.deletion.title,
+                      confirmText: category?.options?.deletion.button,
+                      message: category?.options?.deletion.message(
+                        currentTranslation?.attributes?.name || category.placeholderName
+                      ),
+                      condition: category?.options?.deletion?.condition
+                        ? {
+                            label: category?.options?.deletion?.condition.label,
+                            value: currentTranslation?.attributes?.name || category.placeholderName,
+                            error: category?.options?.deletion?.condition.error,
+                          }
+                        : undefined,
+                      onConfirm: async () => {
+                        loadingScreen(category?.options?.deletion.deleting, async () => {
+                          switch (category.name) {
+                            case Categories.organizer: {
+                              const deleteResp = await deleteOrganizer(entry?.data?.id);
+                              if (adminModeActive) {
+                                quit();
+                              }
 
-                            return deleteResp;
+                              return deleteResp;
+                            }
+                            case Categories.offer: {
+                              return await deleteOffer(entry?.data?.id);
+                            }
+                            case Categories.location: {
+                              return await deleteLocation(entry?.data?.id);
+                            }
                           }
-                          case Categories.offer: {
-                            return await deleteOffer(entry?.data?.id);
-                          }
-                          case Categories.location: {
-                            return await deleteLocation(entry?.data?.id);
-                          }
-                        }
-                      });
-                    }
+                        });
+                      },
+                    });
                   }}
                 >
-                  {category?.options?.delete}
+                  {category?.options?.deletion.title}
                 </Button>
               )}
             </DropdownMenu>

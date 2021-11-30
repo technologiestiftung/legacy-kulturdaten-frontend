@@ -22,6 +22,8 @@ const {
   publicRuntimeConfig: { authTokenCookieName },
 } = getConfig();
 
+const verificationErrorCode = 'E_UNVERIFIED_USER';
+
 const authCookie = (value: string, remember: boolean, locale: Locale): Cookie => ({
   'name': authTokenCookieName,
   'value': value,
@@ -32,7 +34,7 @@ const authCookie = (value: string, remember: boolean, locale: Locale): Cookie =>
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<string>();
   const [remember, setRemember] = useState<boolean>(true);
   const { isLoggedIn, login } = useUser();
   const router = useRouter();
@@ -71,9 +73,24 @@ export const LoginForm: React.FC = () => {
 
             return { success: true };
           }
-        } catch (e) {
-          setError(e);
           return { success: false, error: <Info>{t('login.error')}</Info> };
+        } catch (e) {
+          const requestErrors = e.message
+            ? (JSON.parse(e.message)?.errors as {
+                title: string;
+                code: string;
+                status: string;
+              }[])
+            : undefined;
+
+          console.log(requestErrors);
+
+          const visibleError = requestErrors?.find((error) => error.code === verificationErrorCode)
+            ? (t('login.verificationError') as string)
+            : (t('login.error') as string);
+
+          setError(visibleError);
+          return { success: false, error: <Info>{visibleError}</Info> };
         }
       });
     }
@@ -134,7 +151,7 @@ export const LoginForm: React.FC = () => {
             />
           </span>
         </AuthFormItem>
-        {error ? <Info>{t('login.error')}</Info> : ''}
+        {error ? <Info>{error}</Info> : ''}
       </AuthFormContainer>
     </form>
   );

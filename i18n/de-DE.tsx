@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { InfoLi, InfoP, InfoUl } from '../components/info';
+import { FormText, FormTextP } from '../components/pages/helpers/formComponents';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
@@ -303,7 +304,8 @@ export const deDE: Localization = {
     },
   },
   dateCreate: {
-    overlayTitle: ({ offerTitle }) => `Termin für ‚${offerTitle}‘ erstellen`,
+    overlayTitle: ({ offerTitle }) =>
+      `Termin für ${offerTitle ? `‚${offerTitle}‘` : 'unbenanntes Angebot'} erstellen`,
     create: () => 'Termin erstellen',
     loading: () => ' Erstelle Termin',
   },
@@ -328,6 +330,58 @@ export const deDE: Localization = {
         'Dein Name wird ausschließlich intern auf kulturdaten.berlin verwendet und ist nicht öffentlich einsehbar. Nur deine gemeinsamen Team-Mitglieder:innen können ihn sehen, wenn ihr gemeinsam die Daten eurer Anbieter:in hinterlegt.',
       firstname: () => 'Vorname',
       lastname: () => 'Nachname',
+    },
+    terms: {
+      title: () => 'Aktualisierte Nutzungsbedinungen',
+      text: () =>
+        'Wir haben die Nutzungsbedingungen für kulturdaten.berlin aktualisiert. Um die Plattform weiterzunutzen, musst du diese bitte lesen und ihnen zustimmen.',
+      button: () => 'zustimmen',
+      loading: () => 'Stimme Nutzungsbedingungen zu',
+    },
+    deletion: {
+      title: () => 'Nutzer:innenkonto löschen',
+      text: () => (
+        <FormText>
+          <FormTextP>
+            Du kannst jederzeit die Löschung deines Nutzer:innenkontos beantragen. Nach einer Dauer
+            von zwei Wochen werden alle deine Daten unwiederbringlich gelöscht. Innerhalb dieses
+            Zeitraums kannst du die Löschung abbrechen.
+          </FormTextP>
+        </FormText>
+      ),
+      button: () => 'Löschung beantragen',
+      confirm: ({ email }) => (
+        <>
+          <p>
+            Wenn du die Löschung deines Kontos beantragst, werden alle deine Daten nach zwei Wochen
+            unwiederbringlich gelöscht. Innerhalb dieses Zeitraums kannst du die Löschung abbrechen.
+          </p>
+          <p>
+            Um die Löschung zu bestätigen, gib bitte die E-Mail-Adresse deines Kontos ({email}) in
+            dieses Feld ein und drücke den {'‚'}Löschung beantragen{'‘'}-Button.
+          </p>
+        </>
+      ),
+      confirmInputLabel: () => 'E-Mail zur Bestätigung',
+      confirmButton: () => 'Löschung beantragen',
+      confirmError: () => 'Die eingegebene E-Mail-Adresse ist nicht korrekt',
+      loading: () => 'Beantrage Löschung',
+    },
+    requestedDeletion: {
+      title: () => 'Löschung deines Nutzer:innenkontos beantragt',
+      text: ({ date, email }) => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            Du hast die Löschung deines Nutzer:innenkontos (E-Mail: {email}) beantragt. Dein Konto
+            wird endgültig am <b>{date}</b> gelöscht.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            Vor diesem Datum kannst du die Löschung abbrechen, indem du auf den unten stehenden
+            Button drückst.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      button: () => 'Löschung abbrechen',
     },
     api: {
       titleCreate: () => 'API Token erstellen (für Entwickler:innen)',
@@ -427,6 +481,8 @@ export const deDE: Localization = {
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
     registerReference: () => 'Du bis neu hier?',
     registerReferenceLinkText: () => 'Registriere dich jetzt.',
+    verificationError: () =>
+      'Dieser Account ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
   },
   logout: {
     loading: () => 'Abmeldung läuft',
@@ -494,6 +550,7 @@ export const deDE: Localization = {
     altTooltip: () =>
       'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima.',
     license: () => 'Lizenz',
+    deleteTitle: () => 'Bild löschen',
     licenses: {
       '1': {
         name: () => 'mit Namensnennung nutzbar (CC BY)',
@@ -672,6 +729,8 @@ export const deDE: Localization = {
         plural: () => 'diese Termine',
       },
     },
+    cancel: () => 'abbrechen',
+    confirmDelete: () => 'Löschen bestätigen',
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
     created: () => 'erstellt',
@@ -879,9 +938,21 @@ export const deDE: Localization = {
         exportCsv: () => 'Export als CSV',
         exportXls: () => 'Export als Excel',
         delete: () => 'Anbieter:in löschen',
-        deleteConfirm: () =>
-          'Bist du sicher, dass du diese Anbieter:in löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>
+              Bist du sicher, dass du die Anbieter:in ‚{name}‘ löschen möchtest? Dies kann nicht
+              rückgängig gemacht werden.
+            </p>
+            <p>
+              Um die Löschung zu bestätigen, gib bitte den Namen der Anbieter:in in dieses Feld ein
+              und drücke den {'‚'}Löschuen bestätigen{'‘'}-Button.
+            </p>
+          </>
+        ),
         deleting: () => 'Lösche Anbieter:in',
+        deleteConditionLabel: () => 'Name der Anbieter:in zur Bestätigung',
+        deleteConditionError: () => 'Der eingebene Name ist nicht korrekt',
       },
     },
     offer: {
@@ -967,7 +1038,7 @@ export const deDE: Localization = {
           label: () => 'Veranstaltungsort',
           choose: () => 'Ort auswählen',
           edit: () => 'Ort ändern',
-          title: ({ name }) => `Ort für ‚${name}‘ wählen`,
+          title: ({ name }) => `Ort für ${name ? `‚${name}‘` : 'unbenanntes Angebot'} wählen`,
         },
         topics: () => 'Themen-Kategorie (Pflichtfeld)',
         topicsTooltip: () => (

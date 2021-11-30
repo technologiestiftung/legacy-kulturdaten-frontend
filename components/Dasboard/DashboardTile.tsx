@@ -196,6 +196,10 @@ export const DashboardTileTextP = styled.p`
     font-size: var(--font-size-400);
     line-height: var(--line-height-400);
   }
+
+  b {
+    font-weight: 700;
+  }
 `;
 
 export enum DashboardTileVariant {

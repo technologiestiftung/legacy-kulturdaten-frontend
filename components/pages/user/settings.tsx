@@ -2,67 +2,183 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
-import { useUser } from '../../user/useUser';
-import { EntryHeader } from '../../EntryHeader';
 import { LocaleSwitch, LocaleSwitchVariant } from '../../navigation/LocaleSwitch';
 import { usePseudoUID } from '../../../lib/uid';
 import { DashboardLinkList } from '../../Dasboard/DashboardLinkList';
 import { StandardLinkType } from '../../../lib/generalTypes';
-import { Info, InfoColor } from '../../info';
 import { Input, InputType } from '../../input';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button, ButtonColor, ButtonSize } from '../../button';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { UserContext } from '../../user/UserContext';
 import {
-  StyledTeamList,
-  StyledTeamListItem,
-  StyledTeamListItemText,
-  StyledTeamListItemTextBold,
-  StyledTeamListItemTitle,
-  StyledTeamListList,
-  StyledTeamListListTitleRow,
-} from '../../Team/TeamList';
-import styled from '@emotion/styled';
-import { mq } from '../../globals/Constants';
-import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
-import { Textarea } from '../../textarea';
+  DashboardTile,
+  DashboardTileText,
+  DashboardTileTextP,
+  DashboardTileVariant,
+} from '../../Dasboard/DashboardTile';
+import { Checkbox } from '../../checkbox';
+import { SettingsHeader } from './SettingsHeader';
+import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
+import { useUser } from '../../user/useUser';
+import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { useApiCall } from '../../../lib/api';
+import { UserUpdate, userUpdateFactory } from '../../../lib/api/routes/user/update';
+import { useRouter } from 'next/router';
+import { useLocale } from '../../../lib/routing';
+import { useOrganizerId } from '../../../lib/useOrganizer';
+import { routes } from '../../../config/routes';
 
-const CustomListTitleRow = styled(StyledTeamListListTitleRow)`
-  grid-template-columns: 100%;
+const TermsComponent: React.FC = () => {
+  const [accepted, setAccepted] = useState(false);
+  const uid = usePseudoUID();
+  const t = useT();
+  const loadingScreen = useLoadingScreen();
+  const call = useApiCall();
+  const { mutateUserInfo } = useUser();
+  const router = useRouter();
+  const locale = useLocale();
+  const organizerId = useOrganizerId();
 
-  ${mq(Breakpoint.mid)} {
-    grid-template-columns: calc(50% - 2.625rem) 20% 20% 10%;
-  }
-`;
+  return (
+    <EntryFormContainer>
+      <FormGrid>
+        <DashboardTile
+          title={t('settings.terms.title') as string}
+          variant={DashboardTileVariant.hint}
+        >
+          <DashboardTileText>
+            <DashboardTileTextP>{t('settings.terms.text')}</DashboardTileTextP>
+            <FormGrid>
+              <FormItem width={FormItemWidth.full}>
+                <Checkbox
+                  id={`${uid}-terms`}
+                  label={t('register.confirmationText')}
+                  required
+                  checked={accepted}
+                  onChange={(e) => setAccepted(e.target.checked)}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Button
+                  size={ButtonSize.big}
+                  color={ButtonColor.black}
+                  disabled={!accepted}
+                  onClick={() => {
+                    if (accepted) {
+                      loadingScreen(t('settings.terms.loading'), async () => {
+                        try {
+                          const resp = await call<UserUpdate>(userUpdateFactory, {
+                            user: {
+                              attributes: {
+                                acceptedTermsAt: new Date().toISOString(),
+                              },
+                            },
+                          });
 
-const CustomListItem = styled(StyledTeamListItem)`
-  grid-template-columns: 100%;
+                          if (resp.status === 200) {
+                            mutateUserInfo();
+                            setTimeout(() => {
+                              router.push(
+                                routes.dashboard({
+                                  locale,
+                                  query: {
+                                    organizer: organizerId,
+                                  },
+                                })
+                              );
+                            }, 250);
+                            return { success: true };
+                          }
 
-  ${mq(Breakpoint.mid)} {
-    grid-template-columns: calc(50% - 2.625rem) 20% 20% 10%;
-  }
-`;
+                          return { success: false, error: t('general.serverProblem') };
+                        } catch (e) {
+                          console.error(e);
+                          return { success: false, error: t('general.serverProblem') };
+                        }
+                      });
+                    }
+                  }}
+                >
+                  {t('settings.terms.button')}
+                </Button>
+              </FormItem>
+            </FormGrid>
+          </DashboardTileText>
+        </DashboardTile>
+      </FormGrid>
+    </EntryFormContainer>
+  );
+};
+
+const UserDeleteComponent: React.FC = () => {
+  const { user, mutateUserInfo } = useUser();
+  const confirmScreen = useConfirmScreen();
+  const loadingScreen = useLoadingScreen();
+  const t = useT();
+  const call = useApiCall();
+
+  return (
+    <EntryFormContainer>
+      <EntryFormHead title={t('settings.deletion.title') as string} />
+      <FormGrid>
+        <FormItem width={FormItemWidth.full}>{t('settings.deletion.text')}</FormItem>
+        <FormItem width={FormItemWidth.full}>
+          <Button
+            size={ButtonSize.big}
+            onClick={() =>
+              confirmScreen({
+                title: t('settings.deletion.title') as string,
+                message: t('settings.deletion.confirm', { email: user?.attributes?.email }),
+                confirmText: t('settings.deletion.confirmButton') as string,
+                onConfirm: async () => {
+                  loadingScreen(t('settings.deletion.loading'), async () => {
+                    try {
+                      const resp = await call<UserUpdate>(userUpdateFactory, {
+                        user: {
+                          attributes: {
+                            deletionRequestedAt: new Date().toISOString(),
+                          },
+                        },
+                      });
+
+                      if (resp.status === 200) {
+                        mutateUserInfo();
+                        return { success: true };
+                      }
+
+                      return { success: false, error: t('general.serverProblem') };
+                    } catch (e) {
+                      return { success: false, error: t('general.serverProblem') };
+                    }
+                  });
+                },
+                condition: {
+                  label: t('settings.deletion.confirmInputLabel') as string,
+                  value: user?.attributes?.email,
+                  error: t('settings.deletion.confirmError') as string,
+                },
+              })
+            }
+          >
+            {t('settings.deletion.button')}
+          </Button>
+        </FormItem>
+      </FormGrid>
+    </EntryFormContainer>
+  );
+};
 
 export const UserSettingsPage: React.FC = () => {
   const t = useT();
-  const { user } = useUser();
   const uid = usePseudoUID();
-  const loadingScreen = useLoadingScreen();
-  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
-
-  const [dummyInput1, setDummyInput1] = useState('');
-  const [dummyInput2, setDummyInput2] = useState('');
-  const [dummyInput3, setDummyInput3] = useState('');
+  const { acceptedTerms } = useContext(UserContext);
 
   return (
     <>
-      <EntryHeader
-        title={t('settings.title') as string}
-        subTitle={user?.attributes.email}
-        minimalVariant
-      />
+      <SettingsHeader />
       <div>
         <EntryFormWrapper>
+          {!acceptedTerms && <TermsComponent />}
           <EntryFormContainer>
             <EntryFormHead
               title={`${t('settings.personal.title')} (${t('forms.optional')})`}
@@ -79,185 +195,6 @@ export const UserSettingsPage: React.FC = () => {
                 <Button color={ButtonColor.black} size={ButtonSize.big}>
                   {t('forms.save') as string}
                 </Button>
-              </FormItem>
-            </FormGrid>
-          </EntryFormContainer>
-          <EntryFormContainer>
-            <EntryFormHead
-              title={t('settings.api.titleCreate') as string}
-              tooltip={t('settings.api.titleCreateTooltip')}
-            />
-            <FormGrid>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={t('settings.api.projectTitle') as string}
-                  value={dummyInput1}
-                  placeholder={t('settings.api.projectTitlePlaceholder') as string}
-                  onChange={(e) => setDummyInput1(e.target.value)}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.text}
-                  label={`${t('settings.api.projectUrl')} (${t('forms.optional')})`}
-                  value={dummyInput2}
-                  placeholder={t('forms.urlPlaceholder') as string}
-                  onChange={(e) => setDummyInput2(e.target.value)}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Textarea
-                  id={'project-description'}
-                  value={dummyInput3}
-                  label={`${t('settings.api.projectDescription')} (${t('forms.optional')})`}
-                  placeholder={t('settings.api.projectDescriptionPlaceholder') as string}
-                  onChange={(e) => setDummyInput3(e.target.value)}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.full}>
-                <Button
-                  color={ButtonColor.black}
-                  size={ButtonSize.big}
-                  onClick={() =>
-                    loadingScreen(t('settings.loading'), async () => {
-                      setDummyInput1('');
-                      setDummyInput2('');
-                      setDummyInput3('');
-                      return { success: true };
-                    })
-                  }
-                >
-                  {t('settings.api.createButton') as string}
-                </Button>
-              </FormItem>
-              <FormItem width={FormItemWidth.full}>
-                <Info color={InfoColor.white}>{t('settings.api.info')}</Info>
-              </FormItem>
-            </FormGrid>
-          </EntryFormContainer>
-          <EntryFormContainer>
-            <EntryFormHead title={t('settings.api.titleList') as string} />
-            <FormGrid>
-              <FormItem width={FormItemWidth.full}>
-                <StyledTeamList>
-                  <StyledTeamListList>
-                    {isMidOrWider && (
-                      <CustomListTitleRow>
-                        <StyledTeamListItemTitle>
-                          {t('settings.api.tokenTitle') as string}
-                        </StyledTeamListItemTitle>
-                        <StyledTeamListItemTitle>
-                          {t('settings.api.tokenName') as string}
-                        </StyledTeamListItemTitle>
-                        <StyledTeamListItemTitle>
-                          {t('settings.api.tokenUrl') as string}
-                        </StyledTeamListItemTitle>
-                      </CustomListTitleRow>
-                    )}
-                    <CustomListItem>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenTitle') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>
-                        UDK8rdbeF7cJ63SST6hSXDbEp4KgEqSY
-                      </StyledTeamListItemText>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenName') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>BDE Mobile App</StyledTeamListItemText>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenUrl') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>bde.mobile</StyledTeamListItemText>
-                      <StyledTeamListItemText>
-                        <Button color={ButtonColor.black}>{t('general.remove') as string}</Button>
-                      </StyledTeamListItemText>
-                    </CustomListItem>
-                    <CustomListItem>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenTitle') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>
-                        zfEY3M2ekAyABs53s34tJ9XUeK6hEtnF
-                      </StyledTeamListItemText>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenName') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>BDE Web App</StyledTeamListItemText>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenUrl') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>bde.com</StyledTeamListItemText>
-                      <StyledTeamListItemText>
-                        <Button color={ButtonColor.black}>{t('general.remove') as string}</Button>
-                      </StyledTeamListItemText>
-                    </CustomListItem>
-                    <CustomListItem>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenTitle') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>
-                        hFnexC5g72bPYSBp3UKgDv6c7xWBCtg9
-                      </StyledTeamListItemText>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenName') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>Test Token</StyledTeamListItemText>
-                      {!isMidOrWider && (
-                        <StyledTeamListItemTextBold>
-                          {t('settings.api.tokenUrl') as string}
-                        </StyledTeamListItemTextBold>
-                      )}
-                      <StyledTeamListItemText>example.com</StyledTeamListItemText>
-                      <StyledTeamListItemText>
-                        <Button color={ButtonColor.black}>{t('general.remove') as string}</Button>
-                      </StyledTeamListItemText>
-                    </CustomListItem>
-                  </StyledTeamListList>
-                </StyledTeamList>
-              </FormItem>
-            </FormGrid>
-          </EntryFormContainer>
-          <EntryFormContainer>
-            <EntryFormHead title={t('settings.docs.title') as string} />
-            <FormGrid>
-              <FormItem width={FormItemWidth.full}>
-                <DashboardLinkList
-                  links={[
-                    {
-                      type: StandardLinkType.external,
-                      title: t('settings.docs.api') as string,
-                      href: 'https://beta.api.kulturdaten-berlin.anyvent.cloud/docs/',
-                    },
-                    {
-                      type: StandardLinkType.external,
-                      title: t('settings.docs.frontend') as string,
-                      href: 'https://github.com/technologiestiftung/kulturdaten-frontend',
-                    },
-                    {
-                      type: StandardLinkType.external,
-                      title: t('settings.docs.backend') as string,
-                      href: 'https://github.com/technologiestiftung/kulturdaten-api',
-                    },
-                  ]}
-                />
               </FormItem>
             </FormGrid>
           </EntryFormContainer>
@@ -301,6 +238,7 @@ export const UserSettingsPage: React.FC = () => {
               </FormItem>
             </FormGrid>
           </EntryFormContainer>
+          <UserDeleteComponent />
         </EntryFormWrapper>
       </div>
     </>

@@ -28,6 +28,7 @@ import { District } from './api/types/district';
 import { DistrictList, districtListFactory } from './api/routes/district/list';
 import { defaultOrganizerId } from '../components/navigation/NavigationContext';
 import { sortByTranslation } from './sortTranslations';
+import { useConfirmScreen } from '../components/Confirm/ConfirmScreen';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -75,9 +76,16 @@ export type Category = {
   options: {
     exportCsv: string;
     exportXls: string;
-    delete: string;
-    deleteConfirm: string;
-    deleting: string;
+    deletion: {
+      title: string;
+      message: (name: string) => string;
+      button: string;
+      deleting: string;
+      condition?: {
+        label: string;
+        error: string;
+      };
+    };
   };
   requirements?: Requirement[];
   publishText: string;
@@ -562,16 +570,18 @@ export const useDeleteEntry = (
 
               router.push(routes.dashboard({ locale, query: { organizer: newActiveOrganizerId } }));
             } else {
-              mutateList();
               setLastEntryId(categoryName, undefined);
-              router.push(
-                category.routes.list({
-                  locale,
-                  query: {
-                    organizer: organizerId,
-                  },
-                })
-              );
+              mutateList();
+              setTimeout(() => {
+                router.push(
+                  category.routes.list({
+                    locale,
+                    query: {
+                      organizer: organizerId,
+                    },
+                  })
+                );
+              }, 250);
             }
           }, 250);
 

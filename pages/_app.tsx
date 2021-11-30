@@ -17,6 +17,7 @@ import { HeaderLink } from '../components/navigation/header/HeaderLink';
 import { LoadingContextProvider } from '../components/Loading/LoadingContext';
 import { AdminContextProvider } from '../components/Admin/AdminContext';
 import { useHandleActiveOrganizer } from '../lib/useOrganizer';
+import { ConfirmContextProvider } from '../components/Confirm/ConfirmContext';
 
 const EmbeddedAppLayout: React.FC<{ content: React.ReactElement }> = ({
   content,
@@ -41,20 +42,22 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
     <WindowContextProvider>
       <NavigationContextProvider>
         <LoadingContextProvider>
-          <EntryListContextProvider
-            listNames={[Categories.organizer, Categories.location, Categories.offer]}
-          >
-            <UserContextProvider>
-              <AdminContextProvider>
-                <Reset />
-                <CSSVars />
-                <Global />
-                <Typography />
+          <ConfirmContextProvider>
+            <EntryListContextProvider
+              listNames={[Categories.organizer, Categories.location, Categories.offer]}
+            >
+              <UserContextProvider>
+                <AdminContextProvider>
+                  <Reset />
+                  <CSSVars />
+                  <Global />
+                  <Typography />
 
-                <EmbeddedAppLayout content={<Component {...pageProps} />} />
-              </AdminContextProvider>
-            </UserContextProvider>
-          </EntryListContextProvider>
+                  <EmbeddedAppLayout content={<Component {...pageProps} />} />
+                </AdminContextProvider>
+              </UserContextProvider>
+            </EntryListContextProvider>
+          </ConfirmContextProvider>
         </LoadingContextProvider>
       </NavigationContextProvider>
     </WindowContextProvider>
