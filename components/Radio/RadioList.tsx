@@ -6,7 +6,7 @@ import { useT } from '../../lib/i18n';
 import { Label } from '../label';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
-import { ExternalLink, Info } from 'react-feather';
+import { ExternalLink } from 'react-feather';
 
 const StyledRadioList = styled.div<{ variant?: ComponentVariant }>`
   ${({ variant }) =>
