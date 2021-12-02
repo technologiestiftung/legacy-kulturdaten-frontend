@@ -441,7 +441,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   label: t(`media.licenses.${mediaLicense.id}.name`) as string,
                   link: {
                     href: t(`media.licenses.${mediaLicense.id}.href`) as string,
-                    title: t(`media.licenses.${mediaLicense.id}.href`) as string,
+                    title: t(`media.licenses.${mediaLicense.id}.title`) as string,
                   },
                 }))}
                 onChange={(newValue) =>

@@ -547,18 +547,22 @@ export const enDE: Localization = {
       '1': {
         name: () => 'with attribution (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.en',
+        title: () => 'information about license',
       },
       '2': {
         name: () => 'without restrictions (public domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.en',
+        title: () => 'information about license',
       },
       '3': {
         name: () => 'with attribution-ShareAlike (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
+        title: () => 'information about license',
       },
       '4': {
         name: () => 'permitted exclusively in the context of current reporting',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
+        title: () => 'information about license',
       },
     },
     licenseEnd: () => 'End date license',
