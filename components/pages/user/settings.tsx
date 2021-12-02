@@ -129,7 +129,7 @@ const UserDeleteComponent: React.FC = () => {
               confirmScreen({
                 title: t('settings.deletion.title') as string,
                 message: t('settings.deletion.confirm', { email: user?.attributes?.email }),
-                confirmText: t('settings.deletion.confirmButton') as string,
+                confirmButtonText: t('settings.deletion.confirmButton') as string,
                 onConfirm: async () => {
                   loadingScreen(t('settings.deletion.loading'), async () => {
                     try {

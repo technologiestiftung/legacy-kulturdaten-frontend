@@ -232,7 +232,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
             dateIds?.length > 1 ? 'general.deleting.date.plural' : 'general.deleting.date.singular'
           ) as string,
         }),
-        confirmText: t('general.confirmDelete') as string,
+        confirmButtonText: t('general.confirmDelete') as string,
         onConfirm: async () => {
           loadingScreen(
             t('general.deleting.loading'),

@@ -323,7 +323,7 @@ export const deDE: Localization = {
   },
   settings: {
     title: () => 'Einstellungen',
-    loading: () => 'Erstelle API Token',
+    loading: () => 'Erstelle API-Token',
     personal: {
       title: () => 'Persönliche Angaben',
       tooltip: () =>
@@ -384,7 +384,7 @@ export const deDE: Localization = {
       button: () => 'Löschung abbrechen',
     },
     api: {
-      titleCreate: () => 'API Token erstellen (für Entwickler:innen)',
+      titleCreate: () => 'API-Token erstellen (für Entwickler:innen)',
       titleCreateTooltip: () =>
         'Du möchtest unsere API verwenden? Erzähl uns von deinem Projekt und gib bitte die Website URL bzw. den Projektname an.',
       projectTitle: () => 'Bezeichnung deiner Anwendung',
@@ -393,16 +393,22 @@ export const deDE: Localization = {
       projectDescription: () => 'Projektbeschreibung',
       projectDescriptionPlaceholder: () =>
         'z.B. Smartphone-App zur Kontext-bezogenen Nutzung von Kulturdaten',
-      titleList: () => 'Deine bestehenden API Token',
+      titleList: () => 'Deine bestehenden API-Token',
       tokenTitle: () => 'Token',
       tokenName: () => 'Bezeichnung',
+      tokenDescription: () => 'Projektbeschreibung',
       tokenUrl: () => 'URL',
+      tokenRemoveTitle: () => 'API-Token löschen',
+      tokenRemoveMessage: ({ tokenName }) =>
+        `Bist du sicher, dass du das API-Token der Anwendung ‚${tokenName}‘ löschen möchtest? Die Anwendung verliert damit ihren Zugriff auf die API. Dies kann nicht rückgängig gemacht werden.`,
+      tokenRemoveConfirm: () => 'API-Token löschen',
+      tokenRemoveLoading: () => 'Lösche API-Token',
       uniqueNameError: () => 'Diese Bezeichnung existiert bereits. Wähle bitte eine andere.',
-      createButton: () => 'API Token erstellen',
+      createButton: () => 'API-Token erstellen',
       info: () => (
         <div>
           Dies ist eine Funktion für Entwickler:innen. Um die kulturdaten.berlin API zu nutzen,
-          benötigst du ein API Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto
+          benötigst du ein API-Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto
           zugeordnet. Wie du das Token verwenden kannst, um Daten über die API zu erhalten, erfährst
           du in unserer{' '}
           <a

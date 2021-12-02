@@ -10,7 +10,7 @@ export const Global: React.FC = () => (
         width: 100%;
 
         * {
-          letter-spacing: 0.01em;
+          letter-spacing: -0.005em;
         }
       }
     `}

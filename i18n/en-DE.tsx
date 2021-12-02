@@ -394,6 +394,11 @@ export const enDE: Localization = {
       tokenTitle: () => 'Token',
       tokenName: () => 'Project name',
       tokenUrl: () => 'Url',
+      tokenRemoveTitle: () => 'Remove API token',
+      tokenRemoveMessage: ({ tokenName }) =>
+        `Are you sure you want to delete the application's API token called “${tokenName}”? The application then loses its access to the API. This cannot be reversed.`,
+      tokenRemoveConfirm: () => 'delete API token',
+      tokenRemoveLoading: () => 'deleting API token',
       uniqueNameError: () => 'This name already exists. Please choose another one.',
       createButton: () => 'create API token',
       info: () => (
