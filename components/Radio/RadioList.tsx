@@ -6,6 +6,7 @@ import { useT } from '../../lib/i18n';
 import { Label } from '../label';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
+import { ExternalLink, Info } from 'react-feather';
 
 const StyledRadioList = styled.div<{ variant?: ComponentVariant }>`
   ${({ variant }) =>
@@ -29,18 +30,30 @@ const StyledRadioListItems = styled.ul`
   grid-row-gap: 0.75rem;
 `;
 
-const StyledRadioListItem = styled.li``;
+const StyledRadioListItem = styled.li`
+  display: inline-flex;
+  justify-content: space-between;
+`;
 
 const StyledRadioListItemLink = styled.div`
   font-size: var(--font-size-300);
-  line-height: var(--font-size-300);
-  padding: 0.375rem 0 0.375rem 2.25rem;
+  line-height: var(--line-height-300);
+  padding: 0 0 0 0.75rem;
+  flex-shrink: 0;
 `;
 
 const StyledRadioListItemLinkA = styled.a`
   color: inherit;
   overflow-wrap: anywhere;
   word-break: break-word;
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    padding: 0.1875rem 0;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 `;
 
 export interface RadioListProps extends ComponentWithVariants {
@@ -102,8 +115,10 @@ export const RadioList: React.FC<RadioListProps> = ({
                   href={option.link.href}
                   rel="noopener noreferrer"
                   target="_blank"
+                  title={option.link.title}
+                  aria-label={option.link.title}
                 >
-                  {option.link.title}
+                  <ExternalLink />
                 </StyledRadioListItemLinkA>
               </StyledRadioListItemLink>
             )}
