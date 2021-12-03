@@ -36,6 +36,7 @@ import { organizerTypeListFactory } from '../lib/api/routes/organizerType/list';
 import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 import { defaultLanguage, Language } from './locale';
 import { ParsedUrlQuery } from 'querystring';
+import { Page404 } from '../components/pages/404';
 
 type RequirementAttributes = {
   path: string;
@@ -93,10 +94,11 @@ export const useCategories: () => {
         create: routes[Routes.createOrganizer],
       },
       pages: {
-        info: OrganizerInfoPage,
-        categorization: OrganizerCategorizationPage,
-        media: OrganizerMediaPage,
-        list: OrganizerListPage,
+        'info': OrganizerInfoPage,
+        'categorization': OrganizerCategorizationPage,
+        'media': OrganizerMediaPage,
+        'list': OrganizerListPage,
+        '404': Page404,
       },
       tabs: [
         { title: t('categories.organizer.tabs.info') as string, sub: 'info' },
@@ -256,12 +258,13 @@ export const useCategories: () => {
       },
       subMenuKey: 'offer',
       pages: {
-        info: OfferInfoPage,
-        media: OfferMediaPage,
-        categorization: OfferCategorizationPage,
-        audience: OfferAudiencePage,
-        list: OfferListPage,
-        dates: OfferDatesPage,
+        'info': OfferInfoPage,
+        'media': OfferMediaPage,
+        'categorization': OfferCategorizationPage,
+        'audience': OfferAudiencePage,
+        'list': OfferListPage,
+        'dates': OfferDatesPage,
+        '404': Page404,
       },
       tabs: [
         { title: t('categories.offer.tabs.info') as string, sub: 'info' },
@@ -405,11 +408,12 @@ export const useCategories: () => {
       },
       subMenuKey: 'location',
       pages: {
-        info: LocationInfoPage,
-        service: LocationServicePage,
-        media: LocationMediaPage,
-        accessibility: LocationAccessibilityPage,
-        list: LocationListPage,
+        'info': LocationInfoPage,
+        'service': LocationServicePage,
+        'media': LocationMediaPage,
+        'accessibility': LocationAccessibilityPage,
+        'list': LocationListPage,
+        '404': Page404,
       },
       tabs: [
         { title: t('categories.location.tabs.info') as string, sub: 'info' },
