@@ -1,4 +1,4 @@
-import { apiRoutes, ApiCall, ApiRoute, ApiCallFactory } from '../..';
+import { apiRoutes, ApiCall, ApiRoute, ApiCallFactory, makeBearer } from '../..';
 import { District } from '../../types/district';
 
 /**
@@ -9,6 +9,9 @@ export interface DistrictList extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'GET';
+    headers: {
+      Authorization: string;
+    };
   };
   response: {
     status: 200;
@@ -18,10 +21,15 @@ export interface DistrictList extends ApiCall {
   };
 }
 
-export const districtListFactory: ApiCallFactory = (): DistrictList => ({
+export const districtListFactory: ApiCallFactory = (
+  token: DistrictList['request']['headers']['Authorization']
+): DistrictList => ({
   request: {
     route: apiRoutes.districtList(),
     method: 'GET',
+    headers: {
+      Authorization: makeBearer(token),
+    },
   },
   response: {
     status: 200,

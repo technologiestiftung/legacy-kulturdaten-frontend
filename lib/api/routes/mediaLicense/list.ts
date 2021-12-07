@@ -1,4 +1,4 @@
-import { apiRoutes, ApiCall, ApiRoute, ApiCallFactory } from '../..';
+import { apiRoutes, ApiCall, ApiRoute, ApiCallFactory, makeBearer } from '../..';
 import { MediaLicense } from '../../types/media';
 
 /**
@@ -9,6 +9,9 @@ export interface MediaLicenseList extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'GET';
+    headers: {
+      Authorization: string;
+    };
   };
   response: {
     status: 200;
@@ -18,10 +21,15 @@ export interface MediaLicenseList extends ApiCall {
   };
 }
 
-export const mediaLicenseListFactory: ApiCallFactory = (): MediaLicenseList => ({
+export const mediaLicenseListFactory: ApiCallFactory = (
+  token: MediaLicenseList['request']['headers']['Authorization']
+): MediaLicenseList => ({
   request: {
     route: apiRoutes.mediaLicenseList(),
     method: 'GET',
+    headers: {
+      Authorization: makeBearer(token),
+    },
   },
   response: {
     status: 200,

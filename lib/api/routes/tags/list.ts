@@ -1,4 +1,4 @@
-import { apiRoutes, ApiCall, ApiRoute, ApiCallFactory } from '../..';
+import { apiRoutes, ApiCall, ApiRoute, ApiCallFactory, makeBearer } from '../..';
 import { Tag } from '../../types/tag';
 
 /**
@@ -9,6 +9,9 @@ export interface TagList extends ApiCall {
   request: {
     route: ReturnType<ApiRoute>;
     method: 'GET';
+    headers: {
+      Authorization: string;
+    };
   };
   response: {
     status: 200;
@@ -18,10 +21,15 @@ export interface TagList extends ApiCall {
   };
 }
 
-export const tagListFactory: ApiCallFactory = (): TagList => ({
+export const tagListFactory: ApiCallFactory = (
+  token: TagList['request']['headers']['Authorization']
+): TagList => ({
   request: {
     route: apiRoutes.tagList(),
     method: 'GET',
+    headers: {
+      Authorization: makeBearer(token),
+    },
   },
   response: {
     status: 200,
