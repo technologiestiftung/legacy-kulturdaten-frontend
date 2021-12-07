@@ -562,18 +562,22 @@ export const deDE: Localization = {
       '1': {
         name: () => 'mit Namensnennung nutzbar (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.de',
+        title: () => 'Information über Lizenz',
       },
       '2': {
         name: () => 'ohne Namensnennung nutzbar (Public Domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.de',
+        title: () => 'Information über Lizenz',
       },
       '3': {
         name: () => 'mit Namensnennung - Weitergabe unter gleichen Bedingungen (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.de',
+        title: () => 'Information über Lizenz',
       },
       '4': {
         name: () => 'nur im Zuge der aktuellen Berichtersattung nutzbar',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
+        title: () => 'Information über Lizenz',
       },
     },
     licenseEnd: () => 'Ablaufdatum Lizenz',
