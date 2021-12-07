@@ -7,8 +7,8 @@ import { usePseudoUID } from '../../../lib/uid';
 import { DashboardLinkList } from '../../Dasboard/DashboardLinkList';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { Input, InputType } from '../../input';
-import { useContext, useState } from 'react';
-import { Button, ButtonColor, ButtonSize } from '../../button';
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from 'react';
+import { Button, ButtonColor, ButtonSize, ButtonType } from '../../button';
 import { UserContext } from '../../user/UserContext';
 import {
   DashboardTile,
@@ -27,6 +27,7 @@ import { useRouter } from 'next/router';
 import { useLocale } from '../../../lib/routing';
 import { useOrganizerId } from '../../../lib/useOrganizer';
 import { routes } from '../../../config/routes';
+import { Info, InfoColor } from '../../info';
 
 const TermsComponent: React.FC = () => {
   const [accepted, setAccepted] = useState(false);
@@ -168,6 +169,184 @@ const UserDeleteComponent: React.FC = () => {
   );
 };
 
+const passwordErrorId = 0;
+const requestErrorId = 1;
+
+const UserPasswordUpdate: React.FC = () => {
+  const t = useT();
+
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [success, setSuccess] = useState(false);
+  const call = useApiCall();
+  const loadingScreen = useLoadingScreen();
+
+  const passwordsMatch = useMemo(
+    () => newPassword === confirmPassword,
+    [confirmPassword, newPassword]
+  );
+
+  const [passwordConfirmationBlurred, setPasswordConfirmationBlurred] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ id: number; message: string }[]>([]);
+
+  const valid = useMemo(
+    () =>
+      oldPassword?.length > 0 &&
+      newPassword?.length > 0 &&
+      confirmPassword?.length > 0 &&
+      passwordsMatch,
+    [confirmPassword?.length, newPassword?.length, oldPassword?.length, passwordsMatch]
+  );
+
+  useEffect(() => {
+    if (newPassword.length > 0 && confirmPassword.length > 0) {
+      const filteredErrors = errors.filter(({ id }) => id !== passwordErrorId);
+      const passwordError = {
+        id: passwordErrorId,
+        message: t('register.passwordError') as string,
+      };
+      const passwordErrorPresent = errors.length !== filteredErrors.length;
+
+      if (passwordErrorPresent && passwordsMatch) {
+        setErrors(filteredErrors);
+      } else if (!passwordsMatch && !passwordErrorPresent && passwordConfirmationBlurred) {
+        setErrors([passwordError, ...filteredErrors]);
+      }
+    }
+  }, [
+    confirmPassword.length,
+    errors,
+    newPassword.length,
+    passwordConfirmationBlurred,
+    passwordsMatch,
+    t,
+  ]);
+
+  return (
+    <EntryFormContainer>
+      <EntryFormHead title={t('settings.password.title') as string} />
+      {success ? (
+        <FormGrid>
+          <FormItem width={FormItemWidth.full}>
+            <Info color={InfoColor.grey}>{t('settings.password.success')}</Info>
+          </FormItem>
+        </FormGrid>
+      ) : (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setErrors([]);
+
+            if (valid) {
+              loadingScreen(t('settings.password.loading'), async () => {
+                try {
+                  await call<UserUpdate>(userUpdateFactory, {
+                    user: {
+                      attributes: {
+                        password: newPassword,
+                        passwordConfirmation: confirmPassword,
+                      },
+                    },
+                  });
+                  setSuccess(true);
+
+                  setOldPassword('');
+                  setNewPassword('');
+                  setConfirmPassword('');
+                  setPasswordConfirmationBlurred(false);
+
+                  return { success: true };
+                } catch (e) {
+                  const requestErrors = e.message
+                    ? (JSON.parse(e.message)?.errors as {
+                        rule: string;
+                        field: string;
+                        message: string;
+                      }[])
+                    : undefined;
+
+                  const visibleError = requestErrors?.find(
+                    (error) => error.rule === 'unique' && error.field === 'email'
+                  )
+                    ? (t('register.uniqueEmailError') as string)
+                    : (t('register.requestError') as string);
+
+                  setErrors([
+                    { id: requestErrorId, message: visibleError },
+                    ...errors.filter(({ id }) => id !== requestErrorId),
+                  ]);
+                  return { success: false, error: <Info>{visibleError}</Info> };
+                }
+              });
+            }
+          }}
+        >
+          <FormGrid>
+            <FormItem width={FormItemWidth.full}>
+              <Input
+                value={oldPassword}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value)}
+                label={t('settings.password.oldLabel') as string}
+                placeholder={t('register.passwordPlaceholder') as string}
+                type={InputType.password}
+                id="old-password"
+                minLength={8}
+                required
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Input
+                value={newPassword}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
+                label={t('settings.password.newLabel') as string}
+                placeholder={t('register.passwordPlaceholder') as string}
+                type={InputType.password}
+                id="new-password"
+                minLength={8}
+                required
+                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Input
+                value={confirmPassword}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
+                label={t('settings.password.newConfirmLabel') as string}
+                placeholder={t('register.passwordPlaceholder') as string}
+                type={InputType.password}
+                id="confirm-password"
+                minLength={8}
+                required
+                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
+                onBlur={() => setPasswordConfirmationBlurred(true)}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Button
+                type={ButtonType.submit}
+                size={ButtonSize.big}
+                color={ButtonColor.black}
+                disabled={!valid}
+              >
+                {t('settings.password.button')}
+              </Button>
+            </FormItem>
+            {errors?.length > 0 && (
+              <FormItem width={FormItemWidth.full}>
+                {errors.map(({ message }, index) => (
+                  <Info key={index}>{message}</Info>
+                ))}
+              </FormItem>
+            )}
+          </FormGrid>
+        </form>
+      )}
+    </EntryFormContainer>
+  );
+};
+
 export const UserSettingsPage: React.FC = () => {
   const t = useT();
   const uid = usePseudoUID();
@@ -179,25 +358,7 @@ export const UserSettingsPage: React.FC = () => {
       <div>
         <EntryFormWrapper>
           {!acceptedTerms && <TermsComponent />}
-          <EntryFormContainer>
-            <EntryFormHead
-              title={`${t('settings.personal.title')} (${t('forms.optional')})`}
-              tooltip={t('settings.personal.tooltip')}
-            />
-            <FormGrid>
-              <FormItem width={FormItemWidth.half}>
-                <Input type={InputType.text} label={t('settings.personal.firstname') as string} />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Input type={InputType.text} label={t('settings.personal.lastname') as string} />
-              </FormItem>
-              <FormItem width={FormItemWidth.full}>
-                <Button color={ButtonColor.black} size={ButtonSize.big}>
-                  {t('forms.save') as string}
-                </Button>
-              </FormItem>
-            </FormGrid>
-          </EntryFormContainer>
+          <UserPasswordUpdate />
           <EntryFormContainer>
             <EntryFormHead
               title={t('menu.localeSwitch.label') as string}
