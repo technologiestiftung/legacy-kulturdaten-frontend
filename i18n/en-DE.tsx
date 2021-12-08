@@ -337,6 +337,17 @@ export const enDE: Localization = {
       button: () => 'agree',
       loading: () => 'Accepting terms of use',
     },
+    password: {
+      title: () => 'Change password',
+      oldLabel: () => 'Current password',
+      newLabel: () => 'New password',
+      newConfirmLabel: () => 'Confirm new password',
+      button: () => 'Change now',
+      loading: () => 'Updating password',
+      oldPasswordError: () =>
+        'The entered current password is wrong. Please try again with the correct password.',
+      success: () => 'You have successfully changed your password.',
+    },
     deletion: {
       title: () => 'Delete user account',
       text: () => (
