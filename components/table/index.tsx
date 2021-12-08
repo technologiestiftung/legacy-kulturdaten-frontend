@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUp } from 'react-feather';
 import { Order } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { insetBorder, mq, insetBorderColored } from '../globals/Constants';
+import { insetBorder, mq } from '../globals/Constants';
 
 const StyledTable = styled.div`
   display: grid;
@@ -57,8 +57,6 @@ const StyledRowWrapper = styled.div<{ narrow?: boolean; isTitleRow?: boolean }>`
           top: 0;
           left: 0;
           background: var(--grey-200);
-          /* box-shadow: ${insetBorderColored('var(--black)', false, false, true)}; */
-          /* border-bottom: 0.1875rem solid var(--grey-400); */
           z-index: 1;
         `
       : ''}
@@ -72,7 +70,7 @@ const StyledRowContainer = styled.div<{ narrow?: boolean }>`
   }
 `;
 
-const StyledCellSort = styled.button<{ active: boolean }>`
+export const StyledCellSort = styled.button<{ active: boolean }>`
   padding: 0.1875rem 0.375rem;
   background: var(--white);
   border: none;
@@ -156,25 +154,6 @@ const StyledCellText = styled.span`
   display: block;
 `;
 
-export interface TableProps {
-  columns: {
-    title: string;
-    bold?: boolean;
-    width?: number;
-    sort?: {
-      order: Order;
-      onClick: () => void;
-      active: boolean;
-    };
-  }[];
-  content: {
-    contents: (string | React.ReactElement)[];
-    Wrapper?: React.FC<{ children: React.ReactNode }>;
-  }[];
-  narrow?: boolean;
-  placeholder?: string | React.ReactNode;
-}
-
 type TableContext = {
   narrow: boolean;
 };
@@ -202,6 +181,25 @@ export const TableContextProvider: React.FC<TableContextProviderProps> = ({
     </TableContext.Provider>
   );
 };
+
+export interface TableProps {
+  columns: {
+    title: string;
+    bold?: boolean;
+    width?: number;
+    sort?: {
+      order: Order;
+      onClick: () => void;
+      active: boolean;
+    };
+  }[];
+  content: {
+    contents: (string | React.ReactElement)[];
+    Wrapper?: React.FC<{ children: React.ReactNode }>;
+  }[];
+  narrow?: boolean;
+  placeholder?: string | React.ReactNode;
+}
 
 export const Table: React.FC<TableProps> = ({
   columns,
