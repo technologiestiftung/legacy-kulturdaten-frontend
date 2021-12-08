@@ -6,10 +6,12 @@ export type AppToken = {
       name: string;
       description: string;
       url: string;
-      token: {
-        type: 'bearer';
-        token: string;
-      };
+      token:
+        | {
+            type: 'bearer';
+            token: string;
+          }
+        | string;
     };
   };
 };

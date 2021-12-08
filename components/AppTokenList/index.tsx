@@ -119,7 +119,7 @@ export const AppTokenList: React.FC<AppTokenListProps> = ({
               </StyledAppTokenListItemTokenLabel>
               <StyledAppTokenListItemTokenContent>
                 <StyledAppTokenListItemTokenContentInner>
-                  <pre>{token?.token || ' '}</pre>
+                  <pre>{typeof token === 'string' ? token : token?.token || ' '}</pre>
                 </StyledAppTokenListItemTokenContentInner>
               </StyledAppTokenListItemTokenContent>
               <StyledAppTokenListItemTokenRemove>
