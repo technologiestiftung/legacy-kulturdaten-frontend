@@ -20,7 +20,7 @@ export type UserUpdate = ApiCall & {
     body: {
       data: User;
       meta: {
-        message: 'Offer updated successfully';
+        message: 'User updated successfully';
       };
     };
   };

@@ -281,10 +281,11 @@ export const useMediaUpload = (
         });
 
         setProgress(0);
+
         req.open('PATCH', new URL(route, api).toString());
+        req.setRequestHeader('Authorization', request?.headers?.Authorization);
         req.send(formData);
       });
-      // req.open('PATCH', );
 
       return re;
     },
@@ -292,69 +293,6 @@ export const useMediaUpload = (
   );
 
   return { progress, upload: cb };
-};
-
-/**
- * Makes a call to kulturdaten.berlin API
- * @param request
- * @returns
- */
-export const upload = async <T extends ApiCall>(
-  { request, response }: T,
-  files: FileList
-): Promise<T['response']> => {
-  const route = request.route;
-
-  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
-
-  const formData = new FormData();
-
-  [...files].forEach((file: File) => formData.append('media', file));
-
-  const req = new XMLHttpRequest();
-
-  req.upload.addEventListener('progress', () => undefined);
-
-  req.upload.addEventListener('load', () => undefined);
-
-  req.upload.addEventListener('error', () => undefined);
-
-  req.upload.addEventListener('abort', () => undefined);
-
-  req.open('PATCH', route);
-  req.send(formData);
-
-  try {
-    const resp = await fetch(new URL(route, api).toString(), {
-      method: request.method,
-      headers: request.headers,
-      body: JSON.stringify(request.body, null, 2),
-    }).catch((e: ErrorEvent) => {
-      throw e;
-    });
-
-    const body: T['response']['body'] = await resp.json();
-
-    // TODO: Optimize when API became generalized
-    switch (resp.status) {
-      case response.status: {
-        return {
-          status: response.status,
-          body,
-        };
-      }
-      case 422: {
-        const regError = new Error(JSON.stringify(body));
-        regError.name = 'reg error';
-        throw regError;
-      }
-      default: {
-        throw new Error(JSON.stringify(body));
-      }
-    }
-  } catch (e) {
-    throw e;
-  }
 };
 
 /**

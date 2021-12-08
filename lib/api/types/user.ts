@@ -13,7 +13,8 @@ export type User = {
     email: string;
     emailConfirmation?: string;
     password?: string;
-    passwordConfirmation?: string;
+    newPassword?: string;
+    newPasswordConfirmation?: string;
     rememberMeToken: string;
     isSuperuser: boolean;
     status: UserStatus;
