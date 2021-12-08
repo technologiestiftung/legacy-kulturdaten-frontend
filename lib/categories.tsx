@@ -289,8 +289,8 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     }
 
     if (error && activeRoute !== Routes.page404) {
-      if (category.name !== Categories.organizer) {
-        router.replace(category.routes.list({ locale, query: { organizer: organizerId } }));
+      if (category?.name !== Categories.organizer) {
+        router.replace(category?.routes.list({ locale, query: { organizer: organizerId } }));
       } else {
         router.replace(
           routes.dashboard({
@@ -301,7 +301,16 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     }
 
     return undefined;
-  }, [activeRoute, category.name, category.routes, data?.body, error, locale, organizerId, router]);
+  }, [
+    activeRoute,
+    category?.name,
+    category?.routes,
+    data?.body,
+    error,
+    locale,
+    organizerId,
+    router,
+  ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return { entry, mutate: wrappedMutate };
