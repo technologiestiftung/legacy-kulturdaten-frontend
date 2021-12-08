@@ -25,6 +25,7 @@ export enum Routes {
   createLocation = 'createLocation',
   imprint = 'imprint',
   admin = 'admin',
+  page404 = 'page404',
 }
 
 /**
@@ -65,6 +66,10 @@ export const routes: { [key in Routes]: Route } = {
     `/${query.organizer}/${localizedRoutes[Routes.createLocation][locale]}/`,
   imprint: ({ locale }) => `/${localizedRoutes[Routes.imprint][locale]}/`,
   admin: ({ locale }) => `/${localizedRoutes[Routes.admin][locale]}/organizers/`,
+  page404: ({ query, locale }) =>
+    `/${query?.organizer ? `${query.organizer}/` : ''}${
+      query?.category ? `${localizedRoutes[query.category as string][locale]}/` : ''
+    }${localizedRoutes[Routes.page404][locale]}/`,
 };
 
 export const internalRoutes = [
@@ -159,6 +164,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'admin',
     'en-DE': 'admin',
   },
+  page404: {
+    'de-DE': '404',
+    'en-DE': '404',
+  },
 };
 
 export const routesLayouts: { [key in Routes]: Layouts } = {
@@ -179,5 +188,6 @@ export const routesLayouts: { [key in Routes]: Layouts } = {
   userSettings: Layouts.loggedInMeta,
   userDeletion: Layouts.loggedInMeta,
   developer: Layouts.loggedInMeta,
-  admin: Layouts.loggedInMeta,
+  admin: Layouts.loggedIn,
+  page404: Layouts.loggedIn,
 };
