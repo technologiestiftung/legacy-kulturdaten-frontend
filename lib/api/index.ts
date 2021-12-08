@@ -36,6 +36,7 @@ export type ApiCallFactory = (
  */
 
 export enum ApiRoutes {
+  appToken = 'appToken',
   authRegister = 'authRegister',
   authLogin = 'authLogin',
   authLogout = 'authLogout',
@@ -79,6 +80,7 @@ export type ApiRoute = (query?: ParsedUrlQuery) => string;
 export const apiRoutes: {
   [key in ApiRoutes]: ApiRoute;
 } = {
+  appToken: () => '/appToken',
   authRegister: () => '/auth/register',
   authLogin: () => '/auth/login',
   authLogout: () => '/auth/logout',

@@ -196,7 +196,7 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                   message: t('general.deleting.confirm', {
                     name: t('general.deleting.logo.singular') as string,
                   }),
-                  confirmText: t('general.confirmDelete') as string,
+                  confirmButtonText: t('general.confirmDelete') as string,
                   onConfirm: async () => {
                     loadingScreen(
                       t('general.deleting.loading'),

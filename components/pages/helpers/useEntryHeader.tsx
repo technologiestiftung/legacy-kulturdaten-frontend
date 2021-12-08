@@ -113,7 +113,7 @@ export const useEntryHeader = (
                   onClick={() => {
                     confirmScreen({
                       title: category?.options?.deletion.title,
-                      confirmText: category?.options?.deletion.button,
+                      confirmButtonText: category?.options?.deletion.button,
                       message: category?.options?.deletion.message(
                         currentTranslation?.attributes?.name || category.placeholderName
                       ),

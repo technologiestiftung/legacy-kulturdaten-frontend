@@ -172,7 +172,7 @@ interface ConfirmScreenProps {
   onConfirm: () => Promise<void>;
   onCancel: () => void;
   message: React.ReactNode | string;
-  confirmText: string;
+  confirmButtonText: string;
   condition?: ConfirmCondition;
 }
 
@@ -182,7 +182,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
   onConfirm,
   onCancel,
   message,
-  confirmText,
+  confirmButtonText,
   condition,
 }: ConfirmScreenProps) => {
   const t = useT();
@@ -218,7 +218,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
         )}
         <StyledConfirmScreenActions>
           <StyledConfirmScreenAction onClick={onConfirm} disabled={!(!condition || conditionValid)}>
-            {confirmText}
+            {confirmButtonText}
           </StyledConfirmScreenAction>
           <StyledConfirmScreenAction onClick={onCancel}>
             {t('general.cancel')}
@@ -232,7 +232,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
 export const useConfirmScreen = (): ((props: {
   title: React.ReactNode | string;
   message: React.ReactNode | string;
-  confirmText: string;
+  confirmButtonText: string;
   onConfirm: () => Promise<void>;
   condition?: ConfirmCondition;
 }) => void) => {
@@ -243,21 +243,21 @@ export const useConfirmScreen = (): ((props: {
       setVisible,
       setMessage,
       setOnConfirm,
-      setConfirmText,
+      setConfirmButtonText,
       setTitle,
       setCondition,
     },
   } = useContext(ConfirmContext);
 
   const callback = useCallback(
-    async ({ title, message, confirmText, onConfirm, condition }) => {
+    async ({ title, message, confirmButtonText, onConfirm, condition }) => {
       if (!render) {
         setRender(true);
         setTitle(title);
         setVisible(true);
         setMessage(message);
         setOnConfirm(() => onConfirm);
-        setConfirmText(confirmText);
+        setConfirmButtonText(confirmButtonText);
         setCondition(condition);
       }
     },
@@ -268,7 +268,7 @@ export const useConfirmScreen = (): ((props: {
       setVisible,
       setMessage,
       setOnConfirm,
-      setConfirmText,
+      setConfirmButtonText,
       setCondition,
     ]
   );

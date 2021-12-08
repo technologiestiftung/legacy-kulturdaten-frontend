@@ -9,8 +9,8 @@ type ConfirmContext = {
     setRender: (visible: boolean) => void;
     visible: boolean;
     setVisible: (visible: boolean) => void;
-    confirmText: string;
-    setConfirmText: (confirmText: string) => void;
+    confirmButtonText: string;
+    setConfirmButtonText: (confirmButtonText: string) => void;
     condition: ConfirmCondition;
     setCondition: (condition: ConfirmCondition) => void;
     onConfirm: () => Promise<void>;
@@ -28,8 +28,8 @@ export const ConfirmContext = React.createContext<ConfirmContext>({
     setRender: () => undefined,
     visible: false,
     setVisible: () => undefined,
-    confirmText: undefined,
-    setConfirmText: () => undefined,
+    confirmButtonText: undefined,
+    setConfirmButtonText: () => undefined,
     onConfirm: () => undefined,
     setOnConfirm: () => undefined,
     condition: undefined,
@@ -50,7 +50,7 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
 }: ConfirmContextProviderProps) => {
   const [render, setRender] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
-  const [confirmText, setConfirmText] = useState<string>();
+  const [confirmButtonText, setConfirmButtonText] = useState<string>();
   const [onConfirm, setOnConfirm] = useState<() => Promise<void>>();
   const [title, setTitle] = useState<React.ReactNode | string>('');
   const [message, setMessage] = useState<React.ReactNode | string>('');
@@ -87,8 +87,8 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
           setRender,
           visible,
           setVisible,
-          confirmText,
-          setConfirmText,
+          confirmButtonText,
+          setConfirmButtonText,
           onConfirm,
           setOnConfirm,
           title,
@@ -106,7 +106,6 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
           visible={visible}
           message={message}
           onConfirm={async () => {
-            console.log('ejo');
             if (typeof onConfirm === 'function') {
               await onConfirm();
             }
@@ -121,7 +120,7 @@ export const ConfirmContextProvider: React.FC<ConfirmContextProviderProps> = ({
             setOnConfirm(undefined);
           }}
           title={title}
-          confirmText={confirmText}
+          confirmButtonText={confirmButtonText}
           condition={condition}
         />
       )}

@@ -405,9 +405,15 @@ export const enDE: Localization = {
       tokenTitle: () => 'Token',
       tokenName: () => 'Project name',
       tokenUrl: () => 'Url',
+      tokenRemoveTitle: () => 'Remove API token',
+      tokenRemoveMessage: ({ tokenName }) =>
+        `Are you sure you want to delete the application's API token called “${tokenName}”? The application then loses its access to the API. This cannot be reversed.`,
+      tokenRemoveConfirm: () => 'delete API token',
+      tokenRemoveLoading: () => 'deleting API token',
+      uniqueNameError: () => 'This name already exists. Please choose another one.',
       createButton: () => 'create API token',
       info: () => (
-        <>
+        <div>
           This is a function for developers. To use the kulturdaten.berlin API, you need an API
           token. Requests made with this token are connected to your user account. To find out how
           you can use the token to get data via the API, please read our{' '}
@@ -418,7 +424,7 @@ export const enDE: Localization = {
           >
             API docs.
           </a>
-        </>
+        </div>
       ),
     },
     docs: {
