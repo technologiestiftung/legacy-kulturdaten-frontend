@@ -338,6 +338,17 @@ export const deDE: Localization = {
       button: () => 'zustimmen',
       loading: () => 'Stimme Nutzungsbedingungen zu',
     },
+    password: {
+      title: () => 'Passwort ändern',
+      oldLabel: () => 'Aktuelles Passwort',
+      newLabel: () => 'Neues Passwort',
+      newConfirmLabel: () => 'Neues Passwort bestätigen',
+      button: () => 'Jetzt ändern',
+      loading: () => 'Aktualisiere Passwort',
+      oldPasswordError: () =>
+        'Das eingegebene aktuelle Passwort ist falsch. Bitte versuche es erneut mit dem richtigen Passwort.',
+      success: () => 'Du hast dein Passwort erfolgreich geändert.',
+    },
     deletion: {
       title: () => 'Nutzer:innenkonto löschen',
       text: () => (

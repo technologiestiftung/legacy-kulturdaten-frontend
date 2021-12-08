@@ -183,6 +183,11 @@ export const call = async <T extends ApiCall>(
           body,
         } as T['response'];
       }
+      case 404: {
+        const error404 = new Error(JSON.stringify(body));
+        error404.name = 'not found error';
+        throw error404;
+      }
       case 422: {
         const regError = new Error(JSON.stringify(body));
         regError.name = 'reg error';

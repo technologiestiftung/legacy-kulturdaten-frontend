@@ -13,7 +13,7 @@ const EntrySubPage: NextPage = () => {
   if (category) {
     return (
       <AppWrapper subMenuKey={category.subMenuKey}>
-        {React.createElement(category?.pages[subPath || 'info'], {
+        {React.createElement(category?.pages[subPath || 'info'] || category.pages['404'], {
           category,
           query: router?.query,
         })}
