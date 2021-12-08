@@ -103,7 +103,7 @@ const StyledAppTokenListItemDetailsContent = styled.div``;
 
 interface AppTokenListProps {
   tokens: AppToken['data']['attributes'][];
-  onRemove: (tokenName: string) => Promise<void>;
+  onRemove: (tokenId: number) => Promise<void>;
 }
 
 export const AppTokenList: React.FC<AppTokenListProps> = ({
@@ -135,7 +135,7 @@ export const AppTokenList: React.FC<AppTokenListProps> = ({
                       confirmButtonText: t('settings.api.tokenRemoveConfirm') as string,
                       title: t('settings.api.tokenRemoveTitle'),
                       onConfirm: async () => {
-                        await onRemove(name);
+                        await onRemove(id);
                       },
                     });
                   }}

@@ -56,6 +56,7 @@ const UserApiTokens: React.FC = () => {
                     appToken: {
                       attributes: {
                         name,
+                        url,
                         description,
                       },
                     },
@@ -134,12 +135,12 @@ const UserApiTokens: React.FC = () => {
                 <StyledTeamListList>
                   <AppTokenList
                     tokens={appTokens}
-                    onRemove={async (name) => {
+                    onRemove={async (id) => {
                       loadingScreen(t('settings.api.tokenRemoveLoading'), async () => {
                         try {
                           const resp = await call<AppTokenDelete>(appTokenDeleteFactory, {
                             appToken: {
-                              attributes: { name },
+                              id,
                             },
                           });
 
