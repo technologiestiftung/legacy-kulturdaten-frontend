@@ -9,7 +9,6 @@ import { Input, InputType } from '../../input';
 import { useMemo, useState } from 'react';
 import { Button, ButtonColor, ButtonSize, ButtonType } from '../../button';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
-import { StyledTeamList, StyledTeamListList } from '../../Team/TeamList';
 import { Textarea } from '../../textarea';
 import { SettingsHeader } from './SettingsHeader';
 import { useApiCall } from '../../../lib/api';
@@ -131,33 +130,29 @@ const UserApiTokens: React.FC = () => {
           <EntryFormHead title={t('settings.api.titleList') as string} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
-              <StyledTeamList>
-                <StyledTeamListList>
-                  <AppTokenList
-                    tokens={appTokens}
-                    onRemove={async (id) => {
-                      loadingScreen(t('settings.api.tokenRemoveLoading'), async () => {
-                        try {
-                          const resp = await call<AppTokenDelete>(appTokenDeleteFactory, {
-                            appToken: {
-                              id,
-                            },
-                          });
-
-                          if (resp.status === 200) {
-                            mutateAppTokens();
-                            return { success: true };
-                          }
-
-                          return { success: false, error: t('general.serverProblem') };
-                        } catch (e) {
-                          return { success: false, error: t('general.serverProblem') };
-                        }
+              <AppTokenList
+                tokens={appTokens}
+                onRemove={async (id) => {
+                  loadingScreen(t('settings.api.tokenRemoveLoading'), async () => {
+                    try {
+                      const resp = await call<AppTokenDelete>(appTokenDeleteFactory, {
+                        appToken: {
+                          id,
+                        },
                       });
-                    }}
-                  />
-                </StyledTeamListList>
-              </StyledTeamList>
+
+                      if (resp.status === 200) {
+                        mutateAppTokens();
+                        return { success: true };
+                      }
+
+                      return { success: false, error: t('general.serverProblem') };
+                    } catch (e) {
+                      return { success: false, error: t('general.serverProblem') };
+                    }
+                  });
+                }}
+              />
             </FormItem>
           </FormGrid>
         </EntryFormContainer>

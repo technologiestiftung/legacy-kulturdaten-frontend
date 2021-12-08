@@ -9,37 +9,32 @@ import { mq } from '../globals/Constants';
 const StyledAppTokenList = styled.div`
   display: flex;
   flex-direction: column;
+  row-gap: 0.75rem;
 
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
-`;
 
-const StyledAppTokenListItemToken = styled.div`
-  display: flex;
-  justify-content: flex-start;
-
-  background: var(--grey-200);
-  border-bottom: 1px solid var(--grey-400);
-
-  min-width: 0;
-  max-width: 100%;
-  flex-basis: 0;
+  ${mq(Breakpoint.mid)} {
+    row-gap: 1.5rem;
+  }
 `;
 
 const StyledAppTokenListItem = styled.div`
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--grey-400);
+  border-radius: 0.75rem;
+`;
+
+const StyledAppTokenListItemToken = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  background: var(--grey-200);
   border-bottom: 1px solid var(--grey-400);
-
-  &:last-of-type {
-    border-bottom: none;
-  }
-
-  &:first-of-type {
-    ${StyledAppTokenListItemToken} {
-      border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
-    }
-  }
+  min-width: 0;
+  max-width: 100%;
+  flex-basis: 0;
+  border-radius: calc(0.75rem - 1px) calc(0.75rem - 1px) 0 0;
 `;
 
 const StyledAppTokenListItemTokenLabel = styled.div`
