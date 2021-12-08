@@ -27,9 +27,7 @@ import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { usePublish } from '../../Publish';
-import { RadioSwitch } from '../../RadioSwitch';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
-import { Select } from '../../select';
 import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -151,7 +149,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const call = useApiCall();
   const [currentPage, setCurrentPage] = useState(1);
-  const pseudoUID = usePseudoUID();
   const loadingScreen = useLoadingScreen();
   const confirmScreen = useConfirmScreen();
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
@@ -223,6 +220,28 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         ...datesNotPristineList.filter((id) => id !== changedDateId),
         changedDateId,
       ]);
+    },
+    fromSort: {
+      order,
+      active: sortKey === 'startsAt',
+      onClick: () => {
+        if (sortKey === 'startsAt') {
+          setOrder(order === Order.ASC ? Order.DESC : Order.ASC);
+        }
+        setCurrentPage(1);
+        setSortKey('startsAt');
+      },
+    },
+    endSort: {
+      order,
+      active: sortKey === 'endsAt',
+      onClick: () => {
+        if (sortKey === 'endsAt') {
+          setOrder(order === Order.ASC ? Order.DESC : Order.ASC);
+        }
+        setCurrentPage(1);
+        setSortKey('endsAt');
+      },
     },
     onDelete: (dateIds) => {
       confirmScreen({
@@ -418,47 +437,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                     }}
                     offerTitles={offerTitles}
                     submitDelay={500}
-                  />
-                </FormItem>
-                <FormItem
-                  width={FormItemWidth.full}
-                  css={css`
-                    align-items: flex-end;
-                  `}
-                >
-                  <Select
-                    id={`entry-sort-${pseudoUID}`}
-                    label={t('general.sort') as string}
-                    onChange={(e) => {
-                      setCurrentPage(1);
-                      setSortKey(e.target.value);
-                    }}
-                    value={sortKey}
-                  >
-                    <option value="startsAt">{t('date.sort.startsAt')}</option>
-                    <option value="endsAt">{t('date.sort.endsAt')}</option>
-                  </Select>
-                  <RadioSwitch
-                    value={order}
-                    name={`entry-order-${pseudoUID}`}
-                    onChange={(value) => {
-                      setCurrentPage(1);
-                      setOrder(value as Order);
-                    }}
-                    options={[
-                      {
-                        value: Order.ASC,
-                        label: t('general.ascending') as string,
-                        ariaLabel: t('general.ascendingAriaLabel') as string,
-                        icon: 'ArrowUp',
-                      },
-                      {
-                        value: Order.DESC,
-                        label: t('general.descending') as string,
-                        ariaLabel: t('general.descendingAriaLabel') as string,
-                        icon: 'ArrowDown',
-                      },
-                    ]}
                   />
                 </FormItem>
                 <FormItem width={FormItemWidth.full} css={customFormItemCss}>
