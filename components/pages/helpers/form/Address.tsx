@@ -13,6 +13,8 @@ import { Select, SelectSize } from '../../../select';
 import { EntryFormHook, EntryFormHookProps } from '../form';
 import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 
+const Berlin = 'berlin';
+
 interface AddressFormHookProps extends EntryFormHookProps {
   customRequired?: boolean;
   district?: boolean;
@@ -48,7 +50,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
 
   const organizerId = useOrganizerId();
   const [address, setAddress] = useState<Address>(initialAddress);
-  const [pristine, setPristine] = useState(true);
+  const [addressFromApi, setAddressFromApi] = useState<Address>(initialAddress);
   const districtList = useDistrictList();
   const mutateList = useMutateList(
     category,
@@ -72,11 +74,22 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
     [customRequired]
   );
 
+  const isInBerlin = useMemo(
+    () => address?.attributes?.city?.trim().toLowerCase() === Berlin,
+    [address?.attributes?.city]
+  );
+
   useEffect(() => {
-    if (pristine) {
+    if (JSON.stringify(initialAddress) !== JSON.stringify(addressFromApi)) {
       setAddress(initialAddress);
+      setAddressFromApi(initialAddress);
     }
-  }, [pristine, initialAddress]);
+  }, [addressFromApi, initialAddress]);
+
+  const pristine = useMemo(
+    () => JSON.stringify(address) === JSON.stringify(addressFromApi),
+    [address, addressFromApi]
+  );
 
   const t = useT();
 
@@ -144,7 +157,6 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                 type={InputType.text}
                 value={address?.attributes?.street1 || ''}
                 onChange={(e) => {
-                  setPristine(false);
                   setAddress({
                     ...address,
                     attributes: {
@@ -163,7 +175,6 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                 type={InputType.text}
                 value={address?.attributes?.street2 || ''}
                 onChange={(e) => {
-                  setPristine(false);
                   setAddress({
                     ...address,
                     attributes: {
@@ -180,7 +191,6 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                 type={InputType.text}
                 value={address?.attributes?.zipCode || ''}
                 onChange={(e) => {
-                  setPristine(false);
                   setAddress({
                     ...address,
                     attributes: {
@@ -199,12 +209,15 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                 type={InputType.text}
                 value={address?.attributes?.city || ''}
                 onChange={(e) => {
-                  setPristine(false);
                   setAddress({
                     ...address,
                     attributes: {
                       ...address?.attributes,
                       city: e.target.value,
+                      district:
+                        e.target.value.trim().toLowerCase() !== Berlin
+                          ? ' '
+                          : address?.attributes?.district,
                     },
                   });
                 }}
@@ -213,38 +226,40 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
               />
             </FormItem>
             {district && (
-              <FormItem width={FormItemWidth.half} alignSelf="flex-end">
-                <Select
-                  value={
-                    address?.attributes?.district?.length > 1
-                      ? address?.attributes?.district
-                      : 'undefined'
-                  }
-                  id={`${uid}-district`}
-                  label={t('categories.location.form.district') as string}
-                  size={SelectSize.big}
-                  required={required}
-                  onChange={(e) => {
-                    setPristine(false);
-                    setAddress({
-                      ...address,
-                      attributes: {
-                        ...address?.attributes,
-                        district: e.target.value !== 'undefined' ? e.target.value : ' ',
-                      },
-                    });
-                  }}
-                >
-                  <option value="undefined">
-                    {t('categories.location.form.districtPlaceholder')}
-                  </option>
-                  {districtList?.map((district, index) => (
-                    <option value={district.attributes.name} key={index}>
-                      {district.attributes.name}
+              <>
+                <FormItem width={FormItemWidth.half} alignSelf="flex-end">
+                  <Select
+                    value={
+                      address?.attributes?.district?.length > 1
+                        ? address?.attributes?.district
+                        : 'undefined'
+                    }
+                    id={`${uid}-district`}
+                    label={t('categories.location.form.district') as string}
+                    size={SelectSize.big}
+                    required={required}
+                    disabled={!isInBerlin && address?.attributes?.city !== Berlin}
+                    onChange={(e) => {
+                      setAddress({
+                        ...address,
+                        attributes: {
+                          ...address?.attributes,
+                          district: e.target.value !== 'undefined' ? e.target.value : ' ',
+                        },
+                      });
+                    }}
+                  >
+                    <option value="undefined">
+                      {t('categories.location.form.districtPlaceholder')}
                     </option>
-                  ))}
-                </Select>
-              </FormItem>
+                    {districtList?.map((district, index) => (
+                      <option value={district.attributes.name} key={index}>
+                        {district.attributes.name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormItem>
+              </>
             )}
           </FormGrid>
         </FormWrapper>
@@ -268,8 +283,6 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
             if (category.name === Categories.location) {
               mutateList();
             }
-
-            setTimeout(() => setPristine(true), 500);
           }
         } catch (e) {
           console.error(e);
@@ -279,7 +292,6 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
     pristine,
     reset: () => {
       setAddress(initialAddress);
-      setPristine(true);
     },
     valid,
     requirementFulfillment: {
