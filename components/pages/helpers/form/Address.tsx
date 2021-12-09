@@ -214,6 +214,10 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
                     attributes: {
                       ...address?.attributes,
                       city: e.target.value,
+                      district:
+                        e.target.value.trim().toLowerCase() !== Berlin
+                          ? ' '
+                          : address?.attributes?.district,
                     },
                   });
                 }}
