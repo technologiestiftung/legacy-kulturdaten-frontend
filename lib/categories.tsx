@@ -8,7 +8,7 @@ import { Tabs, TabsProps } from '../components/navigation/tabs';
 import { useUser, useUserOrganizerLists } from '../components/user/useUser';
 import { Categories, Requirement, useCategories } from '../config/categories';
 import { Language } from '../config/locale';
-import { ApiCall, ApiCallFactory, ApiRoutes, getApiUrlString, useApiCall } from './api';
+import { ApiCall, ApiCallFactory, ApiRoute, ApiRoutes, getApiUrlString, useApiCall } from './api';
 import { OfferDateList, offerDateListFactory } from './api/routes/offer/date/list';
 import { OfferMainTypeList, offerMainTypeListFactory } from './api/routes/offerMainType/list';
 import { OfferTypeList, offerTypeListFactory } from './api/routes/offerType/list';
@@ -74,8 +74,18 @@ export type Category = {
     typeList?: categoryApi;
   };
   options: {
-    exportCsv: string;
-    exportXls: string;
+    export: {
+      xls: {
+        entry: {
+          title: string;
+          route: ApiRoute;
+        };
+        list: {
+          title: string;
+          route: ApiRoute;
+        };
+      };
+    };
     deletion: {
       title: string;
       message: (name: string) => string;

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { OfferList as OfferListCall } from '../../lib/api';
+import { apiRoutes, OfferList as OfferListCall } from '../../lib/api';
 import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
 import {
   Order,
@@ -32,6 +32,8 @@ import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useAuthToken } from '../user/UserContext';
+import { useDownload } from '../../lib/api/download';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -63,6 +65,7 @@ export const OfferList: React.FC<OfferListProps> = ({
   expandable = true,
   enableUltraWideLayout = true,
 }: OfferListProps) => {
+  const authToken = useAuthToken();
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
   const [totalEntries, setTotalEntries] = useState<number>();
@@ -110,6 +113,8 @@ export const OfferList: React.FC<OfferListProps> = ({
   const organizerId = useOrganizerId();
   const mainTypeOptions = useOfferMainTypeList();
   const typeOptions = useOfferTypeList();
+
+  const download = useDownload();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -319,6 +324,18 @@ export const OfferList: React.FC<OfferListProps> = ({
           </Button>
         }
       />
+      <div>
+        <Button
+          onClick={async () => {
+            download(
+              apiRoutes.offerListDownload({ organizer: organizerId, format: 'xls' }),
+              'offer-list.xls'
+            );
+          }}
+        >
+          Export für Excel (.xls)
+        </Button>
+      </div>
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}

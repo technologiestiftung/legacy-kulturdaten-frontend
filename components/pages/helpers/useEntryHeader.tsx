@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { Link } from 'react-feather';
 import { Categories } from '../../../config/categories';
 import { ApiCall } from '../../../lib/api';
+import { useDownload } from '../../../lib/api/download';
 import { CategoryEntry, Translation } from '../../../lib/api/types/general';
 import { useDeleteEntry, useEntry, useTabs } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
@@ -58,6 +59,7 @@ export const useEntryHeader = (
   const deleteOrganizer = useDeleteEntry(Categories.organizer);
   const deleteOffer = useDeleteEntry(Categories.offer);
   const deleteLocation = useDeleteEntry(Categories.location);
+  const download = useDownload();
 
   const titleBarLink = (
     <Link href={category?.routes.list({ locale, query: { organizer: organizerId } })}>
@@ -93,17 +95,17 @@ export const useEntryHeader = (
                 variant={ButtonVariant.minimal}
                 size={ButtonSize.default}
                 color={ButtonColor.white}
-                onClick={() => alert('Download startet')}
+                onClick={() =>
+                  download(
+                    category?.options?.export.xls.entry.route({
+                      id: entry?.data?.id,
+                      format: 'xls',
+                    }),
+                    `${currentTranslation?.attributes?.name || category?.placeholderName}.xls`
+                  )
+                }
               >
-                {category?.options?.exportCsv}
-              </Button>
-              <Button
-                variant={ButtonVariant.minimal}
-                size={ButtonSize.default}
-                color={ButtonColor.white}
-                onClick={() => alert('Download startet')}
-              >
-                {category?.options?.exportXls}
+                {category?.options?.export?.xls?.entry?.title}
               </Button>
               {userIsOwner && (
                 <Button

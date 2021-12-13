@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { LocationList as LocationListCall } from '../../lib/api';
+import { apiRoutes, LocationList as LocationListCall } from '../../lib/api';
 import { Location, LocationTranslation } from '../../lib/api/types/location';
 import { Order, useCreateLocation, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
@@ -26,6 +26,7 @@ import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useDownload } from '../../lib/api/download';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -105,6 +106,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   const loadingScreen = useLoadingScreen();
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
+  const download = useDownload();
 
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
@@ -343,7 +345,18 @@ export const LocationList: React.FC<LocationListProps> = ({
           </Button>
         }
       />
-
+      <div>
+        <Button
+          onClick={async () => {
+            download(
+              apiRoutes.locationListDownload({ organizer: organizerId, format: 'xls' }),
+              'location-list.xls'
+            );
+          }}
+        >
+          Export für Excel (.xls)
+        </Button>
+      </div>
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
