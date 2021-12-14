@@ -4,7 +4,12 @@ import { Order } from './categories';
 import { getTranslation } from './translations';
 
 const normalizeTranslationString = (text: string): string =>
-  text.toLowerCase().replace('ö', 'oe').replace('ä', 'ae').replace('ü', 'ue').replace('ß', 'ss');
+  text
+    .toLowerCase()
+    .replaceAll('ö', 'oe')
+    .replaceAll('ä', 'ae')
+    .replaceAll('ü', 'ue')
+    .replaceAll('ß', 'ss');
 
 export const sortByTranslation = <
   T extends {

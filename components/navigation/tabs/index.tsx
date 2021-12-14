@@ -46,7 +46,12 @@ const StyledTab = styled.div`
   }
 `;
 
-const StyledTabLink = styled.a<{ isActive?: boolean; itemCount: number; index: number }>`
+const StyledTabLink = styled.a<{
+  isActive?: boolean;
+  itemCount: number;
+  index: number;
+  disabled?: boolean;
+}>`
   display: flex;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -95,6 +100,19 @@ const StyledTabLink = styled.a<{ isActive?: boolean; itemCount: number; index: n
     padding: 0;
     flex-shrink: 0;
   }
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      cursor: not-allowed;
+      opacity: 0.25;
+
+      &:hover {
+        background: var(--white);
+        border-color: var(--grey-400);
+        color: var(--black);
+      }
+    `}
 `;
 
 export interface TabsProps {
@@ -102,21 +120,39 @@ export interface TabsProps {
     title: string;
     href: string;
     isActive?: boolean;
+    disabled?: boolean;
   }[];
 }
 
 export const Tabs: React.FC<TabsProps> = ({ links }: TabsProps) => (
   <StyledTabs role="tablist">
     <StyledTabsContainer itemCount={links.length}>
-      {links.map(({ title, href, isActive }, index) => (
-        <StyledTab key={index}>
-          <Link href={href} passHref shallow>
-            <StyledTabLink isActive={isActive} itemCount={links.length} index={index} role="tab">
-              {title}
-            </StyledTabLink>
-          </Link>
-        </StyledTab>
-      ))}
+      {links.map(({ title, href, isActive, disabled }, index) => {
+        const renderedTab = (
+          <StyledTabLink
+            disabled={disabled}
+            as={disabled ? 'div' : undefined}
+            isActive={isActive}
+            itemCount={links.length}
+            index={index}
+            role="tab"
+          >
+            {title}
+          </StyledTabLink>
+        );
+
+        return (
+          <StyledTab key={index}>
+            {disabled ? (
+              renderedTab
+            ) : (
+              <Link href={href} passHref shallow>
+                {renderedTab}
+              </Link>
+            )}
+          </StyledTab>
+        );
+      })}
     </StyledTabsContainer>
   </StyledTabs>
 );

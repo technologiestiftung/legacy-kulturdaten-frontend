@@ -13,6 +13,7 @@ import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/d
 import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from './formComponents';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 
 const imagesMax = 5;
 const maxFileSize = 10240;
@@ -94,6 +95,7 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
   const call = useApiCall();
   const t = useT();
   const loadingScreen = useLoadingScreen();
+  const confirmScreen = useConfirmScreen();
 
   const initialMedia = useMemo<Media['data'][]>(
     () => (entry?.data?.relations?.media ? [...entry.data.relations.media].reverse() : undefined),
@@ -203,41 +205,42 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
               }}
               setValid={(valid) => setValid(valid)}
               onDelete={async (mediaItemId) => {
-                if (
-                  confirm(
-                    t('general.deleting.confirm', {
-                      name: t('general.deleting.media.singular') as string,
-                    }) as string
-                  )
-                ) {
-                  loadingScreen(
-                    t('general.deleting.loading'),
-                    async () => {
-                      try {
-                        const resp = await call<MediaDelete>(mediaDeleteFactory, {
-                          id: mediaItemId,
-                          entry: {
-                            attributes: {
-                              id: mediaItemId,
+                confirmScreen({
+                  title: t('media.deleteTitle') as string,
+                  message: t('general.deleting.confirm', {
+                    name: t('general.deleting.media.singular') as string,
+                  }),
+                  confirmButtonText: t('general.confirmDelete') as string,
+                  onConfirm: async () => {
+                    loadingScreen(
+                      t('general.deleting.loading'),
+                      async () => {
+                        try {
+                          const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                            id: mediaItemId,
+                            entry: {
+                              attributes: {
+                                id: mediaItemId,
+                              },
                             },
-                          },
-                        });
+                          });
 
-                        if (resp.status === 200) {
-                          mutateEntry();
-                          return { success: true };
+                          if (resp.status === 200) {
+                            mutateEntry();
+                            return { success: true };
+                          }
+
+                          return { success: false, error: t('general.serverProblem') };
+                        } catch (e) {
+                          console.error(e);
+
+                          return { success: false, error: t('general.serverProblem') };
                         }
-
-                        return { success: false, error: t('general.serverProblem') };
-                      } catch (e) {
-                        console.error(e);
-
-                        return { success: false, error: t('general.serverProblem') };
-                      }
-                    },
-                    t('general.takeAFewSeconds')
-                  );
-                }
+                      },
+                      t('general.takeAFewSeconds')
+                    );
+                  },
+                });
               }}
             />
           </FormItem>

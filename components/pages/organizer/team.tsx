@@ -44,7 +44,7 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
   const membersArray = useMemo(
     () =>
       valid && !empty
-        ? members.replace(' ', '').replace(';', ',').split(',').slice(0, maxInvites)
+        ? members.replaceAll(' ', '').replaceAll(';', ',').split(',').slice(0, maxInvites)
         : [],
     [members, valid, empty]
   );

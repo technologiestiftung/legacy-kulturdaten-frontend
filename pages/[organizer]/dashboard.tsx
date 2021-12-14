@@ -70,7 +70,7 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
 
   return (
     <DashboardTile
-      title={currentTranslation?.attributes?.name}
+      title={currentTranslation?.attributes?.name || (t('general.placeholderOffer') as string)}
       gridColumn={isUltraOrWider ? 'span 4' : undefined}
       link={
         <DashboardTileLink
@@ -367,7 +367,7 @@ const DashboardPage: NextPage = () => {
                 title={t('dashboard.info.data.api.title') as string}
                 link={
                   <DashboardTileLink
-                    href={routes.userSettings({ locale })}
+                    href={routes.developer({ locale })}
                     type={StandardLinkType.internal}
                     title={t('dashboard.info.data.api.link') as string}
                   />

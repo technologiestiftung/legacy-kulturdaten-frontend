@@ -461,7 +461,6 @@ export const OfferList: React.FC<OfferListProps> = ({
           </EntryCardGrid>
         ) : (
           <StyledEntryListTable>
-            {/* {rows && rows.length > 0 ? ( */}
             <Table
               columns={[
                 {

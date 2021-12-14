@@ -19,9 +19,9 @@ import { OfferDate, OfferType, OfferMainType } from './api/types/offer';
 import { OrganizerType } from './api/types/organizer';
 import { EntryType } from './api/types/typeSubject';
 import { useT } from './i18n';
-import { Route, useLanguage, useLocale } from './routing';
+import { Route, useActiveRoute, useLanguage, useLocale } from './routing';
 import { useOrganizerId, useSetOrganizerId } from './useOrganizer';
-import { routes } from '../config/routes';
+import { routes, Routes } from '../config/routes';
 import { MediaLicense } from './api/types/media';
 import { MediaLicenseList, mediaLicenseListFactory } from './api/routes/mediaLicense/list';
 import { District } from './api/types/district';
@@ -55,9 +55,10 @@ export type Category = {
     create: Route;
   };
   pages: {
-    info: React.FC<CategoryEntryPage>;
-    media: React.FC<CategoryEntryPage>;
-    list: React.FC<CategoryPage>;
+    'info': React.FC<CategoryEntryPage>;
+    'media': React.FC<CategoryEntryPage>;
+    'list': React.FC<CategoryEntryPage>;
+    '404': React.FC<CategoryEntryPage>;
   } & { [key: string]: React.FC<CategoryEntryPage> };
   tabs: {
     title: string;
@@ -75,9 +76,16 @@ export type Category = {
   options: {
     exportCsv: string;
     exportXls: string;
-    delete: string;
-    deleteConfirm: string;
-    deleting: string;
+    deletion: {
+      title: string;
+      message: (name: string) => string;
+      button: string;
+      deleting: string;
+      condition?: {
+        label: string;
+        error: string;
+      };
+    };
   };
   requirements?: Requirement[];
   publishText: string;
@@ -251,11 +259,14 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
 } => {
   const call = useApiCall();
-
+  const router = useRouter();
   const apiCallFactory = category?.api.show.factory;
   const apiCallRoute = category?.api.show.route;
+  const locale = useLocale();
+  const organizerId = useOrganizerId();
+  const activeRoute = useActiveRoute();
 
-  const { data, mutate } = useSWR<C['response']>(
+  const z = useSWR<C['response']>(
     apiCallRoute &&
       query &&
       (query.id || (query.organizer && query.organizer !== defaultOrganizerId))
@@ -264,14 +275,45 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
+  const { data, mutate, error } = z;
+
   const wrappedMutate = (entry?: T, shouldRevalidate?: boolean) =>
     mutate(
       entry ? ({ status: 200, body: { data: entry } } as unknown as C['response']) : undefined,
       shouldRevalidate
     );
 
+  const entry = useMemo(() => {
+    if ((data?.body as unknown as T)?.data?.id) {
+      return data?.body as unknown as T;
+    }
+
+    if (error && activeRoute !== Routes.page404) {
+      if (category?.name !== Categories.organizer) {
+        router.replace(category?.routes.list({ locale, query: { organizer: organizerId } }));
+      } else {
+        router.replace(
+          routes.dashboard({
+            locale,
+          })
+        );
+      }
+    }
+
+    return undefined;
+  }, [
+    activeRoute,
+    category?.name,
+    category?.routes,
+    data?.body,
+    error,
+    locale,
+    organizerId,
+    router,
+  ]);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { entry: data?.body as any as unknown as T, mutate: wrappedMutate };
+  return { entry, mutate: wrappedMutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
@@ -562,16 +604,18 @@ export const useDeleteEntry = (
 
               router.push(routes.dashboard({ locale, query: { organizer: newActiveOrganizerId } }));
             } else {
-              mutateList();
               setLastEntryId(categoryName, undefined);
-              router.push(
-                category.routes.list({
-                  locale,
-                  query: {
-                    organizer: organizerId,
-                  },
-                })
-              );
+              mutateList();
+              setTimeout(() => {
+                router.push(
+                  category.routes.list({
+                    locale,
+                    query: {
+                      organizer: organizerId,
+                    },
+                  })
+                );
+              }, 250);
             }
           }, 250);
 

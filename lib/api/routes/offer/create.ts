@@ -2,7 +2,7 @@ import { apiRoutes, makeBearer, ApiCall, ApiRoute, ApiCallFactory } from '../..'
 import { Offer, CreateOffer } from '../../types/offer';
 
 /**
- * /auth/info
+ * /offer
  */
 
 export interface OfferCreate extends ApiCall {

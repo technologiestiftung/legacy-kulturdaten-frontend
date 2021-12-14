@@ -17,6 +17,7 @@ import { usePseudoUID } from '../../../lib/uid';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { Breakpoint, WindowContext } from '../../../lib/WindowService';
 import { useCollapsable } from '../../collapsable';
+import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -26,9 +27,7 @@ import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { usePublish } from '../../Publish';
-import { RadioSwitch } from '../../RadioSwitch';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
-import { Select } from '../../select';
 import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -150,8 +149,8 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const call = useApiCall();
   const [currentPage, setCurrentPage] = useState(1);
-  const pseudoUID = usePseudoUID();
   const loadingScreen = useLoadingScreen();
+  const confirmScreen = useConfirmScreen();
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
   const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
   const [sortKey, setSortKey] = useState('startsAt');
@@ -222,49 +221,70 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         changedDateId,
       ]);
     },
+    fromSort: {
+      order,
+      active: sortKey === 'startsAt',
+      onClick: () => {
+        if (sortKey === 'startsAt') {
+          setOrder(order === Order.ASC ? Order.DESC : Order.ASC);
+        }
+        setCurrentPage(1);
+        setSortKey('startsAt');
+      },
+    },
+    endSort: {
+      order,
+      active: sortKey === 'endsAt',
+      onClick: () => {
+        if (sortKey === 'endsAt') {
+          setOrder(order === Order.ASC ? Order.DESC : Order.ASC);
+        }
+        setCurrentPage(1);
+        setSortKey('endsAt');
+      },
+    },
     onDelete: (dateIds) => {
-      if (
-        confirm(
-          t('general.deleting.confirm', {
-            name: t(
-              dateIds?.length > 1
-                ? 'general.deleting.date.plural'
-                : 'general.deleting.date.singular'
-            ) as string,
-          }) as string
-        )
-      ) {
-        loadingScreen(
-          t('general.deleting.loading'),
-          async () => {
-            try {
-              const resp = await call<OfferDelete>(offerDeleteFactory, {
-                id: entry.data.id,
-                entry: {
-                  relations: {
-                    dates: dateIds,
+      confirmScreen({
+        title: t('date.delete') as string,
+        message: t('general.deleting.confirm', {
+          name: t(
+            dateIds?.length > 1 ? 'general.deleting.date.plural' : 'general.deleting.date.singular'
+          ) as string,
+        }),
+        confirmButtonText: t('general.confirmDelete') as string,
+        onConfirm: async () => {
+          loadingScreen(
+            t('general.deleting.loading'),
+            async () => {
+              try {
+                const resp = await call<OfferDelete>(offerDeleteFactory, {
+                  id: entry.data.id,
+                  entry: {
+                    relations: {
+                      dates: dateIds,
+                    },
                   },
-                },
-              });
+                });
 
-              if (resp.status === 200) {
-                setCheckedDateIds(
-                  checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
-                );
-                mutateDateList();
-                return { success: true };
+                if (resp.status === 200) {
+                  setCheckedDateIds(
+                    checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
+                  );
+                  mutateDateList();
+                  return { success: true };
+                }
+
+                return { success: false, error: t('general.serverProblem') };
+              } catch (e) {
+                console.error(e);
+
+                return { success: false, error: t('general.serverProblem') };
               }
-
-              return { success: false, error: t('general.serverProblem') };
-            } catch (e) {
-              console.error(e);
-
-              return { success: false, error: t('general.serverProblem') };
-            }
-          },
-          t('general.takeAFewSeconds')
-        );
-      }
+            },
+            t('general.takeAFewSeconds')
+          );
+        },
+      });
     },
   });
 
@@ -375,7 +395,8 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                             const filteredTranslations = date.relations?.translations?.filter(
                               (translation) =>
                                 translation?.attributes.name?.length > 0 ||
-                                translation?.attributes.roomDescription?.length > 0
+                                translation?.attributes.roomDescription?.length > 0 ||
+                                translation?.attributes.teaser?.length > 0
                             );
 
                             const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
@@ -416,47 +437,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                     }}
                     offerTitles={offerTitles}
                     submitDelay={500}
-                  />
-                </FormItem>
-                <FormItem
-                  width={FormItemWidth.full}
-                  css={css`
-                    align-items: flex-end;
-                  `}
-                >
-                  <Select
-                    id={`entry-sort-${pseudoUID}`}
-                    label={t('general.sort') as string}
-                    onChange={(e) => {
-                      setCurrentPage(1);
-                      setSortKey(e.target.value);
-                    }}
-                    value={sortKey}
-                  >
-                    <option value="startsAt">{t('date.sort.startsAt')}</option>
-                    <option value="endsAt">{t('date.sort.endsAt')}</option>
-                  </Select>
-                  <RadioSwitch
-                    value={order}
-                    name={`entry-order-${pseudoUID}`}
-                    onChange={(value) => {
-                      setCurrentPage(1);
-                      setOrder(value as Order);
-                    }}
-                    options={[
-                      {
-                        value: Order.ASC,
-                        label: t('general.ascending') as string,
-                        ariaLabel: t('general.ascendingAriaLabel') as string,
-                        icon: 'ArrowUp',
-                      },
-                      {
-                        value: Order.DESC,
-                        label: t('general.descending') as string,
-                        ariaLabel: t('general.descendingAriaLabel') as string,
-                        icon: 'ArrowDown',
-                      },
-                    ]}
                   />
                 </FormItem>
                 <FormItem width={FormItemWidth.full} css={customFormItemCss}>

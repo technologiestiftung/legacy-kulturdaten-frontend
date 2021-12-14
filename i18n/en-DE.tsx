@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { InfoLi, InfoP, InfoUl } from '../components/info';
+import { FormText, FormTextP } from '../components/pages/helpers/formComponents';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
@@ -190,8 +191,9 @@ export const enDE: Localization = {
     },
   },
   language: {
-    de: () => 'German',
-    en: () => 'English',
+    'de': () => 'German',
+    'en': () => 'English',
+    'de-easy': () => 'German: simple Language',
   },
   languageTags: {
     addButton: () => 'Add language',
@@ -301,7 +303,8 @@ export const enDE: Localization = {
     },
   },
   dateCreate: {
-    overlayTitle: ({ offerTitle }) => `Create date for ‘${offerTitle}’`,
+    overlayTitle: ({ offerTitle }) =>
+      `Create date for ${offerTitle ? `‘${offerTitle}’` : 'unnamed offer'}`,
     create: () => 'Create date',
     loading: () => 'Creating date',
   },
@@ -327,6 +330,67 @@ export const enDE: Localization = {
       firstname: () => 'First name',
       lastname: () => 'Last name',
     },
+    terms: {
+      title: () => 'Updates terms of use',
+      text: () =>
+        'We have updated the terms of use for kulturdaten.berlin. In order to continue using the platform, please read them and agree to them. ',
+      button: () => 'agree',
+      loading: () => 'Accepting terms of use',
+    },
+    password: {
+      title: () => 'Change password',
+      oldLabel: () => 'Current password',
+      newLabel: () => 'New password',
+      newConfirmLabel: () => 'Confirm new password',
+      button: () => 'Change now',
+      loading: () => 'Updating password',
+      oldPasswordError: () =>
+        'The entered current password is wrong. Please try again with the correct password.',
+      success: () => 'You have successfully changed your password.',
+    },
+    deletion: {
+      title: () => 'Delete user account',
+      text: () => (
+        <FormText>
+          <FormTextP>
+            If you request the deletion of your account, all your data will be irretrievably deleted
+            after two weeks. You can cancel the deletion within this period.
+          </FormTextP>
+        </FormText>
+      ),
+      button: () => 'Request deletion',
+      confirm: ({ email }) => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            If you request the deletion of your account, all your data will be irretrievably deleted
+            after two weeks. You can cancel the deletion within this period.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            To confirm the deletion, please enter the email address of your account ({email}) in
+            this field and press the {'“'}Request deletion{'”'} button.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      confirmInputLabel: () => 'Email for verification',
+      confirmButton: () => 'Request deletion',
+      confirmError: () => 'The entered email address is not correct',
+      loading: () => 'Requesting deletion',
+    },
+    requestedDeletion: {
+      title: () => 'User account deletion requested',
+      text: ({ date, email }) => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            You have requested the deletion of your user account (email: {email}). Your account will
+            be finally deleted on the {date}.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            Before this date, you can cancel the deletion by clicking on the button below.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      button: () => 'Cancel deletion',
+    },
     api: {
       titleCreate: () => 'Create API token (for developers)',
       titleCreateTooltip: () =>
@@ -341,9 +405,15 @@ export const enDE: Localization = {
       tokenTitle: () => 'Token',
       tokenName: () => 'Project name',
       tokenUrl: () => 'Url',
+      tokenRemoveTitle: () => 'Remove API token',
+      tokenRemoveMessage: ({ tokenName }) =>
+        `Are you sure you want to delete the application's API token called “${tokenName}”? The application then loses its access to the API. This cannot be reversed.`,
+      tokenRemoveConfirm: () => 'delete API token',
+      tokenRemoveLoading: () => 'deleting API token',
+      uniqueNameError: () => 'This name already exists. Please choose another one.',
       createButton: () => 'create API token',
       info: () => (
-        <>
+        <div>
           This is a function for developers. To use the kulturdaten.berlin API, you need an API
           token. Requests made with this token are connected to your user account. To find out how
           you can use the token to get data via the API, please read our{' '}
@@ -354,7 +424,7 @@ export const enDE: Localization = {
           >
             API docs.
           </a>
-        </>
+        </div>
       ),
     },
     docs: {
@@ -441,6 +511,8 @@ export const enDE: Localization = {
     passwordError: () => 'The entered passwords do not match.',
     requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
     uniqueEmailError: () => 'This account already exists.',
+    verificationError: () =>
+      "This account wasn't verified yet. Please check your emails for a confirmation email we've sent you.",
     successHeadline: () => 'Great, that worked!',
     successSubline: () => 'We sent you an email. Check your inbox to activate your account.',
     confirmationText: () => (
@@ -487,22 +559,27 @@ export const enDE: Localization = {
     altTooltip: () =>
       'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
     license: () => 'License',
+    deleteTitle: () => 'Delete image',
     licenses: {
       '1': {
         name: () => 'with attribution (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.en',
+        title: () => 'information about license',
       },
       '2': {
         name: () => 'without restrictions (public domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.en',
+        title: () => 'information about license',
       },
       '3': {
         name: () => 'with attribution-ShareAlike (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
+        title: () => 'information about license',
       },
       '4': {
         name: () => 'permitted exclusively in the context of current reporting',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
+        title: () => 'information about license',
       },
     },
     licenseEnd: () => 'End date license',
@@ -667,6 +744,8 @@ export const enDE: Localization = {
         plural: () => 'these dates',
       },
     },
+    cancel: () => 'cancel',
+    confirmDelete: () => 'Confirm deletion',
     name: () => 'name',
     city: () => 'city',
     created: () => 'created',
@@ -872,8 +951,15 @@ export const enDE: Localization = {
         exportCsv: () => 'Export as CSV',
         exportXls: () => 'Export as Excel',
         delete: () => 'Delete organizer',
-        deleteConfirm: () =>
-          'Are you sure you want to delete this organizer? This cannot be undone.',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>Are you sure you want to delete the offer “{name}”? This cannot be undone.</p>
+            <p>
+              To confirm the deletion, please enter the name of the organizer in this field and
+              press the {'“'}Confirm deletion{'”'} button.
+            </p>
+          </>
+        ),
         deleting: () => 'Deleting organizer',
       },
     },
@@ -960,7 +1046,7 @@ export const enDE: Localization = {
           label: () => 'Location',
           choose: () => 'Choose location',
           edit: () => 'Change location',
-          title: ({ name }) => `Choose location for ‘${name}’`,
+          title: ({ name }) => `Choose location for ${name ? `‘${name}’` : 'unnamed offer'}`,
         },
         topics: () => 'Topic category (required)',
         topicsTooltip: () => (
@@ -990,8 +1076,13 @@ export const enDE: Localization = {
         exportCsv: () => 'Export as CSV',
         exportXls: () => 'Export as Excel',
         delete: () => 'Delete offer',
-        deleteConfirm: () => 'Are you sure you want to delete this offer? This cannot be undone.',
         deleting: () => 'Deleting offer',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>Are you sure you want to delete the offer “{name}”? This cannot be undone.</p>
+          </>
+        ),
+        deleteConditionLabel: () => 'Name der Anbieter:in zur Bestätigung',
       },
     },
     location: {
@@ -1041,7 +1132,7 @@ export const enDE: Localization = {
         editCancel: () => 'cancel',
         contact: () => 'Contact data',
         tel: () => 'Phone',
-        district: () => 'District',
+        district: () => 'District (only for Berlin)',
         districtPlaceholder: () => 'Choose district',
         url: () => 'URL / venue information',
         urlPlaceholder: () => 'e.g. https://theatreberlin.de/virtualstage',
@@ -1069,8 +1160,11 @@ export const enDE: Localization = {
         exportCsv: () => 'Export as CSV',
         exportXls: () => 'Export as Excel',
         delete: () => 'Delete location',
-        deleteConfirm: () =>
-          'Are you sure you want to delete this location? This cannot be undone.',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>Are you sure you want to delete the location “{name}”? This cannot be undone.</p>
+          </>
+        ),
         deleting: () => 'Deleting location',
       },
     },

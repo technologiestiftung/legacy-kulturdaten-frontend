@@ -22,6 +22,8 @@ import { StandardLinkType } from '../../lib/generalTypes';
 const passwordErrorId = 0;
 const requestErrorId = 1;
 
+export const passwordMinLength = 8;
+
 export const RegisterForm: React.FC = () => {
   const locale = useLocale();
   const [email, setEmail] = useState<string>('');
@@ -137,7 +139,7 @@ export const RegisterForm: React.FC = () => {
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
                 id="register-password"
-                minLength={8}
+                minLength={passwordMinLength}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
               />
@@ -152,7 +154,7 @@ export const RegisterForm: React.FC = () => {
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
                 id="register-password-confirmation"
-                minLength={8}
+                minLength={passwordMinLength}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
                 onBlur={() => setPasswordConfirmationBlurred(true)}
@@ -161,7 +163,7 @@ export const RegisterForm: React.FC = () => {
             <AuthFormItem>
               <Checkbox
                 id="register-confirmation"
-                label={t('register.confirmationText') as string}
+                label={t('register.confirmationText')}
                 required
               />
             </AuthFormItem>

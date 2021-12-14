@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { routes } from '../../../config/routes';
 import { useT } from '../../../lib/i18n';
 import { useLocale } from '../../../lib/routing';
@@ -7,6 +7,7 @@ import { useAdminMode } from '../../Admin/AdminContext';
 import { Button, ButtonColor, ButtonVariant } from '../../button';
 import { DropdownMenu, DropdownMenuButtonColor, DropdownMenuText } from '../../DropdownMenu';
 import { appLayouts, useLayout } from '../../layouts/AppLayout';
+import { UserContext } from '../../user/UserContext';
 import { useUser, WrappedUser } from '../../user/useUser';
 import { HeaderMenuLink } from './HeaderMenuLink';
 
@@ -21,6 +22,7 @@ export const UserMenu: React.FC<UserMenuProps> = () => {
   const { adminModeActive } = useAdminMode();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const layout = useLayout();
+  const { requestedDeletion } = useContext(UserContext);
 
   const hasOrganizerBand = useMemo(() => appLayouts[layout].hasOrganizerBand, [layout]);
 
@@ -40,18 +42,21 @@ export const UserMenu: React.FC<UserMenuProps> = () => {
       <DropdownMenuText>
         {t('userMenu.loggedIn')}: <b>{user?.attributes?.email}</b>
       </DropdownMenuText>
-      <HeaderMenuLink
-        href={routes.userSettings({ locale })}
-        title={t('userMenu.settings') as string}
-        icon="Sliders"
-      />
-      {isSuperuser && (
+      {!requestedDeletion && (
+        <HeaderMenuLink
+          href={routes.userSettings({ locale })}
+          title={t('userMenu.settings') as string}
+          icon="Sliders"
+        />
+      )}
+      {!requestedDeletion && isSuperuser && (
         <HeaderMenuLink
           href={routes.admin({ locale })}
           title={t('userMenu.admin') as string}
           icon="Eye"
         />
       )}
+
       <Button
         variant={ButtonVariant.minimal}
         color={ButtonColor.white}

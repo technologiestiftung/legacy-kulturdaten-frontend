@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import { DashboardTileText, DashboardTileTextP } from '../components/Dasboard/DashboardTile';
 import { InfoLi, InfoP, InfoUl } from '../components/info';
+import { FormText, FormTextP } from '../components/pages/helpers/formComponents';
 import { StatusFlag, StatusFlagVariant } from '../components/Status/StatusFlag';
 import { TooltipP } from '../components/tooltip/TooltipContent';
 import { PublishedStatus } from '../lib/api/types/general';
@@ -191,8 +192,9 @@ export const deDE: Localization = {
     },
   },
   language: {
-    de: () => 'Deutsch',
-    en: () => 'Englisch',
+    'de': () => 'Deutsch',
+    'en': () => 'Englisch',
+    'de-easy': () => 'Deutsch: einfache Sprache',
   },
   languageTags: {
     addButton: () => 'Sprache hinzufügen',
@@ -302,7 +304,8 @@ export const deDE: Localization = {
     },
   },
   dateCreate: {
-    overlayTitle: ({ offerTitle }) => `Termin für ‚${offerTitle}‘ erstellen`,
+    overlayTitle: ({ offerTitle }) =>
+      `Termin für ${offerTitle ? `‚${offerTitle}‘` : 'unbenanntes Angebot'} erstellen`,
     create: () => 'Termin erstellen',
     loading: () => ' Erstelle Termin',
   },
@@ -320,7 +323,7 @@ export const deDE: Localization = {
   },
   settings: {
     title: () => 'Einstellungen',
-    loading: () => 'Erstelle API Token',
+    loading: () => 'Erstelle API-Token',
     personal: {
       title: () => 'Persönliche Angaben',
       tooltip: () =>
@@ -328,8 +331,71 @@ export const deDE: Localization = {
       firstname: () => 'Vorname',
       lastname: () => 'Nachname',
     },
+    terms: {
+      title: () => 'Aktualisierte Nutzungsbedinungen',
+      text: () =>
+        'Wir haben die Nutzungsbedingungen für kulturdaten.berlin aktualisiert. Um die Plattform weiterzunutzen, musst du diese bitte lesen und ihnen zustimmen.',
+      button: () => 'zustimmen',
+      loading: () => 'Stimme Nutzungsbedingungen zu',
+    },
+    password: {
+      title: () => 'Passwort ändern',
+      oldLabel: () => 'Aktuelles Passwort',
+      newLabel: () => 'Neues Passwort',
+      newConfirmLabel: () => 'Neues Passwort bestätigen',
+      button: () => 'Jetzt ändern',
+      loading: () => 'Aktualisiere Passwort',
+      oldPasswordError: () =>
+        'Das eingegebene aktuelle Passwort ist falsch. Bitte versuche es erneut mit dem richtigen Passwort.',
+      success: () => 'Du hast dein Passwort erfolgreich geändert.',
+    },
+    deletion: {
+      title: () => 'Nutzer:innenkonto löschen',
+      text: () => (
+        <FormText>
+          <FormTextP>
+            Du kannst jederzeit die Löschung deines Nutzer:innenkontos beantragen. Nach einer Dauer
+            von zwei Wochen werden alle deine Daten unwiederbringlich gelöscht. Innerhalb dieses
+            Zeitraums kannst du die Löschung abbrechen.
+          </FormTextP>
+        </FormText>
+      ),
+      button: () => 'Löschung beantragen',
+      confirm: ({ email }) => (
+        <>
+          <p>
+            Wenn du die Löschung deines Kontos beantragst, werden alle deine Daten nach zwei Wochen
+            unwiederbringlich gelöscht. Innerhalb dieses Zeitraums kannst du die Löschung abbrechen.
+          </p>
+          <p>
+            Um die Löschung zu bestätigen, gib bitte die E-Mail-Adresse deines Kontos ({email}) in
+            dieses Feld ein und drücke den {'‚'}Löschung beantragen{'‘'}-Button.
+          </p>
+        </>
+      ),
+      confirmInputLabel: () => 'E-Mail zur Bestätigung',
+      confirmButton: () => 'Löschung beantragen',
+      confirmError: () => 'Die eingegebene E-Mail-Adresse ist nicht korrekt',
+      loading: () => 'Beantrage Löschung',
+    },
+    requestedDeletion: {
+      title: () => 'Löschung deines Nutzer:innenkontos beantragt',
+      text: ({ date, email }) => (
+        <DashboardTileText>
+          <DashboardTileTextP>
+            Du hast die Löschung deines Nutzer:innenkontos (E-Mail: {email}) beantragt. Dein Konto
+            wird endgültig am <b>{date}</b> gelöscht.
+          </DashboardTileTextP>
+          <DashboardTileTextP>
+            Vor diesem Datum kannst du die Löschung abbrechen, indem du auf den unten stehenden
+            Button drückst.
+          </DashboardTileTextP>
+        </DashboardTileText>
+      ),
+      button: () => 'Löschung abbrechen',
+    },
     api: {
-      titleCreate: () => 'API Token erstellen (für Entwickler:innen)',
+      titleCreate: () => 'API-Token erstellen (für Entwickler:innen)',
       titleCreateTooltip: () =>
         'Du möchtest unsere API verwenden? Erzähl uns von deinem Projekt und gib bitte die Website URL bzw. den Projektname an.',
       projectTitle: () => 'Bezeichnung deiner Anwendung',
@@ -338,15 +404,22 @@ export const deDE: Localization = {
       projectDescription: () => 'Projektbeschreibung',
       projectDescriptionPlaceholder: () =>
         'z.B. Smartphone-App zur Kontext-bezogenen Nutzung von Kulturdaten',
-      titleList: () => 'Deine bestehenden API Token',
+      titleList: () => 'Deine bestehenden API-Token',
       tokenTitle: () => 'Token',
       tokenName: () => 'Bezeichnung',
+      tokenDescription: () => 'Projektbeschreibung',
       tokenUrl: () => 'URL',
-      createButton: () => 'API Token erstellen',
+      tokenRemoveTitle: () => 'API-Token löschen',
+      tokenRemoveMessage: ({ tokenName }) =>
+        `Bist du sicher, dass du das API-Token der Anwendung ‚${tokenName}‘ löschen möchtest? Die Anwendung verliert damit ihren Zugriff auf die API. Dies kann nicht rückgängig gemacht werden.`,
+      tokenRemoveConfirm: () => 'API-Token löschen',
+      tokenRemoveLoading: () => 'Lösche API-Token',
+      uniqueNameError: () => 'Diese Bezeichnung existiert bereits. Wähle bitte eine andere.',
+      createButton: () => 'API-Token erstellen',
       info: () => (
-        <>
+        <div>
           Dies ist eine Funktion für Entwickler:innen. Um die kulturdaten.berlin API zu nutzen,
-          benötigst du ein API Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto
+          benötigst du ein API-Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto
           zugeordnet. Wie du das Token verwenden kannst, um Daten über die API zu erhalten, erfährst
           du in unserer{' '}
           <a
@@ -356,7 +429,7 @@ export const deDE: Localization = {
           >
             API-Dokumentation
           </a>
-        </>
+        </div>
       ),
     },
     docs: {
@@ -426,6 +499,8 @@ export const deDE: Localization = {
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
     registerReference: () => 'Du bis neu hier?',
     registerReferenceLinkText: () => 'Registriere dich jetzt.',
+    verificationError: () =>
+      'Dieser Account ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
   },
   logout: {
     loading: () => 'Abmeldung läuft',
@@ -493,22 +568,27 @@ export const deDE: Localization = {
     altTooltip: () =>
       'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima.',
     license: () => 'Lizenz',
+    deleteTitle: () => 'Bild löschen',
     licenses: {
       '1': {
         name: () => 'mit Namensnennung nutzbar (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.de',
+        title: () => 'Information über Lizenz',
       },
       '2': {
         name: () => 'ohne Namensnennung nutzbar (Public Domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.de',
+        title: () => 'Information über Lizenz',
       },
       '3': {
         name: () => 'mit Namensnennung - Weitergabe unter gleichen Bedingungen (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.de',
+        title: () => 'Information über Lizenz',
       },
       '4': {
         name: () => 'nur im Zuge der aktuellen Berichtersattung nutzbar',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
+        title: () => 'Information über Lizenz',
       },
     },
     licenseEnd: () => 'Ablaufdatum Lizenz',
@@ -671,6 +751,8 @@ export const deDE: Localization = {
         plural: () => 'diese Termine',
       },
     },
+    cancel: () => 'abbrechen',
+    confirmDelete: () => 'Löschen bestätigen',
     name: () => 'Bezeichnung',
     city: () => 'Stadt',
     created: () => 'erstellt',
@@ -878,9 +960,21 @@ export const deDE: Localization = {
         exportCsv: () => 'Export als CSV',
         exportXls: () => 'Export als Excel',
         delete: () => 'Anbieter:in löschen',
-        deleteConfirm: () =>
-          'Bist du sicher, dass du diese Anbieter:in löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
+        deleteConfirm: ({ name }) => (
+          <>
+            <p>
+              Bist du sicher, dass du die Anbieter:in ‚{name}‘ löschen möchtest? Dies kann nicht
+              rückgängig gemacht werden.
+            </p>
+            <p>
+              Um die Löschung zu bestätigen, gib bitte den Namen der Anbieter:in in dieses Feld ein
+              und drücke den {'‚'}Löschuen bestätigen{'‘'}-Button.
+            </p>
+          </>
+        ),
         deleting: () => 'Lösche Anbieter:in',
+        deleteConditionLabel: () => 'Name der Anbieter:in zur Bestätigung',
+        deleteConditionError: () => 'Der eingebene Name ist nicht korrekt',
       },
     },
     offer: {
@@ -966,7 +1060,7 @@ export const deDE: Localization = {
           label: () => 'Veranstaltungsort',
           choose: () => 'Ort auswählen',
           edit: () => 'Ort ändern',
-          title: ({ name }) => `Ort für ‚${name}‘ wählen`,
+          title: ({ name }) => `Ort für ${name ? `‚${name}‘` : 'unbenanntes Angebot'} wählen`,
         },
         topics: () => 'Themen-Kategorie (Pflichtfeld)',
         topicsTooltip: () => (
@@ -1047,7 +1141,7 @@ export const deDE: Localization = {
         editCancel: () => 'abbrechen',
         contact: () => 'Kontaktdaten',
         tel: () => 'Telefon',
-        district: () => 'Bezirk',
+        district: () => 'Bezirk (nur für Berlin)',
         districtPlaceholder: () => 'Bezirk auswählen',
         url: () => 'URL / Online-Informationen zum Ort',
         urlPlaceholder: () => 'z.B. https://theaterberlin.de/virtualstage',

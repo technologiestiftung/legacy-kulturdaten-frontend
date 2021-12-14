@@ -108,20 +108,6 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
     [weekdays]
   );
 
-  useEffect(() => {
-    if (frequency) {
-      setRule(
-        new RRule({
-          freq: frequency,
-          interval: interval,
-          byweekday: frequency === Frequency.WEEKLY ? chosenRruleWeekdays : undefined,
-          dtstart: startDate,
-          until: endDate,
-        })
-      );
-    }
-  }, [chosenRruleWeekdays, endDate, frequency, interval, setRule, startDate]);
-
   return (
     <StyledDateRecurrence>
       <StyledDateRecurrenceLabel>{t('date.recurrence.frequency')}</StyledDateRecurrenceLabel>
@@ -131,7 +117,21 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
           size={SelectSize.big}
           value={frequency ? frequency.toString() : undefined}
           onChange={(e) => {
-            setFrequency(e.target.value !== 'undefined' ? parseInt(e.target.value, 10) : undefined);
+            const newFrequency =
+              e.target.value !== 'undefined' ? parseInt(e.target.value, 10) : undefined;
+            setFrequency(newFrequency);
+
+            setRule(
+              newFrequency
+                ? new RRule({
+                    freq: newFrequency,
+                    interval: interval,
+                    byweekday: frequency === Frequency.WEEKLY ? chosenRruleWeekdays : undefined,
+                    dtstart: startDate,
+                    until: endDate,
+                  })
+                : undefined
+            );
           }}
         >
           <option value="undefined">{t('date.recurrence.never')}</option>
@@ -150,7 +150,20 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
                 min={1}
                 max={100}
                 value={interval}
-                onChange={(e) => setInterval(parseInt(e.target.value, 10))}
+                onChange={(e) => {
+                  const newInterval = parseInt(e.target.value, 10);
+                  setInterval(newInterval);
+
+                  setRule(
+                    new RRule({
+                      freq: frequency,
+                      interval: newInterval,
+                      byweekday: frequency === Frequency.WEEKLY ? chosenRruleWeekdays : undefined,
+                      dtstart: startDate,
+                      until: endDate,
+                    })
+                  );
+                }}
               />
             </StyledDateRecurrenceInterval>
             <StyledDateRecurrenceText>{t(frequencyNameMap[frequency])}</StyledDateRecurrenceText>
@@ -161,7 +174,24 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
                 {t('date.recurrence.onWeekdays')}
               </StyledDateRecurrenceLabel>
               <StyledDateRecurrenceItem>
-                <DayPicker value={weekdays} onChange={(value) => setWeekdays(value)} min={1} />
+                <DayPicker
+                  value={weekdays}
+                  onChange={(value) => {
+                    const newWeekdays = value;
+                    setWeekdays(newWeekdays);
+
+                    setRule(
+                      new RRule({
+                        freq: frequency,
+                        interval: interval,
+                        byweekday: frequency === Frequency.WEEKLY ? newWeekdays : undefined,
+                        dtstart: startDate,
+                        until: endDate,
+                      })
+                    );
+                  }}
+                  min={1}
+                />
               </StyledDateRecurrenceItem>
             </>
           )}
@@ -172,7 +202,20 @@ const DateRecurrence: React.FC<DateRecurrenceProps> = ({
               min={formatISO(startDate, { representation: 'date' })}
               max={formatISO(latestDate, { representation: 'date' })}
               value={endDateISOString}
-              onChange={(e) => setEndDateISOString(e.target.value)}
+              onChange={(e) => {
+                const newEndDate = e.target.value;
+                setEndDateISOString(newEndDate);
+
+                setRule(
+                  new RRule({
+                    freq: frequency,
+                    interval: interval,
+                    byweekday: frequency === Frequency.WEEKLY ? chosenRruleWeekdays : undefined,
+                    dtstart: startDate,
+                    until: new Date(newEndDate),
+                  })
+                );
+              }}
             />
           </StyledDateRecurrenceItem>
         </>
