@@ -21,6 +21,11 @@ export const enDE: Localization = {
     quit: () => 'Quit admin mode',
     leave: () => 'Quit admin mode',
   },
+  download: {
+    title: ({ fileName }) => `Downloading “${fileName}”`,
+    progress: ({ percent }) => `${percent}%`,
+    cancel: () => 'cancel download',
+  },
   dashboard: {
     info: {
       hint: {
