@@ -4,6 +4,7 @@ import { useCallback, useContext } from 'react';
 import { makeBearer } from '.';
 import { DownloadContext } from '../../components/Download/DownloadContext';
 import { useAuthToken } from '../../components/user/UserContext';
+import { useT } from '../i18n';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
@@ -15,6 +16,7 @@ export const useDownload = (): ((
 ) => void) => {
   const authToken = useAuthToken();
   const { add, update, remove, getNewId } = useContext(DownloadContext);
+  const t = useT();
 
   const callback = useCallback(
     async (route: string, fileName: string, onProcess?: (e: ProgressEvent) => void) => {
@@ -63,10 +65,19 @@ export const useDownload = (): ((
           }, 2000);
         })
         .catch((error) => {
+          update({
+            id,
+            fileName,
+            progress: 0,
+            error: t('general.serverProblem') as string,
+          });
           console.error(error);
+          setTimeout(() => {
+            remove({ id, fileName, progress: 0, error: t('general.serverProblem') as string });
+          }, 3000);
         });
     },
-    [add, authToken, getNewId, remove, update]
+    [add, authToken, getNewId, remove, update, t]
   );
 
   return callback;

@@ -146,9 +146,15 @@ interface DownloadToastProps {
   fileName: string;
   progress: number;
   fadeOut?: boolean;
+  error?: string;
 }
 
-export const DownloadToast: React.FC<DownloadToastProps> = ({ fileName, progress, fadeOut }) => {
+export const DownloadToast: React.FC<DownloadToastProps> = ({
+  fileName,
+  progress,
+  fadeOut,
+  error,
+}) => {
   const t = useT();
   const [animationStatus, setAnimationStatus] = useState(ToastAnimationStatus.fadeIn);
 
@@ -175,12 +181,18 @@ export const DownloadToast: React.FC<DownloadToastProps> = ({ fileName, progress
       <StyledDownloadToastBody>
         <StyledDownloadToastBodyContent>
           <StyledDownloadToastText>
-            <StyledDownloadToastTextText>
-              {t('download.title', { fileName })}
-            </StyledDownloadToastTextText>
-            <StyledDownloadToastTextText>
-              {t('download.progress', { percent: String(Math.floor(progress * 100)) })}
-            </StyledDownloadToastTextText>
+            {error ? (
+              <StyledDownloadToastTextText>{error}</StyledDownloadToastTextText>
+            ) : (
+              <>
+                <StyledDownloadToastTextText>
+                  {t('download.title', { fileName })}
+                </StyledDownloadToastTextText>
+                <StyledDownloadToastTextText>
+                  {t('download.progress', { percent: String(Math.floor(progress * 100)) })}
+                </StyledDownloadToastTextText>
+              </>
+            )}
           </StyledDownloadToastText>
         </StyledDownloadToastBodyContent>
         <StyledDownloadToastProgressBar progress={progress}></StyledDownloadToastProgressBar>

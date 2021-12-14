@@ -12,6 +12,7 @@ type Download = {
   fileName: string;
   progress: number;
   fadeOut?: boolean;
+  error?: string;
 };
 
 type DownloadsState = Download[];
@@ -108,6 +109,7 @@ export const DownloadContextProvider: React.FC<DownloadContextProviderProps> = (
               fileName={download.fileName}
               progress={download.progress}
               fadeOut={download.fadeOut}
+              error={download.error}
             />
           ))}
         </DownloadToastWrapper>
