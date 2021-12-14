@@ -17,7 +17,7 @@ export const DownloadToastWrapper = styled.div`
   padding: 0 0.75rem;
   row-gap: 0.75rem;
   pointer-events: none;
-  z-index: 999;
+  z-index: 1000;
 
   ${mq(Breakpoint.mid)} {
     padding: 0 1.5rem;
