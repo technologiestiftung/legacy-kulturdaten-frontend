@@ -684,6 +684,7 @@ export const deDE: Localization = {
     delete: () => 'Termin löschen',
     selectedCount: ({ count }) => `${count} ausgewählt`,
     selectedDelete: () => 'lösche ausgewählte Termine',
+    hasBreaks: () => 'Es gibt Pausen während der Veranstaltung',
     sort: {
       startsAt: () => 'Startzeit',
       endsAt: () => 'Endzeit',

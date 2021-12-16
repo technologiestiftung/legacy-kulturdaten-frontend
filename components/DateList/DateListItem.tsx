@@ -14,6 +14,7 @@ import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { Button, ButtonColor } from '../button';
+import { Checkbox } from '../checkbox';
 import { EntryFormHead, EntryFormHeadSize } from '../EntryForm/EntryFormHead';
 import { mq } from '../globals/Constants';
 import { Info, InfoColor } from '../info';
@@ -221,6 +222,24 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   valid={toTimeValid}
                   error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
                   disabled={!editable}
+                />
+              </FormItem>
+              <FormItem width={FormItemWidth.full}>
+                <Checkbox
+                  id={`${uid}-has-breaks`}
+                  checked={date?.attributes?.hasBreaks}
+                  label={t('date.hasBreaks')}
+                  onChange={(e) => {
+                    onChange({
+                      attributes: {
+                        ...date?.attributes,
+                        hasBreaks: e.target.checked,
+                      },
+                      id: date?.id,
+                      type: date?.type,
+                      relations: date?.relations,
+                    });
+                  }}
                 />
               </FormItem>
             </FormGrid>

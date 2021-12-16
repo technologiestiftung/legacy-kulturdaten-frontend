@@ -21,6 +21,7 @@ import { Breakpoint } from '../../lib/WindowService';
 import { Textarea } from '../textarea';
 import { usePseudoUID } from '../../lib/uid';
 import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
+import { Checkbox } from '../checkbox';
 
 interface DateFormTimeProps {
   earliestDate: Date;
@@ -31,6 +32,8 @@ interface DateFormTimeProps {
   setToDate: (date: Date) => void;
   toDateValid: boolean;
   toTimeValid: boolean;
+  hasBreaks: boolean;
+  setHasBreaks: (hasBreaks: boolean) => void;
 }
 
 export const DateFormTime: React.FC<DateFormTimeProps> = ({
@@ -42,8 +45,11 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
   setToDate,
   toDateValid,
   toTimeValid,
+  hasBreaks,
+  setHasBreaks,
 }: DateFormTimeProps) => {
   const t = useT();
+  const uid = usePseudoUID();
 
   const earliestDateISOString = formatISO(earliestDate, { representation: 'date' });
   const latestDateISOString = formatISO(latestDate, { representation: 'date' });
@@ -119,6 +125,14 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
             error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
           />
         </FormItem>
+        <FormItem width={FormItemWidth.full}>
+          <Checkbox
+            id={`${uid}-has-breaks`}
+            checked={hasBreaks}
+            label={t('date.hasBreaks')}
+            onChange={(e) => setHasBreaks(e.target.checked)}
+          />
+        </FormItem>
       </FormGrid>
     </>
   );
@@ -162,6 +176,8 @@ interface DateCreateFormProps {
   setToDate: (date: Date) => void;
   toDateValid: boolean;
   toTimeValid: boolean;
+  hasBreaks: boolean;
+  setHasBreaks: (hasBreaks: boolean) => void;
 }
 
 const DateCreateForm: React.FC<DateCreateFormProps> = ({
@@ -194,6 +210,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   setToDate,
   toDateValid,
   toTimeValid,
+  hasBreaks,
+  setHasBreaks,
 }: DateCreateFormProps) => {
   const t = useT();
   const uid = usePseudoUID();
@@ -219,6 +237,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               setToDate,
               toDateValid,
               toTimeValid,
+              hasBreaks,
+              setHasBreaks,
             }}
           />
         </EntryFormContainer>
@@ -408,6 +428,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
 
   const [fromDate, setFromDate] = useState<Date>(now);
   const [toDate, setToDate] = useState<Date>(add(now, { hours: 1 }));
+  const [hasBreaks, setHasBreaks] = useState(false);
 
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
@@ -422,6 +443,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           status: OfferDateStatus.scheduled,
           ticketUrl: ticketUrl,
           registrationUrl: registrationUrl,
+          hasBreaks,
         },
         relations: {
           translations: [
@@ -464,6 +486,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   }, [
     fromDate,
     toDate,
+    hasBreaks,
     ticketUrl,
     registrationUrl,
     titleGerman,
@@ -512,6 +535,8 @@ export const DateCreate: React.FC<DateCreateProps> = ({
           setFromDate,
           toDate,
           setToDate,
+          hasBreaks,
+          setHasBreaks,
         }}
       />
       <StyledDateCreateBottomBar>{createButton}</StyledDateCreateBottomBar>

@@ -45,6 +45,7 @@ export type OfferDate = {
       status: OfferDateStatus;
       ticketUrl?: string;
       registrationUrl?: string;
+      hasBreaks?: boolean;
     };
     relations?: {
       translations: OfferDateTranslation[];

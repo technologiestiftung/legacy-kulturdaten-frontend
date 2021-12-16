@@ -677,6 +677,7 @@ export const enDE: Localization = {
     delete: () => 'delete date',
     selectedCount: ({ count }) => `${count} selected`,
     selectedDelete: () => 'delete selected dates',
+    hasBreaks: () => 'There will be breaks during the event',
     sort: {
       startsAt: () => 'Start time',
       endsAt: () => 'End time',
