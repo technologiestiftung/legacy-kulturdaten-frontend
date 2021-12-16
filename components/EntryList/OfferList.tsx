@@ -40,6 +40,7 @@ import {
   DropdownMenuForm,
 } from '../DropdownMenu';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -193,6 +194,10 @@ export const OfferList: React.FC<OfferListProps> = ({
                 ? getTranslation<OfferTranslation>(language, translations)
                 : undefined;
 
+              const defaultTranslation = translations
+                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
+                : undefined;
+
               return (
                 <EntryCard
                   onClick={() => {
@@ -202,7 +207,11 @@ export const OfferList: React.FC<OfferListProps> = ({
                   href={href('info')}
                   menuExpanded={expanded}
                   key={index}
-                  title={currentTranslation?.attributes?.name || categories?.offer?.placeholderName}
+                  title={
+                    currentTranslation?.attributes?.name ||
+                    defaultTranslation?.attributes?.name ||
+                    categories?.offer?.placeholderName
+                  }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href())}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
@@ -235,6 +244,10 @@ export const OfferList: React.FC<OfferListProps> = ({
 
               const currentTranslation = translations
                 ? getTranslation<OfferTranslation>(language, translations)
+                : undefined;
+
+              const defaultTranslation = translations
+                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
                 : undefined;
 
               const href = (sub?: string) =>
@@ -275,7 +288,9 @@ export const OfferList: React.FC<OfferListProps> = ({
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name || categories?.offer?.placeholderName}
+                    {currentTranslation?.attributes?.name ||
+                      defaultTranslation?.attributes?.name ||
+                      categories?.offer?.placeholderName}
                   </StyledTableLinkText>,
                   mainTypeNames?.join(', '),
                   typeNames?.join(', '),

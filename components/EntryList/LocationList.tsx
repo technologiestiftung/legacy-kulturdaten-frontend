@@ -34,6 +34,7 @@ import {
   DropdownMenuForm,
 } from '../DropdownMenu';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -191,6 +192,10 @@ export const LocationList: React.FC<LocationListProps> = ({
                 ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
 
+              const defaultTranslation = translations
+                ? getTranslation<LocationTranslation>(defaultLanguage, translations)
+                : undefined;
+
               const address = relations?.address;
 
               return (
@@ -207,7 +212,9 @@ export const LocationList: React.FC<LocationListProps> = ({
                   menuExpanded={expanded}
                   key={index}
                   title={
-                    currentTranslation?.attributes?.name || categories?.location?.placeholderName
+                    currentTranslation?.attributes?.name ||
+                    defaultTranslation?.attributes?.name ||
+                    categories?.location?.placeholderName
                   }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href()) || activeEntryId === id}
@@ -258,6 +265,10 @@ export const LocationList: React.FC<LocationListProps> = ({
                 ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
 
+              const defaultTranslation = translations
+                ? getTranslation<LocationTranslation>(defaultLanguage, translations)
+                : undefined;
+
               const href = (sub?: string) =>
                 routes[Routes.location]({
                   locale,
@@ -286,7 +297,9 @@ export const LocationList: React.FC<LocationListProps> = ({
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name || categories?.location?.placeholderName}
+                    {currentTranslation?.attributes?.name ||
+                      defaultTranslation?.attributes?.name ||
+                      categories?.location?.placeholderName}
                   </StyledTableLinkText>,
                   `${
                     address
