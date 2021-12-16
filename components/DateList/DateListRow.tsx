@@ -177,9 +177,9 @@ interface DateListRowProps {
   onChange: (checked: boolean) => void;
   to?: string;
   title?: string;
-  body?: React.ReactNode;
   editable?: boolean;
   disabled?: boolean;
+  children?: React.ReactNode;
 }
 
 export const DateListRow: React.FC<DateListRowProps> = ({
@@ -188,7 +188,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   lastRow,
   title,
   status,
-  body,
+  children,
   checked,
   onChange,
   editable = true,
@@ -208,7 +208,7 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const formattedTo = `${toDate && formatDate(toDate, dateFormat)}`;
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
-    <StyledDateListItemBodyInner lastRow={lastRow}>{body}</StyledDateListItemBodyInner>
+    <StyledDateListItemBodyInner lastRow={lastRow}>{children}</StyledDateListItemBodyInner>
   );
 
   const expanded = !isCollapsed;

@@ -136,7 +136,8 @@ export const DateListItem: React.FC<DateListItemProps> = ({
         }
       }}
       disabled={!editable}
-      body={
+      editable={editable}
+    >
         <StyledDateListItemBody>
           <StyledDateListItemContainer columns={isUltraOrWider ? 2 : 3}>
             <EntryFormHead title={t('date.time') as string} size={EntryFormHeadSize.small} />
@@ -284,11 +285,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             <FormGrid>
               {contentLanguages.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
-                  ? getTranslation<OfferDateTranslation>(
-                      language,
-                      date.relations.translations,
-                      false
-                    )
+                ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
                   : undefined;
 
                 return (
@@ -364,11 +361,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             <FormGrid>
               {contentLanguagesWithEasy.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
-                  ? getTranslation<OfferDateTranslation>(
-                      language,
-                      date.relations.translations,
-                      false
-                    )
+                ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
                   : undefined;
 
                 return (
@@ -424,11 +417,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             <FormGrid>
               {contentLanguages.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
-                  ? getTranslation<OfferDateTranslation>(
-                      language,
-                      date.relations.translations,
-                      false
-                    )
+                ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
                   : undefined;
 
                 return (
@@ -532,8 +521,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             </StyledDateListItemContainer>
           )}
         </StyledDateListItemBody>
-      }
-      editable={editable}
-    />
+    </DateListRow>
   ) : null;
 };
