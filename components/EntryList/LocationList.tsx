@@ -22,11 +22,18 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import { Button, ButtonColor, ButtonSize } from '../button';
+import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useDownload } from '../../lib/api/download';
+import {
+  DropdownMenu,
+  DropdownMenuButtonColor,
+  DropdownMenuButtonSize,
+  DropdownMenuForm,
+} from '../DropdownMenu';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -107,6 +114,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
   const download = useDownload();
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
@@ -344,19 +352,34 @@ export const LocationList: React.FC<LocationListProps> = ({
             {t('categories.location.form.create')}
           </Button>
         }
+        menu={
+          <DropdownMenu
+            icon="MoreVertical"
+            form={DropdownMenuForm.rounded}
+            buttonAriaLabels={{
+              open: t('general.actionsOpen') as string,
+              close: t('general.actionsClose') as string,
+            }}
+            buttonSize={isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default}
+            buttonColor={DropdownMenuButtonColor.grey}
+            menuWidth="12rem"
+          >
+            <Button
+              variant={ButtonVariant.minimal}
+              size={ButtonSize.default}
+              color={ButtonColor.white}
+              onClick={() =>
+                download(
+                  apiRoutes.locationListDownload({ organizer: organizerId, format: 'xls' }),
+                  'location-list.xls'
+                )
+              }
+            >
+              {categories?.location?.options?.export?.xls?.entry?.title}
+            </Button>
+          </DropdownMenu>
+        }
       />
-      <div>
-        <Button
-          onClick={async () => {
-            download(
-              apiRoutes.locationListDownload({ organizer: organizerId, format: 'xls' }),
-              'location-list.xls'
-            );
-          }}
-        >
-          Export für Excel (.xls)
-        </Button>
-      </div>
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}

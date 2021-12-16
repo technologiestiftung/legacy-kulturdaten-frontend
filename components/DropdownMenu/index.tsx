@@ -57,7 +57,6 @@ const StyledDropdownMenuButton = styled.button<{
   transition: transform var(--transition-duration);
   position: relative;
   z-index: 2;
-  /* padding: ${({ size }) => (size === DropdownMenuButtonSize.big ? '0.375rem' : 0)}; */
   padding: 0;
 
   ${({ color }) => css`
@@ -122,6 +121,7 @@ const StyledDropdownMenuDropdown = styled.div<{
   visible: boolean;
   animating: boolean;
   direction: DropdownMenuDirection;
+  menuWidth?: string;
 }>`
   color: var(--black);
   background: var(--grey-200);
@@ -141,7 +141,8 @@ const StyledDropdownMenuDropdown = styled.div<{
 
   ${mq(Breakpoint.mid)} {
     width: auto;
-    min-width: 18rem;
+    min-width: ${({ menuWidth }) => menuWidth || '18rem'};
+    max-width: ${({ menuWidth }) => menuWidth || ''};
   }
 
   ${({ animating }) =>
@@ -208,6 +209,7 @@ interface DropdownMenuProps {
   buttonColor?: DropdownMenuButtonColor;
   buttonSize?: DropdownMenuButtonSize;
   direction?: DropdownMenuDirection;
+  menuWidth?: string;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -220,6 +222,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   buttonColor = DropdownMenuButtonColor.black,
   buttonSize = DropdownMenuButtonSize.default,
   direction = DropdownMenuDirection.left,
+  menuWidth,
 }: DropdownMenuProps) => {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -275,7 +278,12 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
             : React.createElement(feather[icon || 'Circle'])}
         </StyledDropdownMenuButtonIcon>
       </StyledDropdownMenuButton>
-      <StyledDropdownMenuDropdown visible={visible} animating={animating} direction={direction}>
+      <StyledDropdownMenuDropdown
+        visible={visible}
+        animating={animating}
+        direction={direction}
+        menuWidth={menuWidth}
+      >
         <StyledDropdownMenuDropdownContent>
           {React.Children.toArray(children).map((child) => {
             const elementType = (child as React.ReactElement)?.props?.__TYPE;

@@ -32,13 +32,11 @@ import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
-import { useAuthToken } from '../user/UserContext';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
   DropdownMenuButtonColor,
   DropdownMenuButtonSize,
-  DropdownMenuDirection,
   DropdownMenuForm,
 } from '../DropdownMenu';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
@@ -339,10 +337,9 @@ export const OfferList: React.FC<OfferListProps> = ({
               open: t('general.actionsOpen') as string,
               close: t('general.actionsClose') as string,
             }}
-            direction={isMidOrWider ? DropdownMenuDirection.right : DropdownMenuDirection.left}
             buttonSize={isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default}
             buttonColor={DropdownMenuButtonColor.grey}
-            // stretch={!isMidOrWider}
+            menuWidth="12rem"
           >
             <Button
               variant={ButtonVariant.minimal}
@@ -355,7 +352,7 @@ export const OfferList: React.FC<OfferListProps> = ({
                 )
               }
             >
-              Export für Excel (.xls)
+              {categories?.offer?.options?.export?.xls?.entry?.title}
             </Button>
           </DropdownMenu>
         }
