@@ -113,7 +113,7 @@ interface DateListProps {
   checkedDateIds?: string[];
   setCheckedDateIds?: Dispatch<SetStateAction<string[]>>;
   offerTitles: { [key in Language]: string };
-  onDelete?: (dateIds: OfferDate['data']['id'][]) => void;
+  onDelete?: (dateIds: OfferDate['data']['id'][], callback?: () => void) => void;
   fromSort?: {
     order: Order;
     onClick: () => void;
@@ -306,7 +306,11 @@ const DateList: React.FC<DateListProps> = ({
                 editable={editable}
                 lastRow={index === rowCount - 1}
                 offerTitles={offerTitles}
-                onDelete={editable && onDelete ? (dateId) => onDelete([dateId]) : undefined}
+                onDelete={
+                  editable && onDelete
+                    ? (dateId, callback) => onDelete([dateId], callback)
+                    : undefined
+                }
               />
             );
           })

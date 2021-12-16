@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { ArrowRight, ChevronDown } from 'react-feather';
 import { OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
@@ -180,9 +181,11 @@ interface DateListRowProps {
   editable?: boolean;
   disabled?: boolean;
   children?: React.ReactNode;
+  isCollapsed?: boolean;
+  setIsCollapsed?: (isCollapsed: boolean) => void;
 }
 
-export const DateListRow: React.FC<DateListRowProps> = ({
+const DateListRow: React.FC<DateListRowProps> = ({
   from,
   to,
   lastRow,
@@ -193,6 +196,8 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   onChange,
   editable = true,
   disabled,
+  isCollapsed,
+  setIsCollapsed,
 }: DateListRowProps) => {
   const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const uid = usePseudoUID();
@@ -207,8 +212,10 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   const formattedFrom = `${formatDate(fromDate, dateFormat)}`;
   const formattedTo = `${toDate && formatDate(toDate, dateFormat)}`;
 
-  const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
-    <StyledDateListItemBodyInner lastRow={lastRow}>{children}</StyledDateListItemBodyInner>
+  const { renderedCollapsable } = useCollapsable(
+    <StyledDateListItemBodyInner lastRow={lastRow}>{children}</StyledDateListItemBodyInner>,
+    isCollapsed,
+    setIsCollapsed
   );
 
   const expanded = !isCollapsed;
@@ -298,4 +305,17 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   );
 
   return isWideOrWider ? renderedGridContent : renderedFlexContent;
+};
+
+export const useDateListRow = (
+  props: DateListRowProps
+): {
+  renderedRow: React.ReactElement<DateListRowProps>;
+  setIsCollapsed: (isCollapsed: boolean) => void;
+} => {
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  return {
+    renderedRow: <DateListRow {...{ ...props, isCollapsed, setIsCollapsed }} />,
+    setIsCollapsed,
+  };
 };

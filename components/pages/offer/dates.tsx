@@ -243,7 +243,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         setSortKey('endsAt');
       },
     },
-    onDelete: (dateIds) => {
+    onDelete: (dateIds, callback) => {
       confirmScreen({
         title: t('date.delete') as string,
         message: t('general.deleting.confirm', {
@@ -270,6 +270,9 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                   setCheckedDateIds(
                     checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
                   );
+                  if (typeof callback === 'function') {
+                    callback();
+                  }
                   mutateDateList();
                   return { success: true };
                 }
