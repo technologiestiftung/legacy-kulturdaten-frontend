@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { apiRoutes, LocationList as LocationListCall } from '../../lib/api';
+import { LocationList as LocationListCall } from '../../lib/api';
 import { Location, LocationTranslation } from '../../lib/api/types/location';
-import { Order, useCreateLocation, useList } from '../../lib/categories';
+import { CategoryExportType, Order, useCreateLocation, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -116,6 +116,8 @@ export const LocationList: React.FC<LocationListProps> = ({
   const organizerId = useOrganizerId();
   const download = useDownload();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
@@ -375,21 +377,28 @@ export const LocationList: React.FC<LocationListProps> = ({
             }}
             buttonSize={isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default}
             buttonColor={DropdownMenuButtonColor.grey}
-            menuWidth="12rem"
+            menuWidth={
+              expanded ? undefined : isUltraOrWider ? '22rem' : isWideOrWider ? '15rem' : '12rem'
+            }
           >
-            <Button
-              variant={ButtonVariant.minimal}
-              size={ButtonSize.default}
-              color={ButtonColor.white}
-              onClick={() =>
-                download(
-                  apiRoutes.locationListDownload({ organizer: organizerId, format: 'xls' }),
-                  'location-list.xls'
-                )
-              }
-            >
-              {categories?.location?.options?.export?.xls?.entry?.title}
-            </Button>
+            {categories?.location?.options?.export
+              ?.filter(({ type }) => type === CategoryExportType.list)
+              ?.map(({ format, title, route }, index) => (
+                <Button
+                  key={index}
+                  variant={ButtonVariant.minimal}
+                  size={ButtonSize.default}
+                  color={ButtonColor.white}
+                  onClick={() =>
+                    download(
+                      route({ organizer: organizerId, format }),
+                      `${categories?.location?.title?.plural}.${format}`
+                    )
+                  }
+                >
+                  {title}
+                </Button>
+              ))}
           </DropdownMenu>
         }
       />

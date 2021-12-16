@@ -3,9 +3,10 @@ import { useRouter } from 'next/router';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
-import { apiRoutes, OfferList as OfferListCall } from '../../lib/api';
+import { OfferList as OfferListCall } from '../../lib/api';
 import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
 import {
+  CategoryExportType,
   Order,
   useCreateOffer,
   useList,
@@ -120,6 +121,8 @@ export const OfferList: React.FC<OfferListProps> = ({
   const mainTypeOptions = useOfferMainTypeList();
   const typeOptions = useOfferTypeList();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
   const download = useDownload();
 
@@ -354,21 +357,28 @@ export const OfferList: React.FC<OfferListProps> = ({
             }}
             buttonSize={isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default}
             buttonColor={DropdownMenuButtonColor.grey}
-            menuWidth="12rem"
+            menuWidth={
+              expanded ? undefined : isUltraOrWider ? '22rem' : isWideOrWider ? '15rem' : '12rem'
+            }
           >
-            <Button
-              variant={ButtonVariant.minimal}
-              size={ButtonSize.default}
-              color={ButtonColor.white}
-              onClick={() =>
-                download(
-                  apiRoutes.offerListDownload({ organizer: organizerId, format: 'xls' }),
-                  'offer-list.xls'
-                )
-              }
-            >
-              {categories?.offer?.options?.export?.xls?.entry?.title}
-            </Button>
+            {categories?.offer?.options?.export
+              ?.filter(({ type }) => type === CategoryExportType.list)
+              ?.map(({ format, title, route }, index) => (
+                <Button
+                  key={index}
+                  variant={ButtonVariant.minimal}
+                  size={ButtonSize.default}
+                  color={ButtonColor.white}
+                  onClick={() =>
+                    download(
+                      route({ organizer: organizerId, format }),
+                      `${categories?.offer?.title?.plural}.${format}`
+                    )
+                  }
+                >
+                  {title}
+                </Button>
+              ))}
           </DropdownMenu>
         }
       />

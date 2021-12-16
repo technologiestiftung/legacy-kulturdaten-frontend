@@ -4,7 +4,7 @@ import { Categories } from '../../../config/categories';
 import { ApiCall } from '../../../lib/api';
 import { useDownload } from '../../../lib/api/download';
 import { CategoryEntry, Translation } from '../../../lib/api/types/general';
-import { useDeleteEntry, useEntry, useTabs } from '../../../lib/categories';
+import { CategoryExportType, useDeleteEntry, useEntry, useTabs } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
@@ -91,22 +91,31 @@ export const useEntryHeader = (
               }}
               stretch={!isMidOrWider}
             >
-              <Button
-                variant={ButtonVariant.minimal}
-                size={ButtonSize.default}
-                color={ButtonColor.white}
-                onClick={() =>
-                  download(
-                    category?.options?.export.xls.entry.route({
-                      id: entry?.data?.id,
-                      format: 'xls',
-                    }),
-                    `${currentTranslation?.attributes?.name || category?.placeholderName}.xls`
-                  )
-                }
-              >
-                {category?.options?.export?.xls?.entry?.title}
-              </Button>
+              {category?.options?.export
+                ?.filter(({ type }) => type === CategoryExportType.entry)
+                ?.map(({ format, title, route }, index) => (
+                  <Button
+                    key={index}
+                    variant={ButtonVariant.minimal}
+                    size={ButtonSize.default}
+                    color={ButtonColor.white}
+                    onClick={() =>
+                      download(
+                        route({
+                          id: entry?.data?.id,
+                          format,
+                          offerId:
+                            category?.name === Categories.offer ? entry?.data?.id : undefined,
+                        }),
+                        `${
+                          currentTranslation?.attributes?.name || category?.placeholderName
+                        }.${format}`
+                      )
+                    }
+                  >
+                    {title}
+                  </Button>
+                ))}
               {userIsOwner && (
                 <Button
                   variant={ButtonVariant.minimal}

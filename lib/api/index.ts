@@ -69,6 +69,7 @@ export enum ApiRoutes {
   offerDelete = 'offerDelete',
   offerDateUpdate = 'offerDateUpdate',
   offerDateList = 'offerDateList',
+  offerDateListDownload = 'offerDateListDownload',
   offerTypeList = 'offerTypeList',
   offerMainTypeList = 'offerMainTypeList',
   offerDownload = 'offerDownload',
@@ -150,6 +151,8 @@ export const apiRoutes: {
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
+  offerDateListDownload: ({ offerId, format }) =>
+    `/${apiVersion}/offer/${offerId}/date?include=translations,dates,media?format=${format}&filter=past=false&sort=startsAt`,
   offerDownload: ({ id, format }) =>
     `/${apiVersion}/offer/${id}?include=translations,location,organizers,links,types,subjects,tags,mainType&format=${format}`,
   offerListDownload: ({ format, organizer }) =>

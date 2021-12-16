@@ -42,6 +42,11 @@ export interface CategoryEntryPage extends CategoryPage {
   query: ParsedUrlQuery;
 }
 
+export enum CategoryExportType {
+  entry = 'entry',
+  list = 'list',
+}
+
 export type Category = {
   name: Categories;
   title: {
@@ -75,17 +80,11 @@ export type Category = {
   };
   options: {
     export: {
-      xls: {
-        entry: {
-          title: string;
-          route: ApiRoute;
-        };
-        list: {
-          title: string;
-          route: ApiRoute;
-        };
-      };
-    };
+      format: string;
+      title: string;
+      route: ApiRoute;
+      type: CategoryExportType;
+    }[];
     deletion: {
       title: string;
       message: (name: string) => string;

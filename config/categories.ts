@@ -5,7 +5,7 @@ import { useT } from '../lib/i18n';
 import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
 import { Routes, routes, useLocale } from '../lib/routing';
-import { Category } from '../lib/categories';
+import { Category, CategoryExportType } from '../lib/categories';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
 import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
@@ -136,18 +136,20 @@ export const useCategories: () => {
         },
       },
       options: {
-        export: {
-          xls: {
-            entry: {
-              title: t('categories.organizer.options.exportXls') as string,
-              route: apiRoutes.organizerDownload,
-            },
-            list: {
-              title: t('categories.organizer.options.exportXls') as string,
-              route: apiRoutes.organizerListDownload,
-            },
+        export: [
+          {
+            format: 'xls',
+            title: t('categories.organizer.options.exportEntryXls') as string,
+            route: apiRoutes.organizerDownload,
+            type: CategoryExportType.entry,
           },
-        },
+          {
+            format: 'xls',
+            title: t('categories.organizer.options.exportListXls') as string,
+            route: apiRoutes.organizerListDownload,
+            type: CategoryExportType.list,
+          },
+        ],
         deletion: {
           title: t('categories.organizer.options.delete') as string,
           message: (name) => t('categories.organizer.options.deleteConfirm', { name }) as string,
@@ -311,18 +313,26 @@ export const useCategories: () => {
         },
       },
       options: {
-        export: {
-          xls: {
-            entry: {
-              title: t('categories.offer.options.exportXls') as string,
-              route: apiRoutes.offerDownload,
-            },
-            list: {
-              title: t('categories.offer.options.exportXls') as string,
-              route: apiRoutes.offerListDownload,
-            },
+        export: [
+          {
+            format: 'xls',
+            title: t('categories.offer.options.exportEntryXls') as string,
+            route: apiRoutes.offerDownload,
+            type: CategoryExportType.entry,
           },
-        },
+          {
+            format: 'xls',
+            title: t('categories.offer.options.exportDatesXls') as string,
+            route: apiRoutes.offerDateListDownload,
+            type: CategoryExportType.entry,
+          },
+          {
+            format: 'xls',
+            title: t('categories.offer.options.exportListXls') as string,
+            route: apiRoutes.offerListDownload,
+            type: CategoryExportType.list,
+          },
+        ],
         deletion: {
           title: t('categories.offer.options.delete') as string,
           message: (name) => t('categories.offer.options.deleteConfirm', { name }) as string,
@@ -464,18 +474,20 @@ export const useCategories: () => {
         },
       },
       options: {
-        export: {
-          xls: {
-            entry: {
-              title: t('categories.location.options.exportXls') as string,
-              route: apiRoutes.locationDownload,
-            },
-            list: {
-              title: t('categories.location.options.exportXls') as string,
-              route: apiRoutes.locationListDownload,
-            },
+        export: [
+          {
+            format: 'xls',
+            title: t('categories.location.options.exportEntryXls') as string,
+            route: apiRoutes.locationDownload,
+            type: CategoryExportType.entry,
           },
-        },
+          {
+            format: 'xls',
+            title: t('categories.location.options.exportListXls') as string,
+            route: apiRoutes.locationListDownload,
+            type: CategoryExportType.list,
+          },
+        ],
         deletion: {
           title: t('categories.location.options.delete') as string,
           message: (name) => t('categories.location.options.deleteConfirm', { name }) as string,
