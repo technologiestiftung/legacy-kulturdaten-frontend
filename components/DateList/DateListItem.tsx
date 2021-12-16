@@ -138,389 +138,391 @@ export const DateListItem: React.FC<DateListItemProps> = ({
       disabled={!editable}
       editable={editable}
     >
-        <StyledDateListItemBody>
-          <StyledDateListItemContainer columns={isUltraOrWider ? 2 : 3}>
-            <EntryFormHead title={t('date.time') as string} size={EntryFormHeadSize.small} />
-            <FormGrid>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.date}
-                  label={t('date.from') as string}
-                  value={formatISO9075(fromDate, { representation: 'date' })}
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        startsAt: `${e.target.value}T${format(fromDate, 'HH:mm')}`,
-                      },
-                    })
-                  }
-                  min={formatISO9075(today, { representation: 'date' })}
-                  max={formatISO9075(add(today, { years: 1 }), { representation: 'date' })}
-                  disabled={!editable}
-                />
+      <StyledDateListItemBody>
+        <StyledDateListItemContainer columns={isUltraOrWider ? 2 : 3}>
+          <EntryFormHead title={t('date.time') as string} size={EntryFormHeadSize.small} />
+          <FormGrid>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                type={InputType.date}
+                label={t('date.from') as string}
+                value={formatISO9075(fromDate, { representation: 'date' })}
+                onChange={(e) =>
+                  onChange({
+                    ...date,
+                    attributes: {
+                      ...date.attributes,
+                      startsAt: parseISO(
+                        `${e.target.value}T${format(fromDate, 'HH:mm')}`
+                      ).toString(),
+                    },
+                  })
+                }
+                min={formatISO9075(today, { representation: 'date' })}
+                max={formatISO9075(add(today, { years: 1 }), { representation: 'date' })}
+                disabled={!editable}
+              />
 
-                <Input
-                  type={InputType.time}
-                  label={t('date.clock') as string}
-                  value={format(fromDate, 'HH:mm')}
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        startsAt: `${formatISO9075(fromDate, { representation: 'date' })}T${
-                          e.target.value
-                        }`,
-                      },
-                    })
-                  }
-                  disabled={!editable}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.half}>
-                <Input
-                  type={InputType.date}
-                  label={t('date.to') as string}
-                  value={formatISO9075(toDate, { representation: 'date' })}
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        endsAt: `${e.target.value}T${format(toDate, 'HH:mm')}`,
-                      },
-                    })
-                  }
-                  min={formatISO9075(today, { representation: 'date' })}
-                  max={formatISO9075(latestDate, { representation: 'date' })}
-                  valid={toDateValid}
-                  error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
-                  disabled={!editable}
-                />
+              <Input
+                type={InputType.time}
+                label={t('date.clock') as string}
+                value={format(fromDate, 'HH:mm')}
+                onChange={(e) =>
+                  onChange({
+                    ...date,
+                    attributes: {
+                      ...date.attributes,
+                      startsAt: `${formatISO9075(fromDate, { representation: 'date' })}T${
+                        e.target.value
+                      }`,
+                    },
+                  })
+                }
+                disabled={!editable}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.half}>
+              <Input
+                type={InputType.date}
+                label={t('date.to') as string}
+                value={formatISO9075(toDate, { representation: 'date' })}
+                onChange={(e) =>
+                  onChange({
+                    ...date,
+                    attributes: {
+                      ...date.attributes,
+                      endsAt: parseISO(`${e.target.value}T${format(toDate, 'HH:mm')}`).toString(),
+                    },
+                  })
+                }
+                min={formatISO9075(today, { representation: 'date' })}
+                max={formatISO9075(latestDate, { representation: 'date' })}
+                valid={toDateValid}
+                error={!toDateValid ? (t('date.toDateInvalid') as string) : undefined}
+                disabled={!editable}
+              />
 
-                <Input
-                  type={InputType.time}
-                  label={t('date.clock') as string}
-                  value={toTimeISOString}
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        endsAt: `${formatISO9075(toDate, { representation: 'date' })}T${
-                          e.target.value
-                        }`,
-                      },
-                    })
-                  }
-                  min={
-                    compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
-                      ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
-                      : undefined
-                  }
-                  valid={toTimeValid}
-                  error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
-                  disabled={!editable}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.full}>
-                <Checkbox
-                  id={`${uid}-has-breaks`}
-                  checked={date?.attributes?.hasBreaks}
-                  label={t('date.hasBreaks')}
-                  onChange={(e) => {
-                    onChange({
-                      attributes: {
-                        ...date?.attributes,
-                        hasBreaks: e.target.checked,
-                      },
-                      id: date?.id,
-                      type: date?.type,
-                      relations: date?.relations,
-                    });
-                  }}
-                />
-              </FormItem>
-            </FormGrid>
-          </StyledDateListItemContainer>
-          <StyledDateListItemContainer columns={isUltraOrWider ? 1 : 3}>
-            <EntryFormHead
-              title={t('date.status') as string}
-              size={EntryFormHeadSize.small}
-              id={`entryformhead-${uid}`}
-            />
-            <FormGrid>
-              <FormItem width={isUltraOrWider ? FormItemWidth.full : FormItemWidth.half}>
-                <Select
-                  id={`entryformstatusselect-${uid}`}
-                  value={attributes.status}
-                  ariaLabelledby={`entryformhead-${uid}`}
-                  size={SelectSize.big}
-                  disabled={!editable}
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        status: e.target.value as OfferDateStatus,
-                      },
-                    })
-                  }
-                >
-                  <option value={OfferDateStatus.scheduled}>
-                    {t(editable ? 'date.scheduled' : 'date.scheduledArchived')}
-                  </option>
-                  <option value={OfferDateStatus.canceled}>{t('date.canceled')}</option>
-                </Select>
-              </FormItem>
-            </FormGrid>
-          </StyledDateListItemContainer>
-          <StyledDateListItemContainer columns={3}>
-            <EntryFormHead
-              title={`${t('date.title')} (${t('forms.optional')})`}
-              size={EntryFormHeadSize.small}
-            />
-            <FormGrid>
-              {contentLanguages.map((language: Language, index) => {
-                const currentTranslation = date.relations?.translations
+              <Input
+                type={InputType.time}
+                label={t('date.clock') as string}
+                value={toTimeISOString}
+                onChange={(e) =>
+                  onChange({
+                    ...date,
+                    attributes: {
+                      ...date.attributes,
+                      endsAt: `${formatISO9075(toDate, { representation: 'date' })}T${
+                        e.target.value
+                      }`,
+                    },
+                  })
+                }
+                min={
+                  compareAsc(parseISO(fromDateISOString), parseISO(toDateISOString)) === 0
+                    ? format(add(fromDateTime, { minutes: 1 }), 'HH:mm')
+                    : undefined
+                }
+                valid={toTimeValid}
+                error={!toTimeValid ? (t('date.toTimeInvalid') as string) : undefined}
+                disabled={!editable}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Checkbox
+                id={`${uid}-has-breaks`}
+                checked={date?.attributes?.hasBreaks}
+                label={t('date.hasBreaks')}
+                onChange={(e) => {
+                  onChange({
+                    attributes: {
+                      ...date?.attributes,
+                      hasBreaks: e.target.checked,
+                    },
+                    id: date?.id,
+                    type: date?.type,
+                    relations: date?.relations,
+                  });
+                }}
+              />
+            </FormItem>
+          </FormGrid>
+        </StyledDateListItemContainer>
+        <StyledDateListItemContainer columns={isUltraOrWider ? 1 : 3}>
+          <EntryFormHead
+            title={t('date.status') as string}
+            size={EntryFormHeadSize.small}
+            id={`entryformhead-${uid}`}
+          />
+          <FormGrid>
+            <FormItem width={isUltraOrWider ? FormItemWidth.full : FormItemWidth.half}>
+              <Select
+                id={`entryformstatusselect-${uid}`}
+                value={attributes.status}
+                ariaLabelledby={`entryformhead-${uid}`}
+                size={SelectSize.big}
+                disabled={!editable}
+                onChange={(e) =>
+                  onChange({
+                    ...date,
+                    attributes: {
+                      ...date.attributes,
+                      status: e.target.value as OfferDateStatus,
+                    },
+                  })
+                }
+              >
+                <option value={OfferDateStatus.scheduled}>
+                  {t(editable ? 'date.scheduled' : 'date.scheduledArchived')}
+                </option>
+                <option value={OfferDateStatus.canceled}>{t('date.canceled')}</option>
+              </Select>
+            </FormItem>
+          </FormGrid>
+        </StyledDateListItemContainer>
+        <StyledDateListItemContainer columns={3}>
+          <EntryFormHead
+            title={`${t('date.title')} (${t('forms.optional')})`}
+            size={EntryFormHeadSize.small}
+          />
+          <FormGrid>
+            {contentLanguages.map((language: Language, index) => {
+              const currentTranslation = date.relations?.translations
                 ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
-                  : undefined;
+                : undefined;
 
-                return (
-                  <FormItem width={FormItemWidth.half} key={index}>
-                    <Input
-                      debounce
-                      type={InputType.text}
-                      label={t(languageTranslationKeys[language]) as string}
-                      ariaLabel={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
-                      value={currentTranslation?.attributes?.name || ''}
-                      onChange={(e) => {
-                        const updatedTranslation = {
-                          ...currentTranslation,
-                          attributes: {
-                            ...currentTranslation?.attributes,
-                            language,
-                            name: e.target.value,
-                          },
-                        };
+              return (
+                <FormItem width={FormItemWidth.half} key={index}>
+                  <Input
+                    debounce
+                    type={InputType.text}
+                    label={t(languageTranslationKeys[language]) as string}
+                    ariaLabel={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
+                    value={currentTranslation?.attributes?.name || ''}
+                    onChange={(e) => {
+                      const updatedTranslation = {
+                        ...currentTranslation,
+                        attributes: {
+                          ...currentTranslation?.attributes,
+                          language,
+                          name: e.target.value,
+                        },
+                      };
 
-                        const filteredTranslations =
-                          date?.relations?.translations?.filter(
-                            (translation) => translation.attributes?.language !== language
-                          ) || [];
+                      const filteredTranslations =
+                        date?.relations?.translations?.filter(
+                          (translation) => translation.attributes?.language !== language
+                        ) || [];
 
-                        onChange({
-                          attributes: date?.attributes,
-                          id: date?.id,
-                          type: date?.type,
-                          relations: date?.relations
-                            ? {
-                                ...date.relations,
-                                translations: [...filteredTranslations, updatedTranslation],
-                              }
-                            : {
-                                translations: [updatedTranslation],
-                              },
-                        });
-                      }}
-                      disabled={!editable}
-                    />
-                  </FormItem>
-                );
-              })}
-              <FormItem width={FormItemWidth.full}>
-                <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                  <div>
-                    {contentLanguages.map((language: Language, index) => {
-                      const currentTranslation = date.relations?.translations
-                        ? getTranslation<OfferDateTranslation>(
-                            language,
-                            date.relations.translations,
-                            false
-                          )
-                        : undefined;
-
-                      return (
-                        <div key={index}>
-                          {t(languageTranslationKeys[language])}: {offerTitles[language]}
-                          {currentTranslation?.attributes?.name
-                            ? ` - ${currentTranslation?.attributes?.name}`
-                            : ''}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </Info>
-              </FormItem>
-            </FormGrid>
-          </StyledDateListItemContainer>
-          <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title={`${t('forms.teaser')}`} size={EntryFormHeadSize.small} />
-            <FormGrid>
-              {contentLanguagesWithEasy.map((language: Language, index) => {
-                const currentTranslation = date.relations?.translations
-                ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
-                  : undefined;
-
-                return (
-                  <FormItem width={FormItemWidth.full} key={index}>
-                    <Textarea
-                      debounce
-                      id={`${uid}-textarea-${language}`}
-                      label={t(languageTranslationKeys[language]) as string}
-                      ariaLabel={t(languageTranslationKeys[language]) as string}
-                      value={currentTranslation?.attributes?.teaser || ''}
-                      onChange={(e) => {
-                        const updatedTranslation = {
-                          ...currentTranslation,
-                          attributes: {
-                            ...currentTranslation?.attributes,
-                            language,
-                            teaser: e.target.value,
-                          },
-                        };
-
-                        const filteredTranslations =
-                          date?.relations?.translations?.filter(
-                            (translation) => translation.attributes?.language !== language
-                          ) || [];
-
-                        onChange({
-                          attributes: date?.attributes,
-                          id: date?.id,
-                          type: date?.type,
-                          relations: date?.relations
-                            ? {
-                                ...date.relations,
-                                translations: [...filteredTranslations, updatedTranslation],
-                              }
-                            : {
-                                translations: [updatedTranslation],
-                              },
-                        });
-                      }}
-                      rows={5}
-                      maxLength={defaultTeaserTextLimit}
-                    />
-                  </FormItem>
-                );
-              })}
-            </FormGrid>
-          </StyledDateListItemContainer>
-          <StyledDateListItemContainer columns={3}>
-            <EntryFormHead
-              title={`${t('date.roomInfo')} (${t('forms.optional')})`}
-              size={EntryFormHeadSize.small}
-            />
-            <FormGrid>
-              {contentLanguages.map((language: Language, index) => {
-                const currentTranslation = date.relations?.translations
-                ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
-                  : undefined;
-
-                return (
-                  <FormItem width={FormItemWidth.half} key={index}>
-                    <Input
-                      debounce
-                      type={InputType.text}
-                      label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
-                      value={currentTranslation?.attributes?.roomDescription || ''}
-                      onChange={(e) => {
-                        const updatedTranslation = {
-                          ...currentTranslation,
-                          attributes: {
-                            ...currentTranslation?.attributes,
-                            language,
-                            roomDescription: e.target.value,
-                          },
-                        };
-
-                        const filteredTranslations =
-                          date?.relations?.translations?.filter(
-                            (translation) => translation.attributes?.language !== language
-                          ) || [];
-
-                        onChange({
-                          attributes: date?.attributes,
-                          id: date?.id,
-                          type: date?.type,
-                          relations: date?.relations
-                            ? {
-                                ...date.relations,
-                                translations: [...filteredTranslations, updatedTranslation],
-                              }
-                            : {
-                                translations: [updatedTranslation],
-                              },
-                        });
-                      }}
-                      disabled={!editable}
-                    />
-                  </FormItem>
-                );
-              })}
-            </FormGrid>
-          </StyledDateListItemContainer>
-          <StyledDateListItemContainer columns={3}>
-            <EntryFormHead
-              title={`${t('date.additionalLinks')} (${t('forms.optional')})`}
-              size={EntryFormHeadSize.small}
-            />
-            <FormGrid>
-              <FormItem width={FormItemWidth.full}>
-                <Input
-                  type={InputType.url}
-                  label={t('date.ticketLink') as string}
-                  value={date?.attributes?.ticketUrl || ''}
-                  placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        ticketUrl: e.target.value,
-                      },
-                    })
-                  }
-                  disabled={!editable}
-                />
-              </FormItem>
-              <FormItem width={FormItemWidth.full}>
-                <Input
-                  type={InputType.url}
-                  label={t('categories.offer.form.pricing.registrationUrl') as string}
-                  value={date?.attributes?.registrationUrl || ''}
-                  placeholder={
-                    t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
-                  }
-                  onChange={(e) =>
-                    onChange({
-                      ...date,
-                      attributes: {
-                        ...date.attributes,
-                        registrationUrl: e.target.value,
-                      },
-                    })
-                  }
-                  disabled={!editable}
-                />
-              </FormItem>
-            </FormGrid>
-          </StyledDateListItemContainer>
-          {editable && onDelete && (
-            <StyledDateListItemContainer columns={1}>
-              <FormGrid>
-                <FormItem width={FormItemWidth.full}>
-                  <Button color={ButtonColor.white} onClick={() => onDelete(date.id)}>
-                    {t('date.delete')}
-                  </Button>
+                      onChange({
+                        attributes: date?.attributes,
+                        id: date?.id,
+                        type: date?.type,
+                        relations: date?.relations
+                          ? {
+                              ...date.relations,
+                              translations: [...filteredTranslations, updatedTranslation],
+                            }
+                          : {
+                              translations: [updatedTranslation],
+                            },
+                      });
+                    }}
+                    disabled={!editable}
+                  />
                 </FormItem>
-              </FormGrid>
-            </StyledDateListItemContainer>
-          )}
-        </StyledDateListItemBody>
+              );
+            })}
+            <FormItem width={FormItemWidth.full}>
+              <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
+                <div>
+                  {contentLanguages.map((language: Language, index) => {
+                    const currentTranslation = date.relations?.translations
+                      ? getTranslation<OfferDateTranslation>(
+                          language,
+                          date.relations.translations,
+                          false
+                        )
+                      : undefined;
+
+                    return (
+                      <div key={index}>
+                        {t(languageTranslationKeys[language])}: {offerTitles[language]}
+                        {currentTranslation?.attributes?.name
+                          ? ` - ${currentTranslation?.attributes?.name}`
+                          : ''}
+                      </div>
+                    );
+                  })}
+                </div>
+              </Info>
+            </FormItem>
+          </FormGrid>
+        </StyledDateListItemContainer>
+        <StyledDateListItemContainer columns={3}>
+          <EntryFormHead title={`${t('forms.teaser')}`} size={EntryFormHeadSize.small} />
+          <FormGrid>
+            {contentLanguagesWithEasy.map((language: Language, index) => {
+              const currentTranslation = date.relations?.translations
+                ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
+                : undefined;
+
+              return (
+                <FormItem width={FormItemWidth.full} key={index}>
+                  <Textarea
+                    debounce
+                    id={`${uid}-textarea-${language}`}
+                    label={t(languageTranslationKeys[language]) as string}
+                    ariaLabel={t(languageTranslationKeys[language]) as string}
+                    value={currentTranslation?.attributes?.teaser || ''}
+                    onChange={(e) => {
+                      const updatedTranslation = {
+                        ...currentTranslation,
+                        attributes: {
+                          ...currentTranslation?.attributes,
+                          language,
+                          teaser: e.target.value,
+                        },
+                      };
+
+                      const filteredTranslations =
+                        date?.relations?.translations?.filter(
+                          (translation) => translation.attributes?.language !== language
+                        ) || [];
+
+                      onChange({
+                        attributes: date?.attributes,
+                        id: date?.id,
+                        type: date?.type,
+                        relations: date?.relations
+                          ? {
+                              ...date.relations,
+                              translations: [...filteredTranslations, updatedTranslation],
+                            }
+                          : {
+                              translations: [updatedTranslation],
+                            },
+                      });
+                    }}
+                    rows={5}
+                    maxLength={defaultTeaserTextLimit}
+                  />
+                </FormItem>
+              );
+            })}
+          </FormGrid>
+        </StyledDateListItemContainer>
+        <StyledDateListItemContainer columns={3}>
+          <EntryFormHead
+            title={`${t('date.roomInfo')} (${t('forms.optional')})`}
+            size={EntryFormHeadSize.small}
+          />
+          <FormGrid>
+            {contentLanguages.map((language: Language, index) => {
+              const currentTranslation = date.relations?.translations
+                ? getTranslation<OfferDateTranslation>(language, date.relations.translations, false)
+                : undefined;
+
+              return (
+                <FormItem width={FormItemWidth.half} key={index}>
+                  <Input
+                    debounce
+                    type={InputType.text}
+                    label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
+                    value={currentTranslation?.attributes?.roomDescription || ''}
+                    onChange={(e) => {
+                      const updatedTranslation = {
+                        ...currentTranslation,
+                        attributes: {
+                          ...currentTranslation?.attributes,
+                          language,
+                          roomDescription: e.target.value,
+                        },
+                      };
+
+                      const filteredTranslations =
+                        date?.relations?.translations?.filter(
+                          (translation) => translation.attributes?.language !== language
+                        ) || [];
+
+                      onChange({
+                        attributes: date?.attributes,
+                        id: date?.id,
+                        type: date?.type,
+                        relations: date?.relations
+                          ? {
+                              ...date.relations,
+                              translations: [...filteredTranslations, updatedTranslation],
+                            }
+                          : {
+                              translations: [updatedTranslation],
+                            },
+                      });
+                    }}
+                    disabled={!editable}
+                  />
+                </FormItem>
+              );
+            })}
+          </FormGrid>
+        </StyledDateListItemContainer>
+        <StyledDateListItemContainer columns={3}>
+          <EntryFormHead
+            title={`${t('date.additionalLinks')} (${t('forms.optional')})`}
+            size={EntryFormHeadSize.small}
+          />
+          <FormGrid>
+            <FormItem width={FormItemWidth.full}>
+              <Input
+                type={InputType.url}
+                label={t('date.ticketLink') as string}
+                value={date?.attributes?.ticketUrl || ''}
+                placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
+                onChange={(e) =>
+                  onChange({
+                    ...date,
+                    attributes: {
+                      ...date.attributes,
+                      ticketUrl: e.target.value,
+                    },
+                  })
+                }
+                disabled={!editable}
+              />
+            </FormItem>
+            <FormItem width={FormItemWidth.full}>
+              <Input
+                type={InputType.url}
+                label={t('categories.offer.form.pricing.registrationUrl') as string}
+                value={date?.attributes?.registrationUrl || ''}
+                placeholder={
+                  t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
+                }
+                onChange={(e) =>
+                  onChange({
+                    ...date,
+                    attributes: {
+                      ...date.attributes,
+                      registrationUrl: e.target.value,
+                    },
+                  })
+                }
+                disabled={!editable}
+              />
+            </FormItem>
+          </FormGrid>
+        </StyledDateListItemContainer>
+        {editable && onDelete && (
+          <StyledDateListItemContainer columns={1}>
+            <FormGrid>
+              <FormItem width={FormItemWidth.full}>
+                <Button color={ButtonColor.white} onClick={() => onDelete(date.id)}>
+                  {t('date.delete')}
+                </Button>
+              </FormItem>
+            </FormGrid>
+          </StyledDateListItemContainer>
+        )}
+      </StyledDateListItemBody>
     </DateListRow>
   ) : null;
 };
