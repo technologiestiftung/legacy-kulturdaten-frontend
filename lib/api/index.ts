@@ -109,7 +109,7 @@ export const apiRoutes: {
   organizerDownload: ({ id, format }) =>
     `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,tags,contacts&format=${format}`,
   organizerListDownload: ({ format }) =>
-    `/${apiVersion}/organizer/include=types,address,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
+    `/${apiVersion}/organizer?include=types,address,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
   locationList: (query) =>
     `/${apiVersion}/location?include=translations,address${
       query?.page ? `&page=${query.page}` : ''
