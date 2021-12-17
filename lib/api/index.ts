@@ -152,7 +152,7 @@ export const apiRoutes: {
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
   offerDateListDownload: ({ offerId, format }) =>
-    `/${apiVersion}/offer/${offerId}/date?include=translations,dates,media?format=${format}&filter=past=false&sort=startsAt`,
+    `/${apiVersion}/offer/${offerId}/date?include=translations,dates,media&format=${format}&filter=past=false&sort=startsAt`,
   offerDownload: ({ id, format }) =>
     `/${apiVersion}/offer/${id}?include=translations,location,organizers,links,types,subjects,tags,mainType&format=${format}`,
   offerListDownload: ({ format, organizer }) =>
