@@ -368,38 +368,42 @@ export const LocationList: React.FC<LocationListProps> = ({
           </Button>
         }
         menu={
-          <DropdownMenu
-            icon="MoreVertical"
-            form={DropdownMenuForm.rounded}
-            buttonAriaLabels={{
-              open: t('general.actionsOpen') as string,
-              close: t('general.actionsClose') as string,
-            }}
-            buttonSize={isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default}
-            buttonColor={DropdownMenuButtonColor.grey}
-            menuWidth={
-              expanded ? undefined : isUltraOrWider ? '22rem' : isWideOrWider ? '15rem' : '12rem'
-            }
-          >
-            {categories?.location?.options?.export
-              ?.filter(({ type }) => type === CategoryExportType.list)
-              ?.map(({ format, title, route }, index) => (
-                <Button
-                  key={index}
-                  variant={ButtonVariant.minimal}
-                  size={ButtonSize.default}
-                  color={ButtonColor.white}
-                  onClick={() =>
-                    download(
-                      route({ organizer: organizerId, format }),
-                      `${categories?.location?.title?.plural}.${format}`
-                    )
-                  }
-                >
-                  {title}
-                </Button>
-              ))}
-          </DropdownMenu>
+          list?.data?.length > 0 ? (
+            <DropdownMenu
+              icon="MoreVertical"
+              form={DropdownMenuForm.rounded}
+              buttonAriaLabels={{
+                open: t('general.actionsOpen') as string,
+                close: t('general.actionsClose') as string,
+              }}
+              buttonSize={
+                isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default
+              }
+              buttonColor={DropdownMenuButtonColor.grey}
+              menuWidth={
+                expanded ? undefined : isUltraOrWider ? '22rem' : isWideOrWider ? '15rem' : '12rem'
+              }
+            >
+              {categories?.location?.options?.export
+                ?.filter(({ type }) => type === CategoryExportType.list)
+                ?.map(({ format, title, route }, index) => (
+                  <Button
+                    key={index}
+                    variant={ButtonVariant.minimal}
+                    size={ButtonSize.default}
+                    color={ButtonColor.white}
+                    onClick={() =>
+                      download(
+                        route({ organizer: organizerId, format }),
+                        `${categories?.location?.title?.plural}.${format}`
+                      )
+                    }
+                  >
+                    {title}
+                  </Button>
+                ))}
+            </DropdownMenu>
+          ) : undefined
         }
       />
       <EntryListFiltersBox
