@@ -195,8 +195,8 @@ export const DownloadToast: React.FC<DownloadToastProps> = ({
             )}
           </StyledDownloadToastText>
         </StyledDownloadToastBodyContent>
-        <StyledDownloadToastProgressBar progress={progress}></StyledDownloadToastProgressBar>
       </StyledDownloadToastBody>
+      <StyledDownloadToastProgressBar progress={progress}></StyledDownloadToastProgressBar>
     </StyledDownloadToast>
   );
 };

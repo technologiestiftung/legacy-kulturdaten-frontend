@@ -22,7 +22,7 @@ export const deDE: Localization = {
     leave: () => 'Adminmodus beenden',
   },
   download: {
-    title: ({ fileName }) => `Lade „${fileName}“ herunter`,
+    title: ({ fileName }) => `Lade „${fileName}“`,
     progress: ({ percent }) => `${percent}%`,
     cancel: () => 'Download abbrechen',
   },
