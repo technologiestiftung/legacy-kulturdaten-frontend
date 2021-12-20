@@ -93,7 +93,7 @@ export const useEntryHeader = (
             >
               {category?.options?.export
                 ?.filter(({ type }) => type === CategoryExportType.entry)
-                ?.map(({ format, title, route }, index) => (
+                ?.map(({ format, title, route, fileNameFactory }, index) => (
                   <Button
                     key={index}
                     variant={ButtonVariant.minimal}
@@ -108,7 +108,11 @@ export const useEntryHeader = (
                             category?.name === Categories.offer ? entry?.data?.id : undefined,
                         }),
                         `${
-                          currentTranslation?.attributes?.name || category?.placeholderName
+                          fileNameFactory
+                            ? fileNameFactory(
+                                currentTranslation?.attributes?.name || category?.placeholderName
+                              )
+                            : currentTranslation?.attributes?.name || category?.placeholderName
                         }.${format}`
                       )
                     }

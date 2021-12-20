@@ -325,6 +325,8 @@ export const useCategories: () => {
             title: t('categories.offer.options.exportDatesXls') as string,
             route: apiRoutes.offerDateListDownload,
             type: CategoryExportType.entry,
+            fileNameFactory: (offerName) =>
+              t('categories.offer.options.exportDatesFileName', { offerName }) as string,
           },
           {
             format: 'xls',

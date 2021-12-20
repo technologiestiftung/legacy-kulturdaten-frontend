@@ -84,6 +84,7 @@ export type Category = {
       title: string;
       route: ApiRoute;
       type: CategoryExportType;
+      fileNameFactory?: (...args: string[]) => string;
     }[];
     deletion: {
       title: string;

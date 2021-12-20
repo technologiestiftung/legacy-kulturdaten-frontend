@@ -1094,6 +1094,7 @@ export const deDE: Localization = {
         exportListXls: () => 'Exportiere Angebote als Excel',
         exportEntryXls: () => 'Exportiere Angebot als Excel',
         exportDatesXls: () => 'Exportiere Termine als Excel',
+        exportDatesFileName: ({offerName}) => `${offerName}-Termine`,
         delete: () => 'Angebot löschen',
         deleteConfirm: () =>
           'Bist du sicher, dass du dieses Angebot löschen möchtest? Dies kann nicht rückgängig gemacht werden.',

@@ -1081,6 +1081,7 @@ export const enDE: Localization = {
         exportEntryXls: () => 'Export offer as Excel',
         exportListXls: () => 'Export offers as Excel',
         exportDatesXls: () => 'Export dates as Excel',
+        exportDatesFileName: ({ offerName }) => `${offerName}-dates`,
         delete: () => 'Delete offer',
         deleting: () => 'Deleting offer',
         deleteConfirm: ({ name }) => (
