@@ -8,6 +8,7 @@ import { mq } from '../globals/Constants';
 export enum DropdownMenuButtonColor {
   black = 'black',
   white = 'white',
+  grey = 'grey',
 }
 
 const ButtonColors: {
@@ -24,6 +25,10 @@ const ButtonColors: {
     background: 'var(--white)',
     color: 'var(--black)',
   },
+  grey: {
+    background: 'var(--grey-200)',
+    color: 'var(--black)',
+  },
 };
 
 const StyledDropdownMenu = styled.div<{ stretch?: boolean }>`
@@ -37,6 +42,7 @@ const StyledDropdownMenuButton = styled.button<{
   form?: DropdownMenuForm;
   stretch?: boolean;
   color: DropdownMenuButtonColor;
+  size: DropdownMenuButtonSize;
 }>`
   appearance: none;
   border: none;
@@ -84,19 +90,38 @@ const StyledDropdownMenuButtonText = styled.div`
   padding: 0.375rem 0 0.375rem 1.125rem;
 `;
 
-const StyledDropdownMenuButtonIcon = styled.div<{ hasText?: boolean }>`
+const StyledDropdownMenuButtonIcon = styled.div<{
+  hasText?: boolean;
+  size: DropdownMenuButtonSize;
+}>`
   line-height: 0;
-  padding: ${({ hasText }) => (hasText ? '0.5625rem 1.125rem 0.5625rem 0' : '0.5625rem')};
+  padding: ${({ hasText, size }) => {
+    switch (size) {
+      case DropdownMenuButtonSize.default: {
+        return hasText ? '0.5625rem 1.125rem 0.5625rem 0' : '0.5625rem';
+      }
+
+      case DropdownMenuButtonSize.big: {
+        return hasText ? '0.75rem 1.5rem 0.75rem 0' : '0.75rem';
+      }
+
+      default: {
+        break;
+      }
+    }
+  }};
 
   svg {
-    width: 1.125rem;
-    height: 1.125rem;
+    width: ${({ size }) => (size === DropdownMenuButtonSize.big ? '1.5rem' : '1.125rem')};
+    height: ${({ size }) => (size === DropdownMenuButtonSize.big ? '1.5rem' : '1.125rem')};
   }
 `;
 
 const StyledDropdownMenuDropdown = styled.div<{
   visible: boolean;
   animating: boolean;
+  direction: DropdownMenuDirection;
+  menuWidth?: string;
 }>`
   color: var(--black);
   background: var(--grey-200);
@@ -104,18 +129,20 @@ const StyledDropdownMenuDropdown = styled.div<{
   border-radius: 1.125rem;
   width: calc(var(--app-width) - 1.5rem);
   position: absolute;
-  right: 0;
   transition: opacity var(--transition-duration), transform var(--transition-duration);
   transform: translate(0rem, -1rem);
   opacity: 0;
   box-shadow: 0.125rem 0.125rem 3rem -0.25rem rgba(0, 0, 0, 0.5);
   display: none;
   visibility: hidden;
-  z-index: 1;
+  z-index: 100002;
+
+  ${({ direction }) => (direction === DropdownMenuDirection.left ? 'right: 0;' : 'left: 0;')}
 
   ${mq(Breakpoint.mid)} {
     width: auto;
-    min-width: 18rem;
+    min-width: ${({ menuWidth }) => menuWidth || '18rem'};
+    max-width: ${({ menuWidth }) => menuWidth || ''};
   }
 
   ${({ animating }) =>
@@ -159,6 +186,16 @@ export enum DropdownMenuForm {
   rounded = 'rounded',
 }
 
+export enum DropdownMenuDirection {
+  left = 'left',
+  right = 'right',
+}
+
+export enum DropdownMenuButtonSize {
+  default = 'default',
+  big = 'big',
+}
+
 interface DropdownMenuProps {
   children: React.ReactNode;
   icon: string;
@@ -170,6 +207,9 @@ interface DropdownMenuProps {
   form?: DropdownMenuForm;
   stretch?: boolean;
   buttonColor?: DropdownMenuButtonColor;
+  buttonSize?: DropdownMenuButtonSize;
+  direction?: DropdownMenuDirection;
+  menuWidth?: string;
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({
@@ -180,6 +220,9 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   form = DropdownMenuForm.round,
   stretch,
   buttonColor = DropdownMenuButtonColor.black,
+  buttonSize = DropdownMenuButtonSize.default,
+  direction = DropdownMenuDirection.left,
+  menuWidth,
 }: DropdownMenuProps) => {
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -226,15 +269,21 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
         form={form}
         stretch={stretch}
         color={buttonColor}
+        size={buttonSize}
       >
         {text && <StyledDropdownMenuButtonText>{text}</StyledDropdownMenuButtonText>}
-        <StyledDropdownMenuButtonIcon hasText={hasText}>
+        <StyledDropdownMenuButtonIcon hasText={hasText} size={buttonSize}>
           {visible
             ? React.createElement(feather.X)
             : React.createElement(feather[icon || 'Circle'])}
         </StyledDropdownMenuButtonIcon>
       </StyledDropdownMenuButton>
-      <StyledDropdownMenuDropdown visible={visible} animating={animating}>
+      <StyledDropdownMenuDropdown
+        visible={visible}
+        animating={animating}
+        direction={direction}
+        menuWidth={menuWidth}
+      >
         <StyledDropdownMenuDropdownContent>
           {React.Children.toArray(children).map((child) => {
             const elementType = (child as React.ReactElement)?.props?.__TYPE;

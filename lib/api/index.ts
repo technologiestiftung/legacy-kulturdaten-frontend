@@ -49,6 +49,8 @@ export enum ApiRoutes {
   organizerUpdate = 'organizerUpdate',
   organizerDelete = 'organizerDelete',
   organizerTypeList = 'organizerTypeList',
+  organizerDownload = 'organizerDownload',
+  organizerListDownload = 'organizerListDownload',
   locationList = 'locationList',
   locationShow = 'locationShow',
   locationCreate = 'locationCreate',
@@ -56,6 +58,8 @@ export enum ApiRoutes {
   locationDelete = 'locationDelete',
   locationAccessibilityUpdate = 'locationAccessibilityUpdate',
   locationServiceUpdate = 'locationServiceUpdate',
+  locationDownload = 'locationDownload',
+  locationListDownload = 'locationListDownload',
   offerAudienceUpdate = 'offerAudienceUpdate',
   offerList = 'offerList',
   offerShow = 'offerShow',
@@ -65,8 +69,11 @@ export enum ApiRoutes {
   offerDelete = 'offerDelete',
   offerDateUpdate = 'offerDateUpdate',
   offerDateList = 'offerDateList',
+  offerDateListDownload = 'offerDateListDownload',
   offerTypeList = 'offerTypeList',
   offerMainTypeList = 'offerMainTypeList',
+  offerDownload = 'offerDownload',
+  offerListDownload = 'offerListDownload',
   mediaShow = 'mediaShow',
   mediaUpdate = 'mediaUpdate',
   mediaDelete = 'mediaDelete',
@@ -100,6 +107,10 @@ export const apiRoutes: {
     `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
+  organizerDownload: ({ id, format }) =>
+    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,tags,contacts&format=${format}`,
+  organizerListDownload: ({ format }) =>
+    `/${apiVersion}/organizer?include=types,address,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
   locationList: (query) =>
     `/${apiVersion}/location?include=translations,address${
       query?.page ? `&page=${query.page}` : ''
@@ -114,6 +125,10 @@ export const apiRoutes: {
   locationAccessibilityUpdate: ({ id }) => `/${apiVersion}/location/${id}/accessibility`,
   locationServiceUpdate: ({ id }) => `/${apiVersion}/location/${id}/service`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
+  locationDownload: ({ id, format }) =>
+    `/${apiVersion}/location/${id}?include=links,translations,openingHours,organizers,address,accessibility,service&format=${format}`,
+  locationListDownload: ({ format, organizer }) =>
+    `/${apiVersion}/location?include=links,translations,openingHours,organizers,address,accessibility,service&filter=organizer=${organizer}&sort=-updatedAt&format=${format}`,
   offerAudienceUpdate: ({ id }) => `/${apiVersion}/offer/${id}/audience`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations,types,mainType${
@@ -136,6 +151,12 @@ export const apiRoutes: {
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
+  offerDateListDownload: ({ offerId, format }) =>
+    `/${apiVersion}/offer/${offerId}/date?include=translations,dates,media&format=${format}&filter=past=false&sort=startsAt`,
+  offerDownload: ({ id, format }) =>
+    `/${apiVersion}/offer/${id}?include=translations,location,organizers,links,types,subjects,tags,mainType&format=${format}`,
+  offerListDownload: ({ format, organizer }) =>
+    `/${apiVersion}/offer?include=translations,location,organizers,links,types,subjects,tags,mainType&filter=organizers=${organizer}&sort=-updatedAt&format=${format}`,
   offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
   offerMainTypeList: () => `/${apiVersion}/offerMainType?include=translations`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}?include=license`,

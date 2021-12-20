@@ -205,7 +205,7 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
           </StyledEntryHeaderSubTitle>
         )}
       </StyledEntryHeaderTitleWrapper>
-      {!minimalVariant && menu && <StyledEntryHeaderMenu>{menu}</StyledEntryHeaderMenu>}
+      {menu && <StyledEntryHeaderMenu>{menu}</StyledEntryHeaderMenu>}
     </StyledEntryHeaderHead>
     {!minimalVariant && tabs && (
       <StyledEntryHeaderTabsSlot>

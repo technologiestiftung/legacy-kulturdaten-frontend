@@ -188,6 +188,6 @@ export const routesLayouts: { [key in Routes]: Layouts } = {
   userSettings: Layouts.loggedInMeta,
   userDeletion: Layouts.loggedInMeta,
   developer: Layouts.loggedInMeta,
-  admin: Layouts.loggedIn,
+  admin: Layouts.loggedInMeta,
   page404: Layouts.loggedIn,
 };

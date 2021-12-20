@@ -6,6 +6,7 @@ import { Categories, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall } from '../../lib/api';
 import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
 import {
+  CategoryExportType,
   Order,
   useCreateOffer,
   useList,
@@ -28,10 +29,19 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import { Button, ButtonColor, ButtonSize } from '../button';
+import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useDownload } from '../../lib/api/download';
+import {
+  DropdownMenu,
+  DropdownMenuButtonColor,
+  DropdownMenuButtonSize,
+  DropdownMenuForm,
+} from '../DropdownMenu';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -110,6 +120,11 @@ export const OfferList: React.FC<OfferListProps> = ({
   const organizerId = useOrganizerId();
   const mainTypeOptions = useOfferMainTypeList();
   const typeOptions = useOfferTypeList();
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
+
+  const download = useDownload();
 
   const list = useList<OfferListCall, Offer>(
     categories.offer,
@@ -182,6 +197,10 @@ export const OfferList: React.FC<OfferListProps> = ({
                 ? getTranslation<OfferTranslation>(language, translations)
                 : undefined;
 
+              const defaultTranslation = translations
+                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
+                : undefined;
+
               return (
                 <EntryCard
                   onClick={() => {
@@ -191,7 +210,11 @@ export const OfferList: React.FC<OfferListProps> = ({
                   href={href('info')}
                   menuExpanded={expanded}
                   key={index}
-                  title={currentTranslation?.attributes?.name || categories?.offer?.placeholderName}
+                  title={
+                    currentTranslation?.attributes?.name ||
+                    defaultTranslation?.attributes?.name ||
+                    categories?.offer?.placeholderName
+                  }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href())}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
@@ -224,6 +247,10 @@ export const OfferList: React.FC<OfferListProps> = ({
 
               const currentTranslation = translations
                 ? getTranslation<OfferTranslation>(language, translations)
+                : undefined;
+
+              const defaultTranslation = translations
+                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
                 : undefined;
 
               const href = (sub?: string) =>
@@ -264,7 +291,9 @@ export const OfferList: React.FC<OfferListProps> = ({
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name || categories?.offer?.placeholderName}
+                    {currentTranslation?.attributes?.name ||
+                      defaultTranslation?.attributes?.name ||
+                      categories?.offer?.placeholderName}
                   </StyledTableLinkText>,
                   mainTypeNames?.join(', '),
                   typeNames?.join(', '),
@@ -317,6 +346,44 @@ export const OfferList: React.FC<OfferListProps> = ({
           >
             {t('categories.offer.form.create')}
           </Button>
+        }
+        menu={
+          list?.data?.length > 0 ? (
+            <DropdownMenu
+              icon="MoreVertical"
+              form={DropdownMenuForm.rounded}
+              buttonAriaLabels={{
+                open: t('general.actionsOpen') as string,
+                close: t('general.actionsClose') as string,
+              }}
+              buttonSize={
+                isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default
+              }
+              buttonColor={DropdownMenuButtonColor.grey}
+              menuWidth={
+                expanded ? undefined : isUltraOrWider ? '22rem' : isWideOrWider ? '15rem' : '12rem'
+              }
+            >
+              {categories?.offer?.options?.export
+                ?.filter(({ type }) => type === CategoryExportType.list)
+                ?.map(({ format, title, route }, index) => (
+                  <Button
+                    key={index}
+                    variant={ButtonVariant.minimal}
+                    size={ButtonSize.default}
+                    color={ButtonColor.white}
+                    onClick={() =>
+                      download(
+                        route({ organizer: organizerId, format }),
+                        `${categories?.offer?.title?.plural}.${format}`
+                      )
+                    }
+                  >
+                    {title}
+                  </Button>
+                ))}
+            </DropdownMenu>
+          ) : undefined
         }
       />
       <EntryListFiltersBox

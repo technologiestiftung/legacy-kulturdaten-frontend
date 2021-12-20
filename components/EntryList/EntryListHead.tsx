@@ -32,6 +32,10 @@ const StyledEntryListHeadTitleRowRight = styled.div`
   flex-direction: row;
 `;
 
+const StyledEntryListHeadMenu = styled.div`
+  padding: 0 0.75rem;
+`;
+
 const StyledEntryListHeadTitle = styled.div<{ noPadding?: boolean }>`
   margin: 0 0.75rem;
 
@@ -74,10 +78,7 @@ const StyledExpandableButton = styled.button`
   align-self: stretch;
   cursor: pointer;
   color: var(--white);
-  padding: calc(0.75rem - 1px);
-
-  border: 1px solid var(--grey-400);
-  border-right: none;
+  padding: 0.75rem;
   border-radius: 0.75rem 0 0 0.75rem;
 
   &:hover {
@@ -98,6 +99,7 @@ interface EntryListHeadProps {
   actionButton?: React.ReactNode;
   actions?: React.ReactElement[];
   noPadding?: boolean;
+  menu?: React.ReactElement;
 }
 
 export const EntryListHead: React.FC<EntryListHeadProps> = ({
@@ -108,6 +110,7 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
   setExpanded,
   expandable,
   noPadding,
+  menu,
 }: EntryListHeadProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const t = useT();
@@ -120,6 +123,7 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
             <span>{title}</span>
           </StyledEntryListHeadTitle>
           <StyledEntryListHeadTitleRowRight>
+            {menu && <StyledEntryListHeadMenu>{menu}</StyledEntryListHeadMenu>}
             {expanded && actionButton && (
               <StyledEntryListHeadActionButton expanded={expanded}>
                 {actionButton}

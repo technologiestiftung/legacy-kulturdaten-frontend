@@ -21,6 +21,11 @@ export const deDE: Localization = {
     quit: () => 'Beende Adminmodus',
     leave: () => 'Adminmodus beenden',
   },
+  download: {
+    title: ({ fileName }) => `Lade „${fileName}“`,
+    progress: ({ percent }) => `${percent}%`,
+    cancel: () => 'Download abbrechen',
+  },
   dashboard: {
     info: {
       hint: {
@@ -957,8 +962,8 @@ export const deDE: Localization = {
         updated: () => 'geändert',
       },
       options: {
-        exportCsv: () => 'Export als CSV',
-        exportXls: () => 'Export als Excel',
+        exportEntryXls: () => 'Exportiere Profil als Excel',
+        exportListXls: () => 'Exportiere Anbieter:innen als Excel',
         delete: () => 'Anbieter:in löschen',
         deleteConfirm: ({ name }) => (
           <>
@@ -1086,8 +1091,9 @@ export const deDE: Localization = {
         media: () => 'Bilder',
       },
       options: {
-        exportCsv: () => 'Export als CSV',
-        exportXls: () => 'Export als Excel',
+        exportListXls: () => 'Exportiere Angebote als Excel',
+        exportEntryXls: () => 'Exportiere Angebot als Excel',
+        exportDatesXls: () => 'Exportiere Termine als Excel',
         delete: () => 'Angebot löschen',
         deleteConfirm: () =>
           'Bist du sicher, dass du dieses Angebot löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
@@ -1166,8 +1172,8 @@ export const deDE: Localization = {
         media: () => 'Bilder',
       },
       options: {
-        exportCsv: () => 'Export als CSV',
-        exportXls: () => 'Export als Excel',
+        exportEntryXls: () => 'Exportiere Ort als Excel',
+        exportListXls: () => 'Exportiere Orte als Excel',
         delete: () => 'Ort löschen',
         deleteConfirm: () =>
           'Bist du sicher, dass du diesen Ort löschen möchtest? Dies kann nicht rückgängig gemacht werden.',
