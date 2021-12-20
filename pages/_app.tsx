@@ -18,6 +18,7 @@ import { LoadingContextProvider } from '../components/Loading/LoadingContext';
 import { AdminContextProvider } from '../components/Admin/AdminContext';
 import { useHandleActiveOrganizer } from '../lib/useOrganizer';
 import { ConfirmContextProvider } from '../components/Confirm/ConfirmContext';
+import { DownloadContextProvider } from '../components/Download/DownloadContext';
 
 const EmbeddedAppLayout: React.FC<{ content: React.ReactElement }> = ({
   content,
@@ -48,12 +49,13 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
             >
               <UserContextProvider>
                 <AdminContextProvider>
-                  <Reset />
-                  <CSSVars />
-                  <Global />
-                  <Typography />
-
-                  <EmbeddedAppLayout content={<Component {...pageProps} />} />
+                  <DownloadContextProvider>
+                    <Reset />
+                    <CSSVars />
+                    <Global />
+                    <Typography />
+                    <EmbeddedAppLayout content={<Component {...pageProps} />} />
+                  </DownloadContextProvider>
                 </AdminContextProvider>
               </UserContextProvider>
             </EntryListContextProvider>

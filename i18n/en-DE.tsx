@@ -21,6 +21,11 @@ export const enDE: Localization = {
     quit: () => 'Quit admin mode',
     leave: () => 'Quit admin mode',
   },
+  download: {
+    title: ({ fileName }) => `Downloading “${fileName}”`,
+    progress: ({ percent }) => `${percent}%`,
+    cancel: () => 'cancel download',
+  },
   dashboard: {
     info: {
       hint: {
@@ -948,12 +953,12 @@ export const enDE: Localization = {
         updated: () => 'updated',
       },
       options: {
-        exportCsv: () => 'Export as CSV',
-        exportXls: () => 'Export as Excel',
+        exportEntryXls: () => 'Export organizer as Excel',
+        exportListXls: () => 'Export organizers as Excel',
         delete: () => 'Delete organizer',
         deleteConfirm: ({ name }) => (
           <>
-            <p>Are you sure you want to delete the offer “{name}”? This cannot be undone.</p>
+            <p>Are you sure you want to delete the organizer “{name}”? This cannot be undone.</p>
             <p>
               To confirm the deletion, please enter the name of the organizer in this field and
               press the {'“'}Confirm deletion{'”'} button.
@@ -1073,13 +1078,15 @@ export const enDE: Localization = {
         media: () => 'Images',
       },
       options: {
-        exportCsv: () => 'Export as CSV',
-        exportXls: () => 'Export as Excel',
+        exportEntryXls: () => 'Export offer as Excel',
+        exportListXls: () => 'Export offers as Excel',
+        exportDatesXls: () => 'Export dates as Excel',
+        exportDatesFileName: ({ offerName }) => `${offerName}-dates`,
         delete: () => 'Delete offer',
         deleting: () => 'Deleting offer',
         deleteConfirm: ({ name }) => (
           <>
-            <p>Are you sure you want to delete the offer “{name}”? This cannot be undone.</p>
+            <p>Are you sure you want to delete the location “{name}”? This cannot be undone.</p>
           </>
         ),
         deleteConditionLabel: () => 'Name der Anbieter:in zur Bestätigung',
@@ -1157,8 +1164,8 @@ export const enDE: Localization = {
         media: () => 'Images',
       },
       options: {
-        exportCsv: () => 'Export as CSV',
-        exportXls: () => 'Export as Excel',
+        exportEntryXls: () => 'Export location as Excel',
+        exportListXls: () => 'Export locations as Excel',
         delete: () => 'Delete location',
         deleteConfirm: ({ name }) => (
           <>

@@ -232,7 +232,7 @@ const useRentForm: EntryFormHook = ({ category, query }) => {
             id: entry.data.id,
             entry: {
               attributes: {
-                url,
+                rentUrl: url,
               },
             },
           });

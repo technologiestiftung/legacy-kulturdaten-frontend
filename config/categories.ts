@@ -1,11 +1,11 @@
-import { ApiRoutes, locationListFactory, organizerListFactory } from '../lib/api';
+import { apiRoutes, ApiRoutes, locationListFactory, organizerListFactory } from '../lib/api';
 import { organizerShowFactory } from '../lib/api/routes/organizer/show';
 import { organizerCreateFactory } from '../lib/api/routes/organizer/create';
 import { useT } from '../lib/i18n';
 import { organizerUpdateFactory } from '../lib/api/routes/organizer/update';
 import { organizerDeleteFactory } from '../lib/api/routes/organizer/delete';
 import { Routes, routes, useLocale } from '../lib/routing';
-import { Category } from '../lib/categories';
+import { Category, CategoryExportType } from '../lib/categories';
 import { OrganizerInfoPage } from '../components/pages/organizer/info';
 import { OrganizerCategorizationPage } from '../components/pages/organizer/categorization';
 import { MenuIconName } from '../components/navigation/Menu/MenuIcon';
@@ -136,8 +136,20 @@ export const useCategories: () => {
         },
       },
       options: {
-        exportCsv: t('categories.organizer.options.exportCsv') as string,
-        exportXls: t('categories.organizer.options.exportXls') as string,
+        export: [
+          {
+            format: 'xls',
+            title: t('categories.organizer.options.exportEntryXls') as string,
+            route: apiRoutes.organizerDownload,
+            type: CategoryExportType.entry,
+          },
+          {
+            format: 'xls',
+            title: t('categories.organizer.options.exportListXls') as string,
+            route: apiRoutes.organizerListDownload,
+            type: CategoryExportType.list,
+          },
+        ],
         deletion: {
           title: t('categories.organizer.options.delete') as string,
           message: (name) => t('categories.organizer.options.deleteConfirm', { name }) as string,
@@ -301,8 +313,28 @@ export const useCategories: () => {
         },
       },
       options: {
-        exportCsv: t('categories.offer.options.exportCsv') as string,
-        exportXls: t('categories.offer.options.exportXls') as string,
+        export: [
+          {
+            format: 'xls',
+            title: t('categories.offer.options.exportEntryXls') as string,
+            route: apiRoutes.offerDownload,
+            type: CategoryExportType.entry,
+          },
+          {
+            format: 'xls',
+            title: t('categories.offer.options.exportDatesXls') as string,
+            route: apiRoutes.offerDateListDownload,
+            type: CategoryExportType.entry,
+            fileNameFactory: (offerName) =>
+              t('categories.offer.options.exportDatesFileName', { offerName }) as string,
+          },
+          {
+            format: 'xls',
+            title: t('categories.offer.options.exportListXls') as string,
+            route: apiRoutes.offerListDownload,
+            type: CategoryExportType.list,
+          },
+        ],
         deletion: {
           title: t('categories.offer.options.delete') as string,
           message: (name) => t('categories.offer.options.deleteConfirm', { name }) as string,
@@ -444,8 +476,20 @@ export const useCategories: () => {
         },
       },
       options: {
-        exportCsv: t('categories.location.options.exportCsv') as string,
-        exportXls: t('categories.location.options.exportXls') as string,
+        export: [
+          {
+            format: 'xls',
+            title: t('categories.location.options.exportEntryXls') as string,
+            route: apiRoutes.locationDownload,
+            type: CategoryExportType.entry,
+          },
+          {
+            format: 'xls',
+            title: t('categories.location.options.exportListXls') as string,
+            route: apiRoutes.locationListDownload,
+            type: CategoryExportType.list,
+          },
+        ],
         deletion: {
           title: t('categories.location.options.delete') as string,
           message: (name) => t('categories.location.options.deleteConfirm', { name }) as string,

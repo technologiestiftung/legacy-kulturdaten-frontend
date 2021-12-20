@@ -114,7 +114,7 @@ const MenuSlot = styled.div<{ expanded?: boolean; hasOrganizerBand: boolean }>`
   top: 3rem;
   left: 0;
   z-index: 1000;
-  overflow: hidden;
+  /* overflow: hidden; */
   width: 100%;
 
   filter: grayscale(1);

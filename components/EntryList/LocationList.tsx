@@ -5,7 +5,7 @@ import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall } from '../../lib/api';
 import { Location, LocationTranslation } from '../../lib/api/types/location';
-import { Order, useCreateLocation, useList } from '../../lib/categories';
+import { CategoryExportType, Order, useCreateLocation, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
@@ -22,10 +22,19 @@ import { Table, TableProps } from '../table';
 import { StatusFlag } from '../Status/StatusFlag';
 import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
-import { Button, ButtonColor, ButtonSize } from '../button';
+import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useDownload } from '../../lib/api/download';
+import {
+  DropdownMenu,
+  DropdownMenuButtonColor,
+  DropdownMenuButtonSize,
+  DropdownMenuForm,
+} from '../DropdownMenu';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -105,6 +114,10 @@ export const LocationList: React.FC<LocationListProps> = ({
   const loadingScreen = useLoadingScreen();
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
+  const download = useDownload();
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+  const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
+  const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
@@ -181,6 +194,10 @@ export const LocationList: React.FC<LocationListProps> = ({
                 ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
 
+              const defaultTranslation = translations
+                ? getTranslation<LocationTranslation>(defaultLanguage, translations)
+                : undefined;
+
               const address = relations?.address;
 
               return (
@@ -197,7 +214,9 @@ export const LocationList: React.FC<LocationListProps> = ({
                   menuExpanded={expanded}
                   key={index}
                   title={
-                    currentTranslation?.attributes?.name || categories?.location?.placeholderName
+                    currentTranslation?.attributes?.name ||
+                    defaultTranslation?.attributes?.name ||
+                    categories?.location?.placeholderName
                   }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href()) || activeEntryId === id}
@@ -248,6 +267,10 @@ export const LocationList: React.FC<LocationListProps> = ({
                 ? getTranslation<LocationTranslation>(language, translations)
                 : undefined;
 
+              const defaultTranslation = translations
+                ? getTranslation<LocationTranslation>(defaultLanguage, translations)
+                : undefined;
+
               const href = (sub?: string) =>
                 routes[Routes.location]({
                   locale,
@@ -276,7 +299,9 @@ export const LocationList: React.FC<LocationListProps> = ({
               return {
                 contents: [
                   <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name || categories?.location?.placeholderName}
+                    {currentTranslation?.attributes?.name ||
+                      defaultTranslation?.attributes?.name ||
+                      categories?.location?.placeholderName}
                   </StyledTableLinkText>,
                   `${
                     address
@@ -342,8 +367,45 @@ export const LocationList: React.FC<LocationListProps> = ({
             {t('categories.location.form.create')}
           </Button>
         }
+        menu={
+          list?.data?.length > 0 ? (
+            <DropdownMenu
+              icon="MoreVertical"
+              form={DropdownMenuForm.rounded}
+              buttonAriaLabels={{
+                open: t('general.actionsOpen') as string,
+                close: t('general.actionsClose') as string,
+              }}
+              buttonSize={
+                isMidOrWider ? DropdownMenuButtonSize.big : DropdownMenuButtonSize.default
+              }
+              buttonColor={DropdownMenuButtonColor.grey}
+              menuWidth={
+                expanded ? undefined : isUltraOrWider ? '22rem' : isWideOrWider ? '15rem' : '12rem'
+              }
+            >
+              {categories?.location?.options?.export
+                ?.filter(({ type }) => type === CategoryExportType.list)
+                ?.map(({ format, title, route }, index) => (
+                  <Button
+                    key={index}
+                    variant={ButtonVariant.minimal}
+                    size={ButtonSize.default}
+                    color={ButtonColor.white}
+                    onClick={() =>
+                      download(
+                        route({ organizer: organizerId, format }),
+                        `${categories?.location?.title?.plural}.${format}`
+                      )
+                    }
+                  >
+                    {title}
+                  </Button>
+                ))}
+            </DropdownMenu>
+          ) : undefined
+        }
       />
-
       <EntryListFiltersBox
         isCollapsed={filtersBoxExpanded}
         setIsCollapsed={(collapsed: boolean) => setFiltersBoxExpanded(listName, collapsed)}
