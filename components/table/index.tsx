@@ -87,6 +87,7 @@ export const StyledCellSort = styled.button<{ active: boolean }>`
   transition: transform var(--transition-duration-fast), color var(--transition-duration-fast),
     background var(--transition-duration-fast), box-shadow var(--transition-duration-fast);
   box-shadow: none;
+  color: inherit;
 
   svg {
     width: 1.125rem;
