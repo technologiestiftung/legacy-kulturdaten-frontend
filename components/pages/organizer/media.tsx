@@ -158,13 +158,13 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
   const submitLogo = useCallback(async () => {
     try {
       const resp = await call<MediaUpdate>(mediaUpdateFactory, {
-        id: logo.id,
+        id: logo?.id,
         media: {
           ...logo,
           relations: {
-            ...logo.relations,
-            license: (logo.relations.license as MediaLicense).id,
-            translations: logo.relations?.translations,
+            ...logo?.relations,
+            license: (logo?.relations?.license as MediaLicense)?.id,
+            translations: logo?.relations?.translations,
           },
         },
       });
