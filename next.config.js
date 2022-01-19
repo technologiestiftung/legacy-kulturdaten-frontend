@@ -17,6 +17,9 @@ module.exports = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    esmExternals: false,
+  },
   async redirects() {
     return [
       {

@@ -1,5 +1,5 @@
 import { jsx } from 'slate-hyperscript';
-import marked from 'marked';
+import { marked } from 'marked';
 import TurndownService from 'turndown';
 
 import { CustomDescendant } from '.';
