@@ -207,7 +207,7 @@ const OrganizerBandItemForwarded = (
           {icon && feather[icon] ? (
             React.createElement(feather[icon])
           ) : logoRendition ? (
-            <Image src={logoRendition.url} layout={'fill'} objectFit="contain" alt="" />
+            <Image src={logoRendition.url} layout={'fill'} objectFit="contain" alt="" unoptimized />
           ) : (
             <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
               {children?.slice(0, 1)}
