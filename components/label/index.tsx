@@ -5,6 +5,7 @@ export const StyledLabel = styled.label`
   line-height: var(--line-height-300);
   font-weight: 700;
   color: inherit;
+  display: inline-flex;
 `;
 
 interface LabelProps {
