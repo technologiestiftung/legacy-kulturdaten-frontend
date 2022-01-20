@@ -5,6 +5,8 @@ import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
 import { inputStyles } from '../input';
 import { Label, StyledLabel } from '../label';
+import { Tooltip } from '../tooltip';
+import { TooltipP } from '../tooltip/TooltipContent';
 
 const StyledTextareaContainer = styled.div`
   display: flex;
@@ -18,6 +20,10 @@ const StyledTextareaContainer = styled.div`
 const StyledTextarea = styled.textarea<{ pristine?: boolean; valid?: boolean }>`
   display: block;
   ${(props) => inputStyles(props)}
+`;
+
+const StyledTooltip = styled.div`
+  margin-left: 0.5rem;
 `;
 
 export interface TextareaProps extends ComponentWithVariants {
@@ -37,6 +43,7 @@ export interface TextareaProps extends ComponentWithVariants {
   minLength?: number;
   maxLength?: number;
   placeholder?: string;
+  tooltip?: string | React.ReactNode;
   required?: boolean;
   valid?: boolean;
   debounce?: boolean;
@@ -66,6 +73,17 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         <Label htmlFor={props.id}>
           {props.label}
           {props.required ? ` (${t('forms.required')})` : ''}
+          {props.tooltip && (
+            <StyledTooltip>
+              <Tooltip>
+                {typeof props.tooltip === 'string' ? (
+                  <TooltipP>{props.tooltip}</TooltipP>
+                ) : (
+                  props.tooltip
+                )}
+              </Tooltip>
+            </StyledTooltip>
+          )}
         </Label>
       )}
       <StyledTextarea

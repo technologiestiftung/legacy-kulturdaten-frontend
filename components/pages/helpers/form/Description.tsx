@@ -15,6 +15,8 @@ import { Label } from '../../../label';
 import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
 import { FormContainer, FormWrapper } from '../formComponents';
+import { Tooltip } from '../../../tooltip';
+import { TooltipP } from '../../../tooltip/TooltipContent';
 
 const defaultMaxLength = 1500;
 
@@ -108,9 +110,14 @@ const StyledMaxLengthDisplayText = styled.div`
   }
 `;
 
+const StyledTooltip = styled.div`
+  margin-left: 0.5rem;
+`;
+
 interface DescriptionProps extends EntryFormProps {
   language: Language;
   title: string;
+  tooltip?: string;
   required?: boolean;
   softRequired?: boolean;
   key?: string;
@@ -122,6 +129,7 @@ export const useDescription = ({
   query,
   language,
   title,
+  tooltip,
   required,
   softRequired,
   key = 'description',
@@ -232,6 +240,13 @@ export const useDescription = ({
                 <Label>
                   {title}
                   {(required || softRequired) && ` (${t('forms.required')})`}
+                  {tooltip && (
+                    <StyledTooltip>
+                      <Tooltip>
+                        {typeof tooltip === 'string' ? <TooltipP>{tooltip}</TooltipP> : tooltip}
+                      </Tooltip>
+                    </StyledTooltip>
+                  )}
                 </Label>
               </StyledDescriptionTitle>
             </StyledDescriptionTitleStatus>
@@ -345,6 +360,7 @@ export const useDescriptionForm: EntryFormHook = ({
     query,
     language: 'de-easy' as Language,
     title: t('forms.labelGermanEasy') as string,
+    tooltip: t('forms.labelGermanEasyTooltip') as string,
     required: false,
     maxLength: defaultMaxLength,
   });
