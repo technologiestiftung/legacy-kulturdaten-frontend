@@ -29,16 +29,16 @@ export const deDE: Localization = {
   dashboard: {
     info: {
       hint: {
-        title: ({ name }) => `${name ? `„${name}“` : 'Profil'} veröffentlichen`,
+        title: () => 'Profil noch nicht öffentlich',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
-              Dein Profil ist noch nicht öffentlich. Veröffentliche es, damit deine Daten, Angebote
-              und Orte öffentlich verfügbar sind.
+              Hmm, das Profil deiner Anbieter:in ist noch nicht veröffentlicht. Finalisiere es,
+              damit andere diese Informationen sehen und nutzen können.
             </DashboardTileTextP>
           </DashboardTileText>
         ),
-        link: () => `Profil bearbeiten und veröffentlichen`,
+        link: () => `Profil aufrufen`,
       },
       start: {
         title: () => 'So legst du los',
@@ -76,7 +76,7 @@ export const deDE: Localization = {
               <DashboardTileTextP>
                 Schluss mit Adressen-Copy-Paste! Gib Informationen zu deinem Veranstaltungsort nur
                 einmal an und nutze sie dann immer wieder für deine Angebote. Du kannst beliebig
-                viele Orte anlegen - oder auch einzelne Räume darstellen.
+                viele Orte oder auch einzelne Räume anlegen.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
@@ -459,6 +459,36 @@ export const deDE: Localization = {
     name: () => 'Bezeichnung / Name',
     labelGerman: () => 'Deutsch',
     labelGermanEasy: () => 'Deutsch: einfache Sprache',
+    labelGermanEasyTooltip: () => (
+      <>
+        <TooltipP>
+          Einfache Sprache ist ein klarer &amp; vereinfachter Sprachstil – bestehend aus kurzen
+          Sätzen und niedrigschwelligen Wörtern - der für möglichst viele Menschen verständlich ist
+          (z.B. Menschen mit Lese- und Rechtschreibschwäche). Unterschiede zur Leichten Sprache
+          sowie Beispiele für beide findest du hier:
+        </TooltipP>
+        <TooltipP>
+          •&nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
+          >
+            Checkliste des Netzwerk Einfache Sprache
+          </a>
+        </TooltipP>
+        <TooltipP>
+          •&nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://portaleinfach.org/abc-der-einfachen-sprache/"
+          >
+            Infoportal Einfache Sprache
+          </a>
+        </TooltipP>
+      </>
+    ),
     labelEnglish: () => 'Englisch',
     labelEnglishEasy: () => 'Englisch: einfache Sprache',
     description: () => 'Beschreibung',
@@ -1037,6 +1067,8 @@ export const deDE: Localization = {
         editCancel: () => 'abbrechen',
         locationInfo: () => 'Hinweis zum Angebotsort',
         locationInfoPlaceholder: () => 'z.B. spezifischer Raum',
+        locationInfoTooltip: () =>
+          'Adressdaten zum Ort des Angebots sind automatisch durch den ausgewählten Ort hinterlegt. Gibt es Hinweise zum Ort, die darüber hinaus speziell für dieses Angebot gelten? z.B. konkrete Informationen zum Startpunkt einer Führung.',
         peakHours: () => 'Stoßzeiten',
         mainType: {
           title: () => 'Angebotsart',
@@ -1094,7 +1126,7 @@ export const deDE: Localization = {
         exportListXls: () => 'Exportiere Angebote als Excel',
         exportEntryXls: () => 'Exportiere Angebot als Excel',
         exportDatesXls: () => 'Exportiere Termine als Excel',
-        exportDatesFileName: ({offerName}) => `${offerName}-Termine`,
+        exportDatesFileName: ({ offerName }) => `${offerName}-Termine`,
         delete: () => 'Angebot löschen',
         deleteConfirm: () =>
           'Bist du sicher, dass du dieses Angebot löschen möchtest? Dies kann nicht rückgängig gemacht werden.',

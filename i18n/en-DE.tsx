@@ -29,16 +29,16 @@ export const enDE: Localization = {
   dashboard: {
     info: {
       hint: {
-        title: ({ name }) => `Publish ${name ? `“${name}”` : 'profile'}`,
+        title: () => 'Profile not yet public',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
-              Your profile is not yet public. Publish it so your dates, offers, and places are
-              publicly available.
+              Hmm, your organizer profile is not yet published. Finalize it so others can see and
+              use this information.
             </DashboardTileTextP>
           </DashboardTileText>
         ),
-        link: () => `Edit and publish profile`,
+        link: () => `View profile`,
       },
       start: {
         title: () => 'How to get started',
@@ -47,9 +47,9 @@ export const enDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                You want to publish data about a cultural institution, your collective or yourself
-                as a solo artist? Create an organizer profile to describe yourself and link
-                locations and offers to this profile.
+                You want to publish data about a cultural institution, your collective or you as a
+                solo artist? Create an organizer profile to describe yourself and link locations and
+                offers to this profile.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
@@ -454,6 +454,36 @@ export const enDE: Localization = {
     name: () => 'Name',
     labelGerman: () => 'German',
     labelGermanEasy: () => 'German: simple Language',
+    labelGermanEasyTooltip: () => (
+      <>
+        <TooltipP>
+          Plain language is a clear &amp; simplified language style - consisting of short sentences
+          and low-threshold words. Plain language is understandable for as many people as possible
+          (e.g. non-native speakers or people with reading and spelling difficulties). You can find
+          examples of Plain Language and an explanation on how it differs from Easy Language here:
+        </TooltipP>
+        <TooltipP>
+          •&nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
+          >
+            Checklist Plain Language (in German)
+          </a>
+        </TooltipP>
+        <TooltipP>
+          •&nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://portaleinfach.org/abc-der-einfachen-sprache/"
+          >
+            Info page Plain Language (in German)
+          </a>
+        </TooltipP>
+      </>
+    ),
     labelEnglish: () => 'English',
     labelEnglishEasy: () => 'English: simple Language',
     description: () => 'Description',
@@ -1023,6 +1053,8 @@ export const enDE: Localization = {
         editCancel: () => 'cancel',
         locationInfo: () => 'Note on the offer location',
         locationInfoPlaceholder: () => 'e.g. specific room',
+        locationInfoTooltip: () =>
+          'Data such as address and opening times are automatically linked to your offer through the location that you have chosen above. Is there anything else you would like to add regarding the location of this offer? E.g. information on the starting point of a guided tour.',
         peakHours: () => 'Peak hours',
         mainType: {
           title: () => 'Event type',
