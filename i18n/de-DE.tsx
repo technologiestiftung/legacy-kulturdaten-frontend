@@ -510,7 +510,7 @@ export const deDE: Localization = {
     tel: () => 'Telefon',
     email: () => 'E-Mail',
     website: () => 'Website',
-    links: () => 'Relevante Links',
+    links: () => 'Weitere Links (z.B. Social Media Kanäle)',
     urlPlaceholder: () => 'https://example.com',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
@@ -597,8 +597,25 @@ export const deDE: Localization = {
     title: () => 'Bilder',
     copyright: () => 'Bildnachweis / Urheber:in',
     copyrightPlaceholder: () => 'z.B. © Name Fotograf:in, Veröffentlichungsjahr',
-    copyrightTooltip: () =>
-      'Bitte gib immer einen Bildnachweis bzw. einen Hinweis auf den/die Urheber:in des Bildes an. Das Format des Bildnachweises hängt von den Vorgaben des/der Urheber:in ab, z.B. © Name des Fotografen od. Agentur, Jahr; Name einer Institution, Foto: © Name Fotograf:in',
+    copyrightTooltip: () => (
+      <>
+        <TooltipP>
+          Bitte gib immer einen Bildnachweis bzw. einen Hinweis auf den/die Urheber:in des Bildes
+          an. Bildtitel sind optional. Das Format des Bildnachweises hängt von den Vorgaben des/der
+          Urheber:in ab, z.B.
+        </TooltipP>
+        <TooltipP>•&nbsp; Name des Fotografen od. Agentur, Jahr</TooltipP>
+        <TooltipP>•&nbsp; Name Künstler:in des abgebildeten Werks, Foto: Name Fotograf:in</TooltipP>
+        <TooltipP>
+          •&nbsp; Bilder mit mehreren Urheber:innen, z.B. Collagen: Angabe zu Gestalter:in der
+          Collage und Angabe der Urheber:innen der Ausgangsmaterialien (wenn vorgegeben)
+        </TooltipP>
+        <TooltipP>
+          •&nbsp; Sammlungsobjekte mit digitaler Reproduktion ohne Urheber:in: Name Institution,
+          Ausschnitt Zeitungsseite, Sammlung XY
+        </TooltipP>
+      </>
+    ),
     alt: () => 'Alt Text',
     altTooltip: () =>
       'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima.',
@@ -932,10 +949,24 @@ export const deDE: Localization = {
         baseInfo: () => 'Grundlagen',
         address: () => 'Kontakt intern - für unsere Rückfragen zu diesem Anbieter:in-Profil',
         addressTooltip: () =>
-          'Diese Angaben sind für unseren internen Gebrauch und werden nicht veröffentlicht. Bitte gib hier Kontakt- und Adressdaten an, über die wir deine Institution / Gruppe / dich bei internen Rückfragen oder Problemen erreichen können.',
+          'Nur für unseren internen Gebrauch für Rückfragen bzw. bei Problemen, wird nicht veröffentlicht.',
         name: () => 'Bezeichnung / Name',
-        nameTooltip: () =>
-          'Bitte gib hier den Namen deiner Institution, Gruppe oder auch die Bezeichnung ein, die du als Solo-Künstler:in nutzt. Die hier gewählte Bezeichnung erscheint dann automatisch als Veranstalter:/Anbieter:innen-Name, wenn du ein Angebot mit diesem Profil verknüpfst.',
+        nameTooltip: () => (
+          <>
+            <TooltipP>
+              Bitte gib hier den Namen deiner Institution, Gruppe oder auch die Bezeichnung ein, die
+              du als Solo-Künstler:in nutzt.
+            </TooltipP>
+            <TooltipP>
+              Diese Bezeichnung erscheint dann automatisch als Anbieter:innen-Name, wenn du ein
+              Angebot in diesem Profil anlegst.
+            </TooltipP>
+            <TooltipP>
+              Fülle das Feld Bezeichnung - Englisch bitte nur aus, wenn es einen offizielle
+              englische Variante deiner Bezeichnung gibt.
+            </TooltipP>
+          </>
+        ),
         description: () => 'Über euch / dich - Beschreibung (max. 1500 Zeichen)',
         descriptionTooltip: () =>
           'Was macht deine Institution / Gruppe / deine eigene künstlerische Arbeit aus? Hier gibst du einen kurzen Überblick für euer / dein Publikum.',
@@ -1204,6 +1235,9 @@ export const deDE: Localization = {
         accessibility: () => 'Barrierefreiheit',
         media: () => 'Bilder',
       },
+      accessibilityHeadline: () => 'Beschreibt Orte - nicht Menschen',
+      accessibilityIntro: () =>
+        'Klopft euren Ort umfänglich auf Barrierefreiheit ab und hinterlegt die Infos, die wirklich bei der Besuchsplanung helfen. Gebt die Daten nur 1x ein und verknüpft sie später immer wieder bequem mit euren Angeboten!',
       options: {
         exportEntryXls: () => 'Exportiere Ort als Excel',
         exportListXls: () => 'Exportiere Orte als Excel',
