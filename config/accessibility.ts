@@ -369,7 +369,7 @@ export const locationAccessibility: GenericFormCategory[] = [
                     {
                       attributes: {
                         language: Language.de,
-                        name: 'Tickets nur an der Kasse',
+                        name: 'Tickets an der Kasse',
                       },
                     },
                     {
