@@ -29,16 +29,16 @@ export const enDE: Localization = {
   dashboard: {
     info: {
       hint: {
-        title: ({ name }) => `Publish ${name ? `“${name}”` : 'profile'}`,
+        title: () => 'Profile not yet public',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
-              Your profile is not yet public. Publish it so your dates, offers, and places are
-              publicly available.
+              Hmm, your organizer profile is not yet published. Finalize it so others can see and
+              use this information.
             </DashboardTileTextP>
           </DashboardTileText>
         ),
-        link: () => `Edit and publish profile`,
+        link: () => `View profile`,
       },
       start: {
         title: () => 'How to get started',
@@ -47,9 +47,9 @@ export const enDE: Localization = {
           content: () => (
             <DashboardTileText>
               <DashboardTileTextP>
-                You want to publish data about a cultural institution, your collective or yourself
-                as a solo artist? Create an organizer profile to describe yourself and link
-                locations and offers to this profile.
+                You want to publish data about a cultural institution, your collective or you as a
+                solo artist? Create an organizer profile to describe yourself and link locations and
+                offers to this profile.
               </DashboardTileTextP>
             </DashboardTileText>
           ),
@@ -454,6 +454,36 @@ export const enDE: Localization = {
     name: () => 'Name',
     labelGerman: () => 'German',
     labelGermanEasy: () => 'German: simple Language',
+    labelGermanEasyTooltip: () => (
+      <>
+        <TooltipP>
+          Plain language is a clear &amp; simplified language style - consisting of short sentences
+          and low-threshold words. Plain language is understandable for as many people as possible
+          (e.g. non-native speakers or people with reading and spelling difficulties). You can find
+          examples of Plain Language and an explanation on how it differs from Easy Language here:
+        </TooltipP>
+        <TooltipP>
+          •&nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
+          >
+            Checklist Plain Language (in German)
+          </a>
+        </TooltipP>
+        <TooltipP>
+          •&nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://portaleinfach.org/abc-der-einfachen-sprache/"
+          >
+            Info page Plain Language (in German)
+          </a>
+        </TooltipP>
+      </>
+    ),
     labelEnglish: () => 'English',
     labelEnglishEasy: () => 'English: simple Language',
     description: () => 'Description',
@@ -475,7 +505,7 @@ export const enDE: Localization = {
     tel: () => 'Phone',
     email: () => 'Email',
     website: () => 'Website',
-    links: () => 'Relevant links',
+    links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
@@ -558,8 +588,25 @@ export const enDE: Localization = {
     title: () => 'Images',
     copyright: () => 'Image credits / author',
     copyrightPlaceholder: () => 'e.g. © name of photographer, year of publication',
-    copyrightTooltip: () =>
-      'Please make sure to include a photo credit or reference to the creator(s) of the image. The format of the image credit depends on the specifications provided by the creator(s), e.g. © name of photographer or agency, year; name of an institution, photo: © name photographer',
+    copyrightTooltip: () => (
+      <>
+        <TooltipP>
+          Please make sure to include a photo credit or reference to the creator(s) of the image.
+          The format of the image credit depends on the specifications provided by the creator(s),
+          e.g.
+        </TooltipP>
+        <TooltipP>•&nbsp; Name of photographer or agency, year</TooltipP>
+        <TooltipP>•&nbsp; Name of an institution, photo: name photographer</TooltipP>
+        <TooltipP>
+          •&nbsp; Images with several creators, e.g. collages: reference to creator of the collage
+          and the creators of each source material (if required by original license)
+        </TooltipP>
+        <TooltipP>
+          •&nbsp; Collection object, digital reproduction without author: Name of institution,
+          newspaper fragment, collection XY
+        </TooltipP>
+      </>
+    ),
     alt: () => 'Alt text',
     altTooltip: () =>
       'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
@@ -895,10 +942,24 @@ export const enDE: Localization = {
         baseInfo: () => 'Basic information',
         address: () => 'Internal contact - for questions regarding this profile',
         addressTooltip: () =>
-          'This information is for our internal use and will not be published. Please enter contact and address data  via which we can reach your institution / group / you in case of problems or queries.',
+          'Only for our internal use for queries in case of problems, will not be published.',
         name: () => 'Name',
-        nameTooltip: () =>
-          "Please enter the name of your institution, group, or the name you use as a  solo-artist. The name you provide here will automatically appear as the organizer's name when you link an offer to this profile.",
+        nameTooltip: () => (
+          <>
+            <TooltipP>
+              Please enter the name of your institution, group, or the name you use as a
+              solo-artist.
+            </TooltipP>
+            <TooltipP>
+              The name you provide here will automatically appear as the organizer&apos;s name when
+              you link an offer to this profile.
+            </TooltipP>
+            <TooltipP>
+              Please fill in the field &apos;Name - English&apos; only if there is an official
+              English variant of your / your organization&apos;s title.
+            </TooltipP>
+          </>
+        ),
         description: () => 'About you - description (max. 1500 characters)',
         descriptionTooltip: () =>
           'What characterizes your institution / group / your own artistic work? Here you give a brief overview for your audience(s).',
@@ -911,7 +972,7 @@ export const enDE: Localization = {
         email: () => 'Email',
         website: () => 'Website',
         links: () => 'Additional links (e.g. social media accounts)',
-        additionalContacts: () => 'Additional contacts',
+        additionalContacts: () => 'Additional contacts (e.g. press contact)',
         additionalContactsTooltip: () =>
           'Use this option to list additional contacts. You want to add a contact that is only relevant to a specific event? Head to offers and add the contact information to the event in question.',
         topicsTooltip: () => (
@@ -1023,6 +1084,8 @@ export const enDE: Localization = {
         editCancel: () => 'cancel',
         locationInfo: () => 'Note on the offer location',
         locationInfoPlaceholder: () => 'e.g. specific room',
+        locationInfoTooltip: () =>
+          'Data such as address and opening times are automatically linked to your offer through the location that you have chosen above. Is there anything else you would like to add regarding the location of this offer? E.g. information on the starting point of a guided tour.',
         peakHours: () => 'Peak hours',
         mainType: {
           title: () => 'Event type',
@@ -1163,6 +1226,9 @@ export const enDE: Localization = {
         accessibility: () => 'Accessibility',
         media: () => 'Images',
       },
+      accessibilityHeadline: () => 'Describe venues - not people',
+      accessibilityIntro: () =>
+        'Describe the accessibility of your venue to help others plan their visit. Enter the data only once and link them later on easily with your offers!',
       options: {
         exportEntryXls: () => 'Export location as Excel',
         exportListXls: () => 'Export locations as Excel',
