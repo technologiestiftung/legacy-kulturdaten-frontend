@@ -1,6 +1,8 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useEntryHeader } from '../helpers/useEntryHeader';
-import { EntryFormWrapper } from '../../EntryForm/wrappers';
+import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { EntryFormHead } from '../../EntryForm/EntryFormHead';
+import { FormGrid, FormItem, FormItemWidth } from '../../pages/helpers/formComponents';
 import { locationAccessibility } from '../../../config/accessibility';
 import {
   genericFormActionInit,
@@ -23,6 +25,7 @@ import {
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
+import { Info, InfoColor } from '../../info';
 
 const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Location, LocationShow>(category, query);
@@ -140,7 +143,7 @@ const useAccessibilityForm: EntryFormHook = ({ category, query }) => {
           e.stopPropagation();
         }}
       >
-        <EntryFormWrapper>{renderedForm}</EntryFormWrapper>
+        {renderedForm}
       </form>
     ),
     submit: async () => {
@@ -231,7 +234,19 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
 
-          {renderedForm}
+          <EntryFormWrapper>
+            <EntryFormContainer>
+              <EntryFormHead title={t('categories.location.accessibilityHeadline') as string} />
+              <FormGrid>
+                <FormItem width={FormItemWidth.full}>
+                  <Info color={InfoColor.white} noMaxWidth>
+                    <p>{t('categories.location.accessibilityIntro')}</p>
+                  </Info>
+                </FormItem>
+              </FormGrid>
+              {renderedForm}
+            </EntryFormContainer>
+          </EntryFormWrapper>
         </div>
       </div>
     </>
