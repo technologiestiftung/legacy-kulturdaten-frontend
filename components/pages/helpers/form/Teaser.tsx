@@ -17,6 +17,7 @@ export const defaultTeaserTextLimit = 150;
 
 interface SetTeaserProps {
   label: string;
+  tooltip?: string;
   ariaLabel?: string;
   onSubmit: (e?: FormEvent) => Promise<void>;
   pristine: boolean;
@@ -31,6 +32,7 @@ interface SetTeaserProps {
 
 const Teaser: React.FC<SetTeaserProps> = ({
   label,
+  tooltip,
   ariaLabel,
   onSubmit,
   pristine,
@@ -54,6 +56,7 @@ const Teaser: React.FC<SetTeaserProps> = ({
         id={`${uid}-textarea`}
         label={label}
         ariaLabel={ariaLabel}
+        tooltip={tooltip}
         value={value || ''}
         onChange={(e) => {
           setPristine(false);
@@ -76,6 +79,7 @@ export const useTeaser = <
   query: ParsedUrlQuery;
   language: Language;
   label: string;
+  tooltip?: string;
   ariaLabel?: string;
   loaded: boolean;
 }): {
@@ -86,7 +90,7 @@ export const useTeaser = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, ariaLabel } = props;
+  const { category, query, language, label, tooltip, ariaLabel } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
 
@@ -148,6 +152,7 @@ export const useTeaser = <
           value,
           setValue,
           label,
+          tooltip,
           ariaLabel,
           onSubmit,
           teaser,
@@ -196,6 +201,7 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
     query,
     language: 'de-easy' as Language,
     label: t('forms.labelGermanEasy') as string,
+    tooltip: t('forms.labelGermanEasyTooltip') as string,
     ariaLabel: title
       ? `${title} ${t('forms.labelGermanEasy')}`
       : `${t('forms.teaser')} ${t('forms.labelGermanEasy')}`,

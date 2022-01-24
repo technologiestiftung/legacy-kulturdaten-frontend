@@ -358,6 +358,11 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                       debounce
                       id={`${uid}-textarea-${language}`}
                       label={t(languageTranslationKeys[language]) as string}
+                      tooltip={
+                        languageTranslationKeys[language] === 'language.de-easy'
+                          ? (t('forms.labelGermanEasyTooltip') as string)
+                          : ''
+                      }
                       ariaLabel={t(languageTranslationKeys[language]) as string}
                       value={currentTranslation?.attributes?.teaser || ''}
                       onChange={(e) => {
