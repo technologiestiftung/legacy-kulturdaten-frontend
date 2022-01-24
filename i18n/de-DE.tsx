@@ -654,7 +654,8 @@ export const deDE: Localization = {
     deleteConfirm: () =>
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
-    hint: () => 'Bitte fülle die Pflichtfelder aus, damit das Bild öffentlich verfügbar ist.',
+    hint: () =>
+      'Das Bild ist noch nicht öffentlich verfügbar. Damit es öffentlich wird, müssen alle Pflichtfelder ausgefüllt sein.',
     dropZoneLabel: () => 'Bilder hochladen',
     usageInfo: () => (
       <>

@@ -3,7 +3,9 @@ import { css } from '@emotion/react';
 import { ChangeEventHandler } from 'react';
 import { Check } from 'react-feather';
 
-const StyledRadioInput = styled.input`
+const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
+
+const StyledRadioInput = styled.input<{ softRequired?: boolean; valid?: boolean }>`
   display: block;
   margin: 0;
   appearance: none;
@@ -24,6 +26,14 @@ const StyledRadioInput = styled.input`
     box-shadow: none;
     background: var(--grey-350);
   }
+
+  ${({ softRequired, valid }) =>
+    valid === false &&
+    softRequired &&
+    css`
+      border-color: var(--error) !important;
+      box-shadow: 0.0625rem 0.0625rem 0.25rem var(--black-o25), ${errorShadow};
+    `}
 `;
 
 const StyledRadio = styled.div<{ disabled?: boolean }>`
@@ -92,6 +102,8 @@ interface RadioProps {
   name?: string;
   disabled?: boolean;
   required?: boolean;
+  softRequired?: boolean;
+  valid?: boolean;
   value?: string;
 }
 
@@ -104,6 +116,8 @@ export const Radio: React.FC<RadioProps> = ({
   name,
   disabled,
   required,
+  softRequired,
+  valid,
   value,
 }: RadioProps) => {
   return (
@@ -119,6 +133,8 @@ export const Radio: React.FC<RadioProps> = ({
           disabled={disabled}
           required={required}
           value={value}
+          softRequired={softRequired}
+          valid={valid}
         />
         <StyledRadioInputCheck checked={checked}>
           <Check color="var(--black)" />
