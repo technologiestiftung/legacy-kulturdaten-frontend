@@ -1,24 +1,20 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { Hours, HoursWeekday } from '../../lib/api/types/hours';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
-import { Button, ButtonColor } from '../button';
+import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
-import { Select } from '../select';
+import { Select, SelectSize } from '../select';
 
 const StyledHoursField = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-template-columns: 100%;
-  row-gap: 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    grid-template-columns: 1fr 1fr;
-    column-gap: 1.5rem;
-    row-gap: 1.5rem;
-  }
+  row-gap: 1.5rem;
 `;
 
 const StyledHoursFieldAdd = styled.div`
@@ -29,23 +25,21 @@ const StyledHoursFieldAdd = styled.div`
 
 const StyledHoursFieldItem = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   row-gap: 0.75rem;
-  align-items: flex-end;
-  border: 1px solid var(--grey-400);
+  column-gap: 1.5rem;
   border-radius: 0.75rem;
-  padding: 0.75rem;
 
   ${mq(Breakpoint.mid)} {
-    row-gap: 1.5rem;
-    padding: 1.5rem;
+    align-items: flex-end;
+    flex-direction: row;
   }
 `;
 const StyledHoursFieldItemWeekday = styled.div`
-  align-self: stretch;
+  display: flex;
 `;
 const StyledHoursFieldItemTimes = styled.div`
-  align-self: stretch;
   display: flex;
   column-gap: 0.75rem;
 `;
@@ -57,6 +51,7 @@ const StyledHoursFieldItemTimesTo = styled.div`
 `;
 const StyledHoursFieldItemRemove = styled.div`
   text-align: right;
+  flex-grow: 1;
 `;
 
 interface HoursProps {
@@ -92,7 +87,8 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
                   ...hours.slice(index + 1),
                 ]);
               }}
-              label={t('hours.weekday') as string}
+              ariaLabel={t('hours.weekday') as string}
+              size={SelectSize.big}
             >
               <option value={HoursWeekday.monday}>{t('days.monday.long')}</option>
               <option value={HoursWeekday.tuesday}>{t('days.tuesday.long')}</option>
@@ -108,7 +104,7 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
               <Input
                 type={InputType.time}
                 value={hour.attributes.from}
-                label={t('hours.from') as string}
+                ariaLabel={t('hours.from') as string}
                 onChange={(e) =>
                   onChange([
                     ...hours.slice(0, index),
@@ -128,7 +124,7 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
               <Input
                 type={InputType.time}
                 value={hour.attributes.to}
-                label={t('hours.to') as string}
+                ariaLabel={t('hours.to') as string}
                 onChange={(e) =>
                   onChange([
                     ...hours.slice(0, index),
@@ -147,10 +143,17 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
           </StyledHoursFieldItemTimes>
           <StyledHoursFieldItemRemove>
             <Button
+              variant={ButtonVariant.minimal}
+              ariaLabel={t('hours.remove') as string}
+              tooltip={t('hours.remove') as string}
+              css={css`
+                padding: 0.875rem;
+                border-radius: 0.375rem;
+              `}
               onClick={() => onChange(hours.filter((hour, hourIndex) => hourIndex !== index))}
-            >
-              {t('hours.remove')}
-            </Button>
+              icon="Trash2"
+              size={ButtonSize.big}
+            />
           </StyledHoursFieldItemRemove>
         </StyledHoursFieldItem>
       ))}
