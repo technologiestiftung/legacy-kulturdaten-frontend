@@ -376,6 +376,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                     id={`${uid}-alt-${language}`}
                     value={currentTranslation?.attributes?.alternativeText || ''}
                     required={language === defaultLanguage}
+                    softRequired={language === defaultLanguage}
                     tooltip={language === defaultLanguage ? (t('media.altTooltip') as string) : ''}
                     onChange={(e) => {
                       const updatedTranslation = {
@@ -425,6 +426,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   })
                 }
                 required
+                softRequired
               />
             </div>
           </StyledMediaListItemForm>
@@ -433,6 +435,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
             <div>
               <RadioList
                 required
+                softRequired
                 label={t('media.license') as string}
                 id={`${uid}-license`}
                 name={`${uid}-license`}
@@ -466,7 +469,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                 <Input
                   type={InputType.date}
                   label={t('media.licenseEnd') as string}
-                  id={`${uid}-copyright`}
+                  id={`${uid}-license`}
                   value={
                     mediaItem.attributes.expiresAt
                       ? formatISO9075(new Date(mediaItem.attributes.expiresAt), {
@@ -485,6 +488,8 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                       },
                     })
                   }
+                  required
+                  softRequired
                 />
               </div>
             )}
@@ -570,7 +575,25 @@ export const MediaList: React.FC<MediaListProps> = ({
   const itemsValidList = useMemo(
     () =>
       media?.map((mediaItem) => {
-        const requiredAttributes = [mediaItem.attributes.acceptedTermsAt];
+        const requiredAttributes = [
+          mediaItem.attributes.acceptedTermsAt,
+          mediaItem.attributes.copyright,
+          mediaItem.relations.license,
+        ];
+
+        if (
+          mediaItem.relations?.translations &&
+          Array.isArray(mediaItem.relations?.translations) &&
+          mediaItem.relations.translations.filter(
+            ({ attributes }) => attributes.language === defaultLanguage
+          )[0]
+        ) {
+          requiredAttributes.push(
+            mediaItem.relations.translations.filter(
+              ({ attributes }) => attributes.language === defaultLanguage
+            )[0].attributes.alternativeText
+          );
+        }
 
         for (let i = 0; i < requiredAttributes.length; i += 1) {
           const attribute = requiredAttributes[i];
@@ -589,8 +612,8 @@ export const MediaList: React.FC<MediaListProps> = ({
   );
 
   useEffect(() => {
-    setValid(!itemsValidList?.includes(false));
-  }, [itemsValidList, setValid]);
+    setValid(true);
+  }, [setValid]);
 
   return (
     <StyledMediaList role="list">

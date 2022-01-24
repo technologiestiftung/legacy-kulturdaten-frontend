@@ -646,7 +646,7 @@ export const enDE: Localization = {
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
     ariaLabel: () => 'Upload files',
     hint: () =>
-      'In order for the image to be publicly available, the required fields must be filled out.',
+      'This image is not public yet. In order for the image to be publicly available, the required fields must be filled out.',
     dropZoneLabel: () => 'Upload images',
     usageInfo: () => (
       <>

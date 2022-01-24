@@ -71,6 +71,7 @@ export interface RadioListProps extends ComponentWithVariants {
   label?: string;
   ariaLabel?: string;
   required?: boolean;
+  softRequired?: boolean;
   value?: string;
   onChange?: (value: string) => void;
 }
@@ -84,6 +85,7 @@ export const RadioList: React.FC<RadioListProps> = ({
   value,
   onChange,
   required,
+  softRequired,
   variant,
 }: RadioListProps) => {
   const t = useT();
@@ -108,6 +110,10 @@ export const RadioList: React.FC<RadioListProps> = ({
               checked={value === option.value}
               onChange={(e) => onChange(e.target.value)}
               required={required}
+              softRequired={softRequired}
+              valid={Boolean(
+                !required || !softRequired || (value?.length > 0 && value !== 'undefined')
+              )}
             />
             {option.link && (
               <StyledRadioListItemLink>
