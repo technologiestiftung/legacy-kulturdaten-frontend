@@ -286,6 +286,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               <Textarea
                 id={`${uid}-textarea-german-easy`}
                 label={t('forms.labelGermanEasy') as string}
+                tooltip={t('forms.labelGermanEasyTooltip') as string}
                 ariaLabel={t('forms.labelGermanEasy') as string}
                 value={teaserGermanEasy || ''}
                 onChange={(e) => setTeaserGermanEasy(e.target.value)}

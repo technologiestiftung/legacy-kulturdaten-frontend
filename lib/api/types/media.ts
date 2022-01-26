@@ -36,7 +36,6 @@ export type Media = {
       createdAt: string;
       updatedAt: string;
       acceptedTermsAt: string;
-      mediaLicenseId: number;
     } & RenditionAttributes;
     relations: {
       translations: MediaTranslation[];

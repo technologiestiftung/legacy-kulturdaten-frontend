@@ -58,7 +58,10 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
 
   const renderedForm = (
     <FormContainer>
-      <EntryFormHead title={t('categories.offer.form.locationInfo') as string} />
+      <EntryFormHead
+        title={t('categories.offer.form.locationInfo') as string}
+        tooltip={t('categories.offer.form.locationInfoTooltip') as string}
+      />
       <FormGrid>
         {contentLanguages.map((language: Language, index) => {
           const currentTranslation = translations
