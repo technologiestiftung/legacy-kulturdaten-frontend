@@ -68,6 +68,8 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
     order: Order.ASC,
   });
 
+  const { isPermanent } = offer?.attributes;
+
   return (
     <DashboardTile
       title={currentTranslation?.attributes?.name || (t('general.placeholderOffer') as string)}
@@ -96,7 +98,9 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
             </StyledDashboardTileDate>
           );
         })}
-        {!dates || dates.length === 0 ? (
+        {isPermanent ? (
+          <DashboardTileTextP>{t('dashboard.info.offers.isPermanent')}</DashboardTileTextP>
+        ) : !dates || dates.length === 0 ? (
           <DashboardTileTextP>{t('dashboard.info.offers.datePlaceholder')}</DashboardTileTextP>
         ) : (
           ''

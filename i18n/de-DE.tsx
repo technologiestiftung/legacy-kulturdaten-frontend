@@ -88,6 +88,8 @@ export const deDE: Localization = {
         title: () => 'Aktuelle Angebote',
         link: () => 'Angebot anschauen',
         datePlaceholder: () => 'Noch keine Termine vorhanden',
+        isPermanent: () => 'Dauerangebot mit Öffnungszeiten entsprechend des Veranstaltungsortes',
+        isOnlinePermanent: () => 'Online Dauerangebot',
       },
       organizer: {
         title: () => 'Fülle deine Anbieter:in mit Leben',

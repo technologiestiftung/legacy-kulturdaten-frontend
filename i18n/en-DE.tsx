@@ -120,6 +120,8 @@ export const enDE: Localization = {
         title: () => 'Current Offers',
         link: () => 'View Offer',
         datePlaceholder: () => 'No dates available yet',
+        isPermanent: () => 'Permanent offer with opening hours depending on the location',
+        isOnlinePermanent: () => 'Permanent online offer',
       },
       data: {
         title: () => 'Use the data (further)',
