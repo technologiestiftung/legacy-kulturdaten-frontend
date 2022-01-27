@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useMemo, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { StyledError } from '../Error';
 import { MouseTooltip } from '../MouseTooltip';
 
@@ -154,6 +155,7 @@ const DayPickerDay: React.FC<DayPickerDayProps> = ({
 }) => {
   const t = useT();
   const ref = useRef<HTMLLabelElement>(null);
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   return (
     <StyledDayPickerDay
@@ -162,7 +164,7 @@ const DayPickerDay: React.FC<DayPickerDayProps> = ({
       role="checkbox"
       checked={state.includes(index as Day)}
     >
-      <MouseTooltip hoverElement={ref}>{t(long)}</MouseTooltip>
+      {isMidOrWider && <MouseTooltip hoverElement={ref}>{t(long)}</MouseTooltip>}
       <StyledDayPickerDayLabel ref={ref}>
         <StyledDayPickerDayCheckbox
           type="checkbox"
