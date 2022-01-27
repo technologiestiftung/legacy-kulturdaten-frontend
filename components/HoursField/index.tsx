@@ -73,7 +73,11 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
     to: string;
     hours: Hours[];
   }[] = useMemo(() => {
-    const groups = [];
+    const groups: {
+      from: string;
+      to: string;
+      hours: Hours[];
+    }[] = [];
 
     if (hours?.length > 0) {
       const hoursCopy = [...hours];
@@ -101,7 +105,17 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
         n += 1;
       }
 
-      return groups;
+      return groups.sort((a, b) => {
+        if (a.from < b.from) {
+          return -1;
+        }
+
+        if (a.from > b.from) {
+          return 1;
+        }
+
+        return 0;
+      });
     }
 
     return [];
