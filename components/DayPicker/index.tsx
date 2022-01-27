@@ -84,18 +84,12 @@ export enum DayPickerMode {
   week = 'week',
 }
 
-export const weekdays: {
+const weekdays: {
   name: {
     long: string;
     short: string;
   };
 }[] = [
-  {
-    name: {
-      long: 'days.sunday.long',
-      short: 'days.sunday.short',
-    },
-  },
   {
     name: {
       long: 'days.monday.long',
@@ -130,6 +124,12 @@ export const weekdays: {
     name: {
       long: 'days.saturday.long',
       short: 'days.saturday.short',
+    },
+  },
+  {
+    name: {
+      long: 'days.sunday.long',
+      short: 'days.sunday.short',
     },
   },
 ];
