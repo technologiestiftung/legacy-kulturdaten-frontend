@@ -8,6 +8,17 @@ export enum HoursWeekday {
   sunday = 'sunday',
 }
 
+export const hoursWeekDayToNumber = (hoursWeekday: HoursWeekday): number =>
+  [
+    HoursWeekday.monday,
+    HoursWeekday.tuesday,
+    HoursWeekday.wednesday,
+    HoursWeekday.thursday,
+    HoursWeekday.friday,
+    HoursWeekday.saturday,
+    HoursWeekday.sunday,
+  ].findIndex((value) => value === hoursWeekday);
+
 export type Hours = {
   id?: number;
   attributes: {

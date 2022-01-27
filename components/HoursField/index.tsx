@@ -1,11 +1,13 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useMemo } from 'react';
 
-import { Hours, HoursWeekday } from '../../lib/api/types/hours';
+import { Hours, HoursWeekday, hoursWeekDayToNumber } from '../../lib/api/types/hours';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
+import { DayPicker } from '../DayPicker';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
 import { Select, SelectSize } from '../select';
@@ -66,12 +68,93 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
   const uid = usePseudoUID();
   const t = useT();
 
+  const groupedHours: {
+    from: string;
+    to: string;
+    hours: Hours[];
+  }[] = useMemo(() => {
+    const groups = [];
+
+    if (hours?.length > 0) {
+      const hoursCopy = [...hours];
+
+      let n = 0;
+
+      while (hoursCopy.length > 0) {
+        const startHours = hoursCopy.pop();
+
+        groups.push({
+          from: startHours.attributes.from,
+          to: startHours.attributes.to,
+          hours: [startHours],
+        });
+
+        for (let i = hoursCopy.length - 1; i >= 0; i -= 1) {
+          if (
+            hoursCopy[i].attributes.from === startHours.attributes.from &&
+            hoursCopy[i].attributes.to === startHours.attributes.to
+          ) {
+            groups[n].hours.push(hoursCopy.splice(i, 1)[0]);
+          }
+        }
+
+        n += 1;
+      }
+
+      return groups;
+    }
+
+    return [];
+  }, [hours]);
+
   return (
     <StyledHoursField>
-      {hours.map((hour, index) => (
+      {groupedHours.map((hour, index) => (
         <StyledHoursFieldItem key={index}>
+          <StyledHoursFieldItemTimes>
+            <StyledHoursFieldItemTimesFrom>
+              <Input
+                type={InputType.time}
+                value={hour.from}
+                ariaLabel={t('hours.from') as string}
+                // onChange={(e) =>
+                //   onChange([
+                //     ...hours.slice(0, index),
+                //     {
+                //       ...hour,
+                //       attributes: {
+                //         ...hour.attributes,
+                //         from: e.target.value,
+                //       },
+                //     },
+                //     ...hours.slice(index + 1),
+                //   ])
+                // }
+              />
+            </StyledHoursFieldItemTimesFrom>
+            <StyledHoursFieldItemTimesTo>
+              <Input
+                type={InputType.time}
+                value={hour.to}
+                ariaLabel={t('hours.to') as string}
+                // onChange={(e) =>
+                //   onChange([
+                //     ...hours.slice(0, index),
+                //     {
+                //       ...hour,
+                //       attributes: {
+                //         ...hour.attributes,
+                //         to: e.target.value,
+                //       },
+                //     },
+                //     ...hours.slice(index + 1),
+                //   ])
+                // }
+              />
+            </StyledHoursFieldItemTimesTo>
+          </StyledHoursFieldItemTimes>
           <StyledHoursFieldItemWeekday>
-            <Select
+            {/* <Select
               id={`${uid}-hours`}
               value={hour.attributes.weekday}
               onChange={(e) => {
@@ -97,50 +180,11 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
               <option value={HoursWeekday.friday}>{t('days.friday.long')}</option>
               <option value={HoursWeekday.saturday}>{t('days.saturday.long')}</option>
               <option value={HoursWeekday.sunday}>{t('days.sunday.long')}</option>
-            </Select>
+            </Select> */}
+            <DayPicker
+              value={hour.hours.map((h) => hoursWeekDayToNumber(h.attributes.weekday) as Day)}
+            />
           </StyledHoursFieldItemWeekday>
-          <StyledHoursFieldItemTimes>
-            <StyledHoursFieldItemTimesFrom>
-              <Input
-                type={InputType.time}
-                value={hour.attributes.from}
-                ariaLabel={t('hours.from') as string}
-                onChange={(e) =>
-                  onChange([
-                    ...hours.slice(0, index),
-                    {
-                      ...hour,
-                      attributes: {
-                        ...hour.attributes,
-                        from: e.target.value,
-                      },
-                    },
-                    ...hours.slice(index + 1),
-                  ])
-                }
-              />
-            </StyledHoursFieldItemTimesFrom>
-            <StyledHoursFieldItemTimesTo>
-              <Input
-                type={InputType.time}
-                value={hour.attributes.to}
-                ariaLabel={t('hours.to') as string}
-                onChange={(e) =>
-                  onChange([
-                    ...hours.slice(0, index),
-                    {
-                      ...hour,
-                      attributes: {
-                        ...hour.attributes,
-                        to: e.target.value,
-                      },
-                    },
-                    ...hours.slice(index + 1),
-                  ])
-                }
-              />
-            </StyledHoursFieldItemTimesTo>
-          </StyledHoursFieldItemTimes>
           <StyledHoursFieldItemRemove>
             <Button
               variant={ButtonVariant.minimal}
