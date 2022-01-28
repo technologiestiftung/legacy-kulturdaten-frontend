@@ -530,12 +530,14 @@ export const deDE: Localization = {
     remember: () => 'Eingeloggt bleiben',
     submit: () => 'einloggen',
     headline: () => 'Logge dich jetzt bei kulturdaten.berlin ein!',
+    headlineSuccess: () =>
+      'Dein Konto wurde erfolgreich verifiziert. Du kannst dich jetzt einloggen.',
     loading: () => 'Anmeldung läuft',
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
     registerReference: () => 'Du bis neu hier?',
     registerReferenceLinkText: () => 'Registriere dich jetzt.',
     verificationError: () =>
-      'Dieser Account ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
+      'Dieses Konto ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
   },
   logout: {
     loading: () => 'Abmeldung läuft',
@@ -555,7 +557,7 @@ export const deDE: Localization = {
     loading: () => 'Deine Registrierung läuft',
     requestError: () =>
       'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
-    uniqueEmailError: () => 'Dieser Account existiert bereits.',
+    uniqueEmailError: () => 'Dieses Konto existiert bereits.',
     successHeadline: () => 'Super, das hat geklappt!',
     successSubline: () =>
       'Wir haben dir eine E-Mail geschickt. Bitte bestätige deine Anmeldung mit dem Link in der E-Mail.',
@@ -572,7 +574,7 @@ export const deDE: Localization = {
         von kulturdaten.berlin gelesen und stimme ihnen ausdrücklich zu.
       </>
     ),
-    loginReference: () => 'Du hast bereits einen Account?',
+    loginReference: () => 'Du hast bereits ein Konto?',
     loginReferenceLinkText: () => 'Log dich hier ein.',
   },
   statusBar: {
