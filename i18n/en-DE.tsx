@@ -525,6 +525,7 @@ export const enDE: Localization = {
     remember: () => 'Stay logged in',
     submit: () => 'login',
     headline: () => 'Log in to kulturdaten.berlin now!',
+    headlineSuccess: () => "You're account has been successfully verified. You can log in now.",
     loading: () => 'Logging you in',
     error: () => 'The provided login credentials are not valid.',
     registerReference: () => 'New here?',
