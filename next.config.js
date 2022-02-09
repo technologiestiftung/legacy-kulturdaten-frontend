@@ -1,7 +1,7 @@
 module.exports = {
   publicRuntimeConfig: {
     defaultLocale: 'catchAll',
-    api: process.env.API_BASE_URL || 'https://beta.api.kulturdaten.berlin',
+    api: process.env.API_BASE_URL || 'https://beta.api.aws.kulturdaten-berlin.anyvent.cloud',
     authTokenCookieName: 'AUTH_TOKEN',
     activeOrganizerCookieName: 'ACTIVE_ORGANIZER_ID',
     adminOrganizerCookieName: 'ADMIN_ORGANIZER_ID',

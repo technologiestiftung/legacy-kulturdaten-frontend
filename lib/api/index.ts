@@ -183,7 +183,7 @@ export const call = async <T extends ApiCall>(
     ? addUrlParam(request.route, `include=${includes.join(',')}`)
     : request.route;
 
-  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+  const api = publicRuntimeConfig?.api;
 
   try {
     const resp = await fetch(new URL(routeWithIncludes, api).toString(), {
@@ -269,7 +269,7 @@ export const useMediaUpload = (
     ) => {
       const { request } = factory(overrideAuthToken || authToken, query);
       const route = request.route;
-      const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+      const api = publicRuntimeConfig?.api;
 
       const formData = new FormData();
       if (files) {
@@ -327,7 +327,7 @@ export const getApiUrl = (
   query?: ParsedUrlQuery,
   includes?: string[]
 ): URL => {
-  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+  const api = publicRuntimeConfig?.api;
 
   const route = apiRoutes[apiRoute](query);
   const routeWithIncludes = Array.isArray(includes)
