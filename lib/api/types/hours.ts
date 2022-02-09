@@ -8,16 +8,20 @@ export enum HoursWeekday {
   sunday = 'sunday',
 }
 
+const hoursWeekdays = [
+  HoursWeekday.monday,
+  HoursWeekday.tuesday,
+  HoursWeekday.wednesday,
+  HoursWeekday.thursday,
+  HoursWeekday.friday,
+  HoursWeekday.saturday,
+  HoursWeekday.sunday,
+];
+
 export const hoursWeekDayToNumber = (hoursWeekday: HoursWeekday): number =>
-  [
-    HoursWeekday.monday,
-    HoursWeekday.tuesday,
-    HoursWeekday.wednesday,
-    HoursWeekday.thursday,
-    HoursWeekday.friday,
-    HoursWeekday.saturday,
-    HoursWeekday.sunday,
-  ].findIndex((value) => value === hoursWeekday);
+  hoursWeekdays.findIndex((value) => value === hoursWeekday);
+
+export const dayNumberToHoursWeekday = (day: number): HoursWeekday => hoursWeekdays[day];
 
 export type Hours = {
   id?: number;
