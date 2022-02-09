@@ -24,7 +24,7 @@ import { PeakHours } from '../../../lib/api/types/hours';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
-import { HoursField } from '../../HoursField';
+import { useHoursField } from '../../HoursField';
 import { OfferDelete } from '../../../lib/api/routes/offer/delete';
 import { OfferUpdate } from '../../../lib/api/routes/offer/update';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
@@ -37,6 +37,11 @@ const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
 
   const call = useApiCall();
   const t = useT();
+
+  const { renderedHoursField, init: initHoursField } = useHoursField({
+    i18nKeys: { addButton: 'peakHours.add' },
+    onChange: (updatedPeakHours) => setPeakHours(updatedPeakHours),
+  });
 
   const initialPeakHours = useMemo(
     () => entry?.data?.relations?.peakHours,
@@ -52,20 +57,15 @@ const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
     if (JSON.stringify(initialPeakHours) !== JSON.stringify(peakHoursFromApi)) {
       setPeakHoursFromApi(initialPeakHours);
       setPeakHours(initialPeakHours);
+      initHoursField(initialPeakHours);
     }
-  }, [initialPeakHours, peakHoursFromApi]);
+  }, [initialPeakHours, peakHoursFromApi, initHoursField]);
 
   const renderedForm = (
     <div>
       <EntryFormHead title={t('categories.offer.form.peakHours') as string} />
       <FormGrid>
-        <FormItem width={FormItemWidth.full}>
-          <HoursField
-            i18nKeys={{ addButton: 'peakHours.add' }}
-            hours={peakHours || []}
-            onChange={(updatedPeakHours) => setPeakHours(updatedPeakHours)}
-          />
-        </FormItem>
+        <FormItem width={FormItemWidth.full}>{renderedHoursField}</FormItem>
       </FormGrid>
     </div>
   );
