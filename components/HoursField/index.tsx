@@ -55,6 +55,7 @@ const StyledHoursFieldItemTimesTo = styled.div`
 const StyledHoursFieldItemRemove = styled.div`
   text-align: right;
   flex-grow: 1;
+  align-self: flex-end;
 `;
 
 interface HoursProps {
