@@ -263,6 +263,7 @@ export const deDE: Localization = {
   },
   hours: {
     weekday: () => 'Wochentag',
+    weekdays: () => 'Wochentage',
     from: () => 'von',
     to: () => 'bis',
     add: () => 'Neue Zeit hinzufügen',

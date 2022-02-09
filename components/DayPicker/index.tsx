@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { StyledError } from '../Error';
+import { Label } from '../label';
 import { MouseTooltip } from '../MouseTooltip';
 
 const errorShadow = '0px 0px 0px 0.1125rem var(--error-o50)';
@@ -60,6 +61,10 @@ const StyledDayPickerDay = styled.div<{ checked: boolean }>`
       background: ${({ checked }) => (checked ? 'var(--green-light)' : 'var(--grey-400)')};
     }
   }
+`;
+
+const StyledDayPickerLabel = styled.div`
+  padding-bottom: 0.375rem;
 `;
 
 const StyledDayPickerDayLabel = styled.label`
@@ -182,9 +187,10 @@ interface DayPicker {
   onChange?: (value: Day[]) => void;
   mode?: DayPickerMode;
   min?: number;
+  label?: string;
 }
 
-export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min }: DayPicker) => {
+export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min, label }: DayPicker) => {
   const [internalState, setInternalState] = useState<Day[]>([]);
   const t = useT();
 
@@ -202,6 +208,11 @@ export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min }: DayPick
 
   return (
     <div>
+      {label && (
+        <StyledDayPickerLabel>
+          <Label>{label}</Label>
+        </StyledDayPickerLabel>
+      )}
       <StyledDayPicker aria-label={t('dayPicker.ariaLabel') as string} role="group" valid={valid}>
         {weekdays.map(({ name: { short, long } }, index) => (
           <DayPickerDay key={index} {...{ index, short, long, changeHandler, state }} />

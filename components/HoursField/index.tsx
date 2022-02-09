@@ -2,12 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Dispatch, Reducer, useEffect, useReducer, useState } from 'react';
 
-import {
-  dayNumberToHoursWeekday,
-  Hours,
-  HoursWeekday,
-  hoursWeekDayToNumber,
-} from '../../lib/api/types/hours';
+import { dayNumberToHoursWeekday, Hours, hoursWeekDayToNumber } from '../../lib/api/types/hours';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
@@ -19,7 +14,7 @@ const StyledHoursField = styled.div`
   display: flex;
   flex-direction: column;
   grid-template-columns: 100%;
-  row-gap: 1.5rem;
+  row-gap: 0.75rem;
 `;
 
 const StyledHoursFieldAdd = styled.div`
@@ -35,6 +30,9 @@ const StyledHoursFieldItem = styled.div`
   row-gap: 0.75rem;
   column-gap: 1.5rem;
   border-radius: 0.75rem;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-400);
+  padding: calc(0.375rem - 1px) calc(0.75rem - 1px) calc(0.75rem - 1px);
 
   ${mq(Breakpoint.mid)} {
     align-items: flex-end;
@@ -57,6 +55,7 @@ const StyledHoursFieldItemTimesTo = styled.div`
 const StyledHoursFieldItemRemove = styled.div`
   text-align: right;
   flex-grow: 1;
+  align-self: flex-end;
 `;
 
 interface HoursProps {
@@ -80,6 +79,7 @@ const HoursField: React.FC<HoursProps> = ({ hoursState, dispatch, i18nKeys }: Ho
                 type={InputType.time}
                 value={hoursGroup.from}
                 ariaLabel={t('hours.from') as string}
+                label={t('hours.from') as string}
                 onChange={(e) =>
                   dispatch({
                     type: HoursActions.update,
@@ -106,6 +106,7 @@ const HoursField: React.FC<HoursProps> = ({ hoursState, dispatch, i18nKeys }: Ho
                 type={InputType.time}
                 value={hoursGroup.to}
                 ariaLabel={t('hours.to') as string}
+                label={t('hours.to') as string}
                 onChange={(e) =>
                   dispatch({
                     type: HoursActions.update,
@@ -131,6 +132,7 @@ const HoursField: React.FC<HoursProps> = ({ hoursState, dispatch, i18nKeys }: Ho
           <StyledHoursFieldItemWeekday>
             <DayPicker
               value={hoursGroup.hours.map((h) => hoursWeekDayToNumber(h.attributes.weekday) as Day)}
+              label={t('hours.weekdays') as string}
               onChange={(days) =>
                 dispatch({
                   type: HoursActions.update,
