@@ -262,6 +262,7 @@ export const enDE: Localization = {
   },
   hours: {
     weekday: () => 'Weekday',
+    weekdays: () => 'Weekdays',
     from: () => 'von',
     to: () => 'bis',
     add: () => 'Add new hours',

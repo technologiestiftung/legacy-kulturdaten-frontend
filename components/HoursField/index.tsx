@@ -32,7 +32,7 @@ const StyledHoursFieldItem = styled.div`
   border-radius: 0.75rem;
   background: var(--grey-200);
   border: 1px solid var(--grey-400);
-  padding: calc(0.75rem - 1px);
+  padding: calc(0.375rem - 1px) calc(0.75rem - 1px) calc(0.75rem - 1px);
 
   ${mq(Breakpoint.mid)} {
     align-items: flex-end;
@@ -78,6 +78,7 @@ const HoursField: React.FC<HoursProps> = ({ hoursState, dispatch, i18nKeys }: Ho
                 type={InputType.time}
                 value={hoursGroup.from}
                 ariaLabel={t('hours.from') as string}
+                label={t('hours.from') as string}
                 onChange={(e) =>
                   dispatch({
                     type: HoursActions.update,
@@ -104,6 +105,7 @@ const HoursField: React.FC<HoursProps> = ({ hoursState, dispatch, i18nKeys }: Ho
                 type={InputType.time}
                 value={hoursGroup.to}
                 ariaLabel={t('hours.to') as string}
+                label={t('hours.to') as string}
                 onChange={(e) =>
                   dispatch({
                     type: HoursActions.update,
@@ -129,6 +131,7 @@ const HoursField: React.FC<HoursProps> = ({ hoursState, dispatch, i18nKeys }: Ho
           <StyledHoursFieldItemWeekday>
             <DayPicker
               value={hoursGroup.hours.map((h) => hoursWeekDayToNumber(h.attributes.weekday) as Day)}
+              label={t('hours.weekdays') as string}
               onChange={(days) =>
                 dispatch({
                   type: HoursActions.update,
