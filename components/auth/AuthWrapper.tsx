@@ -27,6 +27,12 @@ const StyledAuthWrapperImage = styled.div`
   }
 `;
 
+const StyledAuthWrapperImageInner = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
+
 export const AuthFormContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -124,7 +130,9 @@ export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children, image }: Aut
     <StyledAuthWrapper>
       <StyledAuthWrapperContent>{children}</StyledAuthWrapperContent>
       <StyledAuthWrapperImage>
-        <Image src={image.src} layout="fill" objectFit="cover" alt="" unoptimized />
+        <StyledAuthWrapperImageInner>
+          <Image src={image.src} layout="fill" objectFit="cover" alt="" />
+        </StyledAuthWrapperImageInner>
       </StyledAuthWrapperImage>
     </StyledAuthWrapper>
   );

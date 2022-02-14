@@ -340,7 +340,6 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                   height={isMidOrWider ? smallestRendition.height : undefined}
                   objectFit="contain"
                   alt={currentTranslation?.attributes?.alternativeText || ''}
-                  unoptimized
                 />
                 <StyledMediaListItemThumbnailLinkHover>
                   <ExternalLink />
