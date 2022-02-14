@@ -269,6 +269,7 @@ export const deDE: Localization = {
     add: () => 'Neue Zeit hinzufügen',
     remove: () => 'entfernen',
     note: () => 'Anmerkung zu Zeiten',
+    error: () => 'Die Endzeit (‚bis‘) muss nach der Startzeit (‚von‘) liegen.',
   },
   openingHours: {
     add: () => 'Neue Öffnungszeit hinzufügen',
