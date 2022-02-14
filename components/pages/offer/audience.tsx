@@ -53,6 +53,18 @@ const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
     [peakHours, peakHoursFromApi]
   );
 
+  const valid = useMemo(() => {
+    if (peakHours?.length > 0) {
+      for (let i = 0; i < peakHours.length; i += 1) {
+        if (peakHours[i].attributes.from >= peakHours[i].attributes.to) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [peakHours]);
+
   useEffect(() => {
     if (JSON.stringify(initialPeakHours) !== JSON.stringify(peakHoursFromApi)) {
       setPeakHoursFromApi(initialPeakHours);
@@ -114,7 +126,7 @@ const usePeakHoursForm: EntryFormHook = ({ category, query }) => {
     },
     pristine,
     reset: () => undefined,
-    valid: true,
+    valid,
   };
 };
 

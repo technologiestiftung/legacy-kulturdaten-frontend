@@ -261,13 +261,14 @@ export const enDE: Localization = {
     placeholder: () => 'No contacts added yet',
   },
   hours: {
-    weekday: () => 'Weekday',
-    weekdays: () => 'Weekdays',
-    from: () => 'von',
-    to: () => 'bis',
+    weekday: () => 'weekday',
+    weekdays: () => 'weekdays',
+    from: () => 'from',
+    to: () => 'to',
     add: () => 'Add new hours',
     remove: () => 'remove',
     note: () => 'Note on hours',
+    error: () => 'The end time (‘to’) must be after the start time (‘from’).',
   },
   openingHours: {
     add: () => 'Add new opening hours',

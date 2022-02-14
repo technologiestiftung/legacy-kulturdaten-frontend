@@ -70,6 +70,18 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
     [initialOpeningHoursTranslations, openingHours, openingHoursFromApi, openingHoursTranslations]
   );
 
+  const valid = useMemo(() => {
+    if (openingHours?.length > 0) {
+      for (let i = 0; i < openingHours.length; i += 1) {
+        if (openingHours[i].attributes.from >= openingHours[i].attributes.to) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [openingHours]);
+
   useEffect(() => {
     if (JSON.stringify(initialOpeningHours) !== JSON.stringify(openingHoursFromApi)) {
       setOpeningHoursFromApi(initialOpeningHours);
@@ -183,7 +195,7 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       setOpeningHours(initialOpeningHours);
       setOpeningHoursTranslations(initialOpeningHoursTranslations);
     },
-    valid: true,
+    valid,
   };
 };
 
