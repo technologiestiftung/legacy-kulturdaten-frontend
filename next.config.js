@@ -12,7 +12,11 @@ module.exports = {
     defaultLocale: 'catchAll',
   },
   images: {
-    domains: ['beta.api.kulturdaten.berlin', 'api.kulturdaten.berlin'],
+    domains: [
+      'beta.api.kulturdaten.berlin', 
+      'api.kulturdaten.berlin', 
+      's3.eu-central-1.amazonaws.com'
+    ],
   },
   typescript: {
     ignoreBuildErrors: true,
