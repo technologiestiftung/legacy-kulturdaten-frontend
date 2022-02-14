@@ -36,23 +36,38 @@ const StyledHoursFieldItem = styled.div<{ valid: boolean }>`
       box-shadow: ${errorShadow};
     `}
 `;
+
 const StyledHoursFieldItemWeekday = styled.div`
   display: flex;
+  order: 2;
+
+  @media screen and (min-width: 25.5rem) {
+    order: 1;
+  }
 `;
+
 const StyledHoursFieldItemTimes = styled.div`
   display: flex;
   column-gap: 0.75rem;
+  order: 0;
 `;
+
 const StyledHoursFieldItemTimesFrom = styled.div`
   flex-grow: 1;
 `;
+
 const StyledHoursFieldItemTimesTo = styled.div`
   flex-grow: 1;
 `;
+
 const StyledHoursFieldItemRemove = styled.div`
   text-align: right;
   flex-grow: 1;
   align-self: flex-end;
+
+  @media screen and (min-width: 25.5rem) {
+    order: 2;
+  }
 `;
 
 const StyledHoursFieldItemError = styled.div`
