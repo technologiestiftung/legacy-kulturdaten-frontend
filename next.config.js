@@ -33,12 +33,6 @@ module.exports = {
         permanent: false,
       },
       {
-        source: '/catchAll/:slug*/',
-        destination: '/de-DE/:slug*/',
-        locale: false,
-        permanent: false,
-      },
-      {
         source: '/',
         destination: '/auth/login/',
         permanent: false,
@@ -51,11 +45,6 @@ module.exports = {
       {
         source: '/:organizer/profile/',
         destination: '/:organizer/profile/info/',
-        permanent: true,
-      },
-      {
-        source: '/',
-        destination: '/default/dashboard/',
         permanent: true,
       },
       {
