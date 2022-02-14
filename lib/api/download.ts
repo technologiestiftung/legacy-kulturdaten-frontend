@@ -7,7 +7,7 @@ import { useAuthToken } from '../../components/user/UserContext';
 import { useT } from '../i18n';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
-const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+const api = publicRuntimeConfig?.api;
 
 export const useDownload = (): ((
   route: string,
