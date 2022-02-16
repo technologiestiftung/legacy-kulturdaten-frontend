@@ -12,6 +12,7 @@ export enum Routes {
   team = 'team',
   login = 'login',
   register = 'register',
+  resetPassword = 'resetPassword',
   userProfile = 'userProfile',
   userSettings = 'userSettings',
   userNotifications = 'userNotifications',
@@ -43,6 +44,7 @@ export const routes: { [key in Routes]: Route } = {
   userNotifications: ({ locale }) => `/${localizedRoutes[Routes.userNotifications][locale]}/`,
   login: ({ locale }) => `/${localizedRoutes[Routes.login][locale]}/`,
   register: ({ locale }) => `/${localizedRoutes[Routes.register][locale]}/`,
+  resetPassword: ({ locale }) => `/${localizedRoutes[Routes.resetPassword][locale]}/`,
   organizer: ({ query, locale }) =>
     `/${
       query?.organizer
@@ -132,6 +134,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': 'auth/register',
     'en-DE': 'auth/register',
   },
+  resetPassword: {
+    'de-DE': 'auth/resetPassword',
+    'en-DE': 'auth/resetPassword',
+  },
   organizer: {
     'de-DE': 'profile',
     'en-DE': 'profile',
@@ -182,6 +188,7 @@ export const routesLayouts: { [key in Routes]: Layouts } = {
   offer: Layouts.loggedIn,
   organizer: Layouts.loggedIn,
   register: Layouts.loggedOut,
+  resetPassword: Layouts.loggedOut,
   team: Layouts.loggedIn,
   userNotifications: Layouts.loggedInMeta,
   userProfile: Layouts.loggedInMeta,

@@ -33,6 +33,18 @@ module.exports = {
         permanent: false,
       },
       {
+        source: '/catchAll/auth/resetPassword/',
+        destination: '/de-DE/auth/resetPassword/',
+        locale: false,
+        permanent: true,
+      },
+      {
+        source: '/catchAll/auth/resetPassword/:email*',
+        destination: '/de-DE/auth/resetPassword/:email*',
+        locale: false,
+        permanent: true,
+      },
+      {
         source: '/',
         destination: '/auth/login/',
         permanent: false,
