@@ -62,6 +62,7 @@ interface LocationListProps {
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
   showAllLocationsSwitch?: boolean;
+  hideExport?: boolean;
 }
 
 export const LocationList: React.FC<LocationListProps> = ({
@@ -71,6 +72,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   customEntryOnClick,
   activeEntryId,
   showAllLocationsSwitch = false,
+  hideExport = false,
 }: LocationListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -368,7 +370,7 @@ export const LocationList: React.FC<LocationListProps> = ({
           </Button>
         }
         menu={
-          list?.data?.length > 0 ? (
+          !hideExport && list?.data?.length > 0 ? (
             <DropdownMenu
               icon="MoreVertical"
               form={DropdownMenuForm.rounded}
