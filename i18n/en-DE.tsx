@@ -540,7 +540,7 @@ export const enDE: Localization = {
     successHeadline: () => 'Requested password reset',
     successSubline: () =>
       'We have sent you an email. In this you will find a link that you can use to set a new password. For security reasons, this link only works for 10 minutes.',
-    submit: () => 'Reset password',
+    submit: () => 'reset password',
     loginReference: () => 'You remembered your password?',
     loginReferenceLinkText: () => 'Log in here.',
     loading: () => 'Requesting password reset',
@@ -550,14 +550,14 @@ export const enDE: Localization = {
   resetPassword: {
     headline: () => 'Set new password',
     subline: ({ email }) => `Set a new password for your user account with the email “${email}”.`,
-    submit: () => 'Set password',
+    submit: () => 'set password',
     successHeadline: () => 'Great, that worked!',
     successSubline: () => 'You can now log in with your new password.',
     loading: () => 'Setting new password',
     requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
     expiredLinkError: () =>
       'Unfortunately, this link has expired. Please request your password reset again.',
-    goToLogin: () => 'Go to login',
+    goToLogin: () => 'go to login',
   },
   logout: {
     loading: () => 'Logging you out',
