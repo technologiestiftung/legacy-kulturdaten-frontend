@@ -1,28 +1,20 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
-import { AuthRegister, authRegisterFactory, useApiCall } from '../../lib/api';
+import { useApiCall } from '../../lib/api';
 import { routes, useLocale } from '../../lib/routing';
 import { useT } from '../../lib/i18n';
-import { Anchor } from '../anchor';
 import { Button, ButtonColor, ButtonContentPosition, ButtonSize, ButtonType } from '../button';
-import { Checkbox } from '../checkbox';
 import { Info } from '../info';
 import { Input, InputType } from '../input';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
-import {
-  AuthContent,
-  AuthFormContainer,
-  AuthFormItem,
-  AuthHead,
-  AuthHeadline,
-  AuthSubline,
-} from './AuthWrapper';
-import { StandardLinkType } from '../../lib/generalTypes';
+import { AuthContent, AuthFormContainer, AuthHead, AuthHeadline, AuthSubline } from './AuthWrapper';
 import { useRouter } from 'next/router';
 import {
   AuthResetPassword,
   authResetPasswordFactory,
 } from '../../lib/api/routes/auth/resetPassword';
+import { ButtonLink } from '../button/ButtonLink';
+import Link from 'next/link';
 
 const passwordErrorId = 0;
 const requestErrorId = 1;
@@ -96,15 +88,11 @@ export const ResetPasswordForm: React.FC = () => {
           } catch (e) {
             const requestErrors = e.message
               ? (JSON.parse(e.message)?.errors as {
-                  rule: string;
-                  field: string;
-                  message: string;
+                  code: string;
                 }[])
               : undefined;
 
-            const visibleError = requestErrors?.find(
-              (error) => error.rule === 'unique' && error.field === 'email'
-            )
+            const visibleError = requestErrors?.find((error) => error.code === 'E_UNAUTHORIZED')
               ? (t('resetPassword.expiredLinkError') as string)
               : (t('resetPassword.requestError') as string);
 
@@ -141,7 +129,7 @@ export const ResetPasswordForm: React.FC = () => {
                 label={t('register.password') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
-                id="register-password"
+                id="reset-password"
                 minLength={passwordMinLength}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
@@ -156,7 +144,7 @@ export const ResetPasswordForm: React.FC = () => {
                 label={t('register.confirmPassword') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
-                id="register-password-confirmation"
+                id="reset-password-confirmation"
                 minLength={passwordMinLength}
                 required
                 valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
@@ -174,7 +162,17 @@ export const ResetPasswordForm: React.FC = () => {
           </AuthFormContainer>
         </form>
       ) : (
-        ''
+        <AuthFormContainer>
+          <Link href={routes.login({ locale })} passHref>
+            <ButtonLink
+              color={ButtonColor.black}
+              size={ButtonSize.big}
+              contentPosition={ButtonContentPosition.center}
+            >
+              {t('resetPassword.goToLogin')}
+            </ButtonLink>
+          </Link>
+        </AuthFormContainer>
       )}
       {errors?.length > 0 && (
         <AuthFormContainer>
