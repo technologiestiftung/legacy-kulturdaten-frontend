@@ -557,6 +557,7 @@ export const enDE: Localization = {
     requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
     expiredLinkError: () =>
       'Unfortunately, this link has expired. Please request your password reset again.',
+    expiredLinkHeadline: () => 'Link expired',
     goToLogin: () => 'go to login',
   },
   logout: {

@@ -36,6 +36,7 @@ export const ResetPasswordForm: React.FC = () => {
   );
   const [passwordConfirmationBlurred, setPasswordConfirmationBlurred] = useState<boolean>(false);
   const [errors, setErrors] = useState<{ id: number; message: string }[]>([]);
+  const [linkExpired, setLinkExpired] = useState(false);
   const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
@@ -96,6 +97,10 @@ export const ResetPasswordForm: React.FC = () => {
               ? (t('resetPassword.expiredLinkError') as string)
               : (t('resetPassword.requestError') as string);
 
+            if (requestErrors?.find((error) => error.code === 'E_UNAUTHORIZED')) {
+              setLinkExpired(true);
+            }
+
             setErrors([
               { id: requestErrorId, message: visibleError },
               ...errors.filter(({ id }) => id !== requestErrorId),
@@ -112,73 +117,98 @@ export const ResetPasswordForm: React.FC = () => {
     <AuthContent>
       <AuthHead>
         <AuthHeadline>
-          {t(success ? 'resetPassword.successHeadline' : 'resetPassword.headline')}
+          {t(
+            success
+              ? 'resetPassword.successHeadline'
+              : linkExpired
+              ? 'resetPassword.expiredLinkHeadline'
+              : 'resetPassword.headline'
+          )}
         </AuthHeadline>
-        <AuthSubline>
-          {t(success ? 'resetPassword.successSubline' : 'resetPassword.subline', { email })}
-        </AuthSubline>
+        {!linkExpired && (
+          <AuthSubline>
+            {t(success ? 'resetPassword.successSubline' : 'resetPassword.subline', { email })}
+          </AuthSubline>
+        )}
       </AuthHead>
 
-      {!success ? (
-        <form onSubmit={submitHandler}>
-          <AuthFormContainer>
-            <div>
-              <Input
-                value={password}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                label={t('register.password') as string}
-                placeholder={t('register.passwordPlaceholder') as string}
-                type={InputType.password}
-                id="reset-password"
-                minLength={passwordMinLength}
-                required
-                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
-              />
-            </div>
-            <div>
-              <Input
-                value={passwordConfirmation}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setPasswordConfirmation(e.target.value)
-                }
-                label={t('register.confirmPassword') as string}
-                placeholder={t('register.passwordPlaceholder') as string}
-                type={InputType.password}
-                id="reset-password-confirmation"
-                minLength={passwordMinLength}
-                required
-                valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
-                onBlur={() => setPasswordConfirmationBlurred(true)}
-              />
-            </div>
-            <Button
-              type={ButtonType.submit}
-              size={ButtonSize.big}
-              color={ButtonColor.black}
-              contentPosition={ButtonContentPosition.center}
-            >
-              {t('resetPassword.submit')}
-            </Button>
-          </AuthFormContainer>
-        </form>
-      ) : (
-        <AuthFormContainer>
-          <Link href={routes.login({ locale })} passHref>
-            <ButtonLink
-              color={ButtonColor.black}
-              size={ButtonSize.big}
-              contentPosition={ButtonContentPosition.center}
-            >
-              {t('resetPassword.goToLogin')}
-            </ButtonLink>
-          </Link>
-        </AuthFormContainer>
+      {!linkExpired && (
+        <>
+          {!success ? (
+            <form onSubmit={submitHandler}>
+              <AuthFormContainer>
+                <div>
+                  <Input
+                    value={password}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    label={t('register.password') as string}
+                    placeholder={t('register.passwordPlaceholder') as string}
+                    type={InputType.password}
+                    id="reset-password"
+                    minLength={passwordMinLength}
+                    required
+                    valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
+                  />
+                </div>
+                <div>
+                  <Input
+                    value={passwordConfirmation}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      setPasswordConfirmation(e.target.value)
+                    }
+                    label={t('register.confirmPassword') as string}
+                    placeholder={t('register.passwordPlaceholder') as string}
+                    type={InputType.password}
+                    id="reset-password-confirmation"
+                    minLength={passwordMinLength}
+                    required
+                    valid={Boolean(passwordsMatch || !passwordConfirmationBlurred)}
+                    onBlur={() => setPasswordConfirmationBlurred(true)}
+                  />
+                </div>
+                <Button
+                  type={ButtonType.submit}
+                  size={ButtonSize.big}
+                  color={ButtonColor.black}
+                  contentPosition={ButtonContentPosition.center}
+                >
+                  {t('resetPassword.submit')}
+                </Button>
+              </AuthFormContainer>
+            </form>
+          ) : (
+            <AuthFormContainer>
+              <Link href={routes.login({ locale })} passHref>
+                <ButtonLink
+                  color={ButtonColor.black}
+                  size={ButtonSize.big}
+                  contentPosition={ButtonContentPosition.center}
+                >
+                  {t('resetPassword.goToLogin')}
+                </ButtonLink>
+              </Link>
+            </AuthFormContainer>
+          )}
+        </>
       )}
       {errors?.length > 0 && (
         <AuthFormContainer>
           {errors.map(({ message }, index) => (
             <Info key={index}>{message}</Info>
           ))}
+        </AuthFormContainer>
+      )}
+      {linkExpired && (
+        <AuthFormContainer>
+          <Link href={routes.resetPassword({ locale })} passHref>
+            <ButtonLink
+              color={ButtonColor.black}
+              size={ButtonSize.big}
+              contentPosition={ButtonContentPosition.center}
+            >
+              {t('requestPasswordReset.headline')}
+            </ButtonLink>
+          </Link>
         </AuthFormContainer>
       )}
     </AuthContent>

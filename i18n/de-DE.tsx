@@ -568,6 +568,7 @@ export const deDE: Localization = {
       'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
     expiredLinkError: () =>
       'Dieser Link war leider abgelaufen. Bitte beantrage das Zurücksetzen deines Passworts erneut.',
+    expiredLinkHeadline: () => 'Link abgelaufen',
     goToLogin: () => 'Zum Login',
   },
   logout: {
