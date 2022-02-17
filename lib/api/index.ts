@@ -42,6 +42,8 @@ export enum ApiRoutes {
   authLogout = 'authLogout',
   authValidate = 'authValidate',
   authInfo = 'authInfo',
+  authRequestPasswordReset = 'authRequestPasswordReset',
+  authResetPassword = 'authResetPassword',
   districtList = 'districtList',
   organizerList = 'organizerList',
   organizerShow = 'organizerShow',
@@ -93,6 +95,9 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
+  authRequestPasswordReset: () => '/auth/requestPasswordReset',
+  authResetPassword: ({ email, signature }) =>
+    `/auth/resetPassword/${email}?signature=${signature}`,
   districtList: () => `/${apiVersion}/district`,
   organizerList: (query) =>
     `/${apiVersion}/organizer?include=types,subjects,translations,logo${

@@ -541,6 +541,35 @@ export const deDE: Localization = {
     verificationError: () =>
       'Dieses Konto ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
   },
+  requestPasswordReset: {
+    headline: () => 'Passwort zurücksetzen',
+    subline: () =>
+      'Du hast dein Passwort vergessen? Kein Problem! Gib unten einfach deine E-Mail-Adresse ein und wir senden dir einen Link, über welchen du dir ein neues Passwort erstellen kannst.',
+    successHeadline: () => 'Zurücksetzen des Passwortes beantragt',
+    successSubline: () =>
+      'Wir haben dir eine E-Mail geschickt. In dieser findest du einen Link, über den du ein neues Passwort setzen kannst. Dieser Link funktioniert aus Sicherheitsgründen nur für 10 Minuten.',
+    submit: () => 'Passwort zurücksetzen',
+    loginReference: () => 'Dir ist dein Passwort wieder eingefallen?',
+    loginReferenceLinkText: () => 'Log dich hier ein.',
+    loading: () => 'Zurücksetzen des Passworts wird beantragt',
+    requestError: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    nonExistantEmailError: () => 'Es existiert kein Konto mit dieser E-Mail-Adresse.',
+  },
+  resetPassword: {
+    headline: () => 'Neues Passwort festlegen',
+    subline: ({ email }) =>
+      `Lege jetzt ein neues Passwort für dein Nutzer:innenkonto mit der E-Mail ‚${email}‘ fest.`,
+    submit: () => 'Passwort festlegen',
+    successHeadline: () => 'Super, das hat geklappt!',
+    successSubline: () => 'Du kannst dich nun mit deinem neuen Passwort einloggen.',
+    loading: () => 'Passwort wird neu festgelegt',
+    requestError: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    expiredLinkError: () =>
+      'Dieser Link war leider abgelaufen. Bitte beantrage das Zurücksetzen deines Passworts erneut.',
+    goToLogin: () => 'Zum Login',
+  },
   logout: {
     loading: () => 'Abmeldung läuft',
     loadingMessage: () => 'Tschüss!',
