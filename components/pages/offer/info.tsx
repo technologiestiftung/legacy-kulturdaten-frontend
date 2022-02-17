@@ -296,6 +296,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
                 enableUltraWideLayout={false}
                 activeEntryId={locationId}
                 showAllLocationsSwitch={true}
+                hideExport
               />
             }
           />
