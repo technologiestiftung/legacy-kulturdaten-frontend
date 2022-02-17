@@ -560,7 +560,7 @@ export const deDE: Localization = {
     headline: () => 'Neues Passwort festlegen',
     subline: ({ email }) =>
       `Lege jetzt ein neues Passwort für dein Nutzer:innenkonto mit der E-Mail ‚${email}‘ fest.`,
-    submit: () => 'Password festlegen',
+    submit: () => 'Passwort festlegen',
     successHeadline: () => 'Super, das hat geklappt!',
     successSubline: () => 'Du kannst dich nun mit deinem neuen Passwort einloggen.',
     loading: () => 'Passwort wird neu festgelegt',
@@ -568,6 +568,7 @@ export const deDE: Localization = {
       'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
     expiredLinkError: () =>
       'Dieser Link war leider abgelaufen. Bitte beantrage das Zurücksetzen deines Passworts erneut.',
+    goToLogin: () => 'Zum Login',
   },
   logout: {
     loading: () => 'Abmeldung läuft',
