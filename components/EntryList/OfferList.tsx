@@ -42,6 +42,7 @@ import {
 } from '../DropdownMenu';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
+import { Input, InputType } from '../input';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -115,6 +116,7 @@ export const OfferList: React.FC<OfferListProps> = ({
     () => getDispatchFilters(listName),
     [getDispatchFilters, listName]
   );
+  const [search, setSearch] = useState<string>();
   const loadingScreen = useLoadingScreen();
   const createOffer = useCreateOffer();
   const organizerId = useOrganizerId();
@@ -131,7 +133,9 @@ export const OfferList: React.FC<OfferListProps> = ({
     currentPage,
     entriesPerPage,
     [...Object.entries(filters), ['organizers', organizerId]],
-    { key: sortKey, order }
+    { key: sortKey, order },
+    true,
+    search
   );
 
   const activeFiltersCount = useMemo(
@@ -470,6 +474,17 @@ export const OfferList: React.FC<OfferListProps> = ({
               );
             })}
           </Select>
+        </StyledFilters>
+        <StyledFilters expanded={expanded}>
+          <Input
+            label={t('categories.offer.list.searchNameLabel') as string}
+            type={InputType.text}
+            id="test"
+            value={search || ''}
+            onChange={(e) => setSearch(e.target.value !== '' ? e.target.value : undefined)}
+            debounce={1000}
+            placeholder={t('categories.offer.list.searchNamePlaceholder') as string}
+          />
         </StyledFilters>
         {!menuExpanded && (
           <StyledFilters expanded={expanded}>

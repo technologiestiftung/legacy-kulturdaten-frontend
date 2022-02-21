@@ -942,6 +942,8 @@ export const deDE: Localization = {
         loading: () => 'Lade Anbieter:innen',
         nothing: () => 'Es gibt noch keine Anbieter:innen. Lege gerne eine:n an.',
         nothingFilter: () => 'Keine Anbieter:innen für die aktive Filterung gefunden.',
+        searchNameLabel: () => 'Suche nach Bezeichnung',
+        searchNamePlaceholder: () => "z.B. 'Technologiestiftung Berlin'",
       },
       filters: {
         status: {
@@ -1083,6 +1085,8 @@ export const deDE: Localization = {
         loading: () => 'Lade Angebote',
         nothing: () => 'Es gibt noch keine Angebote. Lege gerne eines an.',
         nothingFilter: () => 'Keine Angebote für die aktive Filterung gefunden.',
+        searchNameLabel: () => 'Suche nach Angebotstitel',
+        searchNamePlaceholder: () => "z.B. 'Konzert'",
       },
       requirements: {
         name: () => 'Angebotstitel',
@@ -1210,6 +1214,8 @@ export const deDE: Localization = {
         allLocations: () => 'Alle öffentlichen Orte',
         myLocations: () => 'Nur meine Orte',
         address: () => 'Adresse',
+        searchNameLabel: () => 'Suche nach Bezeichnung / Name',
+        searchNamePlaceholder: () => "z.B. 'Neues Museum'",
       },
       title: {
         plural: () => 'Orte',

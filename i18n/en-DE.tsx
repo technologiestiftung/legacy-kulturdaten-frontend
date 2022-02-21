@@ -930,6 +930,8 @@ export const enDE: Localization = {
         loading: () => 'Loading Organizers',
         nothing: () => 'There are no Organizers yet. Feel free to create one.',
         nothingFilter: () => 'No Organizers found with current filters.',
+        searchNameLabel: () => 'Search for name',
+        searchNamePlaceholder: () => "e.g. 'Technologiestiftung Berlin'",
       },
       filters: {
         status: {
@@ -1064,6 +1066,8 @@ export const enDE: Localization = {
         loading: () => 'Loading Offers',
         nothing: () => 'There are no Offers yet. Feel free to create one.',
         nothingFilter: () => 'No Offers found with current filters.',
+        searchNameLabel: () => 'Search for title',
+        searchNamePlaceholder: () => "e.g. 'Concert'",
       },
       publishText: () => (
         <>
@@ -1196,6 +1200,8 @@ export const enDE: Localization = {
         allLocations: () => 'All public Locations',
         myLocations: () => 'Only my Locations',
         address: () => 'address',
+        searchNameLabel: () => 'Search for name',
+        searchNamePlaceholder: () => "e.g. 'New Museum'",
       },
       title: {
         plural: () => 'Locations',

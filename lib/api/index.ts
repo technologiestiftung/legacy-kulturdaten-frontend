@@ -104,7 +104,7 @@ export const apiRoutes: {
       query?.page ? `&page=${query.page}` : ''
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
-    }`,
+    }${query?.search ? `&search=${query.search}` : ''}`,
   organizerShow: ({ organizer }) =>
     `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerCreate: () => `/${apiVersion}/organizer`,
@@ -121,7 +121,7 @@ export const apiRoutes: {
       query?.page ? `&page=${query.page}` : ''
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
-    }`,
+    }${query?.search ? `&search=${query.search}` : ''}`,
   locationShow: ({ id }) =>
     `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
   locationCreate: () => `/${apiVersion}/location`,
@@ -140,7 +140,7 @@ export const apiRoutes: {
       query?.page ? `&page=${query.page}` : ''
     }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
       query?.sort ? `&sort=${query.sort}` : ''
-    }`,
+    }${query?.search ? `&search=${query.search}` : ''}`,
   offerShow: ({ id }) =>
     `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
   offerCreate: () => `/${apiVersion}/offer`,
