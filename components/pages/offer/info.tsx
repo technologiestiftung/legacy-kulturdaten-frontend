@@ -251,7 +251,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
 
 const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
-  const [locationIds, setLocationIds] = useState<string[]>();
+  const [locationIds, setLocationIds] = useState<string[]>([]);
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const language = useLanguage();
   const call = useApiCall();
@@ -260,7 +260,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
 
   const [locationIdsFromApi, setLocationIdsFromApi] = useState<string[]>();
   const initialLocationIds = useMemo(
-    () => (entry?.data?.relations?.locations as Location['data'][])?.map(({ id }) => id),
+    () => (entry?.data?.relations?.locations as Location['data'][])?.map(({ id }) => id) || [],
     [entry?.data?.relations?.locations]
   );
 
