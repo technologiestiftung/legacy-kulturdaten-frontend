@@ -61,6 +61,7 @@ interface LocationListProps {
   enableUltraWideLayout?: boolean;
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
+  chosenEntryIds?: string[];
   showAllLocationsSwitch?: boolean;
   hideExport?: boolean;
 }
@@ -71,6 +72,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   enableUltraWideLayout = true,
   customEntryOnClick,
   activeEntryId,
+  chosenEntryIds,
   showAllLocationsSwitch = false,
   hideExport = false,
 }: LocationListProps) => {
@@ -205,11 +207,13 @@ export const LocationList: React.FC<LocationListProps> = ({
               return (
                 <EntryCard
                   onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.location, id);
+                    if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
+                      setMenuExpanded(false);
+                      setLastEntryId(Categories.location, id);
 
-                    if (typeof customEntryOnClick === 'function') {
-                      customEntryOnClick(Categories.organizer, id);
+                      if (typeof customEntryOnClick === 'function') {
+                        customEntryOnClick(Categories.organizer, id);
+                      }
                     }
                   }}
                   href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
@@ -222,6 +226,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                   }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href()) || activeEntryId === id}
+                  forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
                   meta={
@@ -255,6 +260,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       categories?.location?.placeholderName,
+      chosenEntryIds,
     ]
   );
 
@@ -282,15 +288,18 @@ export const LocationList: React.FC<LocationListProps> = ({
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
                 <TableLink
                   onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.location, id);
+                    if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
+                      setMenuExpanded(false);
+                      setLastEntryId(Categories.location, id);
 
-                    if (typeof customEntryOnClick === 'function') {
-                      customEntryOnClick(Categories.organizer, id);
+                      if (typeof customEntryOnClick === 'function') {
+                        customEntryOnClick(Categories.organizer, id);
+                      }
                     }
                   }}
                   href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
                   isActive={router.asPath.includes(href()) || activeEntryId === id}
+                  forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
                 >
                   {children}
                 </TableLink>
@@ -343,6 +352,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       setLastEntryId,
       organizerId,
       categories?.location?.placeholderName,
+      chosenEntryIds,
     ]
   );
 

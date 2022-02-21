@@ -14,7 +14,7 @@ const StyledEntryCardLink = styled.a`
   color: inherit;
 `;
 
-const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean }>`
+const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
   border: 1px solid rgba(0, 0, 0, 0.25);
   background: var(--white);
   border-radius: 0.75rem;
@@ -38,6 +38,21 @@ const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean }>`
           }
         `
       : ''}
+
+  ${({ forbidden }) =>
+    forbidden
+      ? css`
+          box-shadow: none;
+          border-color: rgba(0, 0, 0, 0.25);
+          opacity: 0.5;
+          cursor: not-allowed;
+
+          &:hover {
+            box-shadow: none;
+            border-color: rgba(0, 0, 0, 0.25);
+          }
+        `
+      : ''}
 `;
 
 const StyledEntryCardTop = styled.div`
@@ -50,7 +65,11 @@ const StyledEntryCardTopLeft = styled.div`
   flex-direction: column;
 `;
 
-const StyledEntryCardTitle = styled.div<{ menuExpanded: boolean; active: boolean }>`
+const StyledEntryCardTitle = styled.div<{
+  menuExpanded: boolean;
+  active: boolean;
+  forbidden: boolean;
+}>`
   font-size: var(--font-size-500);
   line-height: var(--line-height-500);
   font-weight: var(--font-weight-bold);
@@ -206,6 +225,7 @@ interface EntryCardProps {
   meta?: React.ReactElement;
   image?: string;
   active?: boolean;
+  forbidden?: boolean;
 }
 
 export const EntryCard: React.FC<EntryCardProps> = ({
@@ -219,16 +239,17 @@ export const EntryCard: React.FC<EntryCardProps> = ({
   active,
   onClick,
   image,
+  forbidden = false,
 }: EntryCardProps) => {
   const date = useDate();
   const t = useT();
 
   const renderedCard = (
     <StyledEntryCardLink onClick={onClick}>
-      <StyledEntryCard menuExpanded={menuExpanded} active={active}>
+      <StyledEntryCard menuExpanded={menuExpanded} active={active} forbidden={forbidden}>
         <StyledEntryCardTop>
           <StyledEntryCardTopLeft>
-            <StyledEntryCardTitle menuExpanded={menuExpanded} active={active}>
+            <StyledEntryCardTitle menuExpanded={menuExpanded} active={active} forbidden={forbidden}>
               {title}
             </StyledEntryCardTitle>
             <StyledEntryCardMeta menuExpanded={menuExpanded}>{meta}</StyledEntryCardMeta>
