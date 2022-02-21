@@ -9,7 +9,7 @@ import { Offer, OfferTranslation } from '../../../lib/api/types/offer';
 import { Language, languageTranslationKeys } from '../../../config/locales';
 import { OfferShow } from '../../../lib/api/routes/offer/show';
 import { useEntryHeader } from '../helpers/useEntryHeader';
-import { EntryPicker } from '../../EntryPicker';
+import { EntryPicker, EntryPickerVariant } from '../../EntryPicker';
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
@@ -281,10 +281,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
       <EntryFormHead title={t('categories.offer.form.location.label') as string} />
       <FormGrid>
         {locationIds?.map((locationId, index) => (
-          <FormItem
-            width={locationIds?.length > 1 ? FormItemWidth.half : FormItemWidth.full}
-            key={index}
-          >
+          <FormItem width={FormItemWidth.full} key={index}>
             <EntryPicker
               chooseText={t('categories.offer.form.location.choose') as string}
               editText={t('categories.offer.form.location.edit') as string}
@@ -323,6 +320,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
         {locationIds.length < 10 && (
           <FormItem width={FormItemWidth.full}>
             <EntryPicker
+              variant={EntryPickerVariant.button}
               chooseText={
                 t(
                   locationIds?.length > 0
