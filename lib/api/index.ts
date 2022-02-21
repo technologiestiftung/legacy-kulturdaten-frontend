@@ -142,10 +142,10 @@ export const apiRoutes: {
       query?.sort ? `&sort=${query.sort}` : ''
     }`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
@@ -159,9 +159,9 @@ export const apiRoutes: {
   offerDateListDownload: ({ offerId, format }) =>
     `/${apiVersion}/offer/${offerId}/date?include=translations,dates,media&format=${format}&filter=past=false&sort=startsAt`,
   offerDownload: ({ id, format }) =>
-    `/${apiVersion}/offer/${id}?include=translations,location,organizers,links,types,subjects,tags,mainType&format=${format}`,
+    `/${apiVersion}/offer/${id}?include=translations,locations,organizers,links,types,subjects,tags,mainType&format=${format}`,
   offerListDownload: ({ format, organizer }) =>
-    `/${apiVersion}/offer?include=translations,location,organizers,links,types,subjects,tags,mainType&filter=organizers=${organizer}&sort=-updatedAt&format=${format}`,
+    `/${apiVersion}/offer?include=translations,locations,organizers,links,types,subjects,tags,mainType&filter=organizers=${organizer}&sort=-updatedAt&format=${format}`,
   offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
   offerMainTypeList: () => `/${apiVersion}/offerMainType?include=translations`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}?include=license`,
