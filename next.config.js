@@ -1,7 +1,7 @@
 module.exports = {
   publicRuntimeConfig: {
     defaultLocale: 'catchAll',
-    api: process.env.API_BASE_URL || 'https://api.kulturdaten.berlin',
+    api: 'https://kulturdaten-api.1k5jj15lgph0k.eu-central-1.cs.amazonlightsail.com',
     authTokenCookieName: 'AUTH_TOKEN',
     activeOrganizerCookieName: 'ACTIVE_ORGANIZER_ID',
     adminOrganizerCookieName: 'ADMIN_ORGANIZER_ID',
