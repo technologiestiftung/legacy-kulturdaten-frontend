@@ -1141,9 +1141,11 @@ export const enDE: Localization = {
           title: ({ name }) => `Choose organizer for ‘${name}’`,
         },
         location: {
-          label: () => 'Location',
+          label: () => 'Location(s)',
           choose: () => 'Choose location',
+          chooseAdditional: () => 'Choose additional location',
           edit: () => 'Change location',
+          remove: () => 'remove location',
           title: ({ name }) => `Choose location for ${name ? `‘${name}’` : 'unnamed offer'}`,
         },
         topics: () => 'Topic category (required)',

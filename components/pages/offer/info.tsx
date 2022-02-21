@@ -251,56 +251,112 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
 
 const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
-  const [locationId, setLocationId] = useState<string>();
+  const [locationIds, setLocationIds] = useState<string[]>();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const language = useLanguage();
   const call = useApiCall();
   const t = useT();
   const translation = getTranslation(language, entry?.data?.relations?.translations, true);
 
-  const [locationIdFromApi, setLocationIdFromApi] = useState<string>();
-  const initialLocationId = useMemo(
-    () => (entry?.data?.relations?.location as Location['data'])?.id,
-    [entry?.data?.relations?.location]
+  const [locationIdsFromApi, setLocationIdsFromApi] = useState<string[]>();
+  const initialLocationIds = useMemo(
+    () => (entry?.data?.relations?.locations as Location['data'][])?.map(({ id }) => id),
+    [entry?.data?.relations?.locations]
   );
 
-  const pristine = useMemo(() => locationId === locationIdFromApi, [locationIdFromApi, locationId]);
+  const pristine = useMemo(
+    () => locationIds?.toString() === locationIdsFromApi?.toString(),
+    [locationIdsFromApi, locationIds]
+  );
 
   useEffect(() => {
-    if (initialLocationId !== locationIdFromApi) {
-      setLocationIdFromApi(initialLocationId);
-      setLocationId(initialLocationId);
+    if (initialLocationIds?.toString() !== locationIdsFromApi?.toString()) {
+      setLocationIdsFromApi(initialLocationIds);
+      setLocationIds(initialLocationIds);
     }
-  }, [initialLocationId, locationIdFromApi]);
+  }, [initialLocationIds, locationIdsFromApi]);
 
   const renderedForm = (
     <div>
       <EntryFormHead title={t('categories.offer.form.location.label') as string} />
       <FormGrid>
-        <FormItem width={FormItemWidth.full}>
-          <EntryPicker
-            chooseText={t('categories.offer.form.location.choose') as string}
-            editText={t('categories.offer.form.location.edit') as string}
-            overlayTitle={
-              t('categories.offer.form.location.title', {
-                name: translation?.attributes?.name,
-              }) as string
-            }
-            value={locationId}
-            onChange={(value) => setLocationId(value)}
-            categoryName={Categories.location}
-            list={
-              <LocationList
-                expanded={isMidOrWider}
-                expandable={false}
-                enableUltraWideLayout={false}
-                activeEntryId={locationId}
-                showAllLocationsSwitch={true}
-                hideExport
-              />
-            }
-          />
-        </FormItem>
+        {locationIds?.map((locationId, index) => (
+          <FormItem
+            width={locationIds?.length > 1 ? FormItemWidth.half : FormItemWidth.full}
+            key={index}
+          >
+            <EntryPicker
+              chooseText={t('categories.offer.form.location.choose') as string}
+              editText={t('categories.offer.form.location.edit') as string}
+              overlayTitle={
+                t('categories.offer.form.location.title', {
+                  name: translation?.attributes?.name,
+                }) as string
+              }
+              value={locationId}
+              onChange={(value) =>
+                setLocationIds(
+                  value
+                    ? [...locationIds.slice(0, index), value, ...locationIds.slice(index + 1)]
+                    : locationIds.filter((id) => id !== locationId)
+                )
+              }
+              categoryName={Categories.location}
+              list={
+                <LocationList
+                  expanded={isMidOrWider}
+                  expandable={false}
+                  enableUltraWideLayout={false}
+                  activeEntryId={locationId}
+                  showAllLocationsSwitch={true}
+                  hideExport
+                  chosenEntryIds={locationIds}
+                />
+              }
+              remove={{
+                onRemove: () => setLocationIds(locationIds.filter((id) => id !== locationId)),
+                text: t('categories.offer.form.location.remove') as string,
+              }}
+            />
+          </FormItem>
+        ))}
+        {locationIds.length < 10 && (
+          <FormItem width={FormItemWidth.full}>
+            <EntryPicker
+              chooseText={
+                t(
+                  locationIds?.length > 0
+                    ? 'categories.offer.form.location.chooseAdditional'
+                    : 'categories.offer.form.location.choose'
+                ) as string
+              }
+              editText={t('categories.offer.form.location.edit') as string}
+              overlayTitle={
+                t('categories.offer.form.location.title', {
+                  name: translation?.attributes?.name,
+                }) as string
+              }
+              value={undefined}
+              onChange={(value) =>
+                setLocationIds(
+                  value ? (locationIds ? [...locationIds, value] : [value]) : locationIds
+                )
+              }
+              categoryName={Categories.location}
+              list={
+                <LocationList
+                  expanded={isMidOrWider}
+                  expandable={false}
+                  enableUltraWideLayout={false}
+                  activeEntryId={undefined}
+                  showAllLocationsSwitch={true}
+                  hideExport
+                  chosenEntryIds={locationIds}
+                />
+              }
+            />
+          </FormItem>
+        )}
       </FormGrid>
     </div>
   );
@@ -314,7 +370,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
             id: entry.data.id,
             entry: {
               relations: {
-                location: locationId,
+                locations: locationIds,
               },
             },
           });
@@ -329,7 +385,7 @@ const useOrganizerLocationForm: EntryFormHook = ({ category, query }) => {
     },
     pristine,
     reset: () => {
-      setLocationId(initialLocationId);
+      setLocationIds(initialLocationIds);
     },
     valid: true,
   };

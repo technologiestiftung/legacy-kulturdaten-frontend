@@ -82,7 +82,7 @@ export type Offer = {
     relations?: {
       dates?: OfferDate['data'][];
       links?: Link[];
-      location?: Location['data'][] | string[];
+      locations?: Location['data'][] | string[];
       organizers?: Organizer['data'][] | string[];
       subjects?: OfferSubject[];
       translations: OfferTranslation[];

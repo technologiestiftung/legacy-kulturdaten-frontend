@@ -1160,9 +1160,11 @@ export const deDE: Localization = {
           title: ({ name }) => `Anbieter:in für ‚${name}‘ wählen`,
         },
         location: {
-          label: () => 'Veranstaltungsort',
+          label: () => 'Veranstaltungsort(e)',
           choose: () => 'Ort auswählen',
+          chooseAdditional: () => 'Weiteren Ort auswählen',
           edit: () => 'Ort ändern',
+          remove: () => 'Ort entfernen',
           title: ({ name }) => `Ort für ${name ? `‚${name}‘` : 'unbenanntes Angebot'} wählen`,
         },
         topics: () => 'Themen-Kategorie (Pflichtfeld)',

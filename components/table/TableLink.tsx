@@ -13,7 +13,7 @@ export const StyledTableLinkText = styled.div<{ isActive?: boolean }>`
       : ''}
 `;
 
-const StyledTableLink = styled.a<{ isActive?: boolean }>`
+const StyledTableLink = styled.a<{ isActive?: boolean; forbidden: boolean }>`
   background: inherit;
   position: relative;
   display: flex;
@@ -57,6 +57,18 @@ const StyledTableLink = styled.a<{ isActive?: boolean }>`
           }
         `
       : ''}
+
+  ${({ forbidden }) =>
+    forbidden
+      ? css`
+          cursor: not-allowed;
+          opacity: 0.5;
+
+          &:hover {
+            background: var(--white);
+          }
+        `
+      : ''}
 `;
 
 interface TableLinkProps {
@@ -64,6 +76,7 @@ interface TableLinkProps {
   href?: string;
   isActive?: boolean;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
+  forbidden?: boolean;
 }
 
 export const TableLink: React.FC<TableLinkProps> = ({
@@ -71,9 +84,10 @@ export const TableLink: React.FC<TableLinkProps> = ({
   href,
   isActive,
   onClick,
+  forbidden = false,
 }: TableLinkProps) => {
   const renderedLink = (
-    <StyledTableLink isActive={isActive} onClick={onClick} role="menuitem">
+    <StyledTableLink isActive={isActive} onClick={onClick} role="menuitem" forbidden={forbidden}>
       <div>{children}</div>
     </StyledTableLink>
   );

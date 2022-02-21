@@ -6,6 +6,7 @@ import { useEntry } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
+import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryListContextProvider } from '../EntryList/EntryListContext';
 import { useOverlay } from '../overlay';
 import { OverlayContainer } from '../overlay/OverlayContainer';
@@ -68,6 +69,11 @@ const StyledEntryPickerSlotEdit = styled.div`
   text-decoration: underline;
 `;
 
+const StyledEntryPickerSlotRemove = styled.div`
+  text-align: right;
+  padding: 0.75rem 0;
+`;
+
 const StyledEntryPickerSlotChoose = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
@@ -81,6 +87,10 @@ interface EntryPickerProps {
   list: React.ReactElement;
   categoryName: Categories;
   onChange: (value: string) => void;
+  remove?: {
+    onRemove: () => void;
+    text: string;
+  };
   showHint?: boolean;
   error?: boolean;
 }
@@ -94,6 +104,7 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
   list,
   onChange,
   showHint,
+  remove,
 }: EntryPickerProps) => {
   const categories = useCategories();
   const language = useLanguage();
@@ -149,6 +160,13 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
       >
         {renderedOverlay}
       </EntryListContextProvider>
+      {remove && (
+        <StyledEntryPickerSlotRemove>
+          <Button onClick={remove.onRemove} size={ButtonSize.small} color={ButtonColor.black}>
+            {remove.text}
+          </Button>
+        </StyledEntryPickerSlotRemove>
+      )}
     </StyledEntryPicker>
   );
 };
