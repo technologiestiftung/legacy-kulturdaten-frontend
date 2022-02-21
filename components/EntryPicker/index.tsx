@@ -80,7 +80,7 @@ const StyledEntryPickerSlot = styled.button<{ showHint?: boolean; variant: Entry
 `;
 
 const StyledEntryPickerSlotActiveEntry = styled.div`
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   background: var(--grey-200);
 `;
 const StyledEntryPickerSlotActiveEntryTitle = styled.div`
@@ -92,7 +92,7 @@ const StyledEntryPickerSlotActiveEntryTitle = styled.div`
 const StyledEntryPickerSlotEdit = styled.div<{ hasRemove?: boolean }>`
   text-align: ${({ hasRemove }) => (hasRemove ? 'left' : 'right')};
   text-decoration: underline;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
 `;
 
 const StyledEntryPickerSlotRemove = styled.div`
