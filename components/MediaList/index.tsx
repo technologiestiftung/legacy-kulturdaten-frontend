@@ -452,6 +452,8 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                     ...mediaItem,
                     attributes: {
                       ...mediaItem.attributes,
+                      expiresAt:
+                        parseInt(newValue, 10) !== 4 ? null : mediaItem?.attributes?.expiresAt,
                     },
                     relations: {
                       ...mediaItem.relations,
