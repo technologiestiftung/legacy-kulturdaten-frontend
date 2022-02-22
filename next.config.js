@@ -15,7 +15,8 @@ module.exports = {
     domains: [
       'beta.api.kulturdaten.berlin', 
       'api.kulturdaten.berlin', 
-      's3.eu-central-1.amazonaws.com'
+      's3.eu-central-1.amazonaws.com',
+      'storage-kulturdaten-api-beta.s3.eu-central-1.amazonaws.com',
     ],
   },
   typescript: {
