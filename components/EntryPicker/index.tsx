@@ -57,13 +57,16 @@ const StyledEntryPickerSlot = styled.button<{ showHint?: boolean; variant: Entry
   ${({ variant }) =>
     variant === EntryPickerVariant.button &&
     css`
+      width: auto;
       font-weight: 700;
       background: var(--black);
       color: var(--white);
       border-radius: 0.75rem;
       border-color: var(--black);
       box-shadow: var(--shadow);
-      padding: 0.75rem 1rem;
+      padding: 0.375rem 0.75rem;
+      font-size: var(--font-size-300);
+      line-height: var(--line-height-300);
       transition: box-shadow var(--transition-duration-fast),
         transform var(--transition-duration-fast);
 
@@ -83,6 +86,7 @@ const StyledEntryPickerSlotActiveEntry = styled.div`
   padding: 0.75rem 1rem;
   background: var(--grey-200);
 `;
+
 const StyledEntryPickerSlotActiveEntryTitle = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
@@ -103,10 +107,7 @@ const StyledEntryPickerSlotRemove = styled.div`
   bottom: calc(0.75rem - 2px);
 `;
 
-const StyledEntryPickerSlotChoose = styled.div`
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-`;
+const StyledEntryPickerSlotChoose = styled.div``;
 
 export enum EntryPickerVariant {
   default = 'default',
