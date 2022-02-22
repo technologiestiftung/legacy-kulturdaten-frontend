@@ -27,6 +27,7 @@ export const enDE: Localization = {
     cancel: () => 'cancel download',
   },
   dashboard: {
+    activeOrganizer: ({ name }) => `Active organizer profile: ${name}`,
     info: {
       hint: {
         title: () => 'Profile not yet public',

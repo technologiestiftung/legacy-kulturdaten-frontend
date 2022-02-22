@@ -27,6 +27,7 @@ export const deDE: Localization = {
     cancel: () => 'Download abbrechen',
   },
   dashboard: {
+    activeOrganizer: ({ name }) => `Aktives Anbieter:innen-Profil: ${name}`,
     info: {
       hint: {
         title: () => 'Profil noch nicht öffentlich',

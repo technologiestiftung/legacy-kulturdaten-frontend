@@ -292,7 +292,17 @@ const DashboardPage: NextPage = () => {
       <DashboardWrapper>
         <ContentWrapper>
           <ContentContainer>
-            <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
+            <DashbaordGreeting
+              subline={
+                t('dashboard.activeOrganizer', {
+                  name:
+                    currentTranslation?.attributes?.name ||
+                    (t('general.placeholderOrganizer') as string),
+                }) as string
+              }
+            >
+              {t(selectedGreetings[randomGreetingsIndex])}
+            </DashbaordGreeting>
           </ContentContainer>
           <ContentContainer>
             {organizerId !== defaultOrganizerId && !isPublished && (
