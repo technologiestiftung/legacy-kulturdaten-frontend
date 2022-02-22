@@ -719,6 +719,8 @@ export const enDE: Localization = {
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',
     uploading: ({ progress }) => `Uploading files: ${progress} done`,
+    error: ({ code }) =>
+      `There was an error ${code ? `(code ${code})` : ''} uploading. Please try it again.`,
     success: ({ count }) => `Successfully uploaded ${count} ${count === 1 ? 'file' : 'files'}`,
     pending: () => `Upload done. Files are being processed.`,
     ariaLabel: () => 'Upload files',
