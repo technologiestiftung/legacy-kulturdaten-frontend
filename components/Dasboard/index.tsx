@@ -25,13 +25,9 @@ const StyledDashboardGreetingHeadline = styled.h1`
 `;
 
 const StyledDashboardGreetingSubline = styled.p`
-  font-size: var(--font-size-400);
-  line-height: var(--line-height-400);
-
-  ${mq(Breakpoint.mid)} {
-    font-size: var(--font-size-500);
-    line-height: var(--line-height-500);
-  }
+  font-size: var(--font-size-500);
+  line-height: var(--line-height-500);
+  font-weight: 700;
 `;
 
 interface DashboardGreetingProps {

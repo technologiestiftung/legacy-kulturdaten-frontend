@@ -294,11 +294,8 @@ const DashboardPage: NextPage = () => {
           <ContentContainer>
             <DashbaordGreeting
               subline={
-                t('dashboard.activeOrganizer', {
-                  name:
-                    currentTranslation?.attributes?.name ||
-                    (t('general.placeholderOrganizer') as string),
-                }) as string
+                currentTranslation?.attributes?.name ||
+                (t('general.placeholderOrganizer') as string)
               }
             >
               {t(selectedGreetings[randomGreetingsIndex])}
