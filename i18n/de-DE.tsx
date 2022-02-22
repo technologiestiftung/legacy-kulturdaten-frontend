@@ -731,6 +731,10 @@ export const deDE: Localization = {
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
     uploading: ({ progress }) => `Dateien laden hoch: ${progress} geschafft`,
+    error: ({ code }) =>
+      `Es gab einen Fehler ${
+        code ? `(Code ${code})` : ''
+      } beim Upload. Bitte versuche es noch einmal.`,
     success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
     pending: () => `Hochladen abgeschlossen. Dateien werden verarbeitet.`,
     ariaLabel: () => 'Dateien hochladen',
