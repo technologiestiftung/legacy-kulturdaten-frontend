@@ -52,9 +52,9 @@ export const CSSVars: React.FC = () => (
         --line-height-300: 1.5rem;
         --font-size-400: 1rem;
         --line-height-400: 1.5rem;
-        --font-size-500: 1.1125rem;
+        --font-size-500: 1.125rem;
         --line-height-500: 1.5rem;
-        --font-size-600: 1.1125rem;
+        --font-size-600: 1.125rem;
         --line-height-600: 1.5rem;
         --font-size-650: 1.375rem;
         --line-height-650: 2.25rem;

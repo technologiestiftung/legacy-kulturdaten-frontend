@@ -128,7 +128,7 @@ export const LoginForm: React.FC = () => {
             onChange={(e: ChangeEvent<HTMLInputElement>) => setRemember(e.target.checked)}
           />
           <Anchor
-            href={'#'}
+            href={routes.resetPassword({ locale })}
             type={StandardLinkType.internal}
             title={t('login.passwordReset') as string}
           />

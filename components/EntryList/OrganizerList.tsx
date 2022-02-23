@@ -29,6 +29,7 @@ import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { PublishedStatus } from '../../lib/api/types/general';
+import { Input, InputType } from '../input';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -88,6 +89,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     setFiltersBoxExpanded,
     setLastEntryId,
   } = useContext(EntryListContext);
+  const [search, setSearch] = useState<string>();
   const pseudoUID = usePseudoUID();
   const view = useMemo(() => (expanded ? EntryListView.table : EntryListView.cards), [expanded]);
 
@@ -113,7 +115,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     currentPage,
     entriesPerPage,
     Object.entries(filters),
-    { key: sortKey, order }
+    { key: sortKey, order },
+    true,
+    search
   );
 
   const activeFiltersCount = useMemo(
@@ -344,7 +348,17 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             })}
           </Select>
         </StyledFilters>
-
+        <StyledFilters expanded={expanded}>
+          <Input
+            label={t('categories.organizer.list.searchNameLabel') as string}
+            type={InputType.text}
+            id="test"
+            value={search || ''}
+            onChange={(e) => setSearch(e.target.value !== '' ? e.target.value : undefined)}
+            debounce={1000}
+            placeholder={t('categories.organizer.list.searchNamePlaceholder') as string}
+          />
+        </StyledFilters>
         {!expanded && (
           <StyledFilters expanded={expanded}>
             <Select

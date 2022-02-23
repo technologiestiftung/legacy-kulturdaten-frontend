@@ -14,6 +14,7 @@ import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from './formComponents';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
+import { Info } from '../../info';
 
 const imagesMax = 5;
 const maxFileSize = 10240;
@@ -30,11 +31,13 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   const [isUploading, setIsUploading] = useState(false);
   const { progress, upload } = useMediaUpload();
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number }>();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     const uploadFiles = async () => {
       if (!isUploading && files && files.length > 0) {
         setIsUploading(true);
+        setError(undefined);
 
         try {
           const resp = await upload<C>(files, category.api.update.factory, {
@@ -44,43 +47,63 @@ const useMediaUploadForm = <T extends CategoryEntry, C extends ApiCall>(
           if (resp.status === 200) {
             mutate(resp.body.data as T);
             setUploadSuccess({ count: files.length });
-            setFiles(undefined);
-            // mutateList();
+          } else {
+            setError(t('dropZone.error', { code: resp.status }) as string);
           }
+
+          setFiles(undefined);
 
           setIsUploading(false);
         } catch (e) {
+          setError(t('dropZone.error') as string);
           console.error(e);
         }
       }
     };
 
     uploadFiles();
-  }, [category?.api?.update?.factory, entry?.data?.id, files, isUploading, mutate, query, upload]);
+  }, [
+    category?.api?.update?.factory,
+    entry?.data?.id,
+    files,
+    isUploading,
+    mutate,
+    query,
+    upload,
+    setError,
+    t,
+  ]);
 
   return {
     renderedForm: (
-      <FormItem width={FormItemWidth.full}>
-        <DropZone
-          onDrop={async (newFiles) => {
-            setFiles(newFiles);
-          }}
-          acceptedFileTypes={[
-            { mimeType: 'image/jpeg', name: 'JPG/JPEG' },
-            { mimeType: 'image/png', name: 'PNG' },
-            { mimeType: 'image/webp', name: 'WEBP' },
-            { mimeType: 'image/gif', name: 'GIF' },
-          ]}
-          label={t('media.dropZoneLabel') as string}
-          isUploading={isUploading}
-          progress={progress}
-          success={uploadSuccess}
-          disabled={disabled}
-          disabledMessage={t('media.maxReached', { count: imagesMax }) as string}
-          max={maxFiles}
-          maxFileSizeInKb={maxFileSizeInKb}
-        />
-      </FormItem>
+      <>
+        <FormItem width={FormItemWidth.full}>
+          <DropZone
+            onDrop={async (newFiles) => {
+              setFiles(newFiles);
+            }}
+            acceptedFileTypes={[
+              { mimeType: 'image/jpeg', name: 'JPG/JPEG' },
+              { mimeType: 'image/png', name: 'PNG' },
+              { mimeType: 'image/webp', name: 'WEBP' },
+              { mimeType: 'image/gif', name: 'GIF' },
+            ]}
+            label={t('media.dropZoneLabel') as string}
+            isUploading={isUploading}
+            progress={progress}
+            success={uploadSuccess}
+            disabled={disabled}
+            disabledMessage={t('media.maxReached', { count: imagesMax }) as string}
+            max={maxFiles}
+            maxFileSizeInKb={maxFileSizeInKb}
+          />
+        </FormItem>
+        {error && (
+          <FormItem width={FormItemWidth.full}>
+            <Info>{error}</Info>
+          </FormItem>
+        )}
+      </>
     ),
     valid: true,
     pristine: true,

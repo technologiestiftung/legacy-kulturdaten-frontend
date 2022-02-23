@@ -35,6 +35,7 @@ import {
 } from '../DropdownMenu';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
+import { Input, InputType } from '../input';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -61,7 +62,9 @@ interface LocationListProps {
   enableUltraWideLayout?: boolean;
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
+  chosenEntryIds?: string[];
   showAllLocationsSwitch?: boolean;
+  hideExport?: boolean;
 }
 
 export const LocationList: React.FC<LocationListProps> = ({
@@ -70,7 +73,9 @@ export const LocationList: React.FC<LocationListProps> = ({
   enableUltraWideLayout = true,
   customEntryOnClick,
   activeEntryId,
+  chosenEntryIds,
   showAllLocationsSwitch = false,
+  hideExport = false,
 }: LocationListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -119,6 +124,8 @@ export const LocationList: React.FC<LocationListProps> = ({
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
+  const [search, setSearch] = useState<string>();
+
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
   // Set status filter to published if all locations are shown.
@@ -142,15 +149,19 @@ export const LocationList: React.FC<LocationListProps> = ({
       ...Object.entries(filters),
       ['organizer', showAllLocationsSwitch && showAllLocations ? undefined : organizerId],
     ],
-    { key: sortKey, order }
+    { key: sortKey, order },
+    true,
+    search
   );
 
   const activeFiltersCount = useMemo(
     () =>
       Object.values(filters)?.filter(
         (filter) => filter && filter[0] !== undefined && filter[0] !== ''
-      ).length,
-    [filters]
+      ).length + search
+        ? 1
+        : 0,
+    [filters, search]
   );
 
   useEffect(() => {
@@ -203,11 +214,13 @@ export const LocationList: React.FC<LocationListProps> = ({
               return (
                 <EntryCard
                   onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.location, id);
+                    if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
+                      setMenuExpanded(false);
+                      setLastEntryId(Categories.location, id);
 
-                    if (typeof customEntryOnClick === 'function') {
-                      customEntryOnClick(Categories.organizer, id);
+                      if (typeof customEntryOnClick === 'function') {
+                        customEntryOnClick(Categories.organizer, id);
+                      }
                     }
                   }}
                   href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
@@ -220,6 +233,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                   }
                   status={attributes?.status || PublishedStatus.draft}
                   active={router.asPath.includes(href()) || activeEntryId === id}
+                  forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
                   meta={
@@ -253,6 +267,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       categories?.location?.placeholderName,
+      chosenEntryIds,
     ]
   );
 
@@ -280,15 +295,18 @@ export const LocationList: React.FC<LocationListProps> = ({
               const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
                 <TableLink
                   onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.location, id);
+                    if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
+                      setMenuExpanded(false);
+                      setLastEntryId(Categories.location, id);
 
-                    if (typeof customEntryOnClick === 'function') {
-                      customEntryOnClick(Categories.organizer, id);
+                      if (typeof customEntryOnClick === 'function') {
+                        customEntryOnClick(Categories.organizer, id);
+                      }
                     }
                   }}
                   href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
                   isActive={router.asPath.includes(href()) || activeEntryId === id}
+                  forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
                 >
                   {children}
                 </TableLink>
@@ -341,6 +359,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       setLastEntryId,
       organizerId,
       categories?.location?.placeholderName,
+      chosenEntryIds,
     ]
   );
 
@@ -368,7 +387,7 @@ export const LocationList: React.FC<LocationListProps> = ({
           </Button>
         }
         menu={
-          list?.data?.length > 0 ? (
+          !hideExport && list?.data?.length > 0 ? (
             <DropdownMenu
               icon="MoreVertical"
               form={DropdownMenuForm.rounded}
@@ -467,6 +486,17 @@ export const LocationList: React.FC<LocationListProps> = ({
             <option value="published">{t('categories.organizer.filters.status.published')}</option>
             <option value="draft">{t('categories.organizer.filters.status.draft')}</option>
           </Select>
+        </StyledFilters>
+        <StyledFilters expanded={expanded}>
+          <Input
+            label={t('categories.location.list.searchNameLabel') as string}
+            type={InputType.text}
+            id="test"
+            value={search || ''}
+            onChange={(e) => setSearch(e.target.value !== '' ? e.target.value : undefined)}
+            debounce={1000}
+            placeholder={t('categories.location.list.searchNamePlaceholder') as string}
+          />
         </StyledFilters>
         {!expanded && (
           <StyledFilters expanded={expanded}>

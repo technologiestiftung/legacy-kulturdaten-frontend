@@ -265,11 +265,13 @@ export const deDE: Localization = {
   },
   hours: {
     weekday: () => 'Wochentag',
+    weekdays: () => 'Wochentage',
     from: () => 'von',
     to: () => 'bis',
     add: () => 'Neue Zeit hinzufügen',
     remove: () => 'entfernen',
     note: () => 'Anmerkung zu Zeiten',
+    error: () => 'Die Endzeit (‚bis‘) muss nach der Startzeit (‚von‘) liegen.',
   },
   openingHours: {
     add: () => 'Neue Öffnungszeit hinzufügen',
@@ -532,12 +534,44 @@ export const deDE: Localization = {
     remember: () => 'Eingeloggt bleiben',
     submit: () => 'einloggen',
     headline: () => 'Logge dich jetzt bei kulturdaten.berlin ein!',
+    headlineSuccess: () =>
+      'Dein Konto wurde erfolgreich verifiziert. Du kannst dich jetzt einloggen.',
     loading: () => 'Anmeldung läuft',
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
-    registerReference: () => 'Du bis neu hier?',
+    registerReference: () => 'Du bist neu hier?',
     registerReferenceLinkText: () => 'Registriere dich jetzt.',
     verificationError: () =>
-      'Dieser Account ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
+      'Dieses Konto ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
+  },
+  requestPasswordReset: {
+    headline: () => 'Passwort zurücksetzen',
+    subline: () =>
+      'Du hast dein Passwort vergessen? Kein Problem! Gib unten einfach deine E-Mail-Adresse ein und wir senden dir einen Link, über welchen du dir ein neues Passwort erstellen kannst.',
+    successHeadline: () => 'Zurücksetzen des Passwortes beantragt',
+    successSubline: () =>
+      'Wir haben dir eine E-Mail geschickt. In dieser findest du einen Link, über den du ein neues Passwort setzen kannst. Dieser Link funktioniert aus Sicherheitsgründen nur für 10 Minuten.',
+    submit: () => 'Passwort zurücksetzen',
+    loginReference: () => 'Dir ist dein Passwort wieder eingefallen?',
+    loginReferenceLinkText: () => 'Log dich hier ein.',
+    loading: () => 'Zurücksetzen des Passworts wird beantragt',
+    requestError: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    nonExistantEmailError: () => 'Es existiert kein Konto mit dieser E-Mail-Adresse.',
+  },
+  resetPassword: {
+    headline: () => 'Neues Passwort festlegen',
+    subline: ({ email }) =>
+      `Lege jetzt ein neues Passwort für dein Nutzer:innenkonto mit der E-Mail ‚${email}‘ fest.`,
+    submit: () => 'Passwort festlegen',
+    successHeadline: () => 'Super, das hat geklappt!',
+    successSubline: () => 'Du kannst dich nun mit deinem neuen Passwort einloggen.',
+    loading: () => 'Passwort wird neu festgelegt',
+    requestError: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    expiredLinkError: () =>
+      'Dieser Link war leider abgelaufen. Bitte beantrage das Zurücksetzen deines Passworts erneut.',
+    expiredLinkHeadline: () => 'Link abgelaufen',
+    goToLogin: () => 'Zum Login',
   },
   logout: {
     loading: () => 'Abmeldung läuft',
@@ -557,7 +591,7 @@ export const deDE: Localization = {
     loading: () => 'Deine Registrierung läuft',
     requestError: () =>
       'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
-    uniqueEmailError: () => 'Dieser Account existiert bereits.',
+    uniqueEmailError: () => 'Dieses Konto existiert bereits.',
     successHeadline: () => 'Super, das hat geklappt!',
     successSubline: () =>
       'Wir haben dir eine E-Mail geschickt. Bitte bestätige deine Anmeldung mit dem Link in der E-Mail.',
@@ -574,7 +608,7 @@ export const deDE: Localization = {
         von kulturdaten.berlin gelesen und stimme ihnen ausdrücklich zu.
       </>
     ),
-    loginReference: () => 'Du hast bereits einen Account?',
+    loginReference: () => 'Du hast bereits ein Konto?',
     loginReferenceLinkText: () => 'Log dich hier ein.',
   },
   statusBar: {
@@ -699,6 +733,10 @@ export const deDE: Localization = {
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
     uploading: ({ progress }) => `Dateien laden hoch: ${progress} geschafft`,
+    error: ({ code }) =>
+      `Es gab einen Fehler ${
+        code ? `(Code ${code})` : ''
+      } beim Upload. Bitte versuche es noch einmal.`,
     success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
     pending: () => `Hochladen abgeschlossen. Dateien werden verarbeitet.`,
     ariaLabel: () => 'Dateien hochladen',
@@ -910,6 +948,8 @@ export const deDE: Localization = {
         loading: () => 'Lade Anbieter:innen',
         nothing: () => 'Es gibt noch keine Anbieter:innen. Lege gerne eine:n an.',
         nothingFilter: () => 'Keine Anbieter:innen für die aktive Filterung gefunden.',
+        searchNameLabel: () => 'Suche nach Bezeichnung',
+        searchNamePlaceholder: () => "z.B. 'Technologiestiftung Berlin'",
       },
       filters: {
         status: {
@@ -1051,6 +1091,8 @@ export const deDE: Localization = {
         loading: () => 'Lade Angebote',
         nothing: () => 'Es gibt noch keine Angebote. Lege gerne eines an.',
         nothingFilter: () => 'Keine Angebote für die aktive Filterung gefunden.',
+        searchNameLabel: () => 'Suche nach Angebotstitel',
+        searchNamePlaceholder: () => "z.B. 'Konzert'",
       },
       requirements: {
         name: () => 'Angebotstitel',
@@ -1128,9 +1170,11 @@ export const deDE: Localization = {
           title: ({ name }) => `Anbieter:in für ‚${name}‘ wählen`,
         },
         location: {
-          label: () => 'Veranstaltungsort',
+          label: () => 'Veranstaltungsort(e)',
           choose: () => 'Ort auswählen',
+          chooseAdditional: () => 'Weiteren Ort auswählen',
           edit: () => 'Ort ändern',
+          remove: () => 'Ort entfernen',
           title: ({ name }) => `Ort für ${name ? `‚${name}‘` : 'unbenanntes Angebot'} wählen`,
         },
         topics: () => 'Themen-Kategorie (Pflichtfeld)',
@@ -1176,6 +1220,8 @@ export const deDE: Localization = {
         allLocations: () => 'Alle öffentlichen Orte',
         myLocations: () => 'Nur meine Orte',
         address: () => 'Adresse',
+        searchNameLabel: () => 'Suche nach Bezeichnung / Name',
+        searchNamePlaceholder: () => "z.B. 'Neues Museum'",
       },
       title: {
         plural: () => 'Orte',

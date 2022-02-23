@@ -1,8 +1,11 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useT } from '../../lib/i18n';
+import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { StyledError } from '../Error';
+import { Label } from '../label';
+import { MouseTooltip } from '../MouseTooltip';
 
 const errorShadow = '0px 0px 0px 0.1125rem var(--error-o50)';
 
@@ -60,6 +63,10 @@ const StyledDayPickerDay = styled.div<{ checked: boolean }>`
   }
 `;
 
+const StyledDayPickerLabel = styled.div`
+  padding-bottom: 0.375rem;
+`;
+
 const StyledDayPickerDayLabel = styled.label`
   display: block;
   position: relative;
@@ -84,18 +91,12 @@ export enum DayPickerMode {
   week = 'week',
 }
 
-export const weekdays: {
+const weekdays: {
   name: {
     long: string;
     short: string;
   };
 }[] = [
-  {
-    name: {
-      long: 'days.sunday.long',
-      short: 'days.sunday.short',
-    },
-  },
   {
     name: {
       long: 'days.monday.long',
@@ -132,18 +133,64 @@ export const weekdays: {
       short: 'days.saturday.short',
     },
   },
+  {
+    name: {
+      long: 'days.sunday.long',
+      short: 'days.sunday.short',
+    },
+  },
 ];
 
 export type Day = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+interface DayPickerDayProps {
+  index: number;
+  long: string;
+  short: string;
+  state: Day[];
+  changeHandler: (checked: boolean, index: number) => void;
+}
+
+const DayPickerDay: React.FC<DayPickerDayProps> = ({
+  index,
+  long,
+  short,
+  state,
+  changeHandler,
+}) => {
+  const t = useT();
+  const ref = useRef<HTMLLabelElement>(null);
+  const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
+
+  return (
+    <StyledDayPickerDay
+      key={index}
+      aria-label={t(long) as string}
+      role="checkbox"
+      checked={state.includes(index as Day)}
+    >
+      {isMidOrWider && <MouseTooltip hoverElement={ref}>{t(long)}</MouseTooltip>}
+      <StyledDayPickerDayLabel ref={ref}>
+        <StyledDayPickerDayCheckbox
+          type="checkbox"
+          checked={state.includes(index as Day)}
+          onChange={(e) => changeHandler(e.target.checked, index)}
+        />
+        <StyledDayPickerDayName>{t(short)}</StyledDayPickerDayName>
+      </StyledDayPickerDayLabel>
+    </StyledDayPickerDay>
+  );
+};
 
 interface DayPicker {
   value?: Day[];
   onChange?: (value: Day[]) => void;
   mode?: DayPickerMode;
   min?: number;
+  label?: string;
 }
 
-export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min }: DayPicker) => {
+export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min, label }: DayPicker) => {
   const [internalState, setInternalState] = useState<Day[]>([]);
   const t = useT();
 
@@ -161,23 +208,14 @@ export const DayPicker: React.FC<DayPicker> = ({ value, onChange, min }: DayPick
 
   return (
     <div>
+      {label && (
+        <StyledDayPickerLabel>
+          <Label>{label}</Label>
+        </StyledDayPickerLabel>
+      )}
       <StyledDayPicker aria-label={t('dayPicker.ariaLabel') as string} role="group" valid={valid}>
         {weekdays.map(({ name: { short, long } }, index) => (
-          <StyledDayPickerDay
-            key={index}
-            aria-label={t(long) as string}
-            role="checkbox"
-            checked={state.includes(index as Day)}
-          >
-            <StyledDayPickerDayLabel title={t(long) as string}>
-              <StyledDayPickerDayCheckbox
-                type="checkbox"
-                checked={state.includes(index as Day)}
-                onChange={(e) => changeHandler(e.target.checked, index)}
-              />
-              <StyledDayPickerDayName>{t(short)}</StyledDayPickerDayName>
-            </StyledDayPickerDayLabel>
-          </StyledDayPickerDay>
+          <DayPickerDay key={index} {...{ index, short, long, changeHandler, state }} />
         ))}
       </StyledDayPicker>
       {!valid && <StyledError>{t('dayPicker.minError', { min })}</StyledError>}

@@ -7,6 +7,7 @@ export enum InfoColor {
   yellow = 'yellow',
   grey = 'grey',
   white = 'white',
+  green = 'green',
 }
 
 const infoColorMap: {
@@ -18,6 +19,11 @@ const infoColorMap: {
 } = {
   yellow: {
     background: 'var(--mustard)',
+    color: 'var(--black)',
+    borderColor: 'var(--black-o25)',
+  },
+  green: {
+    background: 'var(--green-light)',
     color: 'var(--black)',
     borderColor: 'var(--black-o25)',
   },
@@ -87,7 +93,7 @@ export const InfoLi = styled.li``;
 
 export const InfoP = styled.p``;
 
-interface InfoProps {
+export interface InfoProps {
   children: React.ReactNode;
   color?: InfoColor;
   title?: string;
