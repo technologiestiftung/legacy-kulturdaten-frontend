@@ -72,7 +72,6 @@ export type Organizer = {
       mainContact?: OrganizerMainContact;
     };
   };
-  error?: Error;
   meta?: {
     publishable:
       | boolean
