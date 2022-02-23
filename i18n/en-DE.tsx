@@ -1348,4 +1348,11 @@ export const enDE: Localization = {
       loading: () => 'Changing active organizer',
     },
   },
+  errors: {
+    server: {
+      headline: () => 'Server problem',
+      text: () =>
+        'Unfortunately there is a problem with our server. As a result, the application is currently not working correctly. Please try again later. We are working on a solution.',
+    },
+  },
 };

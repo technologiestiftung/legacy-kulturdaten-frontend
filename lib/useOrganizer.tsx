@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import getConfig from 'next/config';
 import { defaultOrganizerId, NavigationContext } from '../components/navigation/NavigationContext';
 import { useCategories } from '../config/categories';
@@ -59,6 +59,8 @@ export const useOrganizer = (): Organizer => {
   const organizerId = useOrganizerId();
   const categories = useCategories();
   const { isLoggedIn } = useUser();
+  const [hasError, setHasError] = useState(false);
+  const [result, setResult] = useState<Organizer>();
 
   const { entry } = useEntry<Organizer, OrganizerShow>(
     isLoggedIn ? categories?.organizer : undefined,
@@ -66,10 +68,21 @@ export const useOrganizer = (): Organizer => {
       ? {
           organizer: organizerId,
         }
-      : undefined
+      : undefined,
+    !hasError
   );
 
-  return entry;
+  useEffect(() => {
+    if (entry?.error) {
+      console.log('error');
+      setHasError(true);
+      setResult({ error: 'no organizer defined' } as unknown as Organizer);
+    } else {
+      setResult(entry);
+    }
+  }, [entry]);
+
+  return result;
 };
 
 export const useHandleActiveOrganizer = () => {

@@ -60,6 +60,7 @@ export type Organizer = {
       roles?: OrganizerRole[];
     };
   };
+  error?: Error;
   meta?: {
     publishable:
       | boolean

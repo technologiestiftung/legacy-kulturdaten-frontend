@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { useCategory } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
-import { useLanguage, useLocale } from '../../lib/routing';
+import { useActiveRoute, useLanguage, useLocale, Routes, routes } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
 import { useOrganizer, useOrganizerId } from '../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
@@ -59,6 +59,7 @@ export const useNavigation = (
   const language = useLanguage();
   const t = useT();
   const activeLayout = useMemo(() => appLayouts[layout], [layout]);
+  const activeRoute = useActiveRoute();
 
   const activeHeader = useMemo(
     () =>
@@ -106,8 +107,19 @@ export const useNavigation = (
 
   const organizer = useOrganizer();
 
+  useEffect(() => {
+    console.log(organizer?.error);
+    if (organizer?.error && activeRoute !== Routes.error) {
+      router.replace(
+        routes.error({
+          locale,
+        })
+      );
+    }
+  }, [activeRoute, locale, organizer?.error, router]);
+
   const headerTitle =
-    appLayouts[layout].hasOrganizerBand && organizer
+    appLayouts[layout].hasOrganizerBand && organizer?.data
       ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name ||
         (t('general.placeholderOrganizer') as string)
       : title;

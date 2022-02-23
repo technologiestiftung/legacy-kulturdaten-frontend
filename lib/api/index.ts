@@ -106,16 +106,16 @@ export const apiRoutes: {
       query?.filter ? `&filter=${query.filter}` : ''
     }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   organizerShow: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
+    `/${apiVersion}/organizer/${organizer}?include=mainContact,types,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
+    `/${apiVersion}/organizer/${organizer}?include=mainContact,types,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   organizerDownload: ({ id, format }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,tags,contacts&format=${format}`,
+    `/${apiVersion}/organizer/${id}?include=mainContact,types,subjects,links,translations,tags,contacts&format=${format}`,
   organizerListDownload: ({ format }) =>
-    `/${apiVersion}/organizer?include=types,address,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
+    `/${apiVersion}/organizer?include=mainContact,types,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
   locationList: (query) =>
     `/${apiVersion}/location?include=translations,address${
       query?.includes ? `,${(query.includes as string[]).join(',')}` : ''
