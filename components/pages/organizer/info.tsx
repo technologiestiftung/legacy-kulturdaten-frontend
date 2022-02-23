@@ -18,9 +18,9 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { usePublish } from '../../Publish';
 import { EntryFormHook } from '../helpers/form';
-import { useAddressForm } from '../helpers/form/Address';
 import { useDescriptionForm } from '../helpers/form/Description';
 import { useLinksForm } from '../helpers/form/Links';
+import { useMainContactForm } from '../helpers/form/MainContact';
 import { useNameForm } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -306,14 +306,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     reset: addressReset,
     valid: addressValid,
     requirementFulfillment: addressRequirementFulfillment,
-  } = useAddressForm({
+  } = useMainContactForm({
     category,
     query,
     loaded,
     customRequired: isPublished || undefined,
     title: t('categories.organizer.form.address') as string,
     tooltip: t('categories.organizer.form.addressTooltip') as string,
-    district: false,
     id: 'organizer-internal-contact',
   });
 

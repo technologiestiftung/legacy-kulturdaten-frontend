@@ -16,6 +16,23 @@ interface MainContactFormHookProps extends EntryFormHookProps {
   customRequired?: boolean;
 }
 
+const defaultMainContact: OrganizerMainContact = {
+  attributes: {
+    email: undefined,
+  },
+  relations: {
+    address: undefined,
+    translations: [
+      {
+        attributes: {
+          language: defaultLanguage,
+          name: undefined,
+        },
+      },
+    ],
+  },
+};
+
 export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
   category,
   query,
@@ -41,7 +58,9 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
   );
 
   const organizerId = useOrganizerId();
-  const [mainContact, setMainContact] = useState<OrganizerMainContact>(initialMainContact);
+  const [mainContact, setMainContact] = useState<OrganizerMainContact>(
+    initialMainContact || defaultMainContact
+  );
   const [mainContactFromApi, setMainContactFromApi] =
     useState<OrganizerMainContact>(initialMainContact);
   const mutateList = useMutateList(
@@ -68,7 +87,7 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
 
   const defaultTranslation = useMemo(
     () =>
-      mainContact.relations.translations.find(
+      mainContact?.relations.translations.find(
         ({ attributes }) => attributes?.language === defaultLanguage
       ),
     [mainContact?.relations?.translations]
@@ -135,7 +154,7 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
               <Input
                 label={t('categories.organizer.form.mainContact.name') as string}
                 type={InputType.text}
-                value={defaultTranslation.attributes?.name || ''}
+                value={defaultTranslation?.attributes?.name || ''}
                 required={required}
                 softRequired={softRequired}
                 onChange={(e) => {
