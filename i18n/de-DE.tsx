@@ -88,7 +88,10 @@ export const deDE: Localization = {
         title: () => 'Aktuelle Angebote',
         link: () => 'Angebot anschauen',
         datePlaceholder: () => 'Noch keine Termine vorhanden',
-        isPermanent: () => 'Dauerangebot mit Öffnungszeiten entsprechend des Veranstaltungsortes',
+        isPermanentPhsyical: (props) =>
+          `Dauerangebot mit Öffnungszeiten entsprechend ${
+            props?.plural ? 'der Veranstaltungsorte' : 'des Veranstaltungsortes'
+          }`,
         isOnlinePermanent: () => 'Online Dauerangebot',
       },
       organizer: {

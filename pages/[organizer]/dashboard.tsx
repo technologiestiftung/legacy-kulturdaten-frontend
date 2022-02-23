@@ -105,7 +105,11 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
           );
         })}
         {isPermanent ? (
-          <DashboardTileTextP>{t('dashboard.info.offers.isPermanent')}</DashboardTileTextP>
+          <DashboardTileTextP>
+            {t('dashboard.info.offers.isPermanentPhsyical', {
+              plural: Boolean(offer?.relations?.locations?.length > 1),
+            })}
+          </DashboardTileTextP>
         ) : !dates || dates.length === 0 ? (
           <DashboardTileTextP>{t('dashboard.info.offers.datePlaceholder')}</DashboardTileTextP>
         ) : (
@@ -274,9 +278,16 @@ const DashboardPage: NextPage = () => {
 
   const randomGreetingsIndex = useRandomInt(0, selectedGreetings.length);
 
-  const offers = useList<OfferList, Offer>(categories.offer, 1, isUltraOrWider ? 3 : 2, [
-    ['organizers', organizerId],
-  ]);
+  const offers = useList<OfferList, Offer>(
+    categories.offer,
+    1,
+    isUltraOrWider ? 3 : 2,
+    [['organizers', organizerId]],
+    undefined,
+    true,
+    undefined,
+    ['locations']
+  );
 
   const isPublished = useMemo(
     () => organizer?.data?.attributes?.status === PublishedStatus.published,
