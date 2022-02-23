@@ -97,6 +97,7 @@ const StyledEntryPickerSlotActiveEntryTitle = styled.div`
 const StyledEntryPickerSlotActiveEntryMeta = styled.div`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
+  word-break: break-all;
 `;
 
 const StyledEntryPickerSlotEdit = styled.div<{ hasRemove?: boolean }>`
