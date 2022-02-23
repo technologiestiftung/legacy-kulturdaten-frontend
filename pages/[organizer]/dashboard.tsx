@@ -42,6 +42,7 @@ import { DateStatusFlag } from '../../components/DateList/DateStatusFlag';
 import { useLoadingScreen } from '../../components/Loading/LoadingScreen';
 import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
 import { PublishedStatus } from '../../lib/api/types/general';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledDashboardTileDate = styled.div`
   display: flex;
@@ -62,6 +63,7 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
   const formatDate = useDate();
   const currentTranslation = getTranslation(language, offer.relations?.translations, true);
+  const defaultTranslation = getTranslation(defaultLanguage, offer.relations?.translations, true);
 
   const { data: dates } = useOfferDateList(offer.id, 1, 4, [['past', 'false']], {
     key: 'startsAt',
@@ -72,7 +74,11 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
 
   return (
     <DashboardTile
-      title={currentTranslation?.attributes?.name || (t('general.placeholderOffer') as string)}
+      title={
+        currentTranslation?.attributes?.name ||
+        defaultTranslation?.attributes?.name ||
+        (t('general.placeholderOffer') as string)
+      }
       gridColumn={isUltraOrWider ? 'span 4' : undefined}
       link={
         <DashboardTileLink
@@ -267,6 +273,7 @@ const DashboardPage: NextPage = () => {
   );
 
   const randomGreetingsIndex = useRandomInt(0, selectedGreetings.length);
+
   const offers = useList<OfferList, Offer>(categories.offer, 1, isUltraOrWider ? 3 : 2, [
     ['organizers', organizerId],
   ]);
