@@ -1206,6 +1206,7 @@ export const enDE: Localization = {
         address: () => 'address',
         searchNameLabel: () => 'Search for name',
         searchNamePlaceholder: () => "e.g. 'New Museum'",
+        addressPlaceholder: () => 'not available',
       },
       title: {
         plural: () => 'Locations',

@@ -1222,6 +1222,7 @@ export const deDE: Localization = {
         address: () => 'Adresse',
         searchNameLabel: () => 'Suche nach Bezeichnung / Name',
         searchNamePlaceholder: () => "z.B. 'Neues Museum'",
+        addressPlaceholder: () => 'nicht vorhanden',
       },
       title: {
         plural: () => 'Orte',

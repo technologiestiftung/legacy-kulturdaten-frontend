@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall } from '../../lib/api';
-import { Location, LocationTranslation } from '../../lib/api/types/location';
+import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
 import { CategoryExportType, Order, useCreateLocation, useList } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Routes, routes, useLanguage, useLocale } from '../../lib/routing';
@@ -237,17 +237,21 @@ export const LocationList: React.FC<LocationListProps> = ({
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
                   meta={
-                    address && (
-                      <EntryCardText>
-                        {[
-                          address.attributes.street1,
-                          address.attributes.street2,
-                          address.attributes.zipCode,
-                          address.attributes.city,
-                        ]
-                          .filter((text) => text?.length > 0)
-                          .join(', ')}
-                      </EntryCardText>
+                    attributes.type === LocationType.physical ? (
+                      address && (
+                        <EntryCardText>
+                          {[
+                            address.attributes.street1,
+                            address.attributes.street2,
+                            address.attributes.zipCode,
+                            address.attributes.city,
+                          ]
+                            .filter((text) => text?.length > 0)
+                            .join(', ')}
+                        </EntryCardText>
+                      )
+                    ) : (
+                      <EntryCardText>virtuell</EntryCardText>
                     )
                   }
                 />
@@ -322,7 +326,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                       categories?.location?.placeholderName}
                   </StyledTableLinkText>,
                   `${
-                    address
+                    attributes.type === LocationType.physical && address
                       ? [
                           address.attributes.street1,
                           address.attributes.street2,
@@ -331,7 +335,9 @@ export const LocationList: React.FC<LocationListProps> = ({
                         ]
                           .filter((text) => text?.length > 0 && text !== 'undefined')
                           .join(', ')
-                      : ''
+                      : attributes.url
+                      ? attributes.url
+                      : t('categories.location.list.addressPlaceholder')
                   }`,
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
@@ -360,6 +366,7 @@ export const LocationList: React.FC<LocationListProps> = ({
       organizerId,
       categories?.location?.placeholderName,
       chosenEntryIds,
+      t,
     ]
   );
 

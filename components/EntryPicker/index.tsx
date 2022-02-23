@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React, { useMemo } from 'react';
 import { Categories, useCategories } from '../../config/categories';
+import { Location, LocationType } from '../../lib/api/types/location';
 import { useEntry } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { useLanguage } from '../../lib/routing';
@@ -93,6 +94,11 @@ const StyledEntryPickerSlotActiveEntryTitle = styled.div`
   font-weight: 700;
 `;
 
+const StyledEntryPickerSlotActiveEntryMeta = styled.div`
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+`;
+
 const StyledEntryPickerSlotEdit = styled.div<{ hasRemove?: boolean }>`
   text-align: ${({ hasRemove }) => (hasRemove ? 'left' : 'right')};
   text-decoration: underline;
@@ -170,6 +176,30 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
     false
   );
 
+  const address = useMemo<string>(() => {
+    if (entry?.data?.type === Categories.location) {
+      const data = entry.data as Location['data'];
+
+      const entryAddress = data.relations.address;
+      if (data.attributes.type === LocationType.physical && entryAddress) {
+        return [
+          entryAddress.attributes.street1,
+          entryAddress.attributes.street2,
+          entryAddress.attributes.zipCode,
+          entryAddress.attributes.city,
+        ]
+          .filter((text) => text?.length > 0)
+          .join(', ');
+      } else if (data.attributes.url) {
+        return data.attributes.url;
+      } else {
+        return t('categories.location.list.addressPlaceholder') as string;
+      }
+    }
+
+    return undefined;
+  }, [entry?.data, t]);
+
   return (
     <StyledEntryPicker>
       <StyledEntryPickerSlot
@@ -186,6 +216,11 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
                   ? translation?.attributes?.name || categories[categoryName].placeholderName
                   : `${t('general.loading')}...`}
               </StyledEntryPickerSlotActiveEntryTitle>
+              {address && (
+                <StyledEntryPickerSlotActiveEntryMeta>
+                  {t('categories.location.list.address')}: {address}
+                </StyledEntryPickerSlotActiveEntryMeta>
+              )}
             </StyledEntryPickerSlotActiveEntry>
             <StyledEntryPickerSlotEdit hasRemove={typeof remove !== 'undefined'}>
               {editText}
