@@ -459,8 +459,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       });
     }
 
-    console.log(newDate);
-
     return newDate;
   }, [
     fromDate,

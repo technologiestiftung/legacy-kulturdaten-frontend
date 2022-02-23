@@ -108,7 +108,6 @@ export const useNavigation = (
   const organizer = useOrganizer();
 
   useEffect(() => {
-    console.log(organizer?.error);
     if (organizer?.error && activeRoute !== Routes.error) {
       router.replace(
         routes.error({

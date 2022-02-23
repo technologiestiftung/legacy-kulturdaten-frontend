@@ -74,7 +74,6 @@ export const useOrganizer = (): Organizer => {
 
   useEffect(() => {
     if (entry?.error) {
-      console.log('error');
       setHasError(true);
       setResult({ error: 'no organizer defined' } as unknown as Organizer);
     } else {
