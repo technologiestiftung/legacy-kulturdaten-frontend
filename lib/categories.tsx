@@ -125,7 +125,8 @@ const makeListQuery = (
   perPage?: number,
   filter?: [string, string][],
   sort?: { key: string; order: Order },
-  search?: string
+  search?: string,
+  includes?: string[]
 ) => {
   return {
     page: page ? String(page) : undefined,
@@ -138,6 +139,7 @@ const makeListQuery = (
       : undefined,
     sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
     search: search ? search : undefined,
+    includes: includes ? includes : undefined,
   };
 };
 
@@ -200,7 +202,8 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   filter?: [string, string][],
   sort?: { key: string; order: Order },
   load = true,
-  search?: string
+  search?: string,
+  additionalIncludes?: string[]
 ): {
   data: T['data'][];
   meta: {
@@ -216,7 +219,7 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const call = useApiCall();
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
-  const query = makeListQuery(page, perPage, filter, sort, search);
+  const query = makeListQuery(page, perPage, filter, sort, search, additionalIncludes);
 
   const { data } = useSWR(
     load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,

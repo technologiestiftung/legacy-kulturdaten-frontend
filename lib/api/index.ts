@@ -101,10 +101,10 @@ export const apiRoutes: {
   districtList: () => `/${apiVersion}/district`,
   organizerList: (query) =>
     `/${apiVersion}/organizer?include=types,subjects,translations,logo${
-      query?.page ? `&page=${query.page}` : ''
-    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
-      query?.sort ? `&sort=${query.sort}` : ''
-    }${query?.search ? `&search=${query.search}` : ''}`,
+      query?.includes ? `,${(query.includes as string[]).join(',')}` : ''
+    }${query?.page ? `&page=${query.page}` : ''}${query?.size ? `&size=${query.size}` : ''}${
+      query?.filter ? `&filter=${query.filter}` : ''
+    }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   organizerShow: ({ organizer }) =>
     `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerCreate: () => `/${apiVersion}/organizer`,
@@ -118,10 +118,10 @@ export const apiRoutes: {
     `/${apiVersion}/organizer?include=types,address,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
   locationList: (query) =>
     `/${apiVersion}/location?include=translations,address${
-      query?.page ? `&page=${query.page}` : ''
-    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
-      query?.sort ? `&sort=${query.sort}` : ''
-    }${query?.search ? `&search=${query.search}` : ''}`,
+      query?.includes ? `,${(query.includes as string[]).join(',')}` : ''
+    }${query?.page ? `&page=${query.page}` : ''}${query?.size ? `&size=${query.size}` : ''}${
+      query?.filter ? `&filter=${query.filter}` : ''
+    }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   locationShow: ({ id }) =>
     `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
   locationCreate: () => `/${apiVersion}/location`,
@@ -137,10 +137,10 @@ export const apiRoutes: {
   offerAudienceUpdate: ({ id }) => `/${apiVersion}/offer/${id}/audience`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations,types,mainType${
-      query?.page ? `&page=${query.page}` : ''
-    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
-      query?.sort ? `&sort=${query.sort}` : ''
-    }${query?.search ? `&search=${query.search}` : ''}`,
+      query?.includes ? `,${(query.includes as string[]).join(',')}` : ''
+    }${query?.page ? `&page=${query.page}` : ''}${query?.size ? `&size=${query.size}` : ''}${
+      query?.filter ? `&filter=${query.filter}` : ''
+    }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   offerShow: ({ id }) =>
     `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
   offerCreate: () => `/${apiVersion}/offer`,
