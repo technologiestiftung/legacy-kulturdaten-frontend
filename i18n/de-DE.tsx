@@ -88,6 +88,11 @@ export const deDE: Localization = {
         title: () => 'Aktuelle Angebote',
         link: () => 'Angebot anschauen',
         datePlaceholder: () => 'Noch keine Termine vorhanden',
+        isPermanentPhsyical: (props) =>
+          `Dauerangebot mit Öffnungszeiten entsprechend ${
+            props?.plural ? 'der Veranstaltungsorte' : 'des Veranstaltungsortes'
+          }`,
+        isOnlinePermanent: () => 'Online Dauerangebot',
       },
       organizer: {
         title: () => 'Fülle deine Anbieter:in mit Leben',
@@ -1220,6 +1225,7 @@ export const deDE: Localization = {
         address: () => 'Adresse',
         searchNameLabel: () => 'Suche nach Bezeichnung / Name',
         searchNamePlaceholder: () => "z.B. 'Neues Museum'",
+        addressPlaceholder: () => 'nicht vorhanden',
       },
       title: {
         plural: () => 'Orte',

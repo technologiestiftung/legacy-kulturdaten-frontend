@@ -120,6 +120,11 @@ export const enDE: Localization = {
         title: () => 'Current Offers',
         link: () => 'View Offer',
         datePlaceholder: () => 'No dates available yet',
+        isPermanentPhsyical: (props) =>
+          `Permanent offer with opening hours depending on the ${
+            props?.plural ? 'locations' : 'location'
+          }`,
+        isOnlinePermanent: () => 'Permanent online offer',
       },
       data: {
         title: () => 'Use the data (further)',
@@ -1204,6 +1209,7 @@ export const enDE: Localization = {
         address: () => 'address',
         searchNameLabel: () => 'Search for name',
         searchNamePlaceholder: () => "e.g. 'New Museum'",
+        addressPlaceholder: () => 'not available',
       },
       title: {
         plural: () => 'Locations',
