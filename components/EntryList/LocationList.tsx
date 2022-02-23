@@ -237,7 +237,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                   createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
                   updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
                   meta={
-                    attributes.type === LocationType.physical ? (
+                    attributes?.type === LocationType.physical ? (
                       address && (
                         <EntryCardText>
                           {[
@@ -326,7 +326,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                       categories?.location?.placeholderName}
                   </StyledTableLinkText>,
                   `${
-                    attributes.type === LocationType.physical && address
+                    attributes?.type === LocationType.physical && address && address.attributes
                       ? [
                           address.attributes.street1,
                           address.attributes.street2,
@@ -335,7 +335,7 @@ export const LocationList: React.FC<LocationListProps> = ({
                         ]
                           .filter((text) => text?.length > 0 && text !== 'undefined')
                           .join(', ')
-                      : attributes.url
+                      : attributes?.url
                       ? attributes.url
                       : t('categories.location.list.addressPlaceholder')
                   }`,

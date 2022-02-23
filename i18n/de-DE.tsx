@@ -1365,4 +1365,11 @@ export const deDE: Localization = {
       loading: () => 'Wechsle aktive Anbieter:in',
     },
   },
+  errors: {
+    server: {
+      headline: () => 'Server Problem',
+      text: () =>
+        'Es gibt leider ein Problem mit unserem Server. Daher funktioniert die Anwendung aktuell nicht korrekt. Bitte versuche es später erneut. Wir arbeiten an einer Lösung.',
+    },
+  },
 };

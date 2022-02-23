@@ -182,7 +182,7 @@ export const EntryPicker: React.FC<EntryPickerProps> = ({
       const data = entry.data as Location['data'];
 
       const entryAddress = data.relations.address;
-      if (data.attributes.type === LocationType.physical && entryAddress) {
+      if (data?.attributes?.type === LocationType.physical && entryAddress) {
         return [
           entryAddress.attributes.street1,
           entryAddress.attributes.street2,

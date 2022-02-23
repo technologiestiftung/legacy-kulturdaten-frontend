@@ -217,9 +217,7 @@ export const useHoursField = ({
   useEffect(() => {
     if (updated) {
       setUpdated(false);
-
       const next = hoursGroupsToHours(hoursState);
-      console.log(next);
       onChange(next);
     }
   }, [hoursState, onChange, updated]);

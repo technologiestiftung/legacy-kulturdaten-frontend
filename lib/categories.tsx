@@ -269,7 +269,8 @@ export const useMutateList = (
 
 export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   category: Category,
-  query: ParsedUrlQuery
+  query: ParsedUrlQuery,
+  load = true
 ): {
   entry: T;
   mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
@@ -282,16 +283,17 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const organizerId = useOrganizerId();
   const activeRoute = useActiveRoute();
 
-  const z = useSWR<C['response']>(
-    apiCallRoute &&
+  const dataFromApi = useSWR<C['response']>(
+    load &&
+      apiCallRoute &&
       query &&
       (query.id || (query.organizer && query.organizer !== defaultOrganizerId))
       ? getApiUrlString(apiCallRoute, query)
       : undefined,
-    () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
+    () => (load && apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
-  const { data, mutate, error } = z;
+  const { data, mutate, error } = dataFromApi;
 
   const wrappedMutate = (entry?: T, shouldRevalidate?: boolean) =>
     mutate(
@@ -307,6 +309,8 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     if (error && activeRoute !== Routes.page404) {
       if (category?.name !== Categories.organizer) {
         router.replace(category?.routes.list({ locale, query: { organizer: organizerId } }));
+      } else if (query?.organizer === organizerId) {
+        return { error: new Error('no organizer defined') };
       } else {
         router.replace(
           routes.dashboard({
@@ -318,18 +322,19 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
 
     return undefined;
   }, [
-    activeRoute,
-    category?.name,
-    category?.routes,
     data?.body,
     error,
-    locale,
+    activeRoute,
+    query,
+    category?.name,
+    category?.routes,
     organizerId,
     router,
+    locale,
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { entry, mutate: wrappedMutate };
+  return { entry: entry as unknown as T, mutate: wrappedMutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
