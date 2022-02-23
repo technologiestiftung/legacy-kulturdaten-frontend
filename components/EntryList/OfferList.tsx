@@ -176,20 +176,24 @@ export const OfferList: React.FC<OfferListProps> = ({
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
             ({ attributes, relations, id }, index) => {
-              const typeNames = relations?.types?.map((type) => {
-                const typeTranslation = getTranslation<OfferTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return typeTranslation?.attributes.name;
-              });
-              const mainTypeNames = relations?.mainType?.map((type) => {
-                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return mainTypeTranslation?.attributes.name;
-              });
+              const typeNames =
+                relations?.types?.map((type) => {
+                  const typeTranslation = getTranslation<OfferTypeTranslation>(
+                    language,
+                    type.relations.translations
+                  );
+                  return typeTranslation?.attributes.name;
+                }) || [];
+
+              const mainTypeNames =
+                relations?.mainType?.map((type) => {
+                  const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                    language,
+                    type.relations.translations
+                  );
+                  return mainTypeTranslation?.attributes.name;
+                }) || [];
+
               const href = (sub?: string) =>
                 routes[Routes.offer]({
                   locale,

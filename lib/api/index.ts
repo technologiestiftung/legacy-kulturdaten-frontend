@@ -106,7 +106,7 @@ export const apiRoutes: {
       query?.filter ? `&filter=${query.filter}` : ''
     }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   organizerShow: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
+    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles,mainContact`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
     `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
