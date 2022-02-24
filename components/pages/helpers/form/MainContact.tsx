@@ -7,6 +7,7 @@ import { OrganizerMainContact } from '../../../../lib/api/types/organizer';
 import { useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { useOrganizerId } from '../../../../lib/useOrganizer';
+import { isEmail } from '../../../../lib/validations';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { EntryFormHook, EntryFormHookProps } from '../form';
@@ -113,9 +114,10 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
       !required ||
       Boolean(
         mainContact?.attributes?.email?.length > 0 &&
+          isEmail(mainContact.attributes.email) &&
           mainContact.relations.translations?.find(({ attributes }) => attributes.name?.length > 0)
       ),
-    [loaded, mainContact?.attributes?.email?.length, mainContact?.relations?.translations, required]
+    [loaded, mainContact?.attributes?.email, mainContact?.relations?.translations, required]
   );
 
   const fulfilled = useMemo(
@@ -123,9 +125,10 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
       !softRequired ||
       Boolean(
         mainContact?.attributes?.email?.length > 0 &&
+          isEmail(mainContact.attributes.email) &&
           mainContact.relations.translations?.find(({ attributes }) => attributes.name?.length > 0)
       ),
-    [mainContact?.attributes?.email?.length, mainContact?.relations?.translations, softRequired]
+    [mainContact?.attributes?.email, mainContact?.relations?.translations, softRequired]
   );
 
   return {
@@ -148,6 +151,7 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
             title={t('categories.organizer.form.address') as string}
             tooltip={t('categories.organizer.form.addressTooltip') as string}
             id={id}
+            valid={valid}
           />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
@@ -179,10 +183,16 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
             <FormItem width={FormItemWidth.half}>
               <Input
                 label={t('categories.organizer.form.mainContact.email') as string}
-                type={InputType.text}
+                type={InputType.email}
                 value={mainContact?.attributes?.email || ''}
                 required={required}
                 softRequired={softRequired}
+                error={
+                  mainContact?.attributes?.email?.length > 0 &&
+                  !isEmail(mainContact?.attributes?.email)
+                    ? (t('forms.emailInvalid') as string)
+                    : undefined
+                }
                 onChange={(e) => {
                   setMainContact({
                     ...mainContact,

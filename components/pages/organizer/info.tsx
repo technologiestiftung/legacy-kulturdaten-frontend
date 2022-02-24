@@ -10,6 +10,7 @@ import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { isEmail } from '../../../lib/validations';
 import { WindowContext } from '../../../lib/WindowService';
 import { Contacts } from '../../Contacts';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -87,6 +88,11 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
                 );
               }}
               ref={emailRef}
+              error={
+                attributes?.email?.length && !isEmail(attributes?.email)
+                  ? (t('forms.emailInvalid') as string)
+                  : undefined
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -180,6 +186,20 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
     [contacts, contactsFromApi]
   );
 
+  const valid = useMemo(() => {
+    if (pristine) {
+      return true;
+    }
+
+    for (let i = 0; i < contacts?.length; i += 1) {
+      if (contacts[i]?.attributes?.email?.length > 0 && !isEmail(contacts[i].attributes.email)) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [pristine, contacts]);
+
   useEffect(() => {
     if (JSON.stringify(initialContacts) !== JSON.stringify(contactsFromApi)) {
       setContactsFromApi(initialContacts);
@@ -192,6 +212,7 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
       <EntryFormHead
         title={t('categories.organizer.form.additionalContacts') as string}
         tooltip={t('categories.organizer.form.additionalContactsTooltip')}
+        valid={valid}
       />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
@@ -250,7 +271,7 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
     reset: () => {
       setContacts(initialContacts);
     },
-    valid: true,
+    valid,
     hint: false,
   };
 };
