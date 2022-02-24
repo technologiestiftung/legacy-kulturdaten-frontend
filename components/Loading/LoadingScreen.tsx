@@ -109,7 +109,7 @@ const StyledLoadingScreenCheck = styled.div`
   }
 `;
 
-const StyledLoadingScreenWobbler = styled.div`
+export const StyledLoadingScreenWobbler = styled.div<{ invert?: boolean }>`
   @keyframes wobble {
     0% {
       transform: translateX(calc(0));
@@ -126,9 +126,18 @@ const StyledLoadingScreenWobbler = styled.div`
   margin: 0 auto;
   height: 0.1875rem;
   border-radius: 1.5rem;
-  color: var(--white);
   position: relative;
-  background: var(--grey-600);
+
+  ${({ invert }) =>
+    invert
+      ? css`
+          color: var(--grey-500);
+          background: var(--grey-200);
+        `
+      : css`
+          color: var(--white);
+          background: var(--grey-600);
+        `}
 
   &::before {
     content: '';
@@ -138,7 +147,7 @@ const StyledLoadingScreenWobbler = styled.div`
     bottom: 0;
     left: 0;
     border-radius: 1.5rem;
-    background: var(--grey-200);
+    background: ${({ invert }) => (invert ? 'var(--grey-500)' : 'var(--grey-200)')};
     animation: wobble 1.5s infinite ease-in-out;
   }
 `;

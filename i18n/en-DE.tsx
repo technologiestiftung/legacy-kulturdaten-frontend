@@ -1355,4 +1355,7 @@ export const enDE: Localization = {
         'Unfortunately there is a problem with our server. As a result, the application is currently not working correctly. Please try again later. We are working on a solution.',
     },
   },
+  loader: {
+    loading: () => 'content is loading',
+  },
 };

@@ -12,6 +12,7 @@ import { getTranslation } from '../../lib/translations';
 import { usePseudoUID } from '../../lib/uid';
 import { Checkbox } from '../checkbox';
 import { CheckboxList } from '../checkbox/CheckboxList';
+import { ComponentLoader } from '../ComponentLoader';
 
 const StyledTypesSubjects = styled.div`
   display: grid;
@@ -204,7 +205,7 @@ export const TypesSubjects: React.FC<TypesSubjectsProps> = ({
             )}
           </StyledTypesSubjectsType>
         );
-      })}
+      }) || <ComponentLoader />}
     </StyledTypesSubjects>
   );
 };
