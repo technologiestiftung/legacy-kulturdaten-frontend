@@ -121,10 +121,9 @@ export const enDE: Localization = {
         link: () => 'View Offer',
         datePlaceholder: () => 'No dates available yet',
         isPermanentPhsyical: (props) =>
-          `Permanent offer with opening hours depending on the ${
+          `Permanent offer: Opening hours depending on the ${
             props?.plural ? 'locations' : 'location'
-          }`,
-        isOnlinePermanent: () => 'Permanent online offer',
+          } or permanently available`,
       },
       data: {
         title: () => 'Use the data (further)',

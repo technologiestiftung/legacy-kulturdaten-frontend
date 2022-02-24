@@ -89,10 +89,9 @@ export const deDE: Localization = {
         link: () => 'Angebot anschauen',
         datePlaceholder: () => 'Noch keine Termine vorhanden',
         isPermanentPhsyical: (props) =>
-          `Dauerangebot mit Öffnungszeiten entsprechend ${
-            props?.plural ? 'der Veranstaltungsorte' : 'des Veranstaltungsortes'
-          }`,
-        isOnlinePermanent: () => 'Online Dauerangebot',
+          `Dauerangebot: Öffnungszeiten gemäß ${
+            props?.plural ? 'Veranstaltungsorten' : 'Veranstaltungsort'
+          } bzw. permanent verfügbar`,
       },
       organizer: {
         title: () => 'Fülle deine Anbieter:in mit Leben',
