@@ -29,6 +29,7 @@ import { Tag } from '../../../lib/api/types/tag';
 import { Language } from '../../../config/locale';
 import { useOrganizerId } from '../../../lib/useOrganizer';
 import { PublishedStatus } from '../../../lib/api/types/general';
+import { ComponentLoader } from '../../ComponentLoader';
 
 const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -85,7 +86,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
         />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
-            {typeOptions?.length > 0 && (
+            {typeOptions?.length > 0 ? (
               <Tags
                 id={`${uid}-select`}
                 value={types?.length > 0 ? types : initialTypes?.length > 0 ? initialTypes : []}
@@ -117,6 +118,8 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
                   },
                 }))}
               />
+            ) : (
+              <ComponentLoader />
             )}
           </FormItem>
         </FormGrid>

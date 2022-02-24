@@ -1373,4 +1373,7 @@ export const deDE: Localization = {
         'Es gibt leider ein Problem mit unserem Server. Daher funktioniert die Anwendung aktuell nicht korrekt. Bitte versuche es später erneut. Wir arbeiten an einer Lösung.',
     },
   },
+  loader: {
+    loading: () => 'Inhalt lädt',
+  },
 };
