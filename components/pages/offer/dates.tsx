@@ -443,14 +443,14 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                   {renderedDateList}
                 </FormItem>
                 <FormItem width={FormItemWidth.full}>
-                  {metaDateList?.pages.lastPage > 1 && (
+                  {metaDateList?.pages?.lastPage > 1 && (
                     <EntryListPagination
                       currentPage={currentPage}
-                      lastPage={metaDateList?.pages.lastPage}
-                      totalEntries={metaDateList?.pages.total}
+                      lastPage={metaDateList.pages.lastPage}
+                      totalEntries={metaDateList.pages.total}
                       entriesPerPage={entriesPerPage}
                       nextPage={() =>
-                        currentPage < metaDateList?.pages.lastPage
+                        currentPage < metaDateList.pages.lastPage
                           ? setCurrentPage(currentPage + 1)
                           : undefined
                       }
@@ -458,7 +458,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                         currentPage > 1 ? setCurrentPage(currentPage - 1) : undefined
                       }
                       goToPage={(index: number) =>
-                        index <= metaDateList?.pages.lastPage ? setCurrentPage(index) : undefined
+                        index <= metaDateList.pages.lastPage ? setCurrentPage(index) : undefined
                       }
                       expanded={true}
                       noHorizontalPadding
