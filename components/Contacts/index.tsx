@@ -9,6 +9,7 @@ import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { mq } from '../globals/Constants';
 import { Input, InputType } from '../input';
+import { isEmail } from '../../lib/validations';
 
 const StyledContacts = styled.div`
   display: flex;
@@ -207,6 +208,11 @@ export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: Contac
                     },
                     ...contacts.slice(index + 1),
                   ])
+                }
+                error={
+                  contact.attributes.email?.length && !isEmail(contact.attributes.email)
+                    ? (t('forms.emailInvalid') as string)
+                    : undefined
                 }
               />
             </StyledContactsItemField>

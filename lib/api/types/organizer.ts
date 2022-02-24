@@ -18,6 +18,18 @@ export type OrganizerSubject = EntrySubject;
 export type OrganizerTypeTranslation = EntryTypeTranslation;
 export type OrganizerSubjectTranslation = EntrySubjectTranslation;
 
+type OrganizerMainContactTranslation = Translation;
+
+export type OrganizerMainContact = {
+  attributes: {
+    email: string;
+  };
+  relations: {
+    address?: Address;
+    translations: OrganizerMainContactTranslation[];
+  };
+};
+
 export type OrganizerRolePending = {
   id: string;
   attributes: {
@@ -49,7 +61,6 @@ export type Organizer = {
     } & DefaultAttributes;
     relations?: {
       links?: WebLink[];
-      address?: Address;
       subjects?: OrganizerSubject[];
       translations?: OrganizerTranslation[];
       types?: OrganizerType[];
@@ -58,9 +69,9 @@ export type Organizer = {
       tags?: Tag[];
       contacts?: Contact[];
       roles?: OrganizerRole[];
+      mainContact?: OrganizerMainContact;
     };
   };
-  error?: Error;
   meta?: {
     publishable:
       | boolean

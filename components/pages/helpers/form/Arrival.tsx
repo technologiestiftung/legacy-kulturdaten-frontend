@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useApiCall } from '../../../../lib/api';
 import { useEntry } from '../../../../lib/categories';
-import { useT } from '../../../../lib/i18n';
 import { EntryFormHook } from '../form';
 import { locationArrival } from '../../../../config/arrival';
 import {
@@ -121,8 +120,6 @@ export const useArrivalForm: EntryFormHook = ({ category, query }) => {
       ),
     [serviceFieldsState, serviceFromApi]
   );
-
-  const t = useT();
 
   return {
     renderedForm: (

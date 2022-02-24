@@ -272,7 +272,7 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   query: ParsedUrlQuery,
   load = true
 ): {
-  entry: T;
+  entry: T & { error?: Error };
   mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
 } => {
   const call = useApiCall();

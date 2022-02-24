@@ -13,10 +13,11 @@ module.exports = {
   },
   images: {
     domains: [
-      'beta.api.kulturdaten.berlin', 
-      'api.kulturdaten.berlin', 
+      'beta.api.kulturdaten.berlin',
+      'api.kulturdaten.berlin',
       's3.eu-central-1.amazonaws.com',
       'storage-kulturdaten-api-beta.s3.eu-central-1.amazonaws.com',
+      'storage-kulturdaten-api.s3.eu-central-1.amazonaws.com',
     ],
   },
   typescript: {

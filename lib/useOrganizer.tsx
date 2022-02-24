@@ -55,7 +55,7 @@ export const useSetOrganizerId = (): ((organizerId: string) => void) => {
   };
 };
 
-export const useOrganizer = (): Organizer => {
+export const useOrganizer = (): Organizer & { error?: Error } => {
   const organizerId = useOrganizerId();
   const categories = useCategories();
   const { isLoggedIn } = useUser();
@@ -73,11 +73,11 @@ export const useOrganizer = (): Organizer => {
   );
 
   useEffect(() => {
-    if (entry?.error) {
+    if ((entry as unknown as { error: Error })?.error) {
       setHasError(true);
       setResult({ error: 'no organizer defined' } as unknown as Organizer);
     } else {
-      setResult(entry);
+      setResult(entry as Organizer);
     }
   }, [entry]);
 

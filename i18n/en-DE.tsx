@@ -514,6 +514,7 @@ export const enDE: Localization = {
     website: () => 'Website',
     links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
+    emailInvalid: () => 'The input data is not a correct email.',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
     },
@@ -970,7 +971,7 @@ export const enDE: Localization = {
         name: () => 'Name',
         description: () => 'Description',
         categorization: () => 'Type of organizer',
-        address: () => 'Internal contact',
+        mainContact: () => 'Internal contact',
       },
       title: {
         plural: () => 'Organizers',
@@ -979,6 +980,10 @@ export const enDE: Localization = {
       form: {
         create: () => 'Create new Organizer',
         baseInfo: () => 'Basic information',
+        mainContact: {
+          name: () => 'Contact person',
+          email: () => 'Email',
+        },
         address: () => 'Internal contact - for questions regarding this profile',
         addressTooltip: () =>
           'Only for our internal use for queries in case of problems, will not be published.',

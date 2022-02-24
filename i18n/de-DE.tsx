@@ -519,6 +519,7 @@ export const deDE: Localization = {
     website: () => 'Website',
     links: () => 'Weitere Links (z.B. Social Media Kanäle)',
     urlPlaceholder: () => 'https://example.com',
+    emailInvalid: () => 'Die Eingabe ist keine korrekte E-Mail.',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
     },
@@ -976,7 +977,7 @@ export const deDE: Localization = {
         name: () => 'Bezeichnung / Name',
         description: () => 'Beschreibung',
         categorization: () => 'Art der Anbieter:in',
-        address: () => 'Kontakt intern',
+        mainContact: () => 'Kontakt intern',
       },
       title: {
         plural: () => 'Anbieter:innen',
@@ -993,6 +994,10 @@ export const deDE: Localization = {
       form: {
         create: () => 'Neue Anbieter:in anlegen',
         baseInfo: () => 'Grundlagen',
+        mainContact: {
+          name: () => 'Ansprechperson',
+          email: () => 'E-Mail',
+        },
         address: () => 'Kontakt intern - für unsere Rückfragen zu diesem Anbieter:in-Profil',
         addressTooltip: () =>
           'Nur für unseren internen Gebrauch für Rückfragen bzw. bei Problemen, wird nicht veröffentlicht.',
