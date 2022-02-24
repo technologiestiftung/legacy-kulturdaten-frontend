@@ -7,6 +7,7 @@ import { User } from '../../lib/api/types/user';
 import { Organizer } from '../../lib/api/types/organizer';
 import { RoleName } from '../../lib/api/types/role';
 import { AdminContext } from '../Admin/AdminContext';
+import { useSetOrganizerId } from '../../lib/useOrganizer';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -24,6 +25,7 @@ export const useUser = (): WrappedUser => {
   const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
 
   const { authToken, user, isAuthenticated, login, logout, mutate } = useContext(UserContext);
+  const setActiveOrganizerId = useSetOrganizerId();
 
   const authTokenFromStateOrCookie = useMemo(
     () => authToken || getCookie(authTokenCookieName)?.value,
@@ -41,6 +43,7 @@ export const useUser = (): WrappedUser => {
     logout: async () => {
       setAdminOrganizerId(undefined);
       setAdminModeActive(false);
+      setActiveOrganizerId(undefined);
       await logout();
     },
     mutateUserInfo: mutate,

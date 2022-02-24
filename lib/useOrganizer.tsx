@@ -104,8 +104,6 @@ export const useHandleActiveOrganizer = () => {
       } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
         setActiveOrganizerId(defaultOrganizerId);
       }
-    } else {
-      setActiveOrganizerId(defaultOrganizerId);
     }
   }, [activeOrganizerId, isLoggedIn, setActiveOrganizerId, user?.relations?.organizers]);
 };

@@ -1,7 +1,13 @@
 import React, { ReactNode, Reducer, useCallback, useMemo, useReducer, useState } from 'react';
+import getConfig from 'next/config';
+import { getCookie } from '../../lib/cookies';
 import { getPseudoUID } from '../../lib/uid';
 
 export const defaultOrganizerId = 'default';
+
+const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
+const activeOrganizerCookieName =
+  (publicRuntimeConfig?.activeOrganizerCookieName as string) || 'ACTIVE_ORGANIZER_ID';
 
 type NavigationContext = {
   registerOverlay: (open?: boolean) => { id: string };
@@ -80,8 +86,11 @@ interface NavigationContextProviderProps {
 export const NavigationContextProvider: React.FC<NavigationContextProviderProps> = ({
   children,
 }: NavigationContextProviderProps) => {
+  const organizerIdFromCookie = getCookie(activeOrganizerCookieName)?.value;
   const [menuExpanded, setMenuExpanded] = useState<boolean>(false);
-  const [activeOrganizerId, setActiveOrganizerId] = useState(defaultOrganizerId);
+  const [activeOrganizerId, setActiveOrganizerId] = useState(
+    organizerIdFromCookie || defaultOrganizerId
+  );
   const [overlays, dispatchOverlayAction] = useReducer(linksReducer, {});
   const [headerOrganizerBandCollapsed, setHeaderOrganizerBandCollapsed] = useState(true);
 
