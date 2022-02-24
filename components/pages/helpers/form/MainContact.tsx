@@ -22,7 +22,14 @@ const defaultMainContact: OrganizerMainContact = {
     email: undefined,
   },
   relations: {
-    address: undefined,
+    address: {
+      attributes: {
+        city: undefined,
+        street1: undefined,
+        street2: undefined,
+        zipCode: undefined,
+      },
+    },
     translations: [
       {
         attributes: {
@@ -54,14 +61,12 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
   const call = useApiCall();
 
   const initialMainContact = useMemo(
-    () => entry?.data?.relations?.mainContact,
+    () => entry?.data?.relations?.mainContact || defaultMainContact,
     [entry?.data?.relations?.mainContact]
   );
 
   const organizerId = useOrganizerId();
-  const [mainContact, setMainContact] = useState<OrganizerMainContact>(
-    initialMainContact || defaultMainContact
-  );
+  const [mainContact, setMainContact] = useState<OrganizerMainContact>(initialMainContact);
   const [mainContactFromApi, setMainContactFromApi] =
     useState<OrganizerMainContact>(initialMainContact);
   const mutateList = useMutateList(
