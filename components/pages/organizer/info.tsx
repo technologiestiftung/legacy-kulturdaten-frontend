@@ -10,6 +10,7 @@ import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { useUserIsOwner } from '../../../lib/useUserIsOwner';
 import { isEmail } from '../../../lib/validations';
 import { WindowContext } from '../../../lib/WindowService';
 import { Contacts } from '../../Contacts';
@@ -286,6 +287,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
+  const userIsOwner = useUserIsOwner();
 
   const [valid, setValid] = useState(true);
 
@@ -397,38 +399,45 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const formattedDate = useSaveDate(entry);
 
-  const pristine = useMemo(
-    () =>
-      ![
-        namePristine,
-        addressPristine,
-        linksPristine,
-        contactPristine,
-        descriptionPristine,
-        additionalContactsPristine,
-      ].includes(false),
-    [
-      addressPristine,
+  const pristine = useMemo(() => {
+    const pristineConditions = [
+      namePristine,
+      linksPristine,
       contactPristine,
       descriptionPristine,
-      linksPristine,
-      namePristine,
       additionalContactsPristine,
-    ]
-  );
+    ];
+
+    if (userIsOwner) {
+      pristineConditions.push(addressPristine);
+    }
+    return !pristineConditions.includes(false);
+  }, [
+    userIsOwner,
+    addressPristine,
+    contactPristine,
+    descriptionPristine,
+    linksPristine,
+    namePristine,
+    additionalContactsPristine,
+  ]);
 
   useEffect(() => {
-    setValid(
-      ![
-        nameValid,
-        addressValid,
-        contactValid,
-        descriptionValid,
-        linksValid,
-        additionalContactsValid,
-      ].includes(false)
-    );
+    const validations = [
+      nameValid,
+      contactValid,
+      descriptionValid,
+      linksValid,
+      additionalContactsValid,
+    ];
+
+    if (userIsOwner) {
+      validations.push(addressValid);
+    }
+
+    setValid(!validations.includes(false));
   }, [
+    userIsOwner,
     addressValid,
     contactValid,
     descriptionValid,
@@ -446,30 +455,41 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   useConfirmExit(shouldWarn, message, () => {
     nameReset();
-    addressReset();
+    if (userIsOwner) {
+      addressReset();
+    }
     descriptionReset();
     contactReset();
     additionalContactsReset();
     linksReset();
   });
 
-  const formRequirementFulfillments = useMemo(
-    () => [
-      nameRequirementFulfillment,
-      addressRequirementFulfillment,
-      descriptionRequirementFulfillment,
-    ],
-    [nameRequirementFulfillment, addressRequirementFulfillment, descriptionRequirementFulfillment]
-  );
+  const formRequirementFulfillments = useMemo(() => {
+    const requirementFulfillments = [nameRequirementFulfillment, descriptionRequirementFulfillment];
+
+    if (userIsOwner) {
+      requirementFulfillments.push(addressRequirementFulfillment);
+    }
+
+    return requirementFulfillments;
+  }, [
+    userIsOwner,
+    nameRequirementFulfillment,
+    addressRequirementFulfillment,
+    descriptionRequirementFulfillment,
+  ]);
 
   const onSave = useCallback(async () => {
     nameSubmit();
-    addressSubmit();
+    if (userIsOwner) {
+      addressSubmit();
+    }
     descriptionSubmit();
     linksSubmit();
     contactSubmit();
     additionalContactsSubmit();
   }, [
+    userIsOwner,
     nameSubmit,
     addressSubmit,
     descriptionSubmit,
@@ -503,7 +523,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <EntryFormContainer>{contactForm}</EntryFormContainer>
             <EntryFormContainer>{additionalContactsForm}</EntryFormContainer>
             <EntryFormContainer>{linksForm}</EntryFormContainer>
-            <EntryFormContainer>{addressForm}</EntryFormContainer>
+            {userIsOwner && <EntryFormContainer>{addressForm}</EntryFormContainer>}
           </EntryFormWrapper>
         </div>
       </div>
