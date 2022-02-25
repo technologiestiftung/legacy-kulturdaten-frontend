@@ -124,8 +124,10 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     () =>
       Object.values(filters)?.filter(
         (filter) => filter && filter[0] !== undefined && filter[0] !== ''
-      ).length,
-    [filters]
+      ).length + search
+        ? 1
+        : 0,
+    [filters, search]
   );
 
   useEffect(() => {
@@ -472,9 +474,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               placeholder={
                 rows && rows.length === 0
                   ? activeFiltersCount === 0
-                    ? t('categories.offer.list.nothing')
-                    : t('categories.offer.list.nothingFilter')
-                  : t('categories.offer.list.loading')
+                    ? t('categories.organizer.list.nothing')
+                    : t('categories.organizer.list.nothingFilter')
+                  : t('categories.organizer.list.loading')
               }
             />
           </StyledEntryListTable>
