@@ -8,7 +8,10 @@ import { Typography } from '../components/globals/Typography';
 import { WindowContext, WindowContextProvider } from '../lib/WindowService';
 import { NavigationContextProvider } from '../components/navigation/NavigationContext';
 import { useContext } from 'react';
-import { EntryListContextProvider } from '../components/EntryList/EntryListContext';
+import {
+  AdminListContext,
+  EntryListContextProvider,
+} from '../components/EntryList/EntryListContext';
 import { Categories } from '../config/categories';
 import { AppLayout, useLayout } from '../components/layouts/AppLayout';
 import { useNavigation } from '../components/navigation';
@@ -47,17 +50,22 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
             <EntryListContextProvider
               listNames={[Categories.organizer, Categories.location, Categories.offer]}
             >
-              <UserContextProvider>
-                <AdminContextProvider>
-                  <DownloadContextProvider>
-                    <Reset />
-                    <CSSVars />
-                    <Global />
-                    <Typography />
-                    <EmbeddedAppLayout content={<Component {...pageProps} />} />
-                  </DownloadContextProvider>
-                </AdminContextProvider>
-              </UserContextProvider>
+              <EntryListContextProvider
+                listNames={[Categories.organizer]}
+                Context={AdminListContext}
+              >
+                <UserContextProvider>
+                  <AdminContextProvider>
+                    <DownloadContextProvider>
+                      <Reset />
+                      <CSSVars />
+                      <Global />
+                      <Typography />
+                      <EmbeddedAppLayout content={<Component {...pageProps} />} />
+                    </DownloadContextProvider>
+                  </AdminContextProvider>
+                </UserContextProvider>
+              </EntryListContextProvider>
             </EntryListContextProvider>
           </ConfirmContextProvider>
         </LoadingContextProvider>

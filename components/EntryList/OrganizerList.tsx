@@ -58,6 +58,7 @@ export interface OrganizerListProps {
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
   title?: string;
+  Context?: React.Context<EntryListContext>;
 }
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({
@@ -67,6 +68,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
   customEntryOnClick,
   activeEntryId,
   title,
+  Context = EntryListContext,
 }: OrganizerListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -88,7 +90,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     getFiltersBoxExpanded,
     setFiltersBoxExpanded,
     setLastEntryId,
-  } = useContext(EntryListContext);
+  } = useContext(Context);
   const [search, setSearch] = useState<string>();
   const pseudoUID = usePseudoUID();
   const view = useMemo(() => (expanded ? EntryListView.table : EntryListView.cards), [expanded]);

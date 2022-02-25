@@ -40,11 +40,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
   const uid = usePseudoUID();
   const language = useLanguage();
   const organizerId = useOrganizerId();
-  const mutateList = useMutateList(
-    category,
-
-    [['organizers', organizerId]]
-  );
+  const mutateList = useMutateList(category, [['organizers', organizerId]]);
 
   const typeOptions = useOfferMainTypeList();
 

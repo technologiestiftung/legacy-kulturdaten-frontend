@@ -53,7 +53,7 @@ export enum EntryListView {
   cards = 'cards',
 }
 
-type EntryListContext = {
+export type EntryListContext = {
   getCurrentPage: (listName: string) => number;
   setCurrentPage: (listName: string, currentPage: number) => void;
   getEntriesPerPage: (listName: string) => number;
@@ -89,14 +89,34 @@ export const EntryListContext = React.createContext<EntryListContext>({
   reset: undefined,
 });
 
+export const AdminListContext = React.createContext<EntryListContext>({
+  getCurrentPage: undefined,
+  setCurrentPage: undefined,
+  getEntriesPerPage: undefined,
+  setEntriesPerPage: undefined,
+  getOrder: undefined,
+  setOrder: undefined,
+  getSortKey: undefined,
+  setSortKey: undefined,
+  getFilters: undefined,
+  getDispatchFilters: undefined,
+  getFiltersBoxExpanded: undefined,
+  setFiltersBoxExpanded: undefined,
+  getLastEntryId: undefined,
+  setLastEntryId: undefined,
+  reset: undefined,
+});
+
 interface EntryListContextProviderProps {
   children: ReactNode;
   listNames: string[];
+  Context?: React.Context<EntryListContext>;
 }
 
 export const EntryListContextProvider: React.FC<EntryListContextProviderProps> = ({
   children,
   listNames,
+  Context = EntryListContext,
 }: EntryListContextProviderProps) => {
   const [filters, dispatchFilters] = useReducer(
     filtersReducer,
@@ -128,7 +148,7 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
   );
 
   return (
-    <EntryListContext.Provider
+    <Context.Provider
       value={{
         getCurrentPage: (listName) => currentPages[listName],
         setCurrentPage: (listName, currentPage) =>
@@ -170,6 +190,6 @@ export const EntryListContextProvider: React.FC<EntryListContextProviderProps> =
       }}
     >
       {children}
-    </EntryListContext.Provider>
+    </Context.Provider>
   );
 };
