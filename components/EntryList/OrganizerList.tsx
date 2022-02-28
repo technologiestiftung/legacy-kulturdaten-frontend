@@ -411,11 +411,11 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             ) : cards && cards.length === 0 ? (
               <EntryListPlaceholder>
                 {activeFiltersCount === 0
-                  ? t('categories.offer.list.nothing')
-                  : t('categories.offer.list.nothingFilter')}
+                  ? t('categories.organizer.list.nothing')
+                  : t('categories.organizer.list.nothingFilter')}
               </EntryListPlaceholder>
             ) : (
-              <EntryListPlaceholder>{t('categories.offer.list.loading')}</EntryListPlaceholder>
+              <EntryListPlaceholder>{t('categories.organizer.list.loading')}</EntryListPlaceholder>
             )}
           </EntryCardGrid>
         ) : (

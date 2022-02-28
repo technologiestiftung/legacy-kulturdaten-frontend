@@ -618,9 +618,9 @@ export const LocationList: React.FC<LocationListProps> = ({
               placeholder={
                 rows && rows.length === 0
                   ? activeFiltersCount === 0
-                    ? t('categories.offer.list.nothing')
-                    : t('categories.offer.list.nothingFilter')
-                  : t('categories.offer.list.loading')
+                    ? t('categories.location.list.nothing')
+                    : t('categories.location.list.nothingFilter')
+                  : t('categories.location.list.loading')
               }
             />
           </StyledEntryListTable>

@@ -142,8 +142,10 @@ export const OfferList: React.FC<OfferListProps> = ({
     () =>
       Object.values(filters)?.filter(
         (filter) => filter && filter[0] !== undefined && filter[0] !== ''
-      ).length,
-    [filters]
+      ).length + search
+        ? 1
+        : 0,
+    [filters, search]
   );
 
   useEffect(() => {
