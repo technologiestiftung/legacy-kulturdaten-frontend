@@ -25,7 +25,7 @@ export const useUser = (): WrappedUser => {
   const authTokenCookieName = publicRuntimeConfig?.authTokenCookieName || 'AUTH_TOKEN';
 
   const { authToken, user, isAuthenticated, login, logout, mutate } = useContext(UserContext);
-  const setActiveOrganizerId = useSetOrganizerId();
+  const setOrganizerId = useSetOrganizerId();
 
   const authTokenFromStateOrCookie = useMemo(
     () => authToken || getCookie(authTokenCookieName)?.value,
@@ -43,7 +43,7 @@ export const useUser = (): WrappedUser => {
     logout: async () => {
       setAdminOrganizerId(undefined);
       setAdminModeActive(false);
-      setActiveOrganizerId(undefined);
+      setOrganizerId(undefined);
       await logout();
     },
     mutateUserInfo: mutate,
