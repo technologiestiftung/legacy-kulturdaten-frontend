@@ -123,17 +123,17 @@ export const apiRoutes: {
       query?.filter ? `&filter=${query.filter}` : ''
     }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   locationShow: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizer,address,accessibility,service,roles`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizer,address,accessibility,service,roles`,
   locationAccessibilityUpdate: ({ id }) => `/${apiVersion}/location/${id}/accessibility`,
   locationServiceUpdate: ({ id }) => `/${apiVersion}/location/${id}/service`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   locationDownload: ({ id, format }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,openingHours,organizers,address,accessibility,service&format=${format}`,
+    `/${apiVersion}/location/${id}?include=links,translations,openingHours,organizer,address,accessibility,service&format=${format}`,
   locationListDownload: ({ format, organizer }) =>
-    `/${apiVersion}/location?include=links,translations,openingHours,organizers,address,accessibility,service&filter=organizer=${organizer}&sort=-updatedAt&format=${format}`,
+    `/${apiVersion}/location?include=links,translations,openingHours,organizer,address,accessibility,service&filter=organizer=${organizer}&sort=-updatedAt&format=${format}`,
   offerAudienceUpdate: ({ id }) => `/${apiVersion}/offer/${id}/audience`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations,types,mainType${
@@ -142,7 +142,7 @@ export const apiRoutes: {
       query?.filter ? `&filter=${query.filter}` : ''
     }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience,roles`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
     `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience`,

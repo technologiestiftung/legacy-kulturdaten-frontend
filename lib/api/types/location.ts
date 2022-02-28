@@ -31,7 +31,7 @@ export type Location = {
     } & DefaultAttributes;
     relations?: {
       translations: LocationTranslation[];
-      organizer?: Organizer;
+      organizer?: Organizer['data'];
       address?: Address;
       openingHours?: OpeningHours[];
       accessibility?: Accessibility;

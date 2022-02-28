@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import getConfig from 'next/config';
 
 import { AuthLogin, authLoginFactory, useApiCall } from '../../lib/api';
@@ -44,6 +44,8 @@ export const LoginForm: React.FC = () => {
   const loadingScreen = useLoadingScreen();
   const formRef = useRef<HTMLFormElement>(null);
 
+  const redirect = useMemo(() => router?.query?.redirect, [router?.query?.redirect]);
+
   useEffect(() => {
     if (isLoggedIn) {
       router.replace(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
@@ -65,10 +67,11 @@ export const LoginForm: React.FC = () => {
 
             login(
               authCookie(token, remember, locale),
-              routes.dashboard({
-                locale,
-                query: { organizer: defaultOrganizerId },
-              })
+              (redirect as string) ||
+                routes.dashboard({
+                  locale,
+                  query: { organizer: defaultOrganizerId },
+                })
             );
 
             return { success: true };

@@ -44,7 +44,10 @@ export const routes: { [key in Routes]: Route } = {
   userDeletion: ({ locale }) => `/${localizedRoutes[Routes.userDeletion][locale]}/`,
   developer: ({ locale }) => `/${localizedRoutes[Routes.developer][locale]}/`,
   userNotifications: ({ locale }) => `/${localizedRoutes[Routes.userNotifications][locale]}/`,
-  login: ({ locale }) => `/${localizedRoutes[Routes.login][locale]}/`,
+  login: ({ locale, query }) =>
+    `/${localizedRoutes[Routes.login][locale]}/${
+      query?.redirect ? `?redirect=${query.redirect}` : ''
+    }`,
   register: ({ locale }) => `/${localizedRoutes[Routes.register][locale]}/`,
   resetPassword: ({ locale, query }) =>
     `/${localizedRoutes[Routes.resetPassword][locale]}/${

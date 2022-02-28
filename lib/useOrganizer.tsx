@@ -9,36 +9,43 @@ import { Cookie, deleteCookie, getCookie, setCookie } from './cookies';
 import { routes, useLocale } from './routing';
 import { useAdminMode } from '../components/Admin/AdminContext';
 import { useUser } from '../components/user/useUser';
+import { useRouter } from 'next/router';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 const activeOrganizerCookieName =
   (publicRuntimeConfig?.activeOrganizerCookieName as string) || 'ACTIVE_ORGANIZER_ID';
 
 export const useOrganizerId = (): string => {
-  const { activeOrganizerId, setActiveOrganizerId } = useContext(NavigationContext);
+  const { activeOrganizerId } = useContext(NavigationContext);
+  const setOrganizerId = useSetOrganizerId();
   const locale = useLocale();
   const { adminModeActive, activeOrganizerId: adminActiveOrganizerId } = useAdminMode();
+  const router = useRouter();
 
   useEffect(() => {
     const organizerIdFromCookie = getCookie(activeOrganizerCookieName)?.value;
+    const organizerIdFromRoute = router?.query?.organizer as string;
 
-    if (organizerIdFromCookie && activeOrganizerId === defaultOrganizerId) {
-      setActiveOrganizerId(organizerIdFromCookie);
+    if (activeOrganizerId === defaultOrganizerId) {
+      if (organizerIdFromRoute) {
+        setOrganizerId(organizerIdFromRoute);
+      } else if (organizerIdFromCookie) {
+        setOrganizerId(organizerIdFromCookie);
+      }
     }
-  }, [activeOrganizerId, locale, setActiveOrganizerId]);
+  }, [activeOrganizerId, locale, setOrganizerId, router?.query?.organizer]);
 
   return adminModeActive ? adminActiveOrganizerId : activeOrganizerId;
 };
 
 export const useSetOrganizerId = (): ((organizerId: string) => void) => {
-  const locale = useLocale();
   const { setActiveOrganizerId } = useContext(NavigationContext);
 
   return (organizerId): void => {
     if (organizerId === undefined || organizerId === defaultOrganizerId) {
       deleteCookie({
         name: activeOrganizerCookieName,
-        path: routes.index({ locale }),
+        path: '/',
       } as Cookie);
 
       setActiveOrganizerId(defaultOrganizerId);
@@ -46,7 +53,7 @@ export const useSetOrganizerId = (): ((organizerId: string) => void) => {
       setCookie({
         'name': activeOrganizerCookieName,
         'value': organizerId,
-        'path': routes.index({ locale }),
+        'path': '/',
         'max-age': 1209600,
       });
 
@@ -88,22 +95,62 @@ export const useHandleActiveOrganizer = () => {
   const { user, isLoggedIn } = useUser();
   const activeOrganizerId = useOrganizerId();
   const setActiveOrganizerId = useSetOrganizerId();
+  const router = useRouter();
+  const locale = useLocale();
 
   useEffect(() => {
     const userOrganizerIds = user?.relations?.organizers?.map(
       (role) => role.relations?.organizer?.id
     );
 
+    const organizerIdFromRouter = router?.query?.organizer as string;
+
     if (isLoggedIn) {
+      // Redirect users trying to access foreign organizers
       if (
-        activeOrganizerId &&
-        userOrganizerIds?.length > 0 &&
-        !userOrganizerIds.includes(activeOrganizerId)
+        Boolean(
+          activeOrganizerId &&
+            userOrganizerIds?.length > 0 &&
+            !userOrganizerIds.includes(activeOrganizerId)
+        ) ||
+        Boolean(
+          organizerIdFromRouter &&
+            organizerIdFromRouter !== 'undefined' &&
+            organizerIdFromRouter !== defaultOrganizerId &&
+            organizerIdFromRouter?.length > 0 &&
+            !userOrganizerIds.includes(organizerIdFromRouter)
+        )
       ) {
+        console.log(
+          'wrong organizer id',
+          activeOrganizerId,
+          Boolean(
+            activeOrganizerId &&
+              userOrganizerIds?.length > 0 &&
+              !userOrganizerIds.includes(activeOrganizerId)
+          ),
+          organizerIdFromRouter,
+          Boolean(
+            organizerIdFromRouter &&
+              organizerIdFromRouter?.length > 0 &&
+              !userOrganizerIds.includes(organizerIdFromRouter)
+          ),
+          userOrganizerIds
+        );
         setActiveOrganizerId(userOrganizerIds[0]);
+        router.replace(routes.dashboard({ locale, query: { organizer: userOrganizerIds[0] } }));
       } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
+        console.log('no organizer id');
         setActiveOrganizerId(defaultOrganizerId);
+        router.replace(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
       }
     }
-  }, [activeOrganizerId, isLoggedIn, setActiveOrganizerId, user?.relations?.organizers]);
+  }, [
+    activeOrganizerId,
+    isLoggedIn,
+    setActiveOrganizerId,
+    user?.relations?.organizers,
+    router,
+    locale,
+  ]);
 };
