@@ -1,9 +1,14 @@
 import styled from '@emotion/styled';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { Link } from 'react-feather';
 import { Categories } from '../../../config/categories';
 import { ApiCall } from '../../../lib/api';
 import { useDownload } from '../../../lib/api/download';
 import { CategoryEntry, Translation } from '../../../lib/api/types/general';
+import { Location } from '../../../lib/api/types/location';
+import { Offer } from '../../../lib/api/types/offer';
+import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryExportType, useDeleteEntry, useEntry, useTabs } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useLanguage, useLocale } from '../../../lib/routing';
@@ -17,6 +22,7 @@ import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
+import { useUser } from '../../user/useUser';
 import { EntryFormProps } from './form';
 
 const StyledA = styled.a`
@@ -34,8 +40,34 @@ export const useEntryHeader = (
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const userIsOwner = useUserIsOwner();
   const t = useT();
+  const router = useRouter();
+  const locale = useLocale();
+  const organizerId = useOrganizerId();
 
   const { entry } = useEntry<CategoryEntry, ApiCall>(category, query);
+
+  useEffect(() => {
+    if (entry?.data?.id?.length > 0 && organizerId) {
+      // Redirect users trying to access foreign entries
+      if (category?.name === Categories.location) {
+        const organizerDataId = (entry as Location)?.data?.relations?.organizer?.id;
+        if (organizerDataId && organizerId !== organizerDataId) {
+          router.replace(category.routes.list({ locale, query: { organizer: organizerId } }));
+          return undefined;
+        }
+      } else if (category?.name === Categories.offer) {
+        const organizerDataIds = (entry as Offer)?.data?.relations?.organizers?.map(
+          (organizerData) => (organizerData as Organizer['data']).id
+        );
+
+        if (organizerDataIds?.length > 0 && !organizerDataIds.includes(organizerId)) {
+          console.log('hier');
+          router.replace(category.routes.list({ locale, query: { organizer: organizerId } }));
+          return undefined;
+        }
+      }
+    }
+  }, [category?.name, category.routes, entry, locale, router, organizerId]);
 
   const currentTranslation = entry?.data?.relations?.translations
     ? getTranslation<Translation>(language, entry?.data?.relations?.translations)
@@ -50,10 +82,8 @@ export const useEntryHeader = (
     ? currentTranslation?.attributes.name || category?.placeholderName
     : undefined;
 
-  const locale = useLocale();
   const { quit, adminModeActive } = useAdminMode();
 
-  const organizerId = useOrganizerId();
   const loadingScreen = useLoadingScreen();
   const confirmScreen = useConfirmScreen();
   const deleteOrganizer = useDeleteEntry(Categories.organizer);

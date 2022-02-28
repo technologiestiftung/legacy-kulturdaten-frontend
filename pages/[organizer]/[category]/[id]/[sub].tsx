@@ -21,7 +21,7 @@ const EntrySubPage: NextPage = () => {
     );
   }
 
-  return <AppWrapper>TBD</AppWrapper>;
+  return null;
 };
 
 export default EntrySubPage;
