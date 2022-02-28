@@ -22,7 +22,6 @@ import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
-import { useUser } from '../../user/useUser';
 import { EntryFormProps } from './form';
 
 const StyledA = styled.a`
