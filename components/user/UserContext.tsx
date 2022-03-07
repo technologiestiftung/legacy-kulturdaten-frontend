@@ -174,6 +174,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
         activeRoute !== Routes.login &&
         `${router.pathname}/` !== routes.login({ locale })
       ) {
+        console.log('trigger redirect to login from userContext because no login data');
         router.replace(routes.login({ locale, query: { redirect: router.asPath } }));
       }
     }
@@ -228,9 +229,11 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
       mutateValidate({ body: { meta: { valid: true } } });
       setAuthToken(cookie.value);
       setCookie(cookie);
+      console.log('push redirectroute', redirectRoute);
       router.push(redirectRoute);
 
       setTimeout(() => {
+        console.log('push/replace redirectroute again', redirectRoute);
         if (router.asPath !== redirectRoute) {
           router.replace(redirectRoute);
         }

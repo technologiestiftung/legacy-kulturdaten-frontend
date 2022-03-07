@@ -305,6 +305,7 @@ const DashboardPage: NextPage = () => {
       router?.query?.organizer !== organizerId &&
       organizerId
     ) {
+      console.log('replace route on dashboard to active organizer');
       router.replace(routes.dashboard({ locale, query: { organizer: organizerId } }));
     }
   }, [locale, organizerId, router]);

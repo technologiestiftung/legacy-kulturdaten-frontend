@@ -28,6 +28,7 @@ import { District } from './api/types/district';
 import { DistrictList, districtListFactory } from './api/routes/district/list';
 import { defaultOrganizerId } from '../components/navigation/NavigationContext';
 import { sortByTranslation } from './sortTranslations';
+import { useAuthToken } from '../components/user/UserContext';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -220,10 +221,11 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
   const query = makeListQuery(page, perPage, filter, sort, search, additionalIncludes);
+  const authToken = useAuthToken();
 
   const { data } = useSWR(
-    load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,
-    () => (load && category ? call<C>(apiCallFactory, query) : undefined)
+    load && apiCallRoute && authToken ? getApiUrlString(apiCallRoute, query) : undefined,
+    () => (load && category && authToken ? call<C>(apiCallFactory, query) : undefined)
   );
 
   return {
@@ -282,15 +284,17 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const locale = useLocale();
   const organizerId = useOrganizerId();
   const activeRoute = useActiveRoute();
+  const authToken = useAuthToken();
 
   const dataFromApi = useSWR<C['response']>(
     load &&
       apiCallRoute &&
       query &&
+      authToken &&
       (query.id || (query.organizer && query.organizer !== defaultOrganizerId))
       ? getApiUrlString(apiCallRoute, query)
       : undefined,
-    () => (load && apiCallRoute && query ? call(apiCallFactory, query) : undefined)
+    () => (authToken && load && apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
   const { data, mutate, error } = dataFromApi;
@@ -308,10 +312,12 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
 
     if (error && activeRoute !== Routes.page404) {
       if (category?.name !== Categories.organizer) {
+        console.log('redirect to list because category error');
         router.replace(category?.routes.list({ locale, query: { organizer: organizerId } }));
       } else if (query?.organizer === organizerId) {
         return { error: new Error('no organizer defined') };
       } else {
+        console.log('redirect to dashboard because category error');
         router.replace(
           routes.dashboard({
             locale,

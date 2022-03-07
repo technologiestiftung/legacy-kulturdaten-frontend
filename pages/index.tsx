@@ -12,6 +12,7 @@ const AppIndexPage: NextPage = () => {
   const organizerId = useOrganizerId();
   const router = useRouter();
 
+  console.log('replace route because index page');
   router.replace(
     routes.dashboard({ locale, query: { organizer: organizerId || defaultOrganizerId } })
   );

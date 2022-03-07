@@ -194,9 +194,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
 
               return {
                 contents: [
-                  <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name || categories?.organizer?.placeholderName}
-                  </StyledTableLinkText>,
+                  <StyledTableLinkText key={0}>{id}</StyledTableLinkText>,
                   typeNames.join(', '),
                   <StatusFlag status={attributes?.status} key={1} />,
                   attributes?.updatedAt
@@ -222,7 +220,6 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
       setMenuExpanded,
       setLastEntryId,
       customEntryOnClick,
-      categories?.organizer?.placeholderName,
     ]
   );
 

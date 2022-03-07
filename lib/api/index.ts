@@ -1,7 +1,7 @@
 import getConfig from 'next/config';
 import { ParsedUrlQuery } from 'node:querystring';
-import { useCallback, useState } from 'react';
-import { useAuthToken } from '../../components/user/UserContext';
+import { useCallback, useContext, useState } from 'react';
+import { useAuthToken, UserContext } from '../../components/user/UserContext';
 import { apiVersion } from '../../config/api';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
@@ -236,6 +236,7 @@ export const useApiCall = (
   includes?: string[]
 ) => Promise<T['response']>) => {
   const authToken = useAuthToken();
+  const { isAuthenticated } = useContext(UserContext);
 
   const cb = useCallback(
     <T extends ApiCall>(
@@ -243,9 +244,12 @@ export const useApiCall = (
       query?: unknown,
       includes?: string[]
     ): Promise<T['response']> => {
-      return call<T>(factory(overrideAuthToken || authToken, query) as T, includes);
+      console.log(authToken);
+      return !isAuthenticated || (typeof authToken !== 'undefined' && authToken !== 'undefined')
+        ? call<T>(factory(overrideAuthToken || authToken, query) as T, includes)
+        : undefined;
     },
-    [overrideAuthToken, authToken]
+    [isAuthenticated, authToken, overrideAuthToken]
   );
 
   return cb;

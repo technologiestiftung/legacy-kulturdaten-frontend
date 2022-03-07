@@ -44,6 +44,7 @@ export const OfferListPage: React.FC<CategoryPage> = () => {
   useEffect(() => {
     if (list) {
       if (isMidOrWider && list?.data?.length > 0) {
+        console.log('trigger redirect from offer list');
         router.replace(
           routes.offer({
             locale,
