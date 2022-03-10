@@ -5,7 +5,7 @@ import { routes } from '../../../config/routes';
 import { LocationList as LocationListCall } from '../../../lib/api';
 import { Location } from '../../../lib/api/types/location';
 import { CategoryPage, useList } from '../../../lib/categories';
-import { useLocale } from '../../../lib/routing';
+import { useActiveRoute, useLocale } from '../../../lib/routing';
 import { useOrganizerId } from '../../../lib/useOrganizer';
 import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { EntryListContext } from '../../EntryList/EntryListContext';
@@ -30,6 +30,7 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
   const lastEntryId = useMemo(() => getLastEntryId(listName), [getLastEntryId, listName]);
   const order = useMemo(() => getOrder(listName), [getOrder, listName]);
   const organizerId = useOrganizerId();
+  const activeRoute = useActiveRoute();
 
   const list = useList<LocationListCall, Location>(
     categories.location,
@@ -51,7 +52,7 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
       }
       setListEvaluated(true);
     }
-  }, [list, list.data, locale, router, isMidOrWider, lastEntryId, organizerId]);
+  }, [list, list.data, locale, router, isMidOrWider, lastEntryId, organizerId, activeRoute]);
 
   return listEvaluated ? (
     <AppWrapper>{!isMidOrWider ? <LocationList expanded={false} /> : ''}</AppWrapper>

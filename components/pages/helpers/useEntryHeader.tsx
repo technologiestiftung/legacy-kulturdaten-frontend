@@ -60,7 +60,6 @@ export const useEntryHeader = (
         );
 
         if (organizerDataIds?.length > 0 && !organizerDataIds.includes(organizerId)) {
-          console.log('hier');
           router.replace(category.routes.list({ locale, query: { organizer: organizerId } }));
           return undefined;
         }

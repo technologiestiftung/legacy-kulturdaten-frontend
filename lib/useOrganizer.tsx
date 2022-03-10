@@ -97,6 +97,7 @@ export const useHandleActiveOrganizer = () => {
   const setActiveOrganizerId = useSetOrganizerId();
   const router = useRouter();
   const locale = useLocale();
+  const { adminModeActive } = useAdminMode();
 
   useEffect(() => {
     const userOrganizerIds = user?.relations?.organizers?.map(
@@ -105,7 +106,7 @@ export const useHandleActiveOrganizer = () => {
 
     const organizerIdFromRouter = router?.query?.organizer as string;
 
-    if (isLoggedIn) {
+    if (isLoggedIn && !adminModeActive) {
       // Redirect users trying to access foreign organizers
       if (
         Boolean(
@@ -121,31 +122,15 @@ export const useHandleActiveOrganizer = () => {
             !userOrganizerIds.includes(organizerIdFromRouter)
         )
       ) {
-        console.log(
-          'wrong organizer id',
-          activeOrganizerId,
-          Boolean(
-            activeOrganizerId &&
-              userOrganizerIds?.length > 0 &&
-              !userOrganizerIds.includes(activeOrganizerId)
-          ),
-          organizerIdFromRouter,
-          Boolean(
-            organizerIdFromRouter &&
-              organizerIdFromRouter?.length > 0 &&
-              !userOrganizerIds.includes(organizerIdFromRouter)
-          ),
-          userOrganizerIds
-        );
         setActiveOrganizerId(userOrganizerIds[0]);
         router.replace(routes.dashboard({ locale, query: { organizer: userOrganizerIds[0] } }));
       } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
-        console.log('no organizer id');
         setActiveOrganizerId(defaultOrganizerId);
         router.replace(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
       }
     }
   }, [
+    adminModeActive,
     activeOrganizerId,
     isLoggedIn,
     setActiveOrganizerId,
