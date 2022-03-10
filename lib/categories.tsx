@@ -169,13 +169,14 @@ export const useOfferDateList = (
 } => {
   const call = useApiCall();
   const query = makeListQuery(page, perPage, filter, sort);
+  const authToken = useAuthToken();
 
   const { data, mutate } = useSWR(
-    load && offerId
+    load && offerId && authToken
       ? getApiUrlString(ApiRoutes.offerDateList, { ...query, offerId: String(offerId) })
       : undefined,
     () =>
-      load && offerId
+      load && offerId && authToken
         ? call<OfferDateList>(offerDateListFactory, { ...query, offerId: String(offerId) })
         : undefined
   );
@@ -369,11 +370,16 @@ export const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
   factory: ApiCallFactory
 ): C[] => {
   const call = useApiCall();
+  const authToken = useAuthToken();
 
-  const { data } = useSWR(getApiUrlString(route, undefined), () => call<T>(factory, undefined), {
-    revalidateOnFocus: false,
-    focusThrottleInterval: 1000 * 60 * 5,
-  });
+  const { data } = useSWR(
+    authToken ? getApiUrlString(route, undefined) : undefined,
+    () => (authToken ? call<T>(factory, undefined) : undefined),
+    {
+      revalidateOnFocus: false,
+      focusThrottleInterval: 1000 * 60 * 5,
+    }
+  );
 
   return data?.body?.data as unknown as C[];
 };
@@ -413,10 +419,11 @@ export const useOfferMainTypeList = (): OfferMainType[] => {
 
 export const useMediaLicenseList = (): MediaLicense[] => {
   const call = useApiCall();
+  const authToken = useAuthToken();
 
   const { data } = useSWR(
-    getApiUrlString(ApiRoutes.mediaLicenseList),
-    () => call<MediaLicenseList>(mediaLicenseListFactory),
+    authToken ? getApiUrlString(ApiRoutes.mediaLicenseList) : undefined,
+    () => (authToken ? call<MediaLicenseList>(mediaLicenseListFactory) : undefined),
     {
       revalidateOnFocus: false,
       focusThrottleInterval: 1000 * 60 * 5,
@@ -428,10 +435,11 @@ export const useMediaLicenseList = (): MediaLicense[] => {
 
 export const useDistrictList = (): District[] => {
   const call = useApiCall();
+  const authToken = useAuthToken();
 
   const { data } = useSWR(
-    getApiUrlString(ApiRoutes.districtList),
-    () => call<DistrictList>(districtListFactory),
+    authToken ? getApiUrlString(ApiRoutes.districtList) : undefined,
+    () => (authToken ? call<DistrictList>(districtListFactory) : undefined),
     {
       revalidateOnFocus: false,
       focusThrottleInterval: 1000 * 60 * 5,
