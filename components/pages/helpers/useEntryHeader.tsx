@@ -51,7 +51,6 @@ export const useEntryHeader = (
       if (category?.name === Categories.location) {
         const organizerDataId = (entry as Location)?.data?.relations?.organizer?.id;
         if (organizerDataId && organizerId !== organizerDataId) {
-          console.log('trigger entry redirect from header');
           router.replace(category.routes.list({ locale, query: { organizer: organizerId } }));
           return undefined;
         }
@@ -61,7 +60,6 @@ export const useEntryHeader = (
         );
 
         if (organizerDataIds?.length > 0 && !organizerDataIds.includes(organizerId)) {
-          console.log('trigger entry redirect from header');
           router.replace(category.routes.list({ locale, query: { organizer: organizerId } }));
           return undefined;
         }

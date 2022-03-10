@@ -43,7 +43,6 @@ export const LocationListPage: React.FC<CategoryPage> = () => {
   useEffect(() => {
     if (list) {
       if (isMidOrWider && list?.data?.length > 0) {
-        console.log('trigger redirect from location list', router.asPath, activeRoute);
         router.replace(
           routes.location({
             locale,

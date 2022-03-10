@@ -123,10 +123,8 @@ export const useHandleActiveOrganizer = () => {
         )
       ) {
         setActiveOrganizerId(userOrganizerIds[0]);
-        console.log('redirect user because no access on organizer, but existing organizer');
         router.replace(routes.dashboard({ locale, query: { organizer: userOrganizerIds[0] } }));
       } else if (userOrganizerIds?.length === 0 && activeOrganizerId !== defaultOrganizerId) {
-        console.log('redirect user because no access on organizer, no existing organizer');
         setActiveOrganizerId(defaultOrganizerId);
         router.replace(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
       }

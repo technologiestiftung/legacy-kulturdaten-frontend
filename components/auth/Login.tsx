@@ -48,7 +48,6 @@ export const LoginForm: React.FC = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log('trigger replace from loginForm');
       router.replace(routes.dashboard({ locale, query: { organizer: defaultOrganizerId } }));
     }
   }, [isLoggedIn, router, locale]);

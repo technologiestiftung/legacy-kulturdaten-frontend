@@ -313,12 +313,10 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
 
     if (error && activeRoute !== Routes.page404) {
       if (category?.name !== Categories.organizer) {
-        console.log('redirect to list because category error');
         router.replace(category?.routes.list({ locale, query: { organizer: organizerId } }));
       } else if (query?.organizer === organizerId) {
         return { error: new Error('no organizer defined') };
       } else {
-        console.log('redirect to dashboard because category error');
         router.replace(
           routes.dashboard({
             locale,
