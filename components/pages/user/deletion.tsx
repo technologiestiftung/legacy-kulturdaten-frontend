@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
-import { usePseudoUID } from '../../../lib/uid';
 import { useContext, useEffect, useMemo } from 'react';
 import { UserContext } from '../../user/UserContext';
 import { useRouter } from 'next/router';
@@ -124,8 +123,6 @@ const CancelDeletionComponent: React.FC = () => {
 };
 
 export const UserDeletionPage: React.FC = () => {
-  const t = useT();
-  const uid = usePseudoUID();
   const { requestedDeletion } = useContext(UserContext);
   const router = useRouter();
   const locale = useLocale();

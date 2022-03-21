@@ -88,6 +88,10 @@ export const deDE: Localization = {
         title: () => 'Aktuelle Angebote',
         link: () => 'Angebot anschauen',
         datePlaceholder: () => 'Noch keine Termine vorhanden',
+        isPermanentPhsyical: (props) =>
+          `Dauerangebot: Öffnungszeiten gemäß ${
+            props?.plural ? 'Veranstaltungsorten' : 'Veranstaltungsort'
+          } bzw. permanent verfügbar`,
       },
       organizer: {
         title: () => 'Fülle deine Anbieter:in mit Leben',
@@ -263,11 +267,13 @@ export const deDE: Localization = {
   },
   hours: {
     weekday: () => 'Wochentag',
+    weekdays: () => 'Wochentage',
     from: () => 'von',
     to: () => 'bis',
     add: () => 'Neue Zeit hinzufügen',
     remove: () => 'entfernen',
     note: () => 'Anmerkung zu Zeiten',
+    error: () => 'Die Endzeit (‚bis‘) muss nach der Startzeit (‚von‘) liegen.',
   },
   openingHours: {
     add: () => 'Neue Öffnungszeit hinzufügen',
@@ -512,6 +518,7 @@ export const deDE: Localization = {
     website: () => 'Website',
     links: () => 'Weitere Links (z.B. Social Media Kanäle)',
     urlPlaceholder: () => 'https://example.com',
+    emailInvalid: () => 'Die Eingabe ist keine korrekte E-Mail.',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
     },
@@ -534,10 +541,40 @@ export const deDE: Localization = {
       'Dein Konto wurde erfolgreich verifiziert. Du kannst dich jetzt einloggen.',
     loading: () => 'Anmeldung läuft',
     error: () => 'Die eingegeben Login-Daten sind nicht korrekt.',
-    registerReference: () => 'Du bis neu hier?',
+    registerReference: () => 'Du bist neu hier?',
     registerReferenceLinkText: () => 'Registriere dich jetzt.',
     verificationError: () =>
       'Dieses Konto ist noch nicht verifiziert. Prüfe bitte deine E-Mails für eine Bestätigungs-E-Mail.',
+  },
+  requestPasswordReset: {
+    headline: () => 'Passwort zurücksetzen',
+    subline: () =>
+      'Du hast dein Passwort vergessen? Kein Problem! Gib unten einfach deine E-Mail-Adresse ein und wir senden dir einen Link, über welchen du dir ein neues Passwort erstellen kannst.',
+    successHeadline: () => 'Zurücksetzen des Passwortes beantragt',
+    successSubline: () =>
+      'Wir haben dir eine E-Mail geschickt. In dieser findest du einen Link, über den du ein neues Passwort setzen kannst. Dieser Link funktioniert aus Sicherheitsgründen nur für 10 Minuten.',
+    submit: () => 'Passwort zurücksetzen',
+    loginReference: () => 'Dir ist dein Passwort wieder eingefallen?',
+    loginReferenceLinkText: () => 'Log dich hier ein.',
+    loading: () => 'Zurücksetzen des Passworts wird beantragt',
+    requestError: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    nonExistantEmailError: () => 'Es existiert kein Konto mit dieser E-Mail-Adresse.',
+  },
+  resetPassword: {
+    headline: () => 'Neues Passwort festlegen',
+    subline: ({ email }) =>
+      `Lege jetzt ein neues Passwort für dein Nutzer:innenkonto mit der E-Mail ‚${email}‘ fest.`,
+    submit: () => 'Passwort festlegen',
+    successHeadline: () => 'Super, das hat geklappt!',
+    successSubline: () => 'Du kannst dich nun mit deinem neuen Passwort einloggen.',
+    loading: () => 'Passwort wird neu festgelegt',
+    requestError: () =>
+      'Es gibt leider ein Problem mit unserem Server. Bitte probiere es später noch einmal.',
+    expiredLinkError: () =>
+      'Dieser Link war leider abgelaufen. Bitte beantrage das Zurücksetzen deines Passworts erneut.',
+    expiredLinkHeadline: () => 'Link abgelaufen',
+    goToLogin: () => 'Zum Login',
   },
   logout: {
     loading: () => 'Abmeldung läuft',
@@ -699,6 +736,10 @@ export const deDE: Localization = {
   dropZone: {
     allowedFileTypes: () => 'Erlaubte Dateitypen',
     uploading: ({ progress }) => `Dateien laden hoch: ${progress} geschafft`,
+    error: ({ code }) =>
+      `Es gab einen Fehler ${
+        code ? `(Code ${code})` : ''
+      } beim Upload. Bitte versuche es noch einmal.`,
     success: ({ count }) => `Erfolreich ${count} ${count === 1 ? 'Datei' : 'Dateien'} hochgeladen`,
     pending: () => `Hochladen abgeschlossen. Dateien werden verarbeitet.`,
     ariaLabel: () => 'Dateien hochladen',
@@ -910,6 +951,8 @@ export const deDE: Localization = {
         loading: () => 'Lade Anbieter:innen',
         nothing: () => 'Es gibt noch keine Anbieter:innen. Lege gerne eine:n an.',
         nothingFilter: () => 'Keine Anbieter:innen für die aktive Filterung gefunden.',
+        searchNameLabel: () => 'Suche nach Bezeichnung',
+        searchNamePlaceholder: () => "z.B. 'Technologiestiftung Berlin'",
       },
       filters: {
         status: {
@@ -933,7 +976,7 @@ export const deDE: Localization = {
         name: () => 'Bezeichnung / Name',
         description: () => 'Beschreibung',
         categorization: () => 'Art der Anbieter:in',
-        address: () => 'Kontakt intern',
+        mainContact: () => 'Kontakt intern',
       },
       title: {
         plural: () => 'Anbieter:innen',
@@ -950,6 +993,10 @@ export const deDE: Localization = {
       form: {
         create: () => 'Neue Anbieter:in anlegen',
         baseInfo: () => 'Grundlagen',
+        mainContact: {
+          name: () => 'Ansprechperson',
+          email: () => 'E-Mail',
+        },
         address: () => 'Kontakt intern - für unsere Rückfragen zu diesem Anbieter:in-Profil',
         addressTooltip: () =>
           'Nur für unseren internen Gebrauch für Rückfragen bzw. bei Problemen, wird nicht veröffentlicht.',
@@ -1051,6 +1098,8 @@ export const deDE: Localization = {
         loading: () => 'Lade Angebote',
         nothing: () => 'Es gibt noch keine Angebote. Lege gerne eines an.',
         nothingFilter: () => 'Keine Angebote für die aktive Filterung gefunden.',
+        searchNameLabel: () => 'Suche nach Angebotstitel',
+        searchNamePlaceholder: () => "z.B. 'Konzert'",
       },
       requirements: {
         name: () => 'Angebotstitel',
@@ -1128,9 +1177,11 @@ export const deDE: Localization = {
           title: ({ name }) => `Anbieter:in für ‚${name}‘ wählen`,
         },
         location: {
-          label: () => 'Veranstaltungsort',
+          label: () => 'Veranstaltungsort(e)',
           choose: () => 'Ort auswählen',
+          chooseAdditional: () => 'Weiteren Ort auswählen',
           edit: () => 'Ort ändern',
+          remove: () => 'Ort entfernen',
           title: ({ name }) => `Ort für ${name ? `‚${name}‘` : 'unbenanntes Angebot'} wählen`,
         },
         topics: () => 'Themen-Kategorie (Pflichtfeld)',
@@ -1176,6 +1227,9 @@ export const deDE: Localization = {
         allLocations: () => 'Alle öffentlichen Orte',
         myLocations: () => 'Nur meine Orte',
         address: () => 'Adresse',
+        searchNameLabel: () => 'Suche nach Bezeichnung / Name',
+        searchNamePlaceholder: () => "z.B. 'Neues Museum'",
+        addressPlaceholder: () => 'nicht vorhanden',
       },
       title: {
         plural: () => 'Orte',
@@ -1264,7 +1318,7 @@ export const deDE: Localization = {
         back: () => 'zurück zum Dashboard',
         dashboard: () => 'Dashboard',
         notifications: () => 'Benachrichtigungen',
-        profile: () => 'Profil',
+        profile: () => 'Anbieter:in-Profil',
         team: () => 'Team',
         login: () => 'Login',
         registration: () => 'Registrierung',
@@ -1310,5 +1364,15 @@ export const deDE: Localization = {
       create: () => 'Neue Anbieter:in erstellen',
       loading: () => 'Wechsle aktive Anbieter:in',
     },
+  },
+  errors: {
+    server: {
+      headline: () => 'Server Problem',
+      text: () =>
+        'Es gibt leider ein Problem mit unserem Server. Daher funktioniert die Anwendung aktuell nicht korrekt. Bitte versuche es später erneut. Wir arbeiten an einer Lösung.',
+    },
+  },
+  loader: {
+    loading: () => 'Inhalt lädt',
   },
 };

@@ -9,6 +9,7 @@ import { Tags } from '../../../tags';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 import { EntryFormHook } from '../form';
 import { CategoryEntry } from '../../../../lib/api/types/general';
+import { ComponentLoader } from '../../../ComponentLoader';
 
 export const useEntryTags: EntryFormHook = ({ category, query, tooltip }) => {
   const tagOptions = useTags();
@@ -41,12 +42,14 @@ export const useEntryTags: EntryFormHook = ({ category, query, tooltip }) => {
         <EntryFormHead title={t('general.topics') as string} tooltip={tooltip} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
-            {tagOptions && (
+            {tagOptions ? (
               <Tags
                 options={tagOptions}
                 value={selectedTags || []}
                 onChange={(newValue) => setSelectedTags(newValue)}
               />
+            ) : (
+              <ComponentLoader />
             )}
           </FormItem>
         </FormGrid>

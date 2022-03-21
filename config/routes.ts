@@ -8,10 +8,12 @@ import { Locale } from './locales';
  */
 export enum Routes {
   index = 'index',
+  error = 'error',
   dashboard = 'dashboard',
   team = 'team',
   login = 'login',
   register = 'register',
+  resetPassword = 'resetPassword',
   userProfile = 'userProfile',
   userSettings = 'userSettings',
   userNotifications = 'userNotifications',
@@ -33,6 +35,7 @@ export enum Routes {
  */
 export const routes: { [key in Routes]: Route } = {
   index: ({ locale }) => `/${localizedRoutes[Routes.index][locale]}`,
+  error: ({ locale }) => `/${localizedRoutes[Routes.error][locale]}`,
   dashboard: ({ query, locale }) =>
     `/${query?.organizer}/${localizedRoutes[Routes.dashboard][locale]}/`,
   team: ({ query, locale }) => `/${query?.organizer}/${localizedRoutes[Routes.team][locale]}/`,
@@ -41,8 +44,15 @@ export const routes: { [key in Routes]: Route } = {
   userDeletion: ({ locale }) => `/${localizedRoutes[Routes.userDeletion][locale]}/`,
   developer: ({ locale }) => `/${localizedRoutes[Routes.developer][locale]}/`,
   userNotifications: ({ locale }) => `/${localizedRoutes[Routes.userNotifications][locale]}/`,
-  login: ({ locale }) => `/${localizedRoutes[Routes.login][locale]}/`,
+  login: ({ locale, query }) =>
+    `/${localizedRoutes[Routes.login][locale]}/${
+      query?.redirect ? `?redirect=${query.redirect}` : ''
+    }`,
   register: ({ locale }) => `/${localizedRoutes[Routes.register][locale]}/`,
+  resetPassword: ({ locale, query }) =>
+    `/${localizedRoutes[Routes.resetPassword][locale]}/${
+      query?.email ? `${query.email}?signature=${query.signature}` : ''
+    }`,
   organizer: ({ query, locale }) =>
     `/${
       query?.organizer
@@ -96,6 +106,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
     'de-DE': '',
     'en-DE': '',
   },
+  error: {
+    'de-DE': 'error',
+    'en-DE': 'error',
+  },
   dashboard: {
     'de-DE': 'dashboard',
     'en-DE': 'dashboard',
@@ -131,6 +145,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   register: {
     'de-DE': 'auth/register',
     'en-DE': 'auth/register',
+  },
+  resetPassword: {
+    'de-DE': 'auth/resetPassword',
+    'en-DE': 'auth/resetPassword',
   },
   organizer: {
     'de-DE': 'profile',
@@ -172,6 +190,7 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
 
 export const routesLayouts: { [key in Routes]: Layouts } = {
   index: Layouts.loggedOut,
+  error: Layouts.loggedOut,
   createLocation: Layouts.loggedIn,
   createOffer: Layouts.loggedIn,
   createOrganizer: Layouts.loggedIn,
@@ -182,6 +201,7 @@ export const routesLayouts: { [key in Routes]: Layouts } = {
   offer: Layouts.loggedIn,
   organizer: Layouts.loggedIn,
   register: Layouts.loggedOut,
+  resetPassword: Layouts.loggedOut,
   team: Layouts.loggedIn,
   userNotifications: Layouts.loggedInMeta,
   userProfile: Layouts.loggedInMeta,

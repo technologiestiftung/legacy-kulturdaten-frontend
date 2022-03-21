@@ -166,7 +166,7 @@ export interface InputProps extends ComponentWithVariants {
   valid?: boolean;
   value?: string | number;
   hideError?: boolean;
-  debounce?: boolean;
+  debounce?: boolean | number;
   tooltip?: string;
 }
 
@@ -176,7 +176,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const [pristine, setPristine] = useState<boolean>(true);
     const [normalized, setNormalized] = useState(true);
     const [touched, setTouched] = useState(false);
-    const debouncer = useDebounce();
+    const debouncer = useDebounce(typeof props?.debounce === 'number' ? props.debounce : undefined);
     const [internalState, setInternalState] = useState(props?.value);
 
     const t = useT();

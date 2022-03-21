@@ -29,6 +29,7 @@ import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { PublishedStatus } from '../../lib/api/types/general';
+import { Input, InputType } from '../input';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -57,6 +58,7 @@ export interface OrganizerListProps {
   customEntryOnClick?: (categoryName: Categories, entryId: string) => void;
   activeEntryId?: string;
   title?: string;
+  Context?: React.Context<EntryListContext>;
 }
 
 export const OrganizerList: React.FC<OrganizerListProps> = ({
@@ -66,6 +68,7 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
   customEntryOnClick,
   activeEntryId,
   title,
+  Context = EntryListContext,
 }: OrganizerListProps) => {
   const categories = useCategories();
   const [lastPage, setLastPage] = useState<number>();
@@ -87,7 +90,8 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     getFiltersBoxExpanded,
     setFiltersBoxExpanded,
     setLastEntryId,
-  } = useContext(EntryListContext);
+  } = useContext(Context);
+  const [search, setSearch] = useState<string>();
   const pseudoUID = usePseudoUID();
   const view = useMemo(() => (expanded ? EntryListView.table : EntryListView.cards), [expanded]);
 
@@ -113,15 +117,19 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
     currentPage,
     entriesPerPage,
     Object.entries(filters),
-    { key: sortKey, order }
+    { key: sortKey, order },
+    true,
+    search
   );
 
   const activeFiltersCount = useMemo(
     () =>
       Object.values(filters)?.filter(
         (filter) => filter && filter[0] !== undefined && filter[0] !== ''
-      ).length,
-    [filters]
+      ).length + search
+        ? 1
+        : 0,
+    [filters, search]
   );
 
   useEffect(() => {
@@ -344,7 +352,17 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             })}
           </Select>
         </StyledFilters>
-
+        <StyledFilters expanded={expanded}>
+          <Input
+            label={t('categories.organizer.list.searchNameLabel') as string}
+            type={InputType.text}
+            id="test"
+            value={search || ''}
+            onChange={(e) => setSearch(e.target.value !== '' ? e.target.value : undefined)}
+            debounce={1000}
+            placeholder={t('categories.organizer.list.searchNamePlaceholder') as string}
+          />
+        </StyledFilters>
         {!expanded && (
           <StyledFilters expanded={expanded}>
             <Select
@@ -393,11 +411,11 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
             ) : cards && cards.length === 0 ? (
               <EntryListPlaceholder>
                 {activeFiltersCount === 0
-                  ? t('categories.offer.list.nothing')
-                  : t('categories.offer.list.nothingFilter')}
+                  ? t('categories.organizer.list.nothing')
+                  : t('categories.organizer.list.nothingFilter')}
               </EntryListPlaceholder>
             ) : (
-              <EntryListPlaceholder>{t('categories.offer.list.loading')}</EntryListPlaceholder>
+              <EntryListPlaceholder>{t('categories.organizer.list.loading')}</EntryListPlaceholder>
             )}
           </EntryCardGrid>
         ) : (
@@ -458,9 +476,9 @@ export const OrganizerList: React.FC<OrganizerListProps> = ({
               placeholder={
                 rows && rows.length === 0
                   ? activeFiltersCount === 0
-                    ? t('categories.offer.list.nothing')
-                    : t('categories.offer.list.nothingFilter')
-                  : t('categories.offer.list.loading')
+                    ? t('categories.organizer.list.nothing')
+                    : t('categories.organizer.list.nothingFilter')
+                  : t('categories.organizer.list.loading')
               }
             />
           </StyledEntryListTable>

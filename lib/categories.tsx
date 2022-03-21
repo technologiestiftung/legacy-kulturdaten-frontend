@@ -28,6 +28,7 @@ import { District } from './api/types/district';
 import { DistrictList, districtListFactory } from './api/routes/district/list';
 import { defaultOrganizerId } from '../components/navigation/NavigationContext';
 import { sortByTranslation } from './sortTranslations';
+import { useAuthToken } from '../components/user/UserContext';
 
 export type categoryApi = {
   route: ApiRoutes;
@@ -124,7 +125,9 @@ const makeListQuery = (
   page?: number,
   perPage?: number,
   filter?: [string, string][],
-  sort?: { key: string; order: Order }
+  sort?: { key: string; order: Order },
+  search?: string,
+  includes?: string[]
 ) => {
   return {
     page: page ? String(page) : undefined,
@@ -136,6 +139,8 @@ const makeListQuery = (
           .join(',')
       : undefined,
     sort: sort ? `${sort.order === Order.ASC ? '' : '-'}${sort.key}` : undefined,
+    search: search ? search : undefined,
+    includes: includes ? includes : undefined,
   };
 };
 
@@ -164,13 +169,14 @@ export const useOfferDateList = (
 } => {
   const call = useApiCall();
   const query = makeListQuery(page, perPage, filter, sort);
+  const authToken = useAuthToken();
 
   const { data, mutate } = useSWR(
-    load && offerId
+    load && offerId && authToken
       ? getApiUrlString(ApiRoutes.offerDateList, { ...query, offerId: String(offerId) })
       : undefined,
     () =>
-      load && offerId
+      load && offerId && authToken
         ? call<OfferDateList>(offerDateListFactory, { ...query, offerId: String(offerId) })
         : undefined
   );
@@ -197,7 +203,9 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   perPage?: number,
   filter?: [string, string][],
   sort?: { key: string; order: Order },
-  load = true
+  load = true,
+  search?: string,
+  additionalIncludes?: string[]
 ): {
   data: T['data'][];
   meta: {
@@ -213,11 +221,12 @@ export const useList = <C extends ApiCall, T extends CategoryEntry>(
   const call = useApiCall();
   const apiCallFactory = category?.api.list.factory;
   const apiCallRoute = category?.api.list.route;
-  const query = makeListQuery(page, perPage, filter, sort);
+  const query = makeListQuery(page, perPage, filter, sort, search, additionalIncludes);
+  const authToken = useAuthToken();
 
   const { data } = useSWR(
-    load && apiCallRoute ? getApiUrlString(apiCallRoute, query) : undefined,
-    () => (load && category ? call<C>(apiCallFactory, query) : undefined)
+    load && apiCallRoute && authToken ? getApiUrlString(apiCallRoute, query) : undefined,
+    () => (load && category && authToken ? call<C>(apiCallFactory, query) : undefined)
   );
 
   return {
@@ -263,9 +272,10 @@ export const useMutateList = (
 
 export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   category: Category,
-  query: ParsedUrlQuery
+  query: ParsedUrlQuery,
+  load = true
 ): {
-  entry: T;
+  entry: T & { error?: Error };
   mutate: (entry?: T, shouldRevalidate?: boolean) => Promise<C['response'] | undefined>;
 } => {
   const call = useApiCall();
@@ -275,17 +285,20 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
   const locale = useLocale();
   const organizerId = useOrganizerId();
   const activeRoute = useActiveRoute();
+  const authToken = useAuthToken();
 
-  const z = useSWR<C['response']>(
-    apiCallRoute &&
+  const dataFromApi = useSWR<C['response']>(
+    load &&
+      apiCallRoute &&
       query &&
+      authToken &&
       (query.id || (query.organizer && query.organizer !== defaultOrganizerId))
       ? getApiUrlString(apiCallRoute, query)
       : undefined,
-    () => (apiCallRoute && query ? call(apiCallFactory, query) : undefined)
+    () => (authToken && load && apiCallRoute && query ? call(apiCallFactory, query) : undefined)
   );
 
-  const { data, mutate, error } = z;
+  const { data, mutate, error } = dataFromApi;
 
   const wrappedMutate = (entry?: T, shouldRevalidate?: boolean) =>
     mutate(
@@ -301,6 +314,8 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
     if (error && activeRoute !== Routes.page404) {
       if (category?.name !== Categories.organizer) {
         router.replace(category?.routes.list({ locale, query: { organizer: organizerId } }));
+      } else if (query?.organizer === organizerId) {
+        return { error: new Error('no organizer defined') };
       } else {
         router.replace(
           routes.dashboard({
@@ -312,18 +327,19 @@ export const useEntry = <T extends CategoryEntry, C extends ApiCall>(
 
     return undefined;
   }, [
-    activeRoute,
-    category?.name,
-    category?.routes,
     data?.body,
     error,
-    locale,
+    activeRoute,
+    query,
+    category?.name,
+    category?.routes,
     organizerId,
     router,
+    locale,
   ]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return { entry, mutate: wrappedMutate };
+  return { entry: entry as unknown as T, mutate: wrappedMutate };
 };
 
 export const useTabs = (category: Category): React.ReactElement<TabsProps> => {
@@ -352,11 +368,16 @@ export const useEntryTypeList = <T extends ApiCall, C extends EntryType>(
   factory: ApiCallFactory
 ): C[] => {
   const call = useApiCall();
+  const authToken = useAuthToken();
 
-  const { data } = useSWR(getApiUrlString(route, undefined), () => call<T>(factory, undefined), {
-    revalidateOnFocus: false,
-    focusThrottleInterval: 1000 * 60 * 5,
-  });
+  const { data } = useSWR(
+    authToken ? getApiUrlString(route, undefined) : undefined,
+    () => (authToken ? call<T>(factory, undefined) : undefined),
+    {
+      revalidateOnFocus: false,
+      focusThrottleInterval: 1000 * 60 * 5,
+    }
+  );
 
   return data?.body?.data as unknown as C[];
 };
@@ -396,10 +417,11 @@ export const useOfferMainTypeList = (): OfferMainType[] => {
 
 export const useMediaLicenseList = (): MediaLicense[] => {
   const call = useApiCall();
+  const authToken = useAuthToken();
 
   const { data } = useSWR(
-    getApiUrlString(ApiRoutes.mediaLicenseList),
-    () => call<MediaLicenseList>(mediaLicenseListFactory),
+    authToken ? getApiUrlString(ApiRoutes.mediaLicenseList) : undefined,
+    () => (authToken ? call<MediaLicenseList>(mediaLicenseListFactory) : undefined),
     {
       revalidateOnFocus: false,
       focusThrottleInterval: 1000 * 60 * 5,
@@ -411,10 +433,11 @@ export const useMediaLicenseList = (): MediaLicense[] => {
 
 export const useDistrictList = (): District[] => {
   const call = useApiCall();
+  const authToken = useAuthToken();
 
   const { data } = useSWR(
-    getApiUrlString(ApiRoutes.districtList),
-    () => call<DistrictList>(districtListFactory),
+    authToken ? getApiUrlString(ApiRoutes.districtList) : undefined,
+    () => (authToken ? call<DistrictList>(districtListFactory) : undefined),
     {
       revalidateOnFocus: false,
       focusThrottleInterval: 1000 * 60 * 5,

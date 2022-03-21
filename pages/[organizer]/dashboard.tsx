@@ -42,6 +42,7 @@ import { DateStatusFlag } from '../../components/DateList/DateStatusFlag';
 import { useLoadingScreen } from '../../components/Loading/LoadingScreen';
 import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
 import { PublishedStatus } from '../../lib/api/types/general';
+import { defaultLanguage } from '../../config/locale';
 
 const StyledDashboardTileDate = styled.div`
   display: flex;
@@ -62,15 +63,22 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
   const formatDate = useDate();
   const currentTranslation = getTranslation(language, offer.relations?.translations, true);
+  const defaultTranslation = getTranslation(defaultLanguage, offer.relations?.translations, true);
 
   const { data: dates } = useOfferDateList(offer.id, 1, 4, [['past', 'false']], {
     key: 'startsAt',
     order: Order.ASC,
   });
 
+  const { isPermanent } = offer?.attributes;
+
   return (
     <DashboardTile
-      title={currentTranslation?.attributes?.name || (t('general.placeholderOffer') as string)}
+      title={
+        currentTranslation?.attributes?.name ||
+        defaultTranslation?.attributes?.name ||
+        (t('general.placeholderOffer') as string)
+      }
       gridColumn={isUltraOrWider ? 'span 4' : undefined}
       link={
         <DashboardTileLink
@@ -96,7 +104,13 @@ const DashboardOfferTile: React.FC<DashboardDateTileProps> = ({
             </StyledDashboardTileDate>
           );
         })}
-        {!dates || dates.length === 0 ? (
+        {isPermanent ? (
+          <DashboardTileTextP>
+            {t('dashboard.info.offers.isPermanentPhsyical', {
+              plural: Boolean(offer?.relations?.locations?.length > 1),
+            })}
+          </DashboardTileTextP>
+        ) : !dates || dates.length === 0 ? (
           <DashboardTileTextP>{t('dashboard.info.offers.datePlaceholder')}</DashboardTileTextP>
         ) : (
           ''
@@ -263,9 +277,17 @@ const DashboardPage: NextPage = () => {
   );
 
   const randomGreetingsIndex = useRandomInt(0, selectedGreetings.length);
-  const offers = useList<OfferList, Offer>(categories.offer, 1, isUltraOrWider ? 3 : 2, [
-    ['organizers', organizerId],
-  ]);
+
+  const offers = useList<OfferList, Offer>(
+    categories.offer,
+    1,
+    isUltraOrWider ? 3 : 2,
+    [['organizers', organizerId]],
+    undefined,
+    true,
+    undefined,
+    ['locations']
+  );
 
   const isPublished = useMemo(
     () => organizer?.data?.attributes?.status === PublishedStatus.published,
@@ -292,7 +314,16 @@ const DashboardPage: NextPage = () => {
       <DashboardWrapper>
         <ContentWrapper>
           <ContentContainer>
-            <DashbaordGreeting>{t(selectedGreetings[randomGreetingsIndex])}</DashbaordGreeting>
+            <DashbaordGreeting
+              subline={
+                !userHasNoOrganizer
+                  ? currentTranslation?.attributes?.name ||
+                    (t('general.placeholderOrganizer') as string)
+                  : undefined
+              }
+            >
+              {t(selectedGreetings[randomGreetingsIndex])}
+            </DashbaordGreeting>
           </ContentContainer>
           <ContentContainer>
             {organizerId !== defaultOrganizerId && !isPublished && (

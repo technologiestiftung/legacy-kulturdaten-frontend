@@ -25,6 +25,7 @@ import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/u
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
 import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
+import { Info } from '../../info';
 
 const maxLogoSize = 10240;
 
@@ -40,11 +41,13 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
   const { progress, upload } = useMediaUpload();
   const [uploadSuccess, setUploadSuccess] = useState<{ count: number }>();
   const { mutateUserInfo } = useUser();
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     const x = async () => {
       if (!isUploading && files && files.length > 0) {
         setIsUploading(true);
+        setError(undefined);
 
         try {
           const resp = await upload<C>(
@@ -59,14 +62,16 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
           if (resp.status === 200) {
             mutate(resp.body.data as T);
             setUploadSuccess({ count: files.length });
-            setFiles(undefined);
             setTimeout(() => mutateUserInfo(), 1000);
-            // mutateList();
+          } else {
+            setError(t('dropZone.error', { code: resp.status }) as string);
           }
 
+          setFiles(undefined);
           setIsUploading(false);
         } catch (e) {
           console.error(e);
+          setError(t('dropZone.error') as string);
         }
       }
     };
@@ -81,31 +86,40 @@ const useLogoUploadForm = <T extends CategoryEntry, C extends ApiCall>(
     query,
     upload,
     mutateUserInfo,
+    setError,
+    t,
   ]);
 
   return {
     renderedForm: (
-      <FormItem width={FormItemWidth.full}>
-        <DropZone
-          onDrop={async (newFiles) => {
-            setFiles(newFiles);
-          }}
-          acceptedFileTypes={[
-            { mimeType: 'image/svg+xml', name: 'SVG' },
-            { mimeType: 'image/jpeg', name: 'JPG/JPEG' },
-            { mimeType: 'image/png', name: 'PNG' },
-            { mimeType: 'image/webp', name: 'WEBP' },
-            { mimeType: 'image/gif', name: 'GIF' },
-          ]}
-          label={t('logo.dropZoneLabel') as string}
-          isUploading={isUploading}
-          progress={progress}
-          success={uploadSuccess}
-          disabled={disabled}
-          max={maxFiles}
-          maxFileSizeInKb={maxLogoSize}
-        />
-      </FormItem>
+      <>
+        <FormItem width={FormItemWidth.full}>
+          <DropZone
+            onDrop={async (newFiles) => {
+              setFiles(newFiles);
+            }}
+            acceptedFileTypes={[
+              { mimeType: 'image/svg+xml', name: 'SVG' },
+              { mimeType: 'image/jpeg', name: 'JPG/JPEG' },
+              { mimeType: 'image/png', name: 'PNG' },
+              { mimeType: 'image/webp', name: 'WEBP' },
+              { mimeType: 'image/gif', name: 'GIF' },
+            ]}
+            label={t('logo.dropZoneLabel') as string}
+            isUploading={isUploading}
+            progress={progress}
+            success={uploadSuccess}
+            disabled={disabled}
+            max={maxFiles}
+            maxFileSizeInKb={maxLogoSize}
+          />
+        </FormItem>
+        {error && (
+          <FormItem width={FormItemWidth.full}>
+            <Info>{error}</Info>
+          </FormItem>
+        )}
+      </>
     ),
     valid: true,
     pristine: true,

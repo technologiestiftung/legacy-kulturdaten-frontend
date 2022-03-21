@@ -168,8 +168,13 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
     } else if (userIsAuthenticated) {
       logoutUser();
     } else {
-      if (locale && isInternalRoute) {
-        router.replace(routes.login({ locale }));
+      if (
+        locale &&
+        isInternalRoute &&
+        activeRoute !== Routes.login &&
+        `${router.pathname}/` !== routes.login({ locale })
+      ) {
+        router.replace(routes.login({ locale, query: { redirect: router.asPath } }));
       }
     }
   }, [
@@ -183,6 +188,7 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
     userIsAuthenticated,
     userResponse?.body,
     userTokenIsValid,
+    activeRoute,
   ]);
 
   useEffect(() => {
@@ -222,7 +228,13 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
       mutateValidate({ body: { meta: { valid: true } } });
       setAuthToken(cookie.value);
       setCookie(cookie);
-      router.replace(redirectRoute);
+      router.push(redirectRoute);
+
+      setTimeout(() => {
+        if (router.asPath !== redirectRoute) {
+          router.replace(redirectRoute);
+        }
+      }, 1500);
     },
     [mutateValidate, router]
   );

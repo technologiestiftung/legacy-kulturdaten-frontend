@@ -120,6 +120,10 @@ export const enDE: Localization = {
         title: () => 'Current Offers',
         link: () => 'View Offer',
         datePlaceholder: () => 'No dates available yet',
+        isPermanentPhsyical: (props) =>
+          `Permanent offer: Opening hours depending on the ${
+            props?.plural ? 'locations' : 'location'
+          } or permanently available`,
       },
       data: {
         title: () => 'Use the data (further)',
@@ -261,12 +265,14 @@ export const enDE: Localization = {
     placeholder: () => 'No contacts added yet',
   },
   hours: {
-    weekday: () => 'Weekday',
-    from: () => 'von',
-    to: () => 'bis',
+    weekday: () => 'weekday',
+    weekdays: () => 'weekdays',
+    from: () => 'from',
+    to: () => 'to',
     add: () => 'Add new hours',
     remove: () => 'remove',
     note: () => 'Note on hours',
+    error: () => 'The end time (‘to’) must be after the start time (‘from’).',
   },
   openingHours: {
     add: () => 'Add new opening hours',
@@ -507,6 +513,7 @@ export const enDE: Localization = {
     website: () => 'Website',
     links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
+    emailInvalid: () => 'The input data is not a correct email.',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
     },
@@ -530,6 +537,33 @@ export const enDE: Localization = {
     error: () => 'The provided login credentials are not valid.',
     registerReference: () => 'New here?',
     registerReferenceLinkText: () => 'Register now.',
+  },
+  requestPasswordReset: {
+    headline: () => 'Reset password',
+    subline: () =>
+      "Forgotten your password? No problem! Simply enter your email address below and we'll send you a link to create a new password.",
+    successHeadline: () => 'Requested password reset',
+    successSubline: () =>
+      'We have sent you an email. In this you will find a link that you can use to set a new password. For security reasons, this link only works for 10 minutes.',
+    submit: () => 'reset password',
+    loginReference: () => 'You remembered your password?',
+    loginReferenceLinkText: () => 'Log in here.',
+    loading: () => 'Requesting password reset',
+    requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
+    nonExistantEmailError: () => 'There is no account with this email address.',
+  },
+  resetPassword: {
+    headline: () => 'Set new password',
+    subline: ({ email }) => `Set a new password for your user account with the email “${email}”.`,
+    submit: () => 'set password',
+    successHeadline: () => 'Great, that worked!',
+    successSubline: () => 'You can now log in with your new password.',
+    loading: () => 'Setting new password',
+    requestError: () => "Unfortunately there's a problem with our server. Please try again later.",
+    expiredLinkError: () =>
+      'Unfortunately, this link has expired. Please request your password reset again.',
+    expiredLinkHeadline: () => 'Link expired',
+    goToLogin: () => 'go to login',
   },
   logout: {
     loading: () => 'Logging you out',
@@ -690,6 +724,8 @@ export const enDE: Localization = {
   dropZone: {
     allowedFileTypes: () => 'Allowed file types',
     uploading: ({ progress }) => `Uploading files: ${progress} done`,
+    error: ({ code }) =>
+      `There was an error ${code ? `(code ${code})` : ''} uploading. Please try it again.`,
     success: ({ count }) => `Successfully uploaded ${count} ${count === 1 ? 'file' : 'files'}`,
     pending: () => `Upload done. Files are being processed.`,
     ariaLabel: () => 'Upload files',
@@ -901,6 +937,8 @@ export const enDE: Localization = {
         loading: () => 'Loading Organizers',
         nothing: () => 'There are no Organizers yet. Feel free to create one.',
         nothingFilter: () => 'No Organizers found with current filters.',
+        searchNameLabel: () => 'Search for name',
+        searchNamePlaceholder: () => "e.g. 'Technologiestiftung Berlin'",
       },
       filters: {
         status: {
@@ -932,7 +970,7 @@ export const enDE: Localization = {
         name: () => 'Name',
         description: () => 'Description',
         categorization: () => 'Type of organizer',
-        address: () => 'Internal contact',
+        mainContact: () => 'Internal contact',
       },
       title: {
         plural: () => 'Organizers',
@@ -941,6 +979,10 @@ export const enDE: Localization = {
       form: {
         create: () => 'Create new Organizer',
         baseInfo: () => 'Basic information',
+        mainContact: {
+          name: () => 'Contact person',
+          email: () => 'Email',
+        },
         address: () => 'Internal contact - for questions regarding this profile',
         addressTooltip: () =>
           'Only for our internal use for queries in case of problems, will not be published.',
@@ -1035,6 +1077,8 @@ export const enDE: Localization = {
         loading: () => 'Loading Offers',
         nothing: () => 'There are no Offers yet. Feel free to create one.',
         nothingFilter: () => 'No Offers found with current filters.',
+        searchNameLabel: () => 'Search for title',
+        searchNamePlaceholder: () => "e.g. 'Concert'",
       },
       publishText: () => (
         <>
@@ -1112,9 +1156,11 @@ export const enDE: Localization = {
           title: ({ name }) => `Choose organizer for ‘${name}’`,
         },
         location: {
-          label: () => 'Location',
+          label: () => 'Location(s)',
           choose: () => 'Choose location',
+          chooseAdditional: () => 'Choose additional location',
           edit: () => 'Change location',
+          remove: () => 'remove location',
           title: ({ name }) => `Choose location for ${name ? `‘${name}’` : 'unnamed offer'}`,
         },
         topics: () => 'Topic category (required)',
@@ -1165,6 +1211,9 @@ export const enDE: Localization = {
         allLocations: () => 'All public Locations',
         myLocations: () => 'Only my Locations',
         address: () => 'address',
+        searchNameLabel: () => 'Search for name',
+        searchNamePlaceholder: () => "e.g. 'New Museum'",
+        addressPlaceholder: () => 'not available',
       },
       title: {
         plural: () => 'Locations',
@@ -1256,7 +1305,7 @@ export const enDE: Localization = {
         back: () => 'back to Dashboard',
         dashboard: () => 'Dashboard',
         notifications: () => 'Notifications',
-        profile: () => 'Profile',
+        profile: () => 'Organizer Profile',
         team: () => 'Team',
         login: () => 'Login',
         registration: () => 'Registration',
@@ -1302,5 +1351,15 @@ export const enDE: Localization = {
       create: () => 'Create new organizer',
       loading: () => 'Changing active organizer',
     },
+  },
+  errors: {
+    server: {
+      headline: () => 'Server problem',
+      text: () =>
+        'Unfortunately there is a problem with our server. As a result, the application is currently not working correctly. Please try again later. We are working on a solution.',
+    },
+  },
+  loader: {
+    loading: () => 'content is loading',
   },
 };

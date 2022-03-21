@@ -21,7 +21,7 @@ import { useT } from '../../../lib/i18n';
 import { LocationUpdate } from '../../../lib/api/routes/location/update';
 import { Input, InputType } from '../../input';
 import { OpeningHours } from '../../../lib/api/types/hours';
-import { HoursField } from '../../HoursField';
+import { useHoursField } from '../../HoursField';
 import { LocationDelete } from '../../../lib/api/routes/location/delete';
 import { contentLanguages, languageTranslationKeys } from '../../../config/locales';
 import { getTranslation } from '../../../lib/translations';
@@ -40,6 +40,11 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
 
   const call = useApiCall();
   const t = useT();
+
+  const { renderedHoursField, init: initHoursField } = useHoursField({
+    onChange: (updatedOpeningHours) => setOpeningHours(updatedOpeningHours),
+    i18nKeys: { addButton: 'openingHours.add' },
+  });
 
   const initialOpeningHours = useMemo(
     () => entry?.data?.relations?.openingHours,
@@ -65,12 +70,25 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
     [initialOpeningHoursTranslations, openingHours, openingHoursFromApi, openingHoursTranslations]
   );
 
+  const valid = useMemo(() => {
+    if (openingHours?.length > 0) {
+      for (let i = 0; i < openingHours.length; i += 1) {
+        if (openingHours[i].attributes.from >= openingHours[i].attributes.to) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [openingHours]);
+
   useEffect(() => {
     if (JSON.stringify(initialOpeningHours) !== JSON.stringify(openingHoursFromApi)) {
       setOpeningHoursFromApi(initialOpeningHours);
       setOpeningHours(initialOpeningHours);
+      initHoursField(initialOpeningHours);
     }
-  }, [initialOpeningHours, openingHoursFromApi]);
+  }, [initialOpeningHours, openingHoursFromApi, initHoursField]);
 
   useEffect(() => {
     if (
@@ -86,13 +104,7 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
     <div>
       <EntryFormHead title={t('categories.location.form.openingHours') as string} />
       <FormGrid>
-        <FormItem width={FormItemWidth.full}>
-          <HoursField
-            i18nKeys={{ addButton: 'openingHours.add' }}
-            hours={openingHours || []}
-            onChange={(updatedOpeningHours) => setOpeningHours(updatedOpeningHours)}
-          />
-        </FormItem>
+        <FormItem width={FormItemWidth.full}>{renderedHoursField}</FormItem>
       </FormGrid>
       <EntryFormHead title={t('hours.note') as string} />
       <FormGrid>
@@ -183,7 +195,7 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       setOpeningHours(initialOpeningHours);
       setOpeningHoursTranslations(initialOpeningHoursTranslations);
     },
-    valid: true,
+    valid,
   };
 };
 

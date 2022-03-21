@@ -42,6 +42,8 @@ export enum ApiRoutes {
   authLogout = 'authLogout',
   authValidate = 'authValidate',
   authInfo = 'authInfo',
+  authRequestPasswordReset = 'authRequestPasswordReset',
+  authResetPassword = 'authResetPassword',
   districtList = 'districtList',
   organizerList = 'organizerList',
   organizerShow = 'organizerShow',
@@ -93,54 +95,57 @@ export const apiRoutes: {
   authLogout: () => '/auth/logout',
   authValidate: () => '/auth/validate',
   authInfo: () => '/auth/info',
+  authRequestPasswordReset: () => '/auth/requestPasswordReset',
+  authResetPassword: ({ email, signature }) =>
+    `/auth/resetPassword/${email}?signature=${signature}`,
   districtList: () => `/${apiVersion}/district`,
   organizerList: (query) =>
     `/${apiVersion}/organizer?include=types,subjects,translations,logo${
-      query?.page ? `&page=${query.page}` : ''
-    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
-      query?.sort ? `&sort=${query.sort}` : ''
-    }`,
+      query?.includes ? `,${(query.includes as string[]).join(',')}` : ''
+    }${query?.page ? `&page=${query.page}` : ''}${query?.size ? `&size=${query.size}` : ''}${
+      query?.filter ? `&filter=${query.filter}` : ''
+    }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   organizerShow: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
+    `/${apiVersion}/organizer/${organizer}?include=mainContact,types,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerCreate: () => `/${apiVersion}/organizer`,
   organizerUpdate: ({ organizer }) =>
-    `/${apiVersion}/organizer/${organizer}?include=types,address,subjects,links,translations,media,tags,logo,contacts,roles`,
+    `/${apiVersion}/organizer/${organizer}?include=mainContact,types,subjects,links,translations,media,tags,logo,contacts,roles`,
   organizerDelete: ({ organizer }) => `/${apiVersion}/organizer/${organizer}`,
   organizerTypeList: () => `/${apiVersion}/organizerType?include=translations`,
   organizerDownload: ({ id, format }) =>
-    `/${apiVersion}/organizer/${id}?include=types,address,subjects,links,translations,tags,contacts&format=${format}`,
+    `/${apiVersion}/organizer/${id}?include=mainContact,types,subjects,links,translations,tags,contacts&format=${format}`,
   organizerListDownload: ({ format }) =>
-    `/${apiVersion}/organizer?include=types,address,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
+    `/${apiVersion}/organizer?include=mainContact,types,subjects,links,translations,tags,contacts&sort=-updatedAt&format=${format}`,
   locationList: (query) =>
     `/${apiVersion}/location?include=translations,address${
-      query?.page ? `&page=${query.page}` : ''
-    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
-      query?.sort ? `&sort=${query.sort}` : ''
-    }`,
+      query?.includes ? `,${(query.includes as string[]).join(',')}` : ''
+    }${query?.page ? `&page=${query.page}` : ''}${query?.size ? `&size=${query.size}` : ''}${
+      query?.filter ? `&filter=${query.filter}` : ''
+    }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   locationShow: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizer,address,accessibility,service,roles`,
   locationCreate: () => `/${apiVersion}/location`,
   locationUpdate: ({ id }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizers,address,accessibility,service,roles`,
+    `/${apiVersion}/location/${id}?include=links,translations,media,openingHours,organizer,address,accessibility,service,roles`,
   locationAccessibilityUpdate: ({ id }) => `/${apiVersion}/location/${id}/accessibility`,
   locationServiceUpdate: ({ id }) => `/${apiVersion}/location/${id}/service`,
   locationDelete: ({ id }) => `/${apiVersion}/location/${id}`,
   locationDownload: ({ id, format }) =>
-    `/${apiVersion}/location/${id}?include=links,translations,openingHours,organizers,address,accessibility,service&format=${format}`,
+    `/${apiVersion}/location/${id}?include=links,translations,openingHours,organizer,address,accessibility,service&format=${format}`,
   locationListDownload: ({ format, organizer }) =>
-    `/${apiVersion}/location?include=links,translations,openingHours,organizers,address,accessibility,service&filter=organizer=${organizer}&sort=-updatedAt&format=${format}`,
+    `/${apiVersion}/location?include=links,translations,openingHours,organizer,address,accessibility,service&filter=organizer=${organizer}&sort=-updatedAt&format=${format}`,
   offerAudienceUpdate: ({ id }) => `/${apiVersion}/offer/${id}/audience`,
   offerList: (query) =>
     `/${apiVersion}/offer?include=translations,types,mainType${
-      query?.page ? `&page=${query.page}` : ''
-    }${query?.size ? `&size=${query.size}` : ''}${query?.filter ? `&filter=${query.filter}` : ''}${
-      query?.sort ? `&sort=${query.sort}` : ''
-    }`,
+      query?.includes ? `,${(query.includes as string[]).join(',')}` : ''
+    }${query?.page ? `&page=${query.page}` : ''}${query?.size ? `&size=${query.size}` : ''}${
+      query?.filter ? `&filter=${query.filter}` : ''
+    }${query?.sort ? `&sort=${query.sort}` : ''}${query?.search ? `&search=${query.search}` : ''}`,
   offerShow: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience,roles`,
   offerCreate: () => `/${apiVersion}/offer`,
   offerUpdate: ({ id }) =>
-    `/${apiVersion}/offer/${id}?include=translations,media,tags,location,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
+    `/${apiVersion}/offer/${id}?include=translations,media,tags,locations,organizers,links,types,subjects,tags,mainType,peakHours,audience`,
   offerDelete: ({ id }) => `/${apiVersion}/offer/${id}`,
   offerDateCreate: ({ offerId }) => `/${apiVersion}/offer/${offerId}/date/`,
   offerDateUpdate: ({ offerId, dateId }) =>
@@ -154,9 +159,9 @@ export const apiRoutes: {
   offerDateListDownload: ({ offerId, format }) =>
     `/${apiVersion}/offer/${offerId}/date?include=translations,dates,media&format=${format}&filter=past=false&sort=startsAt`,
   offerDownload: ({ id, format }) =>
-    `/${apiVersion}/offer/${id}?include=translations,location,organizers,links,types,subjects,tags,mainType&format=${format}`,
+    `/${apiVersion}/offer/${id}?include=translations,locations,organizers,links,types,subjects,tags,mainType&format=${format}`,
   offerListDownload: ({ format, organizer }) =>
-    `/${apiVersion}/offer?include=translations,location,organizers,links,types,subjects,tags,mainType&filter=organizers=${organizer}&sort=-updatedAt&format=${format}`,
+    `/${apiVersion}/offer?include=translations,locations,organizers,links,types,subjects,tags,mainType&filter=organizers=${organizer}&sort=-updatedAt&format=${format}`,
   offerTypeList: () => `/${apiVersion}/offerType?include=translations`,
   offerMainTypeList: () => `/${apiVersion}/offerMainType?include=translations`,
   mediaShow: ({ id }) => `/${apiVersion}/media/${id}?include=license`,
@@ -183,7 +188,7 @@ export const call = async <T extends ApiCall>(
     ? addUrlParam(request.route, `include=${includes.join(',')}`)
     : request.route;
 
-  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+  const api = publicRuntimeConfig?.api;
 
   try {
     const resp = await fetch(new URL(routeWithIncludes, api).toString(), {
@@ -269,7 +274,7 @@ export const useMediaUpload = (
     ) => {
       const { request } = factory(overrideAuthToken || authToken, query);
       const route = request.route;
-      const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+      const api = publicRuntimeConfig?.api;
 
       const formData = new FormData();
       if (files) {
@@ -327,7 +332,7 @@ export const getApiUrl = (
   query?: ParsedUrlQuery,
   includes?: string[]
 ): URL => {
-  const api = publicRuntimeConfig?.api || 'https://beta.api.kulturdaten.berlin';
+  const api = publicRuntimeConfig?.api;
 
   const route = apiRoutes[apiRoute](query);
   const routeWithIncludes = Array.isArray(includes)

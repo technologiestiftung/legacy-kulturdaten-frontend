@@ -10,6 +10,8 @@ import { Organizer } from '../../../lib/api/types/organizer';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
+import { useUserIsOwner } from '../../../lib/useUserIsOwner';
+import { isEmail } from '../../../lib/validations';
 import { WindowContext } from '../../../lib/WindowService';
 import { Contacts } from '../../Contacts';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -18,9 +20,9 @@ import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { usePublish } from '../../Publish';
 import { EntryFormHook } from '../helpers/form';
-import { useAddressForm } from '../helpers/form/Address';
 import { useDescriptionForm } from '../helpers/form/Description';
 import { useLinksForm } from '../helpers/form/Links';
+import { useMainContactForm } from '../helpers/form/MainContact';
 import { useNameForm } from '../helpers/form/Name';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -87,6 +89,11 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
                 );
               }}
               ref={emailRef}
+              error={
+                attributes?.email?.length && !isEmail(attributes?.email)
+                  ? (t('forms.emailInvalid') as string)
+                  : undefined
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.half}>
@@ -180,6 +187,20 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
     [contacts, contactsFromApi]
   );
 
+  const valid = useMemo(() => {
+    if (pristine) {
+      return true;
+    }
+
+    for (let i = 0; i < contacts?.length; i += 1) {
+      if (contacts[i]?.attributes?.email?.length > 0 && !isEmail(contacts[i].attributes.email)) {
+        return false;
+      }
+    }
+
+    return true;
+  }, [pristine, contacts]);
+
   useEffect(() => {
     if (JSON.stringify(initialContacts) !== JSON.stringify(contactsFromApi)) {
       setContactsFromApi(initialContacts);
@@ -192,6 +213,7 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
       <EntryFormHead
         title={t('categories.organizer.form.additionalContacts') as string}
         tooltip={t('categories.organizer.form.additionalContactsTooltip')}
+        valid={valid}
       />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
@@ -250,7 +272,7 @@ const useAdditionalContactsForm: EntryFormHook = ({ category, query }) => {
     reset: () => {
       setContacts(initialContacts);
     },
-    valid: true,
+    valid,
     hint: false,
   };
 };
@@ -265,6 +287,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const [loaded, setLoaded] = useState(false);
   const { rendered } = useContext(WindowContext);
+  const userIsOwner = useUserIsOwner();
 
   const [valid, setValid] = useState(true);
 
@@ -306,14 +329,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
     reset: addressReset,
     valid: addressValid,
     requirementFulfillment: addressRequirementFulfillment,
-  } = useAddressForm({
+  } = useMainContactForm({
     category,
     query,
     loaded,
     customRequired: isPublished || undefined,
     title: t('categories.organizer.form.address') as string,
     tooltip: t('categories.organizer.form.addressTooltip') as string,
-    district: false,
     id: 'organizer-internal-contact',
   });
 
@@ -377,38 +399,45 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   const formattedDate = useSaveDate(entry);
 
-  const pristine = useMemo(
-    () =>
-      ![
-        namePristine,
-        addressPristine,
-        linksPristine,
-        contactPristine,
-        descriptionPristine,
-        additionalContactsPristine,
-      ].includes(false),
-    [
-      addressPristine,
+  const pristine = useMemo(() => {
+    const pristineConditions = [
+      namePristine,
+      linksPristine,
       contactPristine,
       descriptionPristine,
-      linksPristine,
-      namePristine,
       additionalContactsPristine,
-    ]
-  );
+    ];
+
+    if (userIsOwner) {
+      pristineConditions.push(addressPristine);
+    }
+    return !pristineConditions.includes(false);
+  }, [
+    userIsOwner,
+    addressPristine,
+    contactPristine,
+    descriptionPristine,
+    linksPristine,
+    namePristine,
+    additionalContactsPristine,
+  ]);
 
   useEffect(() => {
-    setValid(
-      ![
-        nameValid,
-        addressValid,
-        contactValid,
-        descriptionValid,
-        linksValid,
-        additionalContactsValid,
-      ].includes(false)
-    );
+    const validations = [
+      nameValid,
+      contactValid,
+      descriptionValid,
+      linksValid,
+      additionalContactsValid,
+    ];
+
+    if (userIsOwner) {
+      validations.push(addressValid);
+    }
+
+    setValid(!validations.includes(false));
   }, [
+    userIsOwner,
     addressValid,
     contactValid,
     descriptionValid,
@@ -426,30 +455,41 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
 
   useConfirmExit(shouldWarn, message, () => {
     nameReset();
-    addressReset();
+    if (userIsOwner) {
+      addressReset();
+    }
     descriptionReset();
     contactReset();
     additionalContactsReset();
     linksReset();
   });
 
-  const formRequirementFulfillments = useMemo(
-    () => [
-      nameRequirementFulfillment,
-      addressRequirementFulfillment,
-      descriptionRequirementFulfillment,
-    ],
-    [nameRequirementFulfillment, addressRequirementFulfillment, descriptionRequirementFulfillment]
-  );
+  const formRequirementFulfillments = useMemo(() => {
+    const requirementFulfillments = [nameRequirementFulfillment, descriptionRequirementFulfillment];
+
+    if (userIsOwner) {
+      requirementFulfillments.push(addressRequirementFulfillment);
+    }
+
+    return requirementFulfillments;
+  }, [
+    userIsOwner,
+    nameRequirementFulfillment,
+    addressRequirementFulfillment,
+    descriptionRequirementFulfillment,
+  ]);
 
   const onSave = useCallback(async () => {
     nameSubmit();
-    addressSubmit();
+    if (userIsOwner) {
+      addressSubmit();
+    }
     descriptionSubmit();
     linksSubmit();
     contactSubmit();
     additionalContactsSubmit();
   }, [
+    userIsOwner,
     nameSubmit,
     addressSubmit,
     descriptionSubmit,
@@ -483,7 +523,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             <EntryFormContainer>{contactForm}</EntryFormContainer>
             <EntryFormContainer>{additionalContactsForm}</EntryFormContainer>
             <EntryFormContainer>{linksForm}</EntryFormContainer>
-            <EntryFormContainer>{addressForm}</EntryFormContainer>
+            {userIsOwner && <EntryFormContainer>{addressForm}</EntryFormContainer>}
           </EntryFormWrapper>
         </div>
       </div>

@@ -2,7 +2,56 @@ import { format, getDay } from 'date-fns';
 import { useLocale } from './routing';
 import { dateFormatPatternMap } from '../config/locales';
 import { useT } from './i18n';
-import { weekdays } from '../components/DayPicker';
+
+const weekdays: {
+  name: {
+    long: string;
+    short: string;
+  };
+}[] = [
+  {
+    name: {
+      long: 'days.sunday.long',
+      short: 'days.sunday.short',
+    },
+  },
+  {
+    name: {
+      long: 'days.monday.long',
+      short: 'days.monday.short',
+    },
+  },
+  {
+    name: {
+      long: 'days.tuesday.long',
+      short: 'days.tuesday.short',
+    },
+  },
+  {
+    name: {
+      long: 'days.wednesday.long',
+      short: 'days.wednesday.short',
+    },
+  },
+  {
+    name: {
+      long: 'days.thursday.long',
+      short: 'days.thursday.short',
+    },
+  },
+  {
+    name: {
+      long: 'days.friday.long',
+      short: 'days.friday.short',
+    },
+  },
+  {
+    name: {
+      long: 'days.saturday.long',
+      short: 'days.saturday.short',
+    },
+  },
+];
 
 export enum DateFormat {
   date = 'date',

@@ -1,24 +1,18 @@
 import styled from '@emotion/styled';
+import { Dispatch, Reducer, useEffect, useReducer, useState } from 'react';
 
-import { Hours, HoursWeekday } from '../../lib/api/types/hours';
+import { Hours } from '../../lib/api/types/hours';
 import { useT } from '../../lib/i18n';
-import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor } from '../button';
 import { mq } from '../globals/Constants';
-import { Input, InputType } from '../input';
-import { Select } from '../select';
+import { HoursFieldItem } from './HoursFieldItem';
 
 const StyledHoursField = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-template-columns: 100%;
   row-gap: 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    grid-template-columns: 1fr 1fr;
-    column-gap: 1.5rem;
-    row-gap: 1.5rem;
-  }
 `;
 
 const StyledHoursFieldAdd = styled.div`
@@ -27,141 +21,38 @@ const StyledHoursFieldAdd = styled.div`
   }
 `;
 
-const StyledHoursFieldItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 0.75rem;
-  align-items: flex-end;
-  border: 1px solid var(--grey-400);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
-
-  ${mq(Breakpoint.mid)} {
-    row-gap: 1.5rem;
-    padding: 1.5rem;
-  }
-`;
-const StyledHoursFieldItemWeekday = styled.div`
-  align-self: stretch;
-`;
-const StyledHoursFieldItemTimes = styled.div`
-  align-self: stretch;
-  display: flex;
-  column-gap: 0.75rem;
-`;
-const StyledHoursFieldItemTimesFrom = styled.div`
-  flex-grow: 1;
-`;
-const StyledHoursFieldItemTimesTo = styled.div`
-  flex-grow: 1;
-`;
-const StyledHoursFieldItemRemove = styled.div`
-  text-align: right;
-`;
-
-interface HoursProps {
-  hours: Hours[];
-  onChange: (hours: Hours[]) => void;
+interface HoursFieldProps {
+  hoursState: HoursGroup[];
+  dispatch: Dispatch<HoursAction>;
   i18nKeys?: {
     addButton: string;
   };
 }
 
-export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: HoursProps) => {
-  const uid = usePseudoUID();
+const HoursField: React.FC<HoursFieldProps> = ({
+  hoursState,
+  dispatch,
+  i18nKeys,
+}: HoursFieldProps) => {
   const t = useT();
 
   return (
     <StyledHoursField>
-      {hours.map((hour, index) => (
-        <StyledHoursFieldItem key={index}>
-          <StyledHoursFieldItemWeekday>
-            <Select
-              id={`${uid}-hours`}
-              value={hour.attributes.weekday}
-              onChange={(e) => {
-                onChange([
-                  ...hours.slice(0, index),
-                  {
-                    ...hour,
-                    attributes: {
-                      ...hour.attributes,
-                      weekday: e.target.value as HoursWeekday,
-                    },
-                  },
-                  ...hours.slice(index + 1),
-                ]);
-              }}
-              label={t('hours.weekday') as string}
-            >
-              <option value={HoursWeekday.monday}>{t('days.monday.long')}</option>
-              <option value={HoursWeekday.tuesday}>{t('days.tuesday.long')}</option>
-              <option value={HoursWeekday.wednesday}>{t('days.wednesday.long')}</option>
-              <option value={HoursWeekday.thursday}>{t('days.thursday.long')}</option>
-              <option value={HoursWeekday.friday}>{t('days.friday.long')}</option>
-              <option value={HoursWeekday.saturday}>{t('days.saturday.long')}</option>
-              <option value={HoursWeekday.sunday}>{t('days.sunday.long')}</option>
-            </Select>
-          </StyledHoursFieldItemWeekday>
-          <StyledHoursFieldItemTimes>
-            <StyledHoursFieldItemTimesFrom>
-              <Input
-                type={InputType.time}
-                value={hour.attributes.from}
-                label={t('hours.from') as string}
-                onChange={(e) =>
-                  onChange([
-                    ...hours.slice(0, index),
-                    {
-                      ...hour,
-                      attributes: {
-                        ...hour.attributes,
-                        from: e.target.value,
-                      },
-                    },
-                    ...hours.slice(index + 1),
-                  ])
-                }
-              />
-            </StyledHoursFieldItemTimesFrom>
-            <StyledHoursFieldItemTimesTo>
-              <Input
-                type={InputType.time}
-                value={hour.attributes.to}
-                label={t('hours.to') as string}
-                onChange={(e) =>
-                  onChange([
-                    ...hours.slice(0, index),
-                    {
-                      ...hour,
-                      attributes: {
-                        ...hour.attributes,
-                        to: e.target.value,
-                      },
-                    },
-                    ...hours.slice(index + 1),
-                  ])
-                }
-              />
-            </StyledHoursFieldItemTimesTo>
-          </StyledHoursFieldItemTimes>
-          <StyledHoursFieldItemRemove>
-            <Button
-              onClick={() => onChange(hours.filter((hour, hourIndex) => hourIndex !== index))}
-            >
-              {t('hours.remove')}
-            </Button>
-          </StyledHoursFieldItemRemove>
-        </StyledHoursFieldItem>
+      {hoursState.map((hoursGroup, index) => (
+        <HoursFieldItem hoursGroup={hoursGroup} dispatch={dispatch} index={index} key={index} />
       ))}
       <StyledHoursFieldAdd>
         <Button
           color={ButtonColor.black}
           onClick={() =>
-            onChange([
-              ...hours,
-              { attributes: { weekday: HoursWeekday.monday, from: '09:00', to: '10:00' } },
-            ])
+            dispatch({
+              type: HoursActions.add,
+              payload: {
+                from: '09:00',
+                to: '10:00',
+                hours: [],
+              },
+            })
           }
         >
           {t(i18nKeys?.addButton || 'hours.add')}
@@ -169,4 +60,184 @@ export const HoursField: React.FC<HoursProps> = ({ hours, onChange, i18nKeys }: 
       </StyledHoursFieldAdd>
     </StyledHoursField>
   );
+};
+
+export type HoursGroup = {
+  from: string;
+  to: string;
+  hours: Hours[];
+};
+
+export enum HoursActions {
+  add = 'add',
+  init = 'init',
+  remove = 'remove',
+  update = 'update',
+}
+
+type HoursState = HoursGroup[];
+
+export type HoursAction =
+  | {
+      type: HoursActions.add;
+      payload: HoursGroup;
+    }
+  | {
+      type: HoursActions.remove;
+      payload: number;
+    }
+  | {
+      type: HoursActions.update;
+      payload: {
+        index: number;
+        group: HoursGroup;
+      };
+    }
+  | {
+      type: HoursActions.init;
+      payload: HoursGroup[];
+    };
+
+const hoursReducer: Reducer<HoursState, HoursAction> = (state, action) => {
+  switch (action.type) {
+    case HoursActions.init: {
+      return action.payload;
+    }
+
+    case HoursActions.add: {
+      return [...state, action.payload];
+    }
+
+    case HoursActions.remove: {
+      return [...state.slice(0, action.payload), ...state.slice(action.payload + 1)];
+    }
+
+    case HoursActions.update: {
+      return [
+        ...state.slice(0, action.payload.index),
+        action.payload.group,
+        ...state.slice(action.payload.index + 1),
+      ];
+    }
+
+    default: {
+      break;
+    }
+  }
+};
+
+const hoursToHoursGroups = (hours: Hours[]) => {
+  const groups: {
+    from: string;
+    to: string;
+    hours: Hours[];
+  }[] = [];
+
+  if (hours?.length > 0) {
+    const hoursCopy = [...hours];
+
+    let n = 0;
+
+    while (hoursCopy.length > 0) {
+      const startHours = hoursCopy.pop();
+
+      groups.push({
+        from: startHours.attributes.from,
+        to: startHours.attributes.to,
+        hours: [startHours],
+      });
+
+      for (let i = hoursCopy.length - 1; i >= 0; i -= 1) {
+        if (
+          hoursCopy[i].attributes.from === startHours.attributes.from &&
+          hoursCopy[i].attributes.to === startHours.attributes.to
+        ) {
+          groups[n].hours.push(hoursCopy.splice(i, 1)[0]);
+        }
+      }
+
+      n += 1;
+    }
+
+    return groups.sort((a, b) => {
+      if (a.from < b.from) {
+        return -1;
+      }
+
+      if (a.from > b.from) {
+        return 1;
+      }
+
+      return 0;
+    });
+  }
+
+  return [];
+};
+
+const hoursGroupsToHours = (hoursGroups: HoursGroup[]): Hours[] => {
+  const hours = hoursGroups.reduce<Hours[]>((combined, hoursGroup) => {
+    const advanced = [...combined];
+
+    hoursGroup.hours.forEach((candidate) => {
+      if (
+        advanced.findIndex(
+          (existing) =>
+            candidate.attributes.from === existing.attributes.from &&
+            candidate.attributes.to === existing.attributes.to &&
+            candidate.attributes.weekday === existing.attributes.weekday
+        ) === -1
+      ) {
+        advanced.push(candidate);
+      }
+    });
+
+    return advanced;
+  }, []);
+
+  return hours;
+};
+
+export const useHoursField = ({
+  onChange,
+  i18nKeys,
+}: {
+  onChange: (hours: Hours[]) => void;
+  i18nKeys?: {
+    addButton: string;
+  };
+}): {
+  renderedHoursField: React.ReactElement;
+  init: (hours: Hours[]) => void;
+} => {
+  const [hoursState, dispatch] = useReducer(hoursReducer, []);
+
+  const [updated, setUpdated] = useState(false);
+
+  useEffect(() => {
+    if (updated) {
+      setUpdated(false);
+      const next = hoursGroupsToHours(hoursState);
+      onChange(next);
+    }
+  }, [hoursState, onChange, updated]);
+
+  return {
+    renderedHoursField: (
+      <HoursField
+        hoursState={hoursState}
+        dispatch={(action) => {
+          dispatch(action);
+          setUpdated(true);
+        }}
+        i18nKeys={i18nKeys}
+      />
+    ),
+    init: (hours) => {
+      dispatch({
+        type: HoursActions.init,
+        payload: hoursToHoursGroups(hours),
+      });
+    },
+  };
 };

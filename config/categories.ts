@@ -185,18 +185,19 @@ export const useCategories: () => {
           },
         },
         {
-          key: 'address',
-          translation: t('categories.organizer.requirements.address'),
-          publishableKeys: ['relations.address'],
+          key: 'mainContact',
+          translation: t('categories.organizer.requirements.mainContact'),
+          publishableKeys: ['relations.mainContact'],
           attributes: [
             {
-              path: 'relations.address.attributes.city',
+              path: 'relations.mainContact.relations.translation',
+              translation: {
+                language: defaultLanguage,
+                attribute: 'name',
+              },
             },
             {
-              path: 'relations.address.attributes.street1',
-            },
-            {
-              path: 'relations.address.attributes.zipCode',
+              path: 'relations.mainContact.attributes.email',
             },
           ],
           link: {
@@ -206,7 +207,7 @@ export const useCategories: () => {
                 query: { ...query, sub: 'info' },
               })}#organizer-internal-contact`,
             ariaLabel: t('requirements.nameLabel', {
-              fieldName: t('categories.organizer.requirements.address') as string,
+              fieldName: t('categories.organizer.requirements.mainContact') as string,
             }) as string,
           },
         },

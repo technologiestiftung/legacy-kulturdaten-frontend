@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { Categories, useCategories } from '../../../config/categories';
+import { useCategories } from '../../../config/categories';
 import { routes } from '../../../config/routes';
 import { useAppTitle } from '../../../config/structure';
 import { useDownload } from '../../../lib/api/download';
@@ -15,7 +15,7 @@ import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../../button';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryHeader } from '../../EntryHeader';
-import { EntryListContextProvider } from '../../EntryList/EntryListContext';
+import { AdminListContext } from '../../EntryList/EntryListContext';
 import { OrganizerList } from '../../EntryList/OrganizerList';
 import { useUser } from '../../user/useUser';
 
@@ -82,13 +82,12 @@ export const AdminOrganizersPage: React.FC = () => {
       />
       <EntryFormWrapper>
         <EntryFormContainer noPadding={!isMidOrWider}>
-          <EntryListContextProvider listNames={[Categories.organizer]}>
-            <OrganizerList
-              expandable={false}
-              expanded={isMidOrWider}
-              customEntryOnClick={(categoryName, id) => start(id)}
-            />
-          </EntryListContextProvider>
+          <OrganizerList
+            expandable={false}
+            expanded={isMidOrWider}
+            customEntryOnClick={(categoryName, id) => start(id)}
+            Context={AdminListContext}
+          />
         </EntryFormContainer>
       </EntryFormWrapper>
     </>
