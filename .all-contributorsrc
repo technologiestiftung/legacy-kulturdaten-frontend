@@ -29,6 +29,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "matthiasrohmer",
+      "name": "Matthias Rohmer",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12857772?v=4",
+      "profile": "https://github.com/matthiasrohmer",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7

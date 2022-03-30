@@ -68,6 +68,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://mathies.io/"><img src="https://avatars.githubusercontent.com/u/5181384?v=4?s=643" width="643px;" alt=""/><br /><sub><b>Mathies Schneider</b></sub></a><br /><a href="https://github.com/technologiestiftung/kulturdaten-frontend/commits?author=smatjes" title="Code">💻</a> <a href="https://github.com/technologiestiftung/kulturdaten-frontend/commits?author=smatjes" title="Documentation">📖</a></td>
     <td align="center"><a href="https://boris.io/"><img src="https://avatars.githubusercontent.com/u/1102134?v=4?s=643" width="643px;" alt=""/><br /><sub><b>Boris Fruendt</b></sub></a><br /><a href="https://github.com/technologiestiftung/kulturdaten-frontend/commits?author=b0ndt" title="Code">💻</a> <a href="https://github.com/technologiestiftung/kulturdaten-frontend/commits?author=b0ndt" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/matthiasrohmer"><img src="https://avatars.githubusercontent.com/u/12857772?v=4?s=643" width="643px;" alt=""/><br /><sub><b>Matthias Rohmer</b></sub></a><br /><a href="https://github.com/technologiestiftung/kulturdaten-frontend/commits?author=matthiasrohmer" title="Code">💻</a> <a href="https://github.com/technologiestiftung/kulturdaten-frontend/commits?author=matthiasrohmer" title="Documentation">📖</a></td>
   </tr>
 </table>
 
