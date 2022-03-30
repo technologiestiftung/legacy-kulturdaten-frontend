@@ -9,6 +9,17 @@
   "imageSize": 643,
   "commit": true,
   "commitConvention": "angular",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "smatjes",
+      "name": "Mathies Schneider",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5181384?v=4",
+      "profile": "https://mathies.io/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
+  ],
   "contributorsPerLine": 7
 }
