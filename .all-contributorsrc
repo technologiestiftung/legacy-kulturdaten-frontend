@@ -48,6 +48,15 @@
       "contributions": [
         "maintenance"
       ]
+    },
+    {
+      "login": "vogelino",
+      "name": "Lucas Vogel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2759340?v=4",
+      "profile": "https://github.com/vogelino",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
