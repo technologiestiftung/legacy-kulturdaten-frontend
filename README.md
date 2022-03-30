@@ -80,3 +80,26 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Credits
+
+<table>
+  <tr>
+    <td>
+      A project by: <a src="https://www.technologiestiftung-berlin.de/en/">
+        <br />
+        <br />
+        <br />
+        <img width="150" src="https://logos.citylab-berlin.org/logo-technologiestiftung-berlin-en.svg" />
+      </a>
+    </td>
+    <td>
+      Supported by: <a src="https://www.berlin.de/sen/kultur/en/">
+        <br />
+        <br />
+        <img width="120" src="https://logos.citylab-berlin.org/logo-berlin-senkueu-en.svg" />
+      </a>
+    </td>
+  </tr>
+</table>
+
