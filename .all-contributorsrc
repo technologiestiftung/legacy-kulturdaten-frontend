@@ -19,6 +19,16 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "b0ndt",
+      "name": "Boris Fruendt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1102134?v=4",
+      "profile": "https://boris.io/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7
