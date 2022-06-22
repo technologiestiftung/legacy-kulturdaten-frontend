@@ -19,6 +19,11 @@ import { StandardLink } from '../../StandardLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { EntryListContext } from '../../EntryList/EntryListContext';
 
+const HiddenOrganizerTitle = styled.h1`
+  position:absolute;
+  left:-10000px;
+`;
+
 const StyledOrganizerBand = styled.div<{ adminModeActive: boolean }>`
   width: 100%;
   min-height: 100%;
@@ -92,6 +97,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
 
   return (
     <StyledOrganizerBand adminModeActive={adminModeActive}>
+      <HiddenOrganizerTitle >{t('menu.organizerBand.title')}</HiddenOrganizerTitle>
       {adminModeActive ? (
         <>
           {renderedAdminMark}
