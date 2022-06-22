@@ -147,7 +147,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           valid={valid}
         />
         <StyledCheckboxInputCheck checked={checkedState}>
-          <Check color="var(--black)" />
+          <Check color="var(--black)" aria-hidden="true" />
         </StyledCheckboxInputCheck>
       </StyledCheckboxInputContainer>
       {label && (
