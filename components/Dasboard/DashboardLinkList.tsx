@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'react-feather';
+import { useT } from '../../lib/i18n';
 
 import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
@@ -96,15 +97,18 @@ const StyledDashboardLinkListLink = styled.a`
   }
 `;
 
+
 const InternalDashboardLinkListLink: React.FC<StandardLinkInternal> = ({
   title,
-  href,
+  href
 }: StandardLinkInternal) => {
+  const t = useT();
+  const linkIconAltText = t('links.internal.iconAltText');
   return (
     <Link href={href} passHref>
       <StyledDashboardLinkListLink title={title}>
         <span>{title}</span>
-        <ArrowRight />
+        <ArrowRight aria-label={linkIconAltText + ' ' + title} />
       </StyledDashboardLinkListLink>
     </Link>
   );
@@ -112,6 +116,7 @@ const InternalDashboardLinkListLink: React.FC<StandardLinkInternal> = ({
 
 export const DashboardLinkListLink: React.FC<StandardLink> = (props: StandardLink) => {
   const { type = StandardLinkType.internal } = props;
+  const t = useT();
 
   switch (type) {
     case StandardLinkType.internal: {
@@ -120,10 +125,11 @@ export const DashboardLinkListLink: React.FC<StandardLink> = (props: StandardLin
 
     case StandardLinkType.external: {
       const { title, href } = props;
+      const linkIconAltText = t('links.external.iconAltText');
       return (
         <StyledDashboardLinkListLink href={href} rel="noopener noreferrer" target="_blank">
           <span>{title}</span>
-          <ArrowUpRight />
+          <ArrowUpRight aria-label={linkIconAltText} />
         </StyledDashboardLinkListLink>
       );
     }

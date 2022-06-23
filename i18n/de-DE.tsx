@@ -214,6 +214,14 @@ export const deDE: Localization = {
     listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
     noMatch: () => 'Keine passende Sprache gefunden',
   },
+  links: {
+    internal: {
+      iconAltText: () => 'Gehe zu'
+    },
+    external: {
+      iconAltText: () => 'Neuen Tab öffnen'
+    },
+  },
   mainTypeTags: {
     addButton: () => 'Angebotsart hinzufügen',
     addLabel: () => 'Neue Angebotsart hinzufügen',

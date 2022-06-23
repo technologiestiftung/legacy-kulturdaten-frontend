@@ -213,6 +213,14 @@ export const enDE: Localization = {
     listPlaceholder: () => 'No language has been added yet',
     noMatch: () => 'No languages found',
   },
+  links: {
+    internal: {
+      iconAltText: () => 'visit',
+    },
+    external: {
+      iconAltText: () => 'open new tab',
+    },
+  },
   mainTypeTags: {
     addButton: () => 'Add event type',
     addLabel: () => 'Add new event type',
