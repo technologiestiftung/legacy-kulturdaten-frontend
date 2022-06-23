@@ -117,7 +117,7 @@ const StyledDashboardTileContainerChildren = styled.div`
   }
 `;
 
-const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean; variant: DashboardTileVariant }>`
+const StyledDashboardTileTitle = styled.h2<{ hasDigit?: boolean; variant: DashboardTileVariant }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: 700;
