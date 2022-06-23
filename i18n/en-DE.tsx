@@ -30,6 +30,7 @@ export const enDE: Localization = {
     info: {
       hint: {
         title: () => 'Profile not yet public',
+        altText: () => 'Hint',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>

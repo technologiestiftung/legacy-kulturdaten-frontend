@@ -30,6 +30,7 @@ export const deDE: Localization = {
     info: {
       hint: {
         title: () => 'Profil noch nicht öffentlich',
+        altText: () => 'Hinweis',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
