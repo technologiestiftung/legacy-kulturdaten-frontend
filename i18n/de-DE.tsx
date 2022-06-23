@@ -30,6 +30,7 @@ export const deDE: Localization = {
     info: {
       hint: {
         title: () => 'Profil noch nicht öffentlich',
+        altText: () => 'Hinweis',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
@@ -213,6 +214,14 @@ export const deDE: Localization = {
     listLabel: () => 'Bereits hinzugefügte Sprachen',
     listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
     noMatch: () => 'Keine passende Sprache gefunden',
+  },
+  links: {
+    internal: {
+      iconAltText: () => 'Gehe zu'
+    },
+    external: {
+      iconAltText: () => 'Neuen Tab öffnen'
+    },
   },
   mainTypeTags: {
     addButton: () => 'Angebotsart hinzufügen',
@@ -1359,6 +1368,7 @@ export const deDE: Localization = {
       description: () => 'Sprache wählen, choose Language',
     },
     organizerBand: {
+      title: () => 'Anbieter:in-Profile',
       show: () => 'Liste meiner Anbieter:innen ausklappen',
       collapse: () => 'Liste meiner Anbieter:innen einklappen',
       create: () => 'Neue Anbieter:in erstellen',

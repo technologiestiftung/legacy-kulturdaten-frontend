@@ -30,6 +30,7 @@ export const enDE: Localization = {
     info: {
       hint: {
         title: () => 'Profile not yet public',
+        altText: () => 'Hint',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
@@ -212,6 +213,14 @@ export const enDE: Localization = {
     listLabel: () => 'Already added languages',
     listPlaceholder: () => 'No language has been added yet',
     noMatch: () => 'No languages found',
+  },
+  links: {
+    internal: {
+      iconAltText: () => 'visit',
+    },
+    external: {
+      iconAltText: () => 'open new tab',
+    },
   },
   mainTypeTags: {
     addButton: () => 'Add event type',
@@ -1346,6 +1355,7 @@ export const enDE: Localization = {
       description: () => 'Choose Language, Sprache wählen',
     },
     organizerBand: {
+      title: () => 'Profiles',
       show: () => 'Show list of my organizers',
       collapse: () => 'Hide list of my organizers',
       create: () => 'Create new organizer',
