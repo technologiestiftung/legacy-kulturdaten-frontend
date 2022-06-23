@@ -124,7 +124,7 @@ export const RadioList: React.FC<RadioListProps> = ({
                   title={option.link.title}
                   aria-label={option.link.title}
                 >
-                  <ExternalLink />
+                  <ExternalLink aria-hidden />
                 </StyledRadioListItemLinkA>
               </StyledRadioListItemLink>
             )}
