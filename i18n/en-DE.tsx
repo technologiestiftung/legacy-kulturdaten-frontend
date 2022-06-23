@@ -1355,6 +1355,7 @@ export const enDE: Localization = {
       description: () => 'Choose Language, Sprache wählen',
     },
     organizerBand: {
+      title: () => 'Profiles',
       show: () => 'Show list of my organizers',
       collapse: () => 'Hide list of my organizers',
       create: () => 'Create new organizer',

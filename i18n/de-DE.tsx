@@ -1368,6 +1368,7 @@ export const deDE: Localization = {
       description: () => 'Sprache wählen, choose Language',
     },
     organizerBand: {
+      title: () => 'Anbieter:in-Profile',
       show: () => 'Liste meiner Anbieter:innen ausklappen',
       collapse: () => 'Liste meiner Anbieter:innen einklappen',
       create: () => 'Neue Anbieter:in erstellen',
