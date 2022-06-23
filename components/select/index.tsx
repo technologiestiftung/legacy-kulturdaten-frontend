@@ -336,11 +336,11 @@ export const Select: React.FC<SelectProps> = ({
           {children}
         </StyledSelect>
         {icon && feather[icon] && (
-          <StyledSelectIcon size={elementSize}>
+          <StyledSelectIcon size={elementSize} aria-hidden >
             {React.createElement(feather[icon], { size: selectSizeIconSizeMap[elementSize] })}
           </StyledSelectIcon>
         )}
-        <StyledSelectChevron size={elementSize}>
+        <StyledSelectChevron size={elementSize} aria-hidden >
           {React.createElement(feather.ChevronDown, { size: selectSizeIconSizeMap[elementSize] })}
         </StyledSelectChevron>
       </StyledSelectAndChevron>
