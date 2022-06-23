@@ -71,7 +71,7 @@ const InternalDashboardTileLink: React.FC<InternalDashboardTileLinkProps> = ({
   disabled,
 }: InternalDashboardTileLinkProps) => {
   const t = useT();
-  const linkIconAltText = t('links.internal.iconAltText');
+  const linkIconAltText = t('links.internal.iconAltText') as string;
   return (
     <Link href={href} passHref>
       <StyledDashboardTileLink title={title} disabled={disabled}>
@@ -98,12 +98,11 @@ export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
     }
 
     case StandardLinkType.external: {
-      const { title, href } = props;
-      const linkIconAltText = t('links.external.iconAltText');
+      const { title, href } = props;;
       return (
         <StyledDashboardTileLink href={href} rel="noopener noreferrer" target="_blank">
           <span>{title}</span>
-          <ArrowUpRight aria-label={linkIconAltText}/>
+          <ArrowUpRight aria-label={t('links.external.iconAltText') as string}/>
         </StyledDashboardTileLink>
       );
     }

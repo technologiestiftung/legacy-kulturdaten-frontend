@@ -103,7 +103,7 @@ const InternalDashboardLinkListLink: React.FC<StandardLinkInternal> = ({
   href
 }: StandardLinkInternal) => {
   const t = useT();
-  const linkIconAltText = t('links.internal.iconAltText');
+  const linkIconAltText = t('links.internal.iconAltText') as string;
   return (
     <Link href={href} passHref>
       <StyledDashboardLinkListLink title={title}>
@@ -125,11 +125,10 @@ export const DashboardLinkListLink: React.FC<StandardLink> = (props: StandardLin
 
     case StandardLinkType.external: {
       const { title, href } = props;
-      const linkIconAltText = t('links.external.iconAltText');
       return (
         <StyledDashboardLinkListLink href={href} rel="noopener noreferrer" target="_blank">
           <span>{title}</span>
-          <ArrowUpRight aria-label={linkIconAltText} />
+          <ArrowUpRight aria-label={t('links.external.iconAltText') as string} />
         </StyledDashboardLinkListLink>
       );
     }
