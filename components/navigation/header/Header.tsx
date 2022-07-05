@@ -82,12 +82,12 @@ const StyledHeaderTitleText = styled.div`
   }
 `;
 
-const StyledHeaderMenuItems = styled.div`
+const StyledHeaderMenuItems = styled.ul`
   display: flex;
   padding: 0.75rem 0.375rem;
 `;
 
-const StyledHeaderMenuItem = styled.div`
+const StyledHeaderMenuItem = styled.li`
   flex-shrink: 0;
   padding: 0 0.375rem;
 `;
