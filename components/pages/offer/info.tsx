@@ -1,7 +1,7 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
 import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { Location } from '../../../lib/api/types/location';
@@ -605,13 +605,13 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
-            <EntryFormContainer>{nameForm}</EntryFormContainer>
-            <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
-            <EntryFormContainer>{roomForm}</EntryFormContainer>
-            <EntryFormContainer>{teaserForm}</EntryFormContainer>
-            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
-            <EntryFormContainer>{pricingForm}</EntryFormContainer>
-            <EntryFormContainer>{linksForm}</EntryFormContainer>
+            <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{organizerLocationForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{roomForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{teaserForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{descriptionForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{pricingForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{linksForm}</StyledEntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

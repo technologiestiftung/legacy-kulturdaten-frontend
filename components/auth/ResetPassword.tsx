@@ -117,13 +117,15 @@ export const ResetPasswordForm: React.FC = () => {
     <AuthContent>
       <AuthHead>
         <AuthHeadline>
-          {t(
-            success
-              ? 'resetPassword.successHeadline'
-              : linkExpired
-              ? 'resetPassword.expiredLinkHeadline'
-              : 'resetPassword.headline'
-          )}
+          <legend>
+            {t(
+              success
+                ? 'resetPassword.successHeadline'
+                : linkExpired
+                ? 'resetPassword.expiredLinkHeadline'
+                : 'resetPassword.headline'
+            )}
+          </legend>
         </AuthHeadline>
         {!linkExpired && (
           <AuthSubline>
