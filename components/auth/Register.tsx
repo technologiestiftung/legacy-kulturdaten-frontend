@@ -113,7 +113,7 @@ export const RegisterForm: React.FC = () => {
   return (
     <AuthContent>
       <AuthHead>
-        <AuthHeadline>{t(success ? 'register.successHeadline' : 'register.headline')}</AuthHeadline>
+        <AuthHeadline><legend>{t(success ? 'register.successHeadline' : 'register.headline')}</legend></AuthHeadline>
         <AuthSubline>{t(success ? 'register.successSubline' : 'register.subline')}</AuthSubline>
       </AuthHead>
 

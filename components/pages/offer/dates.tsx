@@ -22,7 +22,7 @@ import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
@@ -379,10 +379,10 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         hint={false}
       />
       <EntryFormWrapper>
-        <EntryFormContainer>{isPermanentForm}</EntryFormContainer>
+        <StyledEntryFormContainer>{isPermanentForm}</StyledEntryFormContainer>
         {!isPermanentValue && (
           <>
-            <EntryFormContainer>
+            <StyledEntryFormContainer>
               <EntryFormHead title={t('date.currentDates') as string} />
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
@@ -466,8 +466,8 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                   )}
                 </FormItem>
               </FormGrid>
-            </EntryFormContainer>
-            <EntryFormContainer>
+            </StyledEntryFormContainer>
+            <StyledEntryFormContainer>
               <EntryFormHead
                 title={t('date.archivedDates') as string}
                 expander={{
@@ -478,7 +478,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 }}
               />
               {renderedCollapsable}
-            </EntryFormContainer>
+            </StyledEntryFormContainer>
           </>
         )}
       </EntryFormWrapper>

@@ -14,7 +14,7 @@ import {
   DashboardTileTextP,
   DashboardTileVariant,
 } from '../Dasboard/DashboardTile';
-import { EntryFormContainer } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer } from '../EntryForm/wrappers';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 import { useUser } from '../user/useUser';
@@ -32,7 +32,7 @@ export const Terms: React.FC = () => {
   const organizerId = useOrganizerId();
 
   return (
-    <EntryFormContainer>
+    <StyledEntryFormContainer>
       <FormGrid>
         <DashboardTile
           title={t('settings.terms.title') as string}
@@ -98,6 +98,6 @@ export const Terms: React.FC = () => {
           </DashboardTileText>
         </DashboardTile>
       </FormGrid>
-    </EntryFormContainer>
+    </StyledEntryFormContainer>
   );
 };
