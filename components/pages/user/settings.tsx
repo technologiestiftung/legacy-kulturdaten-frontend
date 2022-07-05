@@ -1,4 +1,4 @@
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
@@ -25,7 +25,7 @@ export const UserSettingsPage: React.FC = () => {
         <EntryFormWrapper>
           {!acceptedTerms && <Terms />}
           <UserPasswordUpdate />
-          <EntryFormContainer>
+          <StyledEntryFormContainer>
             <EntryFormHead
               title={t('menu.localeSwitch.label') as string}
               id={`${uid}-localeswitch`}
@@ -38,8 +38,8 @@ export const UserSettingsPage: React.FC = () => {
                 />
               </FormItem>
             </FormGrid>
-          </EntryFormContainer>
-          <EntryFormContainer>
+          </StyledEntryFormContainer>
+          <StyledEntryFormContainer>
             <EntryFormHead title={t('settings.legal.title') as string} />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
@@ -64,7 +64,7 @@ export const UserSettingsPage: React.FC = () => {
                 />
               </FormItem>
             </FormGrid>
-          </EntryFormContainer>
+          </StyledEntryFormContainer>
           <DeleteUser />
         </EntryFormWrapper>
       </div>

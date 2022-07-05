@@ -13,7 +13,7 @@ import { Breakpoint, useBreakpointOrWider } from '../../../lib/WindowService';
 import { useAdminMode } from '../../Admin/AdminContext';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../../button';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryHeader } from '../../EntryHeader';
 import { AdminListContext } from '../../EntryList/EntryListContext';
 import { OrganizerList } from '../../EntryList/OrganizerList';
@@ -81,14 +81,14 @@ export const AdminOrganizersPage: React.FC = () => {
         }
       />
       <EntryFormWrapper>
-        <EntryFormContainer noPadding={!isMidOrWider}>
+        <StyledEntryFormContainer noPadding={!isMidOrWider}>
           <OrganizerList
             expandable={false}
             expanded={isMidOrWider}
             customEntryOnClick={(categoryName, id) => start(id)}
             Context={AdminListContext}
           />
-        </EntryFormContainer>
+        </StyledEntryFormContainer>
       </EntryFormWrapper>
     </>
   );

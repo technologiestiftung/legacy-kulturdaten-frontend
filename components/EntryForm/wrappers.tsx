@@ -62,3 +62,19 @@ export const EntryFormContainerColumns = styled.div`
     row-gap: 3rem;
   }
 `;
+
+interface StyledEntryFormContainerProps {
+  children: React.ReactNode;
+  noPadding?,
+  fullWidth?
+}
+
+export const StyledEntryFormContainer: React.FC<StyledEntryFormContainerProps> = ({ children, noPadding, fullWidth }: StyledEntryFormContainerProps) => {
+  return (
+    <EntryFormContainer noPadding={noPadding} fullWidth={fullWidth}>
+      <fieldset>
+        {children}
+      </fieldset>
+    </EntryFormContainer>
+  );
+};

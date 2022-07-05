@@ -2,7 +2,7 @@ import { Dispatch, Reducer, useReducer } from 'react';
 import { GenericFormCategory, GenericFormFieldValue } from '../../lib/genericForm';
 import { useLanguage } from '../../lib/routing';
 import { getTranslation } from '../../lib/translations';
-import { EntryFormContainer } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer } from '../EntryForm/wrappers';
 import { GenericFormCategoryFactory } from './GenericFormCategoryFactory';
 
 export interface GenericFormStateConsumer {
@@ -81,7 +81,7 @@ export const useGenericFormStructure = (
       : undefined;
 
     return (
-      <EntryFormContainer key={index}>
+      <StyledEntryFormContainer key={index}>
         <GenericFormCategoryFactory
           title={currentTranslation?.attributes?.name}
           fieldGroups={category.children}
@@ -89,7 +89,7 @@ export const useGenericFormStructure = (
           dispatch={dispatch}
           collapsable={category.collapsable}
         />
-      </EntryFormContainer>
+      </StyledEntryFormContainer>
     );
   });
 

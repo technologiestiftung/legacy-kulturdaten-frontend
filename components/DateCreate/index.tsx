@@ -5,7 +5,7 @@ import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { EntryFormContainer, EntryFormWrapper } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../EntryForm/wrappers';
 import { Input, InputType } from '../input';
 import { useOverlay } from '../overlay';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
@@ -208,7 +208,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   return (
     <StyledDateCreateFormWrapper>
       <EntryFormWrapper fullWidth reducedVerticalPadding>
-        <EntryFormContainer noPadding fullWidth>
+        <StyledEntryFormContainer noPadding fullWidth>
           <DateFormTime
             {...{
               earliestDate,
@@ -221,14 +221,14 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               toTimeValid,
             }}
           />
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.recurrence.title')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>{renderedDateRecurrence}</FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead
             title={`${t('date.title')} (${t('forms.optional')})`}
             tooltip={t('date.titleTooltip')}
@@ -267,8 +267,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               </Info>
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('forms.teaser')}`} />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
@@ -306,8 +306,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.roomInfo')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.half}>
@@ -329,8 +329,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.additionalLinks')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
@@ -354,7 +354,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
+        </StyledEntryFormContainer>
       </EntryFormWrapper>
     </StyledDateCreateFormWrapper>
   );

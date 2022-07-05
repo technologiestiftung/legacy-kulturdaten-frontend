@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useApiCall } from '../../../lib/api';
 import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useT } from '../../../lib/i18n';
@@ -265,8 +265,8 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
           />
         )}
         <EntryFormWrapper>
-          {userIsOwner && <EntryFormContainer>{inviteForm}</EntryFormContainer>}
-          <EntryFormContainer>{teamForm}</EntryFormContainer>
+          {userIsOwner && <StyledEntryFormContainer>{inviteForm}</StyledEntryFormContainer>}
+          <StyledEntryFormContainer>{teamForm}</StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

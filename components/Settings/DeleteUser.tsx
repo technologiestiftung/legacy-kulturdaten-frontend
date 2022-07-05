@@ -4,7 +4,7 @@ import { useT } from '../../lib/i18n';
 import { Button, ButtonSize } from '../button';
 import { useConfirmScreen } from '../Confirm/ConfirmScreen';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { EntryFormContainer } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer } from '../EntryForm/wrappers';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 import { useUser } from '../user/useUser';
@@ -17,7 +17,7 @@ export const DeleteUser: React.FC = () => {
   const call = useApiCall();
 
   return (
-    <EntryFormContainer>
+    <StyledEntryFormContainer>
       <EntryFormHead title={t('settings.deletion.title') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>{t('settings.deletion.text')}</FormItem>
@@ -63,6 +63,6 @@ export const DeleteUser: React.FC = () => {
           </Button>
         </FormItem>
       </FormGrid>
-    </EntryFormContainer>
+    </StyledEntryFormContainer>
   );
 };

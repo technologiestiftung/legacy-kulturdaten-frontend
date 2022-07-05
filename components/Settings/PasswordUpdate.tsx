@@ -5,7 +5,7 @@ import { useT } from '../../lib/i18n';
 import { passwordMinLength } from '../auth/Register';
 import { ButtonType, ButtonSize, ButtonColor, Button } from '../button';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { EntryFormContainer } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer } from '../EntryForm/wrappers';
 import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
@@ -66,7 +66,7 @@ export const UserPasswordUpdate: React.FC = () => {
   ]);
 
   return (
-    <EntryFormContainer>
+    <StyledEntryFormContainer>
       <EntryFormHead title={t('settings.password.title') as string} />
       {success ? (
         <FormGrid>
@@ -186,6 +186,6 @@ export const UserPasswordUpdate: React.FC = () => {
           </FormGrid>
         </form>
       )}
-    </EntryFormContainer>
+    </StyledEntryFormContainer>
   );
 };
