@@ -341,6 +341,7 @@ export const OfferList: React.FC<OfferListProps> = ({
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={expandable}
+        
         actionButton={
           <Button
             size={ButtonSize.big}
