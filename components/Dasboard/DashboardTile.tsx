@@ -241,7 +241,7 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
         {digit && <StyledDashboardTileDigit>{digit}</StyledDashboardTileDigit>}
         <StyledDashboardTileContainerChildren>
           <StyledDashboardTileTitle hasDigit={typeof digit !== 'undefined'} variant={variant}>
-            {variant === DashboardTileVariant.hint && <Info aria-label={t('dashboard.info.hint.altText') as string}/>}
+            {variant === DashboardTileVariant.hint && <Info aria-hidden/>}
             <span>{title}</span>
           </StyledDashboardTileTitle>
           <StyledDashboardTileContent>{children}</StyledDashboardTileContent>
