@@ -74,9 +74,9 @@ const InternalDashboardTileLink: React.FC<InternalDashboardTileLinkProps> = ({
   const linkIconAltText = t('links.internal.iconAltText') as string;
   return (
     <Link href={href} passHref>
-      <StyledDashboardTileLink title={title} disabled={disabled}>
+      <StyledDashboardTileLink title={linkIconAltText + ' ' + title} disabled={disabled}>
         <span>{title}</span>
-        <ArrowRight aria-label={linkIconAltText + ' ' + title} />
+        <ArrowRight aria-hidden />
       </StyledDashboardTileLink>
     </Link>
   );
