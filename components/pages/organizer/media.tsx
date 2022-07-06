@@ -4,7 +4,7 @@ import { CategoryEntry } from '../../../lib/api/types/general';
 import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { WindowContext } from '../../../lib/WindowService';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useMediaForm } from '../helpers/media';
@@ -345,8 +345,8 @@ export const OrganizerMediaPage: React.FC<CategoryEntryPage> = <
           valid={mediaValid && logoValid}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>{logoForm}</EntryFormContainer>
-          <EntryFormContainer>{mediaForm}</EntryFormContainer>
+          <StyledEntryFormContainer>{logoForm}</StyledEntryFormContainer>
+          <StyledEntryFormContainer>{mediaForm}</StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

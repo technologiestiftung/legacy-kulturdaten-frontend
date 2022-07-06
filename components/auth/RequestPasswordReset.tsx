@@ -81,7 +81,9 @@ export const RequestPasswordResetForm: React.FC = () => {
     <AuthContent>
       <AuthHead>
         <AuthHeadline>
-          {t(success ? 'requestPasswordReset.successHeadline' : 'requestPasswordReset.headline')}
+          <legend>
+            {t(success ? 'requestPasswordReset.successHeadline' : 'requestPasswordReset.headline')}
+          </legend>
         </AuthHeadline>
         <AuthSubline>
           {t(success ? 'requestPasswordReset.successSubline' : 'requestPasswordReset.subline')}
