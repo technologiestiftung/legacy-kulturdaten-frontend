@@ -114,7 +114,7 @@ const StyledRadioVariantOptionLabelContent = styled.div`
   max-width: 52ch;
 `;
 
-const StyledRadioVariantOptionLabelHeadline = styled.div<{ active: boolean }>`
+const StyledRadioVariantOptionLabelHeadline = styled.label<{ active: boolean }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: var(--font-weight-bold);
@@ -133,7 +133,7 @@ const StyledRadioVariantOptionLabelChildren = styled.div`
   row-gap: calc(var(--line-height-300) / 2);
 `;
 
-export const RadioVariantOptionParagraph = styled.div`
+export const RadioVariantOptionParagraph = styled.p`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 400;

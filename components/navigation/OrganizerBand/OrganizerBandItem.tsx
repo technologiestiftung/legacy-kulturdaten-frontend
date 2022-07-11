@@ -118,7 +118,7 @@ const StyledOrganizerBandItem = styled.a<{
         `}
 `;
 
-const StyledOrganizerBandItemText = styled.div<{
+const StyledOrganizerBandItemText = styled.span<{
   layout: OrganizerBandLayout;
 }>`
   font-size: 1.125rem;
@@ -170,7 +170,7 @@ const OrganizerBandItemForwarded = (
   }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
-  const selfRef = useRef<HTMLDivElement>(null);
+  const selfRef = useRef<HTMLLIElement>(null);
   const logoRenditions = useMemo<Media['data']['relations']['renditions']>(
     () => logo?.relations?.renditions?.filter((rendition) => rendition.attributes.base === 96),
     [logo?.relations?.renditions]
@@ -187,7 +187,7 @@ const OrganizerBandItemForwarded = (
   );
 
   return (
-    <div ref={selfRef}>
+    <li ref={selfRef}>
       <StyledOrganizerBandItem
         active={active}
         ref={ref}
@@ -221,7 +221,7 @@ const OrganizerBandItemForwarded = (
           <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
         )}
       </StyledOrganizerBandItem>
-    </div>
+    </li>
   );
 };
 

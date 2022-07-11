@@ -6,6 +6,7 @@ export const StyledLabel = styled.label`
   font-weight: 700;
   color: inherit;
   display: inline-flex;
+  flex-direction: row;
 `;
 
 interface LabelProps {
