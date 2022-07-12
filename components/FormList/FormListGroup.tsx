@@ -50,10 +50,12 @@ export const FormListGroup: React.FC<FormListGroupProps> = ({
       <StyledFormListGroupChildren>
         {childrenArray?.map((child, index) => (
           <StyledFormListGroupItem key={index}>
-            {React.cloneElement(child as React.ReactElement, {
-              last: index === childrenArray.length - 1,
-              first: !title && index === 0,
-            })}
+            <fieldset>
+              {React.cloneElement(child as React.ReactElement, {
+                last: index === childrenArray.length - 1,
+                first: !title && index === 0,
+              })}
+            </fieldset>
           </StyledFormListGroupItem>
         ))}
       </StyledFormListGroupChildren>

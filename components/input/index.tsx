@@ -40,6 +40,8 @@ const StyledTooltip = styled.div`
   margin-left: 0.5rem;
 `;
 
+const createdId = "input-id-" + Math.random().toString(16).slice(2);
+
 const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
 const errorBorderShadow = 'inset 0px 0px 0px 1px var(--error)';
 const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
@@ -124,6 +126,7 @@ const StyledInput = styled.input<{
   valid?: boolean;
   hideError?: boolean;
   variant?: ComponentVariant;
+  id?: string;
 }>`
   ${(props) => inputStyles(props)}
 `;
@@ -255,7 +258,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         return typeof props?.valid === 'undefined' ? true : props.valid;
       }
     }, [internalState, props?.debounce, props?.softRequired, props?.valid, props?.value]);
-
     return (
       <StyledInputContainer>
         {props.type === InputType.submit ? (
@@ -266,7 +268,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <>
             {props.label && (
               <StyledInputLabelContainer>
-                <Label htmlFor={props.id}>
+                <Label htmlFor={props.id ? props.id : createdId }>
                   {props.label}
                   {props.required || props.softRequired ? ` (${t('forms.required')})` : ''}
                 </Label>
@@ -289,6 +291,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               value={props?.debounce ? internalState : props?.value || ''}
               variant={props?.variant}
               aria-label={props?.ariaLabel}
+              id={props.id ? props.id : createdId }
               onChange={(e) => {
                 if (
                   (props?.type !== InputType.date && props?.type !== InputType.time) ||

@@ -920,6 +920,7 @@ export const enDE: Localization = {
     headingThree: () => 'Headline small',
     listOrdered: () => 'Numbered list',
     listUnordered: () => 'Unordered list',
+    maxCharacters: () => 'Maximum characters',
     bold: () => 'Bold',
     italic: () => 'Italic',
     underline: () => 'Underline',
