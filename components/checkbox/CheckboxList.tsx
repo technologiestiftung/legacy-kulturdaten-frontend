@@ -6,7 +6,6 @@ import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../.
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
-import { Label } from '../label';
 
 const StyledCheckboxList = styled.div<{ variant?: ComponentVariant }>`
   display: flex;
