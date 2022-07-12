@@ -114,7 +114,7 @@ const StyledEntryPickerSlotRemove = styled.div`
   bottom: calc(0.75rem - 2px);
 `;
 
-const StyledEntryPickerSlotChoose = styled.div``;
+const StyledEntryPickerSlotChoose = styled.span``;
 
 export enum EntryPickerVariant {
   default = 'default',

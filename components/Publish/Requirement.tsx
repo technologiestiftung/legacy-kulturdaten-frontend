@@ -38,7 +38,7 @@ const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
     `}
 `;
 
-const StyledRequirementText = styled.div`
+const StyledRequirementText = styled.p`
   flex-grow: 1;
 `;
 
@@ -103,11 +103,13 @@ export const Requirement: React.FC<RequirementProps> = ({
   );
 
   return hasLink ? (
-    <Link href={link.href} passHref>
-      <StyledRequirementLink aria-label={link.ariaLabel}>
-        {renderedRequirement}
-      </StyledRequirementLink>
-    </Link>
+    <li>
+      <Link href={link.href} passHref>
+        <StyledRequirementLink aria-label={link.ariaLabel}>
+          {renderedRequirement}
+        </StyledRequirementLink>
+      </Link>
+    </li>
   ) : (
     renderedRequirement
   );

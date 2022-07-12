@@ -57,7 +57,7 @@ const StyledDropZoneLabel = styled.label<{
       : ''}
 `;
 
-const StlyedDropZoneSuccess = styled.div`
+const StlyedDropZoneSuccess = styled.p`
   padding: 0.75rem 0 0;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -72,7 +72,7 @@ const dropZoneLabelTextStyles = (isUploading?: boolean) => css`
   `}
 `;
 
-const StyledDropZoneLabelText = styled.div<{ isUploading?: boolean }>`
+const StyledDropZoneLabelText = styled.span<{ isUploading?: boolean }>`
   font-size: var(--font-size-500);
   line-height: var(--line-height-500);
   font-weight: 700;
@@ -81,7 +81,7 @@ const StyledDropZoneLabelText = styled.div<{ isUploading?: boolean }>`
   ${({ isUploading }) => dropZoneLabelTextStyles(isUploading)}
 `;
 
-const StyledDropZoneLabelSubText = styled.div<{ isUploading?: boolean }>`
+const StyledDropZoneLabelSubText = styled.p<{ isUploading?: boolean }>`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   transition: opacity var(--transition-duration-fast);

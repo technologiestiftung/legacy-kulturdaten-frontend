@@ -24,7 +24,7 @@ const HiddenOrganizerTitle = styled.h1`
   left:-10000px;
 `;
 
-const StyledOrganizerBand = styled.div<{ adminModeActive: boolean }>`
+const StyledOrganizerBand = styled.ul<{ adminModeActive: boolean }>`
   width: 100%;
   min-height: 100%;
   display: flex;
@@ -97,9 +97,9 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
 
   return (
     <StyledOrganizerBand adminModeActive={adminModeActive}>
-      <HiddenOrganizerTitle >{t('menu.organizerBand.title')}</HiddenOrganizerTitle>
+      <li><HiddenOrganizerTitle >{t('menu.organizerBand.title')}</HiddenOrganizerTitle></li>
       {adminModeActive ? (
-        <>
+        <li>
           {renderedAdminMark}
           <OrganizerBandItem
             active={router?.asPath === routes.createOrganizer({ locale })}
@@ -112,7 +112,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
           >
             {t('admin.leave') as string}
           </OrganizerBandItem>
-        </>
+        </li>
       ) : (
         <>
           {[...organizerOwnerList, ...organizerContributorList]?.map((organizer, index) => {

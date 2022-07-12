@@ -245,21 +245,19 @@ const StyledMediaListItemSub = styled.div`
   }
 `;
 
-const StyledMediaListItemInfo = styled.div`
+const StyledMediaListItemInfo = styled.table`
   font-family: var(--font-family-mono);
   font-size: var(--font-size-200);
   line-height: calc(var(--line-height-200) * 1);
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 0.75rem;
 `;
 
-const StyledMediaListItemInfoText = styled.div`
+const StyledMediaListItemInfoText = styled.td`
   word-break: break-all;
 `;
 
-const StyledMediaListItemInfoLabel = styled.div`
+const StyledMediaListItemInfoLabel = styled.td`
   font-weight: 700;
+  padding-right: 1rem;
 `;
 
 const StyledMediaListItemDelete = styled.div`
@@ -523,21 +521,21 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
       <StyledMediaListItemSub>
         <StyledMediaListItemInfo>
           {mediaItem.attributes.format && (
-            <>
+            <tr>
               <StyledMediaListItemInfoLabel>{t('media.format')}</StyledMediaListItemInfoLabel>
               <StyledMediaListItemInfoText>
                 {mediaItem.attributes.format.toUpperCase()}
               </StyledMediaListItemInfoText>
-            </>
+            </tr>
           )}
           {mediaItem.attributes.url && (
-            <>
+            <tr>
               <StyledMediaListItemInfoLabel>{t('media.url')}</StyledMediaListItemInfoLabel>
               <StyledMediaListItemInfoText>{mediaItem.attributes.url}</StyledMediaListItemInfoText>
-            </>
+            </tr>
           )}
           {mediaItem.attributes.filesize && (
-            <>
+            <tr>
               <StyledMediaListItemInfoLabel>{t('media.size')}</StyledMediaListItemInfoLabel>
               <StyledMediaListItemInfoText>
                 {formatNumber(
@@ -545,7 +543,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                 )}{' '}
                 {t('media.mb')}
               </StyledMediaListItemInfoText>
-            </>
+            </tr>
           )}
         </StyledMediaListItemInfo>
         {onDelete && (

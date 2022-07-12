@@ -166,7 +166,7 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
   `,
 };
 
-const StyledButtonText = styled.div<{
+const StyledButtonText = styled.span<{
   variant: ButtonVariant;
   size: ButtonSize;
   iconPosition: IconPosition;

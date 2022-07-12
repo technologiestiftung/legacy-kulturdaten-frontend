@@ -36,7 +36,7 @@ const StyledContactsAdd = styled.div`
   }
 `;
 
-const StyledContactsPlaceholder = styled.div`
+const StyledContactsPlaceholder = styled.p`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0.75rem;
