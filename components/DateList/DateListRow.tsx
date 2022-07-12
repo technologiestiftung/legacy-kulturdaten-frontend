@@ -84,7 +84,7 @@ const StyledDateListItemTimeFrom = styled.span`
   /* font-weight: 700; */
 `;
 
-const StyledDateListItemText = styled.div<{ noPaddingLeft?: boolean; doublePaddingLeft?: boolean }>`
+const StyledDateListItemText = styled.span<{ noPaddingLeft?: boolean; doublePaddingLeft?: boolean }>`
   align-self: center;
   padding: 0.75rem 0.375rem;
   ${({ noPaddingLeft, doublePaddingLeft }) =>

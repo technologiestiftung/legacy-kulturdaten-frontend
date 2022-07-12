@@ -83,7 +83,7 @@ const StyledDropdownMenuButton = styled.button<{
       : ''}
 `;
 
-const StyledDropdownMenuButtonText = styled.div`
+const StyledDropdownMenuButtonText = styled.span`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;

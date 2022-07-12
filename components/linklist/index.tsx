@@ -31,7 +31,7 @@ const StyledLinkListList = styled.ul`
   border-radius: 0.75rem 0.75rem 0 0;
 `;
 
-const StyledLinkListListPlaceholder = styled.div`
+const StyledLinkListListPlaceholder = styled.p`
   padding: 0.75rem;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);

@@ -74,7 +74,7 @@ const StyledInfoIcon = styled.div`
   }
 `;
 
-const StyledInfoText = styled.div<{ noMaxWidth?: boolean }>`
+const StyledInfoText = styled.p<{ noMaxWidth?: boolean }>`
   display: flex;
   flex-direction: column;
   row-gap: 0.75rem;

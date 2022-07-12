@@ -181,7 +181,7 @@ export const EntryCardText = styled.div`
   line-height: var(--line-height-300);
 `;
 
-export const EntryCardGrid = styled.div<{ expanded: boolean; enableUltraWideLayout: boolean }>`
+export const EntryCardGrid = styled.li<{ expanded: boolean; enableUltraWideLayout: boolean }>`
   display: grid;
   grid-template-columns: auto;
   grid-column-gap: 0.75rem;

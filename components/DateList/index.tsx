@@ -21,7 +21,7 @@ const StyledDateList = styled.div`
   line-height: var(--line-height-300);
 `;
 
-const StyledDateListBody = styled.div`
+const StyledDateListBody = styled.ul`
   overflow: hidden;
   border-top: 1px solid var(--grey-400);
   border-bottom: 1px solid var(--grey-400);
@@ -37,7 +37,7 @@ const StyledDateListBody = styled.div`
   }
 `;
 
-const StyledDateListTitleRowCell = styled.div`
+const StyledDateListTitleRowCell = styled.li`
   border-bottom: 1px solid var(--grey-400);
   background: var(--grey-200);
 `;
@@ -55,7 +55,7 @@ const StyledDateListItemCheckbox = styled.div`
   }
 `;
 
-const StyledDateListItemText = styled.div<{
+const StyledDateListItemText = styled.p<{
   noPaddingLeft?: boolean;
   doublePaddingLeft?: boolean;
   lessVerticalPadding?: boolean;
@@ -78,7 +78,7 @@ const StyledDateListItemTextBold = styled(StyledDateListItemText)`
   font-weight: 700;
 `;
 
-const StyledDateListPlaceholder = styled.div`
+const StyledDateListPlaceholder = styled.p`
   padding: 0.75rem;
   grid-column: 1 / -1;
 `;
@@ -91,7 +91,7 @@ const StyledDateListSelect = styled.div`
   padding: 0.75rem;
 `;
 
-const StyledDateListSelectCount = styled.div`
+const StyledDateListSelectCount = styled.p`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0.375rem 0;

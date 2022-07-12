@@ -7,7 +7,7 @@ export const EntryListPlaceholder = styled.div`
   line-height: var(--line-height-400);
 `;
 
-export const StyledEntryListBody = styled.div`
+export const StyledEntryListBody = styled.ul`
   background: var(--white);
   padding: 0 0 1.5rem;
 `;

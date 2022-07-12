@@ -80,7 +80,7 @@ const StyledPublishBody = styled.div`
   }
 `;
 
-const StyledPublishHeadText = styled.div`
+const StyledPublishHeadText = styled.p`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   max-width: 78ch;
@@ -88,7 +88,7 @@ const StyledPublishHeadText = styled.div`
 
 const StyledPublishRequirements = styled.div``;
 
-const StyledPublishRequirementsItems = styled.div`
+const StyledPublishRequirementsItems = styled.ul`
   display: flex;
   column-gap: 0.75rem;
   row-gap: 0.75rem;
