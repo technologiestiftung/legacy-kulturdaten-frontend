@@ -134,7 +134,7 @@ export const FormListField: React.FC<FormListFieldProps> = ({
   return (
     <StyledFormListField last={last}>
       <StyledFormListFieldLabel htmlFor={fieldProps?.id || `${uid}-field`}>
-        <span>{label}</span>
+        <legend>{label}</legend>
         {tooltip && (
           <Tooltip>
             {tooltip.content?.map((item, index) => (

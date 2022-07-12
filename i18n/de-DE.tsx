@@ -934,6 +934,7 @@ export const deDE: Localization = {
     headingThree: () => 'Überschrift klein',
     listOrdered: () => 'Nummerierte Liste',
     listUnordered: () => 'Normale Liste',
+    maxCharacters: () => 'Maximale Zeichenanzahl',
     bold: () => 'Fett',
     italic: () => 'Kursiv',
     underline: () => 'Unterstrichen',
