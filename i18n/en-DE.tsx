@@ -675,7 +675,7 @@ export const enDE: Localization = {
       '4': {
         name: () => 'permitted exclusively in the context of current reporting',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
-        title: () => 'more information on license tbc',
+        title: () => 'Open new tab: more information on license of exclusive permission in the context of current reporting',
       },
     },
     licenseEnd: () => 'End date license',

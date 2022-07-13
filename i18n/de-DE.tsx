@@ -686,9 +686,9 @@ export const deDE: Localization = {
         title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International',
       },
       '4': {
-        name: () => 'nur im Zuge der aktuellen Berichtersattung nutzbar',
+        name: () => 'nur im Zuge der aktuellen Berichterstattung nutzbar',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
-        title: () => 'Nur aktuelle Berichterstattung: tbc',
+        title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz nur für aktuelle Berichterstattung nutzbar',
       },
     },
     licenseEnd: () => 'Ablaufdatum Lizenz',
