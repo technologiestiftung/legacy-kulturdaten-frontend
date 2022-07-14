@@ -38,6 +38,9 @@ const StyledTextField = styled(TextField)`
   input {
     height: unset;
     ${inputStyles({})}
+    &::placeholder {
+      opacity: 1;
+    }
   }
 `;
 

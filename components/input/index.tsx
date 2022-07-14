@@ -129,6 +129,9 @@ const StyledInput = styled.input<{
   id?: string;
 }>`
   ${(props) => inputStyles(props)}
+  &::placeholder {
+    opacity: 1;
+  }
 `;
 
 export enum InputType {

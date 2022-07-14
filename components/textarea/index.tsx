@@ -20,6 +20,9 @@ const StyledTextareaContainer = styled.div`
 const StyledTextarea = styled.textarea<{ pristine?: boolean; valid?: boolean }>`
   display: block;
   ${(props) => inputStyles(props)}
+  &::placeholder {
+    opacity: 1;
+  }
 `;
 
 const StyledTooltip = styled.div`
