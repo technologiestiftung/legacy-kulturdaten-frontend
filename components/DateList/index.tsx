@@ -19,31 +19,73 @@ const StyledDateList = styled.div`
   align-items: stretch;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
+  max-width: 100%;
+  overflow: auto;
 `;
 
-const StyledDateListBody = styled.ul`
+const StyledDateListTitleRow = styled.tr`
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  justify-content: flex-start;
+  position: relative;
+`;
+
+const StyledDateListBody = styled.table`
+  border: 1px solid var(--grey-400);
+  border-radius: 0.75rem;
+  border-collapse: separate;
   overflow: hidden;
-  border-top: 1px solid var(--grey-400);
-  border-bottom: 1px solid var(--grey-400);
-
-  ${mq(Breakpoint.mid)} {
-    border: 1px solid var(--grey-400);
-    border-radius: 0.75rem;
-  }
-
-  ${mq(Breakpoint.widish)} {
-    display: grid;
-    grid-template-columns: auto 1fr 1fr 1fr auto auto;
-  }
 `;
 
-const StyledDateListTitleRowCell = styled.li`
+export const StyledDateListTitleRowCell = styled.th`
   border-bottom: 1px solid var(--grey-400);
   background: var(--grey-200);
-`;
-
-const StyledDateListTitleRow = styled(StyledDateListTitleRowCell)`
   display: flex;
+
+  width: 150px;
+  ${mq(Breakpoint.ultra)} {
+    width: 170px;
+  }
+
+  &:nth-of-type(1) {
+    width: 48px;
+    border-radius: 0.75rem 0 0 0;
+    ${mq(Breakpoint.ultra)} {
+      width: 72px;
+    }
+  }
+
+  &:nth-of-type(3) {
+    padding-left: 0.375em;
+    ${mq(Breakpoint.ultra)} {
+      padding-left: 0;
+    }
+  }
+
+  &:nth-of-type(4) {
+    width: calc(100% - 540px);
+    min-width: 150px;
+    ${mq(Breakpoint.ultra)} {
+      width: calc(100% - 650px);
+    }
+  }
+
+  &:nth-of-type(5) {
+    width:100px;
+    ${mq(Breakpoint.ultra)} {
+      width: 120px;
+    }
+  }
+  
+  &:nth-of-type(6) {
+    width: 92px;
+    border-radius: 0 0.75rem 0 0;
+    ${mq(Breakpoint.ultra)} {
+      width: 120px;
+    }
+  }
 `;
 
 const StyledDateListItemCheckbox = styled.div`
@@ -61,6 +103,7 @@ const StyledDateListItemText = styled.p<{
   lessVerticalPadding?: boolean;
 }>`
   align-self: center;
+  text-align: left;
   padding: ${({ lessVerticalPadding }) =>
     lessVerticalPadding ? '0.5625rem 0.375rem' : '0.75rem 0.375rem'};
   ${({ noPaddingLeft, doublePaddingLeft }) =>
@@ -70,7 +113,7 @@ const StyledDateListItemText = styled.p<{
     padding: ${({ lessVerticalPadding }) =>
       lessVerticalPadding ? '1.3125rem 0.75rem' : '1.5rem 0.75rem'};
     ${({ noPaddingLeft, doublePaddingLeft }) =>
-      noPaddingLeft ? 'padding-left: 0;' : doublePaddingLeft ? 'padding-left: 1.5rem;' : ''}
+      noPaddingLeft ? 'padding-left: 0!important;' : doublePaddingLeft ? 'padding-left: 1.5rem;' : ''}
   }
 `;
 
@@ -178,9 +221,9 @@ const DateList: React.FC<DateListProps> = ({
           </StyledDateListSelectActions>
         </StyledDateListSelect>
       )}
-      <StyledDateListBody role="table">
-        {isWideOrWider ? (
-          <>
+      <StyledDateListBody>
+        
+          <StyledDateListTitleRow>
             <StyledDateListTitleRowCell>
               {editable && (
                 <StyledDateListItemCheckbox>
@@ -253,28 +296,8 @@ const DateList: React.FC<DateListProps> = ({
               <StyledDateListItemTextBold>{t('date.status')}</StyledDateListItemTextBold>
             </StyledDateListTitleRowCell>
             <StyledDateListTitleRowCell />
-          </>
-        ) : (
-          <StyledDateListTitleRow>
-            {editable && (
-              <StyledDateListItemCheckbox>
-                <Checkbox
-                  id={`${uid}-checkbox`}
-                  ariaLabel={t('date.allCheckboxAriaLabel') as string}
-                  checked={dates?.length > 0 && allCheckboxesChecked}
-                  onChange={(e) =>
-                    e?.target.checked
-                      ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
-                      : setCheckedDateIds([])
-                  }
-                />
-              </StyledDateListItemCheckbox>
-            )}
-            <StyledDateListItemTextBold noPaddingLeft={editable} doublePaddingLeft={!editable}>
-              {t('date.info')}
-            </StyledDateListItemTextBold>
           </StyledDateListTitleRow>
-        )}
+        
         {dates && dates.length > 0 ? (
           dates.map((date, index) => {
             const dateId = date?.id;

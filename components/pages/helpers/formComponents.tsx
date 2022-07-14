@@ -130,6 +130,7 @@ const StyledFormItem = styled.div<{
   row-gap: 0.75rem;
   align-items: flex-start;
   flex-wrap: wrap;
+  max-width: 100%;
 
   ${({ customCss }) => customCss}
 `;

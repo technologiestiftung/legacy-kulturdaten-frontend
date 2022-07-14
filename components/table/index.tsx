@@ -89,6 +89,10 @@ export const StyledCellSort = styled.button<{ active: boolean }>`
   box-shadow: none;
   color: inherit;
 
+  ${mq(Breakpoint.ultra)} {
+    margin-left: 0;
+  }
+
   svg {
     width: 1.125rem;
     height: 1.125rem;
