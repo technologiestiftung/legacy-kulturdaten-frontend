@@ -202,6 +202,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
         <FormItem width={FormItemWidth.full}>
           <Input
             type={InputType.url}
+            autoComplete="url"
             label={t('categories.offer.form.pricing.ticketUrl') as string}
             value={attributes?.ticketUrl || ''}
             placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
@@ -211,6 +212,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
         <FormItem width={FormItemWidth.full}>
           <Input
             type={InputType.url}
+            autoComplete="url"
             label={t('categories.offer.form.pricing.registrationUrl') as string}
             value={attributes?.registrationUrl || ''}
             placeholder={t('categories.offer.form.pricing.registrationUrlPlaceholder') as string}

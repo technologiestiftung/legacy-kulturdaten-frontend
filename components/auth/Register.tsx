@@ -123,6 +123,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <Input
                 value={email}
+                autoComplete="email"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 label={t('register.email') as string}
                 placeholder={t('login.emailPlaceholder') as string}
@@ -134,6 +135,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <Input
                 value={password}
+                autoComplete="new-password"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 label={t('register.password') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
@@ -147,6 +149,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <Input
                 value={passwordConfirmation}
+                autoComplete="new-password"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   setPasswordConfirmation(e.target.value)
                 }
