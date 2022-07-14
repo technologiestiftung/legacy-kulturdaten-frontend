@@ -437,7 +437,7 @@ export const deDE: Localization = {
       uniqueNameError: () => 'Diese Bezeichnung existiert bereits. Wähle bitte eine andere.',
       createButton: () => 'API-Token erstellen',
       info: () => (
-        <div>
+        <span>
           Dies ist eine Funktion für Entwickler:innen. Um die kulturdaten.berlin API zu nutzen,
           benötigst du ein API-Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto
           zugeordnet. Wie du das Token verwenden kannst, um Daten über die API zu erhalten, erfährst
@@ -449,7 +449,7 @@ export const deDE: Localization = {
           >
             API-Dokumentation
           </a>
-        </div>
+        </span>
       ),
     },
     docs: {
