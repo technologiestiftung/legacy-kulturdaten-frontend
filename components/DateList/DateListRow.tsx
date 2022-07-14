@@ -1,74 +1,72 @@
 import styled from '@emotion/styled';
-import { ArrowRight, ChevronDown } from 'react-feather';
+import { ChevronDown } from 'react-feather';
 import { OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Breakpoint } from '../../lib/WindowService';
 import { Checkbox } from '../checkbox';
 import { useCollapsable } from '../collapsable';
 import { mq } from '../globals/Constants';
 import { DateStatusFlag } from './DateStatusFlag';
 
-const StyledDateListRowCell = styled.div<{ lastRow: boolean; expanded: boolean }>`
+const StyledDateListRowCell = styled.td<{ lastRow: boolean; expanded: boolean }>`
   flex-shrink: 0;
   display: flex;
-  align-items: stretch;
 
   background: ${({ expanded }) => (expanded ? 'var(--grey-200)' : 'transparent')};
 
-  ${mq(Breakpoint.widish)} {
-    border-bottom: 1px solid var(--grey-400);
-    ${({ lastRow }) => (lastRow ? 'border-bottom: none;' : '')}
+  width: 150px;
+  ${mq(Breakpoint.ultra)} {
+    width: 170px;
   }
+
+  &:nth-of-type(1) {
+    width: 48px;
+    ${mq(Breakpoint.ultra)} {
+      width: 72px;
+    }
+  }
+
+  &:nth-of-type(4) {
+    width: calc(100% - 540px);
+    min-width: 150px;
+    ${mq(Breakpoint.ultra)} {
+      width: calc(100% - 650px);
+    }
+  }
+
+  &:nth-of-type(5) {
+    width:100px;
+    ${mq(Breakpoint.ultra)} {
+      width: 120px;
+    }
+  }
+  
+  &:nth-of-type(6) {
+    width: 92px;
+    ${mq(Breakpoint.ultra)} {
+      width: 120px;
+    }
+  }
+  
 `;
 
-const StyledDateListRow = styled.div<{ lastRow: boolean }>`
+const StyledDateListRow = styled.tr`
   display: flex;
   align-items: stretch;
-  border-bottom: 1px solid var(--grey-400);
   width: 100%;
   max-width: 100%;
-  justify-content: space-between;
+  justify-content: flex-start;
   position: relative;
-
-  ${({ lastRow }) => (lastRow ? 'border-bottom: none;' : '')}
-`;
-
-const StyledDateListRowLeft = styled.div`
-  flex-grow: 0;
-`;
-
-const StyledDateListRowMid = styled.div`
-  min-width: 0;
-  width: 0;
-  flex-basis: 0;
-  flex-grow: 1;
-  display: flex;
-  overflow-x: auto;
-  overflow-y: hidden;
-  position: relative;
-`;
-
-const StyledDateListRowMidInner = styled.div`
-  flex-shrink: 0;
-  display: flex;
-  padding-right: 2.25rem;
-`;
-
-const StyledDateListRowRight = styled.div`
-  flex-grow: 0;
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    height: 100%;
-    width: 2.25rem;
-    background: linear-gradient(270deg, var(--white) 0%, var(--white-o0) 100%);
-    top: 0;
-    left: -2.25rem;
+  border-top: 1px solid var(--grey-400);
+  &:first-of-kind, &:last-of-kind {
+    border-top: 0px solid var(--grey-400);
   }
+`;
+
+const StyledDateListRowNoBorder = styled(StyledDateListRow)`
+    border-top: 0px solid var(--grey-400);
 `;
 
 const StyledDateListItemCheckbox = styled.div`
@@ -80,9 +78,6 @@ const StyledDateListItemCheckbox = styled.div`
   }
 `;
 
-const StyledDateListItemTimeFrom = styled.span`
-  /* font-weight: 700; */
-`;
 
 const StyledDateListItemText = styled.span<{ noPaddingLeft?: boolean; doublePaddingLeft?: boolean }>`
   align-self: center;
@@ -97,20 +92,6 @@ const StyledDateListItemText = styled.span<{ noPaddingLeft?: boolean; doublePadd
   }
 `;
 
-const StyledDateListItemTime = styled(StyledDateListItemText)`
-  display: flex;
-  column-gap: 0.75rem;
-  align-items: center;
-  padding: 0.75rem 0.375rem 0.75rem 0;
-
-  ${({ noPaddingLeft, doublePaddingLeft }) =>
-    noPaddingLeft ? 'padding-left: 0;' : doublePaddingLeft ? 'padding-left: 0.75rem;' : ''}
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
-`;
 
 const StyledDateListItemStatus = styled.div`
   padding: 0.75rem 0.75rem 0.75rem 0.375rem;
@@ -159,9 +140,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
 `;
 
 const StyledDateListItemBody = styled.div`
-  ${mq(Breakpoint.widish)} {
-    grid-column: 1 / -1;
-  }
+  width: 100%;
 `;
 
 const StyledDateListItemBodyInner = styled.div<{ lastRow: boolean }>`
@@ -194,7 +173,6 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   editable = true,
   disabled,
 }: DateListRowProps) => {
-  const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const uid = usePseudoUID();
   const t = useT();
   const formatDate = useDate();
@@ -247,55 +225,36 @@ export const DateListRow: React.FC<DateListRowProps> = ({
 
   const renderedGridContent = (
     <>
-      <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {editable && renderedCheckbox}
-      </StyledDateListRowCell>
+      <StyledDateListRow>
+        <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
+          {editable && renderedCheckbox}
+        </StyledDateListRowCell>
 
-      <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        <StyledDateListItemText noPaddingLeft={editable} doublePaddingLeft={!editable}>
-          <StyledDateListItemTimeFrom>{formattedFrom}</StyledDateListItemTimeFrom>
-        </StyledDateListItemText>
-      </StyledDateListRowCell>
-      <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {to && <StyledDateListItemText>{formattedTo}</StyledDateListItemText>}
-      </StyledDateListRowCell>
-      <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        <StyledDateListItemText>{title}</StyledDateListItemText>
-      </StyledDateListRowCell>
-      <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {renderedStatus}
-      </StyledDateListRowCell>
-      <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
-        {renderedExpandButton}
-      </StyledDateListRowCell>
-      <StyledDateListItemBody>{renderedCollapsable}</StyledDateListItemBody>
-    </>
-  );
-
-  const renderedFlexContent = (
-    <>
-      <StyledDateListRow lastRow={lastRow}>
-        <StyledDateListRowLeft>{editable && renderedCheckbox}</StyledDateListRowLeft>
-        <StyledDateListRowMid>
-          <StyledDateListRowMidInner>
-            <StyledDateListItemTime noPaddingLeft={editable} doublePaddingLeft={!editable}>
-              <span>{formattedFrom}</span>
-              {to && (
-                <>
-                  <ArrowRight />
-                  <span>{formattedTo}</span>
-                </>
-              )}
-            </StyledDateListItemTime>
-            <StyledDateListItemText>{title}</StyledDateListItemText>
-            {renderedStatus}
-          </StyledDateListRowMidInner>
-        </StyledDateListRowMid>
-        <StyledDateListRowRight>{renderedExpandButton}</StyledDateListRowRight>
+        <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
+          <StyledDateListItemText noPaddingLeft={editable} doublePaddingLeft={!editable}>
+            {formattedFrom}
+          </StyledDateListItemText>
+        </StyledDateListRowCell>
+        <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
+          {to && <StyledDateListItemText>
+            {formattedTo}
+            </StyledDateListItemText>}
+        </StyledDateListRowCell>
+        <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
+          <StyledDateListItemText>{title}</StyledDateListItemText>
+        </StyledDateListRowCell>
+        <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
+          {renderedStatus}
+        </StyledDateListRowCell>
+        <StyledDateListRowCell lastRow={lastRow} expanded={expanded}>
+          {renderedExpandButton}
+        </StyledDateListRowCell>
       </StyledDateListRow>
-      <StyledDateListItemBody>{renderedCollapsable}</StyledDateListItemBody>
+      <StyledDateListRowNoBorder>
+        <StyledDateListItemBody>{renderedCollapsable}</StyledDateListItemBody>
+      </StyledDateListRowNoBorder>
     </>
   );
 
-  return isWideOrWider ? renderedGridContent : renderedFlexContent;
+  return renderedGridContent;
 };

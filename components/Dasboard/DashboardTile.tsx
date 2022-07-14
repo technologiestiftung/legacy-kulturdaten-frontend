@@ -5,8 +5,6 @@ import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { Check, Info } from 'react-feather';
 
-import { useT } from '../../lib/i18n';
-
 const StyledDashboardTile = styled.div<{
   gridColumn?: string;
   disabled?: boolean;
@@ -233,7 +231,6 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
   variant = DashboardTileVariant.default,
 }: DashboardTileProps) => {
   const isDone = typeof done !== 'undefined';
-  const t = useT();
 
   return (
     <StyledDashboardTile gridColumn={gridColumn} disabled={disabled} isDone={isDone}>

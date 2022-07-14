@@ -81,6 +81,7 @@ export const FormGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
 `;
 
+
 export const FormText = styled.div`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
@@ -130,6 +131,7 @@ const StyledFormItem = styled.div<{
   row-gap: 0.75rem;
   align-items: flex-start;
   flex-wrap: wrap;
+  max-width: 100%;
 
   ${({ customCss }) => customCss}
 `;

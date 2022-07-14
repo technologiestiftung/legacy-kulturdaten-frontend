@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import { Radio } from '.';
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
-import { Label } from '../label';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { ExternalLink } from 'react-feather';
