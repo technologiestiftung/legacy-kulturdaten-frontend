@@ -77,6 +77,7 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
             <Input
               label={t('categories.organizer.form.email') as string}
               type={InputType.email}
+              autoComplete="email"
               value={attributes?.email || ''}
               onChange={(e) => {
                 setPristine(false);
@@ -100,6 +101,7 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
             <Input
               label={t('categories.organizer.form.tel') as string}
               type={InputType.tel}
+              autoComplete="tel"
               placeholder={t('general.telPlaceholder') as string}
               value={attributes?.phone || ''}
               onChange={(e) => {
@@ -119,6 +121,7 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
             <Input
               label={t('categories.organizer.form.website') as string}
               type={InputType.url}
+              autoComplete="url"
               value={attributes?.homepage || ''}
               onChange={(e) => {
                 setPristine(false);

@@ -292,6 +292,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               variant={props?.variant}
               aria-label={props?.ariaLabel}
               id={props.id ? props.id : createdId }
+              autoComplete={props?.autoComplete}
               onChange={(e) => {
                 if (
                   (props?.type !== InputType.date && props?.type !== InputType.time) ||

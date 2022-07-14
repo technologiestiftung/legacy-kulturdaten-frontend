@@ -105,6 +105,7 @@ export const LoginForm: React.FC = () => {
         <div>
           <Input
             type={InputType.email}
+            autoComplete="email"
             value={email}
             label={t('login.email') as string}
             placeholder={t('login.emailPlaceholder') as string}
@@ -116,6 +117,7 @@ export const LoginForm: React.FC = () => {
         <div>
           <Input
             type={InputType.password}
+            autoComplete="password"
             value={password}
             label={t('login.password') as string}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}

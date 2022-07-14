@@ -189,6 +189,7 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
               <Input
                 label={t('categories.organizer.form.mainContact.email') as string}
                 type={InputType.email}
+                autoComplete="email"
                 value={mainContact?.attributes?.email || ''}
                 required={required}
                 softRequired={softRequired}
