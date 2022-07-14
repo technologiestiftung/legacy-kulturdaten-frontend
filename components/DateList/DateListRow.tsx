@@ -4,7 +4,7 @@ import { OfferDateStatus } from '../../lib/api/types/offer';
 import { DateFormat, useDate } from '../../lib/date';
 import { useT } from '../../lib/i18n';
 import { usePseudoUID } from '../../lib/uid';
-import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { Breakpoint } from '../../lib/WindowService';
 import { Checkbox } from '../checkbox';
 import { useCollapsable } from '../collapsable';
 import { mq } from '../globals/Constants';
@@ -45,7 +45,6 @@ const StyledDateListRowCell = styled.td<{ lastRow: boolean; expanded: boolean }>
   
   &:nth-of-type(6) {
     width: 92px;
-    overflow: hidden;
     ${mq(Breakpoint.ultra)} {
       width: 120px;
     }
@@ -79,9 +78,6 @@ const StyledDateListItemCheckbox = styled.div`
   }
 `;
 
-const StyledDateListItemTimeFrom = styled.span`
-  /* font-weight: 700; */
-`;
 
 const StyledDateListItemText = styled.span<{ noPaddingLeft?: boolean; doublePaddingLeft?: boolean }>`
   align-self: center;
@@ -96,20 +92,6 @@ const StyledDateListItemText = styled.span<{ noPaddingLeft?: boolean; doublePadd
   }
 `;
 
-const StyledDateListItemTime = styled(StyledDateListItemText)`
-  display: flex;
-  column-gap: 0.75rem;
-  align-items: center;
-  padding: 0.75rem 0.375rem 0.75rem 0;
-
-  ${({ noPaddingLeft, doublePaddingLeft }) =>
-    noPaddingLeft ? 'padding-left: 0;' : doublePaddingLeft ? 'padding-left: 0.75rem;' : ''}
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
-`;
 
 const StyledDateListItemStatus = styled.div`
   padding: 0.75rem 0.75rem 0.75rem 0.375rem;
@@ -191,7 +173,6 @@ export const DateListRow: React.FC<DateListRowProps> = ({
   editable = true,
   disabled,
 }: DateListRowProps) => {
-  const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const uid = usePseudoUID();
   const t = useT();
   const formatDate = useDate();
