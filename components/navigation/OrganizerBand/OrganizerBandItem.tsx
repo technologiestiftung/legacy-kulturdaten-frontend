@@ -7,7 +7,7 @@ import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
 import { MouseTooltip } from '../../MouseTooltip';
 
-const StyledOrganizerBandItemLogo = styled.div<{
+const StyledOrganizerBandItemLogo = styled.span<{
   active: boolean;
   layout: OrganizerBandLayout;
   noBorder: boolean;
@@ -118,7 +118,7 @@ const StyledOrganizerBandItem = styled.a<{
         `}
 `;
 
-const StyledOrganizerBandItemText = styled.div<{
+const StyledOrganizerBandItemText = styled.span<{
   layout: OrganizerBandLayout;
 }>`
   font-size: 1.125rem;

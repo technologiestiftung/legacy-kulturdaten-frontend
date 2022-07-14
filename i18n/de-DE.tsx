@@ -701,19 +701,25 @@ export const deDE: Localization = {
         <InfoP>Bitte beachte, dass:</InfoP>
         <InfoUl>
           <InfoLi>
-            du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
-            Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media
-            Kanälen.
+            <p>
+              du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
+              Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media
+              Kanälen.
+            </p>
           </InfoLi>
           <InfoLi>
-            du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
-            Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
-            Dritte vorliegen.
+            <p>
+              du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
+              Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
+              Dritte vorliegen.
+            </p>
           </InfoLi>
           <InfoLi>
-            Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
-            erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
-            innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
+            <p>
+              Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
+              erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
+              innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
+            </p>
           </InfoLi>
         </InfoUl>
       </>

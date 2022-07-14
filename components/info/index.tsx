@@ -74,7 +74,7 @@ const StyledInfoIcon = styled.div`
   }
 `;
 
-const StyledInfoText = styled.div<{ noMaxWidth?: boolean }>`
+const StyledInfoText = styled.p<{ noMaxWidth?: boolean }>`
   display: flex;
   flex-direction: column;
   row-gap: 0.75rem;
@@ -91,7 +91,7 @@ export const InfoUl = styled.ul`
 
 export const InfoLi = styled.li``;
 
-export const InfoP = styled.p``;
+export const InfoP = styled.span``;
 
 export interface InfoProps {
   children: React.ReactNode;

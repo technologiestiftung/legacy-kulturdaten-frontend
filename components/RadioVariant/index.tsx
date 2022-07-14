@@ -107,14 +107,14 @@ const StyledRadioVariantOptionLabel = styled.label<{ active: boolean }>`
       : ''}
 `;
 
-const StyledRadioVariantOptionLabelContent = styled.div`
+const StyledRadioVariantOptionLabelContent = styled.span`
   display: flex;
   flex-direction: column;
   row-gap: calc(var(--line-height-300) / 2);
   max-width: 52ch;
 `;
 
-const StyledRadioVariantOptionLabelHeadline = styled.div<{ active: boolean }>`
+const StyledRadioVariantOptionLabelHeadline = styled.span<{ active: boolean }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: var(--font-weight-bold);
@@ -127,13 +127,13 @@ const StyledRadioVariantOptionLabelHeadline = styled.div<{ active: boolean }>`
       : ''}
 `;
 
-const StyledRadioVariantOptionLabelChildren = styled.div`
+const StyledRadioVariantOptionLabelChildren = styled.span`
   display: flex;
   flex-direction: column;
   row-gap: calc(var(--line-height-300) / 2);
 `;
 
-export const RadioVariantOptionParagraph = styled.div`
+export const RadioVariantOptionParagraph = styled.span`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 400;

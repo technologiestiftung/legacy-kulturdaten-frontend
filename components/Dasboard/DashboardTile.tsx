@@ -83,7 +83,7 @@ const StyledDashboardTileDoneText = styled.div`
   padding: 1.5rem 0.75rem;
 `;
 
-const StyledDashboardTileDigit = styled.div`
+const StyledDashboardTileDigit = styled.span`
   flex-grow: 0;
   flex-shrink: 0;
   background: var(--grey-200);

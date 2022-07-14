@@ -316,7 +316,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               })}
               <FormItem width={FormItemWidth.full}>
                 <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                  <div>
+                  <span>
                     {contentLanguages.map((language: Language, index) => {
                       const currentTranslation = date.relations?.translations
                         ? getTranslation<OfferDateTranslation>(
@@ -327,15 +327,16 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                         : undefined;
 
                       return (
-                        <div key={index}>
+                        <span key={index}>
                           {t(languageTranslationKeys[language])}: {offerTitles[language]}
                           {currentTranslation?.attributes?.name
                             ? ` - ${currentTranslation?.attributes?.name}`
                             : ''}
-                        </div>
+                            <br/>
+                        </span>
                       );
                     })}
-                  </div>
+                  </span>
                 </Info>
               </FormItem>
             </FormGrid>
@@ -469,6 +470,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.full}>
                 <Input
                   type={InputType.url}
+                  autoComplete="url"
                   label={t('date.ticketLink') as string}
                   value={date?.attributes?.ticketUrl || ''}
                   placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
@@ -482,11 +484,12 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     })
                   }
                   disabled={!editable}
-                />
+                  />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
                 <Input
                   type={InputType.url}
+                  autoComplete="url"
                   label={t('categories.offer.form.pricing.registrationUrl') as string}
                   value={date?.attributes?.registrationUrl || ''}
                   placeholder={

@@ -254,16 +254,17 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             </FormItem>
             <FormItem width={FormItemWidth.full}>
               <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                <div>
-                  <div>
+                <span>
+                  <span>
                     {t('general.german')}: {offerTitles[Language.de]}
                     {titleGerman ? ` - ${titleGerman}` : ''}
-                  </div>
-                  <div>
+                  </span>
+                  <br/>
+                  <span>
                     {t('general.english')}: {offerTitles[Language.en]}
                     {titleEnglish ? ` - ${titleEnglish}` : ''}
-                  </div>
-                </div>
+                  </span>
+                </span>
               </Info>
             </FormItem>
           </FormGrid>
