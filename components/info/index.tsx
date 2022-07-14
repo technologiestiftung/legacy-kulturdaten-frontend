@@ -91,7 +91,7 @@ export const InfoUl = styled.ul`
 
 export const InfoLi = styled.li``;
 
-export const InfoP = styled.p``;
+export const InfoP = styled.span``;
 
 export interface InfoProps {
   children: React.ReactNode;

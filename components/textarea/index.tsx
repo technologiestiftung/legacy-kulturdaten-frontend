@@ -35,6 +35,7 @@ export interface TextareaProps extends ComponentWithVariants {
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
   onBlur?: ChangeEventHandler<HTMLTextAreaElement>;
   label?: string;
+  lang?: string;
   ariaLabel?: string;
   autoComplete?: string;
   autofocus?: boolean;
@@ -71,7 +72,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
   }, [touched, props?.value, internalState]);
 
   return (
-    <StyledTextareaContainer>
+    <StyledTextareaContainer lang={props?.lang}>
       {props.label && (
         <Label htmlFor={props.id}>
           {props.label}

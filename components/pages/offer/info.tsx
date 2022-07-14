@@ -69,7 +69,7 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
             : undefined;
 
           return (
-            <FormItem width={FormItemWidth.half} key={index}>
+            <FormItem width={FormItemWidth.half} key={index} lang={language.slice(0,2) as "de" | "en"}>
               <Input
                 label={t(languageTranslationKeys[language]) as string}
                 ariaLabel={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}

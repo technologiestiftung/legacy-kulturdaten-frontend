@@ -164,6 +164,7 @@ export interface InputProps extends ComponentWithVariants {
   max?: number | string;
   maxLength?: number;
   name?: string;
+  lang?: 'en' | 'de';
   placeholder?: string;
   pattern?: string;
   required?: boolean;
@@ -270,7 +271,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ) : (
           <>
             {props.label && (
-              <StyledInputLabelContainer>
+              <StyledInputLabelContainer lang={props?.lang}>
                 <Label htmlFor={props.id ? props.id : createdId }>
                   {props.label}
                   {props.required || props.softRequired ? ` (${t('forms.required')})` : ''}

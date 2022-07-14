@@ -187,7 +187,7 @@ const StyledButtonText = styled.span<{
     `}
 `;
 
-const StyledButtonIcon = styled.div<{
+const StyledButtonIcon = styled.span<{
   size: ButtonSize;
   position: IconPosition;
   hasChildren: boolean;

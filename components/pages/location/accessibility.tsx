@@ -240,7 +240,7 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
                   <Info color={InfoColor.white} noMaxWidth>
-                    <p>{t('categories.location.accessibilityIntro')}</p>
+                    {t('categories.location.accessibilityIntro')}
                   </Info>
                 </FormItem>
               </FormGrid>

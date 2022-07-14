@@ -371,6 +371,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                     type={InputType.text}
                     label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
                     id={`${uid}-alt-${language}`}
+                    lang={language.slice(0,2) as "de" | "en"}
                     value={currentTranslation?.attributes?.alternativeText || ''}
                     required={language === defaultLanguage}
                     softRequired={language === defaultLanguage}

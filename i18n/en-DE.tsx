@@ -697,19 +697,25 @@ export const enDE: Localization = {
         <InfoP>Please ensure:</InfoP>
         <InfoUl>
           <InfoLi>
-            to upload only those images that may be used free of charge by others - either unaltered
-            or in modified form and also for commercial purposes. In the case you chose a CC
-            licence, images may also be used on social media.
+            <p>
+              to upload only those images that may be used free of charge by others - either unaltered
+              or in modified form and also for commercial purposes. In the case you chose a CC
+              licence, images may also be used on social media.
+            </p>
           </InfoLi>
           <InfoLi>
-            to not use any images without the permission of the copyright holder(s). If people are
-            depicted in the images, they must have given you their consent for the image to be used
-            by third parties.
+            <p>
+              to not use any images without the permission of the copyright holder(s). If people are
+              depicted in the images, they must have given you their consent for the image to be used
+              by third parties.
+            </p>
           </InfoLi>
           <InfoLi>
-            that by publishing your image via kulturdaten.berlin, you grant any data users - e.g.
-            event portals or app developers - the right to use the image files within the limits of
-            moral rights, provided the copyright holder is named.
+            <p>
+              that by publishing your image via kulturdaten.berlin, you grant any data users - e.g.
+              event portals or app developers - the right to use the image files within the limits of
+              moral rights, provided the copyright holder is named.
+            </p>
           </InfoLi>
         </InfoUl>
       </>

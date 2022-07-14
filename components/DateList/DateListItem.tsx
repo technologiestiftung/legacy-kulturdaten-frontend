@@ -277,6 +277,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Input
                       debounce
                       type={InputType.text}
+                      lang={language.slice(0,2) as "de" | "en"}
                       label={t(languageTranslationKeys[language]) as string}
                       ariaLabel={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.name || ''}
@@ -316,7 +317,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               })}
               <FormItem width={FormItemWidth.full}>
                 <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                  <div>
+                  <span>
                     {contentLanguages.map((language: Language, index) => {
                       const currentTranslation = date.relations?.translations
                         ? getTranslation<OfferDateTranslation>(
@@ -327,15 +328,16 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                         : undefined;
 
                       return (
-                        <div key={index}>
+                        <span key={index}>
                           {t(languageTranslationKeys[language])}: {offerTitles[language]}
                           {currentTranslation?.attributes?.name
                             ? ` - ${currentTranslation?.attributes?.name}`
                             : ''}
-                        </div>
+                            <br/>
+                        </span>
                       );
                     })}
-                  </div>
+                  </span>
                 </Info>
               </FormItem>
             </FormGrid>
@@ -358,6 +360,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                       debounce
                       id={`${uid}-textarea-${language}`}
                       label={t(languageTranslationKeys[language]) as string}
+                      lang={language.slice(0,2)}
                       tooltip={
                         languageTranslationKeys[language] === 'language.de-easy'
                           ? (t('forms.labelGermanEasyTooltip') as string)
@@ -422,6 +425,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Input
                       debounce
                       type={InputType.text}
+                      lang={language.slice(0,2) as "en" | "de"}
                       label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.roomDescription || ''}
                       onChange={(e) => {
@@ -469,7 +473,9 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.full}>
                 <Input
                   type={InputType.url}
+                  autoComplete="url"
                   label={t('date.ticketLink') as string}
+                  lang={language.slice(0,2) as "en" | "de"}
                   value={date?.attributes?.ticketUrl || ''}
                   placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
                   onChange={(e) =>
@@ -482,11 +488,12 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     })
                   }
                   disabled={!editable}
-                />
+                  />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
                 <Input
                   type={InputType.url}
+                  autoComplete="url"
                   label={t('categories.offer.form.pricing.registrationUrl') as string}
                   value={date?.attributes?.registrationUrl || ''}
                   placeholder={

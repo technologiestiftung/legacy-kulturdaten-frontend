@@ -67,8 +67,9 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
         </FormItem>
         <FormItem width={FormItemWidth.full}>
           <Info color={InfoColor.white} noMaxWidth>
-            <p>{t('team.invite.hint', { max: maxInvites })}</p>
-            <p>{t('team.invite.hint2')}</p>
+            <span>{t('team.invite.hint', { max: maxInvites })}</span>
+            <br/>
+            <span>{t('team.invite.hint2')}</span>
           </Info>
         </FormItem>
         {blurred && !valid && (

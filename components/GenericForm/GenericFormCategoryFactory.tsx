@@ -81,7 +81,7 @@ export const GenericFormCategoryFactory: React.FC<GenericFormCategoryContainerPr
       {fieldGroups?.map((group, index) => {
         const currentTranslation = getTranslation(language, group.translations, true);
         return (
-          <FormItem key={index} width={FormItemWidth.full}>
+          <FormItem key={index} width={FormItemWidth.full} lang={language.slice(0,2) as "en" | "de"}>
             <FormListGroup title={currentTranslation?.attributes?.name}>
               {group.children.map((field, index) =>
                 validateCondition(state, field.condition) ? (

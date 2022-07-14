@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { Check } from 'react-feather';
 import Link from 'next/link';
 
-const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
+const StyledRequirement = styled.span<{ fulfilled: boolean; hasLink?: boolean }>`
   background: ${({ fulfilled }) => (fulfilled ? 'var(--white-green-o50)' : 'var(--white-red)')};
   color: ${({ fulfilled }) => (fulfilled ? 'var(--black-o70)' : 'var(--black)')};
   border-radius: 0.1875rem;
@@ -38,11 +38,11 @@ const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
     `}
 `;
 
-const StyledRequirementText = styled.p`
+const StyledRequirementText = styled.span`
   flex-grow: 1;
 `;
 
-export const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
+export const StyledRequirementMark = styled.span<{ fulfilled: boolean }>`
   flex-shrink: 0;
   flex-grow: 0;
   min-height: 100%;

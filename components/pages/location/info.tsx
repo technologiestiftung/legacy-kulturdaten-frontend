@@ -120,6 +120,7 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
               <Textarea
                 key={index}
                 label={t(languageTranslationKeys[contentLanguage]) as string}
+                lang={contentLanguage.slice(0,2)}
                 id={`${uid}-textarea-${index}`}
                 value={currentTranslation?.attributes?.openingHours || ''}
                 rows={4}

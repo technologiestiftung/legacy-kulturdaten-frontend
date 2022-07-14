@@ -233,7 +233,7 @@ export const useDescription = ({
   return {
     renderedDescription: (
       <StyledDescription>
-        <fieldset>
+        <fieldset lang={language.slice(0,2)}>
           {rendered && (
             <>
               <StyledDescriptionTitleStatus>
