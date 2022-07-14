@@ -93,6 +93,7 @@ const UserApiTokens: React.FC = () => {
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.url}
+                autoComplete="url"
                 label={`${t('settings.api.projectUrl')} (${t('forms.optional')})`}
                 value={url}
                 placeholder={t('forms.urlPlaceholder') as string}

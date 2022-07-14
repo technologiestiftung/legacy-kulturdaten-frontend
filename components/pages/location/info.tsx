@@ -227,6 +227,7 @@ const useRentForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.location.form.rent.url') as string}
             placeholder={t('categories.location.form.rent.urlPlaceholder') as string}
             type={InputType.url}
+            autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
           />
@@ -293,6 +294,7 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.location.form.url') as string}
             placeholder={t('categories.location.form.urlPlaceholder') as string}
             type={InputType.url}
+            autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
           />

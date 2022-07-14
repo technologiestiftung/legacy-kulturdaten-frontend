@@ -134,6 +134,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.oldLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="current-password"
                 id="old-password"
                 minLength={passwordMinLength}
                 required
@@ -146,6 +147,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.newLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="new-password"
                 id="new-password"
                 minLength={passwordMinLength}
                 required
@@ -159,6 +161,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.newConfirmLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="new-password"
                 id="confirm-password"
                 minLength={passwordMinLength}
                 required

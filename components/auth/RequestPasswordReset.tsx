@@ -94,6 +94,7 @@ export const RequestPasswordResetForm: React.FC = () => {
             <div>
               <Input
                 value={email}
+                autoComplete="email"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 label={t('register.email') as string}
                 placeholder={t('login.emailPlaceholder') as string}

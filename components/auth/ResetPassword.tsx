@@ -140,6 +140,7 @@ export const ResetPasswordForm: React.FC = () => {
                 <div>
                   <Input
                     value={password}
+                    autoComplete="new-password"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                     label={t('register.password') as string}
                     placeholder={t('register.passwordPlaceholder') as string}
@@ -153,6 +154,7 @@ export const ResetPasswordForm: React.FC = () => {
                 <div>
                   <Input
                     value={passwordConfirmation}
+                    autoComplete="new-password"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setPasswordConfirmation(e.target.value)
                     }

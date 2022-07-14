@@ -336,6 +336,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.full}>
               <Input
                 type={InputType.url}
+                autoComplete="url"
                 label={t('date.ticketLink') as string}
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
@@ -345,6 +346,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.full}>
               <Input
                 type={InputType.url}
+                autoComplete="url"
                 label={t('categories.offer.form.pricing.registrationUrl') as string}
                 value={registrationUrl}
                 onChange={(e) => setRegistrationUrl(e.target.value)}

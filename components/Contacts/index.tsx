@@ -173,6 +173,7 @@ export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: Contac
             <StyledContactsItemField>
               <Input
                 type={InputType.tel}
+                autoComplete="tel"
                 value={contact.attributes.phone || ''}
                 label={t('forms.tel') as string}
                 placeholder={t('general.telPlaceholder') as string}
@@ -194,6 +195,7 @@ export const Contacts: React.FC<ContactsProps> = ({ contacts, onChange }: Contac
             <StyledContactsItemField>
               <Input
                 type={InputType.email}
+                autoComplete="email"
                 value={contact.attributes.email || ''}
                 label={t('forms.email') as string}
                 onChange={(e) =>
