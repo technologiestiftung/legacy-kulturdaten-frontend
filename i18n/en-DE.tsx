@@ -30,6 +30,7 @@ export const enDE: Localization = {
     info: {
       hint: {
         title: () => 'Profile not yet public',
+        altText: () => 'Hint',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
@@ -212,6 +213,14 @@ export const enDE: Localization = {
     listLabel: () => 'Already added languages',
     listPlaceholder: () => 'No language has been added yet',
     noMatch: () => 'No languages found',
+  },
+  links: {
+    internal: {
+      iconAltText: () => 'visit',
+    },
+    external: {
+      iconAltText: () => 'open new tab',
+    },
   },
   mainTypeTags: {
     addButton: () => 'Add event type',
@@ -651,22 +660,22 @@ export const enDE: Localization = {
       '1': {
         name: () => 'with attribution (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.en',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license Attribution 4.0 International CC BY 4.0',
       },
       '2': {
         name: () => 'without restrictions (public domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.en',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license CC0 1.0 Universal Public Domain Dedication',
       },
       '3': {
         name: () => 'with attribution-ShareAlike (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license Attribution-ShareAlike 4.0 International',
       },
       '4': {
         name: () => 'permitted exclusively in the context of current reporting',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license of exclusive permission in the context of current reporting',
       },
     },
     licenseEnd: () => 'End date license',
@@ -917,6 +926,7 @@ export const enDE: Localization = {
     headingThree: () => 'Headline small',
     listOrdered: () => 'Numbered list',
     listUnordered: () => 'Unordered list',
+    maxCharacters: () => 'Maximum characters',
     bold: () => 'Bold',
     italic: () => 'Italic',
     underline: () => 'Underline',
@@ -1352,6 +1362,7 @@ export const enDE: Localization = {
       description: () => 'Choose Language, Sprache wählen',
     },
     organizerBand: {
+      title: () => 'Profiles',
       show: () => 'Show list of my organizers',
       collapse: () => 'Hide list of my organizers',
       create: () => 'Create new organizer',

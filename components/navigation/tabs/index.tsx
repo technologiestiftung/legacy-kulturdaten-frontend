@@ -12,7 +12,7 @@ const StyledTabs = styled.nav`
   position: relative;
 `;
 
-const StyledTabsContainer = styled.div<{ itemCount: number }>`
+const StyledTabsContainer = styled.ul<{ itemCount: number }>`
   position: relative;
   border-bottom: none;
   display: flex;
@@ -32,7 +32,7 @@ const StyledTabsContainer = styled.div<{ itemCount: number }>`
   }
 `;
 
-const StyledTab = styled.div`
+const StyledTab = styled.li`
   position: relative;
   margin-right: -0.375rem;
 

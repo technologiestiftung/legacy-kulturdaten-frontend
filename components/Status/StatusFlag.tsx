@@ -24,7 +24,7 @@ const StyledEntryHeaderStatusLabel = styled.div`
   background: var(--white);
 `;
 
-const StyledEntryHeaderStatusFlag = styled.span<{
+const StyledEntryHeaderStatusFlag = styled.strong<{
   status: PublishedStatus;
   variant: StatusFlagVariant;
 }>`

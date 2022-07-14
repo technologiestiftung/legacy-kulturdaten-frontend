@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import { Radio } from '.';
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
-import { Label } from '../label';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { ExternalLink } from 'react-feather';
@@ -20,8 +19,10 @@ const StyledRadioList = styled.div<{ variant?: ComponentVariant }>`
     `}
 `;
 
-const StyedRadioListLabel = styled.div`
+const StyedRadioListLabel = styled.legend`
   margin-bottom: 0.75rem;
+  font-weight: 700;
+  font-size: var(--font-size-300);
 `;
 
 const StyledRadioListItems = styled.ul`
@@ -92,45 +93,45 @@ export const RadioList: React.FC<RadioListProps> = ({
 
   return (
     <StyledRadioList variant={variant}>
-      {label && (
-        <StyedRadioListLabel>
-          <Label>
+      <fieldset>
+        {label && (
+          <StyedRadioListLabel>
             {label} {required ? ` (${t('forms.required')})` : ''}
-          </Label>
-        </StyedRadioListLabel>
-      )}
-      <StyledRadioListItems aria-label={ariaLabel}>
-        {options?.map((option, index) => (
-          <StyledRadioListItem key={index}>
-            <Radio
-              name={name}
-              id={option.id || `${id}-${index}`}
-              label={option.label}
-              value={option.value}
-              checked={value === option.value}
-              onChange={(e) => onChange(e.target.value)}
-              required={required}
-              softRequired={softRequired}
-              valid={Boolean(
-                !required || !softRequired || (value?.length > 0 && value !== 'undefined')
+          </StyedRadioListLabel>
+        )}
+        <StyledRadioListItems aria-label={ariaLabel}>
+          {options?.map((option, index) => (
+            <StyledRadioListItem key={index}>
+              <Radio
+                name={name}
+                id={option.id || `${id}-${index}`}
+                label={option.label}
+                value={option.value}
+                checked={value === option.value}
+                onChange={(e) => onChange(e.target.value)}
+                required={required}
+                softRequired={softRequired}
+                valid={Boolean(
+                  !required || !softRequired || (value?.length > 0 && value !== 'undefined')
+                )}
+              />
+              {option.link && (
+                <StyledRadioListItemLink>
+                  <StyledRadioListItemLinkA
+                    href={option.link.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    title={option.link.title}
+                    aria-label={option.link.title}
+                  >
+                    <ExternalLink aria-hidden />
+                  </StyledRadioListItemLinkA>
+                </StyledRadioListItemLink>
               )}
-            />
-            {option.link && (
-              <StyledRadioListItemLink>
-                <StyledRadioListItemLinkA
-                  href={option.link.href}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title={option.link.title}
-                  aria-label={option.link.title}
-                >
-                  <ExternalLink />
-                </StyledRadioListItemLinkA>
-              </StyledRadioListItemLink>
-            )}
-          </StyledRadioListItem>
-        ))}
-      </StyledRadioListItems>
+            </StyledRadioListItem>
+          ))}
+        </StyledRadioListItems>
+      </fieldset>
     </StyledRadioList>
   );
 };

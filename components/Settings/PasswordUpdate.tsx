@@ -5,7 +5,7 @@ import { useT } from '../../lib/i18n';
 import { passwordMinLength } from '../auth/Register';
 import { ButtonType, ButtonSize, ButtonColor, Button } from '../button';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { EntryFormContainer } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer } from '../EntryForm/wrappers';
 import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
@@ -66,7 +66,7 @@ export const UserPasswordUpdate: React.FC = () => {
   ]);
 
   return (
-    <EntryFormContainer>
+    <StyledEntryFormContainer>
       <EntryFormHead title={t('settings.password.title') as string} />
       {success ? (
         <FormGrid>
@@ -134,6 +134,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.oldLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="current-password"
                 id="old-password"
                 minLength={passwordMinLength}
                 required
@@ -146,6 +147,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.newLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="new-password"
                 id="new-password"
                 minLength={passwordMinLength}
                 required
@@ -159,6 +161,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.newConfirmLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="new-password"
                 id="confirm-password"
                 minLength={passwordMinLength}
                 required
@@ -186,6 +189,6 @@ export const UserPasswordUpdate: React.FC = () => {
           </FormGrid>
         </form>
       )}
-    </EntryFormContainer>
+    </StyledEntryFormContainer>
   );
 };

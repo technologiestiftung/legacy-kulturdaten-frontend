@@ -6,7 +6,6 @@ import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../.
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
-import { Label } from '../label';
 
 const StyledCheckboxList = styled.div<{ variant?: ComponentVariant }>`
   display: flex;
@@ -24,6 +23,9 @@ const StyledCheckboxList = styled.div<{ variant?: ComponentVariant }>`
 
 const StyedCheckboxListLabel = styled.div`
   margin-bottom: 0.75rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
 `;
 
 const StyledCheckboxListItems = styled.div<{ columns?: number }>`
@@ -116,9 +118,9 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
     <StyledCheckboxList variant={variant}>
       {label && (
         <StyedCheckboxListLabel>
-          <Label>
+          <legend>
             {label} {required ? ` (${t('forms.required')})` : ''}
-          </Label>
+          </legend>
         </StyedCheckboxListLabel>
       )}
       <StyledCheckboxListItems columns={columns} id={id}>

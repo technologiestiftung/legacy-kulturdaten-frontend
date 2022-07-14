@@ -137,7 +137,7 @@ export const Radio: React.FC<RadioProps> = ({
           valid={valid}
         />
         <StyledRadioInputCheck checked={checked}>
-          <Check color="var(--black)" />
+          <Check color="var(--black)" aria-hidden="true" />
         </StyledRadioInputCheck>
       </StyledRadioInputContainer>
       {label && (

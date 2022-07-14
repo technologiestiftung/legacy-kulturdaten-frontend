@@ -30,6 +30,7 @@ export const deDE: Localization = {
     info: {
       hint: {
         title: () => 'Profil noch nicht öffentlich',
+        altText: () => 'Hinweis',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
@@ -213,6 +214,14 @@ export const deDE: Localization = {
     listLabel: () => 'Bereits hinzugefügte Sprachen',
     listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
     noMatch: () => 'Keine passende Sprache gefunden',
+  },
+  links: {
+    internal: {
+      iconAltText: () => 'Gehe zu'
+    },
+    external: {
+      iconAltText: () => 'Neuen Tab öffnen'
+    },
   },
   mainTypeTags: {
     addButton: () => 'Angebotsart hinzufügen',
@@ -664,22 +673,22 @@ export const deDE: Localization = {
       '1': {
         name: () => 'mit Namensnennung nutzbar (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.de',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neuen Tab öffnen: Mehr Informationen zur Lizenz Namensnennung 4.0 International CC BY 4.0',
       },
       '2': {
         name: () => 'ohne Namensnennung nutzbar (Public Domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.de',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz CC0 1.0 Universell Public Domain Dedication',
       },
       '3': {
         name: () => 'mit Namensnennung - Weitergabe unter gleichen Bedingungen (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.de',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International',
       },
       '4': {
-        name: () => 'nur im Zuge der aktuellen Berichtersattung nutzbar',
+        name: () => 'nur im Zuge der aktuellen Berichterstattung nutzbar',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz nur für aktuelle Berichterstattung nutzbar',
       },
     },
     licenseEnd: () => 'Ablaufdatum Lizenz',
@@ -931,6 +940,7 @@ export const deDE: Localization = {
     headingThree: () => 'Überschrift klein',
     listOrdered: () => 'Nummerierte Liste',
     listUnordered: () => 'Normale Liste',
+    maxCharacters: () => 'Maximale Zeichenanzahl',
     bold: () => 'Fett',
     italic: () => 'Kursiv',
     underline: () => 'Unterstrichen',
@@ -1365,6 +1375,7 @@ export const deDE: Localization = {
       description: () => 'Sprache wählen, choose Language',
     },
     organizerBand: {
+      title: () => 'Anbieter:in-Profile',
       show: () => 'Liste meiner Anbieter:innen ausklappen',
       collapse: () => 'Liste meiner Anbieter:innen einklappen',
       create: () => 'Neue Anbieter:in erstellen',

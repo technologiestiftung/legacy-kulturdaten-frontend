@@ -114,7 +114,7 @@ const StyledRadioVariantOptionLabelContent = styled.span`
   max-width: 52ch;
 `;
 
-const StyledRadioVariantOptionLabelHeadline = styled.span<{ active: boolean }>`
+const StyledRadioVariantOptionLabelHeadline = styled.label<{ active: boolean }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: var(--font-weight-bold);

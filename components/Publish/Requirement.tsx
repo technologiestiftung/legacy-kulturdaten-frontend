@@ -103,11 +103,13 @@ export const Requirement: React.FC<RequirementProps> = ({
   );
 
   return hasLink ? (
-    <Link href={link.href} passHref>
-      <StyledRequirementLink aria-label={link.ariaLabel}>
-        {renderedRequirement}
-      </StyledRequirementLink>
-    </Link>
+    <li>
+      <Link href={link.href} passHref>
+        <StyledRequirementLink aria-label={link.ariaLabel}>
+          {renderedRequirement}
+        </StyledRequirementLink>
+      </Link>
+    </li>
   ) : (
     renderedRequirement
   );

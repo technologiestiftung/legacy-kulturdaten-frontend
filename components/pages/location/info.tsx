@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Location, LocationTranslation, LocationType } from '../../../lib/api/types/location';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
 import { LocationShow } from '../../../lib/api/routes/location/show';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -227,6 +227,7 @@ const useRentForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.location.form.rent.url') as string}
             placeholder={t('categories.location.form.rent.urlPlaceholder') as string}
             type={InputType.url}
+            autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
           />
@@ -293,6 +294,7 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.location.form.url') as string}
             placeholder={t('categories.location.form.urlPlaceholder') as string}
             type={InputType.url}
+            autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
           />
@@ -656,20 +658,20 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
-            <EntryFormContainer>{nameForm}</EntryFormContainer>
-            <EntryFormContainer>{typeForm}</EntryFormContainer>
+            <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{typeForm}</StyledEntryFormContainer>
             {typeValue === LocationType.physical ? (
               <>
-                <EntryFormContainer>{addressForm}</EntryFormContainer>
-                <EntryFormContainer>{urlForm}</EntryFormContainer>
-                <EntryFormContainer noPadding>{arrivalForm}</EntryFormContainer>
-                <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
-                <EntryFormContainer>{rentForm}</EntryFormContainer>
+                <StyledEntryFormContainer>{addressForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer>{urlForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer noPadding>{arrivalForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer>{openingHoursForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer>{rentForm}</StyledEntryFormContainer>
               </>
             ) : (
-              <EntryFormContainer>{urlForm}</EntryFormContainer>
+              <StyledEntryFormContainer>{urlForm}</StyledEntryFormContainer>
             )}
-            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
+            <StyledEntryFormContainer>{descriptionForm}</StyledEntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

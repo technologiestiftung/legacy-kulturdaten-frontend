@@ -1,4 +1,4 @@
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
@@ -38,7 +38,7 @@ const UserApiTokens: React.FC = () => {
 
   return (
     <>
-      <EntryFormContainer>
+      <StyledEntryFormContainer>
         <EntryFormHead
           title={t('settings.api.titleCreate') as string}
           tooltip={t('settings.api.titleCreateTooltip')}
@@ -93,6 +93,7 @@ const UserApiTokens: React.FC = () => {
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.url}
+                autoComplete="url"
                 label={`${t('settings.api.projectUrl')} (${t('forms.optional')})`}
                 value={url}
                 placeholder={t('forms.urlPlaceholder') as string}
@@ -124,9 +125,9 @@ const UserApiTokens: React.FC = () => {
             </FormItem>
           </FormGrid>
         </form>
-      </EntryFormContainer>
+      </StyledEntryFormContainer>
       {appTokens?.length > 0 && (
-        <EntryFormContainer>
+        <StyledEntryFormContainer>
           <EntryFormHead title={t('settings.api.titleList') as string} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
@@ -155,7 +156,7 @@ const UserApiTokens: React.FC = () => {
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
+        </StyledEntryFormContainer>
       )}
     </>
   );
@@ -170,7 +171,7 @@ export const UserDeveloperPage: React.FC = () => {
       <div>
         <EntryFormWrapper>
           <UserApiTokens />
-          <EntryFormContainer>
+          <StyledEntryFormContainer>
             <EntryFormHead title={t('settings.docs.title') as string} />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
@@ -195,7 +196,7 @@ export const UserDeveloperPage: React.FC = () => {
                 />
               </FormItem>
             </FormGrid>
-          </EntryFormContainer>
+          </StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

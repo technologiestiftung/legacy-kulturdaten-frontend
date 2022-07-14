@@ -36,7 +36,7 @@ const StyledTypesSubjectsTypeHead = styled.div`
   position: relative;
 `;
 
-const StyledTypesSubjectsSubjects = styled.div`
+const StyledTypesSubjectsSubjects = styled.fieldset`
   padding: 0.75rem 0.75rem 1.125rem;
   background: var(--grey-200);
 `;

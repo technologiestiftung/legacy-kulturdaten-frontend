@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
 import { useContext, useEffect, useMemo } from 'react';
 import { UserContext } from '../../user/UserContext';
@@ -52,7 +52,7 @@ const CancelDeletionComponent: React.FC = () => {
   );
 
   return (
-    <EntryFormContainer>
+    <StyledEntryFormContainer>
       <FormGrid>
         <DashboardTile
           title={t('settings.requestedDeletion.title') as string}
@@ -118,7 +118,7 @@ const CancelDeletionComponent: React.FC = () => {
           </Button>
         </div>
       </FormGrid>
-    </EntryFormContainer>
+    </StyledEntryFormContainer>
   );
 };
 

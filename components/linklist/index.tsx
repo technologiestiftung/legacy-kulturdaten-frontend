@@ -31,7 +31,7 @@ const StyledLinkListList = styled.ul`
   border-radius: 0.75rem 0.75rem 0 0;
 `;
 
-const StyledLinkListListPlaceholder = styled.div`
+const StyledLinkListListPlaceholder = styled.p`
   padding: 0.75rem;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -241,6 +241,7 @@ const LinkList: React.FC<LinkListProps> = ({
                   type={InputType.url}
                   id={`linklist-${uid}-link-${index}`}
                   value={link}
+                  autoComplete="url"
                   onChange={(e) =>
                     dispatch({
                       type: LinksActions.update,
@@ -294,6 +295,7 @@ const LinkList: React.FC<LinkListProps> = ({
               type={InputType.url}
               id={`linklist-${uid}-add`}
               value={inputState}
+              autoComplete="url"
               onChange={(e) => setInputState(e.target.value)}
               label={t('linkList.addNew') as string}
               placeholder={t('linkList.inputPlaceholder') as string}

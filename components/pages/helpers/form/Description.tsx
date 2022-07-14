@@ -233,39 +233,43 @@ export const useDescription = ({
   return {
     renderedDescription: (
       <StyledDescription>
-        {rendered && (
-          <>
-            <StyledDescriptionTitleStatus>
-              <StyledDescriptionTitle>
-                <Label>
-                  {title}
-                  {(required || softRequired) && ` (${t('forms.required')})`}
-                  {tooltip && (
-                    <StyledTooltip>
-                      <Tooltip>
-                        {typeof tooltip === 'string' ? <TooltipP>{tooltip}</TooltipP> : tooltip}
-                      </Tooltip>
-                    </StyledTooltip>
-                  )}
-                </Label>
-              </StyledDescriptionTitle>
-            </StyledDescriptionTitleStatus>
-            <StyledDescriptionRichTextWrapper
-              valid={softRequired ? valid && textLength > 0 && textLength <= maxLength : valid}
-            >
-              <StyledDescriptionRichTextContainer>
-                {renderedRichText}
-              </StyledDescriptionRichTextContainer>
-              {maxLength && (
-                <StyledMaxLengthDisplay textLength={textLength} maxLength={maxLength}>
-                  <StyledMaxLengthDisplayText>
-                    {textLength} / {maxLength}
-                  </StyledMaxLengthDisplayText>
-                </StyledMaxLengthDisplay>
-              )}
-            </StyledDescriptionRichTextWrapper>
-          </>
-        )}
+        <fieldset>
+          {rendered && (
+            <>
+              <StyledDescriptionTitleStatus>
+                <StyledDescriptionTitle>
+                  <legend>
+                    <Label ariaLabel={t('richText.maxCharacters') as string}>
+                      {title}
+                      {(required || softRequired) && ` (${t('forms.required')})`}
+                      {tooltip && (
+                        <StyledTooltip>
+                          <Tooltip>
+                            {typeof tooltip === 'string' ? <TooltipP>{tooltip}</TooltipP> : tooltip}
+                          </Tooltip>
+                        </StyledTooltip>
+                      )}
+                    </Label>
+                  </legend>
+                </StyledDescriptionTitle>
+              </StyledDescriptionTitleStatus>
+              <StyledDescriptionRichTextWrapper
+                valid={softRequired ? valid && textLength > 0 && textLength <= maxLength : valid}
+              >
+                <StyledDescriptionRichTextContainer>
+                  {renderedRichText}
+                </StyledDescriptionRichTextContainer>
+                {maxLength && (
+                  <StyledMaxLengthDisplay textLength={textLength} maxLength={maxLength}>
+                    <StyledMaxLengthDisplayText>
+                      {textLength} / {maxLength}
+                    </StyledMaxLengthDisplayText>
+                  </StyledMaxLengthDisplay>
+                )}
+              </StyledDescriptionRichTextWrapper>
+            </>
+          )}
+        </fieldset>
       </StyledDescription>
     ),
     submit: async () => {

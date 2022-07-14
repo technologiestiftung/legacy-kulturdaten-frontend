@@ -119,7 +119,7 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
     <StyledEntryListHead>
       <StyledEntryListHeadTop>
         <StyledEntryListHeadTitleRow>
-          <StyledEntryListHeadTitle noPadding={noPadding}>
+          <StyledEntryListHeadTitle noPadding={noPadding} role="heading" aria-label={title}>
             <span>{title}</span>
           </StyledEntryListHeadTitle>
           <StyledEntryListHeadTitleRowRight>

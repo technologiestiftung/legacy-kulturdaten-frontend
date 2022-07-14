@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { compareDesc } from 'date-fns';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
@@ -22,7 +23,7 @@ import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
 import { useLoadingScreen } from '../../Loading/LoadingScreen';
@@ -39,6 +40,11 @@ const customFormItemCss = css`
   ${mq(Breakpoint.mid)} {
     margin: 0;
   }
+`;
+
+const ScrollContainer = styled.div`
+  grid-column: span 4;
+  overflow: hidden;
 `;
 
 const entriesPerPage = 25;
@@ -379,10 +385,10 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         hint={false}
       />
       <EntryFormWrapper>
-        <EntryFormContainer>{isPermanentForm}</EntryFormContainer>
+        <StyledEntryFormContainer>{isPermanentForm}</StyledEntryFormContainer>
         {!isPermanentValue && (
           <>
-            <EntryFormContainer>
+            <StyledEntryFormContainer>
               <EntryFormHead title={t('date.currentDates') as string} />
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
@@ -439,9 +445,9 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                     submitDelay={500}
                   />
                 </FormItem>
-                <FormItem width={FormItemWidth.full} css={customFormItemCss}>
+                <ScrollContainer>
                   {renderedDateList}
-                </FormItem>
+                </ScrollContainer>
                 <FormItem width={FormItemWidth.full}>
                   {metaDateList?.pages?.lastPage > 1 && (
                     <EntryListPagination
@@ -466,8 +472,8 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                   )}
                 </FormItem>
               </FormGrid>
-            </EntryFormContainer>
-            <EntryFormContainer>
+            </StyledEntryFormContainer>
+            <StyledEntryFormContainer>
               <EntryFormHead
                 title={t('date.archivedDates') as string}
                 expander={{
@@ -478,7 +484,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 }}
               />
               {renderedCollapsable}
-            </EntryFormContainer>
+            </StyledEntryFormContainer>
           </>
         )}
       </EntryFormWrapper>
