@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { compareDesc } from 'date-fns';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Language } from '../../../config/locale';
@@ -39,6 +40,11 @@ const customFormItemCss = css`
   ${mq(Breakpoint.mid)} {
     margin: 0;
   }
+`;
+
+const ScrollContainer = styled.div`
+  grid-column: span 4;
+  overflow: hidden;
 `;
 
 const entriesPerPage = 25;
@@ -439,9 +445,9 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                     submitDelay={500}
                   />
                 </FormItem>
-                <FormItem width={FormItemWidth.full} css={customFormItemCss}>
+                <ScrollContainer>
                   {renderedDateList}
-                </FormItem>
+                </ScrollContainer>
                 <FormItem width={FormItemWidth.full}>
                   {metaDateList?.pages?.lastPage > 1 && (
                     <EntryListPagination

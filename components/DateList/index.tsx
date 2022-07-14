@@ -19,24 +19,31 @@ const StyledDateList = styled.div`
   align-items: stretch;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
-  max-width: 100%;
-  overflow: auto;
-`;
-
-const StyledDateListTitleRow = styled.tr`
+  width: 100%;
+  overflow: hidden;
+  `;
+  
+  const StyledDateListTitleRow = styled.tr`
   display: flex;
   align-items: stretch;
   width: 100%;
-  max-width: 100%;
+  width: 100%;
   justify-content: flex-start;
   position: relative;
+  overflow: auto;
+`;
+  
+const DateListScrollContainer = styled.div`
+  border: 1px solid var(--grey-400);
+  width: 100%;
+  border-radius: 0.75rem;
+  overflow: auto;
 `;
 
-const StyledDateListBody = styled.table`
-  border: 1px solid var(--grey-400);
+  const StyledDateListBody = styled.table`
   border-radius: 0.75rem;
   border-collapse: separate;
-  overflow: hidden;
+  min-width: 100%;
 `;
 
 export const StyledDateListTitleRowCell = styled.th`
@@ -221,122 +228,124 @@ const DateList: React.FC<DateListProps> = ({
           </StyledDateListSelectActions>
         </StyledDateListSelect>
       )}
-      <StyledDateListBody>
-        
-          <StyledDateListTitleRow>
-            <StyledDateListTitleRowCell>
-              {editable && (
-                <StyledDateListItemCheckbox>
-                  <Checkbox
-                    id={`${uid}-checkbox`}
-                    checked={dates?.length > 0 && allCheckboxesChecked}
-                    onChange={(e) =>
-                      e?.target.checked
-                        ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
-                        : setCheckedDateIds([])
-                    }
-                  />
-                </StyledDateListItemCheckbox>
-              )}
-            </StyledDateListTitleRowCell>
-            <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold lessVerticalPadding noPaddingLeft={isUltraOrWider}>
-                {editable && fromSort ? (
-                  <StyledCellSort
-                    active={fromSort?.active}
-                    onClick={fromSort?.onClick}
-                    aria-label={
-                      t('general.sorting', {
-                        order: fromSort?.active
-                          ? fromSort?.order === Order.ASC
-                            ? Order.DESC
-                            : Order.ASC
-                          : fromSort?.order,
-                        attribute: t('date.from') as string,
-                      }) as string
-                    }
-                  >
-                    <span>{t('date.from')}</span>
-                    {fromSort?.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}
-                  </StyledCellSort>
-                ) : (
-                  t('date.from')
+      <DateListScrollContainer>
+        <StyledDateListBody>
+          
+            <StyledDateListTitleRow>
+              <StyledDateListTitleRowCell>
+                {editable && (
+                  <StyledDateListItemCheckbox>
+                    <Checkbox
+                      id={`${uid}-checkbox`}
+                      checked={dates?.length > 0 && allCheckboxesChecked}
+                      onChange={(e) =>
+                        e?.target.checked
+                          ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
+                          : setCheckedDateIds([])
+                      }
+                    />
+                  </StyledDateListItemCheckbox>
                 )}
-              </StyledDateListItemTextBold>
-            </StyledDateListTitleRowCell>
-            <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold lessVerticalPadding>
-                {editable && fromSort ? (
-                  <StyledCellSort
-                    active={endSort?.active}
-                    onClick={endSort?.onClick}
-                    aria-label={
-                      t('general.sorting', {
-                        order: endSort?.active
-                          ? endSort?.order === Order.ASC
-                            ? Order.DESC
-                            : Order.ASC
-                          : endSort?.order,
-                        attribute: t('date.to') as string,
-                      }) as string
-                    }
-                  >
-                    <span>{t('date.to')}</span>
-                    {endSort?.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}
-                  </StyledCellSort>
-                ) : (
-                  t('date.to')
-                )}
-              </StyledDateListItemTextBold>
-            </StyledDateListTitleRowCell>
-            <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold>{t('date.title')}</StyledDateListItemTextBold>
-            </StyledDateListTitleRowCell>
-            <StyledDateListTitleRowCell>
-              <StyledDateListItemTextBold>{t('date.status')}</StyledDateListItemTextBold>
-            </StyledDateListTitleRowCell>
-            <StyledDateListTitleRowCell />
-          </StyledDateListTitleRow>
-        
-        {dates && dates.length > 0 ? (
-          dates.map((date, index) => {
-            const dateId = date?.id;
-            return (
-              <DateListItem
-                key={index}
-                date={date}
-                onChange={(changedDate) =>
-                  onChange(
-                    [
-                      ...dates.slice(0, index),
-                      changedDate,
-                      ...dates.slice(index + 1, dates.length),
-                    ],
-                    date.id
-                  )
-                }
-                checked={checkedDateIds?.includes(String(dateId))}
-                setChecked={(checked) => {
-                  if (checked) {
-                    setCheckedDateIds([
-                      ...checkedDateIds.filter((id) => id !== String(dateId)),
-                      String(dateId),
-                    ]);
-                  } else {
-                    setCheckedDateIds(checkedDateIds.filter((id) => id !== String(dateId)));
+              </StyledDateListTitleRowCell>
+              <StyledDateListTitleRowCell>
+                <StyledDateListItemTextBold lessVerticalPadding noPaddingLeft={isUltraOrWider}>
+                  {editable && fromSort ? (
+                    <StyledCellSort
+                      active={fromSort?.active}
+                      onClick={fromSort?.onClick}
+                      aria-label={
+                        t('general.sorting', {
+                          order: fromSort?.active
+                            ? fromSort?.order === Order.ASC
+                              ? Order.DESC
+                              : Order.ASC
+                            : fromSort?.order,
+                          attribute: t('date.from') as string,
+                        }) as string
+                      }
+                    >
+                      <span>{t('date.from')}</span>
+                      {fromSort?.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}
+                    </StyledCellSort>
+                  ) : (
+                    t('date.from')
+                  )}
+                </StyledDateListItemTextBold>
+              </StyledDateListTitleRowCell>
+              <StyledDateListTitleRowCell>
+                <StyledDateListItemTextBold lessVerticalPadding>
+                  {editable && fromSort ? (
+                    <StyledCellSort
+                      active={endSort?.active}
+                      onClick={endSort?.onClick}
+                      aria-label={
+                        t('general.sorting', {
+                          order: endSort?.active
+                            ? endSort?.order === Order.ASC
+                              ? Order.DESC
+                              : Order.ASC
+                            : endSort?.order,
+                          attribute: t('date.to') as string,
+                        }) as string
+                      }
+                    >
+                      <span>{t('date.to')}</span>
+                      {endSort?.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}
+                    </StyledCellSort>
+                  ) : (
+                    t('date.to')
+                  )}
+                </StyledDateListItemTextBold>
+              </StyledDateListTitleRowCell>
+              <StyledDateListTitleRowCell>
+                <StyledDateListItemTextBold>{t('date.title')}</StyledDateListItemTextBold>
+              </StyledDateListTitleRowCell>
+              <StyledDateListTitleRowCell>
+                <StyledDateListItemTextBold>{t('date.status')}</StyledDateListItemTextBold>
+              </StyledDateListTitleRowCell>
+              <StyledDateListTitleRowCell />
+            </StyledDateListTitleRow>
+          
+          {dates && dates.length > 0 ? (
+            dates.map((date, index) => {
+              const dateId = date?.id;
+              return (
+                <DateListItem
+                  key={index}
+                  date={date}
+                  onChange={(changedDate) =>
+                    onChange(
+                      [
+                        ...dates.slice(0, index),
+                        changedDate,
+                        ...dates.slice(index + 1, dates.length),
+                      ],
+                      date.id
+                    )
                   }
-                }}
-                editable={editable}
-                lastRow={index === rowCount - 1}
-                offerTitles={offerTitles}
-                onDelete={editable && onDelete ? (dateId) => onDelete([dateId]) : undefined}
-              />
-            );
-          })
-        ) : (
-          <StyledDateListPlaceholder>{t('date.listPlaceholder')}</StyledDateListPlaceholder>
-        )}
-      </StyledDateListBody>
+                  checked={checkedDateIds?.includes(String(dateId))}
+                  setChecked={(checked) => {
+                    if (checked) {
+                      setCheckedDateIds([
+                        ...checkedDateIds.filter((id) => id !== String(dateId)),
+                        String(dateId),
+                      ]);
+                    } else {
+                      setCheckedDateIds(checkedDateIds.filter((id) => id !== String(dateId)));
+                    }
+                  }}
+                  editable={editable}
+                  lastRow={index === rowCount - 1}
+                  offerTitles={offerTitles}
+                  onDelete={editable && onDelete ? (dateId) => onDelete([dateId]) : undefined}
+                />
+              );
+            })
+          ) : (
+            <StyledDateListPlaceholder>{t('date.listPlaceholder')}</StyledDateListPlaceholder>
+          )}
+        </StyledDateListBody>
+      </DateListScrollContainer>
     </StyledDateList>
   );
 };
