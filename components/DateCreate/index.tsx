@@ -234,7 +234,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             tooltip={t('date.titleTooltip')}
           />
           <FormGrid>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Input
                 type={InputType.text}
                 label={t('general.german') as string}
@@ -243,7 +243,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 onChange={(e) => setTitleGerman(e.target.value)}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="en">
               <Input
                 type={InputType.text}
                 label={t('general.english') as string}
@@ -272,7 +272,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
         <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('forms.teaser')}`} />
           <FormGrid>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Textarea
                 id={`${uid}-textarea-german`}
                 label={t('general.german') as string}
@@ -283,7 +283,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 maxLength={defaultTeaserTextLimit}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Textarea
                 id={`${uid}-textarea-german-easy`}
                 label={t('forms.labelGermanEasy') as string}
@@ -295,7 +295,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 maxLength={defaultTeaserTextLimit}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="en">
               <Textarea
                 id={`${uid}-textarea-english`}
                 label={t('general.english') as string}
@@ -311,7 +311,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
         <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.roomInfo')} (${t('forms.optional')})`} />
           <FormGrid>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Input
                 type={InputType.text}
                 label={t('general.german') as string}
@@ -320,7 +320,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 onChange={(e) => setRoomGerman(e.target.value)}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="en">
               <Input
                 type={InputType.text}
                 label={t('general.english') as string}

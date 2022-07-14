@@ -240,9 +240,9 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
       <div>
         <EntryFormHead title={title || `${t('forms.teaser') as string}`} valid={valid} />
         <FormGrid>
-          <FormItem width={FormItemWidth.full}>{setTeaserGerman}</FormItem>
-          <FormItem width={FormItemWidth.full}>{setTeaserEnglish}</FormItem>
-          <FormItem width={FormItemWidth.full}>{setTeaserGermanEasy}</FormItem>
+          <FormItem width={FormItemWidth.full} lang="de">{setTeaserGerman}</FormItem>
+          <FormItem width={FormItemWidth.full} lang="en">{setTeaserEnglish}</FormItem>
+          <FormItem width={FormItemWidth.full} lang="de">{setTeaserGermanEasy}</FormItem>
         </FormGrid>
       </div>
     ),

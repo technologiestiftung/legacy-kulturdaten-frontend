@@ -144,11 +144,13 @@ const StyledFormItemChild = styled.div<{ flexGrow?: string }>`
   flex-grow: ${({ flexGrow }) => flexGrow || '1'};
 `;
 
+
 interface FormItemProps {
   width: FormItemWidth;
   alignSelf?: string;
   childrenFlexGrow?: string;
   css?: SerializedStyles;
+  lang?: "de" | "en";
 }
 
 export const FormItem: React.FC<PropsWithChildren<FormItemProps>> = ({
@@ -157,8 +159,9 @@ export const FormItem: React.FC<PropsWithChildren<FormItemProps>> = ({
   alignSelf,
   childrenFlexGrow,
   css,
+  lang,
 }: PropsWithChildren<FormItemProps>) => (
-  <StyledFormItem width={width} alignSelf={alignSelf} customCss={css}>
+  <StyledFormItem width={width} alignSelf={alignSelf} customCss={css} lang={lang}>
     {React.Children.toArray(children).map((child, index) => (
       <StyledFormItemChild key={index} flexGrow={childrenFlexGrow}>
         {child}
