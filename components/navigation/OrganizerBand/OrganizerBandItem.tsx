@@ -224,7 +224,7 @@ const OrganizerBandItemForwarded = (
           ) : logoRendition ? (
             <Image src={logoRendition.url} layout={'fill'} objectFit="contain" alt="" />
           ) : (
-            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
+            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow} aria-hidden>
               {children?.slice(0, 1)}
             </StyledOrganizerBandItemText>
           )}
