@@ -187,7 +187,6 @@ const DateList: React.FC<DateListProps> = ({
   fromSort,
   endSort,
 }: DateListProps) => {
-  const isWideOrWider = useBreakpointOrWider(Breakpoint.widish);
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
   const rowCount = dates?.length;
   const uid = usePseudoUID();
@@ -238,6 +237,7 @@ const DateList: React.FC<DateListProps> = ({
                     <Checkbox
                       id={`${uid}-checkbox`}
                       checked={dates?.length > 0 && allCheckboxesChecked}
+                      ariaLabel={t('date.allCheckboxAriaLabel') as string}
                       onChange={(e) =>
                         e?.target.checked
                           ? setCheckedDateIds(allDateIds.map((dateId) => String(dateId)))
