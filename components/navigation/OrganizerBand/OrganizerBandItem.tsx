@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as feather from 'react-feather';
 import Image from 'next/image';
-import React, { RefObject, useMemo, useRef } from 'react';
+import React, { RefObject, useMemo, useRef, useState } from 'react';
 import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
 import { MouseTooltip } from '../../MouseTooltip';
@@ -186,6 +186,19 @@ const OrganizerBandItemForwarded = (
     [logoRenditions, logo]
   );
 
+  const [focused, setFocused] = useState(false)
+
+  const getTooltipPosition = () => {
+    if (selfRef.current) {
+
+      const el = selfRef.current
+      const {x, y} = el.getBoundingClientRect();
+
+      return { x: x + el.clientWidth, y: y + el.clientHeight/2}
+    }
+  }
+
+
   return (
     <li ref={selfRef}>
       <StyledOrganizerBandItem
@@ -202,6 +215,8 @@ const OrganizerBandItemForwarded = (
         }}
         as={asButton ? 'button' : undefined}
         adminModeActive={adminModeActive}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
       >
         <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
           {icon && feather[icon] ? (
@@ -209,14 +224,14 @@ const OrganizerBandItemForwarded = (
           ) : logoRendition ? (
             <Image src={logoRendition.url} layout={'fill'} objectFit="contain" alt="" />
           ) : (
-            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
+            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow} aria-hidden>
               {children?.slice(0, 1)}
             </StyledOrganizerBandItemText>
           )}
         </StyledOrganizerBandItemLogo>
 
         {layout === OrganizerBandLayout.narrow ? (
-          <MouseTooltip hoverElement={selfRef}>{children}</MouseTooltip>
+          <MouseTooltip hoverElement={selfRef} position={getTooltipPosition()} inFocus={focused}>{children}</MouseTooltip>
         ) : (
           <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
         )}

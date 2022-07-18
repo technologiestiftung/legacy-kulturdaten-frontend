@@ -21,19 +21,29 @@ const StyledMouseTooltip = styled.div<{ x: number; y: number }>`
     `translate(calc(${x}px + 0.75rem), calc(${y}px - 0.375rem - (var(--line-height-300) / 2)))`};
 `;
 
+interface Position {
+  x: number;
+  y: number;
+}
+
 type MouseTooltipProps = {
   children: React.ReactNode;
   hoverElement: RefObject<HTMLElement>;
+  inFocus?: boolean;
+  position?: Position;
 };
 
 export const MouseTooltip: React.FC<MouseTooltipProps> = ({
   children,
   hoverElement,
+  inFocus,
+  position
 }: MouseTooltipProps) => {
   const [show, setShow] = useState(false);
   const [isTouchEvent, setIsTouchEvent] = useState(false);
   const [mouseX, setMouseX] = useState(0);
   const [mouseY, setMouseY] = useState(0);
+  
 
   useEffect(() => {
     const element = hoverElement;
@@ -46,6 +56,7 @@ export const MouseTooltip: React.FC<MouseTooltipProps> = ({
       setShow(false);
       setIsTouchEvent(false);
     };
+
 
     const mouseMoveHandler = (e: MouseEvent) => {
       setMouseX(e.pageX - window.scrollX);
@@ -70,8 +81,8 @@ export const MouseTooltip: React.FC<MouseTooltipProps> = ({
     };
   }, [hoverElement, show]);
 
-  return !isTouchEvent && show && mouseX !== 0 && mouseY !== 0 ? (
-    <StyledMouseTooltip x={mouseX} y={mouseY}>
+  return !isTouchEvent && show && mouseX !== 0 && mouseY !== 0 || inFocus ? (
+    <StyledMouseTooltip x={inFocus? position?.x : mouseX} y={inFocus? position?.y : mouseY}>
       {children}
     </StyledMouseTooltip>
   ) : null;

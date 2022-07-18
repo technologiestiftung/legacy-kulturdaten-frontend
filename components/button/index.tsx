@@ -1,4 +1,4 @@
-import React, { MouseEvent, useRef } from 'react';
+import React, { MouseEvent, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/react';
 import * as feather from 'react-feather';
@@ -353,9 +353,21 @@ export const Button: React.FC<ButtonProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const hasIcon = Boolean(renderedIcon || (icon && feather[icon]));
 
+  const [focused, setFocused] = useState(false)
+
+  const getTooltipPosition = () => {
+    if (buttonRef.current) {
+
+      const el = buttonRef.current
+      const {x, y} = el.getBoundingClientRect();
+
+      return { x: x, y: y + 2 * el.clientHeight}
+    }
+  }
+
   return (
     <>
-      {tooltip && isMidOrWider && <MouseTooltip hoverElement={buttonRef}>{tooltip}</MouseTooltip>}
+      {tooltip && isMidOrWider && <MouseTooltip inFocus={focused} position={getTooltipPosition()} hoverElement={buttonRef}>{tooltip}</MouseTooltip>}
       {asInput ? (
         <StyledButton
           ref={buttonRef}
@@ -372,6 +384,8 @@ export const Button: React.FC<ButtonProps> = ({
           onMouseDown={
             onMouseDown ? (e: MouseEvent<HTMLInputElement>) => onMouseDown(e) : undefined
           }
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           disabled={disabled}
           aria-label={ariaLabel}
           title={title}
@@ -384,6 +398,8 @@ export const Button: React.FC<ButtonProps> = ({
           onMouseDown={
             onMouseDown ? (e: MouseEvent<HTMLButtonElement>) => onMouseDown(e) : undefined
           }
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           color={color}
           contentPosition={contentPosition}
           size={size}
