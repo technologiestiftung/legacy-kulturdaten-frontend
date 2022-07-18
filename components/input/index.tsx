@@ -43,14 +43,13 @@ const StyledTooltip = styled.div`
 const createdId = "input-id-" + Math.random().toString(16).slice(2);
 
 const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
-const errorBorderShadow = 'inset 0px 0px 0px 1px var(--error)';
-const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
+const errorBorderShadow = 'inset 0px 0px 0px 0.125rem var(--red-publish)';
 
 const hintBorderShadow = 'inset 0px 0px 0px 1px rgb(10, 47, 211)';
 const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
 
 const errorStyle = css`
-  box-shadow: ${errorBorderShadow}, ${errorShadow}, var(--shadow-inset);
+  box-shadow: ${errorBorderShadow}, var(--shadow-inset);
 `;
 
 const hintStyle = css`

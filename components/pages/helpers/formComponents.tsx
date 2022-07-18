@@ -19,7 +19,6 @@ const StyledFormWrapper = styled.div<{ required: boolean; fulfilled?: boolean }>
         position: absolute;
         width: 3px;
         background: ${fulfilled ? 'var(--green-publish)' : 'var(--red-publish)'};
-        opacity: ${fulfilled ? '0.7' : '1'};
         left: -0.75rem;
         border-radius: 0px 1.5px 1.5px 0px;
 
