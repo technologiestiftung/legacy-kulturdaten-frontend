@@ -16,9 +16,9 @@ const StyledDateListRowCell = styled.td<{ lastRow: boolean; expanded: boolean }>
 
   background: ${({ expanded }) => (expanded ? 'var(--grey-200)' : 'transparent')};
 
-  width: 150px;
+  width: 185px;
   ${mq(Breakpoint.ultra)} {
-    width: 170px;
+    width: 195px;
   }
 
   &:nth-of-type(1) {
@@ -29,10 +29,10 @@ const StyledDateListRowCell = styled.td<{ lastRow: boolean; expanded: boolean }>
   }
 
   &:nth-of-type(4) {
-    width: calc(100% - 540px);
+    width: calc(100% - 612px);
     min-width: 150px;
     ${mq(Breakpoint.ultra)} {
-      width: calc(100% - 650px);
+      width: calc(100% - 710px);
     }
   }
 
@@ -46,7 +46,7 @@ const StyledDateListRowCell = styled.td<{ lastRow: boolean; expanded: boolean }>
   &:nth-of-type(6) {
     width: 92px;
     ${mq(Breakpoint.ultra)} {
-      width: 120px;
+      width: 128px;
     }
   }
   
@@ -117,6 +117,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
   column-gap: 0.375rem;
   cursor: pointer;
   color: inherit;
+  width: 100%;
 
   @media (pointer: fine) {
     transition: background var(--transition-duration-fast);
