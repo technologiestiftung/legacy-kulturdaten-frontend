@@ -69,7 +69,7 @@ export const StyledRequirementMark = styled.span<{ fulfilled: boolean }>`
             margin: 0.4375rem;
           }
         `
-      : 'opacity: 0.7;'}
+      : ''}
 `;
 
 const StyledRequirementLink = styled.a`
@@ -96,7 +96,7 @@ export const Requirement: React.FC<RequirementProps> = ({
   const renderedRequirement = (
     <StyledRequirement fulfilled={fulfilled} hasLink={hasLink}>
       <StyledRequirementMark fulfilled={fulfilled}>
-        {fulfilled && <Check color="var(--green-publish)" />}
+        {fulfilled && <Check color="var(--green-publish)"/>}
       </StyledRequirementMark>
       <StyledRequirementText>{text}</StyledRequirementText>
     </StyledRequirement>

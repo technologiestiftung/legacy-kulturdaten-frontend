@@ -30,7 +30,7 @@ export const CSSVars: React.FC = () => (
         --green-light: #41b496;
         --green-mid: #46948c;
         --green-kelly: #91c882;
-        --green-publish: #00835c;
+        --green-publish: #4f9076;
         --red: #b01e1e;
         --red-publish: #e60032;
         --error: #ae0026;
