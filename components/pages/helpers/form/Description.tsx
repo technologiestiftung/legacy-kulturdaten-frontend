@@ -34,7 +34,7 @@ const StyledDescriptionTitleStatus = styled.div`
   display: flex;
 `;
 
-const errorShadow = '0px 0px 0px 0.1125rem var(--error-o50)';
+const errorShadow = '0px 0px 0px 0.125rem var(--red-publish)';
 const hintShadow = '0px 0px 0px 0.1125rem rgba(10, 47, 211, 0.4)';
 
 const StyledDescriptionRichTextWrapper = styled.div<{ valid?: boolean; hint?: boolean }>`
