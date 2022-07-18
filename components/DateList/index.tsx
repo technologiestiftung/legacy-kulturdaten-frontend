@@ -51,9 +51,9 @@ export const StyledDateListTitleRowCell = styled.th`
   background: var(--grey-200);
   display: flex;
 
-  width: 150px;
+  width: 185px;
   ${mq(Breakpoint.ultra)} {
-    width: 170px;
+    width: 195px;
   }
 
   &:nth-of-type(1) {
@@ -72,10 +72,10 @@ export const StyledDateListTitleRowCell = styled.th`
   }
 
   &:nth-of-type(4) {
-    width: calc(100% - 540px);
+    width: calc(100% - 610px);
     min-width: 150px;
     ${mq(Breakpoint.ultra)} {
-      width: calc(100% - 650px);
+      width: calc(100% - 710px);
     }
   }
 
@@ -87,10 +87,10 @@ export const StyledDateListTitleRowCell = styled.th`
   }
   
   &:nth-of-type(6) {
-    width: 92px;
+    width: 92.6px;
     border-radius: 0 0.75rem 0 0;
     ${mq(Breakpoint.ultra)} {
-      width: 120px;
+      width: 128px;
     }
   }
 `;
