@@ -644,6 +644,7 @@ export const deDE: Localization = {
   },
   media: {
     title: () => 'Bilder',
+    image: () => 'Abbildung',
     copyright: () => 'Bildnachweis / Urheber:in',
     copyrightPlaceholder: () => 'z.B. © Name Fotograf:in, Veröffentlichungsjahr',
     copyrightTooltip: () => (
@@ -766,6 +767,15 @@ export const deDE: Localization = {
   date: {
     from: () => 'Von',
     to: () => 'bis',
+    fromMorePrecise: () => 'Beginn des Angebotes',
+    toMorePrecise: () => 'Ende des Angebotes',
+    fromAria: () => 'Start des Angebotes: Datum und Uhrzeit',
+    toAria: () => 'Ende des Angebotes: Datum und Uhrzeit',
+    fromAriaDate: () => 'Start des Angebotes: Datum',
+    toAriaDate: () => 'Ende des Angebotes: Datum',
+    fromAriaTime: () => 'Start des Angebotes: Uhrzeit',
+    toAriaTime: () => 'Ende des Angebotes: Uhrzeit',
+    for: () => 'für',
     time: () => 'Zeit',
     title: () => 'Titelzusatz',
     titleTooltip: () =>

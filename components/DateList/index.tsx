@@ -264,7 +264,7 @@ const DateList: React.FC<DateListProps> = ({
                         }) as string
                       }
                     >
-                      <span>{t('date.from')}</span>
+                      <span>{t('date.fromMorePrecise')}</span>
                       {fromSort?.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}
                     </StyledCellSort>
                   ) : (
@@ -289,7 +289,7 @@ const DateList: React.FC<DateListProps> = ({
                         }) as string
                       }
                     >
-                      <span>{t('date.to')}</span>
+                      <span>{t('date.toMorePrecise')}</span>
                       {endSort?.order === Order.ASC ? <ArrowUp /> : <ArrowDown />}
                     </StyledCellSort>
                   ) : (

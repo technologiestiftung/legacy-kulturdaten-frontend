@@ -40,6 +40,11 @@ const StyledMediaListItem = styled.div`
   border-radius: 0.75rem;
 `;
 
+const StyledMediaListItemTitle = styled.h3`
+  font-weight: 700;
+  padding: 1.5rem 1.5rem 0;
+`;
+
 const StyledMediaListItemMain = styled.div`
   display: grid;
   grid-template-columns: auto;
@@ -283,6 +288,7 @@ interface MediaListItemProps {
   onChange: (mediaItem: Media['data']) => void;
   valid: boolean;
   onDelete?: (mediaItemId: number) => void;
+  index?: number;
 }
 
 const MediaListItem: React.FC<MediaListItemProps> = ({
@@ -290,6 +296,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   onChange,
   valid,
   onDelete,
+  index,
 }: MediaListItemProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
@@ -314,6 +321,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
 
   return (
     <StyledMediaListItem role="listitem">
+      <StyledMediaListItemTitle>{currentTranslation?.attributes?.alternativeText || `${t('media.image')} ${index}`}</StyledMediaListItemTitle>
       {!valid && (
         <StlyedMediaListItemHint>
           <AlertSymbol />
@@ -622,6 +630,7 @@ export const MediaList: React.FC<MediaListProps> = ({
           key={mediaItem.id}
           valid={itemsValidList[index]}
           mediaItem={mediaItem}
+          index={index + 1}
           onChange={(mediaItem) => {
             onChange(
               [...media.slice(0, index), mediaItem, ...media.slice(index + 1, media.length)],

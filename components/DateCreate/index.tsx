@@ -55,7 +55,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
-            label={t('date.from') as string}
+            label={t('date.fromAriaDate') as string}
             value={formatISO(fromDate, { representation: 'date' })}
             onChange={(e) => {
               const newDate = parseISO(`${e.target.value}T${format(fromDate, 'HH:mm')}`);
@@ -90,7 +90,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
-            label={t('date.to') as string}
+            label={t('date.toAriaDate') as string}
             value={formatISO(toDate, { representation: 'date' })}
             onChange={(e) => {
               setToDate(parseISO(`${e.target.value}T${format(toDate, 'HH:mm')}`));
@@ -104,6 +104,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
           <Input
             type={InputType.time}
             label={t('date.clock') as string}
+            ariaLabel={t('date.toAriaTime') as string}
             value={format(toDate, 'HH:mm')}
             onChange={(e) =>
               setToDate(

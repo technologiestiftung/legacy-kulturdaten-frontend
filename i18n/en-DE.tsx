@@ -631,6 +631,7 @@ export const enDE: Localization = {
   },
   media: {
     title: () => 'Images',
+    image: () => 'Image',
     copyright: () => 'Image credits / author',
     copyrightPlaceholder: () => 'e.g. © name of photographer, year of publication',
     copyrightTooltip: () => (
@@ -753,6 +754,15 @@ export const enDE: Localization = {
     time: () => 'Time',
     from: () => 'From',
     to: () => 'to',
+    fromMorePrecise: () => 'Beginning',
+    toMorePrecise: () => 'End',
+    fromAria: () => 'Beginning of event: date and time',
+    toAria: () => 'End of event: date and time',
+    fromAriaDate: () => 'Beginning of event: date',
+    toAriaDate: () => 'End of event: date',
+    fromAriaTime: () => 'Beginning of event: time',
+    toAriaTime: () => 'End of event: time',
+    for: () => 'for',
     title: () => 'Additional title',
     titleTooltip: () =>
       "You can add further title information to particular dates of this offer, e.g.  'vernissage ' or  'artist is present'",
