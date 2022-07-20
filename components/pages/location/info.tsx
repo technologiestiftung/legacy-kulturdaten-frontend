@@ -452,6 +452,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.location.form.name') as string,
+    hideTitle: true,
     id: 'location-name',
   });
 

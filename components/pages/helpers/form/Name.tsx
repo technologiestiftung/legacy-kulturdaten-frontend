@@ -195,7 +195,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, id }) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, hideTitle, tooltip, id }) => {
   const t = useT();
 
   const {
@@ -209,7 +209,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     category,
     query,
     language: Language.de,
-    label: t('forms.labelGerman') as string,
+    label: `${title} ${t('forms.labelGerman') as string}`,
     ariaLabel: title
       ? `${title} ${t('forms.labelGerman')}`
       : `${t('forms.name')} ${t('forms.labelGerman')}`,
@@ -226,7 +226,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     category,
     query,
     language: Language.en,
-    label: t('forms.labelEnglish') as string,
+    label: `${title} ${t('forms.labelEnglish') as string}`,
     ariaLabel: title
       ? `${title} ${t('forms.labelEnglish')}`
       : `${t('forms.name')} ${t('forms.labelEnglish')}`,
@@ -251,8 +251,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }}>
-        <EntryFormHead title={title || `${t('forms.name') as string}`} tooltip={tooltip} id={id} />
-        <FormGrid>
+        <FormGrid noTopPadding>
           <FormItem width={FormItemWidth.half} lang="de">{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half} lang="en">{setNameEnglish}</FormItem>
         </FormGrid>

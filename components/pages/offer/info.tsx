@@ -58,11 +58,7 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
 
   const renderedForm = (
     <FormContainer>
-      <EntryFormHead
-        title={t('categories.offer.form.locationInfo') as string}
-        tooltip={t('categories.offer.form.locationInfoTooltip') as string}
-      />
-      <FormGrid>
+      <FormGrid >
         {contentLanguages.map((language: Language, index) => {
           const currentTranslation = translations
             ? getTranslation<OfferTranslation>(language, translations, false)
@@ -71,10 +67,11 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
           return (
             <FormItem width={FormItemWidth.half} key={index} lang={language.slice(0,2) as "de" | "en"}>
               <Input
-                label={t(languageTranslationKeys[language]) as string}
+                label={t('categories.offer.form.locationInfo') as string + " " + t(languageTranslationKeys[language]) as string}
                 ariaLabel={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
                 value={currentTranslation?.attributes?.roomDescription || ''}
                 type={InputType.text}
+                tooltip={index == 0 ? t('categories.offer.form.locationInfoTooltip') as string : undefined}
                 placeholder={`${t('categories.offer.form.locationInfoPlaceholder')} (${t(
                   languageTranslationKeys[language]
                 )})`}
@@ -438,6 +435,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.offer.form.name') as string,
+    hideTitle: true,
     id: 'offer-name',
   });
 
@@ -452,6 +450,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     category,
     query,
     loaded,
+    hideTitle: true,
     id: 'offer-description',
   });
 

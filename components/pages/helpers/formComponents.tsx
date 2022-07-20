@@ -72,11 +72,11 @@ export const FormWrapper: React.FC<FormWrapperProps> = ({
   );
 };
 
-export const FormGrid = styled.div`
+export const FormGrid = styled.div<{ noTopPadding: boolean }>`
   display: grid;
   grid-row-gap: 1.5rem;
   grid-column-gap: 1.5rem;
-  padding: 1.5rem 0;
+  padding: ${({ noTopPadding }) => noTopPadding ? '0 0 1.5rem 0' : '1.5rem 0'};
   grid-template-columns: repeat(4, 1fr);
 `;
 

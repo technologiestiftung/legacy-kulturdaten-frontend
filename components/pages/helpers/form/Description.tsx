@@ -23,7 +23,7 @@ const defaultMaxLength = 1500;
 const StyledDescription = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 0;
+  padding: 0 0 1.5rem 0;
 `;
 
 const StyledDescriptionTitle = styled.div`
@@ -332,7 +332,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: Language.de,
-    title: t('forms.labelGerman') as string,
+    title: `${t('forms.description') as string} ${t('forms.labelGerman') as string}`,
     required,
     softRequired: true,
     maxLength: defaultMaxLength,
@@ -348,7 +348,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: Language.en,
-    title: t('forms.labelEnglish') as string,
+    title: `${t('forms.description') as string} ${t('forms.labelEnglish') as string}`,
     required: false,
     maxLength: defaultMaxLength,
   });
@@ -363,7 +363,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: 'de-easy' as Language,
-    title: t('forms.labelGermanEasy') as string,
+    title: `${t('forms.description') as string} ${t('forms.labelGermanEasy') as string}`,
     tooltip: t('forms.labelGermanEasyTooltip') as string,
     required: false,
     maxLength: defaultMaxLength,
@@ -388,12 +388,6 @@ export const useDescriptionForm: EntryFormHook = ({
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }}>
         <FormContainer>
-          <EntryFormHead
-            title={title || `${t('forms.description') as string}`}
-            valid={valid}
-            tooltip={tooltip}
-            id={id}
-          />
           {renderedDescriptionGerman}
           {renderedDescriptionEnglish}
           {renderedDescriptionGermanEasy}
