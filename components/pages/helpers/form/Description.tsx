@@ -314,10 +314,7 @@ export const useDescriptionForm: EntryFormHook = ({
   category,
   query,
   loaded,
-  tooltip,
-  title,
   required,
-  id,
 }) => {
   const t = useT();
 

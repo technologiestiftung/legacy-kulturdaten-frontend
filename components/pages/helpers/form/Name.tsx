@@ -9,7 +9,6 @@ import { Category, useEntry, useMutateList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { useOrganizerId } from '../../../../lib/useOrganizer';
-import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
 import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
@@ -28,6 +27,7 @@ interface SetNameProps {
   softRequired?: boolean;
   valid?: boolean;
   hint?: boolean;
+  tooltip?: string;
 }
 
 const Name: React.FC<SetNameProps> = ({
@@ -41,6 +41,7 @@ const Name: React.FC<SetNameProps> = ({
   required,
   softRequired,
   hint,
+  tooltip
 }: SetNameProps) => {
   // set initial value
   useEffect(() => {
@@ -63,6 +64,7 @@ const Name: React.FC<SetNameProps> = ({
         hint={hint}
         softRequired={softRequired}
         maxLength={defaultMaxLength}
+        tooltip={tooltip}
       />
     </form>
   );
@@ -79,6 +81,7 @@ export const useName = <
   label: string;
   ariaLabel?: string;
   loaded: boolean;
+  tooltip?: string;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -87,7 +90,7 @@ export const useName = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, ariaLabel } = props;
+  const { category, query, language, label, ariaLabel, tooltip } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
   const isPublished = useMemo(
@@ -181,6 +184,7 @@ export const useName = <
           name,
           required,
           valid,
+          tooltip,
           softRequired,
         }}
       />
@@ -214,6 +218,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, hid
       ? `${title} ${t('forms.labelGerman')}`
       : `${t('forms.name')} ${t('forms.labelGerman')}`,
     loaded,
+    tooltip
   });
 
   const {
