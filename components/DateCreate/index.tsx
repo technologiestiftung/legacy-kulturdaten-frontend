@@ -229,25 +229,20 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
           </FormGrid>
         </StyledEntryFormContainer>
         <StyledEntryFormContainer noPadding fullWidth>
-          <EntryFormHead
-            title={`${t('date.title')} (${t('forms.optional')})`}
-            tooltip={t('date.titleTooltip')}
-          />
           <FormGrid>
             <FormItem width={FormItemWidth.half} lang="de">
               <Input
                 type={InputType.text}
-                label={t('general.german') as string}
-                ariaLabel={`${t('date.title')} ${t('general.german')}`}
+                label={`${t('date.title')} ${t('general.german')} (${t('forms.optional')})`}
                 value={titleGerman}
                 onChange={(e) => setTitleGerman(e.target.value)}
+                tooltip={t('date.titleTooltip') as string}
               />
             </FormItem>
             <FormItem width={FormItemWidth.half} lang="en">
               <Input
                 type={InputType.text}
-                label={t('general.english') as string}
-                ariaLabel={`${t('date.title')} ${t('general.english')}`}
+                label={`${t('date.title')} ${t('general.english')} (${t('forms.optional')})`}
                 value={titleEnglish}
                 onChange={(e) => setTitleEnglish(e.target.value)}
               />
@@ -275,8 +270,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.half} lang="de">
               <Textarea
                 id={`${uid}-textarea-german`}
-                label={t('general.german') as string}
-                ariaLabel={t('general.german') as string}
+                label={`${t('forms.teaser')} ${t('forms.labelGerman')}`}
                 value={teaserGerman || ''}
                 onChange={(e) => setTeaserGerman(e.target.value)}
                 rows={5}
@@ -286,9 +280,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.half} lang="de">
               <Textarea
                 id={`${uid}-textarea-german-easy`}
-                label={t('forms.labelGermanEasy') as string}
+                label={`${t('forms.teaser')} ${t('forms.labelGermanEasy')}`}
                 tooltip={t('forms.labelGermanEasyTooltip') as string}
-                ariaLabel={t('forms.labelGermanEasy') as string}
                 value={teaserGermanEasy || ''}
                 onChange={(e) => setTeaserGermanEasy(e.target.value)}
                 rows={5}
@@ -298,8 +291,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.half} lang="en">
               <Textarea
                 id={`${uid}-textarea-english`}
-                label={t('general.english') as string}
-                ariaLabel={t('general.english') as string}
+                label={`${t('forms.teaser')} ${t('forms.labelEnglish')}`}
                 value={teaserEnglish || ''}
                 onChange={(e) => setTeaserEnglish(e.target.value)}
                 rows={5}
@@ -309,12 +301,11 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
           </FormGrid>
         </StyledEntryFormContainer>
         <StyledEntryFormContainer noPadding fullWidth>
-          <EntryFormHead title={`${t('date.roomInfo')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.half} lang="de">
               <Input
                 type={InputType.text}
-                label={t('general.german') as string}
+                label={`${t('date.roomInfo')} ${t('general.german')} (${t('forms.optional')})`}
                 ariaLabel={`${t('date.roomInfo')} ${t('general.german')}`}
                 value={roomGerman}
                 onChange={(e) => setRoomGerman(e.target.value)}
@@ -323,7 +314,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
             <FormItem width={FormItemWidth.half} lang="en">
               <Input
                 type={InputType.text}
-                label={t('general.english') as string}
+                label={`${t('date.roomInfo')} ${t('general.english')} (${t('forms.optional')})`}
                 ariaLabel={`${t('date.roomInfo')} ${t('general.english')}`}
                 value={roomEnglish}
                 onChange={(e) => setRoomEnglish(e.target.value)}
