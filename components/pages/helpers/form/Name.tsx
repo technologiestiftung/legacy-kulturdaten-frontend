@@ -81,7 +81,7 @@ export const useName = <
   label: string;
   ariaLabel?: string;
   loaded: boolean;
-  tooltip?: string;
+  tooltip?: any;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -199,7 +199,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query, loaded, title, hideTitle, tooltip, id }) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip  }) => {
   const t = useT();
 
   const {
@@ -214,9 +214,6 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, hid
     query,
     language: Language.de,
     label: `${title} ${t('forms.labelGerman') as string}`,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelGerman')}`
-      : `${t('forms.name')} ${t('forms.labelGerman')}`,
     loaded,
     tooltip
   });
@@ -232,9 +229,6 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, hid
     query,
     language: Language.en,
     label: `${title} ${t('forms.labelEnglish') as string}`,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelEnglish')}`
-      : `${t('forms.name')} ${t('forms.labelEnglish')}`,
     loaded,
   });
 
