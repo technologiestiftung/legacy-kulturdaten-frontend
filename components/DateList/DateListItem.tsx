@@ -232,7 +232,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               id={`entryformhead-${uid}`}
             />
             <FormGrid>
-              <FormItem width={isUltraOrWider ? FormItemWidth.full : FormItemWidth.half}>
+              <FormItem alignEnd width={isUltraOrWider ? FormItemWidth.full : FormItemWidth.half}>
                 <Select
                   id={`entryformstatusselect-${uid}`}
                   value={attributes.status}
