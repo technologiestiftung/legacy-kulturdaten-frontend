@@ -273,7 +273,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               <StyledInputLabelContainer lang={props?.lang}>
                 <Label htmlFor={props.id ? props.id : createdId }>
                   {props.label}
-                  {props.required || props.softRequired ? ` (${t('forms.required')})` : ''}
+                  {props.required || props.softRequired ? ` ${t('forms.required')}` : ''}
                 </Label>
                 {props.tooltip && (
                   <StyledTooltip>

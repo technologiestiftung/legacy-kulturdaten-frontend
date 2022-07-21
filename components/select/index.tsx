@@ -311,7 +311,7 @@ export const Select: React.FC<SelectProps> = ({
     <StyledSelectContainer labelPosition={labelPosition}>
       {label && (
         <Label htmlFor={id}>
-          {label} {required ? ` (${t('forms.required')})` : ''}
+          {label} {required ? ` ${t('forms.required')}` : ''}
         </Label>
       )}
       <StyledSelectAndChevron>

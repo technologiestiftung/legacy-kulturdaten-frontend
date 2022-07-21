@@ -1,7 +1,7 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
 import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { Location } from '../../../lib/api/types/location';
@@ -606,6 +606,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
+            <StyledRequiredInfoText/>
             <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{organizerLocationForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{roomForm}</StyledEntryFormContainer>

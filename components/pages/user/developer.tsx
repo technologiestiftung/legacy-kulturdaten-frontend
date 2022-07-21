@@ -1,4 +1,4 @@
-import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
@@ -43,6 +43,7 @@ const UserApiTokens: React.FC = () => {
           title={t('settings.api.titleCreate') as string}
           tooltip={t('settings.api.titleCreateTooltip')}
         />
+        <StyledRequiredInfoText/>
         <form
           onSubmit={(e) => {
             e.preventDefault();

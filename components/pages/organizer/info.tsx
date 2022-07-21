@@ -16,7 +16,7 @@ import { WindowContext } from '../../../lib/WindowService';
 import { Contacts } from '../../Contacts';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
-import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { usePublish } from '../../Publish';
 import { EntryFormHook } from '../helpers/form';
@@ -521,6 +521,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
+            <StyledRequiredInfoText/>
             <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{descriptionForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{contactForm}</StyledEntryFormContainer>

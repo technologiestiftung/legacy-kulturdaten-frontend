@@ -5,7 +5,7 @@ import { useT } from '../../lib/i18n';
 import { passwordMinLength } from '../auth/Register';
 import { ButtonType, ButtonSize, ButtonColor, Button } from '../button';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { StyledEntryFormContainer } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer, StyledRequiredInfoText } from '../EntryForm/wrappers';
 import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
 import { useLoadingScreen } from '../Loading/LoadingScreen';
@@ -68,6 +68,7 @@ export const UserPasswordUpdate: React.FC = () => {
   return (
     <StyledEntryFormContainer>
       <EntryFormHead title={t('settings.password.title') as string} />
+      <StyledRequiredInfoText/>
       {success ? (
         <FormGrid>
           <FormItem width={FormItemWidth.full}>

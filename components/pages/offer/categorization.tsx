@@ -9,7 +9,7 @@ import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { WindowContext } from '../../../lib/WindowService';
 import { Save } from '../../EntryForm/Save';
-import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { Offer } from '../../../lib/api/types/offer';
@@ -77,7 +77,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }}>
         <EntryFormHead
-          title={`${t('categories.offer.form.mainType.title')} (${t('forms.required')})`}
+          title={`${t('categories.offer.form.mainType.title')} ${t('forms.required')}`}
           id={id}
         />
         <FormGrid>
@@ -272,6 +272,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
           valid={loaded !== true || (entryTypeSubjectValid && mainTypeValid)}
         />
         <EntryFormWrapper>
+          <StyledRequiredInfoText/>
           <StyledEntryFormContainer>{mainTypeForm}</StyledEntryFormContainer>
           <StyledEntryFormContainer>{formTypeSubject}</StyledEntryFormContainer>
           <StyledEntryFormContainer>{renderedTagsForm}</StyledEntryFormContainer>

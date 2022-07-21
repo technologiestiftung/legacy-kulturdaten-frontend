@@ -467,7 +467,8 @@ export const deDE: Localization = {
   },
   forms: {
     optional: () => 'optional',
-    required: () => 'Pflichtfeld',
+    required: () => '*',
+    requiredInfoText: () => 'Alle Felder die mit einem * markiert sind, sind Pflichtfelder',
     create: () => 'Neue Anbieter:in anlegen',
     baseInfo: () => 'Grundlagen',
     address: () => 'Adressdaten',

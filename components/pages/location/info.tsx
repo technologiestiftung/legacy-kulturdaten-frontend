@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Location, LocationTranslation, LocationType } from '../../../lib/api/types/location';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
-import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
 import { LocationShow } from '../../../lib/api/routes/location/show';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -660,6 +660,7 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
+            <StyledRequiredInfoText/>
             <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{typeForm}</StyledEntryFormContainer>
             {typeValue === LocationType.physical ? (

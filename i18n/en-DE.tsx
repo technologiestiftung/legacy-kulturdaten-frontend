@@ -462,7 +462,8 @@ export const enDE: Localization = {
   },
   forms: {
     optional: () => 'optional',
-    required: () => 'required',
+    required: () => '*',
+    requiredInfoText: () => 'All fields marked with * are required',
     create: () => 'Create new Organizer',
     baseInfo: () => 'Basic information',
     address: () => 'Address data',

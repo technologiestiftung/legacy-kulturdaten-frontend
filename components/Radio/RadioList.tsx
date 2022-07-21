@@ -94,7 +94,7 @@ export const RadioList: React.FC<RadioListProps> = ({
       <fieldset>
         {label && (
           <StyedRadioListLabel>
-            {label} {required ? ` (${t('forms.required')})` : ''}
+            {label} {required ? ` ${t('forms.required')}` : ''}
           </StyedRadioListLabel>
         )}
         <StyledRadioListItems aria-label={ariaLabel}>

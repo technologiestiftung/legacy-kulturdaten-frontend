@@ -72,7 +72,7 @@ export const FormWrapper: React.FC<FormWrapperProps> = ({
   );
 };
 
-export const FormGrid = styled.div<{ noTopPadding: boolean }>`
+export const FormGrid = styled.div<{ noTopPadding?: boolean }>`
   display: grid;
   grid-row-gap: 1.5rem;
   grid-column-gap: 1.5rem;

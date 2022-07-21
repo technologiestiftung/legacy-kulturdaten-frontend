@@ -153,7 +153,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
       {label && (
         <StyledCheckboxLabel htmlFor={id} disabled={disabled}>
           {label}
-          {required && ` (${t('forms.required')})`}
+          {required && ` ${t('forms.required')}`}
         </StyledCheckboxLabel>
       )}
     </StyledCheckbox>

@@ -119,7 +119,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
       {label && (
         <StyedCheckboxListLabel>
           <legend>
-            {label} {required ? ` (${t('forms.required')})` : ''}
+            {label} {required ? ` ${t('forms.required')}` : ''}
           </legend>
         </StyedCheckboxListLabel>
       )}

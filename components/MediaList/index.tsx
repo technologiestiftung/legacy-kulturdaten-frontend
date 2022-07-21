@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import formatISO9075 from 'date-fns/formatISO9075';
 import Image from 'next/image';
 import { ExternalLink } from 'react-feather';
+import { StyledRequiredInfoText } from '../EntryForm/wrappers';
 import { contentLanguages, languageTranslationKeys } from '../../config/locales';
 import {
   Media,
@@ -363,6 +364,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
           )}
         </StyledMediaListItemThumbnail>
         <StyledMediaListItemFormWrapper>
+          <StyledRequiredInfoText wrapped/>
           <StyledMediaListItemForm>
             {contentLanguages.map((language: Language, index) => {
               const currentTranslation = mediaItem.relations?.translations

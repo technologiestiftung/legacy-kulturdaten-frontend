@@ -241,7 +241,7 @@ export const useDescription = ({
                   <legend>
                     <Label ariaLabel={t('richText.maxCharacters') as string}>
                       {title}
-                      {(required || softRequired) && ` (${t('forms.required')})`}
+                      {(required || softRequired) && ` ${t('forms.required')}`}
                       {tooltip && (
                         <StyledTooltip>
                           <Tooltip>

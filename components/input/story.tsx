@@ -61,7 +61,7 @@ InputNumberStory.storyName = 'Number Input';
 export const InputTelStory: Story = () => (
   <StyledTestWrapper>
     <StyledCell>
-      <Input type={InputType.tel} id="id-2" placeholder="+49 30 1111 2222" label="Telephone" />
+      <Input type={InputType.tel} id="id-2" placeholder="+49 30 1111 2222" label="Telephone" autoComplete="tel"/>
     </StyledCell>
   </StyledTestWrapper>
 );
