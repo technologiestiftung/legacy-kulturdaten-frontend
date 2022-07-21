@@ -343,7 +343,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title={`${t('forms.teaser')}`} size={EntryFormHeadSize.small} />
             <FormGrid>
               {contentLanguagesWithEasy.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
@@ -359,7 +358,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Textarea
                       debounce
                       id={`${uid}-textarea-${language}`}
-                      label={t(languageTranslationKeys[language]) as string}
+                      label={`${t('forms.teaser')} ${t(languageTranslationKeys[language])}`}
                       lang={language.slice(0,2)}
                       tooltip={
                         languageTranslationKeys[language] === 'language.de-easy'
@@ -406,10 +405,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead
-              title={`${t('date.roomInfo')} (${t('forms.optional')})`}
-              size={EntryFormHeadSize.small}
-            />
             <FormGrid>
               {contentLanguages.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
