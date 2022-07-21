@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../../lib/WindowService';
-import { mq } from '../../globals/Constants';
+import { mq, focusStyles, focusBlackStyles } from '../../globals/Constants';
 import { css } from '@emotion/react';
 
 const StyledTabs = styled.nav`
@@ -77,6 +77,14 @@ const StyledTabLink = styled.a<{
   }
 
   z-index: ${({ itemCount, index }) => itemCount - index};
+
+
+  &:focus {
+    border: 3px blue solid;
+    padding-top: calc(0.75rem - 3px);
+    margin-bottom: -4px;
+    box-shadow: inset 0 0 0 2px var(--white);
+  }
 
   ${({ isActive, itemCount }) =>
     isActive

@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { appLayouts, Layouts } from '../../layouts/AppLayout';
 import { useAppTitle } from '../../../config/structure';
 import { UserContext } from '../../user/UserContext';
-import { focusStyles } from '../../globals/Constants'
+import { focusStyles } from '../../globals/Constants';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
