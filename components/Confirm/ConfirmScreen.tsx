@@ -194,6 +194,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
   const [inputPristine, setInputPristine] = useState(true);
 
   const confirmButtonRef = useRef(null);
+  const conditionInputRef = useRef(null);
 
   const conditionValid = useMemo(
     () => conditionValue === condition?.value,
@@ -201,7 +202,11 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
   );
 
   useEffect(() => {
-    confirmButtonRef.current.focus()
+    if(condition) {
+      conditionInputRef.current.focus()
+    } else {
+      confirmButtonRef.current.focus()
+    }
   })
 
   return (
@@ -215,6 +220,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
         {condition && (
           <StyledConfirmScreenCondition>
             <Input
+              ref={conditionInputRef}
               type={InputType.text}
               value={conditionValue}
               label={condition.label}
@@ -242,7 +248,8 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
 export const useConfirmScreen = (): ((props: {
   title: React.ReactNode | string;
   message: React.ReactNode | string;
-  confirmButtonText: string;
+  confirmButtonText?: string;
+  confirmText?: string;
   onConfirm: () => Promise<void>;
   condition?: ConfirmCondition;
 }) => void) => {
