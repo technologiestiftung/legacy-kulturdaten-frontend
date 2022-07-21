@@ -16,7 +16,7 @@ import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/v
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Label } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
@@ -131,6 +131,8 @@ const StyledInput = styled.input<{
   &::placeholder {
     opacity: 1;
   }
+
+  ${focusStyles}
 `;
 
 export enum InputType {

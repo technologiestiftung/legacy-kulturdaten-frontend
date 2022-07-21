@@ -7,6 +7,8 @@ import { inputStyles } from '../input';
 import { Label, StyledLabel } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
+import { focusStyles } from '../globals/Constants';
+
 
 const StyledTextareaContainer = styled.div`
   display: flex;
@@ -23,6 +25,7 @@ const StyledTextarea = styled.textarea<{ pristine?: boolean; valid?: boolean }>`
   &::placeholder {
     opacity: 1;
   }
+  ${focusStyles}
 `;
 
 const StyledTooltip = styled.div`

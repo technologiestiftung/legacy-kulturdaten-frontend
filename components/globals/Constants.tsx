@@ -200,3 +200,17 @@ export const overlayStyles = css`
   background: #000;
   opacity: var(--overlay-opacity);
 `;
+
+export const focusStyles = css`
+  &:focus {
+    outline: solid blue 3px;
+  }
+`;
+
+export const focusBlackStyles = css`
+  &:focus {
+    outline: solid blue 3px;
+    border: 1px solid white;
+    margin: -1px;
+  }
+`;

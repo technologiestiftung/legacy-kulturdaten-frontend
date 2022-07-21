@@ -5,7 +5,7 @@ import { useT } from '../../lib/i18n';
 
 import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq,focusStyles } from '../globals/Constants';
 
 const StyledDashboardLinkList = styled.div`
   font-size: var(--font-size-300);
@@ -61,6 +61,7 @@ const StyledDashboardLinkListLink = styled.a`
   column-gap: 0.375rem;
   flex-grow: 0;
   position: relative;
+  ${focusStyles}
 
   @media screen and (pointer: fine) {
     &:hover {

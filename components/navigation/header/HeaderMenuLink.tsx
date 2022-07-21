@@ -6,6 +6,7 @@ import * as feather from 'react-feather';
 import { useIsRouteStringActive } from '../../../lib/routing';
 import { css } from '@emotion/react';
 import { NavigationContext } from '../NavigationContext';
+import { focusBlackStyles, focusStyles } from '../../globals/Constants'
 
 const StyledA = styled.a<{ active?: boolean; disabled?: boolean }>`
   color: inherit;
@@ -23,6 +24,8 @@ const StyledA = styled.a<{ active?: boolean; disabled?: boolean }>`
   font-weight: 700;
   transition: background var(--transition-duration-fast);
 
+  ${focusStyles}
+  
   &:hover {
     background: var(--grey-400);
   }
@@ -42,9 +45,13 @@ const StyledA = styled.a<{ active?: boolean; disabled?: boolean }>`
     active
       ? css`
           background: var(--black);
+          ${focusBlackStyles}
           border-color: var(--black);
           color: var(--white);
 
+          &:focus {
+            margin: 0;
+          }
           &:hover {
             background: var(--black);
           }

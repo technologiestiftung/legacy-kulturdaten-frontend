@@ -5,6 +5,7 @@ import * as feather from 'react-feather';
 import { insetBorderColored } from '../globals/Constants';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { MouseTooltip } from '../MouseTooltip';
+import { focusStyles, focusBlackStyles } from '../globals/Constants';
 
 export enum ButtonColor {
   default = 'default',
@@ -269,6 +270,9 @@ const StyledButton = styled.button<{
   padding: 0;
   cursor: pointer;
   overflow: hidden;
+
+  ${({ color }) => buttonColors[color].background === 'var(--black)' ? focusBlackStyles : focusStyles}
+  
 
   ${({ variant }) => buttonVariants[variant]}
 
