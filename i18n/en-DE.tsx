@@ -462,7 +462,8 @@ export const enDE: Localization = {
   },
   forms: {
     optional: () => 'optional',
-    required: () => 'required',
+    required: () => '*',
+    requiredInfoText: () => 'All fields marked with * are required',
     create: () => 'Create new Organizer',
     baseInfo: () => 'Basic information',
     address: () => 'Address data',
@@ -502,7 +503,8 @@ export const enDE: Localization = {
     labelEnglish: () => 'English',
     labelEnglishEasy: () => 'English: simple Language',
     description: () => 'Description',
-    teaser: () => 'Short description (optional, max. 150 characters)',
+    teaser: () => 'Short description',
+    teaserCount: () => '(optional, max. 150 characters)',
     classification: () => 'Type of organizer / field of focus (min. 1)',
     type: () => 'Type(s)',
     subjects: () => 'additional options',
@@ -630,6 +632,7 @@ export const enDE: Localization = {
   },
   media: {
     title: () => 'Images',
+    image: () => 'Image',
     copyright: () => 'Image credits / author',
     copyrightPlaceholder: () => 'e.g. © name of photographer, year of publication',
     copyrightTooltip: () => (
@@ -752,6 +755,15 @@ export const enDE: Localization = {
     time: () => 'Time',
     from: () => 'From',
     to: () => 'to',
+    fromMorePrecise: () => 'Beginning',
+    toMorePrecise: () => 'End',
+    fromAria: () => 'Beginning of event: date and time',
+    toAria: () => 'End of event: date and time',
+    fromAriaDate: () => 'Beginning of event: date',
+    toAriaDate: () => 'End of event: date',
+    fromAriaTime: () => 'Beginning of event: time',
+    toAriaTime: () => 'End of event: time',
+    for: () => 'for',
     title: () => 'Additional title',
     titleTooltip: () =>
       "You can add further title information to particular dates of this offer, e.g.  'vernissage ' or  'artist is present'",

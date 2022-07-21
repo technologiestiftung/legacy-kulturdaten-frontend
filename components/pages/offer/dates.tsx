@@ -388,90 +388,90 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         <StyledEntryFormContainer>{isPermanentForm}</StyledEntryFormContainer>
         {!isPermanentValue && (
           <>
-            <StyledEntryFormContainer>
-              <EntryFormHead title={t('date.currentDates') as string} />
-              <FormGrid>
-                <FormItem width={FormItemWidth.full}>
-                  <DateCreate
-                    onSubmit={async (date, recurrence) => {
-                      loadingScreen(
-                        t('dateCreate.loading'),
-                        async () => {
-                          try {
-                            const filteredTranslations = date.relations?.translations?.filter(
-                              (translation) =>
-                                translation?.attributes.name?.length > 0 ||
-                                translation?.attributes.roomDescription?.length > 0 ||
-                                translation?.attributes.teaser?.length > 0
-                            );
+          <StyledEntryFormContainer>
+              <EntryFormHead title={`${t('date.currentDates')} ${t('date.for')} ${renderedEntryHeader.props.children.props.title}`} />
+                <FormGrid>
+                  <FormItem width={FormItemWidth.full}>
+                    <DateCreate
+                      onSubmit={async (date, recurrence) => {
+                        loadingScreen(
+                          t('dateCreate.loading'),
+                          async () => {
+                            try {
+                              const filteredTranslations = date.relations?.translations?.filter(
+                                (translation) =>
+                                  translation?.attributes.name?.length > 0 ||
+                                  translation?.attributes.roomDescription?.length > 0 ||
+                                  translation?.attributes.teaser?.length > 0
+                              );
 
-                            const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
-                              offerId: entry.data.id,
-                              date: {
-                                ...date,
-                                attributes: {
-                                  ...date.attributes,
+                              const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
+                                offerId: entry.data.id,
+                                date: {
+                                  ...date,
+                                  attributes: {
+                                    ...date.attributes,
+                                  },
+                                  relations: {
+                                    ...date.relations,
+                                    translations:
+                                      filteredTranslations.length > 0
+                                        ? filteredTranslations
+                                        : undefined,
+                                  },
+                                  meta: recurrence
+                                    ? {
+                                        recurrenceRule: recurrence,
+                                        startsAt: date?.attributes?.startsAt,
+                                        endsAt: date?.attributes?.endsAt,
+                                      }
+                                    : undefined,
                                 },
-                                relations: {
-                                  ...date.relations,
-                                  translations:
-                                    filteredTranslations.length > 0
-                                      ? filteredTranslations
-                                      : undefined,
-                                },
-                                meta: recurrence
-                                  ? {
-                                      recurrenceRule: recurrence,
-                                      startsAt: date?.attributes?.startsAt,
-                                      endsAt: date?.attributes?.endsAt,
-                                    }
-                                  : undefined,
-                              },
-                            });
+                              });
 
-                            if (resp.status === 200) {
-                              mutateDateList();
-                              return { success: true };
+                              if (resp.status === 200) {
+                                mutateDateList();
+                                return { success: true };
+                              }
+                            } catch (e) {
+                              console.error(e);
+                              return { success: false, error: t('general.serverProblem') };
                             }
-                          } catch (e) {
-                            console.error(e);
-                            return { success: false, error: t('general.serverProblem') };
-                          }
-                        },
-                        t('general.takeAFewSeconds')
-                      );
-                    }}
-                    offerTitles={offerTitles}
-                    submitDelay={500}
-                  />
-                </FormItem>
-                <ScrollContainer>
-                  {renderedDateList}
-                </ScrollContainer>
-                <FormItem width={FormItemWidth.full}>
-                  {metaDateList?.pages?.lastPage > 1 && (
-                    <EntryListPagination
-                      currentPage={currentPage}
-                      lastPage={metaDateList.pages.lastPage}
-                      totalEntries={metaDateList.pages.total}
-                      entriesPerPage={entriesPerPage}
-                      nextPage={() =>
-                        currentPage < metaDateList.pages.lastPage
-                          ? setCurrentPage(currentPage + 1)
-                          : undefined
-                      }
-                      previousPage={() =>
-                        currentPage > 1 ? setCurrentPage(currentPage - 1) : undefined
-                      }
-                      goToPage={(index: number) =>
-                        index <= metaDateList.pages.lastPage ? setCurrentPage(index) : undefined
-                      }
-                      expanded={true}
-                      noHorizontalPadding
+                          },
+                          t('general.takeAFewSeconds')
+                        );
+                      }}
+                      offerTitles={offerTitles}
+                      submitDelay={500}
                     />
-                  )}
-                </FormItem>
-              </FormGrid>
+                  </FormItem>
+                  <ScrollContainer>
+                    {renderedDateList}
+                  </ScrollContainer>
+                  <FormItem width={FormItemWidth.full}>
+                    {metaDateList?.pages?.lastPage > 1 && (
+                      <EntryListPagination
+                        currentPage={currentPage}
+                        lastPage={metaDateList.pages.lastPage}
+                        totalEntries={metaDateList.pages.total}
+                        entriesPerPage={entriesPerPage}
+                        nextPage={() =>
+                          currentPage < metaDateList.pages.lastPage
+                            ? setCurrentPage(currentPage + 1)
+                            : undefined
+                        }
+                        previousPage={() =>
+                          currentPage > 1 ? setCurrentPage(currentPage - 1) : undefined
+                        }
+                        goToPage={(index: number) =>
+                          index <= metaDateList.pages.lastPage ? setCurrentPage(index) : undefined
+                        }
+                        expanded={true}
+                        noHorizontalPadding
+                      />
+                    )}
+                  </FormItem>
+                </FormGrid>
             </StyledEntryFormContainer>
             <StyledEntryFormContainer>
               <EntryFormHead

@@ -183,10 +183,7 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
     category,
     query,
     language: Language.de,
-    label: t('forms.labelGerman') as string,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelGerman')}`
-      : `${t('forms.teaser')} ${t('forms.labelGerman')}`,
+    label: `${t('forms.teaser')} ${t('forms.labelGerman')} ${t('forms.teaserCount')}`,
     loaded,
   });
 
@@ -200,11 +197,8 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
     category,
     query,
     language: 'de-easy' as Language,
-    label: t('forms.labelGermanEasy') as string,
+    label: `${t('forms.teaser')} ${t('forms.labelGermanEasy')} ${t('forms.teaserCount')}`,
     tooltip: t('forms.labelGermanEasyTooltip') as string,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelGermanEasy')}`
-      : `${t('forms.teaser')} ${t('forms.labelGermanEasy')}`,
     loaded,
   });
 
@@ -218,10 +212,7 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
     category,
     query,
     language: Language.en,
-    label: t('forms.labelEnglish') as string,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelEnglish')}`
-      : `${t('forms.teaser')} ${t('forms.labelEnglish')}`,
+    label: `${t('forms.teaser')} ${t('forms.labelEnglish')} ${t('forms.teaserCount')}`,
     loaded,
   });
 
@@ -238,7 +229,6 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={title || `${t('forms.teaser') as string}`} valid={valid} />
         <FormGrid>
           <FormItem width={FormItemWidth.full} lang="de">{setTeaserGerman}</FormItem>
           <FormItem width={FormItemWidth.full} lang="en">{setTeaserEnglish}</FormItem>

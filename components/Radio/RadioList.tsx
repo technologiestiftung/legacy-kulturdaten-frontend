@@ -34,16 +34,14 @@ const StyledRadioListItems = styled.ul`
 const StyledRadioListItem = styled.li`
   display: inline-flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
-const StyledRadioListItemLink = styled.div`
+const StyledRadioListItemLinkA = styled.a`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0 0 0 0.75rem;
   flex-shrink: 0;
-`;
-
-const StyledRadioListItemLinkA = styled.a`
   color: inherit;
   overflow-wrap: anywhere;
   word-break: break-word;
@@ -96,7 +94,7 @@ export const RadioList: React.FC<RadioListProps> = ({
       <fieldset>
         {label && (
           <StyedRadioListLabel>
-            {label} {required ? ` (${t('forms.required')})` : ''}
+            {label} {required ? ` ${t('forms.required')}` : ''}
           </StyedRadioListLabel>
         )}
         <StyledRadioListItems aria-label={ariaLabel}>
@@ -116,17 +114,15 @@ export const RadioList: React.FC<RadioListProps> = ({
                 )}
               />
               {option.link && (
-                <StyledRadioListItemLink>
-                  <StyledRadioListItemLinkA
-                    href={option.link.href}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    title={option.link.title}
-                    aria-label={option.link.title}
-                  >
-                    <ExternalLink aria-hidden />
-                  </StyledRadioListItemLinkA>
-                </StyledRadioListItemLink>
+                <StyledRadioListItemLinkA
+                  href={option.link.href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  title={option.link.title}
+                  aria-label={option.link.title}
+                >
+                  <ExternalLink aria-hidden />
+                </StyledRadioListItemLinkA>
               )}
             </StyledRadioListItem>
           ))}

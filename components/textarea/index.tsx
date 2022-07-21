@@ -76,7 +76,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
       {props.label && (
         <Label htmlFor={props.id}>
           {props.label}
-          {props.required ? ` (${t('forms.required')})` : ''}
+          {props.required ? ` ${t('forms.required')}` : ''}
           {props.tooltip && (
             <StyledTooltip>
               <Tooltip>

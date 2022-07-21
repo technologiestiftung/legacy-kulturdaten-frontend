@@ -1,6 +1,6 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useEntryHeader } from '../helpers/useEntryHeader';
-import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { offerAudience } from '../../../config/audience';
 import {
   genericFormActionInit,
@@ -363,6 +363,7 @@ export const OfferAudiencePage: React.FC<CategoryEntryPage> = ({
 
           {audienceForm}
           <EntryFormWrapper>
+            <StyledRequiredInfoText/>
             <StyledEntryFormContainer>{peakHoursForm}</StyledEntryFormContainer>
           </EntryFormWrapper>
         </div>
