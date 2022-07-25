@@ -6,6 +6,7 @@ import React, { RefObject, useMemo, useRef, useState } from 'react';
 import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
 import { MouseTooltip } from '../../MouseTooltip';
+import { focusStyles } from '../../globals/Constants'
 
 const StyledOrganizerBandItemLogo = styled.span<{
   active: boolean;
@@ -54,6 +55,7 @@ const StyledOrganizerBandItem = styled.a<{
   flex-direction: row;
   justify-content: center;
   column-gap: 0.75rem;
+  ${focusStyles}
   background: ${({ adminModeActive }) =>
     adminModeActive ? 'rgba(255,255,255,0.25)' : 'var(--grey-200)'};
   border-radius: 0.75rem;

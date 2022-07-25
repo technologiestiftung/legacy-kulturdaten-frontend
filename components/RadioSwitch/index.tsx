@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import * as feather from 'react-feather';
 import { Label, StyledLabel } from '../label';
+import { focusStyles } from '../globals/Constants';
 
 const StyledRadioSwitch = styled.div<{ labelPosition: RadioSwitchLabelPosition }>`
   display: flex;
@@ -62,6 +63,7 @@ const StyledRadioSwitchOptionInput = styled.input`
   border-radius: 1rem;
   pointer-events: none;
   flex-shrink: 0;
+  ${focusStyles}
 
   &::after {
     content: '';

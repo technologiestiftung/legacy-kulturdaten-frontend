@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { ChangeEventHandler } from 'react';
 import { Check } from 'react-feather';
+import { focusStyles } from '../globals/Constants';
 
 const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
 
@@ -26,6 +27,8 @@ const StyledRadioInput = styled.input<{ softRequired?: boolean; valid?: boolean 
     box-shadow: none;
     background: var(--grey-350);
   }
+
+  ${focusStyles}
 
   ${({ softRequired, valid }) =>
     valid === false &&

@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { ChangeEvent, ChangeEventHandler, useState } from 'react';
 import { Check } from 'react-feather';
 import { useT } from '../../lib/i18n';
+import { focusStyles } from '../globals/Constants';
 
 const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
 
@@ -21,6 +22,7 @@ const StyledCheckboxInput = styled.input<{ valid?: boolean }>`
   padding: 0;
   transition: border var(--transition-duration);
   cursor: inherit;
+  ${focusStyles}
 
   &:disabled {
     border: none;

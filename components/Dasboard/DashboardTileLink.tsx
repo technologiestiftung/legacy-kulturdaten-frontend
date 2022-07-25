@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { ArrowRight, ArrowUpRight, Plus } from 'react-feather';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
@@ -25,6 +25,7 @@ const StyledDashboardTileLink = styled.a<{ disabled?: boolean }>`
   margin: 0;
   cursor: pointer;
   background: var(--white);
+  ${focusStyles}
 
   &:hover {
     background: var(--grey-200);

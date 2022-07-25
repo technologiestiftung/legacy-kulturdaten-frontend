@@ -117,13 +117,6 @@ const MenuSlot = styled.div<{ expanded?: boolean; hasOrganizerBand: boolean }>`
   /* overflow: hidden; */
   width: 100%;
 
-  filter: grayscale(1);
-  transform: filter 0.1s;
-
-  &:hover {
-    filter: grayscale(0);
-  }
-
   ${({ hasOrganizerBand, expanded }) => {
     const width = hasOrganizerBand ? '100% - var(--organizer-band-width)' : '100%';
 

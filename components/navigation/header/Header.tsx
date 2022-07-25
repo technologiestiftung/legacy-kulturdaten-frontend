@@ -19,6 +19,7 @@ import { useRouter } from 'next/router';
 import { appLayouts, Layouts } from '../../layouts/AppLayout';
 import { useAppTitle } from '../../../config/structure';
 import { UserContext } from '../../user/UserContext';
+import { focusStyles } from '../../globals/Constants';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -51,7 +52,10 @@ const StyledLink = styled.a`
   padding: 0.75rem;
   max-width: 100%;
   white-space: nowrap;
-  overflow: hidden;
+  overflow: visible;
+
+  ${focusStyles}
+
 
   ${mq(Breakpoint.mid)} {
     padding: 1.125rem 0.375rem 1.125rem 0.75rem;

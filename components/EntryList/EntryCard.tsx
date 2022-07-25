@@ -6,12 +6,14 @@ import { PublishedStatus } from '../../lib/api/types/general';
 import { DateFormat, useDate } from '../../lib/date';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { StatusFlag } from '../Status/StatusFlag';
 
 const StyledEntryCardLink = styled.a`
   text-decoration: none;
   color: inherit;
+  border-radius: 0.75rem;
+  ${focusStyles}
 `;
 
 const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
@@ -26,15 +28,21 @@ const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; for
     border-color: rgba(0, 0, 0, 0.5);
   }
 
+
   ${({ active }) =>
     active
       ? css`
           box-shadow: var(--shadow-sharp-active);
           border-color: rgba(0, 0, 0, 1);
 
+          &:focus {
+            box-shadow: none;
+            border-color: none;
+          }
+
           &:hover {
-            box-shadow: var(--shadow-sharp-active);
-            border-color: rgba(0, 0, 0, 1);
+            box-shadow: var(--shadow-sharp-hover);
+            border-color: rgba(0, 0, 0, 0.5);
           }
         `
       : ''}

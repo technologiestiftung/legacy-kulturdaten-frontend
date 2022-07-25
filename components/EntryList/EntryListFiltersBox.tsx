@@ -5,7 +5,7 @@ import { ChevronDown } from 'react-feather';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { useCollapsable } from '../collapsable';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 
 const StyledFiltersBox = styled.div<{ expanded: boolean }>`
   ${({ expanded }) =>
@@ -113,6 +113,8 @@ const StyledFiltersBoxTitleButton = styled.button<{ isCollapsed: boolean }>`
   color: var(--black);
   margin: 2px;
   border-radius: 0.75rem;
+
+  ${focusStyles}
 
   ${mq(Breakpoint.wide)} {
     padding: calc(0.75rem - 2px) calc(1.5rem - 2px);

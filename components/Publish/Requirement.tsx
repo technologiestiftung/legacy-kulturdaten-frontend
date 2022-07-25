@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Check } from 'react-feather';
 import Link from 'next/link';
+import { focusStyles } from '../globals/Constants';
 
 const StyledRequirement = styled.span<{ fulfilled: boolean; hasLink?: boolean }>`
   background: ${({ fulfilled }) => (fulfilled ? 'var(--white-green-o50)' : 'var(--white-red)')};
@@ -75,6 +76,8 @@ export const StyledRequirementMark = styled.span<{ fulfilled: boolean }>`
 const StyledRequirementLink = styled.a`
   text-decoration: none;
   color: inherit;
+
+  ${focusStyles}
 `;
 
 export interface RequirementProps {

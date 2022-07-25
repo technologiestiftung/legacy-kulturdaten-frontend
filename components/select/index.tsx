@@ -6,7 +6,7 @@ import * as feather from 'react-feather';
 import { ComponentVariant, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 
 import { Label, StyledLabel } from '../label';
 
@@ -229,6 +229,8 @@ const StyledSelect = styled.select<{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  ${focusStyles}
 
   ${({ variant, valid }) => selectVariants[variant](valid)}
 `;

@@ -5,7 +5,7 @@ import { ArrowDown, ArrowUp } from 'react-feather';
 import { Order } from '../../lib/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { insetBorder, mq } from '../globals/Constants';
+import { insetBorder, mq, focusStyles, focusBlackStyles } from '../globals/Constants';
 
 const StyledTable = styled.div`
   display: grid;
@@ -89,6 +89,8 @@ export const StyledCellSort = styled.button<{ active: boolean }>`
   box-shadow: none;
   color: inherit;
 
+  ${focusStyles}
+
   ${mq(Breakpoint.ultra)} {
     margin-left: 0;
   }
@@ -111,6 +113,10 @@ export const StyledCellSort = styled.button<{ active: boolean }>`
     css`
       background: var(--black);
       color: var(--white);
+      ${focusBlackStyles}
+      :focus {
+        margin-left: calc(-0.375rem - 1px)
+      }
 
       &:hover {
         transform: perspective(40px) translateZ(1px);

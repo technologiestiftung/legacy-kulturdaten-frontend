@@ -78,6 +78,15 @@ const StyledTabLink = styled.a<{
 
   z-index: ${({ itemCount, index }) => itemCount - index};
 
+
+  &:focus {
+    border: 3px blue solid;
+    padding-top: calc(0.75rem - 3px);
+    margin: 0 -2px;
+    margin-bottom: -4px;
+    box-shadow: inset 0 0 0 2px var(--white);
+  }
+
   ${({ isActive, itemCount }) =>
     isActive
       ? css`
