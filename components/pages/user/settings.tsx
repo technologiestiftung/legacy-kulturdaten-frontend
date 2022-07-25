@@ -1,4 +1,4 @@
-import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
@@ -25,7 +25,6 @@ export const UserSettingsPage: React.FC = () => {
         <EntryFormWrapper>
           {!acceptedTerms && <Terms />}
           <UserPasswordUpdate />
-          <StyledRequiredInfoText/>
           <StyledEntryFormContainer>
             <EntryFormHead
               title={t('menu.localeSwitch.label') as string}

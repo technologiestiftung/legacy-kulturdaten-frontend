@@ -5,7 +5,7 @@ import { ChevronDown } from 'react-feather';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
 
@@ -21,6 +21,7 @@ const StyledEntryFormHead = styled.div<{
   flex-wrap: wrap;
   padding: 0;
   color: inherit;
+  ${focusStyles}
 
   ${({ addPadding }) =>
     addPadding

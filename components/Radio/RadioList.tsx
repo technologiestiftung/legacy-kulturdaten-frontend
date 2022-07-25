@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { Radio } from '.';
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { ExternalLink } from 'react-feather';
 
@@ -47,6 +47,8 @@ const StyledRadioListItemLinkA = styled.a`
   word-break: break-word;
   display: inline-flex;
   align-items: center;
+
+  ${focusStyles}
 
   svg {
     padding: 0.1875rem 0;

@@ -272,7 +272,9 @@ const StyledButton = styled.button<{
   overflow: hidden;
 
   ${({ color }) => buttonColors[color].background === 'var(--black)' ? focusBlackStyles : focusStyles}
-  
+  :focus {
+    margin: 0;
+  }
 
   ${({ variant }) => buttonVariants[variant]}
 

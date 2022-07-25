@@ -6,7 +6,7 @@ import React, { RefObject, useMemo, useRef, useState } from 'react';
 import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
 import { MouseTooltip } from '../../MouseTooltip';
-import {focusStyles} from '../../globals/Constants'
+import { focusStyles } from '../../globals/Constants'
 
 const StyledOrganizerBandItemLogo = styled.span<{
   active: boolean;

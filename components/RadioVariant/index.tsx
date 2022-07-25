@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Check } from 'react-feather';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 
 const StyledRadioVariant = styled.div`
   display: flex;
@@ -49,6 +49,8 @@ const StyledRadioVariantOptionInput = styled.input`
   border: 1px solid var(--grey-400);
   border-radius: 1rem;
   pointer-events: none;
+
+  ${focusStyles}
 `;
 
 const StyledRadioVariantOptionCheck = styled.div<{ active: boolean }>`
