@@ -203,13 +203,13 @@ export const overlayStyles = css`
 
 export const focusStyles = css`
   &:focus {
-    outline: solid blue 3px;
+    outline: solid #275EC5 3px;
   }
 `;
 
 export const focusBlackStyles = css`
   &:focus {
-    outline: solid blue 3px;
+    outline: solid #275EC5 3px;
     border: 1px solid white;
     margin: -1px;
   }

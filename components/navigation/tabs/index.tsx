@@ -80,7 +80,7 @@ const StyledTabLink = styled.a<{
 
 
   &:focus {
-    border: 3px blue solid;
+    border: 3px #275EC5 solid;
     padding-top: calc(0.75rem - 3px);
     margin: 0 -2px;
     margin-bottom: -4px;
