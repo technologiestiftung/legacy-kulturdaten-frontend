@@ -109,7 +109,6 @@ export const useAdminMode = (): {
   const { reset: resetEntryList } = useContext(EntryListContext);
 
   const quit = useCallback(() => {
-    loadingScreen(t('admin.quit'), async () => {
       setActiveOrganizerId(undefined);
       setAdminModeActive(false);
       resetEntryList();
@@ -117,12 +116,10 @@ export const useAdminMode = (): {
       setTimeout(() => router.push(routes.admin({ locale })), 250);
 
       return { success: true };
-    });
-  }, [t, resetEntryList, loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]);
+  }, [ resetEntryList, router, locale, setAdminModeActive, setActiveOrganizerId]);
 
   const start = useCallback(
     (organizerId: string) => {
-      loadingScreen(t('admin.start'), async () => {
         setAdminModeActive(true);
         setActiveOrganizerId(organizerId);
         resetEntryList();
@@ -136,9 +133,8 @@ export const useAdminMode = (): {
         );
 
         return { success: true };
-      });
     },
-    [t, resetEntryList, loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]
+    [ resetEntryList, router, locale, setAdminModeActive, setActiveOrganizerId]
   );
 
   return {

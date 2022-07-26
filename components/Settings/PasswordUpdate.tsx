@@ -83,9 +83,8 @@ export const UserPasswordUpdate: React.FC = () => {
             setErrors([]);
 
             if (valid) {
-              loadingScreen(t('settings.password.loading'), async () => {
                 try {
-                  await call<UserUpdate>(userUpdateFactory, {
+                  call<UserUpdate>(userUpdateFactory, {
                     user: {
                       attributes: {
                         password: oldPassword,
@@ -123,7 +122,6 @@ export const UserPasswordUpdate: React.FC = () => {
                   ]);
                   return { success: false, error: <Info>{visibleError}</Info> };
                 }
-              });
             }
           }}
         >

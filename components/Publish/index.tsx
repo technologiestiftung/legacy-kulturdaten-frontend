@@ -229,9 +229,6 @@ export const Publish: React.FC<PublishProps> = ({
               `}
             `}
             onClick={async () => {
-              loadingScreen(
-                t('publish.loadingTitle', { categoryName: category.title.singular }),
-                async () => {
                   try {
                     try {
                       await onPublish();
@@ -261,10 +258,7 @@ export const Publish: React.FC<PublishProps> = ({
                     console.error(e);
                     return { success: false, error: t('general.serverProblem') };
                   }
-                },
-                t('general.takeAFewSeconds'),
-                1000
-              );
+
             }}
           >
             {t('general.publish')}

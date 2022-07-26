@@ -348,11 +348,7 @@ export const OfferList: React.FC<OfferListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.offer.form.create'),
-                async () => await createOffer(),
-                t('general.takeAFewSeconds')
-              );
+              await createOffer()
             }}
           >
             {t('categories.offer.form.create')}

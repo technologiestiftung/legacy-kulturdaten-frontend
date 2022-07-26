@@ -240,8 +240,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   );
 
   const logout = useCallback(async () => {
-    loadingScreen(
-      t('logout.loading'),
       async () => {
         logoutUser();
 
@@ -250,10 +248,8 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
         }, 500);
 
         return { success: true };
-      },
-      t('logout.loadingMessage')
-    );
-  }, [loadingScreen, locale, logoutUser, router, t]);
+      }
+  }, [ locale, logoutUser, router, t]);
 
   return (
     <UserContext.Provider

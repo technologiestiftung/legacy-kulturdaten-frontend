@@ -383,11 +383,8 @@ export const LocationList: React.FC<LocationListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.location.form.create'),
-                async () => await createLocation(),
+              createLocation(),
                 t('general.takeAFewSeconds')
-              );
             }}
           >
             {t('categories.location.form.create')}

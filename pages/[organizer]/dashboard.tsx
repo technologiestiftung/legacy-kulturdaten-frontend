@@ -170,15 +170,9 @@ const DashboardStartTileRow: React.FC = () => {
           link={
             <DashboardTileButton
               title={t('dashboard.info.start.organizer.button') as string}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.organizer.form.create'),
-                  async () => {
+              onClick={async() => {
                     const resp = await createOrganizer();
                     return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
               }}
             />
           }
@@ -201,15 +195,9 @@ const DashboardStartTileRow: React.FC = () => {
             <DashboardTileButton
               title={t('dashboard.info.start.location.button') as string}
               disabled={organizerId === defaultOrganizerId}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.location.form.create'),
-                  async () => {
+              onClick={async() => {
                     const resp = await createLocation();
                     return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
               }}
             />
           }
@@ -232,15 +220,9 @@ const DashboardStartTileRow: React.FC = () => {
             <DashboardTileButton
               title={t('dashboard.info.start.offer.button') as string}
               disabled={organizerId === defaultOrganizerId}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.offer.form.create'),
-                  async () => {
+              onClick={async() => {
                     const resp = await createOffer();
                     return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
               }}
             />
           }

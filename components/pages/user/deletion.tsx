@@ -67,8 +67,7 @@ const CancelDeletionComponent: React.FC = () => {
               <Button
                 size={ButtonSize.big}
                 color={ButtonColor.black}
-                onClick={() => {
-                  loadingScreen('Löschung abbrechen', async () => {
+                onClick={async() =>  {
                     try {
                       const resp = await call<UserUpdate>(userUpdateFactory, {
                         user: {
@@ -102,7 +101,6 @@ const CancelDeletionComponent: React.FC = () => {
 
                       return { success: false, error: t('general.serverProblem') };
                     }
-                  });
                 }}
               >
                 {t('settings.requestedDeletion.button')}

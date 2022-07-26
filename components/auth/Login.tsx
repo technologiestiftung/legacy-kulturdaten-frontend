@@ -56,7 +56,6 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
 
     if (formRef.current?.checkValidity()) {
-      loadingScreen(t('login.loading'), async () => {
         try {
           const resp = await call<AuthLogin>(authLoginFactory, {
             body: { email, password },
@@ -95,7 +94,6 @@ export const LoginForm: React.FC = () => {
           setError(visibleError);
           return { success: false, error: <Info>{visibleError}</Info> };
         }
-      });
     }
   };
 

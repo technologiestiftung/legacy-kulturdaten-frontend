@@ -168,7 +168,6 @@ export const useEntryHeader = (
                           }
                         : undefined,
                       onConfirm: async () => {
-                        loadingScreen(category?.options?.deletion.deleting, async () => {
                           switch (category.name) {
                             case Categories.organizer: {
                               const deleteResp = await deleteOrganizer(entry?.data?.id);
@@ -176,16 +175,15 @@ export const useEntryHeader = (
                                 quit();
                               }
 
-                              return deleteResp;
+                              deleteResp;
                             }
                             case Categories.offer: {
-                              return await deleteOffer(entry?.data?.id);
+                              deleteOffer(entry?.data?.id);
                             }
                             case Categories.location: {
-                              return await deleteLocation(entry?.data?.id);
+                              deleteLocation(entry?.data?.id);
                             }
                           }
-                        });
                       },
                     });
                   }}

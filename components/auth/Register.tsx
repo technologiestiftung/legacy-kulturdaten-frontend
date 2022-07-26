@@ -70,9 +70,6 @@ export const RegisterForm: React.FC = () => {
     setErrors([]);
 
     if (passwordsMatch) {
-      loadingScreen(
-        t('register.loading'),
-        async () => {
           try {
             await call<AuthRegister>(authRegisterFactory, {
               body: {
@@ -104,9 +101,6 @@ export const RegisterForm: React.FC = () => {
             ]);
             return { success: false, error: <Info>{visibleError}</Info> };
           }
-        },
-        t('general.takeAFewSeconds')
-      );
     }
   };
 

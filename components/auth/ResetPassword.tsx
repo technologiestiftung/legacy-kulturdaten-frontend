@@ -72,9 +72,6 @@ export const ResetPasswordForm: React.FC = () => {
     setErrors([]);
 
     if (passwordsMatch && email && signature) {
-      loadingScreen(
-        t('resetPassword.loading'),
-        async () => {
           try {
             await call<AuthResetPassword>(authResetPasswordFactory, {
               body: {
@@ -107,9 +104,6 @@ export const ResetPasswordForm: React.FC = () => {
             ]);
             return { success: false, error: <Info>{visibleError}</Info> };
           }
-        },
-        t('general.takeAFewSeconds')
-      );
     }
   };
 

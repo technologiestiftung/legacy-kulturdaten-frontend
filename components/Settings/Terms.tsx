@@ -55,9 +55,8 @@ export const Terms: React.FC = () => {
                   size={ButtonSize.big}
                   color={ButtonColor.black}
                   disabled={!accepted}
-                  onClick={() => {
+                  onClick={async() => {
                     if (accepted) {
-                      loadingScreen(t('settings.terms.loading'), async () => {
                         try {
                           const resp = await call<UserUpdate>(userUpdateFactory, {
                             attributes: {
@@ -87,7 +86,6 @@ export const Terms: React.FC = () => {
                           console.error(e);
                           return { success: false, error: t('general.serverProblem') };
                         }
-                      });
                     }
                   }}
                 >

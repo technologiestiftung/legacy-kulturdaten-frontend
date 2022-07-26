@@ -212,9 +212,6 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                   }),
                   confirmButtonText: t('general.confirmDelete') as string,
                   onConfirm: async () => {
-                    loadingScreen(
-                      t('general.deleting.loading'),
-                      async () => {
                         try {
                           const resp = await call<MediaDelete>(mediaDeleteFactory, {
                             id: mediaItemId,
@@ -230,18 +227,12 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                               mutate();
                               mutateUserInfo();
                             }, 1000);
-                            return { success: true };
                           }
 
-                          return { success: false, error: t('general.serverProblem') };
                         } catch (e) {
                           console.error(e);
 
-                          return { success: false, error: t('general.serverProblem') };
                         }
-                      },
-                      t('general.takeAFewSeconds')
-                    );
                   },
                 });
               }}

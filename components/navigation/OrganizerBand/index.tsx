@@ -131,14 +131,12 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                 logo={organizer.relations?.logo}
                 onClick={() => {
                   if (organizer.id !== activeOrganizerId)
-                    loadingScreen(t('menu.organizerBand.loading'), async () => {
                       setOrganizerId(organizer.id);
                       reset();
 
                       router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
 
                       return { success: true };
-                    });
                 }}
               >
                 {translation?.attributes?.name ||
@@ -154,11 +152,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
             noBorder
             asButton
             onClick={async () => {
-              loadingScreen(
-                t('menu.organizerBand.create'),
-                async () => await createOrganizer(),
-                t('general.takeAFewSeconds')
-              );
+              createOrganizer()
             }}
           >
             {t('menu.organizerBand.create') as string}
