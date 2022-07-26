@@ -505,6 +505,7 @@ export const enDE: Localization = {
     description: () => 'Description',
     teaser: () => 'Short description',
     teaserCount: () => '(optional, max. 150 characters)',
+    descriptionCount: () => '(max. 1500 characters)',
     classification: () => 'Type of organizer / field of focus (min. 1)',
     type: () => 'Type(s)',
     subjects: () => 'additional options',
