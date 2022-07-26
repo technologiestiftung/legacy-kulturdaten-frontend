@@ -510,6 +510,7 @@ export const deDE: Localization = {
     description: () => 'Beschreibung',
     teaser: () => 'Kurzbeschreibung',
     teaserCount: () => '(optional, max. 150 Zeichen)',
+    descriptionCount: () => '(max. 1500 Zeichen)',
     classification: () => ' Art der Anbieter:in / Arbeitsschwerpunkt (mind. 1)',
     type: () => 'Typ(en)',
     subjects: () => 'Eingrenzung (optional)',
@@ -1112,7 +1113,7 @@ export const deDE: Localization = {
             </p>
             <p>
               Um die Löschung zu bestätigen, gib bitte den Namen der Anbieter:in in dieses Feld ein
-              und drücke den {'‚'}Löschuen bestätigen{'‘'}-Button.
+              und drücke den {'‚'}Löschen bestätigen{'‘'}-Button.
             </p>
           </>
         ),
