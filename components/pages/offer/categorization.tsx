@@ -75,7 +75,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
 
   return {
     renderedForm: (
-      <FormWrapper requirement={{ fulfilled }}>
+      <FormWrapper requirement={{ fulfilled }} requirementNotInFormItem>
         <EntryFormHead
           title={`${t('categories.offer.form.mainType.title')} ${t('forms.required')}`}
           id={id}

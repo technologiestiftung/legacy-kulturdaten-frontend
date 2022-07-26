@@ -1191,7 +1191,7 @@ export const enDE: Localization = {
           remove: () => 'remove location',
           title: ({ name }) => `Choose location for ${name ? `‘${name}’` : 'unnamed offer'}`,
         },
-        topics: () => 'Topic category (required)',
+        topics: () => 'Topic category *',
         topicsTooltip: () => (
           <>
             <TooltipP>

@@ -14,7 +14,7 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
 import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
-import { FormContainer, FormWrapper } from '../formComponents';
+import { FormContainer, FormWrapper, FormRequiredInfo } from '../formComponents';
 import { Tooltip } from '../../../tooltip';
 import { TooltipP } from '../../../tooltip/TooltipContent';
 
@@ -383,9 +383,10 @@ export const useDescriptionForm: EntryFormHook = ({
 
   return {
     renderedForm: (
-      <FormWrapper requirement={{ fulfilled }}>
+      <FormWrapper>
         <FormContainer>
           {renderedDescriptionGerman}
+          <FormRequiredInfo fulfilled={fulfilled} marginBottom/>
           {renderedDescriptionEnglish}
           {renderedDescriptionGermanEasy}
         </FormContainer>

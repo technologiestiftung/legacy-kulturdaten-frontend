@@ -114,7 +114,7 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({
 
   return {
     renderedForm: (
-      <FormWrapper requirement={{ fulfilled }}>
+      <FormWrapper requirement={{ fulfilled }} requirementNotInFormItem>
         <EntryFormHead title={title || `${t('forms.classification') as string}`} id={id} />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>

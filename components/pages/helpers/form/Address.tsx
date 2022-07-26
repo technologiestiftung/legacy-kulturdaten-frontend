@@ -137,6 +137,7 @@ export const useAddressForm: EntryFormHook<AddressFormHookProps> = ({
         }}
       >
         <FormWrapper
+        requirementNotInFormItem
           requirement={
             softRequired
               ? {
