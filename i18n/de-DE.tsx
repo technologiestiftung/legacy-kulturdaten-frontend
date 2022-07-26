@@ -281,7 +281,7 @@ export const deDE: Localization = {
     to: () => 'bis',
     add: () => 'Neue Zeit hinzufügen',
     remove: () => 'entfernen',
-    note: () => 'Anmerkung zu Zeiten',
+    note: () => 'Anmerkung zu Zeiten (du musst “Physischer Ort” auswählen um das zu sehen)',
     error: () => 'Die Endzeit (‚bis‘) muss nach der Startzeit (‚von‘) liegen.',
   },
   openingHours: {

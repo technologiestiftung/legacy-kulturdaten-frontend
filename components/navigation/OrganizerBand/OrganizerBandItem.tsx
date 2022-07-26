@@ -15,6 +15,10 @@ const StyledOrganizerBandItemLogo = styled.span<{
 }>`
   border-radius: calc(0.75rem - 1px);
   width: 100%;
+  ${focusStyles}
+  &:focus {
+    border-color: var(--grey-400);
+  }
 
   flex-grow: 0;
   flex-shrink: 0;
@@ -55,7 +59,7 @@ const StyledOrganizerBandItem = styled.a<{
   flex-direction: row;
   justify-content: center;
   column-gap: 0.75rem;
-  ${focusStyles}
+
   background: ${({ adminModeActive }) =>
     adminModeActive ? 'rgba(255,255,255,0.25)' : 'var(--grey-200)'};
   border-radius: 0.75rem;
@@ -75,8 +79,8 @@ const StyledOrganizerBandItem = styled.a<{
   ${({ noBorder, active }) =>
     noBorder
       ? css`
-          border: 1px solid transparent;
-
+          border: solid 2px var(--grey-200);
+          color: var(--grey-500);
           &:hover {
             background: var(--white);
             color: var(--grey-600);
@@ -89,7 +93,7 @@ const StyledOrganizerBandItem = styled.a<{
           `}
         `
       : css`
-          border: 1px solid var(--grey-400);
+          border: 2px solid rgba(0, 0, 0, 0.25);
 
           &:hover {
             box-shadow: var(--shadow-sharp-hover);
@@ -106,11 +110,8 @@ const StyledOrganizerBandItem = styled.a<{
             background: var(--white);
             border-color: var(--black);
             color: var(--black);
-            box-shadow: var(--shadow-sharp-active);
 
             &:hover {
-              box-shadow: var(--shadow-sharp-active);
-              border-color: var(--black);
 
               ${StyledOrganizerBandItemLogo} {
                 border-color: var(--black);

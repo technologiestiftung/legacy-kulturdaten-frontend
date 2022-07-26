@@ -280,7 +280,7 @@ export const enDE: Localization = {
     to: () => 'to',
     add: () => 'Add new hours',
     remove: () => 'remove',
-    note: () => 'Note on hours',
+    note: () => 'Note on hours (you have to select "Physical Location" to see this)',
     error: () => 'The end time (‘to’) must be after the start time (‘from’).',
   },
   openingHours: {
