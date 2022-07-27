@@ -478,13 +478,17 @@ export const enDE: Localization = {
           (e.g. non-native speakers or people with reading and spelling difficulties). You can find
           examples of Plain Language and an explanation on how it differs from Easy Language here:
         </TooltipP>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
-          >
-            •&nbsp;Checklist Plain Language (in German)
-          </a>
+        <ul>
+          <li>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
+            >
+              •&nbsp;Checklist Plain Language (in German)
+            </a>
+          </li>
+          <li>
           <a
             target="_blank"
             rel="noreferrer"
@@ -492,6 +496,8 @@ export const enDE: Localization = {
           >
             •&nbsp;Info page Plain Language (in German)
           </a>
+          </li>
+        </ul>
       </>
     ),
     labelEnglish: () => 'English',
@@ -632,22 +638,40 @@ export const enDE: Localization = {
     copyrightPlaceholder: () => 'e.g. © name of photographer, year of publication',
     copyrightTooltip: () => (
       <>
-        <TooltipP>
-          Please make sure to include a photo credit or reference to the creator(s) of the image.
-          The format of the image credit depends on the specifications provided by the creator(s),
-          e.g.
-        </TooltipP>
-        <TooltipP>•&nbsp; Name of photographer or agency, year</TooltipP>
-        <TooltipP>•&nbsp; Name of an institution, photo: name photographer</TooltipP>
-        <TooltipP>
-          •&nbsp; Images with several creators, e.g. collages: reference to creator of the collage
-          and the creators of each source material (if required by original license)
-        </TooltipP>
-        <TooltipP>
-          •&nbsp; Collection object, digital reproduction without author: Name of institution,
-          newspaper fragment, collection XY
-        </TooltipP>
-      </>
+      <TooltipP>
+        Please make sure to include a photo credit or reference to the creator(s) of the image.
+        The format of the image credit depends on the specifications provided by the creator(s),
+        e.g.
+        <br/>
+      </TooltipP>
+      <ul>
+        <li>
+          <TooltipP>
+            •&nbsp;Name of photographer or agency, year
+            <br/><br/>
+          </TooltipP>
+        </li>
+        <li>
+          <TooltipP>
+            •&nbsp;Name Künstler:in des abgebildeten Werks, Foto: Name Fotograf:in
+            <br/><br/>
+          </TooltipP>
+        </li>
+        <li>
+          <TooltipP>
+            •&nbsp;Images with several creators, e.g. collages: reference to creator of the collage
+            and the creators of each source material (if required by original license)
+            <br/><br/>
+          </TooltipP>
+        </li>
+        <li>
+          <TooltipP>
+            •&nbsp;Collection object, digital reproduction without author: Name of institution,
+            newspaper fragment, collection XY
+          </TooltipP>
+        </li>
+      </ul>
+    </>
     ),
     alt: () => 'Alt text',
     altTooltip: () =>
