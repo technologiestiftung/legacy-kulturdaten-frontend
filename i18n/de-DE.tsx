@@ -483,26 +483,20 @@ export const deDE: Localization = {
           (z.B. Menschen mit Lese- und Rechtschreibschwäche). Unterschiede zur Leichten Sprache
           sowie Beispiele für beide findest du hier:
         </TooltipP>
-        <TooltipP>
-          •&nbsp;
-          <a
+        <a
             target="_blank"
             rel="noreferrer"
             href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
           >
-            Checkliste des Netzwerk Einfache Sprache
+            •&nbsp;Checkliste des Netzwerk Einfache Sprache
           </a>
-        </TooltipP>
-        <TooltipP>
-          •&nbsp;
           <a
             target="_blank"
             rel="noreferrer"
             href="https://portaleinfach.org/abc-der-einfachen-sprache/"
           >
-            Infoportal Einfache Sprache
+            •&nbsp;Infoportal Einfache Sprache
           </a>
-        </TooltipP>
       </>
     ),
     labelEnglish: () => 'Englisch',

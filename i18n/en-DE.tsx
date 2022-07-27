@@ -478,26 +478,20 @@ export const enDE: Localization = {
           (e.g. non-native speakers or people with reading and spelling difficulties). You can find
           examples of Plain Language and an explanation on how it differs from Easy Language here:
         </TooltipP>
-        <TooltipP>
-          •&nbsp;
           <a
             target="_blank"
             rel="noreferrer"
             href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
           >
-            Checklist Plain Language (in German)
+            •&nbsp;Checklist Plain Language (in German)
           </a>
-        </TooltipP>
-        <TooltipP>
-          •&nbsp;
           <a
             target="_blank"
             rel="noreferrer"
             href="https://portaleinfach.org/abc-der-einfachen-sprache/"
           >
-            Info page Plain Language (in German)
+            •&nbsp;Info page Plain Language (in German)
           </a>
-        </TooltipP>
       </>
     ),
     labelEnglish: () => 'English',
