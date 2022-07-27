@@ -49,8 +49,6 @@ const StyledRadioVariantOptionInput = styled.input`
   border: 1px solid var(--grey-400);
   border-radius: 1rem;
   pointer-events: none;
-
-  ${focusStyles}
 `;
 
 const StyledRadioVariantOptionCheck = styled.div<{ active: boolean }>`
