@@ -28,7 +28,7 @@ const StyedCheckboxListLabel = styled.div`
   font-weight: 700;
 `;
 
-const StyledCheckboxListItems = styled.div<{ columns?: number }>`
+const StyledCheckboxListItems = styled.ul<{ columns?: number }>`
   display: grid;
   grid-template-columns: auto;
   grid-row-gap: 0.75rem;
@@ -129,6 +129,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
             id={id}
             label={label}
             key={index}
+            inList
             checked={
               checkedState[checkboxValue]?.checked || (value && value.includes(checkboxValue))
             }
