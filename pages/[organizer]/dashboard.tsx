@@ -44,7 +44,7 @@ import { defaultOrganizerId } from '../../components/navigation/NavigationContex
 import { PublishedStatus } from '../../lib/api/types/general';
 import { defaultLanguage } from '../../config/locale';
 
-const StyledDashboardTileDate = styled.div`
+const StyledDashboardTileDate = styled.li`
   display: flex;
   justify-content: space-between;
 `;
