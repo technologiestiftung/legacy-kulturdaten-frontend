@@ -483,26 +483,26 @@ export const deDE: Localization = {
           (z.B. Menschen mit Lese- und Rechtschreibschwäche). Unterschiede zur Leichten Sprache
           sowie Beispiele für beide findest du hier:
         </TooltipP>
-        <TooltipP>
-          •&nbsp;
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
-          >
-            Checkliste des Netzwerk Einfache Sprache
-          </a>
-        </TooltipP>
-        <TooltipP>
-          •&nbsp;
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://portaleinfach.org/abc-der-einfachen-sprache/"
-          >
-            Infoportal Einfache Sprache
-          </a>
-        </TooltipP>
+        <ul>
+          <li>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
+            >
+              •&nbsp;Checkliste des Netzwerk Einfache Sprache
+            </a>
+          </li>
+          <li>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://portaleinfach.org/abc-der-einfachen-sprache/"
+            >
+              •&nbsp;Infoportal Einfache Sprache
+            </a>
+          </li>
+        </ul>
       </>
     ),
     labelEnglish: () => 'Englisch',
@@ -655,17 +655,35 @@ export const deDE: Localization = {
           Bitte gib immer einen Bildnachweis bzw. einen Hinweis auf den/die Urheber:in des Bildes
           an. Bildtitel sind optional. Das Format des Bildnachweises hängt von den Vorgaben des/der
           Urheber:in ab, z.B.
+          <br/>
         </TooltipP>
-        <TooltipP>•&nbsp; Name des Fotografen od. Agentur, Jahr</TooltipP>
-        <TooltipP>•&nbsp; Name Künstler:in des abgebildeten Werks, Foto: Name Fotograf:in</TooltipP>
-        <TooltipP>
-          •&nbsp; Bilder mit mehreren Urheber:innen, z.B. Collagen: Angabe zu Gestalter:in der
-          Collage und Angabe der Urheber:innen der Ausgangsmaterialien (wenn vorgegeben)
-        </TooltipP>
-        <TooltipP>
-          •&nbsp; Sammlungsobjekte mit digitaler Reproduktion ohne Urheber:in: Name Institution,
-          Ausschnitt Zeitungsseite, Sammlung XY
-        </TooltipP>
+        <ul>
+          <li>
+            <TooltipP>
+              •&nbsp;Name des Fotografen od. Agentur, Jahr
+              <br/><br/>
+            </TooltipP>
+          </li>
+          <li>
+            <TooltipP>
+              •&nbsp;Name Künstler:in des abgebildeten Werks, Foto: Name Fotograf:in
+              <br/><br/>
+            </TooltipP>
+          </li>
+          <li>
+            <TooltipP>
+              •&nbsp;Bilder mit mehreren Urheber:innen, z.B. Collagen: Angabe zu Gestalter:in der
+              Collage und Angabe der Urheber:innen der Ausgangsmaterialien (wenn vorgegeben)
+              <br/><br/>
+            </TooltipP>
+          </li>
+          <li>
+            <TooltipP>
+              •&nbsp;Sammlungsobjekte mit digitaler Reproduktion ohne Urheber:in: Name Institution,
+              Ausschnitt Zeitungsseite, Sammlung XY
+            </TooltipP>
+          </li>
+        </ul>
       </>
     ),
     alt: () => 'Alt Text',

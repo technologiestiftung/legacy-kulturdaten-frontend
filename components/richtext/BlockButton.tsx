@@ -70,7 +70,7 @@ export const BlockButton: React.FC<BlockButtonProps> = ({
   return (
     <Button
       color={blockActive(editor, format) ? ButtonColor.green : ButtonColor.default}
-      onMouseDown={(event) => {
+      onMouseUp={(event) => {
         event.preventDefault();
         toggleBlock(editor, format);
       }}

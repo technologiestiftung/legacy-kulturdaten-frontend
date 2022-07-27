@@ -113,7 +113,7 @@ const RichText: React.FC<RichTextProps> = ({
               width: ToolbarGroupWidth.half,
               items: [
                 <Button
-                  onMouseDown={() => editor.undo()}
+                  onMouseUp={() => editor.undo()}
                   disabled={editor.history.undos.length < 1}
                   icon="CornerUpLeft"
                   iconPosition={IconPosition.left}
@@ -123,7 +123,7 @@ const RichText: React.FC<RichTextProps> = ({
                   variant={ButtonVariant.toolbar}
                 />,
                 <Button
-                  onMouseDown={() => editor.redo()}
+                  onMouseUp={() => editor.redo()}
                   disabled={editor.history.redos.length < 1}
                   icon="CornerUpRight"
                   key={1}

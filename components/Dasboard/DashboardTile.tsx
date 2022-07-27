@@ -176,7 +176,7 @@ const StyledDashboardTileContent = styled.div`
   white-space: normal;
 `;
 
-export const DashboardTileText = styled.div`
+export const DashboardTileText = styled.ul`
   display: flex;
   flex-direction: column;
   row-gap: calc(var(--line-height-400) / 2);
