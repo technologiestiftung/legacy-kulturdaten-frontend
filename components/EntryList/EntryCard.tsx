@@ -6,42 +6,42 @@ import { PublishedStatus } from '../../lib/api/types/general';
 import { DateFormat, useDate } from '../../lib/date';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq, focusStyles } from '../globals/Constants';
+import { mq } from '../globals/Constants';
 import { StatusFlag } from '../Status/StatusFlag';
 
 const StyledEntryCardLink = styled.a`
   text-decoration: none;
   color: inherit;
   border-radius: 0.75rem;
-  ${focusStyles}
-`;
-
-const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  `;
+  
+  const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
+  border: 2px solid rgba(0, 0, 0, 0.25);
   background: var(--white);
   border-radius: 0.75rem;
   cursor: pointer;
   transition: box-shadow var(--transition-duration-fast);
 
   &:hover {
-    box-shadow: var(--shadow-sharp-hover);
     border-color: rgba(0, 0, 0, 0.5);
   }
-
+  
+  &:focus {
+    border-color: var(--white);
+  }
 
   ${({ active }) =>
     active
       ? css`
-          box-shadow: var(--shadow-sharp-active);
+          
           border-color: rgba(0, 0, 0, 1);
 
           &:focus {
             box-shadow: none;
-            border-color: none;
+            border-color: white;
           }
 
           &:hover {
-            box-shadow: var(--shadow-sharp-hover);
             border-color: rgba(0, 0, 0, 0.5);
           }
         `

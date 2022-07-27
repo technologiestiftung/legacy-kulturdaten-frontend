@@ -53,6 +53,12 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
     <div>
       <EntryFormHead title={t('team.invite.title') as string} />
       <FormGrid>
+      <FormItem width={FormItemWidth.full}>
+          <Info color={InfoColor.white} noMaxWidth>
+            <span>{t('team.invite.hint', { max: maxInvites })}</span>
+            <span>{t('team.invite.hint2')}</span>
+          </Info>
+        </FormItem>
         <FormItem width={FormItemWidth.full}>
           <Textarea
             label={t('team.invite.label') as string}
@@ -64,13 +70,6 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
             valid={valid}
             onBlur={() => setBlurred(true)}
           />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Info color={InfoColor.white} noMaxWidth>
-            <span>{t('team.invite.hint', { max: maxInvites })}</span>
-            <br/>
-            <span>{t('team.invite.hint2')}</span>
-          </Info>
         </FormItem>
         {blurred && !valid && (
           <FormItem width={FormItemWidth.full}>

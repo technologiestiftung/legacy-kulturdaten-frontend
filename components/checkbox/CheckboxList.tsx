@@ -165,6 +165,8 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
         multiple
         required={required}
         value={selectValue}
+        aria-hidden
+        tabIndex={-1}
         onChange={(e) => {
           e.preventDefault();
           e.stopPropagation();

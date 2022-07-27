@@ -14,7 +14,7 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
 import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
-import { FormContainer, FormWrapper } from '../formComponents';
+import { FormContainer, FormWrapper, FormRequiredInfo } from '../formComponents';
 import { Tooltip } from '../../../tooltip';
 import { TooltipP } from '../../../tooltip/TooltipContent';
 
@@ -329,7 +329,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: Language.de,
-    title: `${t('forms.description') as string} ${t('forms.labelGerman') as string}`,
+    title: `${t('forms.description')} ${t('forms.labelGerman')} ${t('forms.descriptionCount')}`,
     required,
     softRequired: true,
     maxLength: defaultMaxLength,
@@ -345,7 +345,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: Language.en,
-    title: `${t('forms.description') as string} ${t('forms.labelEnglish') as string}`,
+    title: `${t('forms.description')} ${t('forms.labelEnglish')} ${t('forms.descriptionCount')}`,
     required: false,
     maxLength: defaultMaxLength,
   });
@@ -360,7 +360,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: 'de-easy' as Language,
-    title: `${t('forms.description') as string} ${t('forms.labelGermanEasy') as string}`,
+    title: `${t('forms.description')} ${t('forms.labelGermanEasy')} ${t('forms.descriptionCount')}`,
     tooltip: t('forms.labelGermanEasyTooltip') as string,
     required: false,
     maxLength: defaultMaxLength,
@@ -383,9 +383,10 @@ export const useDescriptionForm: EntryFormHook = ({
 
   return {
     renderedForm: (
-      <FormWrapper requirement={{ fulfilled }}>
+      <FormWrapper>
         <FormContainer>
           {renderedDescriptionGerman}
+          <FormRequiredInfo fulfilled={fulfilled} marginBottom/>
           {renderedDescriptionEnglish}
           {renderedDescriptionGermanEasy}
         </FormContainer>

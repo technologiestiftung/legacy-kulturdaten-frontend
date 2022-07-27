@@ -20,6 +20,7 @@ import { mq, focusStyles } from '../globals/Constants';
 import { Label } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
+import { FormRequiredInfo } from '../pages/helpers/formComponents'
 
 const StyledInputContainer = styled.div`
   display: flex;
@@ -354,6 +355,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             />
           </>
         )}
+        {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid}/>}
         {!pristine && props.error && <StyledError>{props.error}</StyledError>}
       </StyledInputContainer>
     );

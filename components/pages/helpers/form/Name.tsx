@@ -11,7 +11,7 @@ import { getTranslation } from '../../../../lib/translations';
 import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo } from '../formComponents';
 
 const defaultMaxLength = 100;
 
@@ -66,6 +66,7 @@ const Name: React.FC<SetNameProps> = ({
         maxLength={defaultMaxLength}
         tooltip={tooltip}
       />
+      {required && <FormRequiredInfo fulfilled={value !== ''}/>}
     </form>
   );
 };

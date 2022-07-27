@@ -280,7 +280,7 @@ export const enDE: Localization = {
     to: () => 'to',
     add: () => 'Add new hours',
     remove: () => 'remove',
-    note: () => 'Note on hours',
+    note: () => 'Note on hours (you have to select "Physical Location" to see this)',
     error: () => 'The end time (‘to’) must be after the start time (‘from’).',
   },
   openingHours: {
@@ -505,6 +505,7 @@ export const enDE: Localization = {
     description: () => 'Description',
     teaser: () => 'Short description',
     teaserCount: () => '(optional, max. 150 characters)',
+    descriptionCount: () => '(max. 1500 characters)',
     classification: () => 'Type of organizer / field of focus (min. 1)',
     type: () => 'Type(s)',
     subjects: () => 'additional options',
@@ -1191,7 +1192,7 @@ export const enDE: Localization = {
           remove: () => 'remove location',
           title: ({ name }) => `Choose location for ${name ? `‘${name}’` : 'unnamed offer'}`,
         },
-        topics: () => 'Topic category (required)',
+        topics: () => 'Topic category *',
         topicsTooltip: () => (
           <>
             <TooltipP>

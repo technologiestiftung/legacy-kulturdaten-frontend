@@ -33,41 +33,53 @@ const StyledFormWrapper = styled.div<{ required: boolean; fulfilled?: boolean }>
     `}
 `;
 
-const StyledFormWrapperRequirement = styled.div`
+const StyledFormWrapperRequirement = styled.div<{marginBottom: boolean;}>`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
   display: flex;
   column-gap: 0.1875rem;
   padding: 0 0 0.375rem 0;
+  margin: ${({ marginBottom }) => marginBottom ? '-1.375rem 0 1.5rem' : '0'};
 `;
+
+export interface FormRequiredInfoProps {
+  fulfilled: boolean;
+  marginBottom?: boolean;
+}
+
+export const FormRequiredInfo: React.FC<FormRequiredInfoProps> = ({fulfilled, marginBottom}) => {
+  const t = useT();
+  return(
+    <StyledFormWrapperRequirement marginBottom={marginBottom}>
+      <StyledRequirementMark fulfilled={fulfilled}>
+        {fulfilled && <Check color="var(--green-publish)" />}
+      </StyledRequirementMark>
+      <span>{t(fulfilled ? 'requirements.isFulfilled' : 'requirements.notFulfilled')}</span>
+    </StyledFormWrapperRequirement>
+  )
+}
 
 export interface FormWrapperProps {
   children: React.ReactNode;
   requirement?: {
     fulfilled: boolean;
   };
+  requirementNotInFormItem?: boolean;
 }
 
 export const FormWrapper: React.FC<FormWrapperProps> = ({
   children,
   requirement,
+  requirementNotInFormItem
 }: FormWrapperProps) => {
   const required = typeof requirement !== 'undefined';
   const fulfilled = requirement?.fulfilled;
-  const t = useT();
 
   return (
     <StyledFormWrapper required={required} fulfilled={fulfilled}>
       {children}
-      {required && (
-        <StyledFormWrapperRequirement>
-          <StyledRequirementMark fulfilled={fulfilled}>
-            {fulfilled && <Check color="var(--green-publish)" />}
-          </StyledRequirementMark>
-          <span>{t(fulfilled ? 'requirements.isFulfilled' : 'requirements.notFulfilled')}</span>
-        </StyledFormWrapperRequirement>
-      )}
+      {required && requirementNotInFormItem && <FormRequiredInfo fulfilled={fulfilled}/>}
     </StyledFormWrapper>
   );
 };
