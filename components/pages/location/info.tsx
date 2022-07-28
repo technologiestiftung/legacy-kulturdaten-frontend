@@ -106,7 +106,6 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       <FormGrid>
         <FormItem width={FormItemWidth.full}>{renderedHoursField}</FormItem>
       </FormGrid>
-      <EntryFormHead title={t('hours.note') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           {contentLanguages.map((contentLanguage, index) => {
@@ -119,7 +118,7 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
             return (
               <Textarea
                 key={index}
-                label={t(languageTranslationKeys[contentLanguage]) as string}
+                label={`${t('hours.note')} ${t(languageTranslationKeys[contentLanguage])}`}
                 lang={contentLanguage.slice(0,2)}
                 id={`${uid}-textarea-${index}`}
                 value={currentTranslation?.attributes?.openingHours || ''}
