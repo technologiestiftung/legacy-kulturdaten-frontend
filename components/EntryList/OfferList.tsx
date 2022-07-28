@@ -533,7 +533,7 @@ export const OfferList: React.FC<OfferListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody>
+      <StyledEntryListBody aria-live='assertive' aria-relevant="additions removals">
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (
