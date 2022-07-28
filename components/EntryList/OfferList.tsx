@@ -32,7 +32,6 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -117,7 +116,6 @@ export const OfferList: React.FC<OfferListProps> = ({
     [getDispatchFilters, listName]
   );
   const [search, setSearch] = useState<string>();
-  const loadingScreen = useLoadingScreen();
   const createOffer = useCreateOffer();
   const organizerId = useOrganizerId();
   const mainTypeOptions = useOfferMainTypeList();
@@ -348,11 +346,7 @@ export const OfferList: React.FC<OfferListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.offer.form.create'),
-                async () => await createOffer(),
-                t('general.takeAFewSeconds')
-              );
+              await createOffer()
             }}
           >
             {t('categories.offer.form.create')}

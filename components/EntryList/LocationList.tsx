@@ -25,7 +25,6 @@ import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
 import { useOrganizerId } from '../../lib/useOrganizer';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -116,7 +115,6 @@ export const LocationList: React.FC<LocationListProps> = ({
     () => getDispatchFilters(listName),
     [getDispatchFilters, listName]
   );
-  const loadingScreen = useLoadingScreen();
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
   const download = useDownload();
@@ -383,11 +381,7 @@ export const LocationList: React.FC<LocationListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.location.form.create'),
-                async () => await createLocation(),
-                t('general.takeAFewSeconds')
-              );
+              await createLocation()
             }}
           >
             {t('categories.location.form.create')}
