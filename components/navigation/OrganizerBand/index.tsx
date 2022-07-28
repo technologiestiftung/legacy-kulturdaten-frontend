@@ -154,11 +154,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
             noBorder
             asButton
             onClick={async () => {
-              loadingScreen(
-                t('menu.organizerBand.create'),
-                async () => await createOrganizer(),
-                t('general.takeAFewSeconds')
-              );
+              await createOrganizer()
             }}
           >
             {t('menu.organizerBand.create') as string}
