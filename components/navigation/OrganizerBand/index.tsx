@@ -131,14 +131,12 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                 logo={organizer.relations?.logo}
                 onClick={() => {
                   if (organizer.id !== activeOrganizerId)
-                    loadingScreen(t('menu.organizerBand.loading'), async () => {
-                      setOrganizerId(organizer.id);
-                      reset();
+                    setOrganizerId(organizer.id);
+                    reset();
 
-                      router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
+                    router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
 
-                      return { success: true };
-                    });
+                    return { success: true };
                 }}
               >
                 {translation?.attributes?.name ||
