@@ -26,7 +26,6 @@ import { Save } from '../../EntryForm/Save';
 import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { usePublish } from '../../Publish';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { EntryFormHook } from '../helpers/form';
@@ -155,7 +154,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const call = useApiCall();
   const [currentPage, setCurrentPage] = useState(1);
-  const loadingScreen = useLoadingScreen();
   const confirmScreen = useConfirmScreen();
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
   const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
@@ -259,36 +257,30 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         }),
         confirmButtonText: t('general.confirmDelete') as string,
         onConfirm: async () => {
-          loadingScreen(
-            t('general.deleting.loading'),
-            async () => {
-              try {
-                const resp = await call<OfferDelete>(offerDeleteFactory, {
-                  id: entry.data.id,
-                  entry: {
-                    relations: {
-                      dates: dateIds,
-                    },
-                  },
-                });
+          try {
+            const resp = await call<OfferDelete>(offerDeleteFactory, {
+              id: entry.data.id,
+              entry: {
+                relations: {
+                  dates: dateIds,
+                },
+              },
+            });
 
-                if (resp.status === 200) {
-                  setCheckedDateIds(
-                    checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
-                  );
-                  mutateDateList();
-                  return { success: true };
-                }
+            if (resp.status === 200) {
+              setCheckedDateIds(
+                checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
+              );
+              mutateDateList();
+              return { success: true };
+            }
 
-                return { success: false, error: t('general.serverProblem') };
-              } catch (e) {
-                console.error(e);
+            return { success: false, error: t('general.serverProblem') };
+          } catch (e) {
+            console.error(e);
 
-                return { success: false, error: t('general.serverProblem') };
-              }
-            },
-            t('general.takeAFewSeconds')
-          );
+            return { success: false, error: t('general.serverProblem') };
+          }
         },
       });
     },
@@ -394,52 +386,46 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                   <FormItem width={FormItemWidth.full}>
                     <DateCreate
                       onSubmit={async (date, recurrence) => {
-                        loadingScreen(
-                          t('dateCreate.loading'),
-                          async () => {
-                            try {
-                              const filteredTranslations = date.relations?.translations?.filter(
-                                (translation) =>
-                                  translation?.attributes.name?.length > 0 ||
-                                  translation?.attributes.roomDescription?.length > 0 ||
-                                  translation?.attributes.teaser?.length > 0
-                              );
+                        try {
+                          const filteredTranslations = date.relations?.translations?.filter(
+                            (translation) =>
+                              translation?.attributes.name?.length > 0 ||
+                              translation?.attributes.roomDescription?.length > 0 ||
+                              translation?.attributes.teaser?.length > 0
+                          );
 
-                              const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
-                                offerId: entry.data.id,
-                                date: {
-                                  ...date,
-                                  attributes: {
-                                    ...date.attributes,
-                                  },
-                                  relations: {
-                                    ...date.relations,
-                                    translations:
-                                      filteredTranslations.length > 0
-                                        ? filteredTranslations
-                                        : undefined,
-                                  },
-                                  meta: recurrence
-                                    ? {
-                                        recurrenceRule: recurrence,
-                                        startsAt: date?.attributes?.startsAt,
-                                        endsAt: date?.attributes?.endsAt,
-                                      }
+                          const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
+                            offerId: entry.data.id,
+                            date: {
+                              ...date,
+                              attributes: {
+                                ...date.attributes,
+                              },
+                              relations: {
+                                ...date.relations,
+                                translations:
+                                  filteredTranslations.length > 0
+                                    ? filteredTranslations
                                     : undefined,
-                                },
-                              });
+                              },
+                              meta: recurrence
+                                ? {
+                                    recurrenceRule: recurrence,
+                                    startsAt: date?.attributes?.startsAt,
+                                    endsAt: date?.attributes?.endsAt,
+                                  }
+                                : undefined,
+                            },
+                          });
 
-                              if (resp.status === 200) {
-                                mutateDateList();
-                                return { success: true };
-                              }
-                            } catch (e) {
-                              console.error(e);
-                              return { success: false, error: t('general.serverProblem') };
-                            }
-                          },
-                          t('general.takeAFewSeconds')
-                        );
+                          if (resp.status === 200) {
+                            mutateDateList();
+                            return { success: true };
+                          }
+                        } catch (e) {
+                          console.error(e);
+                          return { success: false, error: t('general.serverProblem') };
+                        }
                       }}
                       offerTitles={offerTitles}
                       submitDelay={500}

@@ -8,7 +8,6 @@ import React, { useContext } from 'react';
 import { useOrganizerId, useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { useUserOrganizerLists } from '../../user/useUser';
 import { useCreateOrganizer } from '../../../lib/categories';
 import { defaultLanguage } from '../../../config/locale';
@@ -77,7 +76,6 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
   const activeOrganizerId = useOrganizerId();
   const setOrganizerId = useSetOrganizerId();
   const t = useT();
-  const loadingScreen = useLoadingScreen();
   const createOrganizer = useCreateOrganizer();
   const { adminModeActive, quit: quitAdminMode } = useAdminMode();
   const { reset } = useContext(EntryListContext);
