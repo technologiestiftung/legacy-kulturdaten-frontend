@@ -250,7 +250,7 @@ export const useConfirmScreen = (): ((props: {
   message: React.ReactNode | string;
   confirmButtonText?: string;
   confirmText?: string;
-  onConfirm: () => Promise<void>;
+  onConfirm: () => Promise<{ success: boolean; error?: React.ReactNode; }>;
   condition?: ConfirmCondition;
 }) => void) => {
   const {
