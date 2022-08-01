@@ -938,6 +938,9 @@ export const deDE: Localization = {
     placeholderOffer: () => 'Unbenanntes Angebot',
     placeholderLocation: () => 'Unbenannter Ort',
     placeholderOrganizer: () => 'Unbenanntes Profil',
+    defaultTitleOffer: () => 'Neues Angebot',
+    defaultTitleLocation: () => 'Neuer Ort',
+    defaultTitleOrganizer: () => 'Neues Profil',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',

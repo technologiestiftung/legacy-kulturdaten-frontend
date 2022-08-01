@@ -924,6 +924,9 @@ export const enDE: Localization = {
     placeholderOffer: () => 'Unnamed offer',
     placeholderLocation: () => 'Unnamed location',
     placeholderOrganizer: () => 'Unnamed profile',
+    defaultTitleOffer: () => 'New offer',
+    defaultTitleLocation: () => 'New location',
+    defaultTitleOrganizer: () => 'New profile',
   },
   tags: {
     boxLabel: () => 'Already added keywords',
