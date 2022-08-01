@@ -8,7 +8,6 @@ import { EntryFormHead } from '../EntryForm/EntryFormHead';
 import { StyledEntryFormContainer, StyledRequiredInfoText } from '../EntryForm/wrappers';
 import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 
 const passwordErrorId = 0;
@@ -22,7 +21,6 @@ export const UserPasswordUpdate: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [success, setSuccess] = useState(false);
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
 
   const passwordsMatch = useMemo(
     () => newPassword === confirmPassword,
@@ -77,53 +75,51 @@ export const UserPasswordUpdate: React.FC = () => {
         </FormGrid>
       ) : (
         <form
-          onSubmit={(e) => {
+          onSubmit={async(e) => {
             e.preventDefault();
             e.stopPropagation();
             setErrors([]);
 
             if (valid) {
-              loadingScreen(t('settings.password.loading'), async () => {
-                try {
-                  await call<UserUpdate>(userUpdateFactory, {
-                    user: {
-                      attributes: {
-                        password: oldPassword,
-                        newPassword,
-                        newPasswordConfirmation: confirmPassword,
-                      },
+              try {
+                await call<UserUpdate>(userUpdateFactory, {
+                  user: {
+                    attributes: {
+                      password: oldPassword,
+                      newPassword,
+                      newPasswordConfirmation: confirmPassword,
                     },
-                  });
-                  setSuccess(true);
+                  },
+                });
+                setSuccess(true);
 
-                  setOldPassword('');
-                  setNewPassword('');
-                  setConfirmPassword('');
-                  setPasswordConfirmationBlurred(false);
+                setOldPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setPasswordConfirmationBlurred(false);
 
-                  return { success: true };
-                } catch (e) {
-                  const requestErrors = e.message
-                    ? (JSON.parse(e.message)?.errors as {
-                        rule: string;
-                        field: string;
-                        message: string;
-                      }[])
-                    : undefined;
+                return { success: true };
+              } catch (e) {
+                const requestErrors = e.message
+                  ? (JSON.parse(e.message)?.errors as {
+                      rule: string;
+                      field: string;
+                      message: string;
+                    }[])
+                  : undefined;
 
-                  const visibleError = requestErrors?.find(
-                    (error) => error.message === 'Invalid user credentials'
-                  )
-                    ? (t('settings.password.oldPasswordError') as string)
-                    : (t('register.requestError') as string);
+                const visibleError = requestErrors?.find(
+                  (error) => error.message === 'Invalid user credentials'
+                )
+                  ? (t('settings.password.oldPasswordError') as string)
+                  : (t('register.requestError') as string);
 
-                  setErrors([
-                    { id: requestErrorId, message: visibleError },
-                    ...errors.filter(({ id }) => id !== requestErrorId),
-                  ]);
-                  return { success: false, error: <Info>{visibleError}</Info> };
-                }
-              });
+                setErrors([
+                  { id: requestErrorId, message: visibleError },
+                  ...errors.filter(({ id }) => id !== requestErrorId),
+                ]);
+                return { success: false, error: <Info>{visibleError}</Info> };
+              }
             }
           }}
         >

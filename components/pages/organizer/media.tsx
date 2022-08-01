@@ -19,7 +19,6 @@ import { Organizer } from '../../../lib/api/types/organizer';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { MediaList } from '../../MediaList';
 import { useUser } from '../../user/useUser';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
 import { MediaUpdate, mediaUpdateFactory } from '../../../lib/api/routes/media/update';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
@@ -133,7 +132,6 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
   const t = useT();
-  const loadingScreen = useLoadingScreen();
   const confirmScreen = useConfirmScreen();
   const { mutateUserInfo } = useUser();
 
@@ -212,36 +210,30 @@ export const useLogoForm: EntryFormHook = ({ category, query }) => {
                   }),
                   confirmButtonText: t('general.confirmDelete') as string,
                   onConfirm: async () => {
-                    loadingScreen(
-                      t('general.deleting.loading'),
-                      async () => {
-                        try {
-                          const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                    try {
+                      const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                        id: mediaItemId,
+                        entry: {
+                          attributes: {
                             id: mediaItemId,
-                            entry: {
-                              attributes: {
-                                id: mediaItemId,
-                              },
-                            },
-                          });
+                          },
+                        },
+                      });
 
-                          if (resp.status === 200) {
-                            setTimeout(() => {
-                              mutate();
-                              mutateUserInfo();
-                            }, 1000);
-                            return { success: true };
-                          }
+                      if (resp.status === 200) {
+                        setTimeout(() => {
+                          mutate();
+                          mutateUserInfo();
+                        }, 1000);
+                        return { success: true };
+                      }
 
-                          return { success: false, error: t('general.serverProblem') };
-                        } catch (e) {
-                          console.error(e);
+                      return { success: false, error: t('general.serverProblem') };
+                    } catch (e) {
+                      console.error(e);
 
-                          return { success: false, error: t('general.serverProblem') };
-                        }
-                      },
-                      t('general.takeAFewSeconds')
-                    );
+                      return { success: false, error: t('general.serverProblem') };
+                    }
                   },
                 });
               }}
