@@ -24,7 +24,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
-import { useOrganizerId } from '../../lib/useOrganizer';
+import { useOrganizerId, useOrganizer } from '../../lib/useOrganizer';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -117,13 +117,15 @@ export const LocationList: React.FC<LocationListProps> = ({
   );
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
+  const organizer = useOrganizer();
+  const organizerTitle = organizer?.data?.relations.translations.filter(translation => translation.attributes.language === language)[0].attributes.name
   const download = useDownload();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
   const [search, setSearch] = useState<string>();
-
+  
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
   // Set status filter to published if all locations are shown.
@@ -383,7 +385,9 @@ export const LocationList: React.FC<LocationListProps> = ({
             onClick={async () => {
               await createLocation()
               setTimeout(() => {
-                document.title= t('general.defaultTitleLocation') as string
+                document.title = organizerTitle 
+                ? `${organizerTitle} - ${t('general.defaultTitleLocation')}` 
+                : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleLocation')}` 
               }, 500)
             }}
           >

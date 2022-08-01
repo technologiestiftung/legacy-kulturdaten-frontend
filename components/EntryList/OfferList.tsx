@@ -31,7 +31,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
-import { useOrganizerId } from '../../lib/useOrganizer';
+import { useOrganizerId, useOrganizer } from '../../lib/useOrganizer';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -118,6 +118,8 @@ export const OfferList: React.FC<OfferListProps> = ({
   const [search, setSearch] = useState<string>();
   const createOffer = useCreateOffer();
   const organizerId = useOrganizerId();
+  const organizer = useOrganizer();
+  const organizerTitle = organizer?.data?.relations.translations.filter(translation => translation.attributes.language === language)[0].attributes.name
   const mainTypeOptions = useOfferMainTypeList();
   const typeOptions = useOfferTypeList();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
@@ -348,7 +350,9 @@ export const OfferList: React.FC<OfferListProps> = ({
             onClick={async () => {
               await createOffer()
               setTimeout(() => {
-                document.title= t('general.defaultTitleOffer') as string
+                document.title = organizerTitle 
+                ? `${organizerTitle} - ${t('general.defaultTitleOffer')}` 
+                : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleOffer')}` 
               }, 500)
             }}
           >
