@@ -292,6 +292,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     <StyledAppLayout>
       {bodyLock}
 
+      {activeLayout?.hasOrganizerBand && isMidOrWider && (
+        <OrganizerSlot adminModeActive={adminModeActive}>
+          <OrganizerBand layout={OrganizerBandLayout.narrow} />
+        </OrganizerSlot>
+      )}
       {headerMain && (
         <HeaderSlot
           locked={locked}
@@ -309,11 +314,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         >
           {headerSecondary}
         </HeaderSlotSecondary>
-      )}
-      {activeLayout?.hasOrganizerBand && isMidOrWider && (
-        <OrganizerSlot adminModeActive={adminModeActive}>
-          <OrganizerBand layout={OrganizerBandLayout.narrow} />
-        </OrganizerSlot>
       )}
       {isMidOrWider && sidebar && (
         <MenuSlot
