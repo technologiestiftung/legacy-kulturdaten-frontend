@@ -14,6 +14,7 @@ import { useCollapsable } from '../../collapsable';
 import { ChevronDown } from 'react-feather';
 import { OrganizerBand, OrganizerBandLayout } from '../OrganizerBand';
 import { useT } from '../../../lib/i18n';
+import { useActiveRoute } from '../../../lib/routing';
 import { NavigationContext } from '../NavigationContext';
 import { useRouter } from 'next/router';
 import { appLayouts, Layouts } from '../../layouts/AppLayout';
@@ -150,6 +151,11 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   const appTitle = useAppTitle();
   const { userInactive } = useContext(UserContext);
 
+  const activeRoute = useActiveRoute();
+  const t = useT();
+
+  const displayRoute = activeRoute ? t(`menu.start.items.${activeRoute}`): undefined
+
   const renderedLink = (
     <Link>
       <StyledLink>{title}</StyledLink>
@@ -186,7 +192,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   return (
     <>
       <Head>
-        <title>{title !== appTitle ? `${title} – ${appTitle}` : appTitle}</title>
+        <title>{title !== appTitle ? `${title} – ${displayRoute} - ${appTitle}` : appTitle}</title>
       </Head>
       {isMidOrWider ? (
         <StyledHeader>

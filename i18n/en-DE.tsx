@@ -1361,6 +1361,12 @@ export const enDE: Localization = {
         login: () => 'Login',
         registration: () => 'Registration',
         info: () => 'Info',
+        offer: () => 'Aoffers',
+        location: () => 'Locations',
+        organizer: () => 'My Profile',
+        userSettings: () => 'My Settings',
+        admin: () => 'Administration',
+        developer: () => 'Developer Settings',
       },
     },
     organizer: {

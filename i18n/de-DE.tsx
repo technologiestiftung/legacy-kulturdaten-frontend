@@ -1374,6 +1374,12 @@ export const deDE: Localization = {
         login: () => 'Login',
         registration: () => 'Registrierung',
         info: () => 'Info',
+        offer: () => 'Angebote',
+        location: () => 'Orte',
+        organizer: () => 'Anbieter:in-Profil',
+        userSettings: () => 'Meine Einstellungen',
+        admin: () => 'Administration',
+        developer: () => 'Entwickler:innen Einstellungen',
       },
     },
     organizer: {

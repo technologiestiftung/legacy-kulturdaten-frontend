@@ -27,11 +27,13 @@ export type MenuItemButton = {
   onClick: () => void;
   icon?: string;
   iconPosition?: IconPosition;
+  active?: boolean;
 };
 
 export type MenuItemFolder = {
   label: string;
   menuKey: string;
+  active?: boolean;
 };
 
 export type MenuData = {
@@ -63,6 +65,7 @@ export type MenuItem = {
   type: MenuItemType;
   disabled?: boolean;
   action?: MenuItemLink | MenuItemButton | MenuItemFolder;
+  active?: boolean;
 };
 
 const StyledMenuSections = styled.div`
