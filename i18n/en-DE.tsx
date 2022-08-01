@@ -525,6 +525,7 @@ export const enDE: Localization = {
     website: () => 'Website',
     links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
+    urlInvalid: () => 'The input data is not a correct URL. Please use the format: (https://)example.com',
     emailInvalid: () => 'The input data is not a correct email.',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',

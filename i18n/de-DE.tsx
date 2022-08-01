@@ -530,6 +530,7 @@ export const deDE: Localization = {
     website: () => 'Website',
     links: () => 'Weitere Links (z.B. Social Media Kanäle)',
     urlPlaceholder: () => 'https://example.com',
+    urlInvalid: () => 'Die Eingabe ist keine korrekte URL. Bitte verwende das Format: (https://)example.com',
     emailInvalid: () => 'Die Eingabe ist keine korrekte E-Mail.',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
