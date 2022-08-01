@@ -120,16 +120,8 @@ export const useNavigation = (
   const headerTitle =
     appLayouts[layout].hasOrganizerBand && organizer?.data
       ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name ||
-        (t('general.placeholderOrganizer') as string)
-      : title;
-
-  const pageTitle =
-    appLayouts[layout].hasOrganizerBand && organizer?.data
-      ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name ||
         (t('general.defaultTitleOrganizer') as string)
       : title;
-
-    console.log(headerTitle)
 
   const renderedHeaderMain = (
     <HeaderMain

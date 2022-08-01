@@ -347,6 +347,9 @@ export const OfferList: React.FC<OfferListProps> = ({
             icon="Plus"
             onClick={async () => {
               await createOffer()
+              setTimeout(() => {
+                document.title= t('general.defaultTitleOffer') as string
+              }, 500)
             }}
           >
             {t('categories.offer.form.create')}
@@ -527,7 +530,7 @@ export const OfferList: React.FC<OfferListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody aria-live='assertive' aria-relevant="additions removals">
+      <StyledEntryListBody aria-live='polite' aria-relevant="additions removals">
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (

@@ -382,6 +382,9 @@ export const LocationList: React.FC<LocationListProps> = ({
             icon="Plus"
             onClick={async () => {
               await createLocation()
+              setTimeout(() => {
+                document.title= t('general.defaultTitleLocation') as string
+              }, 500)
             }}
           >
             {t('categories.location.form.create')}
@@ -539,7 +542,7 @@ export const LocationList: React.FC<LocationListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody  aria-live='assertive' aria-relevant="additions removals">
+      <StyledEntryListBody  aria-live='polite' aria-relevant="additions removals">
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (
