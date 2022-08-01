@@ -39,7 +39,6 @@ import { getTranslation } from '../../lib/translations';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { DateFormat, useDate } from '../../lib/date';
 import { DateStatusFlag } from '../../components/DateList/DateStatusFlag';
-import { useLoadingScreen } from '../../components/Loading/LoadingScreen';
 import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { defaultLanguage } from '../../config/locale';
@@ -126,7 +125,6 @@ const DashboardStartTileRow: React.FC = () => {
   const createOrganizer = useCreateOrganizer();
   const createOffer = useCreateOffer();
   const createLocation = useCreateLocation();
-  const loadingScreen = useLoadingScreen();
   const organizerId = useOrganizerId();
   const categories = useCategories();
 
@@ -170,15 +168,9 @@ const DashboardStartTileRow: React.FC = () => {
           link={
             <DashboardTileButton
               title={t('dashboard.info.start.organizer.button') as string}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.organizer.form.create'),
-                  async () => {
-                    const resp = await createOrganizer();
-                    return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
+              onClick={async () => {
+                const resp = await createOrganizer();
+                return resp;
               }}
             />
           }
@@ -201,15 +193,9 @@ const DashboardStartTileRow: React.FC = () => {
             <DashboardTileButton
               title={t('dashboard.info.start.location.button') as string}
               disabled={organizerId === defaultOrganizerId}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.location.form.create'),
-                  async () => {
-                    const resp = await createLocation();
-                    return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
+              onClick={async () => {
+                const resp = await createLocation();
+                return resp;
               }}
             />
           }
@@ -232,15 +218,9 @@ const DashboardStartTileRow: React.FC = () => {
             <DashboardTileButton
               title={t('dashboard.info.start.offer.button') as string}
               disabled={organizerId === defaultOrganizerId}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.offer.form.create'),
-                  async () => {
-                    const resp = await createOffer();
-                    return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
+              onClick={async () => {
+                const resp = await createOffer();
+                return resp;
               }}
             />
           }
