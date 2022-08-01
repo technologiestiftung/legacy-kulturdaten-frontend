@@ -542,6 +542,9 @@ export const useCreateEntry = (
                 },
               })
             );
+            if (categoryName === Categories.location) {
+              document.title = "Neue Location"
+            }
           }, 250);
         }, 150);
 

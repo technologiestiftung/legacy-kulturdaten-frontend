@@ -347,6 +347,7 @@ export const OfferList: React.FC<OfferListProps> = ({
             icon="Plus"
             onClick={async () => {
               await createOffer()
+              document.title = "New offer"
             }}
           >
             {t('categories.offer.form.create')}
