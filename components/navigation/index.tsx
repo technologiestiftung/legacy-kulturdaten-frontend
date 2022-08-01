@@ -129,13 +129,10 @@ export const useNavigation = (
         (t('general.defaultTitleOrganizer') as string)
       : title;
 
-    console.log(headerTitle)
-
   const renderedHeaderMain = (
     <HeaderMain
       user={user}
-      title={headerTitle}
-      // pageTitle={pageTitle}
+      title={pageTitle}
       Link={Link}
       menuItems={activeHeader.menuItems}
       layout={layout}
