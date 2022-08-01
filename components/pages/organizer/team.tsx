@@ -17,7 +17,6 @@ import { OrganizerUpdate, organizerUpdateFactory } from '../../../lib/api/routes
 import { Textarea } from '../../textarea';
 import { usePseudoUID } from '../../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../../button';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { ParsedUrlQuery } from 'querystring';
 import { Role } from '../../../lib/api/types/role';
 import { User } from '../../../lib/api/types/user';
@@ -34,7 +33,6 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
   const [members, setMembers] = useState<string>('');
   const [blurred, setBlurred] = useState(false);
   const uid = usePseudoUID();
-  const loadingScreen = useLoadingScreen();
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry(category, query);
@@ -83,34 +81,32 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
             disabled={empty || !valid}
             onClick={async () => {
               if (membersArray.length > 0) {
-                loadingScreen(t('team.invite.loading'), async () => {
-                  try {
-                    const resp = await call<OrganizerUpdate>(organizerUpdateFactory, {
-                      id: entry?.data.id,
-                      entry: {
-                        relations: {
-                          roles: membersArray.map((member) => ({
-                            attributes: {
-                              role: 'editor',
-                              email: member,
-                            },
-                          })),
-                        },
+                try {
+                  const resp = await call<OrganizerUpdate>(organizerUpdateFactory, {
+                    id: entry?.data.id,
+                    entry: {
+                      relations: {
+                        roles: membersArray.map((member) => ({
+                          attributes: {
+                            role: 'editor',
+                            email: member,
+                          },
+                        })),
                       },
-                    });
+                    },
+                  });
 
-                    if (resp.status === 200) {
-                      mutate();
-                      setMembers('');
-                      return { success: true };
-                    }
-
-                    return { success: false, e: t('general.serverProblem') };
-                  } catch (e) {
-                    console.error(e);
-                    return { success: false, e: t('general.serverProblem') };
+                  if (resp.status === 200) {
+                    mutate();
+                    setMembers('');
+                    return { success: true };
                   }
-                });
+
+                  return { success: false, e: t('general.serverProblem') };
+                } catch (e) {
+                  console.error(e);
+                  return { success: false, e: t('general.serverProblem') };
+                }
               }
             }}
           >
