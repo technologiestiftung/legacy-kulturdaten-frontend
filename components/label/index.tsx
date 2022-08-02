@@ -13,8 +13,9 @@ interface LabelProps {
   children: React.ReactNode;
   htmlFor?: string;
   ariaLabel?: string;
+  id?: string;
 }
 
-export const Label: React.FC<LabelProps> = ({ children, htmlFor, ariaLabel }: LabelProps) => (
-  <StyledLabel htmlFor={htmlFor} aria-label={ariaLabel}>{children}</StyledLabel>
+export const Label: React.FC<LabelProps> = ({ children, htmlFor, ariaLabel, id }: LabelProps) => (
+  <StyledLabel htmlFor={htmlFor} aria-label={ariaLabel} id={id}>{children}</StyledLabel>
 );

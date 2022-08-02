@@ -14,7 +14,7 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
 import { emptyRichTextValue, useRichText } from '../../../richtext';
 import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
-import { FormContainer, FormWrapper, FormRequiredInfo } from '../formComponents';
+import { FormContainer, FormWrapper, FormRequiredInfo, Anchor } from '../formComponents';
 import { Tooltip } from '../../../tooltip';
 import { TooltipP } from '../../../tooltip/TooltipContent';
 
@@ -122,6 +122,7 @@ interface DescriptionProps extends EntryFormProps {
   softRequired?: boolean;
   key?: string;
   maxLength?: number;
+  id?: string;
 }
 
 export const useDescription = ({
@@ -134,6 +135,7 @@ export const useDescription = ({
   softRequired,
   key = 'description',
   maxLength,
+  id
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
@@ -315,6 +317,7 @@ export const useDescriptionForm: EntryFormHook = ({
   query,
   loaded,
   required,
+  id,
 }) => {
   const t = useT();
 
@@ -333,6 +336,7 @@ export const useDescriptionForm: EntryFormHook = ({
     required,
     softRequired: true,
     maxLength: defaultMaxLength,
+    id
   });
 
   const {
@@ -384,6 +388,7 @@ export const useDescriptionForm: EntryFormHook = ({
   return {
     renderedForm: (
       <FormWrapper>
+        <Anchor id={id}/>
         <FormContainer>
           {renderedDescriptionGerman}
           <FormRequiredInfo fulfilled={fulfilled} marginBottom/>

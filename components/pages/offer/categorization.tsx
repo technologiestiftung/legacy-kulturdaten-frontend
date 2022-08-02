@@ -19,7 +19,7 @@ import { useEntryTags } from '../helpers/form/Tags';
 import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../helpers/formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper, Anchor } from '../helpers/formComponents';
 import { usePseudoUID } from '../../../lib/uid';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
@@ -76,9 +76,9 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }} requirementNotInFormItem>
+        <Anchor id={id}/>
         <EntryFormHead
           title={`${t('categories.offer.form.mainType.title')} ${t('forms.required')}`}
-          id={id}
         />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>

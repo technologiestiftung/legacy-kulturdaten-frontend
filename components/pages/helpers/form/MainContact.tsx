@@ -11,7 +11,7 @@ import { isEmail } from '../../../../lib/validations';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { EntryFormHook, EntryFormHookProps } from '../form';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper, Anchor } from '../formComponents';
 
 interface MainContactFormHookProps extends EntryFormHookProps {
   customRequired?: boolean;
@@ -152,10 +152,10 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
               : undefined
           }
         >
+          <Anchor id={id}/>
           <EntryFormHead
             title={t('categories.organizer.form.address') as string}
             tooltip={t('categories.organizer.form.addressTooltip') as string}
-            id={id}
             valid={valid}
           />
           <FormGrid>
@@ -166,6 +166,7 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
                 value={defaultTranslation?.attributes?.name || ''}
                 required={required}
                 softRequired={softRequired}
+                id={id}
                 onChange={(e) => {
                   setMainContact({
                     ...mainContact,
