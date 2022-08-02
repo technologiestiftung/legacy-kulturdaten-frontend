@@ -30,6 +30,7 @@ import { RadioList } from '../../Radio/RadioList';
 import { useTeaserForm } from '../helpers/form/Teaser';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
+import { RichTextEditor } from '../../RichTextEditor'
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -608,6 +609,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <StyledRequiredInfoText/>
             <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
+            <RichTextEditor />
             <StyledEntryFormContainer>{organizerLocationForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{roomForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{teaserForm}</StyledEntryFormContainer>
