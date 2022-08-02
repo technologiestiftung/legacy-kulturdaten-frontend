@@ -18,6 +18,7 @@ import { H3Svg } from '../assets/H3Svg';
 import { ListOrderedSvg } from '../assets/ListOrderedSvg';
 import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
+import { RichTextEditor } from '../RichTextEditor'
 
 interface CustomRenderElementProps extends RenderElementProps {
   element: CustomElement;
@@ -301,6 +302,7 @@ export const useRichText = (
   textLength: number;
 } => {
   const [intValue, setIntValue] = useState<CustomDescendant[]>(emptyRichTextValue);
+  console.log(emptyRichTextValue)
 
   const hasText = useMemo(() => haveDescendantsText(intValue), [intValue]);
 
@@ -310,7 +312,7 @@ export const useRichText = (
 
   return {
     renderedRichText: (
-      <RichText
+      <RichTextEditor
         {...props}
         intValue={intValue}
         setIntValue={setIntValue}
@@ -319,6 +321,7 @@ export const useRichText = (
       />
     ),
     init: (value) => {
+      console.log("value",value)
       setIntValue(value);
     },
     valid,

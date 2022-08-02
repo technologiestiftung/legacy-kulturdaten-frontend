@@ -219,6 +219,7 @@ export const useDescription = ({
 
   useEffect(() => {
     if (textFromApi !== cachedApiText) {
+      console.log("from api",textFromApi)
       setTouched(false);
       setCachedApiText(textFromApi);
       setSerializedMarkdown(textFromApi);

@@ -609,7 +609,6 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
           <EntryFormWrapper>
             <StyledRequiredInfoText/>
             <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
-            <RichTextEditor />
             <StyledEntryFormContainer>{organizerLocationForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{roomForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{teaserForm}</StyledEntryFormContainer>
