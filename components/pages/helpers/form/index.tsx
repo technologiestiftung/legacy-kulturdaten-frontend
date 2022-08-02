@@ -14,6 +14,7 @@ export interface EntryFormHookProps extends EntryFormProps {
   required?: boolean;
   id?: string;
   hideTitle?: boolean;
+  placeholder?: string;
 }
 
 export type EntryFormHook<T = EntryFormHookProps> = (props: T) => {

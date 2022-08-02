@@ -435,6 +435,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.offer.form.name') as string,
+    placeholder: t('categories.offer.form.namePlaceholder') as string,
     hideTitle: true,
     id: 'offer-name',
   });

@@ -1173,6 +1173,7 @@ export const enDE: Localization = {
         nameGermanSimple: () => 'German: simple language',
         nameEnglish: () => 'English',
         nameEnglishSimple: () => 'English: simple language',
+        namePlaceholder: () => "e.g. The Magic Flute",
         description: () => 'Description',
         submit: () => 'create',
         save: () => 'save',

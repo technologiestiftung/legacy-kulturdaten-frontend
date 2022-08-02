@@ -29,6 +29,7 @@ interface SetNameProps {
   hint?: boolean;
   tooltip?: string;
   id?: string;
+  placeholder?: string;
 }
 
 const Name: React.FC<SetNameProps> = ({
@@ -43,7 +44,8 @@ const Name: React.FC<SetNameProps> = ({
   softRequired,
   hint,
   tooltip,
-  id
+  id,
+  placeholder
 }: SetNameProps) => {
   // set initial value
   useEffect(() => {
@@ -59,6 +61,7 @@ const Name: React.FC<SetNameProps> = ({
         ariaLabel={ariaLabel}
         type={InputType.text}
         id={id}
+        placeholder={placeholder}
         value={value || ''}
         onChange={(e) => {
           setValue(e.target.value);
@@ -87,6 +90,7 @@ export const useName = <
   loaded: boolean;
   tooltip?: any;
   id?: string;
+  placeholder?: string;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -191,7 +195,8 @@ export const useName = <
           valid,
           tooltip,
           softRequired,
-          id: props.id
+          id: props.id,
+          placeholder: props.placeholder
         }}
       />
     ),
@@ -205,7 +210,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, id  }) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, id, placeholder  }) => {
   const t = useT();
 
   const {
@@ -222,7 +227,8 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     label: `${title} ${t('forms.labelGerman') as string}`,
     loaded,
     tooltip,
-    id
+    id,
+    placeholder
   });
 
   const {

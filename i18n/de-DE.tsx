@@ -1194,6 +1194,7 @@ export const deDE: Localization = {
         nameGermanSimple: () => 'Deutsch: einfache Sprache',
         nameEnglish: () => 'Englisch',
         nameEnglishSimple: () => 'Englisch: einfache Sprache',
+        namePlaceholder: () => "z.B. Die Zauberflöte",
         description: () => 'Beschreibung',
         submit: () => 'anlegen',
         save: () => 'speichern',
