@@ -15,6 +15,7 @@ export enum ToolbarGroupWidth {
 }
 
 const StyledToolbar = styled.div`
+height: 76px;
 background: var(--grey-200);
 padding: 0.25rem 0.75rem 0.75rem;
 box-shadow: ${insetBorder(false, false, true)};
@@ -83,12 +84,16 @@ export const Toolbar = ({ editor }) => {
             onClick={() => editor.chain().focus().undo().run()}
             icon="CornerUpLeft"
             variant={ButtonVariant.toolbar}
+            ariaLabel={t('richText.undo') as string}
+            tooltip={t('richText.undo') as string}
           />
           <Button
             disabled={!editor.can().redo()}
             onClick={() => editor.chain().focus().redo().run()}
             icon="CornerUpRight"
             variant={ButtonVariant.toolbar}
+            ariaLabel={t('richText.redo') as string}
+            tooltip={t('richText.redo') as string}
           />
         </StyledToolbarGroupItems>
       </StyledToolbarGroup>
@@ -99,20 +104,26 @@ export const Toolbar = ({ editor }) => {
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
             renderedIcon={<H1Svg />}
             variant={ButtonVariant.toolbar}
-            color={editor.isActive('heading', { level: 1 }) ? ButtonColor.green : ButtonColor.default}>
-          </Button>
+            color={editor.isActive('heading', { level: 1 }) ? ButtonColor.green : ButtonColor.default}
+            ariaLabel={t('richText.headingOne') as string}
+            tooltip={t('richText.headingOne') as string}
+          />
           <Button 
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
             renderedIcon={<H2Svg />}
             variant={ButtonVariant.toolbar}
-            color={editor.isActive('heading', { level: 2 }) ? ButtonColor.green : ButtonColor.default}>
-          </Button>
+            color={editor.isActive('heading', { level: 2 }) ? ButtonColor.green : ButtonColor.default}
+            ariaLabel={t('richText.headingTwo') as string}
+            tooltip={t('richText.headingTwo') as string}
+          />
           <Button 
             onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
             renderedIcon={<H3Svg />}
             variant={ButtonVariant.toolbar}
-            color={editor.isActive('heading', { level: 3 }) ? ButtonColor.green : ButtonColor.default}>
-          </Button>
+            color={editor.isActive('heading', { level: 3 }) ? ButtonColor.green : ButtonColor.default}
+            ariaLabel={t('richText.headingThree') as string}
+            tooltip={t('richText.headingThree') as string}
+          />
         </StyledToolbarGroupItems>
       </StyledToolbarGroup>
       <StyledToolbarGroup width={ToolbarGroupWidth.half}>
@@ -123,6 +134,8 @@ export const Toolbar = ({ editor }) => {
             icon="List"
             variant={ButtonVariant.toolbar}
             color={editor.isActive('bulletList') ? ButtonColor.green : ButtonColor.default}
+            ariaLabel={t('richText.listUnordered') as string}
+            tooltip={t('richText.listUnordered') as string}
           />
           <Button
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -131,6 +144,8 @@ export const Toolbar = ({ editor }) => {
             iconHeight="1.125rem"
             variant={ButtonVariant.toolbar}
             color={editor.isActive('orderedList') ? ButtonColor.green : ButtonColor.default}
+            ariaLabel={t('richText.listOrdered') as string}
+            tooltip={t('richText.listOrdered') as string}
           />
         </StyledToolbarGroupItems>
       </StyledToolbarGroup>
@@ -142,12 +157,16 @@ export const Toolbar = ({ editor }) => {
             icon="Bold"
             variant={ButtonVariant.toolbar}
             color={editor.isActive('bold') ? ButtonColor.green : ButtonColor.default}
+            ariaLabel={t('richText.bold') as string}
+            tooltip={t('richText.bold') as string}
             />
           <Button 
             onClick={() => editor.chain().focus().toggleItalic().run()}
             icon="Italic"
             variant={ButtonVariant.toolbar}
             color={editor.isActive('italic') ? ButtonColor.green : ButtonColor.default}
+            ariaLabel={t('richText.italic') as string}
+            tooltip={t('richText.italic') as string}
             />
         </StyledToolbarGroupItems>
       </StyledToolbarGroup>

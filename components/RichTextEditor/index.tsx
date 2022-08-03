@@ -1,28 +1,40 @@
 import styled from '@emotion/styled'
 import CharacterCount from '@tiptap/extension-character-count'
 import StarterKit from '@tiptap/starter-kit'
+import Placeholder from '@tiptap/extension-placeholder'
 import { EditorContent, useEditor } from '@tiptap/react'
-import { useRef, Ref } from 'react'
-import { htmlToMarkdown, markdownToSlate, } from '../richtext/parser'
-
+import { Ref, useState, useMemo, useEffect } from 'react'
+import { useDebounce } from '../../lib/useDebounce';
+import { mq } from '../globals/Constants';
+import { Breakpoint } from '../../lib/WindowService';
+import showdown from 'showdown';
 import { Toolbar } from './Toolbar'
-import { CustomDescendant, CustomElement, ElementType, Element, CustomText } from '../richtext/Element';
 
 
 const RTEWrapper = styled.div`
   grid-column: 2/-2;
   width: 100%;
-  min-height: 100%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  justify-content: stretch;
 
   &:focus{
     outline: solid 2px blue;
   };
 
   .ProseMirror {
+
+    padding: 2rem 0.75rem;
+    height: 180px;
+    overflow: auto;
+    margin: 0 auto;
+
+    ${mq(Breakpoint.mid)} {
+      padding: 2rem 2rem;
+    }
+
     > * + * {
       margin-top: 0.75em;
     };
@@ -40,56 +52,58 @@ const RTEWrapper = styled.div`
     p {
       font-size: var(--font-size-300);
       line-height: var(--line-height-300);
-      padding-bottom: var(--line-height-300);
     };
 
     h1 {
       font-size: var(--font-size-600);
       line-height: var(--line-height-600);
       font-weight: 700;
-      padding-bottom: var(--line-height-600);
     },
     h2 {
       font-size: var(--font-size-400);
       line-height: var(--line-height-400);
       font-weight: 700;
-      padding-bottom: var(--line-height-400);
     },
     h3 {
       font-size: var(--font-size-300);
       line-height: var(--line-height-300);
       font-weight: 700;
-      padding-bottom: var(--line-height-300);
     },
     strong {
       font-weight: 700;
     },
     em {font-style: italic;},
+
+    p.is-editor-empty:first-child::before {
+      content: attr(data-placeholder);
+      float: left;
+      color: #adb5bd;
+      pointer-events: none;
+      height: 0;
+    }
   }  
 
 `;
 
 const StyledCharacterCount = styled.div`
-  color: #868e96;
-  margin-top: 1rem;
-`;
-
-const FocusButton = styled.button`
-  grid-column: 2/-2;
+  padding: 0.375rem 0.75rem;
+  height: 28px;
+  font-size: var(--font-size-200);
+  text-align: end;
 `;
 
 type RichTextEditorProps = {
-  value?: CustomDescendant[];
-  onChange?: (value: CustomDescendant[]) => void;
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   contentRef?: Ref<HTMLDivElement>;
-  intValue: CustomDescendant[];
-  setIntValue: (value: CustomDescendant[]) => void;
+  intValue: string;
+  setIntValue: (value: string) => void;
   required?: boolean;
   softRequired?: boolean;
   valid: boolean;
-  textLength: number;
   maxLength?: number;
+  setTextLength: (value: number) => void;
 };
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -97,26 +111,44 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   placeholder,
   contentRef,
   intValue,
-  setIntValue,
   required,
   valid,
   maxLength,
+  setTextLength
 }: RichTextEditorProps) => {
-  const editorRef = useRef(null)
+  const debouncer = useDebounce();
+  const [count, setCount] = useState(0)
+
   const editor = useEditor({
     extensions: [
       StarterKit,
       CharacterCount.configure({
         limit: maxLength,
       }),
+      Placeholder.configure({
+        placeholder: placeholder || 'hello 123'
+      }),
     ],
-    onUpdate: ({ editor }) => {
-      setIntValue(markdownToSlate(editor.getHTML()))
-      // send the content to an API here
+    onUpdate: ({editor}) => {
+      const parsedValue = editor.getHTML()
+      updateCount()
+      debouncer(() => {
+        onChange(parsedValue);
+      });
     },
     autofocus: true,
-    content: <p></p>,
-  })
+    content: intValue,
+  },[intValue])
+
+  const updateCount = () => {
+    const currentCount = editor?.storage?.characterCount.characters()
+    setTextLength(currentCount)
+    setCount(currentCount)
+  }
+
+  useEffect(() => {
+    updateCount()
+  });
 
   if (!editor) {
     return null
@@ -124,16 +156,66 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   return (
     <>
-    <FocusButton onClick={() => editorRef.current.focus()}>focus</FocusButton>
-    <RTEWrapper aria-label="this is an RT-Editor" ref={editorRef} tabIndex={0} role="group">
-        <Toolbar editor={editor} />
-        <EditorContent editor={editor} />
+    {/* <FocusButton onClick={() => editorRef.current.focus()}>focus</FocusButton> */}
+    <RTEWrapper 
+      aria-label="this is an RT-Editor" 
+      ref={contentRef} 
+      tabIndex={0} 
+      role="group"
+    >
+      <Toolbar editor={editor} />
+      <EditorContent 
+        editor={editor}
+        aria-invalid={!valid}
+        aria-required={required}
+      />
 
-        {maxLength && <StyledCharacterCount>
-          {editor.storage.characterCount.characters()}/{maxLength} characters
-        </StyledCharacterCount>}
-      </RTEWrapper>
+      {maxLength && <StyledCharacterCount>
+        {count} / {maxLength}
+      </StyledCharacterCount>}
+    </RTEWrapper>
     </>
   )
 }
+export const emptyRichTextValue = 'hello';
 
+export const useRichText = (
+  props: Pick<
+    RichTextEditorProps,
+    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired' | 'maxLength'
+  >
+): {
+  renderedRichText: React.ReactElement<RichTextEditorProps>;
+  init: (value: RichTextEditorProps['value']) => void;
+  valid: boolean;
+  textLength: number;
+} => {
+  const [intValue, setIntValue] = useState<string>();
+
+  const hasText = intValue ? true : false
+
+
+  const [textLength, setTextLength] = useState(intValue ? intValue.length : 0)
+
+  const valid = useMemo(() => props.required !== true || hasText, [hasText, props?.required]);
+
+
+  const converter = new showdown.Converter();
+
+  return {
+    renderedRichText: (
+      <RichTextEditor
+        {...props}
+        intValue={intValue}
+        setIntValue={setIntValue}
+        valid={valid}
+        setTextLength={setTextLength}
+      />
+    ),
+    init: (value) => {
+      setIntValue(converter.makeHtml(value));
+    },
+    valid,
+    textLength,
+  };
+};

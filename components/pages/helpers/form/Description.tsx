@@ -12,8 +12,8 @@ import { getTranslation } from '../../../../lib/translations';
 import { WindowContext } from '../../../../lib/WindowService';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
-import { emptyRichTextValue, useRichText } from '../../../richtext';
-import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
+import { emptyRichTextValue, useRichText } from '../../../RichTextEditor';
+import showdown from 'showdown';
 import { FormContainer, FormWrapper, FormRequiredInfo } from '../formComponents';
 import { Tooltip } from '../../../tooltip';
 import { TooltipP } from '../../../tooltip/TooltipContent';
@@ -74,42 +74,6 @@ const StyledDescriptionRichTextContainer = styled.div`
   }
 `;
 
-const StyledMaxLengthDisplay = styled.div<{ textLength: number; maxLength: number }>`
-  font-size: var(--font-size-200);
-  line-height: var(--line-height-200);
-  text-align: right;
-
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 0.375rem;
-
-  pointer-events: none;
-  display: flex;
-  justify-content: flex-end;
-
-  ${({ textLength, maxLength }) =>
-    css`
-      ${textLength > maxLength ? 'color: var(--error);' : ''}
-    `}
-`;
-
-const StyledMaxLengthDisplayText = styled.div`
-  background: var(--white-o85);
-  border-radius: 0.375rem;
-  padding: 0.1875rem 0.375rem;
-
-  @supports (backdrop-filter: blur(16px)) {
-    background: var(--white-o50);
-    backdrop-filter: blur(16px);
-  }
-
-  @supports (-webkit-backdrop-filter: blur(16px)) {
-    background: var(--white-o50);
-    -webkit-backdrop-filter: blur(16px);
-  }
-`;
-
 const StyledTooltip = styled.div`
   margin-left: 0.5rem;
 `;
@@ -153,10 +117,14 @@ export const useDescription = ({
     ApiCall
   >(category, query);
   const call = useApiCall();
-  const [cachedApiText, setCachedApiText] = useState<string>();
+  const [cachedApiText, setCachedApiText] = useState<string>('<p></p>');
   const { rendered } = useContext(WindowContext);
   const t = useT();
   const [touched, setTouched] = useState(false);
+
+  const converter = useMemo(() => {
+    return new showdown.Converter({metadata: true});
+  },[])
 
   const entryTranslation = getTranslation<
     { attributes: { description: string; teaser: string } } & Translation
@@ -165,6 +133,7 @@ export const useDescription = ({
   const textFromApi = useMemo(() => {
     return entryTranslation?.attributes[key] || '';
   }, [entryTranslation, key]);
+
 
   const richTextRef = useRef<HTMLDivElement>(null);
 
@@ -176,10 +145,12 @@ export const useDescription = ({
     valid,
     textLength,
   } = useRichText({
-    onChange: () => {
+    onChange: (changedValue) => {
+      // const parsedHTML = new DOMParser().parseFromString(changedValue, 'text/html').body
       if (richTextRef.current) {
         setTouched(true);
-        setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
+        setSerializedMarkdown(converter.makeMd(changedValue));
+
       }
     },
     contentRef: richTextRef,
@@ -191,6 +162,8 @@ export const useDescription = ({
   const pristine = useMemo(() => {
     if (typeof cachedApiText === 'undefined' || typeof serializedMarkdown === 'undefined') {
       return true;
+    }
+    else {
     }
 
     if (
@@ -218,18 +191,19 @@ export const useDescription = ({
   }, [touched, cachedApiText, serializedMarkdown]);
 
   useEffect(() => {
-    if (textFromApi !== cachedApiText) {
-      console.log("from api",textFromApi)
+    if (textFromApi && textFromApi !== cachedApiText) {
+      console.log("textFromApi !== cachedApiText",textFromApi)
       setTouched(false);
       setCachedApiText(textFromApi);
       setSerializedMarkdown(textFromApi);
       requestAnimationFrame(() =>
         initRichText(
-          textFromApi && textFromApi.length > 0 ? markdownToSlate(textFromApi) : emptyRichTextValue
+          textFromApi && textFromApi.length > 0 ? converter.makeHtml(textFromApi) : emptyRichTextValue
         )
       );
     }
-  }, [initRichText, textFromApi, cachedApiText]);
+  }, [initRichText, textFromApi, cachedApiText, converter]);
+
 
   return {
     renderedDescription: (
@@ -260,13 +234,6 @@ export const useDescription = ({
                 <StyledDescriptionRichTextContainer>
                   {renderedRichText}
                 </StyledDescriptionRichTextContainer>
-                {maxLength && (
-                  <StyledMaxLengthDisplay textLength={textLength} maxLength={maxLength}>
-                    <StyledMaxLengthDisplayText>
-                      {textLength} / {maxLength}
-                    </StyledMaxLengthDisplayText>
-                  </StyledMaxLengthDisplay>
-                )}
               </StyledDescriptionRichTextWrapper>
             </>
           )}
