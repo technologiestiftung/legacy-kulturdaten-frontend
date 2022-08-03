@@ -9,7 +9,7 @@ import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import showdown from 'showdown';
 import { Toolbar } from './Toolbar'
-
+import { focusStyles } from '../globals/Constants'
 
 const RTEWrapper = styled.div`
   grid-column: 2/-2;
@@ -20,16 +20,14 @@ const RTEWrapper = styled.div`
   align-items: stretch;
   justify-content: stretch;
 
-  &:focus{
-    outline: solid 2px blue;
-  };
-
   .ProseMirror {
 
     padding: 2rem 0.75rem;
     height: 180px;
     overflow: auto;
     margin: 0 auto;
+
+    ${focusStyles}
 
     ${mq(Breakpoint.mid)} {
       padding: 2rem 2rem;
@@ -94,6 +92,7 @@ const StyledCharacterCount = styled.div`
 
 type RichTextEditorProps = {
   value?: string;
+  ariaLabel: string;
   onChange?: (value: string) => void;
   placeholder?: string;
   contentRef?: Ref<HTMLDivElement>;
@@ -114,6 +113,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   required,
   valid,
   maxLength,
+  ariaLabel,
   setTextLength
 }: RichTextEditorProps) => {
   const debouncer = useDebounce();
@@ -156,9 +156,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   return (
     <>
-    {/* <FocusButton onClick={() => editorRef.current.focus()}>focus</FocusButton> */}
     <RTEWrapper 
-      aria-label="this is an RT-Editor" 
+      aria-label={ariaLabel} 
       ref={contentRef} 
       tabIndex={0} 
       role="group"
@@ -182,7 +181,7 @@ export const emptyRichTextValue = 'hello';
 export const useRichText = (
   props: Pick<
     RichTextEditorProps,
-    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired' | 'maxLength'
+    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired' | 'maxLength' | 'ariaLabel'
   >
 ): {
   renderedRichText: React.ReactElement<RichTextEditorProps>;
@@ -210,6 +209,7 @@ export const useRichText = (
         setIntValue={setIntValue}
         valid={valid}
         setTextLength={setTextLength}
+        ariaLabel={props.ariaLabel}
       />
     ),
     init: (value) => {

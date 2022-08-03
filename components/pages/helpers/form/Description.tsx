@@ -139,6 +139,8 @@ export const useDescription = ({
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
 
+  const ariaLabel = `Richtext-editor ${t('date.for')} ${title}${(required || softRequired) &&  t('forms.required')}`
+
   const {
     renderedRichText,
     init: initRichText,
@@ -146,7 +148,6 @@ export const useDescription = ({
     textLength,
   } = useRichText({
     onChange: (changedValue) => {
-      // const parsedHTML = new DOMParser().parseFromString(changedValue, 'text/html').body
       if (richTextRef.current) {
         setTouched(true);
         setSerializedMarkdown(converter.makeMd(changedValue));
@@ -157,6 +158,7 @@ export const useDescription = ({
     required,
     softRequired,
     maxLength,
+    ariaLabel
   });
 
   const pristine = useMemo(() => {
