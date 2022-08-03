@@ -10,6 +10,7 @@ import { Breakpoint } from '../../lib/WindowService';
 import showdown from 'showdown';
 import { Toolbar } from './Toolbar'
 import { focusStyles } from '../globals/Constants'
+import { useT } from '../../lib/i18n';
 
 const RTEWrapper = styled.div`
   grid-column: 2/-2;
@@ -90,6 +91,11 @@ const StyledCharacterCount = styled.div`
   text-align: end;
 `;
 
+const CountAlert = styled.p`
+  position: absolute;
+  opacity: 0;
+`;
+
 type RichTextEditorProps = {
   value?: string;
   ariaLabel: string;
@@ -118,6 +124,27 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 }: RichTextEditorProps) => {
   const debouncer = useDebounce();
   const [count, setCount] = useState(0)
+  const [countAlert, setCountAlert] = useState('')
+  const t = useT();
+
+  const countAlertCall = () => {
+    const restDigits = maxLength - count
+    return (
+    restDigits === 0
+    ? `0 ${t('richText.charactersLeft_2')}`    
+    : restDigits < 5
+    ? `${t('richText.charactersLeft_1')} 5 ${t('richText.charactersLeft_2')}`
+    : restDigits < 10
+    ? `${t('richText.charactersLeft_1')} 10 ${t('richText.charactersLeft_2')}`
+    : restDigits < 20
+    ? `${t('richText.charactersLeft_1')} 20 ${t('richText.charactersLeft_2')}`
+    : restDigits < 50
+    ? `${t('richText.charactersLeft_1')} 50 ${t('richText.charactersLeft_2')}`
+    : restDigits >= 50
+    ? `${t('richText.charactersLeft_1b')}50 ${t('richText.charactersLeft_2')}`
+    : null
+    )
+  }
 
   const editor = useEditor({
     extensions: [
@@ -126,7 +153,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         limit: maxLength,
       }),
       Placeholder.configure({
-        placeholder: placeholder || 'hello 123'
+        placeholder: placeholder || ''
       }),
     ],
     onUpdate: ({editor}) => {
@@ -144,6 +171,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     const currentCount = editor?.storage?.characterCount.characters()
     setTextLength(currentCount)
     setCount(currentCount)
+    setCountAlert(countAlertCall)
   }
 
   useEffect(() => {
@@ -169,9 +197,11 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         aria-required={required}
       />
 
-      {maxLength && <StyledCharacterCount>
+      {maxLength && 
+      <StyledCharacterCount>
         {count} / {maxLength}
       </StyledCharacterCount>}
+      {countAlert !== "" && <CountAlert aria-live="assertive" aria-relevant='text' role="region">{countAlert}</CountAlert>}
     </RTEWrapper>
     </>
   )
