@@ -283,6 +283,7 @@ export const usePublish = ({
   const { entry } = useEntry(category, router?.query);
 
   const requirements = category?.requirements;
+  
 
   const failedRequirementsFromApi =
     typeof entry?.meta?.publishable === 'object' &&
@@ -316,6 +317,8 @@ export const usePublish = ({
             ? {
                 href: requirement.link?.href(query),
                 ariaLabel: requirement.link.ariaLabel,
+                targetId: requirement.link.targetId,
+                targetRef: requirement.link.targetRef,
               }
             : undefined,
         };

@@ -11,6 +11,7 @@ import showdown from 'showdown';
 import { Toolbar } from './Toolbar'
 import { focusStyles } from '../globals/Constants'
 import { useT } from '../../lib/i18n';
+// import { RTEWrapper as RTEWrapperRefElement } from './RTEWrapper'
 
 const RTEWrapper = styled.div`
   grid-column: 2/-2;
@@ -109,24 +110,26 @@ type RichTextEditorProps = {
   valid: boolean;
   maxLength?: number;
   setTextLength: (value: number) => void;
+  ref?: any;
 };
+
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onChange,
   placeholder,
-  contentRef,
   intValue,
   required,
   valid,
   maxLength,
   ariaLabel,
-  setTextLength
+  setTextLength,
+  ref
 }: RichTextEditorProps) => {
   const debouncer = useDebounce();
   const [count, setCount] = useState(0)
   const [countAlert, setCountAlert] = useState('')
   const t = useT();
-
+  console.log("REF",ref)
   const countAlertCall = () => {
     const restDigits = maxLength - count
     return (
@@ -184,9 +187,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   return (
     <>
-    <RTEWrapper 
+    <RTEWrapper
       aria-label={ariaLabel} 
-      ref={contentRef} 
+      ref={ref}
       tabIndex={0} 
       role="group"
     >
@@ -211,7 +214,7 @@ export const emptyRichTextValue = 'hello';
 export const useRichText = (
   props: Pick<
     RichTextEditorProps,
-    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired' | 'maxLength' | 'ariaLabel'
+    'value' | 'placeholder' | 'onChange' | 'contentRef' | 'required' | 'softRequired' | 'maxLength' | 'ariaLabel' | 'ref'
   >
 ): {
   renderedRichText: React.ReactElement<RichTextEditorProps>;
@@ -222,7 +225,6 @@ export const useRichText = (
   const [intValue, setIntValue] = useState<string>();
 
   const hasText = intValue ? true : false
-
 
   const [textLength, setTextLength] = useState(intValue ? intValue.length : 0)
 
@@ -240,6 +242,7 @@ export const useRichText = (
         valid={valid}
         setTextLength={setTextLength}
         ariaLabel={props.ariaLabel}
+        ref={props.ref}
       />
     ),
     init: (value) => {

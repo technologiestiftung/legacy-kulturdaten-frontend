@@ -19,7 +19,7 @@ import { useEntryTags } from '../helpers/form/Tags';
 import { EntryFormHook } from '../helpers/form';
 import { useApiCall } from '../../../lib/api';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper, Anchor } from '../helpers/formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../helpers/formComponents';
 import { usePseudoUID } from '../../../lib/uid';
 import { getTranslation } from '../../../lib/translations';
 import { useLanguage } from '../../../lib/routing';
@@ -31,7 +31,7 @@ import { useOrganizerId } from '../../../lib/useOrganizer';
 import { PublishedStatus } from '../../../lib/api/types/general';
 import { ComponentLoader } from '../../ComponentLoader';
 
-const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
+const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required}) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -76,7 +76,6 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }} requirementNotInFormItem>
-        <Anchor id={id}/>
         <EntryFormHead
           title={`${t('categories.offer.form.mainType.title')} ${t('forms.required')}`}
         />

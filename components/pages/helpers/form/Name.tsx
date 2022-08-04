@@ -1,5 +1,5 @@
 import { ParsedUrlQuery } from 'node:querystring';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState, RefObject } from 'react';
 import { EntryFormHook } from '.';
 import { Categories } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
@@ -11,7 +11,8 @@ import { getTranslation } from '../../../../lib/translations';
 import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo, Anchor } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo } from '../formComponents';
+import { organizerNameRef } from '../../../../config/categories';
 
 const defaultMaxLength = 100;
 
@@ -30,6 +31,7 @@ interface SetNameProps {
   tooltip?: string;
   id?: string;
   placeholder?: string;
+  ref?: any;
 }
 
 const Name: React.FC<SetNameProps> = ({
@@ -61,6 +63,7 @@ const Name: React.FC<SetNameProps> = ({
         ariaLabel={ariaLabel}
         type={InputType.text}
         id={id}
+        ref={organizerNameRef}
         placeholder={placeholder}
         value={value || ''}
         onChange={(e) => {
@@ -91,6 +94,7 @@ export const useName = <
   tooltip?: any;
   id?: string;
   placeholder?: string;
+  ref?: any;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -98,6 +102,7 @@ export const useName = <
   reset: () => void;
   valid: boolean;
   value: string;
+  organizerInternalContactRef?: RefObject<unknown>;
 } => {
   const { category, query, language, label, ariaLabel, tooltip } = props;
 
@@ -196,6 +201,7 @@ export const useName = <
           tooltip,
           softRequired,
           id: props.id,
+          ref: props.ref,
           placeholder: props.placeholder
         }}
       />
@@ -210,7 +216,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, id, placeholder  }) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, id, placeholder, ref  }) => {
   const t = useT();
 
   const {
@@ -263,7 +269,6 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }}>
-        <Anchor id={id}/>
         <FormGrid noTopPadding>
           <FormItem width={FormItemWidth.half} lang="de">{setNameGerman}</FormItem>
           <FormItem width={FormItemWidth.half} lang="en">{setNameEnglish}</FormItem>
@@ -283,6 +288,6 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     requirementFulfillment: {
       requirementKey: 'name',
       fulfilled,
-    },
+    }
   };
 };
