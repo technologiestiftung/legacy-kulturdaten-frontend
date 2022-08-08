@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { ChevronDown } from 'react-feather';
-import { organizerTypeRef } from '../../config/categories';
+import { offerCategoryRef, offerTypeRef } from '../../config/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
@@ -137,7 +137,19 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       }) as string)
     : undefined;
 
-    const newRef = useRef(null);
+    const getRef = ():any => {
+      switch(id) {
+        case "offer-main-type":
+          return offerTypeRef
+          break;
+        case "offer-types":
+          return offerCategoryRef
+          break;
+        default:
+          return
+          }
+    }
+
 
   return (
     <StyledEntryFormHead
@@ -156,8 +168,8 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
         ''
       )}
       <StyledEntryFormHeadBorder />
-      <StyledEntryFormHeadTitle id={id} size={size} tabIndex={0}>
-      <legend ref={id === "organizer-types" ? organizerTypeRef : newRef} >{title}</legend>
+      <StyledEntryFormHeadTitle id={id} size={size}>
+      <legend tabIndex={0} ref={getRef}>{title}</legend>
         {tooltip && (
           <StyledTooltip>
             <Tooltip>

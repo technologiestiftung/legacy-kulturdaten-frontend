@@ -286,9 +286,11 @@ export const useDescriptionForm: EntryFormHook = ({
   query,
   loaded,
   required,
-  id,
+  id
 }) => {
   const t = useT();
+
+  console.log("ID", id)
 
   const {
     renderedDescription: renderedDescriptionGerman,
@@ -305,7 +307,7 @@ export const useDescriptionForm: EntryFormHook = ({
     required,
     softRequired: true,
     maxLength: defaultMaxLength,
-    id: "organizer-description"
+    id
   });
 
   const {

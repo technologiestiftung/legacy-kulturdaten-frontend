@@ -177,7 +177,7 @@ export interface InputProps extends ComponentWithVariants {
   hideError?: boolean;
   debounce?: boolean | number;
   tooltip?: string;
-  ref?: HTMLElement;
+  ref?: any;
 }
 
 // eslint-disable-next-line react/display-name

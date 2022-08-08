@@ -3,7 +3,7 @@ import CharacterCount from '@tiptap/extension-character-count'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import { EditorContent, useEditor } from '@tiptap/react'
-import { Ref, useState, useMemo, useEffect, useRef } from 'react'
+import { Ref, useState, useMemo, useEffect } from 'react'
 import { useDebounce } from '../../lib/useDebounce';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
@@ -11,7 +11,8 @@ import showdown from 'showdown';
 import { Toolbar } from './Toolbar'
 import { focusStyles } from '../globals/Constants'
 import { useT } from '../../lib/i18n';
-import { organizerDescriptionRef } from '../../config/categories'
+import { locationDescriptionRef, offerDescriptionRef, organizerDescriptionRef } from '../../config/categories'
+import { Anchor } from '../pages/helpers/formComponents'
 
 const RTEContentWrapper = styled.div`
   grid-column: 2/-2;
@@ -146,7 +147,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     : null
     )
   }
-  const descriptionRef = useRef(null)
 
   const editor = useEditor({
     extensions: [
@@ -184,17 +184,30 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     return null
   }
 
+  const getRef = ():any => {
+    switch(id) {
+      case "organizer-description":
+        return organizerDescriptionRef
+        break;
+      case "offer-description":
+        return offerDescriptionRef
+        break;
+      case "location-description":
+        return locationDescriptionRef
+        break;
+      default:
+        return
+    }
+  }
+
   return (
     <>
+    <Anchor id={id}/>
     <RTEContentWrapper
       aria-label={ariaLabel} 
       tabIndex={0} 
       role="group"
-      ref={
-        id === "organizer-description"
-        ? organizerDescriptionRef
-        : descriptionRef
-      }
+      ref={getRef()}
     >
       <Toolbar editor={editor} />
       <EditorContent

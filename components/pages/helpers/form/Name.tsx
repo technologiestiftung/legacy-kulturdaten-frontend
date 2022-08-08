@@ -1,7 +1,7 @@
 import { ParsedUrlQuery } from 'node:querystring';
 import { FormEvent, useEffect, useMemo, useState, RefObject } from 'react';
 import { EntryFormHook } from '.';
-import { Categories } from '../../../../config/categories';
+import { Categories, locationNameRef, offerNameRef } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
@@ -11,7 +11,7 @@ import { getTranslation } from '../../../../lib/translations';
 import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo, Anchor } from '../formComponents';
 import { organizerNameRef } from '../../../../config/categories';
 import React from 'react';
 
@@ -46,11 +46,11 @@ const Name = React.forwardRef<HTMLElement, SetNameProps>(
 
   return (
     <form onSubmit={props.onSubmit}>
+      <Anchor id={props.id}/>
       <Input
         label={props.label}
         ariaLabel={props.ariaLabel}
         type={InputType.text}
-        id={props.id}
         ref={ref}
         placeholder={props.placeholder}
         value={props.value || ''}
@@ -82,7 +82,6 @@ export const useName = <
   tooltip?: any;
   id?: string;
   placeholder?: string;
-  ref?: any;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -173,9 +172,25 @@ export const useName = <
     }
   };
 
+  const getRef = ():any => {
+    switch(props.id) {
+      case "organizer-name":
+        return organizerNameRef
+        break;
+      case "offer-name":
+        return offerNameRef
+        break;
+      case "location-name":
+        return locationNameRef
+        break;
+      default:
+        return
+        }
+  }
+
   return {
     form: (
-      <Name ref={props.ref}
+      <Name ref={getRef()}
         {...{
           pristine,
           value,
@@ -203,7 +218,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, placeholder }) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, placeholder, id }) => {
   const t = useT();
 
   const {
@@ -220,8 +235,7 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     label: `${title} ${t('forms.labelGerman') as string}`,
     loaded,
     tooltip,
-    id: "organizer-name",
-    ref: organizerNameRef,
+    id: id,
     placeholder
   });
 
