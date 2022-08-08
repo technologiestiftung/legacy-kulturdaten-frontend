@@ -141,6 +141,14 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
   const registrationUrlValid = isUrl(attributes?.registrationUrl);
 
   const [attributesFromApi, setAttributesFromApi] = useState<Offer['data']['attributes']>();
+  const [valid, setValid] = useState(false)
+
+  const checkValidity = () => {
+    setValid((!attributes?.ticketUrl || ticketUrlValid) && (!attributes?.registrationUrl || registrationUrlValid))
+  }
+  useEffect(() => {
+    checkValidity()
+  })
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
@@ -206,7 +214,10 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.offer.form.pricing.ticketUrl') as string}
             value={attributes?.ticketUrl || ''}
             placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
-            onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
+            onChange={(e) => {
+              setAttributes({ ...attributes, ticketUrl: e.target.value })
+              checkValidity()
+            }}
             error={attributes?.ticketUrl && !ticketUrlValid && t('forms.urlInvalid') as string}
           />
         </FormItem>
@@ -217,7 +228,10 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.offer.form.pricing.registrationUrl') as string}
             value={attributes?.registrationUrl || ''}
             placeholder={t('categories.offer.form.pricing.registrationUrlPlaceholder') as string}
-            onChange={(e) => setAttributes({ ...attributes, registrationUrl: e.target.value })}
+            onChange={(e) => {
+              setAttributes({ ...attributes, registrationUrl: e.target.value })
+              checkValidity()
+            }}
             error={attributes?.registrationUrl && !registrationUrlValid && t('forms.urlInvalid') as string}
           />
         </FormItem>
@@ -249,7 +263,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
     reset: () => {
       setAttributes(initialAttributes);
     },
-    valid: true,
+    valid,
   };
 };
 
