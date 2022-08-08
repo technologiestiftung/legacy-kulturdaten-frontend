@@ -106,7 +106,6 @@ export const Requirement: React.FC<RequirementProps> = ({
   );
 
   const handleClick = () => {
-    console.log(link.targetRef?.current);
     link.targetRef?.current?.focus()
   }
 
