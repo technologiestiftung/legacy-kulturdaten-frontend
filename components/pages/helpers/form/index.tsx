@@ -15,7 +15,7 @@ export interface EntryFormHookProps extends EntryFormProps {
   id?: string;
   hideTitle?: boolean;
   placeholder?: string;
-  ref?: any;
+  ref?: HTMLElement;
 }
 
 export type EntryFormHook<T = EntryFormHookProps> = (props: T) => {

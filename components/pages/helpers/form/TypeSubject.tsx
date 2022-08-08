@@ -4,7 +4,7 @@ import { useEntry, useEntryTypeList } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { TypesSubjects } from '../../../TypesSubjects';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper, Anchor } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
 import { EntryFormHook } from '../form';
 import { CategoryEntry } from '../../../../lib/api/types/general';
 
@@ -115,7 +115,7 @@ export const useEntryTypeSubjectForm: EntryFormHook = ({
   return {
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }} requirementNotInFormItem>
-        <EntryFormHead title={title || `${t('forms.classification') as string}`} />
+        <EntryFormHead title={title || `${t('forms.classification') as string}`} id={id}/>
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
             <TypesSubjects

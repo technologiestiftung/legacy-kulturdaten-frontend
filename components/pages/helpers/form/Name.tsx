@@ -13,6 +13,7 @@ import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
 import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo } from '../formComponents';
 import { organizerNameRef } from '../../../../config/categories';
+import React from 'react';
 
 const defaultMaxLength = 100;
 
@@ -31,54 +32,41 @@ interface SetNameProps {
   tooltip?: string;
   id?: string;
   placeholder?: string;
-  ref?: any;
 }
 
-const Name: React.FC<SetNameProps> = ({
-  label,
-  ariaLabel,
-  onSubmit,
-  pristine,
-  setValue,
-  name,
-  value,
-  required,
-  softRequired,
-  hint,
-  tooltip,
-  id,
-  placeholder
-}: SetNameProps) => {
+// eslint-disable-next-line react/display-name
+const Name = React.forwardRef<HTMLElement, SetNameProps>(
+  (props: SetNameProps, ref: RefObject<HTMLInputElement>) => {
   // set initial value
   useEffect(() => {
-    if (pristine) {
-      setValue(name);
+    if (props.pristine) {
+      props.setValue(props.name);
     }
-  }, [pristine, name, setValue]);
+  }, [props]);
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={props.onSubmit}>
       <Input
-        label={label}
-        ariaLabel={ariaLabel}
+        label={props.label}
+        ariaLabel={props.ariaLabel}
         type={InputType.text}
-        id={id}
-        ref={organizerNameRef}
-        placeholder={placeholder}
-        value={value || ''}
+        id={props.id}
+        ref={ref}
+        placeholder={props.placeholder}
+        value={props.value || ''}
         onChange={(e) => {
-          setValue(e.target.value);
+          props.setValue(e.target.value);
         }}
-        required={required}
-        hint={hint}
-        softRequired={softRequired}
+        required={props.required}
+        hint={props.hint}
+        softRequired={props.softRequired}
         maxLength={defaultMaxLength}
-        tooltip={tooltip}
+        tooltip={props.tooltip}
       />
-      {required && <FormRequiredInfo fulfilled={value !== ''}/>}
+      {props.required && <FormRequiredInfo fulfilled={props.value !== ''}/>}
     </form>
   );
-};
+});
 
 export const useName = <
   EntryType extends CategoryEntry,
@@ -187,7 +175,7 @@ export const useName = <
 
   return {
     form: (
-      <Name
+      <Name ref={props.ref}
         {...{
           pristine,
           value,
@@ -201,7 +189,6 @@ export const useName = <
           tooltip,
           softRequired,
           id: props.id,
-          ref: props.ref,
           placeholder: props.placeholder
         }}
       />
@@ -216,7 +203,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, id, placeholder, ref  }) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, placeholder }) => {
   const t = useT();
 
   const {
@@ -233,7 +220,8 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     label: `${title} ${t('forms.labelGerman') as string}`,
     loaded,
     tooltip,
-    id,
+    id: "organizer-name",
+    ref: organizerNameRef,
     placeholder
   });
 

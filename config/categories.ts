@@ -37,7 +37,7 @@ import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 import { defaultLanguage, Language } from './locale';
 import { ParsedUrlQuery } from 'querystring';
 import { Page404 } from '../components/pages/404';
-import { createRef } from 'react'
+import { createRef, LegacyRef, Ref } from 'react'
 
 type RequirementAttributes = {
   path: string;
@@ -77,10 +77,10 @@ export enum CategoriesPlural {
   locations = 'locations',
 }
 
-export const organizerInternalContactRef = createRef();
-export const organizerNameRef = createRef();
-export const organizerDescriptionRef = createRef();
-export const organizerTypeRef = createRef();
+export const organizerInternalContactRef: Ref<HTMLInputElement> = createRef();
+export const organizerNameRef: LegacyRef<HTMLLegendElement> = createRef();
+export const organizerDescriptionRef: LegacyRef<HTMLLegendElement> = createRef();
+export const organizerTypeRef: LegacyRef<HTMLLegendElement> = createRef();
 
 export const offerCategoryRef = createRef();
 export const offerNameRef = createRef();
@@ -89,6 +89,25 @@ export const offerTypeRef = createRef();
 
 export const locationNameRef = createRef();
 export const locationDescriptionRef = createRef();
+
+export const organizerRefs = {
+  organizerInternalContactRef,
+  organizerNameRef,
+  organizerDescriptionRef,
+  organizerTypeRef,
+}
+
+export const offerRefs = {
+  offerCategoryRef,
+  offerNameRef,
+  offerDescriptionRef,
+  offerTypeRef
+}
+
+export const locationRefs= {
+  locationNameRef,
+  locationDescriptionRef
+}
 
 export const useCategories: () => {
   [key in Categories]: Category;

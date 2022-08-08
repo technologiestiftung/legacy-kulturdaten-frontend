@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Check } from 'react-feather';
 import Link from 'next/link';
-import React, { RefObject, Ref } from 'react';
+import React from 'react';
 
 const StyledRequirement = styled.span<{ fulfilled: boolean; hasLink?: boolean }>`
   background: ${({ fulfilled }) => (fulfilled ? 'var(--white-green-o50)' : 'var(--white-red)')};
@@ -109,6 +109,7 @@ export const Requirement: React.FC<RequirementProps> = ({
     console.log(link.targetRef?.current);
     link.targetRef?.current?.focus()
   }
+
   return hasLink ? (
     <li>
       <Link href={link.href} passHref>

@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { ChevronDown } from 'react-feather';
+import { organizerTypeRef } from '../../config/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
@@ -136,6 +137,8 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       }) as string)
     : undefined;
 
+    const newRef = useRef(null);
+
   return (
     <StyledEntryFormHead
       onClick={isExpander ? expander.onClick : undefined}
@@ -153,8 +156,8 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
         ''
       )}
       <StyledEntryFormHeadBorder />
-      <StyledEntryFormHeadTitle id={id} size={size}>
-      <legend>{title}</legend>
+      <StyledEntryFormHeadTitle id={id} size={size} tabIndex={0}>
+      <legend ref={id === "organizer-types" ? organizerTypeRef : newRef} >{title}</legend>
         {tooltip && (
           <StyledTooltip>
             <Tooltip>

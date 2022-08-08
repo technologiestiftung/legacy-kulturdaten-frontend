@@ -17,7 +17,6 @@ import showdown from 'showdown';
 import { FormContainer, FormWrapper, FormRequiredInfo } from '../formComponents';
 import { Tooltip } from '../../../tooltip';
 import { TooltipP } from '../../../tooltip/TooltipContent';
-import { offerDescriptionRef } from '../../../../config/categories';
 
 const defaultMaxLength = 1500;
 
@@ -88,7 +87,6 @@ interface DescriptionProps extends EntryFormProps {
   key?: string;
   maxLength?: number;
   id?: string;
-  ref?: any;
 }
 
 export const useDescription = ({
@@ -101,7 +99,7 @@ export const useDescription = ({
   softRequired,
   key = 'description',
   maxLength,
-  ref
+  id
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
@@ -162,7 +160,7 @@ export const useDescription = ({
     softRequired,
     maxLength,
     ariaLabel,
-    ref
+    id
   });
 
   const pristine = useMemo(() => {
@@ -307,8 +305,7 @@ export const useDescriptionForm: EntryFormHook = ({
     required,
     softRequired: true,
     maxLength: defaultMaxLength,
-    id,
-    ref: offerDescriptionRef
+    id: "organizer-description"
   });
 
   const {
