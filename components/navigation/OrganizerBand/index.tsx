@@ -17,6 +17,7 @@ import { Breakpoint } from '../../../lib/WindowService';
 import { StandardLink } from '../../StandardLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { EntryListContext } from '../../EntryList/EntryListContext';
+import { mainTitleLink } from '../../../config/categories';
 
 const HiddenOrganizerTitle = styled.h1`
   position:absolute;
@@ -133,7 +134,9 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                     reset();
 
                     router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
-
+                    setTimeout(() => {
+                      mainTitleLink.current.focus();
+                    }, 200)
                     return { success: true };
                 }}
               >

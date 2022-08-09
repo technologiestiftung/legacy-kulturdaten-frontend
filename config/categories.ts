@@ -90,6 +90,7 @@ export const offerTypeRef = createRef();
 export const locationNameRef = createRef();
 export const locationDescriptionRef = createRef();
 
+export const mainTitleLink = createRef();
 export const sidebarRef = createRef();
 
 export const useCategories: () => {

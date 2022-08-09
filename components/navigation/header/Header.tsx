@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { useContext, useEffect } from 'react';
+import { LegacyRef, useContext, useEffect } from 'react';
 import Head from 'next/head';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
@@ -21,6 +21,7 @@ import { appLayouts, Layouts } from '../../layouts/AppLayout';
 import { useAppTitle } from '../../../config/structure';
 import { UserContext } from '../../user/UserContext';
 import { focusStyles } from '../../globals/Constants';
+import { mainTitleLink } from '../../../config/categories';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -158,7 +159,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
 
   const renderedLink = (
     <Link>
-      <StyledLink>{title}</StyledLink>
+      <StyledLink ref={ mainTitleLink as LegacyRef<HTMLAnchorElement>}>{title}</StyledLink>
     </Link>
   );
 
