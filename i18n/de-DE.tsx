@@ -894,6 +894,8 @@ export const deDE: Localization = {
         plural: () => 'diese Termine',
       },
     },
+    toMainContent: () => 'Zum Hauptinhalt',
+    skipField: () => 'Feld überspringen',
     cancel: () => 'abbrechen',
     confirmDelete: () => 'Löschen bestätigen',
     name: () => 'Bezeichnung',

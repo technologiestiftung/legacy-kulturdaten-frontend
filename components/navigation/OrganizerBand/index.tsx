@@ -17,7 +17,7 @@ import { Breakpoint } from '../../../lib/WindowService';
 import { StandardLink } from '../../StandardLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { EntryListContext } from '../../EntryList/EntryListContext';
-import { mainTitleLink } from '../../../config/categories';
+import { mainContentRef, mainTitleLink } from '../../../config/categories';
 
 const HiddenOrganizerTitle = styled.h1`
   position:absolute;
@@ -34,6 +34,29 @@ const StyledOrganizerBand = styled.ul<{ adminModeActive: boolean }>`
 
   ${({ adminModeActive }) => adminModeActive && css``}
 `;
+
+export const SkipLinkMainContent:React.FC = () => {
+  const t = useT();
+
+  const SkipLinkButton = styled.button`
+    position: absolute;
+    opacity: 0;
+    z-index: 10;
+
+    &:focus {
+      opacity: 1;
+    }
+  `;
+
+  const skipLinkHandler = () => {
+    if(mainContentRef.current) {
+      mainContentRef.current.focus()
+    }
+  }
+  return (
+    <SkipLinkButton onClick={skipLinkHandler}>{t('general.toMainContent') as string}</SkipLinkButton>
+  )
+}
 
 const StyledOrganizerBandAdminMark = styled.div`
   display: flex;
@@ -136,7 +159,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                     router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
                     setTimeout(() => {
                       mainTitleLink.current.focus();
-                    }, 200)
+                    }, 300)
                     return { success: true };
                 }}
               >

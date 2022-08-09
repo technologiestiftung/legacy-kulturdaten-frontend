@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { LegacyRef, useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
-import { Categories, useCategories } from '../../config/categories';
+import { Categories, locationSidebarRef, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall } from '../../lib/api';
 import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
 import { CategoryExportType, Order, useCreateLocation, useList } from '../../lib/categories';
@@ -35,7 +35,7 @@ import {
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
-import { sidebarRef } from '../../config/categories';
+import { SkipLinkMainContent } from '../navigation/OrganizerBand';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -372,7 +372,8 @@ export const LocationList: React.FC<LocationListProps> = ({
   );
 
   return (
-    <StyledOrganizerList tabIndex={0}  ref={sidebarRef as LegacyRef<HTMLDivElement>}>
+    <StyledOrganizerList tabIndex={0}  ref={locationSidebarRef as LegacyRef<HTMLDivElement>}>
+      <SkipLinkMainContent/>
       <EntryListHead
         title={t('categories.location.title.plural') as string}
         expanded={expanded}

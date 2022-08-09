@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { LegacyRef, useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
-import { Categories, useCategories } from '../../config/categories';
+import { Categories, offerSidebarRef, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall } from '../../lib/api';
 import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
 import {
@@ -42,7 +42,7 @@ import {
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
-import { sidebarRef } from '../../config/categories';
+import { SkipLinkMainContent } from '../navigation/OrganizerBand';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -335,8 +335,10 @@ export const OfferList: React.FC<OfferListProps> = ({
     ]
   );
 
+
   return (
-    <StyledOrganizerList tabIndex={0} ref={sidebarRef as LegacyRef<HTMLDivElement>}>
+    <StyledOrganizerList tabIndex={0} ref={offerSidebarRef as LegacyRef<HTMLDivElement>}>
+      <SkipLinkMainContent/>
       <EntryListHead
         title={t('categories.offer.title.plural') as string}
         expanded={expanded}

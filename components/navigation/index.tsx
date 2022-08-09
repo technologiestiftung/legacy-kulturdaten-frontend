@@ -127,7 +127,6 @@ export const useNavigation = (
     <HeaderMain
       user={user}
       title={headerTitle}
-      // pageTitle={pageTitle}
       Link={Link}
       menuItems={activeHeader.menuItems}
       layout={layout}

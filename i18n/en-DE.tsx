@@ -880,6 +880,8 @@ export const enDE: Localization = {
         plural: () => 'these dates',
       },
     },
+    toMainContent: () => 'To main content',
+    skipField: () => 'Skip field',
     cancel: () => 'cancel',
     confirmDelete: () => 'Confirm deletion',
     name: () => 'name',

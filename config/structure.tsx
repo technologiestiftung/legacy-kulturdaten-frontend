@@ -17,7 +17,7 @@ import { useOrganizerId } from '../lib/useOrganizer';
 import { defaultOrganizerId } from '../components/navigation/NavigationContext';
 import { useContext } from 'react';
 import { UserContext } from '../components/user/UserContext';
-import { sidebarRef } from './categories';
+import { locationSidebarRef, offerSidebarRef } from './categories';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -33,10 +33,19 @@ export const useMenuStructure = (): NavigationStructure => {
   const organizerId = useOrganizerId();
   const { userInactive } = useContext(UserContext);
 
-  const focusSidebar = () => {
-    setTimeout(() => {
-      sidebarRef.current.focus()
-    },300)
+  const focusSidebar = async(type) => {
+    setTimeout(async() => {
+      const current = 
+        type === "offer"
+        ? offerSidebarRef.current
+        : type === "location"
+        ? locationSidebarRef.current
+        : undefined
+  
+        if(current) {
+        current.focus()
+        }
+      },300)
   }
 
   return {
@@ -98,7 +107,7 @@ export const useMenuStructure = (): NavigationStructure => {
               active: router.asPath.includes(
                 routes.offer({ query: { organizer: organizerId }, locale })
               ),
-              onClick: focusSidebar
+              onClick: () => focusSidebar('offer')
             },
           },
           {
@@ -109,7 +118,7 @@ export const useMenuStructure = (): NavigationStructure => {
               active: router.asPath.includes(
                 routes.location({ query: { organizer: organizerId }, locale })
               ),
-              onClick: focusSidebar
+              onClick: () => focusSidebar('location')
             },
           },
           {
