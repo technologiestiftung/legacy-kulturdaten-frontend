@@ -129,7 +129,7 @@ export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children, image }: Aut
   return (
     <StyledAuthWrapper>
       <StyledAuthWrapperContent>
-        <fieldset>
+      <fieldset tabIndex={0}>
           {children}
         </fieldset>
       </StyledAuthWrapperContent>
