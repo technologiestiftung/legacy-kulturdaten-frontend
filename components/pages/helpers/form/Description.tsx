@@ -290,8 +290,6 @@ export const useDescriptionForm: EntryFormHook = ({
 }) => {
   const t = useT();
 
-  console.log("ID", id)
-
   const {
     renderedDescription: renderedDescriptionGerman,
     submit: submitGerman,

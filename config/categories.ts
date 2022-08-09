@@ -90,24 +90,7 @@ export const offerTypeRef = createRef();
 export const locationNameRef = createRef();
 export const locationDescriptionRef = createRef();
 
-export const organizerRefs = {
-  organizerInternalContactRef,
-  organizerNameRef,
-  organizerDescriptionRef,
-  organizerTypeRef,
-}
-
-export const offerRefs = {
-  offerCategoryRef,
-  offerNameRef,
-  offerDescriptionRef,
-  offerTypeRef
-}
-
-export const locationRefs= {
-  locationNameRef,
-  locationDescriptionRef
-}
+export const sidebarRef = createRef();
 
 export const useCategories: () => {
   [key in Categories]: Category;

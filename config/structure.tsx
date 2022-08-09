@@ -17,6 +17,7 @@ import { useOrganizerId } from '../lib/useOrganizer';
 import { defaultOrganizerId } from '../components/navigation/NavigationContext';
 import { useContext } from 'react';
 import { UserContext } from '../components/user/UserContext';
+import { sidebarRef } from './categories';
 
 export const useAppTitle = (): string => {
   const t = useT();
@@ -31,6 +32,12 @@ export const useMenuStructure = (): NavigationStructure => {
   const router = useRouter();
   const organizerId = useOrganizerId();
   const { userInactive } = useContext(UserContext);
+
+  const focusSidebar = () => {
+    setTimeout(() => {
+      sidebarRef.current.focus()
+    },300)
+  }
 
   return {
     header: {
@@ -91,6 +98,7 @@ export const useMenuStructure = (): NavigationStructure => {
               active: router.asPath.includes(
                 routes.offer({ query: { organizer: organizerId }, locale })
               ),
+              onClick: focusSidebar
             },
           },
           {
@@ -101,6 +109,7 @@ export const useMenuStructure = (): NavigationStructure => {
               active: router.asPath.includes(
                 routes.location({ query: { organizer: organizerId }, locale })
               ),
+              onClick: focusSidebar
             },
           },
           {

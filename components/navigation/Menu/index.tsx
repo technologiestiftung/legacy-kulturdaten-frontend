@@ -20,6 +20,7 @@ export type MenuItemLink = {
   href: string;
   type?: MenuLinkType;
   active?: boolean;
+  onClick?: () => void;
 };
 
 export type MenuItemButton = {
@@ -34,6 +35,7 @@ export type MenuItemFolder = {
   label: string;
   menuKey: string;
   active?: boolean;
+  onClick?: () => void;
 };
 
 export type MenuData = {

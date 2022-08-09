@@ -170,6 +170,7 @@ export const HeaderMain: React.FC<HeaderProps> = ({
             <HeaderMenuLink
               {...(action as MenuItemLink)}
               disabled={typeof itemDisabled === 'boolean' ? itemDisabled : disabled}
+              onClick={action.onClick}
             />
           </StyledHeaderMenuItem>
         );

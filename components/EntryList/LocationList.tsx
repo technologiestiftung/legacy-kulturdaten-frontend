@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { LegacyRef, useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
 import { Categories, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall } from '../../lib/api';
@@ -35,6 +35,7 @@ import {
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
+import { sidebarRef } from '../../config/categories';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -371,7 +372,7 @@ export const LocationList: React.FC<LocationListProps> = ({
   );
 
   return (
-    <StyledOrganizerList>
+    <StyledOrganizerList tabIndex={0}  ref={sidebarRef as LegacyRef<HTMLDivElement>}>
       <EntryListHead
         title={t('categories.location.title.plural') as string}
         expanded={expanded}
