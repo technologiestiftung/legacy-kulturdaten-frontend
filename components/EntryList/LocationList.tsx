@@ -548,7 +548,7 @@ export const LocationList: React.FC<LocationListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody  aria-live='polite' aria-relevant="additions removals">
+      <StyledEntryListBody  aria-live='polite' aria-atomic="false" aria-relevant="additions removals">
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (
