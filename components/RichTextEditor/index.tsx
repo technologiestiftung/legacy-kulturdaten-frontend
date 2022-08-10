@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import CharacterCount from '@tiptap/extension-character-count'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
-import { EditorContent, useEditor } from '@tiptap/react'
+import { EditorContent, PureEditorContent, useEditor } from '@tiptap/react'
 import { Ref, useState, useMemo, useEffect } from 'react'
 import { useDebounce } from '../../lib/useDebounce';
 import { mq } from '../globals/Constants';
@@ -103,7 +103,7 @@ type RichTextEditorProps = {
   ariaLabel: string;
   onChange?: (value: string) => void;
   placeholder?: string;
-  contentRef?: Ref<HTMLDivElement>;
+  contentRef?: Ref<PureEditorContent>;
   intValue: string;
   setIntValue: (value: string) => void;
   required?: boolean;
@@ -123,6 +123,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   maxLength,
   ariaLabel,
   setTextLength,
+  contentRef,
   id,
 }: RichTextEditorProps) => {
   const debouncer = useDebounce();
@@ -214,6 +215,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         editor={editor}
         aria-invalid={!valid}
         aria-required={required}
+        ref={contentRef}
       />
 
       {maxLength && 
@@ -259,6 +261,7 @@ export const useRichText = (
         setTextLength={setTextLength}
         ariaLabel={props.ariaLabel}
         id={props.id}
+        contentRef={props.contentRef}
       />
     ),
     init: (value) => {

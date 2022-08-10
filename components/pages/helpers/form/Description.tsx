@@ -17,6 +17,7 @@ import showdown from 'showdown';
 import { FormContainer, FormWrapper, FormRequiredInfo } from '../formComponents';
 import { Tooltip } from '../../../tooltip';
 import { TooltipP } from '../../../tooltip/TooltipContent';
+import { PureEditorContent } from '@tiptap/react';
 
 const defaultMaxLength = 1500;
 
@@ -137,7 +138,7 @@ export const useDescription = ({
   }, [entryTranslation, key]);
 
 
-  const richTextRef = useRef<HTMLDivElement>(null);
+  const richTextRef = useRef<PureEditorContent>(null);
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
 
@@ -157,6 +158,7 @@ export const useDescription = ({
       }
     },
     required,
+    contentRef: richTextRef,
     softRequired,
     maxLength,
     ariaLabel,
@@ -185,6 +187,7 @@ export const useDescription = ({
 
     return true;
   }, [cachedApiText, serializedMarkdown]);
+
 
   useEffect(() => {
     if (!touched && serializedMarkdown === '' && cachedApiText) {
