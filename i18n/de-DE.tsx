@@ -689,7 +689,7 @@ export const deDE: Localization = {
     ),
     alt: () => 'Alt Text',
     altTooltip: () =>
-      'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima.',
+      'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima. Bei dekorativen Bildern sollte auf Alt-Texte verzichtet werden.',
     license: () => 'Lizenz',
     deleteTitle: () => 'Bild löschen',
     licenses: {

@@ -676,7 +676,7 @@ export const enDE: Localization = {
     ),
     alt: () => 'Alt text',
     altTooltip: () =>
-      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
+      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well. For decorative images, alt texts should be avoided.',
     license: () => 'License',
     deleteTitle: () => 'Delete image',
     licenses: {

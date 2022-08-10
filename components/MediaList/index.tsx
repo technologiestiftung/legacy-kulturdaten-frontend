@@ -383,8 +383,6 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                     id={`${uid}-alt-${language}`}
                     lang={language.slice(0,2) as "de" | "en"}
                     value={currentTranslation?.attributes?.alternativeText || ''}
-                    required={language === defaultLanguage}
-                    softRequired={language === defaultLanguage}
                     tooltip={language === defaultLanguage ? (t('media.altTooltip') as string) : ''}
                     onChange={(e) => {
                       const updatedTranslation = {
