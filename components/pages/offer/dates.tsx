@@ -296,7 +296,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <FormGrid>
-      <FormItem width={FormItemWidth.full} css={customFormItemCss}>
+      <FormItem childWidth="100%" width={FormItemWidth.full} css={customFormItemCss}>
         {renderedArchivedDateList}
       </FormItem>
     </FormGrid>,

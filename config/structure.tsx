@@ -45,7 +45,7 @@ export const useMenuStructure = (): NavigationStructure => {
         if(current) {
         current.focus()
         }
-      },300)
+      },400)
   }
 
   return {

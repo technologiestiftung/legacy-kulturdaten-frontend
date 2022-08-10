@@ -217,11 +217,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         ref={contentRef}
       />
 
-      {maxLength && 
       <StyledCharacterCount>
         {count} / {maxLength}
-      </StyledCharacterCount>}
-      {countAlertValue !== "" && <CountAlert aria-live="assertive" role="region">{countAlertValue}</CountAlert>}
+      </StyledCharacterCount>
+      <CountAlert aria-live="assertive" role="region">{countAlertValue}</CountAlert>
     </RTEContentWrapper>
     </>
   )
