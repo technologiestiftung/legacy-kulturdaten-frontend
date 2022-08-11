@@ -1379,6 +1379,7 @@ export const deDE: Localization = {
         team: () => 'Team',
         login: () => 'Login',
         registration: () => 'Registrierung',
+        register: () => 'Registrierung',
         info: () => 'Info',
         offer: () => 'Angebote',
         location: () => 'Orte',

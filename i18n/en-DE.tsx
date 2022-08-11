@@ -1366,6 +1366,7 @@ export const enDE: Localization = {
         team: () => 'Team',
         login: () => 'Login',
         registration: () => 'Registration',
+        register: () => 'Registration',
         info: () => 'Info',
         offer: () => 'Offers',
         location: () => 'Locations',
