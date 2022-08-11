@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useOrganizerId, useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
@@ -83,19 +83,6 @@ const StyledOrganizerBandAdminMarkText = styled.div`
   }
 `;
 
-const SitemapIcon: React.FC = () => {
-  return(
-    <svg width="36" height="36" viewBox="0 0 36 36" fill="black" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18 24.75V11.25" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <rect x="7.5" y="6.75" width="21" height="4.5" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M6 24L10.5 18.75H25.4807L30 24" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <rect x="3" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <rect x="15" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    <rect x="27" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  )
-}
-
 export enum OrganizerBandLayout {
   narrow = 'narrow',
   wide = 'wide',
@@ -116,6 +103,10 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
   const createOrganizer = useCreateOrganizer();
   const { adminModeActive, quit: quitAdminMode } = useAdminMode();
   const { reset } = useContext(EntryListContext);
+
+  const sitemapActive = useMemo(()=> {
+    return router?.pathname.search("sitemap") !== -1
+  },[router])
 
   const { owner: organizerOwnerList, contributor: organizerContributorList } =
     useUserOrganizerLists();
@@ -194,17 +185,40 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
           >
             {t('menu.organizerBand.create') as string}
           </OrganizerBandItem>
-          <OrganizerBandItem
-            active={router?.asPath === routes.createOrganizer({ locale })}
-            layout={layout}
-            icon="sitemap"
-            asButton
-            onClick={async () => {
-              await createOrganizer()
-            }}
-          >
-            Sitemap
+          { sitemapActive ? (
+
+            <OrganizerBandItem
+              active={router?.asPath === routes.createOrganizer({ locale })}
+              layout={layout}
+              icon="ArrowLeft"
+              asButton
+              onClick={async () => {{
+                  router.push(routes.dashboard({ locale, query: { organizer: router?.query?.organizer } }));
+                  setTimeout(() => {
+                    mainTitleLink.current.focus();
+                  }, 300)
+                  return { success: true };
+              }}}
+            >
+              Sitemap
+            </OrganizerBandItem>
+          ) : (
+            <OrganizerBandItem
+              active={router?.asPath === routes.createOrganizer({ locale })}
+              layout={layout}
+              icon="sitemap"
+              asButton
+              onClick={async () => {{
+                  router.push(routes.sitemap({ locale, query: { organizer: router?.query?.organizer } }));
+                  setTimeout(() => {
+                    mainTitleLink.current.focus();
+                  }, 300)
+                  return { success: true };
+              }}}
+            >
+              Sitemap
           </OrganizerBandItem>
+          )}
         </>
       )}
     </StyledOrganizerBand>
