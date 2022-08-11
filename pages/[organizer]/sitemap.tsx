@@ -13,6 +13,7 @@ import { DashbaordGreeting, DashboardWrapper } from '../../components/Dasboard';
 import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
 import { useCategories } from '../../config/categories';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
+import { SitemapContainer } from '../../components/pages/sitemap/wrapper';
 
 
 const SitemapPage: NextPage = () => {
@@ -63,7 +64,7 @@ const SitemapPage: NextPage = () => {
       <DashboardWrapper>
         <ContentWrapper>
           <ContentContainer>
-            <h1>Hello World</h1>
+            <SitemapContainer organizer={organizer} organizerId={organizerId}/>
           </ContentContainer>
         </ContentWrapper>
       </DashboardWrapper>

@@ -222,8 +222,6 @@ const OrganizerBandItemForwarded = (
     }
   }
 
-  console.log("FEATHER", feather)
-
 
   return (
     <li ref={selfRef}>
