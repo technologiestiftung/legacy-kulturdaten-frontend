@@ -1361,6 +1361,7 @@ export const enDE: Localization = {
       items: {
         back: () => 'back to Dashboard',
         dashboard: () => 'Dashboard',
+        sitemap: () => 'Sitemap',
         notifications: () => 'Notifications',
         profile: () => 'Organizer Profile',
         team: () => 'Team',

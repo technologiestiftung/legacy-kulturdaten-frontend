@@ -10,6 +10,7 @@ export enum Routes {
   index = 'index',
   error = 'error',
   dashboard = 'dashboard',
+  sitemap = 'sitemap',
   team = 'team',
   login = 'login',
   register = 'register',
@@ -38,6 +39,8 @@ export const routes: { [key in Routes]: Route } = {
   error: ({ locale }) => `/${localizedRoutes[Routes.error][locale]}`,
   dashboard: ({ query, locale }) =>
     `/${query?.organizer}/${localizedRoutes[Routes.dashboard][locale]}/`,
+  sitemap: ({ query, locale }) =>
+    `/${query?.organizer}/${localizedRoutes[Routes.sitemap][locale]}/`,
   team: ({ query, locale }) => `/${query?.organizer}/${localizedRoutes[Routes.team][locale]}/`,
   userProfile: ({ locale }) => `/${localizedRoutes[Routes.userProfile][locale]}/`,
   userSettings: ({ locale }) => `/${localizedRoutes[Routes.userSettings][locale]}/`,
@@ -84,6 +87,7 @@ export const routes: { [key in Routes]: Route } = {
 
 export const internalRoutes = [
   Routes.dashboard,
+  Routes.sitemap,
   Routes.team,
   Routes.userProfile,
   Routes.userNotifications,
@@ -113,6 +117,10 @@ const localizedRoutes: { [key in Routes]: { [key in Locale]: string } } = {
   dashboard: {
     'de-DE': 'dashboard',
     'en-DE': 'dashboard',
+  },
+  sitemap: {
+    'de-DE': 'sitemap',
+    'en-DE': 'sitemap',
   },
   team: {
     'de-DE': 'team',
@@ -195,6 +203,7 @@ export const routesLayouts: { [key in Routes]: Layouts } = {
   createOffer: Layouts.loggedIn,
   createOrganizer: Layouts.loggedIn,
   dashboard: Layouts.loggedIn,
+  sitemap: Layouts.loggedIn,
   imprint: undefined,
   location: Layouts.loggedIn,
   login: Layouts.loggedOut,

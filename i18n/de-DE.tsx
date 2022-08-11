@@ -1374,6 +1374,7 @@ export const deDE: Localization = {
       items: {
         back: () => 'zurück zum Dashboard',
         dashboard: () => 'Dashboard',
+        sitemap: () => 'Sitemap',
         notifications: () => 'Benachrichtigungen',
         profile: () => 'Anbieter:in-Profil',
         team: () => 'Team',
