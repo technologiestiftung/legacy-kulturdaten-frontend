@@ -29,6 +29,8 @@ export type MenuItemButton = {
   icon?: string;
   iconPosition?: IconPosition;
   active?: boolean;
+  href?: string;
+  title?: string;
 };
 
 export type MenuItemFolder = {
@@ -36,6 +38,8 @@ export type MenuItemFolder = {
   menuKey: string;
   active?: boolean;
   onClick?: () => void;
+  href?: string;
+  title?: string;
 };
 
 export type MenuData = {
