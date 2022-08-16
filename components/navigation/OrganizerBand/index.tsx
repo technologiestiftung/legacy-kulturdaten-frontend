@@ -42,10 +42,6 @@ export const SkipLinkMainContent:React.FC = () => {
     position: absolute;
     opacity: 0;
     z-index: 10;
-
-    &:focus {
-      opacity: 1;
-    }
   `;
 
   const skipLinkHandler = () => {

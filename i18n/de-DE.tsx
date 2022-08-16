@@ -1370,7 +1370,7 @@ export const deDE: Localization = {
     },
     sitemap: {
       skipLevelButton: () => 'Gehe nach',
-      skipLevelButton_2: () => 'mit Leertaste, oder tiefere Navigation mit Steuerung-Alt-Leertaste'
+      skipLevelButton_2: () => 'mit Leertaste, oder tiefere Navigation mit Steuerung-Alt-Pfeil nach Rechts'
     }
   },
   menu: {

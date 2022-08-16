@@ -1357,7 +1357,7 @@ export const enDE: Localization = {
     },    
     sitemap: {
       skipLevelButton: () => 'Go to',
-      skipLevelButton_2: () => 'with space, or deeper navigation with control-option-space'
+      skipLevelButton_2: () => 'with space, or deeper navigation with control-option-ArrowRight'
     }
   },
   menu: {
