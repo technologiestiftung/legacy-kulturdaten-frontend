@@ -164,7 +164,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         onChange(parsedValue);
       });
     },
-    autofocus: true,
+    autofocus: false,
     content: intValue,
   },[intValue])
   const t = useT();
