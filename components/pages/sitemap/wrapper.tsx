@@ -5,25 +5,20 @@ import styled from '@emotion/styled';
 import { useT } from "../../../lib/i18n";
 import { routes, Routes, useLanguage, useLocale } from "../../../lib/routing"
 import { getTranslation } from "../../../lib/translations";
-import { useHandleActiveOrganizer, useOrganizerId } from "../../../lib/useOrganizer";
+import { useOrganizerId } from "../../../lib/useOrganizer";
 import { EntryFormContainer, EntryFormWrapper } from "../../EntryForm/wrappers";
 import { EntryHeader } from "../../EntryHeader"
-import { useUser, useUserOrganizerLists } from "../../user/useUser";
-import { useEffect, useMemo, useState } from "react";
-import { appLayouts, useLayout } from "../../layouts/AppLayout";
+import { useUserOrganizerLists } from "../../user/useUser";
+import { useMemo } from "react";
 import { useMenuStructure } from "../../../config/structure";
-import { Categories, useCategories } from "../../../config/categories";
+import { useCategories } from "../../../config/categories";
 import { OfferList } from "../../../lib/api";
 import { Location } from "../../../lib/api/types/location";
-import { Offer, OfferTranslation, OfferTypeTranslation } from "../../../lib/api/types/offer";
+import { Offer, OfferTranslation } from "../../../lib/api/types/offer";
 import { useList } from "../../../lib/categories";
 import { defaultOrganizerId } from "../../navigation/NavigationContext";
 import { LocationTranslation } from "../../../lib/api/types/location";
-import router from "next/router";
-import { PublishedStatus } from "../../../lib/api/types/general";
-import { EntryCard, EntryCardTypesSubjects } from "../../EntryList/EntryCard";
 import { LocationList } from '../../../lib/api/routes/location/list'
-import { H1Svg } from "../../assets/H1Svg";
 
 const StyledLinkList = styled.ul`
 
@@ -162,28 +157,20 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
     ]
   );
 
-  const level_1_links = useMemo(() => {return NavigationStructure.header.loggedIn.menuItems.filter(item => item.type === 'link')}, [ NavigationStructure ])
-  const level_2_links = useMemo(() => {return NavigationStructure.menus.filter(item => item)}, [ NavigationStructure ])
+  const level_1_links = useMemo(() => {
+    return NavigationStructure.header.loggedIn.menuItems.filter(item => item.type === 'link')
+  }, [ NavigationStructure ])
 
-  
-  const dahboardLinks = [
-    {
-      href: `${level_1_links[0].action.href}#${t('dashboard.info.linkList.quicklinks.id')}`,
-      title: t('dashboard.info.linkList.quicklinks.title')
-    },
-    {
-      href: `${level_1_links[0].action.href}#${t('dashboard.info.linkList.help.id')}`,
-      title: t('dashboard.info.linkList.help.title')
-    },
-    {
-      href: `${level_1_links[0].action.href}#${t('dashboard.info.linkList.openSource.id')}`,
-      title: t('dashboard.info.linkList.openSource.title')
-    },
-    {
-      href: `${level_1_links[0].action.href}#${t('dashboard.info.linkList.contact.id')}`,
-      title: t('dashboard.info.linkList.contact.title')
-    },
-  ]
+
+  const dahboardLinks = () => { 
+    const subs = ['quicklinks', 'help', 'openSource', 'contact']
+    return subs.map(sub => {
+      return {
+        href: `${level_1_links[0].action.href}#${t(`dashboard.info.linkList.${sub}.id`)}`,
+        title: t(`dashboard.info.linkList.${sub}.title`)
+      }
+    })
+  }
 
   const offerLinks = (offerID) => { 
     const subs = ['info','categorization','dates','audience','media']
@@ -207,22 +194,15 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
     })
   }
 
-  console.log( locationLinks(locations[4].id))
-
-  const organizerLinks = [
-    {
-      href: `${level_1_links[4].action.href.slice(0,-5)}info`,
-      title: t('categories.organizer.tabs.info')
-    },
-    {
-      href: `${level_1_links[4].action.href.slice(0,-5)}categorization`,
-      title: t('categories.organizer.tabs.categorization')
-    },
-    {
-      href: `${level_1_links[4].action.href.slice(0,-5)}media`,
-      title: t('categories.organizer.tabs.media')
-    },
-  ]
+  const organizerLinks = () => { 
+    const subs = ['info', 'categorization', 'media']
+    return subs.map(sub => {
+      return {
+        href: `${level_1_links[4].action.href.slice(0,-5)}${sub}`,
+        title: t(`categories.organizer.tabs.${sub}`)
+      }
+    })
+  }
 
   
   const organizer = organizerLists.all.filter(organizer => organizer.id === organizerId)[0] || undefined
@@ -252,7 +232,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
                   </StyledLink>
                   <StyledLink level={1}>
                     <StyledLinkList>
-                      {index === 0 && dahboardLinks.map((link, index) => (
+                      {index === 0 && dahboardLinks().map((link, index) => (
                         <StyledLink key={index} level={1}>
                           <Link href={link.href as string}>{link.title}</Link>
                         </StyledLink>
@@ -311,7 +291,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
                   </StyledLink>
                   <StyledLink level={1}>
                     <StyledLinkList>
-                      {index === 4 && organizerLinks.map((organizationLink, index) => (
+                      {index === 4 && organizerLinks().map((organizationLink, index) => (
                         <StyledLink key={index} level={1}>
                           <Link href={organizationLink?.href as string}>{organizationLink.title}</Link>
                         </StyledLink>
