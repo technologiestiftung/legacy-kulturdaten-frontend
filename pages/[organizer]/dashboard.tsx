@@ -403,6 +403,11 @@ const DashboardPage: NextPage = () => {
                     href: t('dashboard.info.linkList.help.links.2.href') as string,
                     type: StandardLinkType.external,
                   },
+                  {
+                    title: t('menu.start.items.sitemap') as string,
+                    href: routes.sitemap({ locale, query: { organizer: router?.query?.organizer } }),
+                    type: StandardLinkType.internal,
+                  },
                 ]}
               />
               <DashboardLinkList
