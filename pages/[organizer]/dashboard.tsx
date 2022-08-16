@@ -332,7 +332,7 @@ const DashboardPage: NextPage = () => {
               </DashboardRow>
             )}
             {organizerId !== defaultOrganizerId && offers?.data?.length > 0 && (
-              <DashboardRow title={t('dashboard.info.offers.title') as string}>
+              <DashboardRow id={t('dashboard.info.linkList.quicklinks.id') as string} title={t('dashboard.info.offers.title') as string}>
                 {offers?.data?.map((offer, index) => (
                   <DashboardOfferTile offer={offer} key={index} />
                 ))}
@@ -390,6 +390,7 @@ const DashboardPage: NextPage = () => {
             <DashboardRow>
               <DashboardLinkList
                 title={t('dashboard.info.linkList.help.title') as string}
+                id={t('dashboard.info.linkList.help.id') as string}
                 text={<p>{t('dashboard.info.linkList.help.text') as string}</p>}
                 links={[
                   {
@@ -406,6 +407,7 @@ const DashboardPage: NextPage = () => {
               />
               <DashboardLinkList
                 title={t('dashboard.info.linkList.openSource.title') as string}
+                id={t('dashboard.info.linkList.openSource.id') as string}
                 text={<p>{t('dashboard.info.linkList.openSource.text') as string}</p>}
                 links={[
                   {
@@ -422,6 +424,7 @@ const DashboardPage: NextPage = () => {
               />
               <DashboardLinkList
                 title={t('dashboard.info.linkList.contact.title') as string}
+                id={t('dashboard.info.linkList.contact.id') as string}
                 text={<p>{t('dashboard.info.linkList.contact.text') as string}</p>}
                 links={[
                   {

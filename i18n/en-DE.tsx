@@ -156,8 +156,13 @@ export const enDE: Localization = {
         },
       },
       linkList: {
+        quicklinks: {
+          title: () => 'Quicklinks',
+          id: () => 'dashboard-quicklinks'
+        },
         help: {
           title: () => 'Get help',
+          id: () => 'dashboard-help',
           text: () =>
             "You have questions or need support in using the platform? We're here to help.",
           links: {
@@ -173,6 +178,7 @@ export const enDE: Localization = {
         },
         openSource: {
           title: () => 'Get creative',
+          id: () => 'dashboard-openSource',
           text: () =>
             'kulturdaten.berlin is being developed completely open source. Would you like to help? You can find the source code here:',
           links: {
@@ -188,6 +194,7 @@ export const enDE: Localization = {
         },
         contact: {
           title: () => 'Contact',
+          id: () => 'dashboard-contact',
           text: () =>
             'Do you have any questions, suggestions or comments about the this platform? Get in touch at:',
           links: {

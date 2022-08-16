@@ -157,8 +157,13 @@ export const deDE: Localization = {
         },
       },
       linkList: {
+        quicklinks: {
+          title: () => 'Quicklinks',
+          id: () => 'dashboard-quicklinks'
+        },
         help: {
           title: () => 'Hilfe',
+          id: () => 'dashboard-help',
           text: () =>
             'Du hast Fragen oder benötigst Unterstützung bei der Nutzung der Plattform? Wir helfen dir gern:',
           links: {
@@ -174,6 +179,7 @@ export const deDE: Localization = {
         },
         openSource: {
           title: () => 'Werde kreativ',
+          id: () => 'dashboard-openSource',
           text: () =>
             'kulturdaten.berlin wird komplett Open Source, also quelloffen, entwickelt. Du hast Ideen für neue Funktionen? Hier findest du den Quellcode:',
           links: {
@@ -189,6 +195,7 @@ export const deDE: Localization = {
         },
         contact: {
           title: () => 'Kontakt',
+          id: () => 'dashboard-contact',
           text: () =>
             'Du hast Fragen, Vorschläge oder Anmerkungen zur dieser Plattform? Melde dich bei uns via:',
           links: {
