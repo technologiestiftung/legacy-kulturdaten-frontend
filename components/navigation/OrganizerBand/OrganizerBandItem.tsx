@@ -151,6 +151,10 @@ const StyledSitemapIcon = styled.div`
   display: flex;
 `;
 
+const StyledOrganizerBandListItem = styled.li<{margin: string}>`
+  margin-top: ${({ margin }) => margin ? 'auto' : '' };
+`
+
 const SitemapIcon: React.FC = () => {
   return(
     <StyledSitemapIcon>
@@ -177,6 +181,7 @@ interface OrganizerBandItemProps {
   logo?: Media['data'];
   asButton?: boolean;
   adminModeActive?: boolean;
+  margin?: string;
 }
 
 const OrganizerBandItemForwarded = (
@@ -191,6 +196,7 @@ const OrganizerBandItemForwarded = (
     logo,
     asButton,
     adminModeActive,
+    margin
   }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
@@ -224,7 +230,7 @@ const OrganizerBandItemForwarded = (
 
 
   return (
-    <li ref={selfRef}>
+    <StyledOrganizerBandListItem margin={margin} ref={selfRef}>
       <StyledOrganizerBandItem
         active={active}
         ref={ref}
@@ -262,7 +268,7 @@ const OrganizerBandItemForwarded = (
           <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
         )}
       </StyledOrganizerBandItem>
-    </li>
+    </StyledOrganizerBandListItem>
   );
 };
 

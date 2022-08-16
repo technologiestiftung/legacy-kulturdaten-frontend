@@ -1,4 +1,3 @@
-
 import { defaultLanguage } from "../../../config/locale";
 import Link from 'next/link';
 import styled from '@emotion/styled';
@@ -9,7 +8,7 @@ import { useOrganizerId } from "../../../lib/useOrganizer";
 import { EntryFormContainer, EntryFormWrapper } from "../../EntryForm/wrappers";
 import { EntryHeader } from "../../EntryHeader"
 import { useUserOrganizerLists } from "../../user/useUser";
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useMenuStructure } from "../../../config/structure";
 import { useCategories } from "../../../config/categories";
 import { OfferList } from "../../../lib/api";
@@ -19,15 +18,35 @@ import { useList } from "../../../lib/categories";
 import { defaultOrganizerId } from "../../navigation/NavigationContext";
 import { LocationTranslation } from "../../../lib/api/types/location";
 import { LocationList } from '../../../lib/api/routes/location/list'
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
-const StyledLinkList = styled.ul`
-
-`;
+const StyledLinkList = styled.ul``;
 
 const StyledLink = styled.li<{ level: number }>`
-  margin-left: ${({ level }) => (level * 2 )}rem;
+  margin-left: ${({ level }) => 
+    level === 0
+    ? '0rem' :
+    level === 1 
+    ? '2rem' :
+    level === 2 
+    ? '5rem' : '' };
   margin-bottom: 1.5rem;
+
+  a {
+    color: var(--corporateBlue);
+    font-weight: var(--font-weight-bold);
+  }
 `;
+
+const SkipLevelButton = styled.button`
+  color: var(--corporateBlue);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  border: none;
+  background: none;
+  font-size: 1rem;
+`
 
 interface SitemapContainerProps {
   organizerId? :string;
@@ -40,6 +59,8 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
   const organizerId = useOrganizerId();
   const categories = useCategories();
   const locale = useLocale();
+  const firstLinkRefs = useRef([]);
+  const router = useRouter();
 
   const NavigationStructure = useMenuStructure();
 
@@ -66,7 +87,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
     () =>
       offerList?.data
         ? Object.values(Array.isArray(offerList.data) ? offerList.data : [offerList.data]).map(
-            ({ attributes, relations, id }) => {
+            ({ relations, id }) => {
 
               const href = (sub?: string) =>
                 routes[Routes.offer]({
@@ -114,7 +135,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
     () =>
       locationList?.data
         ? Object.values(Array.isArray(locationList.data) ? locationList.data : [locationList.data]).map(
-            ({ attributes, relations, id }) => {
+            ({ relations, id }) => {
 
               const href = (sub?: string) =>
                 routes[Routes.location]({
@@ -204,7 +225,35 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
     })
   }
 
-  
+  const toggleNestedNavigation = (e, id) => {
+    if(e.altKey && e.ctrlKey && (
+      e.code === 'Space' ||
+      e.code === 'ArrowDown' ||
+      e.code === 'ArrowRight'
+      )) {
+      offersLocationsToggledSet({...offersLocationsToggled, [id]: !offersLocationsToggled[id]})
+      if(offersLocationsToggled[id] === false){
+        setTimeout(() => {
+          firstLinkRefs.current[id].focus()
+        }, 200)
+      }
+    }
+  }
+
+  const [offersLocationsToggled, offersLocationsToggledSet] = useState({})
+
+  useEffect(() => {
+    const defaultOfferLocationState = {}
+    offers?.forEach(offer => {
+      defaultOfferLocationState[offer.id] = false
+    })
+    locations?.forEach(location => {
+      defaultOfferLocationState[location.id] = false
+    })
+
+    offersLocationsToggledSet(defaultOfferLocationState)
+  },[offers, locations])
+
   const organizer = organizerLists.all.filter(organizer => organizer.id === organizerId)[0] || undefined
 
   const organizerCurrentTranslation = organizer ? getTranslation(language, organizer.relations?.translations, true) : undefined
@@ -220,6 +269,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
       <EntryHeader 
         title="Sitemap"
         subTitle={organizerSubTitle}
+        minimalVariant
       />
       <EntryFormWrapper>
         <EntryFormContainer>
@@ -246,14 +296,30 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
                         <StyledLink key={index} level={1}>
                           <StyledLinkList>
                             <StyledLink level={1}>
-                              <Link href={href as string}>{translation}</Link>
+                              <SkipLevelButton 
+                                onKeyUp={(e) => toggleNestedNavigation(e, id)}
+                                onClick={() => router.push(href)}
+                                aria-label={`${t('categories.sitemap.skipLevelButton')} ${translation} ${t('categories.sitemap.skipLevelButton_2')}`}
+                              >{translation}</SkipLevelButton>
                             </StyledLink>
                           <StyledLink level={0}>
                             <StyledLinkList>
                             {
                               offerLinks(id).map(({href, title}, index) => (
-                                <StyledLink key={index} level={2}>
-                                  <Link href={href as string}>{title}</Link>
+                                <StyledLink key={index} level={2} >
+                                  <Link href={href as string} passHref>
+                                    <a 
+                                      aria-label={`${translation}-${title}`}
+                                      ref={ el => (
+                                        index === 0 
+                                        ? firstLinkRefs.current[id] = el
+                                        : undefined
+                                      )}
+                                      tabIndex={offersLocationsToggled[id] ? 0 : -1}
+                                      >
+                                      {title}
+                                    </a>
+                                  </Link>
                                 </StyledLink>
                               ))
                             }
@@ -271,14 +337,30 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
                         <StyledLink key={index} level={1}>
                           <StyledLinkList>
                             <StyledLink level={1}>
-                              <Link href={href as string}>{translation}</Link>
+                              <SkipLevelButton 
+                                onKeyUp={(e) => toggleNestedNavigation(e, id)}
+                                onClick={() => router.push(href)}
+                                aria-label={`${t('categories.sitemap.skipLevelButton')} ${translation} ${t('categories.sitemap.skipLevelButton_2')}`}
+                              >{translation}</SkipLevelButton>
                             </StyledLink>
                           <StyledLink level={0}>
                             <StyledLinkList>
                             {
                               locationLinks(id).map(({href, title}, index) => (
-                                <StyledLink key={index} level={2}>
-                                  <Link href={href as string}>{title}</Link>
+                                <StyledLink key={index} level={2} >
+                                  <Link href={href as string} passHref>
+                                    <a 
+                                      aria-label={`${translation}-${title}`}
+                                      ref={ el => (
+                                        index === 0 
+                                        ? firstLinkRefs.current[id] = el
+                                        : undefined
+                                      )}
+                                      tabIndex={offersLocationsToggled[id] ? 0 : -1}
+                                      >
+                                      {title}
+                                    </a>
+                                  </Link>
                                 </StyledLink>
                               ))
                             }

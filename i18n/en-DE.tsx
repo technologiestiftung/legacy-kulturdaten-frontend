@@ -1354,7 +1354,11 @@ export const enDE: Localization = {
         ),
         deleting: () => 'Deleting location',
       },
-    },
+    },    
+    sitemap: {
+      skipLevelButton: () => 'Go to',
+      skipLevelButton_2: () => 'with space, or deeper navigation with control-option-space'
+    }
   },
   menu: {
     title: () => 'kulturdaten.berlin',
@@ -1367,6 +1371,7 @@ export const enDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'back to Dashboard',
+        backApp: () => 'back to App',
         dashboard: () => 'Dashboard',
         sitemap: () => 'Sitemap',
         notifications: () => 'Notifications',

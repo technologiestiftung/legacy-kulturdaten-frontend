@@ -190,33 +190,35 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
             <OrganizerBandItem
               active={router?.asPath === routes.createOrganizer({ locale })}
               layout={layout}
+              margin="auto"
               icon="ArrowLeft"
               asButton
-              onClick={async () => {{
+              onClick={async () => {
                   router.push(routes.dashboard({ locale, query: { organizer: router?.query?.organizer } }));
                   setTimeout(() => {
-                    mainTitleLink.current.focus();
+                    mainTitleLink?.current?.focus();
                   }, 300)
                   return { success: true };
-              }}}
+              }}
             >
-              Sitemap
+              {t('menu.start.items.backApp') as string}
             </OrganizerBandItem>
           ) : (
             <OrganizerBandItem
               active={router?.asPath === routes.createOrganizer({ locale })}
               layout={layout}
+              margin="auto"
               icon="sitemap"
               asButton
-              onClick={async () => {{
+              onClick={async () => {
                   router.push(routes.sitemap({ locale, query: { organizer: router?.query?.organizer } }));
                   setTimeout(() => {
-                    mainTitleLink.current.focus();
+                    mainTitleLink?.current?.focus();
                   }, 300)
                   return { success: true };
-              }}}
+              }}
             >
-              Sitemap
+              {t('menu.start.items.sitemap') as string}
           </OrganizerBandItem>
           )}
         </>
