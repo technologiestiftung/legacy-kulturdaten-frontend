@@ -99,7 +99,8 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
               return {
                 href: href('info'),
                 translation,
-                id
+                id,
+                returnHref: href
               }
             }
           )
@@ -121,7 +122,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
             ({ attributes, relations, id }) => {
 
               const href = (sub?: string) =>
-                routes[Routes.offer]({
+                routes[Routes.location]({
                   locale,
                   query: { organizer: organizerId, id, sub },
                 });
@@ -145,7 +146,9 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
 
               return {
                 href: href('info'),
-                translation
+                translation,
+                id,
+                returnHref: href
               }
             }
           )
@@ -162,7 +165,6 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
   const level_1_links = useMemo(() => {return NavigationStructure.header.loggedIn.menuItems.filter(item => item.type === 'link')}, [ NavigationStructure ])
   const level_2_links = useMemo(() => {return NavigationStructure.menus.filter(item => item)}, [ NavigationStructure ])
 
-  console.log("NAV-Strukture", level_1_links[2])
   
   const dahboardLinks = [
     {
@@ -186,14 +188,26 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
   const offerLinks = (offerID) => { 
     const subs = ['info','categorization','dates','audience','media']
     return subs.map(sub => {
+      const offer = offers?.filter(offer => offer.id === offerID)[0]
       return {
-        href: `${level_1_links[1].action.href}${offerID}/${sub}`,
+        href: offer ? offer?.returnHref(sub) : '',
         title: t(`categories.offer.tabs.${sub}`)
       }
     })
   }
 
-  // const locationLinks = (locationID) => {}
+  const locationLinks = (locationID) => {
+    const subs = ['info','service','media','accessibility']
+    const location = locations?.filter(location => location.id === locationID)[0]
+    return subs.map(sub => {
+      return {
+        href: location ? location?.returnHref(sub) : '',
+        title: t(`categories.location.tabs.${sub}`)
+      }
+    })
+  }
+
+  console.log( locationLinks(locations[4].id))
 
   const organizerLinks = [
     {
@@ -210,13 +224,6 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
     },
   ]
 
-
-  // const locationLinks = [
-  //   {
-  //     href: `${level_1_links[0].action.href}/#${t('dashboard.info.linkList.quicklinks.id')}`,
-  //     title: t('categories.location.form.tabs')
-  //   },
-  // ]
   
   const organizer = organizerLists.all.filter(organizer => organizer.id === organizerId)[0] || undefined
 
@@ -252,36 +259,53 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({}: SitemapCon
                       ))}
                     </StyledLinkList>
                   </StyledLink>
-                  <StyledLink level={1}>
+
+                  <StyledLink level={0}>
                     <StyledLinkList>
                       {index === 1 && offers && offers.map(({href, translation, id}, index) => (
-                          <StyledLink key={index} level={1}>
-                            <StyledLinkList>
-                              <StyledLink level={1}>
-                                <Link href={href as string}>{translation}</Link>
-                              </StyledLink>
+                        <StyledLink key={index} level={1}>
+                          <StyledLinkList>
                             <StyledLink level={1}>
-                              <StyledLinkList>
-                              {
-                                offerLinks(id).map(({href, title}, index) => (
-                                  <StyledLink key={index} level={2}>
-                                    <Link href={href as string}>{title}</Link>
-                                  </StyledLink>
-                                ))
-                              }
-                              </StyledLinkList>
+                              <Link href={href as string}>{translation}</Link>
                             </StyledLink>
+                          <StyledLink level={0}>
+                            <StyledLinkList>
+                            {
+                              offerLinks(id).map(({href, title}, index) => (
+                                <StyledLink key={index} level={2}>
+                                  <Link href={href as string}>{title}</Link>
+                                </StyledLink>
+                              ))
+                            }
                             </StyledLinkList>
                           </StyledLink>
+                          </StyledLinkList>
+                        </StyledLink>
                       ))}
                     </StyledLinkList>
                   </StyledLink>
-                  <StyledLink level={1}>
+
+                  <StyledLink level={0}>
                     <StyledLinkList>
-                      {index === 2 && locations && locations.map((location, index) => (
+                      {index === 2 && locations && locations.map(({href, translation, id}, index) => (
                         <StyledLink key={index} level={1}>
-                          <Link href={location?.href as string}>{location.translation}</Link>
-                        </StyledLink>
+                          <StyledLinkList>
+                            <StyledLink level={1}>
+                              <Link href={href as string}>{translation}</Link>
+                            </StyledLink>
+                          <StyledLink level={0}>
+                            <StyledLinkList>
+                            {
+                              locationLinks(id).map(({href, title}, index) => (
+                                <StyledLink key={index} level={2}>
+                                  <Link href={href as string}>{title}</Link>
+                                </StyledLink>
+                              ))
+                            }
+                            </StyledLinkList>
+                          </StyledLink>
+                        </StyledLinkList>
+                      </StyledLink>
                       ))}
                     </StyledLinkList>
                   </StyledLink>
