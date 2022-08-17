@@ -69,7 +69,7 @@ const StyledDateListRowNoBorder = styled(StyledDateListRow)`
     border-top: 0px solid var(--grey-400);
 `;
 
-const StyledDateListItemCheckbox = styled.div`
+const StyledDateListItemCheckbox = styled.span`
   padding: 0.75rem;
   align-self: center;
 
@@ -140,7 +140,7 @@ const StyledDateListItemExpand = styled.button<{ isCollapsed: boolean }>`
   }
 `;
 
-const StyledDateListItemBody = styled.div`
+const StyledDateListItemBody = styled.td`
   width: 100%;
 `;
 

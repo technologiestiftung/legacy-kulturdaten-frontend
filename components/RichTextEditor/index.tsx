@@ -75,7 +75,7 @@ const RTEContentWrapper = styled.div`
     },
     em {font-style: italic;},
 
-    p.is-editor-empty:first-child::before {
+    p.is-editor-empty:first-of-type::before {
       content: attr(data-placeholder);
       float: left;
       color: #adb5bd;

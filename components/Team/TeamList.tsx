@@ -146,69 +146,73 @@ export const TeamList: React.FC<TeamListProps> = ({
       <StyledTeamListScrollBox>
         <StyledTeamListList>
           {isMidOrWider && (
-            <StyledTeamListListTitleRow>
-              <StyledTeamListHeader>{t('team.list.email')}</StyledTeamListHeader>
-              <StyledTeamListHeader>{t('team.list.role')}</StyledTeamListHeader>
-            </StyledTeamListListTitleRow>
+            <thead>
+              <StyledTeamListListTitleRow>
+                <StyledTeamListHeader>{t('team.list.email')}</StyledTeamListHeader>
+                <StyledTeamListHeader>{t('team.list.role')}</StyledTeamListHeader>
+              </StyledTeamListListTitleRow>
+            </thead>
           )}
-          {roles?.map((role, index) => {
-            const isPendingUser = !role?.attributes.isActive;
+          <tbody>
+            {roles?.map((role, index) => {
+              const isPendingUser = !role?.attributes.isActive;
 
-            const email = isPendingUser
-              ? (role as OrganizerRolePending).attributes.email
-              : ((role as Role).relations?.user as User)?.attributes.email;
+              const email = isPendingUser
+                ? (role as OrganizerRolePending).attributes.email
+                : ((role as Role).relations?.user as User)?.attributes.email;
 
-            const isCurrentUser = currentUser?.attributes?.email === email;
-            const showRemove = !isCurrentUser && userIsOwner;
-            const isOwnerRole = role.attributes?.role === RoleName.owner;
+              const isCurrentUser = currentUser?.attributes?.email === email;
+              const showRemove = !isCurrentUser && userIsOwner;
+              const isOwnerRole = role.attributes?.role === RoleName.owner;
 
-            const canNotBeRemoved = isOwnerRole && ownersCount < 2;
+              const canNotBeRemoved = isOwnerRole && ownersCount < 2;
 
-            return (
-              <StyledTeamListItem key={index} isCurrentUser={isCurrentUser}>
-                <StyledTeamListItemTitle>
-                  <StyledTeamListItemMail>{email}</StyledTeamListItemMail>
-                  {isPendingUser && (
-                    <StyledTeamListItemStatus>({t('team.list.pending')})</StyledTeamListItemStatus>
-                  )}
-                </StyledTeamListItemTitle>
-                <StyledTeamListItemRole>
-                  <Select
-                    id={`${uid}-roles`}
-                    value={roles.length === 1 ? RoleName.owner : role.attributes?.role || ''}
-                    disabled={!userIsOwner || roles.length === 1 || canNotBeRemoved}
-                    onChange={(e) => {
-                      onChange([
-                        ...roles.slice(0, index),
-                        {
-                          ...role,
-                          attributes: {
-                            ...role.attributes,
-                            role: canNotBeRemoved ? RoleName.owner : (e.target.value as RoleName),
-                          },
-                        } as OrganizerRole,
-                        ...roles.slice(index + 1),
-                      ]);
-                    }}
-                  >
-                    <option value={RoleName.owner}>{t('team.roles.owner')}</option>
-                    <option value={RoleName.editor}>{t('team.roles.editor')}</option>
-                  </Select>
-                </StyledTeamListItemRole>
-                <StyledTeamListItemRemove hide={!showRemove || canNotBeRemoved}>
-                  <Button
-                    onClick={() =>
-                      showRemove && !canNotBeRemoved
-                        ? onChange(roles.filter((role, roleIndex) => roleIndex !== index))
-                        : undefined
-                    }
-                  >
-                    {t('general.remove')}
-                  </Button>
-                </StyledTeamListItemRemove>
-              </StyledTeamListItem>
-            );
-          })}
+              return (
+                <StyledTeamListItem key={index} isCurrentUser={isCurrentUser}>
+                  <StyledTeamListItemTitle>
+                    <StyledTeamListItemMail>{email}</StyledTeamListItemMail>
+                    {isPendingUser && (
+                      <StyledTeamListItemStatus>({t('team.list.pending')})</StyledTeamListItemStatus>
+                    )}
+                  </StyledTeamListItemTitle>
+                  <StyledTeamListItemRole>
+                    <Select
+                      id={`${uid}-roles`}
+                      value={roles.length === 1 ? RoleName.owner : role.attributes?.role || ''}
+                      disabled={!userIsOwner || roles.length === 1 || canNotBeRemoved}
+                      onChange={(e) => {
+                        onChange([
+                          ...roles.slice(0, index),
+                          {
+                            ...role,
+                            attributes: {
+                              ...role.attributes,
+                              role: canNotBeRemoved ? RoleName.owner : (e.target.value as RoleName),
+                            },
+                          } as OrganizerRole,
+                          ...roles.slice(index + 1),
+                        ]);
+                      }}
+                    >
+                      <option value={RoleName.owner}>{t('team.roles.owner')}</option>
+                      <option value={RoleName.editor}>{t('team.roles.editor')}</option>
+                    </Select>
+                  </StyledTeamListItemRole>
+                  <StyledTeamListItemRemove hide={!showRemove || canNotBeRemoved}>
+                    <Button
+                      onClick={() =>
+                        showRemove && !canNotBeRemoved
+                          ? onChange(roles.filter((role, roleIndex) => roleIndex !== index))
+                          : undefined
+                      }
+                    >
+                      {t('general.remove')}
+                    </Button>
+                  </StyledTeamListItemRemove>
+                </StyledTeamListItem>
+              );
+            })}
+          </tbody>
         </StyledTeamListList>
       </StyledTeamListScrollBox>
       {userIsOwner && <Info color={InfoColor.white}>{t('team.list.info')}</Info>}

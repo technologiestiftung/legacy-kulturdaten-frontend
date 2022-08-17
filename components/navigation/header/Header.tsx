@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { LegacyRef, useContext, useEffect } from 'react';
+import { LegacyRef, useContext, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 
 import { Breakpoint, useBreakpointOrWider, WindowContext } from '../../../lib/WindowService';
@@ -14,7 +14,7 @@ import { useCollapsable } from '../../collapsable';
 import { ChevronDown } from 'react-feather';
 import { OrganizerBand, OrganizerBandLayout } from '../OrganizerBand';
 import { useT } from '../../../lib/i18n';
-import { useActiveRoute } from '../../../lib/routing';
+import { useActiveRoute, useLanguage } from '../../../lib/routing';
 import { NavigationContext } from '../NavigationContext';
 import { useRouter } from 'next/router';
 import { appLayouts, Layouts } from '../../layouts/AppLayout';
@@ -22,6 +22,10 @@ import { useAppTitle } from '../../../config/structure';
 import { UserContext } from '../../user/UserContext';
 import { focusStyles } from '../../globals/Constants';
 import { mainTitleLink } from '../../../config/categories';
+import { useOrganizer } from '../../../lib/useOrganizer';
+import { defaultLanguage } from '../../../config/locale';
+import { getTranslation } from '../../../lib/translations';
+import { OrganizerTranslation } from '../../../lib/api/types/organizer';
 
 const StyledHeader = styled.header<{ isSecondary?: boolean }>`
   width: 100%;
@@ -155,11 +159,33 @@ export const HeaderMain: React.FC<HeaderProps> = ({
   const activeRoute = useActiveRoute();
   const t = useT();
 
+  const organizer = useOrganizer()
+  const language = useLanguage()
+
+  const translation = useMemo(() => {
+    const translations = organizer?.data.relations.translations
+
+    const currentTranslation = translations
+      ? getTranslation<OrganizerTranslation>(language, translations)
+      : undefined;
+
+    const defaultTranslation = translations
+    ? getTranslation<OrganizerTranslation>(defaultLanguage, translations)
+    : undefined;
+
+    return currentTranslation?.attributes.name ?
+    currentTranslation.attributes.name :
+    defaultTranslation?.attributes.name ?
+    defaultTranslation.attributes.name :
+    t('general.placeholderOrganizer')
+
+  }, [language, t, organizer])
+
   const displayRoute = activeRoute ? t(`menu.start.items.${activeRoute}`): undefined
 
   const renderedLink = (
     <Link>
-      <StyledLink ref={ mainTitleLink as LegacyRef<HTMLAnchorElement>}>{title}</StyledLink>
+      <StyledLink ref={ mainTitleLink as LegacyRef<HTMLAnchorElement>}>{translation}</StyledLink>
     </Link>
   );
 
