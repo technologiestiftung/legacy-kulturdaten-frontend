@@ -12,7 +12,6 @@ import { MediaList } from '../../MediaList';
 import { MediaDelete, mediaDeleteFactory } from '../../../lib/api/routes/media/delete';
 import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from './formComponents';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { Info } from '../../info';
 
@@ -117,7 +116,6 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate: mutateEntry } = useEntry(category, query);
   const call = useApiCall();
   const t = useT();
-  const loadingScreen = useLoadingScreen();
   const confirmScreen = useConfirmScreen();
 
   const initialMedia = useMemo<Media['data'][]>(
@@ -235,33 +233,27 @@ export const useMediaForm: EntryFormHook = ({ category, query }) => {
                   }),
                   confirmButtonText: t('general.confirmDelete') as string,
                   onConfirm: async () => {
-                    loadingScreen(
-                      t('general.deleting.loading'),
-                      async () => {
-                        try {
-                          const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                    try {
+                      const resp = await call<MediaDelete>(mediaDeleteFactory, {
+                        id: mediaItemId,
+                        entry: {
+                          attributes: {
                             id: mediaItemId,
-                            entry: {
-                              attributes: {
-                                id: mediaItemId,
-                              },
-                            },
-                          });
+                          },
+                        },
+                      });
 
-                          if (resp.status === 200) {
-                            mutateEntry();
-                            return { success: true };
-                          }
+                      if (resp.status === 200) {
+                        mutateEntry();
+                        return { success: true };
+                      }
 
-                          return { success: false, error: t('general.serverProblem') };
-                        } catch (e) {
-                          console.error(e);
+                      return { success: false, error: t('general.serverProblem') };
+                    } catch (e) {
+                      console.error(e);
 
-                          return { success: false, error: t('general.serverProblem') };
-                        }
-                      },
-                      t('general.takeAFewSeconds')
-                    );
+                      return { success: false, error: t('general.serverProblem') };
+                    }
                   },
                 });
               }}

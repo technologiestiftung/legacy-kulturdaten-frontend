@@ -4,11 +4,10 @@ import { useRouter } from 'next/router';
 import { useLanguage, useLocale } from '../../../lib/routing';
 import { getTranslation } from '../../../lib/translations';
 import { routes } from '../../../config/routes';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useOrganizerId, useSetOrganizerId } from '../../../lib/useOrganizer';
 import { useT } from '../../../lib/i18n';
 import { OrganizerBandItem } from './OrganizerBandItem';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { useUserOrganizerLists } from '../../user/useUser';
 import { useCreateOrganizer } from '../../../lib/categories';
 import { defaultLanguage } from '../../../config/locale';
@@ -18,6 +17,7 @@ import { Breakpoint } from '../../../lib/WindowService';
 import { StandardLink } from '../../StandardLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { EntryListContext } from '../../EntryList/EntryListContext';
+import { mainContentRef, mainTitleLink } from '../../../config/categories';
 
 const HiddenOrganizerTitle = styled.h1`
   position:absolute;
@@ -34,6 +34,29 @@ const StyledOrganizerBand = styled.ul<{ adminModeActive: boolean }>`
 
   ${({ adminModeActive }) => adminModeActive && css``}
 `;
+
+export const SkipLinkMainContent:React.FC = () => {
+  const t = useT();
+
+  const SkipLinkButton = styled.button`
+    position: absolute;
+    opacity: 0;
+    z-index: 10;
+
+    &:focus {
+      opacity: 1;
+    }
+  `;
+
+  const skipLinkHandler = () => {
+    if(mainContentRef.current) {
+      mainContentRef.current.focus()
+    }
+  }
+  return (
+    <SkipLinkButton onClick={skipLinkHandler}>{t('general.toMainContent') as string}</SkipLinkButton>
+  )
+}
 
 const StyledOrganizerBandAdminMark = styled.div`
   display: flex;
@@ -77,10 +100,13 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
   const activeOrganizerId = useOrganizerId();
   const setOrganizerId = useSetOrganizerId();
   const t = useT();
-  const loadingScreen = useLoadingScreen();
   const createOrganizer = useCreateOrganizer();
   const { adminModeActive, quit: quitAdminMode } = useAdminMode();
   const { reset } = useContext(EntryListContext);
+
+  const sitemapActive = useMemo(()=> {
+    return router?.pathname.search("sitemap") !== -1
+  },[router])
 
   const { owner: organizerOwnerList, contributor: organizerContributorList } =
     useUserOrganizerLists();
@@ -131,14 +157,14 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
                 logo={organizer.relations?.logo}
                 onClick={() => {
                   if (organizer.id !== activeOrganizerId)
-                    loadingScreen(t('menu.organizerBand.loading'), async () => {
-                      setOrganizerId(organizer.id);
-                      reset();
+                    setOrganizerId(organizer.id);
+                    reset();
 
-                      router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
-
-                      return { success: true };
-                    });
+                    router.push(routes.dashboard({ locale, query: { organizer: organizer.id } }));
+                    setTimeout(() => {
+                      mainTitleLink.current.focus();
+                    }, 300)
+                    return { success: true };
                 }}
               >
                 {translation?.attributes?.name ||
@@ -154,15 +180,47 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
             noBorder
             asButton
             onClick={async () => {
-              loadingScreen(
-                t('menu.organizerBand.create'),
-                async () => await createOrganizer(),
-                t('general.takeAFewSeconds')
-              );
+              await createOrganizer()
             }}
           >
             {t('menu.organizerBand.create') as string}
           </OrganizerBandItem>
+          { sitemapActive ? (
+
+            <OrganizerBandItem
+              active={router?.asPath === routes.createOrganizer({ locale })}
+              layout={layout}
+              margin="auto"
+              icon="ArrowLeft"
+              asButton
+              onClick={async () => {
+                  router.push(routes.dashboard({ locale, query: { organizer: router?.query?.organizer } }));
+                  setTimeout(() => {
+                    mainTitleLink?.current?.focus();
+                  }, 300)
+                  return { success: true };
+              }}
+            >
+              {t('menu.start.items.backApp') as string}
+            </OrganizerBandItem>
+          ) : (
+            <OrganizerBandItem
+              active={router?.asPath === routes.createOrganizer({ locale })}
+              layout={layout}
+              margin="auto"
+              icon="sitemap"
+              asButton
+              onClick={async () => {
+                  router.push(routes.sitemap({ locale, query: { organizer: router?.query?.organizer } }));
+                  setTimeout(() => {
+                    mainTitleLink?.current?.focus();
+                  }, 300)
+                  return { success: true };
+              }}
+            >
+              {t('menu.start.items.sitemap') as string}
+          </OrganizerBandItem>
+          )}
         </>
       )}
     </StyledOrganizerBand>

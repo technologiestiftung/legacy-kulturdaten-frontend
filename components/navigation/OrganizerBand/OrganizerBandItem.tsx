@@ -145,6 +145,31 @@ const StyledOrganizerBandItemText = styled.span<{
     `}
 `;
 
+const StyledSitemapIcon = styled.div`
+  width: 32px;
+  height: 36px;
+  display: flex;
+`;
+
+const StyledOrganizerBandListItem = styled.li<{margin: string}>`
+  margin-top: ${({ margin }) => margin ? 'auto' : '' };
+`
+
+const SitemapIcon: React.FC = () => {
+  return(
+    <StyledSitemapIcon>
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 24.75V11.25" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="7.5" y="6.75" width="21" height="4.5" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M6 24L10.5 18.75H25.4807L30 24" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="3" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="15" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="27" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </StyledSitemapIcon>
+  )
+}
+
 interface OrganizerBandItemProps {
   children: string;
   active: boolean;
@@ -156,6 +181,7 @@ interface OrganizerBandItemProps {
   logo?: Media['data'];
   asButton?: boolean;
   adminModeActive?: boolean;
+  margin?: string;
 }
 
 const OrganizerBandItemForwarded = (
@@ -170,6 +196,7 @@ const OrganizerBandItemForwarded = (
     logo,
     asButton,
     adminModeActive,
+    margin
   }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
@@ -203,7 +230,7 @@ const OrganizerBandItemForwarded = (
 
 
   return (
-    <li ref={selfRef}>
+    <StyledOrganizerBandListItem margin={margin} ref={selfRef}>
       <StyledOrganizerBandItem
         active={active}
         ref={ref}
@@ -224,6 +251,8 @@ const OrganizerBandItemForwarded = (
         <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
           {icon && feather[icon] ? (
             React.createElement(feather[icon])
+          ) : icon === "sitemap" ? (
+            <SitemapIcon />
           ) : logoRendition ? (
             <Image src={logoRendition.url} layout={'fill'} objectFit="contain" alt="" />
           ) : (
@@ -239,7 +268,7 @@ const OrganizerBandItemForwarded = (
           <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
         )}
       </StyledOrganizerBandItem>
-    </li>
+    </StyledOrganizerBandListItem>
   );
 };
 

@@ -12,6 +12,7 @@ import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Input, InputType } from '../../../input';
 import { EntryFormHook, EntryFormHookProps } from '../form';
 import { FormGrid, FormItem, FormItemWidth, FormWrapper } from '../formComponents';
+import { organizerInternalContactRef } from '../../../../config/categories'
 
 interface MainContactFormHookProps extends EntryFormHookProps {
   customRequired?: boolean;
@@ -155,7 +156,6 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
           <EntryFormHead
             title={t('categories.organizer.form.address') as string}
             tooltip={t('categories.organizer.form.addressTooltip') as string}
-            id={id}
             valid={valid}
           />
           <FormGrid>
@@ -166,6 +166,8 @@ export const useMainContactForm: EntryFormHook<MainContactFormHookProps> = ({
                 value={defaultTranslation?.attributes?.name || ''}
                 required={required}
                 softRequired={softRequired}
+                id={id}
+                ref={organizerInternalContactRef}
                 onChange={(e) => {
                   setMainContact({
                     ...mainContact,

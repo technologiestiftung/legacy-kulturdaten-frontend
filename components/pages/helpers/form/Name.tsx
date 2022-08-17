@@ -1,7 +1,7 @@
 import { ParsedUrlQuery } from 'node:querystring';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState, RefObject } from 'react';
 import { EntryFormHook } from '.';
-import { Categories } from '../../../../config/categories';
+import { Categories, locationNameRef, offerNameRef } from '../../../../config/categories';
 import { defaultLanguage, Language } from '../../../../config/locale';
 import { ApiCall, useApiCall } from '../../../../lib/api';
 import { CategoryEntry, PublishedStatus, Translation } from '../../../../lib/api/types/general';
@@ -11,7 +11,9 @@ import { getTranslation } from '../../../../lib/translations';
 import { useOrganizerId } from '../../../../lib/useOrganizer';
 import { Input, InputType } from '../../../input';
 import { useUser } from '../../../user/useUser';
-import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo } from '../formComponents';
+import { FormGrid, FormItem, FormItemWidth, FormWrapper, FormRequiredInfo, Anchor } from '../formComponents';
+import { organizerNameRef } from '../../../../config/categories';
+import React from 'react';
 
 const defaultMaxLength = 100;
 
@@ -28,48 +30,43 @@ interface SetNameProps {
   valid?: boolean;
   hint?: boolean;
   tooltip?: string;
+  id?: string;
+  placeholder?: string;
 }
 
-const Name: React.FC<SetNameProps> = ({
-  label,
-  ariaLabel,
-  onSubmit,
-  pristine,
-  setValue,
-  name,
-  value,
-  required,
-  softRequired,
-  hint,
-  tooltip
-}: SetNameProps) => {
+// eslint-disable-next-line react/display-name
+const Name = React.forwardRef<HTMLElement, SetNameProps>(
+  (props: SetNameProps, ref: RefObject<HTMLInputElement>) => {
   // set initial value
   useEffect(() => {
-    if (pristine) {
-      setValue(name);
+    if (props.pristine) {
+      props.setValue(props.name);
     }
-  }, [pristine, name, setValue]);
+  }, [props]);
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={props.onSubmit}>
+      <Anchor id={props.id}/>
       <Input
-        label={label}
-        ariaLabel={ariaLabel}
+        label={props.label}
+        ariaLabel={props.ariaLabel}
         type={InputType.text}
-        value={value || ''}
+        ref={ref}
+        placeholder={props.placeholder}
+        value={props.value || ''}
         onChange={(e) => {
-          setValue(e.target.value);
+          props.setValue(e.target.value);
         }}
-        required={required}
-        hint={hint}
-        softRequired={softRequired}
+        required={props.required}
+        hint={props.hint}
+        softRequired={props.softRequired}
         maxLength={defaultMaxLength}
-        tooltip={tooltip}
+        tooltip={props.tooltip}
       />
-      {required && <FormRequiredInfo fulfilled={value !== ''}/>}
+      {props.required && <FormRequiredInfo fulfilled={props.value !== ''}/>}
     </form>
   );
-};
+});
 
 export const useName = <
   EntryType extends CategoryEntry,
@@ -83,6 +80,8 @@ export const useName = <
   ariaLabel?: string;
   loaded: boolean;
   tooltip?: any;
+  id?: string;
+  placeholder?: string;
 }): {
   form: React.ReactElement;
   onSubmit: (e?: FormEvent) => Promise<void>;
@@ -90,6 +89,7 @@ export const useName = <
   reset: () => void;
   valid: boolean;
   value: string;
+  organizerInternalContactRef?: RefObject<unknown>;
 } => {
   const { category, query, language, label, ariaLabel, tooltip } = props;
 
@@ -172,9 +172,25 @@ export const useName = <
     }
   };
 
+  const getRef = ():any => {
+    switch(props.id) {
+      case "organizer-name":
+        return organizerNameRef
+        break;
+      case "offer-name":
+        return offerNameRef
+        break;
+      case "location-name":
+        return locationNameRef
+        break;
+      default:
+        return
+        }
+  }
+
   return {
     form: (
-      <Name
+      <Name ref={getRef()}
         {...{
           pristine,
           value,
@@ -187,6 +203,8 @@ export const useName = <
           valid,
           tooltip,
           softRequired,
+          id: props.id,
+          placeholder: props.placeholder
         }}
       />
     ),
@@ -200,7 +218,7 @@ export const useName = <
   };
 };
 
-export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip  }) => {
+export const useNameForm: EntryFormHook = ({ category, query, loaded, title, tooltip, placeholder, id }) => {
   const t = useT();
 
   const {
@@ -216,7 +234,9 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     language: Language.de,
     label: `${title} ${t('forms.labelGerman') as string}`,
     loaded,
-    tooltip
+    tooltip,
+    id: id,
+    placeholder
   });
 
   const {
@@ -270,6 +290,6 @@ export const useNameForm: EntryFormHook = ({ category, query, loaded, title, too
     requirementFulfillment: {
       requirementKey: 'name',
       fulfilled,
-    },
+    }
   };
 };

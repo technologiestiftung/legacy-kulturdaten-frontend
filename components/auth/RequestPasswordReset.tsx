@@ -7,7 +7,6 @@ import { Anchor } from '../anchor';
 import { Button, ButtonColor, ButtonContentPosition, ButtonSize, ButtonType } from '../button';
 import { Info } from '../info';
 import { Input, InputType } from '../input';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import {
   AuthContent,
   AuthFormContainer,
@@ -33,48 +32,40 @@ export const RequestPasswordResetForm: React.FC = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setErrors([]);
+      try {
+        await call<AuthRequestPasswordReset>(authRequestPasswordResetFactory, {
+          body: {
+            email,
+          },
+        });
+        setSuccess(true);
+        return { success: true };
+      } catch (e) {
+        const requestErrors = e.message
+          ? (JSON.parse(e.message)?.errors as {
+              rule: string;
+              field: string;
+              message: string;
+            }[])
+          : undefined;
 
-    loadingScreen(
-      t('requestPasswordReset.loading'),
-      async () => {
-        try {
-          await call<AuthRequestPasswordReset>(authRequestPasswordResetFactory, {
-            body: {
-              email,
-            },
-          });
-          setSuccess(true);
-          return { success: true };
-        } catch (e) {
-          const requestErrors = e.message
-            ? (JSON.parse(e.message)?.errors as {
-                rule: string;
-                field: string;
-                message: string;
-              }[])
-            : undefined;
+        const visibleError = requestErrors?.find(
+          (error) => error.rule === 'exists' && error.field === 'email'
+        )
+          ? (t('requestPasswordReset.nonExistantEmailError') as string)
+          : (t('requestPasswordReset.requestError') as string);
 
-          const visibleError = requestErrors?.find(
-            (error) => error.rule === 'exists' && error.field === 'email'
-          )
-            ? (t('requestPasswordReset.nonExistantEmailError') as string)
-            : (t('requestPasswordReset.requestError') as string);
-
-          setErrors([
-            { id: requestErrorId, message: visibleError },
-            ...errors.filter(({ id }) => id !== requestErrorId),
-          ]);
-          return { success: false, error: <Info>{visibleError}</Info> };
-        }
-      },
-      t('general.takeAFewSeconds')
-    );
+        setErrors([
+          { id: requestErrorId, message: visibleError },
+          ...errors.filter(({ id }) => id !== requestErrorId),
+        ]);
+        return { success: false, error: <Info>{visibleError}</Info> };
+      }
   };
 
   return (

@@ -31,7 +31,7 @@ import { useOrganizerId } from '../../../lib/useOrganizer';
 import { PublishedStatus } from '../../../lib/api/types/general';
 import { ComponentLoader } from '../../ComponentLoader';
 
-const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
+const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id}) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -77,8 +77,7 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
     renderedForm: (
       <FormWrapper requirement={{ fulfilled }} requirementNotInFormItem>
         <EntryFormHead
-          title={`${t('categories.offer.form.mainType.title')} ${t('forms.required')}`}
-          id={id}
+          title={`${t('categories.offer.form.mainType.title')} ${t('forms.required')}`} id={id}
         />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>

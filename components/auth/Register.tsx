@@ -8,7 +8,6 @@ import { Button, ButtonColor, ButtonContentPosition, ButtonSize, ButtonType } fr
 import { Checkbox } from '../checkbox';
 import { Info } from '../info';
 import { Input, InputType } from '../input';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import {
   AuthContent,
   AuthFormContainer,
@@ -38,7 +37,6 @@ export const RegisterForm: React.FC = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
 
   useEffect(() => {
     if (password.length > 0 && passwordConfirmation.length > 0) {
@@ -70,43 +68,37 @@ export const RegisterForm: React.FC = () => {
     setErrors([]);
 
     if (passwordsMatch) {
-      loadingScreen(
-        t('register.loading'),
-        async () => {
-          try {
-            await call<AuthRegister>(authRegisterFactory, {
-              body: {
-                email,
-                password,
-                passwordConfirmation: passwordConfirmation,
-              },
-            });
-            setSuccess(true);
-            return { success: true };
-          } catch (e) {
-            const requestErrors = e.message
-              ? (JSON.parse(e.message)?.errors as {
-                  rule: string;
-                  field: string;
-                  message: string;
-                }[])
-              : undefined;
+      try {
+        await call<AuthRegister>(authRegisterFactory, {
+          body: {
+            email,
+            password,
+            passwordConfirmation: passwordConfirmation,
+          },
+        });
+        setSuccess(true);
+        return { success: true };
+      } catch (e) {
+        const requestErrors = e.message
+          ? (JSON.parse(e.message)?.errors as {
+              rule: string;
+              field: string;
+              message: string;
+            }[])
+          : undefined;
 
-            const visibleError = requestErrors?.find(
-              (error) => error.rule === 'unique' && error.field === 'email'
-            )
-              ? (t('register.uniqueEmailError') as string)
-              : (t('register.requestError') as string);
+        const visibleError = requestErrors?.find(
+          (error) => error.rule === 'unique' && error.field === 'email'
+        )
+          ? (t('register.uniqueEmailError') as string)
+          : (t('register.requestError') as string);
 
-            setErrors([
-              { id: requestErrorId, message: visibleError },
-              ...errors.filter(({ id }) => id !== requestErrorId),
-            ]);
-            return { success: false, error: <Info>{visibleError}</Info> };
-          }
-        },
-        t('general.takeAFewSeconds')
-      );
+        setErrors([
+          { id: requestErrorId, message: visibleError },
+          ...errors.filter(({ id }) => id !== requestErrorId),
+        ]);
+        return { success: false, error: <Info>{visibleError}</Info> };
+      }
     }
   };
 

@@ -15,7 +15,6 @@ import {
   DashboardTileVariant,
 } from '../Dasboard/DashboardTile';
 import { StyledEntryFormContainer } from '../EntryForm/wrappers';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 import { useUser } from '../user/useUser';
 import { routes } from '../../config/routes';
@@ -24,7 +23,6 @@ export const Terms: React.FC = () => {
   const [accepted, setAccepted] = useState(false);
   const uid = usePseudoUID();
   const t = useT();
-  const loadingScreen = useLoadingScreen();
   const call = useApiCall();
   const { mutateUserInfo } = useUser();
   const router = useRouter();
@@ -55,39 +53,37 @@ export const Terms: React.FC = () => {
                   size={ButtonSize.big}
                   color={ButtonColor.black}
                   disabled={!accepted}
-                  onClick={() => {
+                  onClick={async () => {
                     if (accepted) {
-                      loadingScreen(t('settings.terms.loading'), async () => {
-                        try {
-                          const resp = await call<UserUpdate>(userUpdateFactory, {
-                            attributes: {
-                              user: {
-                                acceptedTermsAt: new Date().toISOString(),
-                              },
+                      try {
+                        const resp = await call<UserUpdate>(userUpdateFactory, {
+                          attributes: {
+                            user: {
+                              acceptedTermsAt: new Date().toISOString(),
                             },
-                          });
+                          },
+                        });
 
-                          if (resp.status === 200) {
-                            mutateUserInfo();
-                            setTimeout(() => {
-                              router.push(
-                                routes.dashboard({
-                                  locale,
-                                  query: {
-                                    organizer: organizerId,
-                                  },
-                                })
-                              );
-                            }, 250);
-                            return { success: true };
-                          }
-
-                          return { success: false, error: t('general.serverProblem') };
-                        } catch (e) {
-                          console.error(e);
-                          return { success: false, error: t('general.serverProblem') };
+                        if (resp.status === 200) {
+                          mutateUserInfo();
+                          setTimeout(() => {
+                            router.push(
+                              routes.dashboard({
+                                locale,
+                                query: {
+                                  organizer: organizerId,
+                                },
+                              })
+                            );
+                          }, 250);
+                          return { success: true };
                         }
-                      });
+
+                        return { success: false, error: t('general.serverProblem') };
+                      } catch (e) {
+                        console.error(e);
+                        return { success: false, error: t('general.serverProblem') };
+                      }
                     }
                   }}
                 >

@@ -198,6 +198,7 @@ const LinkList: React.FC<LinkListProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
 
   const [inputState, setInputState] = useState<string>('');
+  const validInputURL = isUrl(inputState)
 
   const maxLinksReached = useMemo<boolean>(
     () => maxLinks && linksState?.length >= maxLinks,
@@ -300,13 +301,14 @@ const LinkList: React.FC<LinkListProps> = ({
               label={t('linkList.addNew') as string}
               placeholder={t('linkList.inputPlaceholder') as string}
               disabled={maxLinksReached}
+              error={inputState && !validInputURL && (t('forms.urlInvalid') as string)}
             />
           </StyledLinkListInput>
           <StyledLinkListInputButton>
             <Button
               icon="Plus"
               type={ButtonType.submit}
-              disabled={inputState.length < 1}
+              disabled={inputState.length < 1 || !validInputURL}
               size={isMidOrWider ? ButtonSize.big : ButtonSize.default}
             >
               {t('general.add')}

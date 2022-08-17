@@ -12,7 +12,6 @@ import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { contentGrid, mq } from '../globals/Constants';
 import { Label, StyledLabel } from '../label';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { Categories, RequirementFulfillment } from '../../config/categories';
 import { useRouter } from 'next/router';
 import { PublishedStatus } from '../../lib/api/types/general';
@@ -143,7 +142,6 @@ export const Publish: React.FC<PublishProps> = ({
 }: PublishProps) => {
   const { entry, mutate } = useEntry<Organizer, OrganizerShow>(category, query);
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
   const categoryName = category?.name;
   const organizerId = useOrganizerId();
   const mutateList = useMutateList(
@@ -229,42 +227,35 @@ export const Publish: React.FC<PublishProps> = ({
               `}
             `}
             onClick={async () => {
-              loadingScreen(
-                t('publish.loadingTitle', { categoryName: category.title.singular }),
-                async () => {
-                  try {
-                    try {
-                      await onPublish();
-                    } catch (e) {
-                      console.error(e);
-                      return { success: false, error: t('general.serverProblem') };
-                    }
-                    const save = await waitForSave();
-                    if (save.success) {
-                      const resp = await call(category.api.update.factory, {
-                        id: entry.data.id,
-                        entry: {
-                          attributes: {
-                            status: PublishedStatus.published,
-                          },
-                        },
-                      });
-                      if (resp.status === 200) {
-                        mutate();
-                        mutateList();
-                        return { success: true };
-                      }
-                    } else {
-                      return { success: false, error: t('general.serverProblem') };
-                    }
-                  } catch (e) {
-                    console.error(e);
-                    return { success: false, error: t('general.serverProblem') };
+              try {
+                try {
+                  await onPublish();
+                } catch (e) {
+                  console.error(e);
+                  return { success: false, error: t('general.serverProblem') };
+                }
+                const save = await waitForSave();
+                if (save.success) {
+                  const resp = await call(category.api.update.factory, {
+                    id: entry.data.id,
+                    entry: {
+                      attributes: {
+                        status: PublishedStatus.published,
+                      },
+                    },
+                  });
+                  if (resp.status === 200) {
+                    mutate();
+                    mutateList();
+                    return { success: true };
                   }
-                },
-                t('general.takeAFewSeconds'),
-                1000
-              );
+                } else {
+                  return { success: false, error: t('general.serverProblem') };
+                }
+              } catch (e) {
+                console.error(e);
+                return { success: false, error: t('general.serverProblem') };
+              }
             }}
           >
             {t('general.publish')}
@@ -292,6 +283,7 @@ export const usePublish = ({
   const { entry } = useEntry(category, router?.query);
 
   const requirements = category?.requirements;
+  
 
   const failedRequirementsFromApi =
     typeof entry?.meta?.publishable === 'object' &&
@@ -325,6 +317,8 @@ export const usePublish = ({
             ? {
                 href: requirement.link?.href(query),
                 ariaLabel: requirement.link.ariaLabel,
+                targetId: requirement.link.targetId,
+                targetRef: requirement.link.targetRef,
               }
             : undefined,
         };

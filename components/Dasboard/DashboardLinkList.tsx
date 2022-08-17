@@ -144,16 +144,18 @@ interface DashboardLinkListProps {
   links: StandardLink[];
   title?: string;
   text?: React.ReactElement;
+  id?: string;
 }
 
 export const DashboardLinkList: React.FC<DashboardLinkListProps> = ({
   title,
   links,
   text,
+  id,
 }: DashboardLinkListProps) => {
   return (
     <StyledDashboardLinkList>
-      {title && <StyledDashboardLinkListTitle>{title}</StyledDashboardLinkListTitle>}
+      {title && <StyledDashboardLinkListTitle id={id}>{title}</StyledDashboardLinkListTitle>}
       {text && <StyledDashboardLinkListText>{text}</StyledDashboardLinkListText>}
       <StyledDashboardLinkListList>
         {links?.map((link, index) => (

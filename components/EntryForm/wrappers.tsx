@@ -108,7 +108,7 @@ interface StyledEntryFormContainerProps {
 export const StyledEntryFormContainer: React.FC<StyledEntryFormContainerProps> = ({ children, noPadding, fullWidth }: StyledEntryFormContainerProps) => {
   return (
     <EntryFormContainer noPadding={noPadding} fullWidth={fullWidth}>
-      <fieldset>
+      <fieldset tabIndex={0}>
         {children}
       </fieldset>
     </EntryFormContainer>

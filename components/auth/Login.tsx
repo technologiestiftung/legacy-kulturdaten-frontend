@@ -13,7 +13,6 @@ import { Input, InputType } from '../input';
 import { Checkbox } from '../checkbox';
 import { Button, ButtonSize, ButtonColor, ButtonType, ButtonContentPosition } from '../button';
 import { AuthFormContainer, AuthFormItem } from './AuthWrapper';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { Info } from '../info';
 import { StandardLinkType } from '../../lib/generalTypes';
 import { defaultOrganizerId } from '../navigation/NavigationContext';
@@ -41,7 +40,6 @@ export const LoginForm: React.FC = () => {
   const locale = useLocale();
   const t = useT();
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
   const formRef = useRef<HTMLFormElement>(null);
 
   const redirect = useMemo(() => router?.query?.redirect, [router?.query?.redirect]);
@@ -56,46 +54,44 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
 
     if (formRef.current?.checkValidity()) {
-      loadingScreen(t('login.loading'), async () => {
-        try {
-          const resp = await call<AuthLogin>(authLoginFactory, {
-            body: { email, password },
-          });
+      try {
+        const resp = await call<AuthLogin>(authLoginFactory, {
+          body: { email, password },
+        });
 
-          if (resp.status === 200) {
-            const token = resp.body.meta.token.token;
+        if (resp.status === 200) {
+          const token = resp.body.meta.token.token;
 
-            login(
-              authCookie(token, remember, locale),
-              (redirect as string) ||
-                routes.dashboard({
-                  locale,
-                  query: { organizer: defaultOrganizerId },
-                })
-            );
+          login(
+            authCookie(token, remember, locale),
+            (redirect as string) ||
+              routes.dashboard({
+                locale,
+                query: { organizer: defaultOrganizerId },
+              })
+          );
 
-            return { success: true };
-          }
-          return { success: false, error: <Info>{t('login.error')}</Info> };
-        } catch (e) {
-          const requestErrors = e.message
-            ? (JSON.parse(e.message)?.errors as {
-                title: string;
-                code: string;
-                status: string;
-              }[])
-            : undefined;
-
-          console.log(requestErrors);
-
-          const visibleError = requestErrors?.find((error) => error.code === verificationErrorCode)
-            ? (t('login.verificationError') as string)
-            : (t('login.error') as string);
-
-          setError(visibleError);
-          return { success: false, error: <Info>{visibleError}</Info> };
+          return { success: true };
         }
-      });
+        return { success: false, error: <Info>{t('login.error')}</Info> };
+      } catch (e) {
+        const requestErrors = e.message
+          ? (JSON.parse(e.message)?.errors as {
+              title: string;
+              code: string;
+              status: string;
+            }[])
+          : undefined;
+
+        console.log(requestErrors);
+
+        const visibleError = requestErrors?.find((error) => error.code === verificationErrorCode)
+          ? (t('login.verificationError') as string)
+          : (t('login.error') as string);
+
+        setError(visibleError);
+        return { success: false, error: <Info>{visibleError}</Info> };
+      }
     }
   };
 

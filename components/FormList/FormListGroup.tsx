@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { useT } from '../../lib/i18n';
+import { usePseudoUID } from '../../lib/uid';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 
@@ -34,6 +36,16 @@ const StyledFormListGroupChildren = styled.ul`
 
 const StyledFormListGroupItem = styled.li``;
 
+const StyledSkipButton = styled.button`
+position: absolute;
+    opacity: 0;
+    z-index: 10;
+
+    &:focus {
+      opacity: 1;
+    }
+  `;;
+
 interface FormListGroupProps {
   title?: string;
   children: React.ReactNode;
@@ -44,13 +56,29 @@ export const FormListGroup: React.FC<FormListGroupProps> = ({
   children,
 }: FormListGroupProps) => {
   const childrenArray = React.Children.toArray(children);
+  const uid = usePseudoUID()
+  const t = useT();
+  const SkipButtonHandler = (index) => {
+    const nextField = document.getElementById(`radio-group-${uid}-${index + 1}`)
+    if(nextField){
+      nextField.focus()
+    }
+  }
+
+  const isCheckBoxField = (index) => {
+    const checkbox = children[index]?.props?.field?.type === 'checkboxList'
+    const nextField = document.getElementById(`radio-group-${uid}-${index + 1}`)
+    return checkbox && nextField
+  }
+  
   return (
     <StyledFormListGroup>
       {title && <StyledFormListGroupTitle>{title}</StyledFormListGroupTitle>}
       <StyledFormListGroupChildren>
         {childrenArray?.map((child, index) => (
           <StyledFormListGroupItem key={index}>
-            <fieldset>
+            <fieldset id={`radio-group-${uid}-${index}`} tabIndex={0}>
+              {isCheckBoxField(index) && <StyledSkipButton onClick={() => SkipButtonHandler(index)}>{t('general.skipField') as string}</StyledSkipButton>}
               {React.cloneElement(child as React.ReactElement, {
                 last: index === childrenArray.length - 1,
                 first: !title && index === 0,

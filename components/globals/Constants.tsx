@@ -38,6 +38,7 @@ export const CSSVars: React.FC = () => (
         --error-o50: rgba(174, 0, 38, 0.5);
         --red-50: #f28098;
         --blue: #1e3791;
+        --corporateBlue: #385BA7;
 
         --cyan-dark: #2e91d2;
         --mustard: #dcc82d;

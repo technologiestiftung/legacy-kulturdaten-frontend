@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ChangeEventHandler, useEffect, useState } from 'react';
+import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import { ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
@@ -8,6 +8,7 @@ import { Label, StyledLabel } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
 import { focusStyles } from '../globals/Constants';
+import { countAlertCall, CountAlert, StyledCharacterCount } from '../RichTextEditor';
 
 
 const StyledTextareaContainer = styled.div`
@@ -61,6 +62,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
   const t = useT();
   const [touched, setTouched] = useState(false);
   const [internalState, setInternalState] = useState(props?.value);
+  const [count, setCount] = useState(0);
   const debouncer = useDebounce();
 
   useEffect(() => {
@@ -71,8 +73,12 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         typeof props?.value === 'number')
     ) {
       setInternalState(props.value);
+      setCount(props.value.length)
     }
   }, [touched, props?.value, internalState]);
+
+  const countAlertValue = useMemo(() => countAlertCall(props.maxLength, count, t), [props.maxLength, count, t])
+
 
   return (
     <StyledTextareaContainer lang={props?.lang}>
@@ -98,9 +104,8 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         value={props?.debounce ? internalState : props?.value || ''}
         valid={props.valid}
         pristine={pristine}
-        onChange={(e) => {
+        onChange={async(e) => {
           setTouched(true);
-
           if (props?.debounce) {
             setInternalState(e.target.value);
             debouncer(() => {
@@ -109,6 +114,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
           } else {
             props?.onChange(e);
           }
+          setCount(e.target.value.length);
         }}
         onBlur={(e) => {
           if (props?.onBlur) {
@@ -119,6 +125,11 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         }}
         aria-label={props?.ariaLabel}
       />
+      {props.maxLength && 
+      <StyledCharacterCount>
+        {count} / {props.maxLength}
+      </StyledCharacterCount>}
+      <CountAlert aria-live="assertive" role="region">{countAlertValue}</CountAlert>
     </StyledTextareaContainer>
   );
 };

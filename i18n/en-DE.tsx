@@ -156,8 +156,13 @@ export const enDE: Localization = {
         },
       },
       linkList: {
+        quicklinks: {
+          title: () => 'Quicklinks',
+          id: () => 'dashboard-quicklinks'
+        },
         help: {
           title: () => 'Get help',
+          id: () => 'dashboard-help',
           text: () =>
             "You have questions or need support in using the platform? We're here to help.",
           links: {
@@ -173,6 +178,7 @@ export const enDE: Localization = {
         },
         openSource: {
           title: () => 'Get creative',
+          id: () => 'dashboard-openSource',
           text: () =>
             'kulturdaten.berlin is being developed completely open source. Would you like to help? You can find the source code here:',
           links: {
@@ -188,6 +194,7 @@ export const enDE: Localization = {
         },
         contact: {
           title: () => 'Contact',
+          id: () => 'dashboard-contact',
           text: () =>
             'Do you have any questions, suggestions or comments about the this platform? Get in touch at:',
           links: {
@@ -280,7 +287,7 @@ export const enDE: Localization = {
     to: () => 'to',
     add: () => 'Add new hours',
     remove: () => 'remove',
-    note: () => 'Note on hours (you have to select "Physical Location" to see this)',
+    note: () => 'Note on hours',
     error: () => 'The end time (‘to’) must be after the start time (‘from’).',
   },
   openingHours: {
@@ -525,6 +532,7 @@ export const enDE: Localization = {
     website: () => 'Website',
     links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
+    urlInvalid: () => 'The input data is not a correct URL. Please use the format: (https://)example.com',
     emailInvalid: () => 'The input data is not a correct email.',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
@@ -675,7 +683,7 @@ export const enDE: Localization = {
     ),
     alt: () => 'Alt text',
     altTooltip: () =>
-      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
+      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well. For decorative images, alt texts should be avoided.',
     license: () => 'License',
     deleteTitle: () => 'Delete image',
     licenses: {
@@ -879,6 +887,8 @@ export const enDE: Localization = {
         plural: () => 'these dates',
       },
     },
+    toMainContent: () => 'To main content',
+    skipField: () => 'Skip field',
     cancel: () => 'cancel',
     confirmDelete: () => 'Confirm deletion',
     name: () => 'name',
@@ -923,6 +933,9 @@ export const enDE: Localization = {
     placeholderOffer: () => 'Unnamed offer',
     placeholderLocation: () => 'Unnamed location',
     placeholderOrganizer: () => 'Unnamed profile',
+    defaultTitleOffer: () => 'New offer',
+    defaultTitleLocation: () => 'New location',
+    defaultTitleOrganizer: () => 'New profile',
   },
   tags: {
     boxLabel: () => 'Already added keywords',
@@ -958,6 +971,9 @@ export const enDE: Localization = {
     listOrdered: () => 'Numbered list',
     listUnordered: () => 'Unordered list',
     maxCharacters: () => 'Maximum characters',
+    charactersLeft_1: () => 'Less than',
+    charactersLeft_1b: () => 'More than',
+    charactersLeft_2: () => 'characters left',
     bold: () => 'Bold',
     italic: () => 'Italic',
     underline: () => 'Underline',
@@ -1169,6 +1185,7 @@ export const enDE: Localization = {
         nameGermanSimple: () => 'German: simple language',
         nameEnglish: () => 'English',
         nameEnglishSimple: () => 'English: simple language',
+        namePlaceholder: () => "e.g. The Magic Flute",
         description: () => 'Description',
         submit: () => 'create',
         save: () => 'save',
@@ -1337,7 +1354,11 @@ export const enDE: Localization = {
         ),
         deleting: () => 'Deleting location',
       },
-    },
+    },    
+    sitemap: {
+      skipLevelButton: () => 'Go to',
+      skipLevelButton_2: () => 'with space, or deeper navigation with control-option-ArrowRight'
+    }
   },
   menu: {
     title: () => 'kulturdaten.berlin',
@@ -1350,13 +1371,22 @@ export const enDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'back to Dashboard',
+        backApp: () => 'back to App',
         dashboard: () => 'Dashboard',
+        sitemap: () => 'Sitemap',
         notifications: () => 'Notifications',
         profile: () => 'Organizer Profile',
         team: () => 'Team',
         login: () => 'Login',
         registration: () => 'Registration',
+        register: () => 'Registration',
         info: () => 'Info',
+        offer: () => 'Offers',
+        location: () => 'Locations',
+        organizer: () => 'My Profile',
+        userSettings: () => 'My Settings',
+        admin: () => 'Administration',
+        developer: () => 'Developer Settings',
       },
     },
     organizer: {

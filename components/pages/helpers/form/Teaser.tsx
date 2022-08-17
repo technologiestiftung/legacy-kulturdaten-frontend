@@ -9,7 +9,6 @@ import { Category, useEntry } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { usePseudoUID } from '../../../../lib/uid';
-import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Textarea } from '../../../textarea';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
@@ -170,7 +169,7 @@ export const useTeaser = <
   };
 };
 
-export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title }) => {
+export const useTeaserForm: EntryFormHook = ({ category, query, loaded }) => {
   const t = useT();
 
   const {

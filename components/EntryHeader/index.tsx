@@ -1,5 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { LegacyRef } from 'react';
+import { mainContentRef } from '../../config/categories';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, insetBorder, mq } from '../globals/Constants';
 import { TabsProps } from '../navigation/tabs';
@@ -193,7 +195,7 @@ export const EntryHeader: React.FC<EntryHeaderProps> = ({
   wideLayout,
   minimalVariant,
 }: EntryHeaderProps) => (
-  <StyledEntryHeader>
+  <StyledEntryHeader tabIndex={0} ref={mainContentRef as LegacyRef<HTMLDivElement>}>
     <StyledEntryHeaderHead minimalVariant={minimalVariant}>
       <StyledEntryHeaderTitleWrapper>
         <StyledEntryHeaderTitle skeleton={typeof title === 'undefined' || title.length === 0}>

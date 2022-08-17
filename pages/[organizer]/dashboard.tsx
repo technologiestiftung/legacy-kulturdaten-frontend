@@ -39,7 +39,6 @@ import { getTranslation } from '../../lib/translations';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { DateFormat, useDate } from '../../lib/date';
 import { DateStatusFlag } from '../../components/DateList/DateStatusFlag';
-import { useLoadingScreen } from '../../components/Loading/LoadingScreen';
 import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { defaultLanguage } from '../../config/locale';
@@ -126,7 +125,6 @@ const DashboardStartTileRow: React.FC = () => {
   const createOrganizer = useCreateOrganizer();
   const createOffer = useCreateOffer();
   const createLocation = useCreateLocation();
-  const loadingScreen = useLoadingScreen();
   const organizerId = useOrganizerId();
   const categories = useCategories();
 
@@ -170,15 +168,9 @@ const DashboardStartTileRow: React.FC = () => {
           link={
             <DashboardTileButton
               title={t('dashboard.info.start.organizer.button') as string}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.organizer.form.create'),
-                  async () => {
-                    const resp = await createOrganizer();
-                    return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
+              onClick={async () => {
+                const resp = await createOrganizer();
+                return resp;
               }}
             />
           }
@@ -201,15 +193,9 @@ const DashboardStartTileRow: React.FC = () => {
             <DashboardTileButton
               title={t('dashboard.info.start.location.button') as string}
               disabled={organizerId === defaultOrganizerId}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.location.form.create'),
-                  async () => {
-                    const resp = await createLocation();
-                    return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
+              onClick={async () => {
+                const resp = await createLocation();
+                return resp;
               }}
             />
           }
@@ -232,15 +218,9 @@ const DashboardStartTileRow: React.FC = () => {
             <DashboardTileButton
               title={t('dashboard.info.start.offer.button') as string}
               disabled={organizerId === defaultOrganizerId}
-              onClick={() => {
-                loadingScreen(
-                  t('categories.offer.form.create'),
-                  async () => {
-                    const resp = await createOffer();
-                    return resp;
-                  },
-                  t('general.takeAFewSeconds')
-                );
+              onClick={async () => {
+                const resp = await createOffer();
+                return resp;
               }}
             />
           }
@@ -352,7 +332,7 @@ const DashboardPage: NextPage = () => {
               </DashboardRow>
             )}
             {organizerId !== defaultOrganizerId && offers?.data?.length > 0 && (
-              <DashboardRow title={t('dashboard.info.offers.title') as string}>
+              <DashboardRow id={t('dashboard.info.linkList.quicklinks.id') as string} title={t('dashboard.info.offers.title') as string}>
                 {offers?.data?.map((offer, index) => (
                   <DashboardOfferTile offer={offer} key={index} />
                 ))}
@@ -410,6 +390,7 @@ const DashboardPage: NextPage = () => {
             <DashboardRow>
               <DashboardLinkList
                 title={t('dashboard.info.linkList.help.title') as string}
+                id={t('dashboard.info.linkList.help.id') as string}
                 text={<p>{t('dashboard.info.linkList.help.text') as string}</p>}
                 links={[
                   {
@@ -422,10 +403,16 @@ const DashboardPage: NextPage = () => {
                     href: t('dashboard.info.linkList.help.links.2.href') as string,
                     type: StandardLinkType.external,
                   },
+                  {
+                    title: t('menu.start.items.sitemap') as string,
+                    href: routes.sitemap({ locale, query: { organizer: router?.query?.organizer } }),
+                    type: StandardLinkType.internal,
+                  },
                 ]}
               />
               <DashboardLinkList
                 title={t('dashboard.info.linkList.openSource.title') as string}
+                id={t('dashboard.info.linkList.openSource.id') as string}
                 text={<p>{t('dashboard.info.linkList.openSource.text') as string}</p>}
                 links={[
                   {
@@ -442,6 +429,7 @@ const DashboardPage: NextPage = () => {
               />
               <DashboardLinkList
                 title={t('dashboard.info.linkList.contact.title') as string}
+                id={t('dashboard.info.linkList.contact.id') as string}
                 text={<p>{t('dashboard.info.linkList.contact.text') as string}</p>}
                 links={[
                   {

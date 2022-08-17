@@ -18,7 +18,6 @@ import { useUser } from '../../user/useUser';
 import { add } from 'date-fns';
 import { DateFormat, useDate } from '../../../lib/date';
 import { useApiCall } from '../../../lib/api';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { UserUpdate, userUpdateFactory } from '../../../lib/api/routes/user/update';
 import { useOrganizerId } from '../../../lib/useOrganizer';
 
@@ -35,7 +34,6 @@ const CancelDeletionComponent: React.FC = () => {
   const { user, logout, mutateUserInfo } = useUser();
   const formatDate = useDate();
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
   const router = useRouter();
   const locale = useLocale();
   const organizerId = useOrganizerId();
@@ -67,42 +65,40 @@ const CancelDeletionComponent: React.FC = () => {
               <Button
                 size={ButtonSize.big}
                 color={ButtonColor.black}
-                onClick={() => {
-                  loadingScreen('Löschung abbrechen', async () => {
-                    try {
-                      const resp = await call<UserUpdate>(userUpdateFactory, {
-                        user: {
-                          attributes: {},
-                          meta: {
-                            abortDeletionRequest: true,
-                          },
+                onClick={async() => {
+                  try {
+                    const resp = await call<UserUpdate>(userUpdateFactory, {
+                      user: {
+                        attributes: {},
+                        meta: {
+                          abortDeletionRequest: true,
                         },
-                      });
+                      },
+                    });
 
-                      if (resp.status === 200) {
-                        mutateUserInfo();
+                    if (resp.status === 200) {
+                      mutateUserInfo();
+                      setTimeout(() => {
                         setTimeout(() => {
-                          setTimeout(() => {
-                            router.replace(
-                              routes.dashboard({
-                                locale,
-                                query: {
-                                  organizer: organizerId,
-                                },
-                              })
-                            );
-                          }, 250);
+                          router.replace(
+                            routes.dashboard({
+                              locale,
+                              query: {
+                                organizer: organizerId,
+                              },
+                            })
+                          );
                         }, 250);
-                        return { success: true };
-                      }
-
-                      return { success: false, error: t('general.serverProblem') };
-                    } catch (e) {
-                      console.error(e);
-
-                      return { success: false, error: t('general.serverProblem') };
+                      }, 250);
+                      return { success: true };
                     }
-                  });
+
+                    return { success: false, error: t('general.serverProblem') };
+                  } catch (e) {
+                    console.error(e);
+
+                    return { success: false, error: t('general.serverProblem') };
+                  }
                 }}
               >
                 {t('settings.requestedDeletion.button')}

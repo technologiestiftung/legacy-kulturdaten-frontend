@@ -24,7 +24,7 @@ import { Select, SelectSize } from '../select';
 import { Textarea } from '../textarea';
 import { DateListRow } from './DateListRow';
 
-const StyledDateListItemBody = styled.div`
+const StyledDateListItemBody = styled.span`
   display: grid;
   padding: 0.75rem;
 
@@ -42,7 +42,7 @@ const StyledDateListItemBody = styled.div`
   }
 `;
 
-const StyledDateListItemContainer = styled.div<{ columns: number }>`
+const StyledDateListItemContainer = styled.span<{ columns: number }>`
   grid-column: span ${({ columns }) => columns};
 `;
 

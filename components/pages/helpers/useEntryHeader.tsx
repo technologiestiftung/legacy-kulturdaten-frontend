@@ -21,7 +21,6 @@ import { Button, ButtonColor, ButtonSize, ButtonVariant, IconPosition } from '..
 import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { EntryFormProps } from './form';
 
 const StyledA = styled.a`
@@ -82,7 +81,6 @@ export const useEntryHeader = (
 
   const { quit, adminModeActive } = useAdminMode();
 
-  const loadingScreen = useLoadingScreen();
   const confirmScreen = useConfirmScreen();
   const deleteOrganizer = useDeleteEntry(Categories.organizer);
   const deleteOffer = useDeleteEntry(Categories.offer);
@@ -168,24 +166,22 @@ export const useEntryHeader = (
                           }
                         : undefined,
                       onConfirm: async () => {
-                        loadingScreen(category?.options?.deletion.deleting, async () => {
-                          switch (category.name) {
-                            case Categories.organizer: {
-                              const deleteResp = await deleteOrganizer(entry?.data?.id);
-                              if (adminModeActive) {
-                                quit();
-                              }
+                        switch (category.name) {
+                          case Categories.organizer: {
+                            const deleteResp = await deleteOrganizer(entry?.data?.id);
+                            if (adminModeActive) {
+                              quit();
+                            }
 
-                              return deleteResp;
-                            }
-                            case Categories.offer: {
-                              return await deleteOffer(entry?.data?.id);
-                            }
-                            case Categories.location: {
-                              return await deleteLocation(entry?.data?.id);
-                            }
+                            return deleteResp;
                           }
-                        });
+                          case Categories.offer: {
+                            return await deleteOffer(entry?.data?.id);
+                          }
+                          case Categories.location: {
+                            return await deleteLocation(entry?.data?.id);
+                          }
+                        }
                       },
                     });
                   }}

@@ -33,7 +33,7 @@ const StyledDateList = styled.div`
   overflow: auto;
 `;
   
-const DateListScrollContainer = styled.div`
+const DateListScrollContainer = styled.span`
   border: 1px solid var(--grey-400);
   width: 100%;
   border-radius: 0.75rem;
@@ -95,7 +95,7 @@ export const StyledDateListTitleRowCell = styled.th`
   }
 `;
 
-const StyledDateListItemCheckbox = styled.div`
+const StyledDateListItemCheckbox = styled.span`
   padding: 0.75rem;
   align-self: center;
 
@@ -104,7 +104,7 @@ const StyledDateListItemCheckbox = styled.div`
   }
 `;
 
-const StyledDateListItemText = styled.p<{
+const StyledDateListItemText = styled.span<{
   noPaddingLeft?: boolean;
   doublePaddingLeft?: boolean;
   lessVerticalPadding?: boolean;
@@ -229,7 +229,7 @@ const DateList: React.FC<DateListProps> = ({
       )}
       <DateListScrollContainer>
         <StyledDateListBody>
-          
+          <thead>
             <StyledDateListTitleRow>
               <StyledDateListTitleRowCell>
                 {editable && (
@@ -305,7 +305,9 @@ const DateList: React.FC<DateListProps> = ({
               </StyledDateListTitleRowCell>
               <StyledDateListTitleRowCell />
             </StyledDateListTitleRow>
+          </thead>
           
+          <tbody>
           {dates && dates.length > 0 ? (
             dates.map((date, index) => {
               const dateId = date?.id;
@@ -342,8 +344,16 @@ const DateList: React.FC<DateListProps> = ({
               );
             })
           ) : (
-            <StyledDateListPlaceholder>{t('date.listPlaceholder')}</StyledDateListPlaceholder>
+
+            <StyledDateListTitleRow>
+              <td>
+                <StyledDateListPlaceholder>
+                  {t('date.listPlaceholder')}
+                </StyledDateListPlaceholder>
+              </td>
+            </StyledDateListTitleRow>
           )}
+          </tbody>
         </StyledDateListBody>
       </DateListScrollContainer>
     </StyledDateList>

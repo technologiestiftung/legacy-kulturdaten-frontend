@@ -30,6 +30,7 @@ import { RadioList } from '../../Radio/RadioList';
 import { useTeaserForm } from '../helpers/form/Teaser';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
+import { isUrl } from '../../../lib/validations';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -136,8 +137,18 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
   const call = useApiCall();
   const t = useT();
   const uid = usePseudoUID();
+  const ticketUrlValid = isUrl(attributes?.ticketUrl);
+  const registrationUrlValid = isUrl(attributes?.registrationUrl);
 
   const [attributesFromApi, setAttributesFromApi] = useState<Offer['data']['attributes']>();
+  const [valid, setValid] = useState(false)
+
+  const checkValidity = () => {
+    setValid((!attributes?.ticketUrl || ticketUrlValid) && (!attributes?.registrationUrl || registrationUrlValid))
+  }
+  useEffect(() => {
+    checkValidity()
+  })
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
@@ -203,7 +214,11 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.offer.form.pricing.ticketUrl') as string}
             value={attributes?.ticketUrl || ''}
             placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
-            onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
+            onChange={(e) => {
+              setAttributes({ ...attributes, ticketUrl: e.target.value })
+              checkValidity()
+            }}
+            error={attributes?.ticketUrl && !ticketUrlValid && t('forms.urlInvalid') as string}
           />
         </FormItem>
         <FormItem width={FormItemWidth.full}>
@@ -213,7 +228,11 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.offer.form.pricing.registrationUrl') as string}
             value={attributes?.registrationUrl || ''}
             placeholder={t('categories.offer.form.pricing.registrationUrlPlaceholder') as string}
-            onChange={(e) => setAttributes({ ...attributes, registrationUrl: e.target.value })}
+            onChange={(e) => {
+              setAttributes({ ...attributes, registrationUrl: e.target.value })
+              checkValidity()
+            }}
+            error={attributes?.registrationUrl && !registrationUrlValid && t('forms.urlInvalid') as string}
           />
         </FormItem>
       </FormGrid>
@@ -244,7 +263,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
     reset: () => {
       setAttributes(initialAttributes);
     },
-    valid: true,
+    valid,
   };
 };
 
@@ -435,6 +454,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.offer.form.name') as string,
+    placeholder: t('categories.offer.form.namePlaceholder') as string,
     hideTitle: true,
     id: 'offer-name',
   });

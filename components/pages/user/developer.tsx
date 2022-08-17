@@ -8,7 +8,6 @@ import { Info, InfoColor } from '../../info';
 import { Input, InputType } from '../../input';
 import { useMemo, useState } from 'react';
 import { Button, ButtonColor, ButtonSize, ButtonType } from '../../button';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { Textarea } from '../../textarea';
 import { SettingsHeader } from './SettingsHeader';
 import { useApiCall } from '../../../lib/api';
@@ -18,7 +17,6 @@ import { AppTokenList } from '../../AppTokenList';
 import { AppTokenDelete, appTokenDeleteFactory } from '../../../lib/api/routes/appToken/delete';
 
 const UserApiTokens: React.FC = () => {
-  const loadingScreen = useLoadingScreen();
   const t = useT();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -45,12 +43,11 @@ const UserApiTokens: React.FC = () => {
         />
         <StyledRequiredInfoText/>
         <form
-          onSubmit={(e) => {
+          onSubmit={async(e) => {
             e.preventDefault();
             e.stopPropagation();
 
             if (tokenNameValid) {
-              loadingScreen(t('settings.loading'), async () => {
                 try {
                   const resp = await call<AppTokenCreate>(appTokenCreateFactory, {
                     appToken: {
@@ -74,7 +71,6 @@ const UserApiTokens: React.FC = () => {
 
                   return { success: false, error: t('general.serverProblem') };
                 }
-              });
             }
           }}
         >
@@ -135,24 +131,22 @@ const UserApiTokens: React.FC = () => {
               <AppTokenList
                 tokens={appTokens}
                 onRemove={async (id) => {
-                  loadingScreen(t('settings.api.tokenRemoveLoading'), async () => {
-                    try {
-                      const resp = await call<AppTokenDelete>(appTokenDeleteFactory, {
-                        appToken: {
-                          id,
-                        },
-                      });
+                  try {
+                    const resp = await call<AppTokenDelete>(appTokenDeleteFactory, {
+                      appToken: {
+                        id,
+                      },
+                    });
 
-                      if (resp.status === 200) {
-                        mutateAppTokens();
-                        return { success: true };
-                      }
-
-                      return { success: false, error: t('general.serverProblem') };
-                    } catch (e) {
-                      return { success: false, error: t('general.serverProblem') };
+                    if (resp.status === 200) {
+                      mutateAppTokens();
+                      return { success: true };
                     }
-                  });
+
+                    return { success: false, error: t('general.serverProblem') };
+                  } catch (e) {
+                    return { success: false, error: t('general.serverProblem') };
+                  }
                 }}
               />
             </FormItem>
