@@ -932,7 +932,7 @@ export const enDE: Localization = {
       `Sort in ${order === Order.ASC ? 'ascending' : 'descending'} order by ${attribute}`,
     placeholderOffer: () => 'Unnamed offer',
     placeholderLocation: () => 'Unnamed location',
-    placeholderOrganizer: () => 'Unnamed profile',
+    placeholderOrganizer: () => 'New profile',
     defaultTitleOffer: () => 'New offer',
     defaultTitleLocation: () => 'New location',
     defaultTitleOrganizer: () => 'New profile',

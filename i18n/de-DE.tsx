@@ -946,7 +946,7 @@ export const deDE: Localization = {
       `${order === Order.ASC ? 'Aufsteigend' : 'Absteigend'} nach ${attribute} sortieren`,
     placeholderOffer: () => 'Unbenanntes Angebot',
     placeholderLocation: () => 'Unbenannter Ort',
-    placeholderOrganizer: () => 'Unbenanntes Profil',
+    placeholderOrganizer: () => 'Neues Profil',
     defaultTitleOffer: () => 'Neues Angebot',
     defaultTitleLocation: () => 'Neuer Ort',
     defaultTitleOrganizer: () => 'Neues Profil',
