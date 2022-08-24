@@ -24,6 +24,7 @@ interface SetTeaserProps {
   value: string;
   setValue: (value: string) => void;
   teaser: string;
+  placeholder?: string;
   required?: boolean;
   valid?: boolean;
   hint?: boolean;
@@ -34,6 +35,7 @@ const Teaser: React.FC<SetTeaserProps> = ({
   tooltip,
   ariaLabel,
   onSubmit,
+  placeholder,
   pristine,
   setPristine,
   setValue,
@@ -55,6 +57,7 @@ const Teaser: React.FC<SetTeaserProps> = ({
         id={`${uid}-textarea`}
         label={label}
         ariaLabel={ariaLabel}
+        placeholder={placeholder}
         tooltip={tooltip}
         value={value || ''}
         onChange={(e) => {
@@ -77,6 +80,7 @@ export const useTeaser = <
   category: Category;
   query: ParsedUrlQuery;
   language: Language;
+  placeholder?: string;
   label: string;
   tooltip?: string;
   ariaLabel?: string;
@@ -89,7 +93,7 @@ export const useTeaser = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, tooltip, ariaLabel } = props;
+  const { category, query, language, label, placeholder, tooltip, ariaLabel } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
 
@@ -148,6 +152,7 @@ export const useTeaser = <
         {...{
           pristine,
           setPristine,
+          placeholder,
           value,
           setValue,
           label,
@@ -169,7 +174,7 @@ export const useTeaser = <
   };
 };
 
-export const useTeaserForm: EntryFormHook = ({ category, query, loaded }) => {
+export const useTeaserForm: EntryFormHook = ({ category, placeholder, query, loaded }) => {
   const t = useT();
 
   const {
@@ -181,6 +186,7 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded }) => {
   } = useTeaser({
     category,
     query,
+    placeholder,
     language: Language.de,
     label: `${t('forms.teaser')} ${t('forms.labelGerman')} ${t('forms.teaserCount')}`,
     loaded,

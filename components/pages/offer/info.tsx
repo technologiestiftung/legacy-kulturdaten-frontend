@@ -484,6 +484,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     category,
     query,
     loaded,
+    placeholder: t('forms.teaserPlaceholder') as string,
   });
 
   const {
