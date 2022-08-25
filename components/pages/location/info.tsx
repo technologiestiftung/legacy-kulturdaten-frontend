@@ -28,6 +28,7 @@ import { getTranslation } from '../../../lib/translations';
 import { Textarea } from '../../textarea';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
+import { isUrl } from '../../../lib/validations';
 
 const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   const uid = usePseudoUID();
@@ -230,6 +231,11 @@ const useRentForm: EntryFormHook = ({ category, query }) => {
             autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
+            error={
+              url?.length && !isUrl(url)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
       </FormGrid>
@@ -297,6 +303,11 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
             autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
+            error={
+              url?.length && !isUrl(url)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
       </FormGrid>

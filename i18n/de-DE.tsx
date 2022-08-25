@@ -541,8 +541,9 @@ export const deDE: Localization = {
     website: () => 'Website',
     links: () => 'Weitere Links (z.B. Social Media Kanäle)',
     urlPlaceholder: () => 'https://example.com',
-    urlInvalid: () => 'Die Eingabe ist keine korrekte URL. Bitte verwende das Format: (https://)example.com',
-    emailInvalid: () => 'Die Eingabe ist keine korrekte E-Mail.',
+    urlInvalid: () => 'Bitte gib eine gültige URL an (z.B. http://www.berlin.de)',
+    emailInvalid: () => 'Bitte gib eine eine gültige E-Mail Adresse an (z.B. name@domain.com)',
+    phoneInvalid: () => 'Bitte gib eine gültige Telefonnummer an (z.B. 0049301234567)',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
     },
@@ -737,7 +738,7 @@ export const deDE: Localization = {
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
     hint: () =>
-      'Das Bild ist noch nicht öffentlich verfügbar. Damit es öffentlich wird, müssen alle Pflichtfelder ausgefüllt sein.',
+      'Das Bild ist noch nicht öffentlich verfügbar. Damit es öffentlich wird, müssen alle Pflichtfelder ausgefüllt sein (Bildnachweis, Lizenztyp, Bestätigung Zusatzinfos).',
     dropZoneLabel: () => 'Bilder hochladen',
     usageInfo: () => (
       <>

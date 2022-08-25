@@ -12,7 +12,7 @@ import React, {
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
-import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/validations';
+import { emailRegExpString, isEmail, isUrl, telRegExpString, urlRegExpString } from '../../lib/validations';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
@@ -235,7 +235,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         case InputType.tel: {
           if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
-            const normalizedValue = props?.value?.replace(/\+/g, '00')?.match(/[0-9]/g).join('');
+            const normalizedValue = props?.value?.replace(/\+/g, '00')?.match(/[0-9]/g)?.join('');
             setInternalState(normalizedValue);
             props.onChange({
               target: {
@@ -253,6 +253,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
       setNormalized(true);
     };
+
+    const getError = (inputType, value) => {
+      if (value) {
+        switch(inputType) {
+          case InputType.url:
+            return !isUrl(value) ?
+            (t('forms.urlInvalid') as string): undefined
+          case InputType.email:
+            return !isEmail(value) ?
+            (t('forms.emailInvalid') as string): undefined
+        }
+      }
+
+      return undefined
+    }
 
     const inputValid = useMemo(() => {
       if (props?.softRequired) {
@@ -337,7 +352,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               }
               onBlur={(e) => {
                 setPristine(false);
-                normalizeStrings();
+                if(!props.error) {
+                  normalizeStrings();
+                }
 
                 if (props?.onBlur) {
                   props.onBlur(e);
@@ -358,6 +375,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid}/>}
         {!pristine && props.error && <StyledError>{props.error}</StyledError>}
+        {!pristine  && props.variant === "formList" && getError(props.type, props?.debounce ? internalState : props?.value) && <StyledError>{getError(props.type, props?.debounce ? internalState : props?.value)}</StyledError>}
       </StyledInputContainer>
     );
   }

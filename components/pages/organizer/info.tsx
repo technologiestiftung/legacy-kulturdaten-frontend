@@ -11,7 +11,7 @@ import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { useUserIsOwner } from '../../../lib/useUserIsOwner';
-import { isEmail } from '../../../lib/validations';
+import { isEmail, isPhoneNumber, isUrl } from '../../../lib/validations';
 import { WindowContext } from '../../../lib/WindowService';
 import { Contacts } from '../../Contacts';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
@@ -115,6 +115,11 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
                 );
               }}
               ref={phoneRef}
+              error={
+                attributes?.phone?.length && !isPhoneNumber(attributes?.phone)
+                  ? (t('forms.phoneInvalid') as string)
+                  : undefined
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
@@ -134,6 +139,11 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
                 );
               }}
               ref={websiteRef}
+              error={
+                attributes?.homepage?.length && !isUrl(attributes?.homepage)
+                  ? (t('forms.urlInvalid') as string)
+                  : undefined
+              }
             />
           </FormItem>
         </FormGrid>

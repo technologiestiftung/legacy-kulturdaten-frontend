@@ -15,4 +15,10 @@ export const isEmail = (candidate: string): boolean => {
   return emailRegExp.test(candidate);
 };
 
-export const telRegExpString = '[0-9]*';
+export const telRegExpString = '^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+
+const telRegExp = new RegExp(telRegExpString);
+
+export const isPhoneNumber = (candidate: string): boolean => {
+  return telRegExp.test(candidate);
+};

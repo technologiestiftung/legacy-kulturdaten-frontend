@@ -536,8 +536,9 @@ export const enDE: Localization = {
     website: () => 'Website',
     links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
-    urlInvalid: () => 'The input data is not a correct URL. Please use the format: (https://)example.com',
-    emailInvalid: () => 'The input data is not a correct email.',
+    urlInvalid: () => 'Please enter a valid URL (e.g. http://www.berlin.de)',
+    emailInvalid: () => 'Please enter a valid email (e.g. name@domain.com)',
+    phoneInvalid: () => 'Please enter a valid phone number (e.g. 0049301234567)',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
     },
@@ -724,7 +725,7 @@ export const enDE: Localization = {
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
     ariaLabel: () => 'Upload files',
     hint: () =>
-      'This image is not public yet. In order for the image to be publicly available, the required fields must be filled out.',
+      'This image is not public yet. In order for the image to be publicly available, the required fields have to be filled out (Image credits, type of license, confirmation of additional notice).',
     dropZoneLabel: () => 'Upload images',
     usageInfo: () => (
       <>
