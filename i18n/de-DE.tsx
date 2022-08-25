@@ -951,10 +951,10 @@ export const deDE: Localization = {
       `${order === Order.ASC ? 'Aufsteigend' : 'Absteigend'} nach ${attribute} sortieren`,
     placeholderOffer: () => 'Unbenanntes Angebot',
     placeholderLocation: () => 'Unbenannter Ort',
-    placeholderOrganizer: () => 'Neues Profil',
+    placeholderOrganizer: () => 'Neues unbenanntes Profil',
     defaultTitleOffer: () => 'Neues Angebot',
     defaultTitleLocation: () => 'Neuer Ort',
-    defaultTitleOrganizer: () => 'Neues Profil',
+    defaultTitleOrganizer: () => 'Neues unbenanntes Profil',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
