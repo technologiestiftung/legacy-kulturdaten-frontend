@@ -1,7 +1,7 @@
 export const urlRegExpString =
-  '^(https?:\\/\\/)?([a-zA-Z0-9]([a-zA-ZäöüÄÖÜ0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,}(\\/[a-zA-Z0-9\\-]*)*(\\?([a-zA-Z0-9\\-]+([=&][a-zA-Z0-9:\\-]*)*))?(#[a-zA-Z0-9\\-]*)?(.[a-zA-Z]*)+$';
-  
-const urlRegExp = new RegExp(urlRegExpString);
+  `^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$`;
+
+const urlRegExp = new RegExp(urlRegExpString,"gm");
 
 export const isUrl = (candidate: string): boolean => {
   return urlRegExp.test(candidate);
