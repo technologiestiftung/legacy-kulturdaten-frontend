@@ -45,6 +45,9 @@ const StyledTooltip = styled.div<{
       !isOpen
         ? css`
             display: none;
+            max-height: 0;
+            max-width: 0;
+            overflow: hidden;
           `
         : ''}
 
@@ -115,8 +118,10 @@ const StyledTooltipOverlay = styled.div<{
   ${({ isOpen }) =>
     !isOpen
       ? css`
-          visibility: hidden;
-          opacity: 0;
+          display: none;
+          max-height: 0;
+          max-width: 0;
+          overflow: hidden; 
           pointer-events: none;
         `
       : ''}
