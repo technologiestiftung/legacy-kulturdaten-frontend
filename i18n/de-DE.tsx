@@ -1389,7 +1389,7 @@ export const deDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'zurück zum Dashboard',
-        backApp: () => 'zurück zur Application',
+        backApp: () => 'zurück',
         dashboard: () => 'Dashboard',
         sitemap: () => 'Sitemap',
         notifications: () => 'Benachrichtigungen',

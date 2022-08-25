@@ -1376,7 +1376,7 @@ export const enDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'back to Dashboard',
-        backApp: () => 'back to App',
+        backApp: () => 'back',
         dashboard: () => 'Dashboard',
         sitemap: () => 'Sitemap',
         notifications: () => 'Notifications',
