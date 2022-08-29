@@ -18,6 +18,7 @@ import { StandardLink } from '../../StandardLink';
 import { StandardLinkType } from '../../../lib/generalTypes';
 import { EntryListContext } from '../../EntryList/EntryListContext';
 import { mainContentRef, mainTitleLink } from '../../../config/categories';
+import { speakerFunction } from '../../pages/helpers/useSpeaker';
 
 const HiddenOrganizerTitle = styled.h1`
   position:absolute;
@@ -180,7 +181,8 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
             noBorder
             asButton
             onClick={async () => {
-              await createOrganizer()
+              const res = await createOrganizer()
+              if(res)speakerFunction(t('speaker.deleteDate') as string)
             }}
           >
             {t('menu.organizerBand.create') as string}

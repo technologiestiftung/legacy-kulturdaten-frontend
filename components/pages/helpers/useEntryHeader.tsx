@@ -22,6 +22,7 @@ import { useConfirmScreen } from '../../Confirm/ConfirmScreen';
 import { DropdownMenu, DropdownMenuForm } from '../../DropdownMenu';
 import { EntryHeader } from '../../EntryHeader';
 import { EntryFormProps } from './form';
+import { speakerFunction } from './useSpeaker';
 
 const StyledA = styled.a`
   text-decoration: none;
@@ -169,6 +170,7 @@ export const useEntryHeader = (
                         switch (category.name) {
                           case Categories.organizer: {
                             const deleteResp = await deleteOrganizer(entry?.data?.id);
+                            if(deleteResp)speakerFunction(t('speaker.deleteProfile') as string)
                             if (adminModeActive) {
                               quit();
                             }
@@ -176,10 +178,14 @@ export const useEntryHeader = (
                             return deleteResp;
                           }
                           case Categories.offer: {
-                            return await deleteOffer(entry?.data?.id);
+                            const deleteResp = await deleteOffer(entry?.data?.id);
+                            if(deleteResp)speakerFunction(t('speaker.deleteOffer') as string)
+                            return deleteResp
                           }
                           case Categories.location: {
-                            return await deleteLocation(entry?.data?.id);
+                            const deleteResp = await deleteLocation(entry?.data?.id);
+                            if(deleteResp)speakerFunction(t('speaker.deleteLocation') as string)
+                            return deleteResp
                           }
                         }
                       },

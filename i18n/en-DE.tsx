@@ -945,6 +945,12 @@ export const enDE: Localization = {
   speaker: {
     newDate: () => 'New date created',
     deleteDate: () => 'Selected dates deleted',
+    newProfile: () => 'New Profile created',
+    deleteProfile: () => 'Profil deleted',
+    newOffer: () => 'New Offer created',
+    deleteOffer: () => 'Offer deleted',
+    newLocation: () => 'New Location created',
+    deleteLocation: () => 'Location deleted',
   },
   tags: {
     boxLabel: () => 'Already added keywords',

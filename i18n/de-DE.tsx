@@ -959,6 +959,12 @@ export const deDE: Localization = {
   speaker: {
     newDate: () => 'Neuen Termin erstellt',
     deleteDate: () => 'Ausgewählte Termine geloscht',
+    newProfile: () => 'Neues Profil erstellt',
+    deleteProfile: () => 'Profil gelöscht',
+    newOffer: () => 'Neues Angebot erstellt',
+    deleteOffer: () => 'Angebot geloscht',
+    newLocation: () => 'Neuen Ort erstellt',
+    deleteLocation: () => 'Ort gelöscht',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
