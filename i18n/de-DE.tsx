@@ -956,6 +956,10 @@ export const deDE: Localization = {
     defaultTitleLocation: () => 'Neuer Ort',
     defaultTitleOrganizer: () => 'Neues unbenanntes Profil',
   },
+  speaker: {
+    newDate: () => 'Neuen Termin erstellt',
+    deleteDate: () => 'Ausgewählte Termine geloscht',
+  },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
     delete: () => 'Stichwort löschen',
