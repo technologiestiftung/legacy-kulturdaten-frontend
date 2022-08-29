@@ -338,7 +338,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
                 placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
-                error={!ticketUrlValid ? (t('forms.urlInvalid') as string) : undefined}
+                error={ticketUrl.length && !ticketUrlValid ? (t('forms.urlInvalid') as string) : undefined}
               />
             </FormItem>
             <FormItem width={FormItemWidth.full}>
@@ -351,7 +351,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 placeholder={
                   t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
                 }
-                error={!registrationUrlValid ? (t('forms.urlInvalid') as string) : undefined}
+                error={registrationUrl.length && !registrationUrlValid ? (t('forms.urlInvalid') as string) : undefined}
               />
             </FormItem>
           </FormGrid>
