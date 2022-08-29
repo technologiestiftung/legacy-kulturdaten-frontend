@@ -512,7 +512,11 @@ export const enDE: Localization = {
     description: () => 'Description',
     teaser: () => 'Short description',
     teaserCount: () => '(optional, max. 150 characters)',
+    teaserPlaceholder: () => 'Describe briefly what your cultural offering is about.',
     descriptionCount: () => '(max. 1500 characters)',
+    descriptionOfferPlaceholder: () => 'Describe in detail what your cultural offering is about.',
+    descriptionLocationPlaceholder: () => 'Describe in detail what your location is about.',
+    descriptionOrganizerPlaceholder: () => 'Describe your organizer profile in detail.',
     classification: () => 'Type of organizer / field of focus (min. 1)',
     type: () => 'Type(s)',
     subjects: () => 'additional options',
@@ -532,8 +536,9 @@ export const enDE: Localization = {
     website: () => 'Website',
     links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
-    urlInvalid: () => 'The input data is not a correct URL. Please use the format: (https://)example.com',
-    emailInvalid: () => 'The input data is not a correct email.',
+    urlInvalid: () => 'Please enter a valid URL (e.g. http://www.berlin.de)',
+    emailInvalid: () => 'Please enter a valid email (e.g. name@domain.com)',
+    phoneInvalid: () => 'Please enter a valid phone number (e.g. 0049301234567)',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
     },
@@ -720,7 +725,7 @@ export const enDE: Localization = {
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
     ariaLabel: () => 'Upload files',
     hint: () =>
-      'This image is not public yet. In order for the image to be publicly available, the required fields must be filled out.',
+      'This image is not public yet. In order for the image to be publicly available, the required fields have to be filled out (Image credits, type of license, confirmation of additional notice).',
     dropZoneLabel: () => 'Upload images',
     usageInfo: () => (
       <>
@@ -932,10 +937,10 @@ export const enDE: Localization = {
       `Sort in ${order === Order.ASC ? 'ascending' : 'descending'} order by ${attribute}`,
     placeholderOffer: () => 'Unnamed offer',
     placeholderLocation: () => 'Unnamed location',
-    placeholderOrganizer: () => 'New profile',
+    placeholderOrganizer: () => 'New unnamed profile',
     defaultTitleOffer: () => 'New offer',
     defaultTitleLocation: () => 'New location',
-    defaultTitleOrganizer: () => 'New profile',
+    defaultTitleOrganizer: () => 'New unnamed profile',
   },
   tags: {
     boxLabel: () => 'Already added keywords',
@@ -1371,7 +1376,7 @@ export const enDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'back to Dashboard',
-        backApp: () => 'back to App',
+        backApp: () => 'back',
         dashboard: () => 'Dashboard',
         sitemap: () => 'Sitemap',
         notifications: () => 'Notifications',

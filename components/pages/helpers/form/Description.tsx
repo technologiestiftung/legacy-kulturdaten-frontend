@@ -87,6 +87,7 @@ interface DescriptionProps extends EntryFormProps {
   softRequired?: boolean;
   key?: string;
   maxLength?: number;
+  placeholder?: string;
   id?: string;
 }
 
@@ -100,6 +101,7 @@ export const useDescription = ({
   softRequired,
   key = 'description',
   maxLength,
+  placeholder,
   id
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
@@ -160,6 +162,7 @@ export const useDescription = ({
     required,
     contentRef: richTextRef,
     softRequired,
+    placeholder,
     maxLength,
     ariaLabel,
     id
@@ -293,6 +296,15 @@ export const useDescriptionForm: EntryFormHook = ({
 }) => {
   const t = useT();
 
+  const placeholderText = 
+    category.name === "location"
+    ? t('forms.descriptionLocationPlaceholder') as string
+    : category.name === "offer"
+    ? t('forms.descriptionOfferPlaceholder') as string
+    : category.name === "organizer"
+    ? t('forms.descriptionOrganizerPlaceholder') as string
+    : ""
+
   const {
     renderedDescription: renderedDescriptionGerman,
     submit: submitGerman,
@@ -307,6 +319,7 @@ export const useDescriptionForm: EntryFormHook = ({
     title: `${t('forms.description')} ${t('forms.labelGerman')} ${t('forms.descriptionCount')}`,
     required,
     softRequired: true,
+    placeholder: placeholderText,
     maxLength: defaultMaxLength,
     id
   });

@@ -46,6 +46,7 @@ const SkipLevelButton = styled.button`
   border: none;
   background: none;
   font-size: 1rem;
+  cursor: pointer;
 `
 
 interface SitemapContainerProps {

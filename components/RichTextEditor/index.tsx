@@ -77,8 +77,9 @@ const RTEContentWrapper = styled.div`
 
     p.is-editor-empty:first-of-type::before {
       content: attr(data-placeholder);
+      font-size: 1rem;
       float: left;
-      color: #adb5bd;
+      color: var(--black);
       pointer-events: none;
       height: 0;
     }

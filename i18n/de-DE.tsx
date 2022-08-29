@@ -517,7 +517,11 @@ export const deDE: Localization = {
     description: () => 'Beschreibung',
     teaser: () => 'Kurzbeschreibung',
     teaserCount: () => '(optional, max. 150 Zeichen)',
+    teaserPlaceholder: () => 'Umschreibe kurz, worum es in deinem kulturellen Angebot geht.',
     descriptionCount: () => '(max. 1500 Zeichen)',
+    descriptionOfferPlaceholder: () => 'Umschreibe ausführlich, worum es in deinem Angebot geht.',
+    descriptionLocationPlaceholder: () => 'Umschreibe ausführlich, worum es sich bei deinem Ort handelt.',
+    descriptionOrganizerPlaceholder: () => 'Umschreibe ausführlich dein Anbieterprofil.',
     classification: () => ' Art der Anbieter:in / Arbeitsschwerpunkt (mind. 1)',
     type: () => 'Typ(en)',
     subjects: () => 'Eingrenzung (optional)',
@@ -537,8 +541,9 @@ export const deDE: Localization = {
     website: () => 'Website',
     links: () => 'Weitere Links (z.B. Social Media Kanäle)',
     urlPlaceholder: () => 'https://example.com',
-    urlInvalid: () => 'Die Eingabe ist keine korrekte URL. Bitte verwende das Format: (https://)example.com',
-    emailInvalid: () => 'Die Eingabe ist keine korrekte E-Mail.',
+    urlInvalid: () => 'Bitte gib eine gültige URL an (z.B. http://www.berlin.de)',
+    emailInvalid: () => 'Bitte gib eine eine gültige E-Mail Adresse an (z.B. name@domain.com)',
+    phoneInvalid: () => 'Bitte gib eine gültige Telefonnummer an (z.B. 0049301234567)',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
     },
@@ -733,7 +738,7 @@ export const deDE: Localization = {
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
     hint: () =>
-      'Das Bild ist noch nicht öffentlich verfügbar. Damit es öffentlich wird, müssen alle Pflichtfelder ausgefüllt sein.',
+      'Das Bild ist noch nicht öffentlich verfügbar. Damit es öffentlich wird, müssen alle Pflichtfelder ausgefüllt sein (Bildnachweis, Lizenztyp, Bestätigung Zusatzinfos).',
     dropZoneLabel: () => 'Bilder hochladen',
     usageInfo: () => (
       <>
@@ -946,10 +951,10 @@ export const deDE: Localization = {
       `${order === Order.ASC ? 'Aufsteigend' : 'Absteigend'} nach ${attribute} sortieren`,
     placeholderOffer: () => 'Unbenanntes Angebot',
     placeholderLocation: () => 'Unbenannter Ort',
-    placeholderOrganizer: () => 'Neues Profil',
+    placeholderOrganizer: () => 'Neues unbenanntes Profil',
     defaultTitleOffer: () => 'Neues Angebot',
     defaultTitleLocation: () => 'Neuer Ort',
-    defaultTitleOrganizer: () => 'Neues Profil',
+    defaultTitleOrganizer: () => 'Neues unbenanntes Profil',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
@@ -1384,7 +1389,7 @@ export const deDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'zurück zum Dashboard',
-        backApp: () => 'zurück zur Application',
+        backApp: () => 'zurück',
         dashboard: () => 'Dashboard',
         sitemap: () => 'Sitemap',
         notifications: () => 'Benachrichtigungen',

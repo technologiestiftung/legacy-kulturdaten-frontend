@@ -194,11 +194,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
               icon="ArrowLeft"
               asButton
               onClick={async () => {
-                  router.push(routes.dashboard({ locale, query: { organizer: router?.query?.organizer } }));
-                  setTimeout(() => {
-                    mainTitleLink?.current?.focus();
-                  }, 300)
-                  return { success: true };
+                router.back()
               }}
             >
               {t('menu.start.items.backApp') as string}
