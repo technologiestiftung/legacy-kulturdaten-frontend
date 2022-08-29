@@ -95,6 +95,8 @@ export const offerSidebarRef = createRef<HTMLDivElement>();
 export const locationSidebarRef = createRef<HTMLDivElement>();
 export const mainContentRef = createRef<HTMLElement>();
 
+export const dateListRef = createRef<HTMLTableElement>();
+
 export const useCategories: () => {
   [key in Categories]: Category;
 } = () => {

@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { compareDesc } from 'date-fns';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { dateListRef } from '../../../config/categories';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { useApiCall } from '../../../lib/api';
@@ -420,6 +421,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
                           if (resp.status === 200) {
                             mutateDateList();
+                            dateListRef.current.focus()
                             return { success: true };
                           }
                         } catch (e) {

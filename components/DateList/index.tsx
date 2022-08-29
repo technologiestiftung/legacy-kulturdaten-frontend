@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import { createRef, Dispatch, LegacyRef, SetStateAction, useMemo, useState } from 'react';
 import { ArrowDown, ArrowUp } from 'react-feather';
+import { dateListRef } from '../../config/categories';
 import { Language } from '../../config/locale';
 import { OfferDate } from '../../lib/api/types/offer';
 import { Order } from '../../lib/categories';
@@ -156,6 +157,12 @@ const StyledDateListSelectActions = styled.div`
 
 const StyledDateListSelectAction = styled.div``;
 
+const StyledHiddenCaption = styled.caption`
+  visibility: hidden;
+  max-height: 0;
+`;
+
+
 interface DateListProps {
   dates: OfferDate['data'][];
   editable?: boolean;
@@ -228,7 +235,8 @@ const DateList: React.FC<DateListProps> = ({
         </StyledDateListSelect>
       )}
       <DateListScrollContainer>
-        <StyledDateListBody>
+        <StyledDateListBody ref={dateListRef}>
+          <StyledHiddenCaption>{editable ? t('date.currentDates') as string : t('date.archivedDates') as string}</StyledHiddenCaption>
           <thead>
             <StyledDateListTitleRow>
               <StyledDateListTitleRowCell>
