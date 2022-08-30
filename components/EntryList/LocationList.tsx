@@ -36,6 +36,7 @@ import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
 import { SkipLinkMainContent } from '../navigation/OrganizerBand';
+import { speakerFunction } from '../pages/helpers/useSpeaker';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -385,7 +386,8 @@ export const LocationList: React.FC<LocationListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              await createLocation()
+              const res = await createLocation()
+              if(res)speakerFunction(t('speaker.newLocation') as string)
               setTimeout(() => {
                 document.title = organizerTitle 
                 ? `${organizerTitle} - ${t('general.defaultTitleLocation')}` 
@@ -548,7 +550,7 @@ export const LocationList: React.FC<LocationListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody  aria-live='polite' aria-atomic="false" aria-relevant="additions removals">
+      <StyledEntryListBody >
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (

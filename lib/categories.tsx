@@ -523,26 +523,15 @@ export const useCreateEntry = (
 
         setTimeout(() => {
           router.push(
-            routes.dashboard({
+            category.routes.list({
               locale,
               query: {
-                organizerId,
+                id,
+                sub: 'info',
+                organizer: categoryName === Categories.organizer ? id : organizerId,
               },
             })
           );
-
-          setTimeout(() => {
-            router.push(
-              category.routes.list({
-                locale,
-                query: {
-                  id,
-                  sub: 'info',
-                  organizer: categoryName === Categories.organizer ? id : organizerId,
-                },
-              })
-            );
-          }, 250);
         }, 150);
 
         return { success: true };

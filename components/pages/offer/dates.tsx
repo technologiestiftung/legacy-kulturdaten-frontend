@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { compareDesc } from 'date-fns';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { dateListRef } from '../../../config/categories';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { useApiCall } from '../../../lib/api';
@@ -32,6 +33,7 @@ import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
+import { speakerFunction } from '../helpers/useSpeaker';
 
 const customFormItemCss = css`
   margin: 0 -0.75rem;
@@ -272,6 +274,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
               );
               mutateDateList();
+              speakerFunction(t('speaker.deleteDate') as string)
               return { success: true };
             }
 
@@ -420,6 +423,8 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
                           if (resp.status === 200) {
                             mutateDateList();
+                            dateListRef.current.focus()
+                            speakerFunction(t('speaker.newDate') as string)
                             return { success: true };
                           }
                         } catch (e) {
