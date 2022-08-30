@@ -5,9 +5,7 @@ import { useEffect } from 'react';
 import { routes, useLocale } from '../../lib/routing';
 import { useUser } from '../../components/user/useUser';
 import { AppWrapper } from '../../components/wrappers/AppWrapper';
-import { ContentContainer, ContentWrapper } from '../../components/wrappers/ContentWrappers';
 import { useOrganizerId } from '../../lib/useOrganizer';
-import { DashboardWrapper } from '../../components/Dasboard';
 import { SitemapContainer } from '../../components/pages/sitemap/wrapper';
 import { defaultOrganizerId } from '../../components/navigation/NavigationContext';
 
