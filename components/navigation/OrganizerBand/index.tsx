@@ -182,7 +182,7 @@ export const OrganizerBand: React.FC<OrganizerBandProps> = ({ layout }: Organize
             asButton
             onClick={async () => {
               const res = await createOrganizer()
-              if(res)speakerFunction(t('speaker.deleteDate') as string)
+              if(res)speakerFunction(t('speaker.addProfile') as string)
             }}
           >
             {t('menu.organizerBand.create') as string}
