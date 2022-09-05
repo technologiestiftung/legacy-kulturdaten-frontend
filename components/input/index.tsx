@@ -376,7 +376,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid}/>}
         {!pristine && props.error && <StyledError>{props.error}</StyledError>}
-        {!pristine  && props.variant === "formList" && getError(props.type, props?.debounce ? internalState : props?.value) && <StyledError>{getError(props.type, props?.debounce ? internalState : props?.value)}</StyledError>}
+        {/* {!pristine  && props.variant === "formList" && getError(props.type, props?.debounce ? internalState : props?.value) && <StyledError>{getError(props.type, props?.debounce ? internalState : props?.value)}</StyledError>} */}
       </StyledInputContainer>
     );
   }
