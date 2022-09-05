@@ -130,6 +130,7 @@ const StyledInput = styled.input<{
 }>`
   ${(props) => inputStyles(props)}
   &::placeholder {
+    color: var(--grey-600);
     opacity: 1;
   }
 

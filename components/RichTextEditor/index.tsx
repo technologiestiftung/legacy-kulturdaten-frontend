@@ -79,7 +79,7 @@ const RTEContentWrapper = styled.div`
       content: attr(data-placeholder);
       font-size: 1rem;
       float: left;
-      color: var(--black);
+      color: var(--grey-600);
       pointer-events: none;
       height: 0;
     }
