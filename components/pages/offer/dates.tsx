@@ -423,7 +423,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
                           if (resp.status === 200) {
                             mutateDateList();
-                            dateListRef.current.focus()
                             speakerFunction(t('speaker.newDate') as string)
                             return { success: true };
                           }

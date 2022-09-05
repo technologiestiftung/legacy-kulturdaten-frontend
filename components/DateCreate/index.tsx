@@ -22,6 +22,7 @@ import { Textarea } from '../textarea';
 import { usePseudoUID } from '../../lib/uid';
 import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
 import { isUrl } from '../../lib/validations';
+import { dateListRef } from '../../config/categories';
 
 interface DateFormTimeProps {
   earliestDate: Date;
@@ -545,6 +546,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       setFromDate(now);
       setToDate(add(now, { hours: 1 }));
     }, submitDelay);
+    dateListRef.current.focus()
   }, [recurrence, date, onSubmit, setIsOpen, submitDelay]);
 
   return (

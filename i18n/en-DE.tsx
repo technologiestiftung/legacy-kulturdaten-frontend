@@ -820,6 +820,7 @@ export const enDE: Localization = {
     additionalLinks: () => 'Additional links',
     ticketLink: () => 'Ticket link',
     currentDates: () => 'Current dates',
+    dateTable: () => 'Table: current dates',
     archivedDates: () => 'Past dates',
     listPlaceholder: () => 'There are no dates yet.',
     delete: () => 'delete date',
