@@ -336,8 +336,8 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
                 placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
-                error={(e) =>
-                  ticketUrl?.length && !isUrl(e.target.value)
+                error={
+                  ticketUrl?.length && !isUrl(ticketUrl)
                     ? (t('forms.urlInvalid') as string)
                     : undefined
                 }
@@ -349,12 +349,12 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 autoComplete="url"
                 label={t('categories.offer.form.pricing.registrationUrl') as string}
                 value={registrationUrl}
-                onChange={(e):string => setRegistrationUrl(e.target.value)}
+                onChange={(e) => setRegistrationUrl(e.target.value)}
                 placeholder={
                   t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
                 }
-                error={(e):string =>
-                  registrationUrl?.length && !isUrl(e.target.value)
+                error={
+                  registrationUrl?.length && !isUrl(registrationUrl)
                     ? (t('forms.urlInvalid') as string)
                     : undefined
                 }
@@ -416,8 +416,8 @@ export const DateCreate: React.FC<DateCreateProps> = ({
 
   const toTimeValid = useMemo(() => compareAsc(fromDate, toDate) === -1, [fromDate, toDate]);
 
-  const ticketUrlValid = useMemo(() => isUrl(ticketUrl) || ticketUrl === "",[ticketUrl]);
-  const registrationUrlValid = useMemo(() => isUrl(registrationUrl) || registrationUrl === "",[registrationUrl]);
+  const ticketUrlValid = isUrl(ticketUrl) || ticketUrl === ""
+  const registrationUrlValid = isUrl(registrationUrl) || registrationUrl === ""
 
   const validForm = ticketUrlValid && registrationUrlValid && toDateValid && toTimeValid
 

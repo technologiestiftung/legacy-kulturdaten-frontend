@@ -15,7 +15,7 @@ import { useDebounce } from '../../lib/useDebounce';
 import { emailRegExpString, isEmail, isUrl, telRegExpString, urlRegExpString } from '../../lib/validations';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
-import { StyledError } from '../Error';
+import { StyledError, StyledFormListError } from '../Error';
 import { mq, focusStyles } from '../globals/Constants';
 import { Label } from '../label';
 import { Tooltip } from '../tooltip';
@@ -42,6 +42,7 @@ const StyledTooltip = styled.div`
 `;
 
 const createdId = "input-id-" + Math.random().toString(16).slice(2);
+
 
 const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
 const errorBorderShadow = 'inset 0px 0px 0px 0.125rem var(--red-publish)';
@@ -196,6 +197,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const ref = forwardedRef || internalRef;
 
+    const getErrorString = (inputType, value) => {
+      if (value) {
+        switch(inputType) {
+          case InputType.url:
+            return !isUrl(value) ?
+            (t('forms.urlInvalid') as string): undefined
+          case InputType.email:
+            return !isEmail(value) ?
+            (t('forms.emailInvalid') as string): undefined
+        }
+      }
+    
+      return undefined
+    }
+
     useEffect(() => {
       if (
         !touched &&
@@ -254,21 +270,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
       setNormalized(true);
     };
-
-    const getError = (inputType, value) => {
-      if (value) {
-        switch(inputType) {
-          case InputType.url:
-            return !isUrl(value) ?
-            (t('forms.urlInvalid') as string): undefined
-          case InputType.email:
-            return !isEmail(value) ?
-            (t('forms.emailInvalid') as string): undefined
-        }
-      }
-
-      return undefined
-    }
 
     const inputValid = useMemo(() => {
       if (props?.softRequired) {
@@ -366,8 +367,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
                   !normalized
                 ) {
-                  normalizeStrings();
-
+                  if(!props.error) {
+                    normalizeStrings();
+                  }
                   return true;
                 }
               }}
@@ -376,7 +378,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid}/>}
         {!pristine && props.error && <StyledError>{props.error}</StyledError>}
-        {/* {!pristine  && props.variant === "formList" && getError(props.type, props?.debounce ? internalState : props?.value) && <StyledError>{getError(props.type, props?.debounce ? internalState : props?.value)}</StyledError>} */}
+        {!pristine  && props.variant === "formList" && getErrorString(props.type, props?.debounce ? internalState : props?.value) && <StyledFormListError>{getErrorString(props.type, props?.debounce ? internalState : props?.value)}</StyledFormListError>}
       </StyledInputContainer>
     );
   }

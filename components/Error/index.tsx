@@ -7,3 +7,8 @@ export const StyledError = styled.div`
   padding-top: 0.75rem;
   flex-basis: 0;
 `;
+
+export const StyledFormListError = styled(StyledError)`
+  padding-bottom: 0.75rem;
+  padding-left: 0.75rem;
+`;

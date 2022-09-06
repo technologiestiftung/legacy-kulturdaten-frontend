@@ -1,10 +1,14 @@
 export const urlRegExpString =
   `^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$`;
 
-const urlRegExp = new RegExp(urlRegExpString,"gm");
+const urlRegExp = new RegExp(urlRegExpString);
 
 export const isUrl = (candidate: string): boolean => {
-  return urlRegExp.test(candidate);
+  if(typeof candidate === "string") {
+    return urlRegExp.test(candidate);
+  } else {
+    return false
+  }
 };
 
 export const emailRegExpString = '[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}';
