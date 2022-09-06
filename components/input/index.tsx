@@ -12,10 +12,10 @@ import React, {
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
-import { emailRegExpString, isEmail, isUrl, telRegExpString, urlRegExpString } from '../../lib/validations';
+import { emailRegExpString, isEmail, isPhoneNumber, isUrl, telRegExpString, urlRegExpString } from '../../lib/validations';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
-import { StyledError, StyledFormListError } from '../Error';
+import { StyledError } from '../Error';
 import { mq, focusStyles } from '../globals/Constants';
 import { Label } from '../label';
 import { Tooltip } from '../tooltip';
@@ -197,21 +197,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const ref = forwardedRef || internalRef;
 
-    const getErrorString = (inputType, value) => {
-      if (value) {
-        switch(inputType) {
-          case InputType.url:
-            return !isUrl(value) ?
-            (t('forms.urlInvalid') as string): undefined
-          case InputType.email:
-            return !isEmail(value) ?
-            (t('forms.emailInvalid') as string): undefined
-        }
-      }
-    
-      return undefined
-    }
-
     useEffect(() => {
       if (
         !touched &&
@@ -377,8 +362,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </>
         )}
         {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid}/>}
-        {!pristine && props.error && <StyledError>{props.error}</StyledError>}
-        {!pristine  && props.variant === "formList" && getErrorString(props.type, props?.debounce ? internalState : props?.value) && <StyledFormListError>{getErrorString(props.type, props?.debounce ? internalState : props?.value)}</StyledFormListError>}
+        {!pristine && props.error && <StyledError inFormList={props.variant === "formList"}>{props.error}</StyledError>}
       </StyledInputContainer>
     );
   }

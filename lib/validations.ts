@@ -1,3 +1,5 @@
+import { InputType } from "../components/input";
+
 export const urlRegExpString =
   `^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$`;
 
@@ -26,3 +28,21 @@ const telRegExp = new RegExp(telRegExpString);
 export const isPhoneNumber = (candidate: string): boolean => {
   return telRegExp.test(candidate);
 };
+
+export const getErrorString = (inputType, value) => {
+  if (value) {
+    switch(inputType) {
+      case InputType.url:
+        return !isUrl(value) ?
+        'forms.urlInvalid': undefined
+      case InputType.email:
+        return !isEmail(value) ?
+        'forms.emailInvalid': undefined
+      case InputType.tel:
+        return !isPhoneNumber(value) ?
+        'forms.phoneInvalid': undefined
+    }
+  }
+
+  return undefined
+}
