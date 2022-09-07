@@ -834,6 +834,7 @@ export const deDE: Localization = {
     additionalLinks: () => 'Weiterführende Links',
     ticketLink: () => 'Ticketlink',
     currentDates: () => 'Aktuelle Termine',
+    dateTable: () => 'Tabelle: Aktuelle Termine',
     archivedDates: () => 'Vergangene Termine',
     listPlaceholder: () => 'Noch keine Termine vorhanden',
     delete: () => 'Termin löschen',
@@ -957,7 +958,7 @@ export const deDE: Localization = {
     defaultTitleOrganizer: () => 'Neues unbenanntes Profil',
   },
   speaker: {
-    newDate: () => 'Neuen Termin erstellt',
+    newDate: () => 'Neuer Termin erstellt',
     deleteDate: () => 'Ausgewählte Termine geloscht',
     newProfile: () => 'Neues Profil erstellt',
     deleteProfile: () => 'Profil gelöscht',

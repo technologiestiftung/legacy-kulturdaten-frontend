@@ -218,7 +218,11 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
               setAttributes({ ...attributes, ticketUrl: e.target.value })
               checkValidity()
             }}
-            error={attributes?.ticketUrl && !ticketUrlValid && t('forms.urlInvalid') as string}
+            error={
+              attributes?.ticketUrl.length && !isUrl(attributes?.ticketUrl)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
         <FormItem width={FormItemWidth.full}>
@@ -232,7 +236,11 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
               setAttributes({ ...attributes, registrationUrl: e.target.value })
               checkValidity()
             }}
-            error={attributes?.registrationUrl && !registrationUrlValid && t('forms.urlInvalid') as string}
+            error={
+              attributes?.registrationUrl.length && !isUrl(attributes?.registrationUrl)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
       </FormGrid>

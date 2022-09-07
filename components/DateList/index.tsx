@@ -235,7 +235,7 @@ const DateList: React.FC<DateListProps> = ({
         </StyledDateListSelect>
       )}
       <DateListScrollContainer>
-        <StyledDateListBody ref={dateListRef}>
+        <StyledDateListBody ref={dateListRef} tabIndex={0}>
           <StyledHiddenCaption>{editable ? t('date.currentDates') as string : t('date.archivedDates') as string}</StyledHiddenCaption>
           <thead>
             <StyledDateListTitleRow>
@@ -262,6 +262,7 @@ const DateList: React.FC<DateListProps> = ({
                       active={fromSort?.active}
                       onClick={fromSort?.onClick}
                       aria-label={
+                        t('date.fromMorePrecise') as string + ": " +
                         t('general.sorting', {
                           order: fromSort?.active
                             ? fromSort?.order === Order.ASC
@@ -287,6 +288,7 @@ const DateList: React.FC<DateListProps> = ({
                       active={endSort?.active}
                       onClick={endSort?.onClick}
                       aria-label={
+                        t('date.toMorePrecise') as string + ": " +
                         t('general.sorting', {
                           order: endSort?.active
                             ? endSort?.order === Order.ASC

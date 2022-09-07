@@ -19,6 +19,7 @@ import { genericFormActionSet, GenericFormStateConsumer } from './useGenericForm
 import { useMemo } from 'react';
 import { useT } from '../../lib/i18n';
 import { Tag } from '../../lib/api/types/tag';
+import { getErrorString } from '../../lib/validations';
 
 interface GenericFormListFieldContainerProps extends GenericFormStateConsumer {
   field: GenericFormField;
@@ -74,6 +75,9 @@ export const GenericFormFieldFactory: React.FC<GenericFormListFieldContainerProp
             type: (field as unknown as GenericFormFieldInput).data.type as InputType,
             placeholder: currentTranslation?.attributes?.placeholder,
             onChange: (e) => dispatch(genericFormActionSet(key, e.target.value)),
+            error: value && (value as string)?.length && getErrorString((field as unknown as GenericFormFieldInput).data.type as InputType, value)
+              ? t(getErrorString((field as unknown as GenericFormFieldInput).data.type as InputType, value)) as string | undefined
+              : null
           }}
         />
       );

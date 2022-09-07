@@ -13,6 +13,7 @@ import { focusStyles } from '../globals/Constants'
 import { useT } from '../../lib/i18n';
 import { locationDescriptionRef, offerDescriptionRef, organizerDescriptionRef } from '../../config/categories'
 import { Anchor } from '../pages/helpers/formComponents'
+import { speakerFunction } from '../pages/helpers/useSpeaker'
 
 const RTEContentWrapper = styled.div`
   grid-column: 2/-2;
@@ -79,7 +80,7 @@ const RTEContentWrapper = styled.div`
       content: attr(data-placeholder);
       font-size: 1rem;
       float: left;
-      color: var(--black);
+      color: var(--grey-600);
       pointer-events: none;
       height: 0;
     }
@@ -116,21 +117,17 @@ type RichTextEditorProps = {
 };
 
 
-export const countAlertCall = (maxLength, count, t) => {
-  const restDigits = maxLength - count
-  return (
-    restDigits === 0
-    ? `0 ${t('richText.charactersLeft_2')}`    
-    : restDigits === 5
-    ? `5 ${t('richText.charactersLeft_2')}`
+const countAlertCall = (maxLength, count, t) => {
+  const restDigits = maxLength - count 
+    restDigits === 5
+    ? speakerFunction(`5 ${t('richText.charactersLeft_2')}` )
     : restDigits === 10
-    ? `10 ${t('richText.charactersLeft_2')}`
+    ? speakerFunction(`10 ${t('richText.charactersLeft_2')}` )
     : restDigits === 20
-    ? `20 ${t('richText.charactersLeft_2')}`
+    ? speakerFunction(`20 ${t('richText.charactersLeft_2')}` )
     : restDigits === 50
-    ? `50 ${t('richText.charactersLeft_2')}`
+    ? speakerFunction(`50 ${t('richText.charactersLeft_2')}` )
     : null
-  )
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -159,6 +156,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }),
     ],
     onUpdate: ({editor}) => {
+      if(editor?.storage?.characterCount.characters() === maxLength) {
+        speakerFunction(`0 ${t('richText.charactersLeft_2')}` )   
+      }
       const parsedValue = editor.getHTML()
       updateCount()
       debouncer(() => {
@@ -174,8 +174,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     const currentCount = editor?.storage?.characterCount.characters()
     setTextLength(currentCount)
     setCount(currentCount)
+    countAlertCall(maxLength, currentCount, t)
   }
-  const countAlertValue = useMemo(() => countAlertCall(maxLength, count, t), [maxLength, count, t])
 
   useEffect(() => {
     updateCount()
@@ -221,7 +221,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       <StyledCharacterCount>
         {count} / {maxLength}
       </StyledCharacterCount>
-      <CountAlert aria-live="assertive" role="region">{countAlertValue}</CountAlert>
     </RTEContentWrapper>
     </>
   )

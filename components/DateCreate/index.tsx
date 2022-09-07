@@ -22,6 +22,7 @@ import { Textarea } from '../textarea';
 import { usePseudoUID } from '../../lib/uid';
 import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
 import { isUrl } from '../../lib/validations';
+import { dateListRef } from '../../config/categories';
 
 interface DateFormTimeProps {
   earliestDate: Date;
@@ -200,9 +201,6 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   const t = useT();
   const uid = usePseudoUID();
 
-  const ticketUrlValid = isUrl(ticketUrl);
-  const registrationUrlValid = isUrl(registrationUrl);
-
   const { renderedDateRecurrence } = useDateRecurrence({
     startDate: fromDate,
     latestDate,
@@ -338,7 +336,11 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
                 placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
-                error={ticketUrl.length && !ticketUrlValid ? (t('forms.urlInvalid') as string) : undefined}
+                error={
+                  ticketUrl?.length && !isUrl(ticketUrl)
+                    ? (t('forms.urlInvalid') as string)
+                    : undefined
+                }
               />
             </FormItem>
             <FormItem width={FormItemWidth.full}>
@@ -351,7 +353,11 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
                 placeholder={
                   t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
                 }
-                error={registrationUrl.length && !registrationUrlValid ? (t('forms.urlInvalid') as string) : undefined}
+                error={
+                  registrationUrl?.length && !isUrl(registrationUrl)
+                    ? (t('forms.urlInvalid') as string)
+                    : undefined
+                }
               />
             </FormItem>
           </FormGrid>
@@ -410,8 +416,8 @@ export const DateCreate: React.FC<DateCreateProps> = ({
 
   const toTimeValid = useMemo(() => compareAsc(fromDate, toDate) === -1, [fromDate, toDate]);
 
-  const ticketUrlValid = isUrl(ticketUrl) || ticketUrl === "";
-  const registrationUrlValid = isUrl(registrationUrl) || registrationUrl === "";
+  const ticketUrlValid = isUrl(ticketUrl) || ticketUrl === ""
+  const registrationUrlValid = isUrl(registrationUrl) || registrationUrl === ""
 
   const validForm = ticketUrlValid && registrationUrlValid && toDateValid && toTimeValid
 
@@ -545,6 +551,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       setFromDate(now);
       setToDate(add(now, { hours: 1 }));
     }, submitDelay);
+    dateListRef.current.focus()
   }, [recurrence, date, onSubmit, setIsOpen, submitDelay]);
 
   return (
