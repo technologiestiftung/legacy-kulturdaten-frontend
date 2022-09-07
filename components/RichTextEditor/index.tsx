@@ -159,9 +159,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       if(editor?.storage?.characterCount.characters() === maxLength) {
         speakerFunction(`0 ${t('richText.charactersLeft_2')}` )   
       }
-      if(editor?.storage?.characterCount.characters() === count) {
-        console.log("no update")   
-      }
       const parsedValue = editor.getHTML()
       updateCount()
       debouncer(() => {
