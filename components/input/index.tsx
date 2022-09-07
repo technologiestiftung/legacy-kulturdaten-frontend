@@ -12,7 +12,7 @@ import React, {
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
-import { emailRegExpString, isEmail, isPhoneNumber, isUrl, telRegExpString, urlRegExpString } from '../../lib/validations';
+import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/validations';
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
