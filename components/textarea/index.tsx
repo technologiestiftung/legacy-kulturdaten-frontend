@@ -8,7 +8,8 @@ import { Label, StyledLabel } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
 import { focusStyles } from '../globals/Constants';
-import { countAlertCall, CountAlert, StyledCharacterCount } from '../RichTextEditor';
+import { StyledCharacterCount } from '../RichTextEditor';
+import { speakerFunction } from '../pages/helpers/useSpeaker';
 
 
 const StyledTextareaContainer = styled.div`
@@ -77,7 +78,21 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
     }
   }, [touched, props?.value, internalState]);
 
-  const countAlertValue = useMemo(() => countAlertCall(props.maxLength, count, t), [props.maxLength, count, t])
+
+  const countAlertCall = (maxLength, count, t) => {
+  const restDigits = maxLength - count 
+    restDigits === 0
+    ? speakerFunction(`0 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 5
+    ? speakerFunction(`5 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 10
+    ? speakerFunction(`10 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 20
+    ? speakerFunction(`20 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 50
+    ? speakerFunction(`50 ${t('richText.charactersLeft_2')}` )
+    : null
+}
 
 
   return (
@@ -104,8 +119,14 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         value={props?.debounce ? internalState : props?.value || ''}
         valid={props.valid}
         pristine={pristine}
+        onKeyDown={(e) => {
+          if(props.maxLength === count && e.code !== "Backspace") {
+            speakerFunction(`0 ${t('richText.charactersLeft_2')}` )
+          }
+        }}
         onChange={async(e) => {
           setTouched(true);
+          countAlertCall(props.maxLength, e.target.value.length, t)
           if (props?.debounce) {
             setInternalState(e.target.value);
             debouncer(() => {
@@ -129,7 +150,6 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
       <StyledCharacterCount>
         {count} / {props.maxLength}
       </StyledCharacterCount>}
-      <CountAlert aria-live="assertive" role="region">{countAlertValue}</CountAlert>
     </StyledTextareaContainer>
   );
 };
