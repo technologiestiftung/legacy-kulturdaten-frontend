@@ -347,6 +347,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   props.onBlur(e);
                 }
               }}
+              onFocus={() => {setPristine(true)}}
               onKeyDown={(e) => {
                 if (
                   (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
