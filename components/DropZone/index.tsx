@@ -57,7 +57,7 @@ const StyledDropZoneLabel = styled.label<{
       : ''}
 `;
 
-const StlyedDropZoneSuccess = styled.div`
+const StlyedDropZoneSuccess = styled.p`
   padding: 0.75rem 0 0;
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
@@ -72,7 +72,7 @@ const dropZoneLabelTextStyles = (isUploading?: boolean) => css`
   `}
 `;
 
-const StyledDropZoneLabelText = styled.div<{ isUploading?: boolean }>`
+const StyledDropZoneLabelText = styled.span<{ isUploading?: boolean }>`
   font-size: var(--font-size-500);
   line-height: var(--line-height-500);
   font-weight: 700;
@@ -81,7 +81,7 @@ const StyledDropZoneLabelText = styled.div<{ isUploading?: boolean }>`
   ${({ isUploading }) => dropZoneLabelTextStyles(isUploading)}
 `;
 
-const StyledDropZoneLabelSubText = styled.div<{ isUploading?: boolean }>`
+const StyledDropZoneLabelSubText = styled.span<{ isUploading?: boolean }>`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   transition: opacity var(--transition-duration-fast);
@@ -89,7 +89,7 @@ const StyledDropZoneLabelSubText = styled.div<{ isUploading?: boolean }>`
   ${({ isUploading }) => dropZoneLabelTextStyles(isUploading)}
 `;
 
-const StyledDropZoneMessage = styled.div<{
+const StyledDropZoneMessage = styled.span<{
   isDropOver: boolean;
   isValidFiles: boolean;
   isUploading?: boolean;
@@ -326,11 +326,13 @@ export const DropZone: React.FC<DropZoneProps> = ({
         <StyledDropZoneLabelText isUploading={isUploading}>
           {disabled ? disabledMessage : label}
         </StyledDropZoneLabelText>
+        <br/>
         {!disabled && acceptedFileTypes && (
           <StyledDropZoneLabelSubText isUploading={isUploading}>
             {t('dropZone.allowedFileTypes')}: {acceptedFileTypes.map(({ name }) => name).join(', ')}
           </StyledDropZoneLabelSubText>
         )}
+        <br/>
         {!disabled && maxFileSizeInKb && (
           <StyledDropZoneLabelSubText isUploading={isUploading}>
             {t('dropZone.maxFileSize')}: {Math.floor((maxFileSizeInKb / 1024) * 100) / 100}{' '}

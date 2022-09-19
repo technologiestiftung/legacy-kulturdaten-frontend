@@ -4,7 +4,7 @@ import { MutableRefObject, useEffect, useRef, useState, useMemo, useCallback } f
 import { X } from 'react-feather';
 
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq, focusBlackStyles } from '../globals/Constants';
 import { useT } from '../../lib/i18n';
 import { QuestionSvg } from '../assets/QuestionSvg';
 
@@ -45,6 +45,9 @@ const StyledTooltip = styled.div<{
       !isOpen
         ? css`
             display: none;
+            max-height: 0;
+            max-width: 0;
+            overflow: hidden;
           `
         : ''}
 
@@ -89,6 +92,8 @@ const StyledTooltipButton = styled.button`
     box-shadow: var(--shadow);
     transform: none;
   }
+
+  ${focusBlackStyles}
 `;
 
 const StyledTooltipOverlay = styled.div<{
@@ -113,8 +118,10 @@ const StyledTooltipOverlay = styled.div<{
   ${({ isOpen }) =>
     !isOpen
       ? css`
-          visibility: hidden;
-          opacity: 0;
+          display: none;
+          max-height: 0;
+          max-width: 0;
+          overflow: hidden; 
           pointer-events: none;
         `
       : ''}

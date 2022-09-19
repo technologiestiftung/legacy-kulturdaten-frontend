@@ -6,7 +6,7 @@ import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { WindowContext } from '../../../lib/WindowService';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useEntryTypeSubjectForm } from '../helpers/form/TypeSubject';
@@ -127,8 +127,8 @@ export const OrganizerCategorizationPage: React.FC<CategoryEntryPage> = ({
           valid={loaded !== true || valid}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>{formTypeSubject}</EntryFormContainer>
-          <EntryFormContainer>{formTags}</EntryFormContainer>
+          <StyledEntryFormContainer>{formTypeSubject}</StyledEntryFormContainer>
+          <StyledEntryFormContainer>{formTags}</StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

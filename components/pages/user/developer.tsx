@@ -1,4 +1,4 @@
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
@@ -8,7 +8,6 @@ import { Info, InfoColor } from '../../info';
 import { Input, InputType } from '../../input';
 import { useMemo, useState } from 'react';
 import { Button, ButtonColor, ButtonSize, ButtonType } from '../../button';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { Textarea } from '../../textarea';
 import { SettingsHeader } from './SettingsHeader';
 import { useApiCall } from '../../../lib/api';
@@ -18,7 +17,6 @@ import { AppTokenList } from '../../AppTokenList';
 import { AppTokenDelete, appTokenDeleteFactory } from '../../../lib/api/routes/appToken/delete';
 
 const UserApiTokens: React.FC = () => {
-  const loadingScreen = useLoadingScreen();
   const t = useT();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -38,18 +36,18 @@ const UserApiTokens: React.FC = () => {
 
   return (
     <>
-      <EntryFormContainer>
+      <StyledEntryFormContainer>
         <EntryFormHead
           title={t('settings.api.titleCreate') as string}
           tooltip={t('settings.api.titleCreateTooltip')}
         />
+        <StyledRequiredInfoText/>
         <form
-          onSubmit={(e) => {
+          onSubmit={async(e) => {
             e.preventDefault();
             e.stopPropagation();
 
             if (tokenNameValid) {
-              loadingScreen(t('settings.loading'), async () => {
                 try {
                   const resp = await call<AppTokenCreate>(appTokenCreateFactory, {
                     appToken: {
@@ -73,7 +71,6 @@ const UserApiTokens: React.FC = () => {
 
                   return { success: false, error: t('general.serverProblem') };
                 }
-              });
             }
           }}
         >
@@ -93,6 +90,7 @@ const UserApiTokens: React.FC = () => {
             <FormItem width={FormItemWidth.half}>
               <Input
                 type={InputType.url}
+                autoComplete="url"
                 label={`${t('settings.api.projectUrl')} (${t('forms.optional')})`}
                 value={url}
                 placeholder={t('forms.urlPlaceholder') as string}
@@ -124,38 +122,36 @@ const UserApiTokens: React.FC = () => {
             </FormItem>
           </FormGrid>
         </form>
-      </EntryFormContainer>
+      </StyledEntryFormContainer>
       {appTokens?.length > 0 && (
-        <EntryFormContainer>
+        <StyledEntryFormContainer>
           <EntryFormHead title={t('settings.api.titleList') as string} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
               <AppTokenList
                 tokens={appTokens}
                 onRemove={async (id) => {
-                  loadingScreen(t('settings.api.tokenRemoveLoading'), async () => {
-                    try {
-                      const resp = await call<AppTokenDelete>(appTokenDeleteFactory, {
-                        appToken: {
-                          id,
-                        },
-                      });
+                  try {
+                    const resp = await call<AppTokenDelete>(appTokenDeleteFactory, {
+                      appToken: {
+                        id,
+                      },
+                    });
 
-                      if (resp.status === 200) {
-                        mutateAppTokens();
-                        return { success: true };
-                      }
-
-                      return { success: false, error: t('general.serverProblem') };
-                    } catch (e) {
-                      return { success: false, error: t('general.serverProblem') };
+                    if (resp.status === 200) {
+                      mutateAppTokens();
+                      return { success: true };
                     }
-                  });
+
+                    return { success: false, error: t('general.serverProblem') };
+                  } catch (e) {
+                    return { success: false, error: t('general.serverProblem') };
+                  }
                 }}
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
+        </StyledEntryFormContainer>
       )}
     </>
   );
@@ -170,7 +166,7 @@ export const UserDeveloperPage: React.FC = () => {
       <div>
         <EntryFormWrapper>
           <UserApiTokens />
-          <EntryFormContainer>
+          <StyledEntryFormContainer>
             <EntryFormHead title={t('settings.docs.title') as string} />
             <FormGrid>
               <FormItem width={FormItemWidth.full}>
@@ -195,7 +191,7 @@ export const UserDeveloperPage: React.FC = () => {
                 />
               </FormItem>
             </FormGrid>
-          </EntryFormContainer>
+          </StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

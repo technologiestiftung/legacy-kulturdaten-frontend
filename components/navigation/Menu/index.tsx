@@ -20,6 +20,7 @@ export type MenuItemLink = {
   href: string;
   type?: MenuLinkType;
   active?: boolean;
+  onClick?: () => void;
 };
 
 export type MenuItemButton = {
@@ -27,11 +28,18 @@ export type MenuItemButton = {
   onClick: () => void;
   icon?: string;
   iconPosition?: IconPosition;
+  active?: boolean;
+  href?: string;
+  title?: string;
 };
 
 export type MenuItemFolder = {
   label: string;
   menuKey: string;
+  active?: boolean;
+  onClick?: () => void;
+  href?: string;
+  title?: string;
 };
 
 export type MenuData = {
@@ -63,6 +71,7 @@ export type MenuItem = {
   type: MenuItemType;
   disabled?: boolean;
   action?: MenuItemLink | MenuItemButton | MenuItemFolder;
+  active?: boolean;
 };
 
 const StyledMenuSections = styled.div`

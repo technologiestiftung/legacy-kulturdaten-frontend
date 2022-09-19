@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { LegacyRef, useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
-import { Categories, useCategories } from '../../config/categories';
+import { Categories, locationSidebarRef, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall } from '../../lib/api';
 import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
 import { CategoryExportType, Order, useCreateLocation, useList } from '../../lib/categories';
@@ -24,8 +24,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
-import { useOrganizerId } from '../../lib/useOrganizer';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useOrganizerId, useOrganizer } from '../../lib/useOrganizer';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -36,6 +35,8 @@ import {
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
+import { SkipLinkMainContent } from '../navigation/OrganizerBand';
+import { speakerFunction } from '../pages/helpers/useSpeaker';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -116,16 +117,17 @@ export const LocationList: React.FC<LocationListProps> = ({
     () => getDispatchFilters(listName),
     [getDispatchFilters, listName]
   );
-  const loadingScreen = useLoadingScreen();
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
+  const organizer = useOrganizer();
+  const organizerTitle = organizer?.data?.relations.translations.filter(translation => translation.attributes.language === language)[0].attributes.name
   const download = useDownload();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
 
   const [search, setSearch] = useState<string>();
-
+  
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
   // Set status filter to published if all locations are shown.
@@ -371,7 +373,8 @@ export const LocationList: React.FC<LocationListProps> = ({
   );
 
   return (
-    <StyledOrganizerList>
+    <StyledOrganizerList tabIndex={0}  ref={locationSidebarRef as LegacyRef<HTMLDivElement>}>
+      <SkipLinkMainContent/>
       <EntryListHead
         title={t('categories.location.title.plural') as string}
         expanded={expanded}
@@ -383,11 +386,13 @@ export const LocationList: React.FC<LocationListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.location.form.create'),
-                async () => await createLocation(),
-                t('general.takeAFewSeconds')
-              );
+              const res = await createLocation()
+              if(res)speakerFunction(t('speaker.newLocation') as string)
+              setTimeout(() => {
+                document.title = organizerTitle 
+                ? `${organizerTitle} - ${t('general.defaultTitleLocation')}` 
+                : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleLocation')}` 
+              }, 500)
             }}
           >
             {t('categories.location.form.create')}
@@ -545,7 +550,7 @@ export const LocationList: React.FC<LocationListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody>
+      <StyledEntryListBody >
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (

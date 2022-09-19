@@ -30,6 +30,7 @@ export const deDE: Localization = {
     info: {
       hint: {
         title: () => 'Profil noch nicht öffentlich',
+        altText: () => 'Hinweis',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
@@ -156,8 +157,13 @@ export const deDE: Localization = {
         },
       },
       linkList: {
+        quicklinks: {
+          title: () => 'Quicklinks',
+          id: () => 'dashboard-quicklinks'
+        },
         help: {
           title: () => 'Hilfe',
+          id: () => 'dashboard-help',
           text: () =>
             'Du hast Fragen oder benötigst Unterstützung bei der Nutzung der Plattform? Wir helfen dir gern:',
           links: {
@@ -173,6 +179,7 @@ export const deDE: Localization = {
         },
         openSource: {
           title: () => 'Werde kreativ',
+          id: () => 'dashboard-openSource',
           text: () =>
             'kulturdaten.berlin wird komplett Open Source, also quelloffen, entwickelt. Du hast Ideen für neue Funktionen? Hier findest du den Quellcode:',
           links: {
@@ -188,6 +195,7 @@ export const deDE: Localization = {
         },
         contact: {
           title: () => 'Kontakt',
+          id: () => 'dashboard-contact',
           text: () =>
             'Du hast Fragen, Vorschläge oder Anmerkungen zur dieser Plattform? Melde dich bei uns via:',
           links: {
@@ -213,6 +221,14 @@ export const deDE: Localization = {
     listLabel: () => 'Bereits hinzugefügte Sprachen',
     listPlaceholder: () => 'Noch keine Sprachen hinzugefügt',
     noMatch: () => 'Keine passende Sprache gefunden',
+  },
+  links: {
+    internal: {
+      iconAltText: () => 'Gehe zu'
+    },
+    external: {
+      iconAltText: () => 'Neuen Tab öffnen'
+    },
   },
   mainTypeTags: {
     addButton: () => 'Angebotsart hinzufügen',
@@ -428,7 +444,7 @@ export const deDE: Localization = {
       uniqueNameError: () => 'Diese Bezeichnung existiert bereits. Wähle bitte eine andere.',
       createButton: () => 'API-Token erstellen',
       info: () => (
-        <div>
+        <span>
           Dies ist eine Funktion für Entwickler:innen. Um die kulturdaten.berlin API zu nutzen,
           benötigst du ein API-Token. Dieses wird bei Anfragen an die API deinem Nutzer:innenkonto
           zugeordnet. Wie du das Token verwenden kannst, um Daten über die API zu erhalten, erfährst
@@ -440,7 +456,7 @@ export const deDE: Localization = {
           >
             API-Dokumentation
           </a>
-        </div>
+        </span>
       ),
     },
     docs: {
@@ -458,7 +474,8 @@ export const deDE: Localization = {
   },
   forms: {
     optional: () => 'optional',
-    required: () => 'Pflichtfeld',
+    required: () => '*',
+    requiredInfoText: () => 'Alle Felder die mit einem * markiert sind, sind Pflichtfelder',
     create: () => 'Neue Anbieter:in anlegen',
     baseInfo: () => 'Grundlagen',
     address: () => 'Adressdaten',
@@ -473,32 +490,38 @@ export const deDE: Localization = {
           (z.B. Menschen mit Lese- und Rechtschreibschwäche). Unterschiede zur Leichten Sprache
           sowie Beispiele für beide findest du hier:
         </TooltipP>
-        <TooltipP>
-          •&nbsp;
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
-          >
-            Checkliste des Netzwerk Einfache Sprache
-          </a>
-        </TooltipP>
-        <TooltipP>
-          •&nbsp;
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://portaleinfach.org/abc-der-einfachen-sprache/"
-          >
-            Infoportal Einfache Sprache
-          </a>
-        </TooltipP>
+        <ul>
+          <li>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
+            >
+              •&nbsp;Checkliste des Netzwerk Einfache Sprache
+            </a>
+          </li>
+          <li>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://portaleinfach.org/abc-der-einfachen-sprache/"
+            >
+              •&nbsp;Infoportal Einfache Sprache
+            </a>
+          </li>
+        </ul>
       </>
     ),
     labelEnglish: () => 'Englisch',
     labelEnglishEasy: () => 'Englisch: einfache Sprache',
     description: () => 'Beschreibung',
-    teaser: () => 'Kurzbeschreibung (optional, max. 150 Zeichen)',
+    teaser: () => 'Kurzbeschreibung',
+    teaserCount: () => '(optional, max. 150 Zeichen)',
+    teaserPlaceholder: () => 'Umschreibe kurz, worum es in deinem kulturellen Angebot geht.',
+    descriptionCount: () => '(max. 1500 Zeichen)',
+    descriptionOfferPlaceholder: () => 'Umschreibe ausführlich, worum es in deinem Angebot geht.',
+    descriptionLocationPlaceholder: () => 'Umschreibe ausführlich, worum es sich bei deinem Ort handelt.',
+    descriptionOrganizerPlaceholder: () => 'Umschreibe ausführlich dein Anbieterprofil.',
     classification: () => ' Art der Anbieter:in / Arbeitsschwerpunkt (mind. 1)',
     type: () => 'Typ(en)',
     subjects: () => 'Eingrenzung (optional)',
@@ -518,7 +541,9 @@ export const deDE: Localization = {
     website: () => 'Website',
     links: () => 'Weitere Links (z.B. Social Media Kanäle)',
     urlPlaceholder: () => 'https://example.com',
-    emailInvalid: () => 'Die Eingabe ist keine korrekte E-Mail.',
+    urlInvalid: () => 'Bitte gib eine gültige URL an (z.B. http://www.berlin.de)',
+    emailInvalid: () => 'Bitte gib eine eine gültige E-Mail Adresse an (z.B. name@domain.com)',
+    phoneInvalid: () => 'Bitte gib eine gültige Telefonnummer an (z.B. 0049301234567)',
     errors: {
       passwordConfirm: () => 'Die eingegebenen Passwörter stimmen nicht überein.',
     },
@@ -634,6 +659,7 @@ export const deDE: Localization = {
   },
   media: {
     title: () => 'Bilder',
+    image: () => 'Abbildung',
     copyright: () => 'Bildnachweis / Urheber:in',
     copyrightPlaceholder: () => 'z.B. © Name Fotograf:in, Veröffentlichungsjahr',
     copyrightTooltip: () => (
@@ -642,44 +668,62 @@ export const deDE: Localization = {
           Bitte gib immer einen Bildnachweis bzw. einen Hinweis auf den/die Urheber:in des Bildes
           an. Bildtitel sind optional. Das Format des Bildnachweises hängt von den Vorgaben des/der
           Urheber:in ab, z.B.
+          <br/>
         </TooltipP>
-        <TooltipP>•&nbsp; Name des Fotografen od. Agentur, Jahr</TooltipP>
-        <TooltipP>•&nbsp; Name Künstler:in des abgebildeten Werks, Foto: Name Fotograf:in</TooltipP>
-        <TooltipP>
-          •&nbsp; Bilder mit mehreren Urheber:innen, z.B. Collagen: Angabe zu Gestalter:in der
-          Collage und Angabe der Urheber:innen der Ausgangsmaterialien (wenn vorgegeben)
-        </TooltipP>
-        <TooltipP>
-          •&nbsp; Sammlungsobjekte mit digitaler Reproduktion ohne Urheber:in: Name Institution,
-          Ausschnitt Zeitungsseite, Sammlung XY
-        </TooltipP>
+        <ul>
+          <li>
+            <TooltipP>
+              •&nbsp;Name des Fotografen od. Agentur, Jahr
+              <br/><br/>
+            </TooltipP>
+          </li>
+          <li>
+            <TooltipP>
+              •&nbsp;Name Künstler:in des abgebildeten Werks, Foto: Name Fotograf:in
+              <br/><br/>
+            </TooltipP>
+          </li>
+          <li>
+            <TooltipP>
+              •&nbsp;Bilder mit mehreren Urheber:innen, z.B. Collagen: Angabe zu Gestalter:in der
+              Collage und Angabe der Urheber:innen der Ausgangsmaterialien (wenn vorgegeben)
+              <br/><br/>
+            </TooltipP>
+          </li>
+          <li>
+            <TooltipP>
+              •&nbsp;Sammlungsobjekte mit digitaler Reproduktion ohne Urheber:in: Name Institution,
+              Ausschnitt Zeitungsseite, Sammlung XY
+            </TooltipP>
+          </li>
+        </ul>
       </>
     ),
     alt: () => 'Alt Text',
     altTooltip: () =>
-      'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima.',
+      'Alt-Texte beschreiben das Bild möglichst eindeutig und in Kürze. Sie sind vor allem für blinde Personen wichtig, die einen Screenreader benutzen, um Website-Inhalte vorlesen zu lassen. Suchmaschinen finden Alt-Texte aber auch prima. Bei dekorativen Bildern sollte auf Alt-Texte verzichtet werden.',
     license: () => 'Lizenz',
     deleteTitle: () => 'Bild löschen',
     licenses: {
       '1': {
         name: () => 'mit Namensnennung nutzbar (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.de',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neuen Tab öffnen: Mehr Informationen zur Lizenz Namensnennung 4.0 International CC BY 4.0',
       },
       '2': {
         name: () => 'ohne Namensnennung nutzbar (Public Domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.de',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz CC0 1.0 Universell Public Domain Dedication',
       },
       '3': {
         name: () => 'mit Namensnennung - Weitergabe unter gleichen Bedingungen (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.de',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International',
       },
       '4': {
-        name: () => 'nur im Zuge der aktuellen Berichtersattung nutzbar',
+        name: () => 'nur im Zuge der aktuellen Berichterstattung nutzbar',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
-        title: () => 'Information über Lizenz',
+        title: () => 'Neues Tab öffnen: Mehr Informationen zur Lizenz nur für aktuelle Berichterstattung nutzbar',
       },
     },
     licenseEnd: () => 'Ablaufdatum Lizenz',
@@ -694,26 +738,32 @@ export const deDE: Localization = {
       'Willst du das Bild wirklich löschen? Dies kann nicht rückgängig gemacht werden.',
     maxReached: ({ count }) => `Maximale Anzahl an Bildern (${count}) erreicht.`,
     hint: () =>
-      'Das Bild ist noch nicht öffentlich verfügbar. Damit es öffentlich wird, müssen alle Pflichtfelder ausgefüllt sein.',
+      'Das Bild ist noch nicht öffentlich verfügbar. Damit es öffentlich wird, müssen alle Pflichtfelder ausgefüllt sein (Bildnachweis, Lizenztyp, Bestätigung Zusatzinfos).',
     dropZoneLabel: () => 'Bilder hochladen',
     usageInfo: () => (
       <>
         <InfoP>Bitte beachte, dass:</InfoP>
         <InfoUl>
           <InfoLi>
-            du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
-            Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media
-            Kanälen.
+            <p>
+              du nur Bilder hochlädst, die von Dritten kostenlos in unveränderter oder veränderter
+              Form verwendet werden dürfen - auch zu kommerziellen Zwecken und auf Social Media
+              Kanälen.
+            </p>
           </InfoLi>
           <InfoLi>
-            du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
-            Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
-            Dritte vorliegen.
+            <p>
+              du keine Bilder ohne die Zustimmung der Rechteinhaber:innen verwendest. Sind auf den
+              Bildern Personen abgebildet, so muss ihr Einverständnis zur Nutzung des Bildes durch
+              Dritte vorliegen.
+            </p>
           </InfoLi>
           <InfoLi>
-            Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
-            erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
-            innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
+            <p>
+              Datennutzer:innen (z.B. Veranstaltungsportale oder App-Entwickler:innen) das Recht
+              erhalten, die Bilddateien unter Nennung der Urheber:innen zur Promotion von Angeboten
+              innerhalb der Grenzen des Urheberpersönlichkeitsrechts zu verwenden.
+            </p>
           </InfoLi>
         </InfoUl>
       </>
@@ -750,6 +800,15 @@ export const deDE: Localization = {
   date: {
     from: () => 'Von',
     to: () => 'bis',
+    fromMorePrecise: () => 'Beginn des Angebotes',
+    toMorePrecise: () => 'Ende des Angebotes',
+    fromAria: () => 'Start des Angebotes: Datum und Uhrzeit',
+    toAria: () => 'Ende des Angebotes: Datum und Uhrzeit',
+    fromAriaDate: () => 'Start des Angebotes: Datum',
+    toAriaDate: () => 'Ende des Angebotes: Datum',
+    fromAriaTime: () => 'Start des Angebotes: Uhrzeit',
+    toAriaTime: () => 'Ende des Angebotes: Uhrzeit',
+    for: () => 'für',
     time: () => 'Zeit',
     title: () => 'Titelzusatz',
     titleTooltip: () =>
@@ -775,6 +834,7 @@ export const deDE: Localization = {
     additionalLinks: () => 'Weiterführende Links',
     ticketLink: () => 'Ticketlink',
     currentDates: () => 'Aktuelle Termine',
+    dateTable: () => 'Tabelle: Aktuelle Termine',
     archivedDates: () => 'Vergangene Termine',
     listPlaceholder: () => 'Noch keine Termine vorhanden',
     delete: () => 'Termin löschen',
@@ -847,6 +907,8 @@ export const deDE: Localization = {
         plural: () => 'diese Termine',
       },
     },
+    toMainContent: () => 'Zum Hauptinhalt',
+    skipField: () => 'Feld überspringen',
     cancel: () => 'abbrechen',
     confirmDelete: () => 'Löschen bestätigen',
     name: () => 'Bezeichnung',
@@ -890,7 +952,20 @@ export const deDE: Localization = {
       `${order === Order.ASC ? 'Aufsteigend' : 'Absteigend'} nach ${attribute} sortieren`,
     placeholderOffer: () => 'Unbenanntes Angebot',
     placeholderLocation: () => 'Unbenannter Ort',
-    placeholderOrganizer: () => 'Unbenanntes Profil',
+    placeholderOrganizer: () => 'Neues unbenanntes Profil',
+    defaultTitleOffer: () => 'Neues Angebot',
+    defaultTitleLocation: () => 'Neuer Ort',
+    defaultTitleOrganizer: () => 'Neues unbenanntes Profil',
+  },
+  speaker: {
+    newDate: () => 'Neuer Termin erstellt',
+    deleteDate: () => 'Ausgewählte Termine geloscht',
+    newProfile: () => 'Neues Profil erstellt',
+    deleteProfile: () => 'Profil gelöscht',
+    newOffer: () => 'Neues Angebot erstellt',
+    deleteOffer: () => 'Angebot geloscht',
+    newLocation: () => 'Neuen Ort erstellt',
+    deleteLocation: () => 'Ort gelöscht',
   },
   tags: {
     boxLabel: () => 'Bereits hinzugefügte Stichworte',
@@ -925,6 +1000,10 @@ export const deDE: Localization = {
     headingThree: () => 'Überschrift klein',
     listOrdered: () => 'Nummerierte Liste',
     listUnordered: () => 'Normale Liste',
+    maxCharacters: () => 'Maximale Zeichenanzahl',
+    charactersLeft_1: () => 'Weniger als',
+    charactersLeft_1b: () => 'Über',
+    charactersLeft_2: () => 'Zeichen übrig',
     bold: () => 'Fett',
     italic: () => 'Kursiv',
     underline: () => 'Unterstrichen',
@@ -1084,7 +1163,7 @@ export const deDE: Localization = {
             </p>
             <p>
               Um die Löschung zu bestätigen, gib bitte den Namen der Anbieter:in in dieses Feld ein
-              und drücke den {'‚'}Löschuen bestätigen{'‘'}-Button.
+              und drücke den {'‚'}Löschen bestätigen{'‘'}-Button.
             </p>
           </>
         ),
@@ -1143,6 +1222,7 @@ export const deDE: Localization = {
         nameGermanSimple: () => 'Deutsch: einfache Sprache',
         nameEnglish: () => 'Englisch',
         nameEnglishSimple: () => 'Englisch: einfache Sprache',
+        namePlaceholder: () => "z.B. Die Zauberflöte",
         description: () => 'Beschreibung',
         submit: () => 'anlegen',
         save: () => 'speichern',
@@ -1304,6 +1384,10 @@ export const deDE: Localization = {
         deleting: () => 'Lösche Ort',
       },
     },
+    sitemap: {
+      skipLevelButton: () => 'Gehe nach',
+      skipLevelButton_2: () => 'mit Leertaste, oder tiefere Navigation mit Steuerung-Alt-Pfeil nach Rechts'
+    }
   },
   menu: {
     title: () => 'kulturdaten.berlin',
@@ -1316,13 +1400,22 @@ export const deDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'zurück zum Dashboard',
+        backApp: () => 'zurück',
         dashboard: () => 'Dashboard',
+        sitemap: () => 'Sitemap',
         notifications: () => 'Benachrichtigungen',
         profile: () => 'Anbieter:in-Profil',
         team: () => 'Team',
         login: () => 'Login',
         registration: () => 'Registrierung',
+        register: () => 'Registrierung',
         info: () => 'Info',
+        offer: () => 'Angebote',
+        location: () => 'Orte',
+        organizer: () => 'Anbieter:in-Profil',
+        userSettings: () => 'Meine Einstellungen',
+        admin: () => 'Administration',
+        developer: () => 'Entwickler:innen Einstellungen',
       },
     },
     organizer: {
@@ -1359,6 +1452,7 @@ export const deDE: Localization = {
       description: () => 'Sprache wählen, choose Language',
     },
     organizerBand: {
+      title: () => 'Anbieter:in-Profile',
       show: () => 'Liste meiner Anbieter:innen ausklappen',
       collapse: () => 'Liste meiner Anbieter:innen einklappen',
       create: () => 'Neue Anbieter:in erstellen',

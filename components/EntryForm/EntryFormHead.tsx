@@ -2,10 +2,11 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { useMemo } from 'react';
 import { ChevronDown } from 'react-feather';
+import { offerCategoryRef, offerTypeRef } from '../../config/categories';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { AlertSymbol } from '../assets/AlertSymbol';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
 
@@ -21,6 +22,7 @@ const StyledEntryFormHead = styled.div<{
   flex-wrap: wrap;
   padding: 0;
   color: inherit;
+  ${focusStyles}
 
   ${({ addPadding }) =>
     addPadding
@@ -135,6 +137,20 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       }) as string)
     : undefined;
 
+    const getRef = ():any => {
+      switch(id) {
+        case "offer-main-type":
+          return offerTypeRef
+          break;
+        case "offer-types":
+          return offerCategoryRef
+          break;
+        default:
+          return
+          }
+    }
+
+
   return (
     <StyledEntryFormHead
       onClick={isExpander ? expander.onClick : undefined}
@@ -153,7 +169,7 @@ export const EntryFormHead: React.FC<EntryFormHeadProps> = ({
       )}
       <StyledEntryFormHeadBorder />
       <StyledEntryFormHeadTitle id={id} size={size}>
-        {title}
+      <legend tabIndex={0} ref={getRef}>{title}</legend>
         {tooltip && (
           <StyledTooltip>
             <Tooltip>

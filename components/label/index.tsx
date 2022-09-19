@@ -6,13 +6,16 @@ export const StyledLabel = styled.label`
   font-weight: 700;
   color: inherit;
   display: inline-flex;
+  flex-direction: row;
 `;
 
 interface LabelProps {
   children: React.ReactNode;
   htmlFor?: string;
+  ariaLabel?: string;
+  id?: string;
 }
 
-export const Label: React.FC<LabelProps> = ({ children, htmlFor }: LabelProps) => (
-  <StyledLabel htmlFor={htmlFor}>{children}</StyledLabel>
+export const Label: React.FC<LabelProps> = ({ children, htmlFor, ariaLabel, id }: LabelProps) => (
+  <StyledLabel htmlFor={htmlFor} aria-label={ariaLabel} id={id}>{children}</StyledLabel>
 );

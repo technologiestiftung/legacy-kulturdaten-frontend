@@ -1,6 +1,6 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useEntryHeader } from '../helpers/useEntryHeader';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { FormGrid, FormItem, FormItemWidth } from '../../pages/helpers/formComponents';
 import { locationAccessibility } from '../../../config/accessibility';
@@ -235,17 +235,17 @@ export const LocationAccessibilityPage: React.FC<CategoryEntryPage> = ({
           />
 
           <EntryFormWrapper>
-            <EntryFormContainer>
+            <StyledEntryFormContainer>
               <EntryFormHead title={t('categories.location.accessibilityHeadline') as string} />
               <FormGrid>
                 <FormItem width={FormItemWidth.full}>
                   <Info color={InfoColor.white} noMaxWidth>
-                    <p>{t('categories.location.accessibilityIntro')}</p>
+                    {t('categories.location.accessibilityIntro')}
                   </Info>
                 </FormItem>
               </FormGrid>
               {renderedForm}
-            </EntryFormContainer>
+            </StyledEntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

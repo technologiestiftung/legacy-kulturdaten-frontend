@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { LegacyRef, useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
-import { Categories, useCategories } from '../../config/categories';
+import { Categories, offerSidebarRef, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall } from '../../lib/api';
 import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
 import {
@@ -31,8 +31,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
-import { useOrganizerId } from '../../lib/useOrganizer';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useOrganizerId, useOrganizer } from '../../lib/useOrganizer';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -43,6 +42,8 @@ import {
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
+import { SkipLinkMainContent } from '../navigation/OrganizerBand';
+import { speakerFunction } from '../pages/helpers/useSpeaker';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -117,9 +118,10 @@ export const OfferList: React.FC<OfferListProps> = ({
     [getDispatchFilters, listName]
   );
   const [search, setSearch] = useState<string>();
-  const loadingScreen = useLoadingScreen();
   const createOffer = useCreateOffer();
   const organizerId = useOrganizerId();
+  const organizer = useOrganizer();
+  const organizerTitle = organizer?.data?.relations.translations.filter(translation => translation.attributes.language === language)[0].attributes.name
   const mainTypeOptions = useOfferMainTypeList();
   const typeOptions = useOfferTypeList();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
@@ -334,24 +336,29 @@ export const OfferList: React.FC<OfferListProps> = ({
     ]
   );
 
+
   return (
-    <StyledOrganizerList>
+    <StyledOrganizerList tabIndex={0} ref={offerSidebarRef as LegacyRef<HTMLDivElement>}>
+      <SkipLinkMainContent/>
       <EntryListHead
         title={t('categories.offer.title.plural') as string}
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={expandable}
+        
         actionButton={
           <Button
             size={ButtonSize.big}
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.offer.form.create'),
-                async () => await createOffer(),
-                t('general.takeAFewSeconds')
-              );
+              const res = await createOffer()
+              if(res)speakerFunction(t('speaker.newOffer') as string)
+              setTimeout(() => {
+                document.title = organizerTitle 
+                ? `${organizerTitle} - ${t('general.defaultTitleOffer')}` 
+                : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleOffer')}` 
+              }, 500)
             }}
           >
             {t('categories.offer.form.create')}
@@ -532,7 +539,7 @@ export const OfferList: React.FC<OfferListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody>
+      <StyledEntryListBody >
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (

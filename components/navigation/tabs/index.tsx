@@ -12,7 +12,7 @@ const StyledTabs = styled.nav`
   position: relative;
 `;
 
-const StyledTabsContainer = styled.div<{ itemCount: number }>`
+const StyledTabsContainer = styled.ul<{ itemCount: number }>`
   position: relative;
   border-bottom: none;
   display: flex;
@@ -32,7 +32,7 @@ const StyledTabsContainer = styled.div<{ itemCount: number }>`
   }
 `;
 
-const StyledTab = styled.div`
+const StyledTab = styled.li`
   position: relative;
   margin-right: -0.375rem;
 
@@ -77,6 +77,15 @@ const StyledTabLink = styled.a<{
   }
 
   z-index: ${({ itemCount, index }) => itemCount - index};
+
+
+  &:focus {
+    border: 3px #275EC5 solid;
+    padding-top: calc(0.75rem - 3px);
+    margin: 0 -2px;
+    margin-bottom: -4px;
+    box-shadow: inset 0 0 0 2px var(--white);
+  }
 
   ${({ isActive, itemCount }) =>
     isActive

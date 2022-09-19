@@ -5,7 +5,7 @@ import { OfferDate, OfferDateStatus } from '../../lib/api/types/offer';
 import { useT } from '../../lib/i18n';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { EntryFormContainer, EntryFormWrapper } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../EntryForm/wrappers';
 import { Input, InputType } from '../input';
 import { useOverlay } from '../overlay';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
@@ -21,6 +21,8 @@ import { Breakpoint } from '../../lib/WindowService';
 import { Textarea } from '../textarea';
 import { usePseudoUID } from '../../lib/uid';
 import { defaultTeaserTextLimit } from '../pages/helpers/form/Teaser';
+import { isUrl } from '../../lib/validations';
+import { dateListRef } from '../../config/categories';
 
 interface DateFormTimeProps {
   earliestDate: Date;
@@ -55,7 +57,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
-            label={t('date.from') as string}
+            label={t('date.fromAriaDate') as string}
             value={formatISO(fromDate, { representation: 'date' })}
             onChange={(e) => {
               const newDate = parseISO(`${e.target.value}T${format(fromDate, 'HH:mm')}`);
@@ -90,7 +92,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
         <FormItem width={FormItemWidth.half}>
           <Input
             type={InputType.date}
-            label={t('date.to') as string}
+            label={t('date.toAriaDate') as string}
             value={formatISO(toDate, { representation: 'date' })}
             onChange={(e) => {
               setToDate(parseISO(`${e.target.value}T${format(toDate, 'HH:mm')}`));
@@ -104,6 +106,7 @@ export const DateFormTime: React.FC<DateFormTimeProps> = ({
           <Input
             type={InputType.time}
             label={t('date.clock') as string}
+            ariaLabel={t('date.toAriaTime') as string}
             value={format(toDate, 'HH:mm')}
             onChange={(e) =>
               setToDate(
@@ -208,7 +211,7 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
   return (
     <StyledDateCreateFormWrapper>
       <EntryFormWrapper fullWidth reducedVerticalPadding>
-        <EntryFormContainer noPadding fullWidth>
+        <StyledEntryFormContainer noPadding fullWidth>
           <DateFormTime
             {...{
               earliestDate,
@@ -221,84 +224,77 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               toTimeValid,
             }}
           />
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.recurrence.title')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>{renderedDateRecurrence}</FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
-          <EntryFormHead
-            title={`${t('date.title')} (${t('forms.optional')})`}
-            tooltip={t('date.titleTooltip')}
-          />
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <FormGrid>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Input
                 type={InputType.text}
-                label={t('general.german') as string}
-                ariaLabel={`${t('date.title')} ${t('general.german')}`}
+                label={`${t('date.title')} ${t('general.german')} (${t('forms.optional')})`}
                 value={titleGerman}
                 onChange={(e) => setTitleGerman(e.target.value)}
+                tooltip={t('date.titleTooltip') as string}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="en">
               <Input
                 type={InputType.text}
-                label={t('general.english') as string}
-                ariaLabel={`${t('date.title')} ${t('general.english')}`}
+                label={`${t('date.title')} ${t('general.english')} (${t('forms.optional')})`}
                 value={titleEnglish}
                 onChange={(e) => setTitleEnglish(e.target.value)}
               />
             </FormItem>
             <FormItem width={FormItemWidth.full}>
               <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                <div>
-                  <div>
+                <span>
+                  <span>
                     {t('general.german')}: {offerTitles[Language.de]}
                     {titleGerman ? ` - ${titleGerman}` : ''}
-                  </div>
-                  <div>
+                  </span>
+                  <br/>
+                  <span>
                     {t('general.english')}: {offerTitles[Language.en]}
                     {titleEnglish ? ` - ${titleEnglish}` : ''}
-                  </div>
-                </div>
+                  </span>
+                </span>
               </Info>
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('forms.teaser')}`} />
           <FormGrid>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Textarea
                 id={`${uid}-textarea-german`}
-                label={t('general.german') as string}
-                ariaLabel={t('general.german') as string}
+                label={`${t('forms.teaser')} ${t('forms.labelGerman')}`}
                 value={teaserGerman || ''}
                 onChange={(e) => setTeaserGerman(e.target.value)}
                 rows={5}
                 maxLength={defaultTeaserTextLimit}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Textarea
                 id={`${uid}-textarea-german-easy`}
-                label={t('forms.labelGermanEasy') as string}
+                label={`${t('forms.teaser')} ${t('forms.labelGermanEasy')}`}
                 tooltip={t('forms.labelGermanEasyTooltip') as string}
-                ariaLabel={t('forms.labelGermanEasy') as string}
                 value={teaserGermanEasy || ''}
                 onChange={(e) => setTeaserGermanEasy(e.target.value)}
                 rows={5}
                 maxLength={defaultTeaserTextLimit}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="en">
               <Textarea
                 id={`${uid}-textarea-english`}
-                label={t('general.english') as string}
-                ariaLabel={t('general.english') as string}
+                label={`${t('forms.teaser')} ${t('forms.labelEnglish')}`}
                 value={teaserEnglish || ''}
                 onChange={(e) => setTeaserEnglish(e.target.value)}
                 rows={5}
@@ -306,55 +302,66 @@ const DateCreateForm: React.FC<DateCreateFormProps> = ({
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
-          <EntryFormHead title={`${t('date.roomInfo')} (${t('forms.optional')})`} />
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <FormGrid>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="de">
               <Input
                 type={InputType.text}
-                label={t('general.german') as string}
+                label={`${t('date.roomInfo')} ${t('general.german')} (${t('forms.optional')})`}
                 ariaLabel={`${t('date.roomInfo')} ${t('general.german')}`}
                 value={roomGerman}
                 onChange={(e) => setRoomGerman(e.target.value)}
               />
             </FormItem>
-            <FormItem width={FormItemWidth.half}>
+            <FormItem width={FormItemWidth.half} lang="en">
               <Input
                 type={InputType.text}
-                label={t('general.english') as string}
+                label={`${t('date.roomInfo')} ${t('general.english')} (${t('forms.optional')})`}
                 ariaLabel={`${t('date.roomInfo')} ${t('general.english')}`}
                 value={roomEnglish}
                 onChange={(e) => setRoomEnglish(e.target.value)}
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
-        <EntryFormContainer noPadding fullWidth>
+        </StyledEntryFormContainer>
+        <StyledEntryFormContainer noPadding fullWidth>
           <EntryFormHead title={`${t('date.additionalLinks')} (${t('forms.optional')})`} />
           <FormGrid>
             <FormItem width={FormItemWidth.full}>
               <Input
                 type={InputType.url}
+                autoComplete="url"
                 label={t('date.ticketLink') as string}
                 value={ticketUrl}
                 onChange={(e) => setTicketUrl(e.target.value)}
                 placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
+                error={
+                  ticketUrl?.length && !isUrl(ticketUrl)
+                    ? (t('forms.urlInvalid') as string)
+                    : undefined
+                }
               />
             </FormItem>
             <FormItem width={FormItemWidth.full}>
               <Input
                 type={InputType.url}
+                autoComplete="url"
                 label={t('categories.offer.form.pricing.registrationUrl') as string}
                 value={registrationUrl}
                 onChange={(e) => setRegistrationUrl(e.target.value)}
                 placeholder={
                   t('categories.offer.form.pricing.registrationUrlPlaceholder') as string
                 }
+                error={
+                  registrationUrl?.length && !isUrl(registrationUrl)
+                    ? (t('forms.urlInvalid') as string)
+                    : undefined
+                }
               />
             </FormItem>
           </FormGrid>
-        </EntryFormContainer>
+        </StyledEntryFormContainer>
       </EntryFormWrapper>
     </StyledDateCreateFormWrapper>
   );
@@ -388,11 +395,6 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const t = useT();
   const language = useLanguage();
 
-  const createButton = (
-    <Button key={0} color={ButtonColor.black} onClick={() => submitHandler()}>
-      {t('dateCreate.create')}
-    </Button>
-  );
   const now = new Date();
   const earliestDate = now;
   const latestDate = add(earliestDate, { years: 1 });
@@ -413,6 +415,17 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   const toDateValid = useMemo(() => compareAsc(fromDate, toDate) < 1, [fromDate, toDate]);
 
   const toTimeValid = useMemo(() => compareAsc(fromDate, toDate) === -1, [fromDate, toDate]);
+
+  const ticketUrlValid = isUrl(ticketUrl) || ticketUrl === ""
+  const registrationUrlValid = isUrl(registrationUrl) || registrationUrl === ""
+
+  const validForm = ticketUrlValid && registrationUrlValid && toDateValid && toTimeValid
+
+  const createButton = (
+    <Button key={0} color={ButtonColor.black} onClick={() => submitHandler()} disabled={!validForm}>
+      {t('dateCreate.create')}
+    </Button>
+  );
 
   const date = useMemo<OfferDate>(() => {
     const newDate = {
@@ -519,6 +532,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
   );
 
   const submitHandler = useCallback(() => {
+
     onSubmit(date?.data, recurrence);
 
     setTimeout(() => {
@@ -537,6 +551,7 @@ export const DateCreate: React.FC<DateCreateProps> = ({
       setFromDate(now);
       setToDate(add(now, { hours: 1 }));
     }, submitDelay);
+    dateListRef.current.focus()
   }, [recurrence, date, onSubmit, setIsOpen, submitDelay]);
 
   return (

@@ -8,7 +8,6 @@ import { Button, ButtonColor, ButtonContentPosition, ButtonSize, ButtonType } fr
 import { Checkbox } from '../checkbox';
 import { Info } from '../info';
 import { Input, InputType } from '../input';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import {
   AuthContent,
   AuthFormContainer,
@@ -38,7 +37,6 @@ export const RegisterForm: React.FC = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
 
   useEffect(() => {
     if (password.length > 0 && passwordConfirmation.length > 0) {
@@ -70,50 +68,44 @@ export const RegisterForm: React.FC = () => {
     setErrors([]);
 
     if (passwordsMatch) {
-      loadingScreen(
-        t('register.loading'),
-        async () => {
-          try {
-            await call<AuthRegister>(authRegisterFactory, {
-              body: {
-                email,
-                password,
-                passwordConfirmation: passwordConfirmation,
-              },
-            });
-            setSuccess(true);
-            return { success: true };
-          } catch (e) {
-            const requestErrors = e.message
-              ? (JSON.parse(e.message)?.errors as {
-                  rule: string;
-                  field: string;
-                  message: string;
-                }[])
-              : undefined;
+      try {
+        await call<AuthRegister>(authRegisterFactory, {
+          body: {
+            email,
+            password,
+            passwordConfirmation: passwordConfirmation,
+          },
+        });
+        setSuccess(true);
+        return { success: true };
+      } catch (e) {
+        const requestErrors = e.message
+          ? (JSON.parse(e.message)?.errors as {
+              rule: string;
+              field: string;
+              message: string;
+            }[])
+          : undefined;
 
-            const visibleError = requestErrors?.find(
-              (error) => error.rule === 'unique' && error.field === 'email'
-            )
-              ? (t('register.uniqueEmailError') as string)
-              : (t('register.requestError') as string);
+        const visibleError = requestErrors?.find(
+          (error) => error.rule === 'unique' && error.field === 'email'
+        )
+          ? (t('register.uniqueEmailError') as string)
+          : (t('register.requestError') as string);
 
-            setErrors([
-              { id: requestErrorId, message: visibleError },
-              ...errors.filter(({ id }) => id !== requestErrorId),
-            ]);
-            return { success: false, error: <Info>{visibleError}</Info> };
-          }
-        },
-        t('general.takeAFewSeconds')
-      );
+        setErrors([
+          { id: requestErrorId, message: visibleError },
+          ...errors.filter(({ id }) => id !== requestErrorId),
+        ]);
+        return { success: false, error: <Info>{visibleError}</Info> };
+      }
     }
   };
 
   return (
     <AuthContent>
       <AuthHead>
-        <AuthHeadline>{t(success ? 'register.successHeadline' : 'register.headline')}</AuthHeadline>
+        <AuthHeadline><legend>{t(success ? 'register.successHeadline' : 'register.headline')}</legend></AuthHeadline>
         <AuthSubline>{t(success ? 'register.successSubline' : 'register.subline')}</AuthSubline>
       </AuthHead>
 
@@ -123,6 +115,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <Input
                 value={email}
+                autoComplete="email"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 label={t('register.email') as string}
                 placeholder={t('login.emailPlaceholder') as string}
@@ -134,6 +127,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <Input
                 value={password}
+                autoComplete="new-password"
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 label={t('register.password') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
@@ -147,6 +141,7 @@ export const RegisterForm: React.FC = () => {
             <div>
               <Input
                 value={passwordConfirmation}
+                autoComplete="new-password"
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                   setPasswordConfirmation(e.target.value)
                 }

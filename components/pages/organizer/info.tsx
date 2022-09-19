@@ -11,12 +11,12 @@ import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { useUserIsOwner } from '../../../lib/useUserIsOwner';
-import { isEmail } from '../../../lib/validations';
+import { isEmail, isPhoneNumber, isUrl } from '../../../lib/validations';
 import { WindowContext } from '../../../lib/WindowService';
 import { Contacts } from '../../Contacts';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { Input, InputType } from '../../input';
 import { usePublish } from '../../Publish';
 import { EntryFormHook } from '../helpers/form';
@@ -77,6 +77,7 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
             <Input
               label={t('categories.organizer.form.email') as string}
               type={InputType.email}
+              autoComplete="email"
               value={attributes?.email || ''}
               onChange={(e) => {
                 setPristine(false);
@@ -100,6 +101,7 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
             <Input
               label={t('categories.organizer.form.tel') as string}
               type={InputType.tel}
+              autoComplete="tel"
               placeholder={t('general.telPlaceholder') as string}
               value={attributes?.phone || ''}
               onChange={(e) => {
@@ -113,12 +115,18 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
                 );
               }}
               ref={phoneRef}
+              error={
+                attributes?.phone?.length && !isPhoneNumber(attributes?.phone)
+                  ? (t('forms.phoneInvalid') as string)
+                  : undefined
+              }
             />
           </FormItem>
           <FormItem width={FormItemWidth.full}>
             <Input
               label={t('categories.organizer.form.website') as string}
               type={InputType.url}
+              autoComplete="url"
               value={attributes?.homepage || ''}
               onChange={(e) => {
                 setPristine(false);
@@ -131,6 +139,11 @@ const useContactForm: EntryFormHook = ({ category, query, loaded }) => {
                 );
               }}
               ref={websiteRef}
+              error={
+                attributes?.homepage?.length && !isUrl(attributes?.homepage)
+                  ? (t('forms.urlInvalid') as string)
+                  : undefined
+              }
             />
           </FormItem>
         </FormGrid>
@@ -518,12 +531,13 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
-            <EntryFormContainer>{nameForm}</EntryFormContainer>
-            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
-            <EntryFormContainer>{contactForm}</EntryFormContainer>
-            <EntryFormContainer>{additionalContactsForm}</EntryFormContainer>
-            <EntryFormContainer>{linksForm}</EntryFormContainer>
-            {userIsOwner && <EntryFormContainer>{addressForm}</EntryFormContainer>}
+            <StyledRequiredInfoText/>
+            <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{descriptionForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{contactForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{additionalContactsForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{linksForm}</StyledEntryFormContainer>
+            {userIsOwner && <StyledEntryFormContainer>{addressForm}</StyledEntryFormContainer>}
           </EntryFormWrapper>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Location, LocationTranslation, LocationType } from '../../../lib/api/types/location';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
 import { LocationShow } from '../../../lib/api/routes/location/show';
 import { useEntryHeader } from '../helpers/useEntryHeader';
@@ -28,6 +28,7 @@ import { getTranslation } from '../../../lib/translations';
 import { Textarea } from '../../textarea';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
+import { isUrl } from '../../../lib/validations';
 
 const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
   const uid = usePseudoUID();
@@ -106,7 +107,6 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
       <FormGrid>
         <FormItem width={FormItemWidth.full}>{renderedHoursField}</FormItem>
       </FormGrid>
-      <EntryFormHead title={t('hours.note') as string} />
       <FormGrid>
         <FormItem width={FormItemWidth.full}>
           {contentLanguages.map((contentLanguage, index) => {
@@ -119,7 +119,8 @@ const useOpeningHoursForm: EntryFormHook = ({ category, query }) => {
             return (
               <Textarea
                 key={index}
-                label={t(languageTranslationKeys[contentLanguage]) as string}
+                label={`${t('hours.note')} ${t(languageTranslationKeys[contentLanguage])}`}
+                lang={contentLanguage.slice(0,2)}
                 id={`${uid}-textarea-${index}`}
                 value={currentTranslation?.attributes?.openingHours || ''}
                 rows={4}
@@ -227,8 +228,14 @@ const useRentForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.location.form.rent.url') as string}
             placeholder={t('categories.location.form.rent.urlPlaceholder') as string}
             type={InputType.url}
+            autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
+            error={
+              url?.length && !isUrl(url)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
       </FormGrid>
@@ -293,8 +300,14 @@ const useUrlForm: EntryFormHook = ({ category, query }) => {
             label={t('categories.location.form.url') as string}
             placeholder={t('categories.location.form.urlPlaceholder') as string}
             type={InputType.url}
+            autoComplete="url"
             value={url || ''}
             onChange={(e) => setUrl(e.target.value)}
+            error={
+              url?.length && !isUrl(url)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
       </FormGrid>
@@ -449,6 +462,8 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.location.form.name') as string,
+    placeholder: t('categories.location.form.namePlaceholder') as string,
+    hideTitle: true,
     id: 'location-name',
   });
 
@@ -656,20 +671,21 @@ export const LocationInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
-            <EntryFormContainer>{nameForm}</EntryFormContainer>
-            <EntryFormContainer>{typeForm}</EntryFormContainer>
+            <StyledRequiredInfoText/>
+            <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{typeForm}</StyledEntryFormContainer>
             {typeValue === LocationType.physical ? (
               <>
-                <EntryFormContainer>{addressForm}</EntryFormContainer>
-                <EntryFormContainer>{urlForm}</EntryFormContainer>
-                <EntryFormContainer noPadding>{arrivalForm}</EntryFormContainer>
-                <EntryFormContainer>{openingHoursForm}</EntryFormContainer>
-                <EntryFormContainer>{rentForm}</EntryFormContainer>
+                <StyledEntryFormContainer>{addressForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer>{urlForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer noPadding>{arrivalForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer>{openingHoursForm}</StyledEntryFormContainer>
+                <StyledEntryFormContainer>{rentForm}</StyledEntryFormContainer>
               </>
             ) : (
-              <EntryFormContainer>{urlForm}</EntryFormContainer>
+              <StyledEntryFormContainer>{urlForm}</StyledEntryFormContainer>
             )}
-            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
+            <StyledEntryFormContainer>{descriptionForm}</StyledEntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

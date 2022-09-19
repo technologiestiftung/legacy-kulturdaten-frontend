@@ -3,8 +3,7 @@ import { css } from '@emotion/react';
 import { Radio } from '.';
 import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
-import { Label } from '../label';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { ExternalLink } from 'react-feather';
 
@@ -20,8 +19,10 @@ const StyledRadioList = styled.div<{ variant?: ComponentVariant }>`
     `}
 `;
 
-const StyedRadioListLabel = styled.div`
+const StyedRadioListLabel = styled.legend`
   margin-bottom: 0.75rem;
+  font-weight: 700;
+  font-size: var(--font-size-300);
 `;
 
 const StyledRadioListItems = styled.ul`
@@ -33,21 +34,21 @@ const StyledRadioListItems = styled.ul`
 const StyledRadioListItem = styled.li`
   display: inline-flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
-const StyledRadioListItemLink = styled.div`
+const StyledRadioListItemLinkA = styled.a`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   padding: 0 0 0 0.75rem;
   flex-shrink: 0;
-`;
-
-const StyledRadioListItemLinkA = styled.a`
   color: inherit;
   overflow-wrap: anywhere;
   word-break: break-word;
   display: inline-flex;
   align-items: center;
+
+  ${focusStyles}
 
   svg {
     padding: 0.1875rem 0;
@@ -92,31 +93,29 @@ export const RadioList: React.FC<RadioListProps> = ({
 
   return (
     <StyledRadioList variant={variant}>
-      {label && (
-        <StyedRadioListLabel>
-          <Label>
-            {label} {required ? ` (${t('forms.required')})` : ''}
-          </Label>
-        </StyedRadioListLabel>
-      )}
-      <StyledRadioListItems aria-label={ariaLabel}>
-        {options?.map((option, index) => (
-          <StyledRadioListItem key={index}>
-            <Radio
-              name={name}
-              id={option.id || `${id}-${index}`}
-              label={option.label}
-              value={option.value}
-              checked={value === option.value}
-              onChange={(e) => onChange(e.target.value)}
-              required={required}
-              softRequired={softRequired}
-              valid={Boolean(
-                !required || !softRequired || (value?.length > 0 && value !== 'undefined')
-              )}
-            />
-            {option.link && (
-              <StyledRadioListItemLink>
+      <fieldset tabIndex={0}>
+        {label && (
+          <StyedRadioListLabel>
+            {label} {required ? ` ${t('forms.required')}` : ''}
+          </StyedRadioListLabel>
+        )}
+        <StyledRadioListItems aria-label={ariaLabel}>
+          {options?.map((option, index) => (
+            <StyledRadioListItem key={index}>
+              <Radio
+                name={name}
+                id={option.id || `${id}-${index}`}
+                label={option.label}
+                value={option.value}
+                checked={value === option.value}
+                onChange={(e) => onChange(e.target.value)}
+                required={required}
+                softRequired={softRequired}
+                valid={Boolean(
+                  !required || !softRequired || (value?.length > 0 && value !== 'undefined')
+                )}
+              />
+              {option.link && (
                 <StyledRadioListItemLinkA
                   href={option.link.href}
                   rel="noopener noreferrer"
@@ -124,13 +123,13 @@ export const RadioList: React.FC<RadioListProps> = ({
                   title={option.link.title}
                   aria-label={option.link.title}
                 >
-                  <ExternalLink />
+                  <ExternalLink aria-hidden />
                 </StyledRadioListItemLinkA>
-              </StyledRadioListItemLink>
-            )}
-          </StyledRadioListItem>
-        ))}
-      </StyledRadioListItems>
+              )}
+            </StyledRadioListItem>
+          ))}
+        </StyledRadioListItems>
+      </fieldset>
     </StyledRadioList>
   );
 };

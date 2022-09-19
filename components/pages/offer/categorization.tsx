@@ -9,7 +9,7 @@ import { useT } from '../../../lib/i18n';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { WindowContext } from '../../../lib/WindowService';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { Offer } from '../../../lib/api/types/offer';
@@ -31,7 +31,7 @@ import { useOrganizerId } from '../../../lib/useOrganizer';
 import { PublishedStatus } from '../../../lib/api/types/general';
 import { ComponentLoader } from '../../ComponentLoader';
 
-const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
+const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id}) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -75,10 +75,9 @@ const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required
 
   return {
     renderedForm: (
-      <FormWrapper requirement={{ fulfilled }}>
+      <FormWrapper requirement={{ fulfilled }} requirementNotInFormItem>
         <EntryFormHead
-          title={`${t('categories.offer.form.mainType.title')} (${t('forms.required')})`}
-          id={id}
+          title={`${t('categories.offer.form.mainType.title')} ${t('forms.required')}`} id={id}
         />
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
@@ -272,9 +271,10 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
           valid={loaded !== true || (entryTypeSubjectValid && mainTypeValid)}
         />
         <EntryFormWrapper>
-          <EntryFormContainer>{mainTypeForm}</EntryFormContainer>
-          <EntryFormContainer>{formTypeSubject}</EntryFormContainer>
-          <EntryFormContainer>{renderedTagsForm}</EntryFormContainer>
+          <StyledRequiredInfoText/>
+          <StyledEntryFormContainer>{mainTypeForm}</StyledEntryFormContainer>
+          <StyledEntryFormContainer>{formTypeSubject}</StyledEntryFormContainer>
+          <StyledEntryFormContainer>{renderedTagsForm}</StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

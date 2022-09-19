@@ -120,7 +120,7 @@ export const useNavigation = (
   const headerTitle =
     appLayouts[layout].hasOrganizerBand && organizer?.data
       ? getTranslation(language, organizer.data.relations?.translations)?.attributes.name ||
-        (t('general.placeholderOrganizer') as string)
+        (t('general.defaultTitleOrganizer') as string)
       : title;
 
   const renderedHeaderMain = (

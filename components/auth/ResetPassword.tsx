@@ -6,7 +6,6 @@ import { useT } from '../../lib/i18n';
 import { Button, ButtonColor, ButtonContentPosition, ButtonSize, ButtonType } from '../button';
 import { Info } from '../info';
 import { Input, InputType } from '../input';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { AuthContent, AuthFormContainer, AuthHead, AuthHeadline, AuthSubline } from './AuthWrapper';
 import { useRouter } from 'next/router';
 import {
@@ -40,7 +39,6 @@ export const ResetPasswordForm: React.FC = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const t = useT();
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
 
   useEffect(() => {
     if (password.length > 0 && passwordConfirmation.length > 0) {
@@ -72,44 +70,38 @@ export const ResetPasswordForm: React.FC = () => {
     setErrors([]);
 
     if (passwordsMatch && email && signature) {
-      loadingScreen(
-        t('resetPassword.loading'),
-        async () => {
-          try {
-            await call<AuthResetPassword>(authResetPasswordFactory, {
-              body: {
-                email,
-                password,
-                passwordConfirmation: passwordConfirmation,
-              },
-              signature,
-            });
-            setSuccess(true);
-            return { success: true };
-          } catch (e) {
-            const requestErrors = e.message
-              ? (JSON.parse(e.message)?.errors as {
-                  code: string;
-                }[])
-              : undefined;
+      try {
+        await call<AuthResetPassword>(authResetPasswordFactory, {
+          body: {
+            email,
+            password,
+            passwordConfirmation: passwordConfirmation,
+          },
+          signature,
+        });
+        setSuccess(true);
+        return { success: true };
+      } catch (e) {
+        const requestErrors = e.message
+          ? (JSON.parse(e.message)?.errors as {
+              code: string;
+            }[])
+          : undefined;
 
-            const visibleError = requestErrors?.find((error) => error.code === 'E_UNAUTHORIZED')
-              ? (t('resetPassword.expiredLinkError') as string)
-              : (t('resetPassword.requestError') as string);
+        const visibleError = requestErrors?.find((error) => error.code === 'E_UNAUTHORIZED')
+          ? (t('resetPassword.expiredLinkError') as string)
+          : (t('resetPassword.requestError') as string);
 
-            if (requestErrors?.find((error) => error.code === 'E_UNAUTHORIZED')) {
-              setLinkExpired(true);
-            }
+        if (requestErrors?.find((error) => error.code === 'E_UNAUTHORIZED')) {
+          setLinkExpired(true);
+        }
 
-            setErrors([
-              { id: requestErrorId, message: visibleError },
-              ...errors.filter(({ id }) => id !== requestErrorId),
-            ]);
-            return { success: false, error: <Info>{visibleError}</Info> };
-          }
-        },
-        t('general.takeAFewSeconds')
-      );
+        setErrors([
+          { id: requestErrorId, message: visibleError },
+          ...errors.filter(({ id }) => id !== requestErrorId),
+        ]);
+        return { success: false, error: <Info>{visibleError}</Info> };
+      }
     }
   };
 
@@ -117,13 +109,15 @@ export const ResetPasswordForm: React.FC = () => {
     <AuthContent>
       <AuthHead>
         <AuthHeadline>
-          {t(
-            success
-              ? 'resetPassword.successHeadline'
-              : linkExpired
-              ? 'resetPassword.expiredLinkHeadline'
-              : 'resetPassword.headline'
-          )}
+          <legend>
+            {t(
+              success
+                ? 'resetPassword.successHeadline'
+                : linkExpired
+                ? 'resetPassword.expiredLinkHeadline'
+                : 'resetPassword.headline'
+            )}
+          </legend>
         </AuthHeadline>
         {!linkExpired && (
           <AuthSubline>
@@ -140,6 +134,7 @@ export const ResetPasswordForm: React.FC = () => {
                 <div>
                   <Input
                     value={password}
+                    autoComplete="new-password"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                     label={t('register.password') as string}
                     placeholder={t('register.passwordPlaceholder') as string}
@@ -153,6 +148,7 @@ export const ResetPasswordForm: React.FC = () => {
                 <div>
                   <Input
                     value={passwordConfirmation}
+                    autoComplete="new-password"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
                       setPasswordConfirmation(e.target.value)
                     }

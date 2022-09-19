@@ -30,6 +30,7 @@ export const enDE: Localization = {
     info: {
       hint: {
         title: () => 'Profile not yet public',
+        altText: () => 'Hint',
         content: () => (
           <DashboardTileText>
             <DashboardTileTextP>
@@ -155,8 +156,13 @@ export const enDE: Localization = {
         },
       },
       linkList: {
+        quicklinks: {
+          title: () => 'Quicklinks',
+          id: () => 'dashboard-quicklinks'
+        },
         help: {
           title: () => 'Get help',
+          id: () => 'dashboard-help',
           text: () =>
             "You have questions or need support in using the platform? We're here to help.",
           links: {
@@ -172,6 +178,7 @@ export const enDE: Localization = {
         },
         openSource: {
           title: () => 'Get creative',
+          id: () => 'dashboard-openSource',
           text: () =>
             'kulturdaten.berlin is being developed completely open source. Would you like to help? You can find the source code here:',
           links: {
@@ -187,6 +194,7 @@ export const enDE: Localization = {
         },
         contact: {
           title: () => 'Contact',
+          id: () => 'dashboard-contact',
           text: () =>
             'Do you have any questions, suggestions or comments about the this platform? Get in touch at:',
           links: {
@@ -212,6 +220,14 @@ export const enDE: Localization = {
     listLabel: () => 'Already added languages',
     listPlaceholder: () => 'No language has been added yet',
     noMatch: () => 'No languages found',
+  },
+  links: {
+    internal: {
+      iconAltText: () => 'visit',
+    },
+    external: {
+      iconAltText: () => 'open new tab',
+    },
   },
   mainTypeTags: {
     addButton: () => 'Add event type',
@@ -453,7 +469,8 @@ export const enDE: Localization = {
   },
   forms: {
     optional: () => 'optional',
-    required: () => 'required',
+    required: () => '*',
+    requiredInfoText: () => 'All fields marked with * are required',
     create: () => 'Create new Organizer',
     baseInfo: () => 'Basic information',
     address: () => 'Address data',
@@ -468,32 +485,38 @@ export const enDE: Localization = {
           (e.g. non-native speakers or people with reading and spelling difficulties). You can find
           examples of Plain Language and an explanation on how it differs from Easy Language here:
         </TooltipP>
-        <TooltipP>
-          •&nbsp;
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
-          >
-            Checklist Plain Language (in German)
-          </a>
-        </TooltipP>
-        <TooltipP>
-          •&nbsp;
+        <ul>
+          <li>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.netzwerk-einfache-sprache.com/uploads/1/1/8/5/11853840/einfache_sprache_9_tipps_dr_ismaiel.pdf"
+            >
+              •&nbsp;Checklist Plain Language (in German)
+            </a>
+          </li>
+          <li>
           <a
             target="_blank"
             rel="noreferrer"
             href="https://portaleinfach.org/abc-der-einfachen-sprache/"
           >
-            Info page Plain Language (in German)
+            •&nbsp;Info page Plain Language (in German)
           </a>
-        </TooltipP>
+          </li>
+        </ul>
       </>
     ),
     labelEnglish: () => 'English',
     labelEnglishEasy: () => 'English: simple Language',
     description: () => 'Description',
-    teaser: () => 'Short description (optional, max. 150 characters)',
+    teaser: () => 'Short description',
+    teaserCount: () => '(optional, max. 150 characters)',
+    teaserPlaceholder: () => 'Describe briefly what your cultural offering is about.',
+    descriptionCount: () => '(max. 1500 characters)',
+    descriptionOfferPlaceholder: () => 'Describe in detail what your cultural offering is about.',
+    descriptionLocationPlaceholder: () => 'Describe in detail what your location is about.',
+    descriptionOrganizerPlaceholder: () => 'Describe your organizer profile in detail.',
     classification: () => 'Type of organizer / field of focus (min. 1)',
     type: () => 'Type(s)',
     subjects: () => 'additional options',
@@ -513,7 +536,9 @@ export const enDE: Localization = {
     website: () => 'Website',
     links: () => 'Additional links (e.g. social media accounts)',
     urlPlaceholder: () => 'https://example.com',
-    emailInvalid: () => 'The input data is not a correct email.',
+    urlInvalid: () => 'Please enter a valid URL (e.g. http://www.berlin.de)',
+    emailInvalid: () => 'Please enter a valid email (e.g. name@domain.com)',
+    phoneInvalid: () => 'Please enter a valid phone number (e.g. 0049301234567)',
     errors: {
       passwordConfirm: () => 'The entered passwords do not match.',
     },
@@ -621,52 +646,71 @@ export const enDE: Localization = {
   },
   media: {
     title: () => 'Images',
+    image: () => 'Image',
     copyright: () => 'Image credits / author',
     copyrightPlaceholder: () => 'e.g. © name of photographer, year of publication',
     copyrightTooltip: () => (
       <>
-        <TooltipP>
-          Please make sure to include a photo credit or reference to the creator(s) of the image.
-          The format of the image credit depends on the specifications provided by the creator(s),
-          e.g.
-        </TooltipP>
-        <TooltipP>•&nbsp; Name of photographer or agency, year</TooltipP>
-        <TooltipP>•&nbsp; Name of an institution, photo: name photographer</TooltipP>
-        <TooltipP>
-          •&nbsp; Images with several creators, e.g. collages: reference to creator of the collage
-          and the creators of each source material (if required by original license)
-        </TooltipP>
-        <TooltipP>
-          •&nbsp; Collection object, digital reproduction without author: Name of institution,
-          newspaper fragment, collection XY
-        </TooltipP>
-      </>
+      <TooltipP>
+        Please make sure to include a photo credit or reference to the creator(s) of the image.
+        The format of the image credit depends on the specifications provided by the creator(s),
+        e.g.
+        <br/>
+      </TooltipP>
+      <ul>
+        <li>
+          <TooltipP>
+            •&nbsp;Name of photographer or agency, year
+            <br/><br/>
+          </TooltipP>
+        </li>
+        <li>
+          <TooltipP>
+            •&nbsp;Name Künstler:in des abgebildeten Werks, Foto: Name Fotograf:in
+            <br/><br/>
+          </TooltipP>
+        </li>
+        <li>
+          <TooltipP>
+            •&nbsp;Images with several creators, e.g. collages: reference to creator of the collage
+            and the creators of each source material (if required by original license)
+            <br/><br/>
+          </TooltipP>
+        </li>
+        <li>
+          <TooltipP>
+            •&nbsp;Collection object, digital reproduction without author: Name of institution,
+            newspaper fragment, collection XY
+          </TooltipP>
+        </li>
+      </ul>
+    </>
     ),
     alt: () => 'Alt text',
     altTooltip: () =>
-      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well.',
+      'Alt texts describe an image as clearly and briefly as possible. They are especially important for blind people who use a screen reader to have website content read aloud. However, search engines find alt texts great as well. For decorative images, alt texts should be avoided.',
     license: () => 'License',
     deleteTitle: () => 'Delete image',
     licenses: {
       '1': {
         name: () => 'with attribution (CC BY)',
         href: () => 'https://creativecommons.org/licenses/by/4.0/deed.en',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license Attribution 4.0 International CC BY 4.0',
       },
       '2': {
         name: () => 'without restrictions (public domain)',
         href: () => 'https://creativecommons.org/publicdomain/zero/1.0/deed.en',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license CC0 1.0 Universal Public Domain Dedication',
       },
       '3': {
         name: () => 'with attribution-ShareAlike (CC BY SA)',
         href: () => 'https://creativecommons.org/licenses/by-sa/4.0/deed.en',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license Attribution-ShareAlike 4.0 International',
       },
       '4': {
         name: () => 'permitted exclusively in the context of current reporting',
         href: () => 'https://kulturdaten.berlin/daten-bereitstellen/#lizenz',
-        title: () => 'information about license',
+        title: () => 'Open new tab: more information on license of exclusive permission in the context of current reporting',
       },
     },
     licenseEnd: () => 'End date license',
@@ -681,26 +725,32 @@ export const enDE: Localization = {
     maxReached: ({ count }) => `Maximum number of images (${count}) reached.`,
     ariaLabel: () => 'Upload files',
     hint: () =>
-      'This image is not public yet. In order for the image to be publicly available, the required fields must be filled out.',
+      'This image is not public yet. In order for the image to be publicly available, the required fields have to be filled out (Image credits, type of license, confirmation of additional notice).',
     dropZoneLabel: () => 'Upload images',
     usageInfo: () => (
       <>
         <InfoP>Please ensure:</InfoP>
         <InfoUl>
           <InfoLi>
-            to upload only those images that may be used free of charge by others - either unaltered
-            or in modified form and also for commercial purposes. In the case you chose a CC
-            licence, images may also be used on social media.
+            <p>
+              to upload only those images that may be used free of charge by others - either unaltered
+              or in modified form and also for commercial purposes. In the case you chose a CC
+              licence, images may also be used on social media.
+            </p>
           </InfoLi>
           <InfoLi>
-            to not use any images without the permission of the copyright holder(s). If people are
-            depicted in the images, they must have given you their consent for the image to be used
-            by third parties.
+            <p>
+              to not use any images without the permission of the copyright holder(s). If people are
+              depicted in the images, they must have given you their consent for the image to be used
+              by third parties.
+            </p>
           </InfoLi>
           <InfoLi>
-            that by publishing your image via kulturdaten.berlin, you grant any data users - e.g.
-            event portals or app developers - the right to use the image files within the limits of
-            moral rights, provided the copyright holder is named.
+            <p>
+              that by publishing your image via kulturdaten.berlin, you grant any data users - e.g.
+              event portals or app developers - the right to use the image files within the limits of
+              moral rights, provided the copyright holder is named.
+            </p>
           </InfoLi>
         </InfoUl>
       </>
@@ -737,6 +787,15 @@ export const enDE: Localization = {
     time: () => 'Time',
     from: () => 'From',
     to: () => 'to',
+    fromMorePrecise: () => 'Beginning',
+    toMorePrecise: () => 'End',
+    fromAria: () => 'Beginning of event: date and time',
+    toAria: () => 'End of event: date and time',
+    fromAriaDate: () => 'Beginning of event: date',
+    toAriaDate: () => 'End of event: date',
+    fromAriaTime: () => 'Beginning of event: time',
+    toAriaTime: () => 'End of event: time',
+    for: () => 'for',
     title: () => 'Additional title',
     titleTooltip: () =>
       "You can add further title information to particular dates of this offer, e.g.  'vernissage ' or  'artist is present'",
@@ -761,6 +820,7 @@ export const enDE: Localization = {
     additionalLinks: () => 'Additional links',
     ticketLink: () => 'Ticket link',
     currentDates: () => 'Current dates',
+    dateTable: () => 'Table: current dates',
     archivedDates: () => 'Past dates',
     listPlaceholder: () => 'There are no dates yet.',
     delete: () => 'delete date',
@@ -833,6 +893,8 @@ export const enDE: Localization = {
         plural: () => 'these dates',
       },
     },
+    toMainContent: () => 'To main content',
+    skipField: () => 'Skip field',
     cancel: () => 'cancel',
     confirmDelete: () => 'Confirm deletion',
     name: () => 'name',
@@ -876,7 +938,20 @@ export const enDE: Localization = {
       `Sort in ${order === Order.ASC ? 'ascending' : 'descending'} order by ${attribute}`,
     placeholderOffer: () => 'Unnamed offer',
     placeholderLocation: () => 'Unnamed location',
-    placeholderOrganizer: () => 'Unnamed profile',
+    placeholderOrganizer: () => 'New unnamed profile',
+    defaultTitleOffer: () => 'New offer',
+    defaultTitleLocation: () => 'New location',
+    defaultTitleOrganizer: () => 'New unnamed profile',
+  },
+  speaker: {
+    newDate: () => 'New date created',
+    deleteDate: () => 'Selected dates deleted',
+    newProfile: () => 'New Profile created',
+    deleteProfile: () => 'Profil deleted',
+    newOffer: () => 'New Offer created',
+    deleteOffer: () => 'Offer deleted',
+    newLocation: () => 'New Location created',
+    deleteLocation: () => 'Location deleted',
   },
   tags: {
     boxLabel: () => 'Already added keywords',
@@ -911,6 +986,10 @@ export const enDE: Localization = {
     headingThree: () => 'Headline small',
     listOrdered: () => 'Numbered list',
     listUnordered: () => 'Unordered list',
+    maxCharacters: () => 'Maximum characters',
+    charactersLeft_1: () => 'Less than',
+    charactersLeft_1b: () => 'More than',
+    charactersLeft_2: () => 'characters left',
     bold: () => 'Bold',
     italic: () => 'Italic',
     underline: () => 'Underline',
@@ -1122,6 +1201,7 @@ export const enDE: Localization = {
         nameGermanSimple: () => 'German: simple language',
         nameEnglish: () => 'English',
         nameEnglishSimple: () => 'English: simple language',
+        namePlaceholder: () => "e.g. The Magic Flute",
         description: () => 'Description',
         submit: () => 'create',
         save: () => 'save',
@@ -1163,7 +1243,7 @@ export const enDE: Localization = {
           remove: () => 'remove location',
           title: ({ name }) => `Choose location for ${name ? `‘${name}’` : 'unnamed offer'}`,
         },
-        topics: () => 'Topic category (required)',
+        topics: () => 'Topic category *',
         topicsTooltip: () => (
           <>
             <TooltipP>
@@ -1290,7 +1370,11 @@ export const enDE: Localization = {
         ),
         deleting: () => 'Deleting location',
       },
-    },
+    },    
+    sitemap: {
+      skipLevelButton: () => 'Go to',
+      skipLevelButton_2: () => 'with space, or deeper navigation with control-option-ArrowRight'
+    }
   },
   menu: {
     title: () => 'kulturdaten.berlin',
@@ -1303,13 +1387,22 @@ export const enDE: Localization = {
       title: () => 'Start',
       items: {
         back: () => 'back to Dashboard',
+        backApp: () => 'back',
         dashboard: () => 'Dashboard',
+        sitemap: () => 'Sitemap',
         notifications: () => 'Notifications',
         profile: () => 'Organizer Profile',
         team: () => 'Team',
         login: () => 'Login',
         registration: () => 'Registration',
+        register: () => 'Registration',
         info: () => 'Info',
+        offer: () => 'Offers',
+        location: () => 'Locations',
+        organizer: () => 'My Profile',
+        userSettings: () => 'My Settings',
+        admin: () => 'Administration',
+        developer: () => 'Developer Settings',
       },
     },
     organizer: {
@@ -1346,6 +1439,7 @@ export const enDE: Localization = {
       description: () => 'Choose Language, Sprache wählen',
     },
     organizerBand: {
+      title: () => 'Profiles',
       show: () => 'Show list of my organizers',
       collapse: () => 'Hide list of my organizers',
       create: () => 'Create new organizer',

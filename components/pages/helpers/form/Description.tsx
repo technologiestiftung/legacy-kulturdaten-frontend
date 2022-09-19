@@ -12,18 +12,19 @@ import { getTranslation } from '../../../../lib/translations';
 import { WindowContext } from '../../../../lib/WindowService';
 import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Label } from '../../../label';
-import { emptyRichTextValue, useRichText } from '../../../richtext';
-import { htmlToMarkdown, markdownToSlate } from '../../../richtext/parser';
-import { FormContainer, FormWrapper } from '../formComponents';
+import { emptyRichTextValue, useRichText } from '../../../RichTextEditor';
+import showdown from 'showdown';
+import { FormContainer, FormWrapper, FormRequiredInfo } from '../formComponents';
 import { Tooltip } from '../../../tooltip';
 import { TooltipP } from '../../../tooltip/TooltipContent';
+import { PureEditorContent } from '@tiptap/react';
 
 const defaultMaxLength = 1500;
 
 const StyledDescription = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 1.5rem 0;
+  padding: 0 0 1.5rem 0;
 `;
 
 const StyledDescriptionTitle = styled.div`
@@ -34,7 +35,7 @@ const StyledDescriptionTitleStatus = styled.div`
   display: flex;
 `;
 
-const errorShadow = '0px 0px 0px 0.1125rem var(--error-o50)';
+const errorShadow = '0px 0px 0px 0.125rem var(--red-publish)';
 const hintShadow = '0px 0px 0px 0.1125rem rgba(10, 47, 211, 0.4)';
 
 const StyledDescriptionRichTextWrapper = styled.div<{ valid?: boolean; hint?: boolean }>`
@@ -74,42 +75,6 @@ const StyledDescriptionRichTextContainer = styled.div`
   }
 `;
 
-const StyledMaxLengthDisplay = styled.div<{ textLength: number; maxLength: number }>`
-  font-size: var(--font-size-200);
-  line-height: var(--line-height-200);
-  text-align: right;
-
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 0.375rem;
-
-  pointer-events: none;
-  display: flex;
-  justify-content: flex-end;
-
-  ${({ textLength, maxLength }) =>
-    css`
-      ${textLength > maxLength ? 'color: var(--error);' : ''}
-    `}
-`;
-
-const StyledMaxLengthDisplayText = styled.div`
-  background: var(--white-o85);
-  border-radius: 0.375rem;
-  padding: 0.1875rem 0.375rem;
-
-  @supports (backdrop-filter: blur(16px)) {
-    background: var(--white-o50);
-    backdrop-filter: blur(16px);
-  }
-
-  @supports (-webkit-backdrop-filter: blur(16px)) {
-    background: var(--white-o50);
-    -webkit-backdrop-filter: blur(16px);
-  }
-`;
-
 const StyledTooltip = styled.div`
   margin-left: 0.5rem;
 `;
@@ -122,6 +87,8 @@ interface DescriptionProps extends EntryFormProps {
   softRequired?: boolean;
   key?: string;
   maxLength?: number;
+  placeholder?: string;
+  id?: string;
 }
 
 export const useDescription = ({
@@ -134,6 +101,8 @@ export const useDescription = ({
   softRequired,
   key = 'description',
   maxLength,
+  placeholder,
+  id
 }: DescriptionProps): {
   renderedDescription: React.ReactElement;
   submit: () => Promise<void>;
@@ -153,10 +122,14 @@ export const useDescription = ({
     ApiCall
   >(category, query);
   const call = useApiCall();
-  const [cachedApiText, setCachedApiText] = useState<string>();
+  const [cachedApiText, setCachedApiText] = useState<string>('<p></p>');
   const { rendered } = useContext(WindowContext);
   const t = useT();
   const [touched, setTouched] = useState(false);
+
+  const converter = useMemo(() => {
+    return new showdown.Converter({metadata: true});
+  },[])
 
   const entryTranslation = getTranslation<
     { attributes: { description: string; teaser: string } } & Translation
@@ -166,9 +139,12 @@ export const useDescription = ({
     return entryTranslation?.attributes[key] || '';
   }, [entryTranslation, key]);
 
-  const richTextRef = useRef<HTMLDivElement>(null);
+
+  const richTextRef = useRef<PureEditorContent>(null);
 
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
+
+  const ariaLabel = `Richtext-editor ${t('date.for')} ${title}${(required || softRequired) &&  t('forms.required')}`
 
   const {
     renderedRichText,
@@ -176,21 +152,27 @@ export const useDescription = ({
     valid,
     textLength,
   } = useRichText({
-    onChange: () => {
+    onChange: (changedValue) => {
       if (richTextRef.current) {
         setTouched(true);
-        setSerializedMarkdown(htmlToMarkdown(richTextRef.current));
+        setSerializedMarkdown(converter.makeMd(changedValue));
+
       }
     },
-    contentRef: richTextRef,
     required,
+    contentRef: richTextRef,
     softRequired,
+    placeholder,
     maxLength,
+    ariaLabel,
+    id
   });
 
   const pristine = useMemo(() => {
     if (typeof cachedApiText === 'undefined' || typeof serializedMarkdown === 'undefined') {
       return true;
+    }
+    else {
     }
 
     if (
@@ -209,6 +191,7 @@ export const useDescription = ({
     return true;
   }, [cachedApiText, serializedMarkdown]);
 
+
   useEffect(() => {
     if (!touched && serializedMarkdown === '' && cachedApiText) {
       setSerializedMarkdown(cachedApiText);
@@ -218,54 +201,52 @@ export const useDescription = ({
   }, [touched, cachedApiText, serializedMarkdown]);
 
   useEffect(() => {
-    if (textFromApi !== cachedApiText) {
+    if (textFromApi && textFromApi !== cachedApiText) {
       setTouched(false);
       setCachedApiText(textFromApi);
       setSerializedMarkdown(textFromApi);
       requestAnimationFrame(() =>
         initRichText(
-          textFromApi && textFromApi.length > 0 ? markdownToSlate(textFromApi) : emptyRichTextValue
+          textFromApi && textFromApi.length > 0 ? converter.makeHtml(textFromApi) : emptyRichTextValue
         )
       );
     }
-  }, [initRichText, textFromApi, cachedApiText]);
+  }, [initRichText, textFromApi, cachedApiText, converter]);
+
 
   return {
     renderedDescription: (
       <StyledDescription>
-        {rendered && (
-          <>
-            <StyledDescriptionTitleStatus>
-              <StyledDescriptionTitle>
-                <Label>
-                  {title}
-                  {(required || softRequired) && ` (${t('forms.required')})`}
-                  {tooltip && (
-                    <StyledTooltip>
-                      <Tooltip>
-                        {typeof tooltip === 'string' ? <TooltipP>{tooltip}</TooltipP> : tooltip}
-                      </Tooltip>
-                    </StyledTooltip>
-                  )}
-                </Label>
-              </StyledDescriptionTitle>
-            </StyledDescriptionTitleStatus>
-            <StyledDescriptionRichTextWrapper
-              valid={softRequired ? valid && textLength > 0 && textLength <= maxLength : valid}
-            >
-              <StyledDescriptionRichTextContainer>
-                {renderedRichText}
-              </StyledDescriptionRichTextContainer>
-              {maxLength && (
-                <StyledMaxLengthDisplay textLength={textLength} maxLength={maxLength}>
-                  <StyledMaxLengthDisplayText>
-                    {textLength} / {maxLength}
-                  </StyledMaxLengthDisplayText>
-                </StyledMaxLengthDisplay>
-              )}
-            </StyledDescriptionRichTextWrapper>
-          </>
-        )}
+        <fieldset lang={language.slice(0,2)}>
+          {rendered && (
+            <>
+              <StyledDescriptionTitleStatus>
+                <StyledDescriptionTitle>
+                  <legend>
+                    <Label ariaLabel={t('richText.maxCharacters') as string}>
+                      {title}
+                      {(required || softRequired) && ` ${t('forms.required')}`}
+                      {tooltip && (
+                        <StyledTooltip>
+                          <Tooltip>
+                            {typeof tooltip === 'string' ? <TooltipP>{tooltip}</TooltipP> : tooltip}
+                          </Tooltip>
+                        </StyledTooltip>
+                      )}
+                    </Label>
+                  </legend>
+                </StyledDescriptionTitle>
+              </StyledDescriptionTitleStatus>
+              <StyledDescriptionRichTextWrapper
+                valid={softRequired ? valid && textLength > 0 && textLength <= maxLength : valid}
+              >
+                <StyledDescriptionRichTextContainer>
+                  {renderedRichText}
+                </StyledDescriptionRichTextContainer>
+              </StyledDescriptionRichTextWrapper>
+            </>
+          )}
+        </fieldset>
       </StyledDescription>
     ),
     submit: async () => {
@@ -310,12 +291,19 @@ export const useDescriptionForm: EntryFormHook = ({
   category,
   query,
   loaded,
-  tooltip,
-  title,
   required,
-  id,
+  id
 }) => {
   const t = useT();
+
+  const placeholderText = 
+    category.name === "location"
+    ? t('forms.descriptionLocationPlaceholder') as string
+    : category.name === "offer"
+    ? t('forms.descriptionOfferPlaceholder') as string
+    : category.name === "organizer"
+    ? t('forms.descriptionOrganizerPlaceholder') as string
+    : ""
 
   const {
     renderedDescription: renderedDescriptionGerman,
@@ -328,10 +316,12 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: Language.de,
-    title: t('forms.labelGerman') as string,
+    title: `${t('forms.description')} ${t('forms.labelGerman')} ${t('forms.descriptionCount')}`,
     required,
     softRequired: true,
+    placeholder: placeholderText,
     maxLength: defaultMaxLength,
+    id
   });
 
   const {
@@ -344,7 +334,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: Language.en,
-    title: t('forms.labelEnglish') as string,
+    title: `${t('forms.description')} ${t('forms.labelEnglish')} ${t('forms.descriptionCount')}`,
     required: false,
     maxLength: defaultMaxLength,
   });
@@ -359,7 +349,7 @@ export const useDescriptionForm: EntryFormHook = ({
     category,
     query,
     language: 'de-easy' as Language,
-    title: t('forms.labelGermanEasy') as string,
+    title: `${t('forms.description')} ${t('forms.labelGermanEasy')} ${t('forms.descriptionCount')}`,
     tooltip: t('forms.labelGermanEasyTooltip') as string,
     required: false,
     maxLength: defaultMaxLength,
@@ -382,15 +372,10 @@ export const useDescriptionForm: EntryFormHook = ({
 
   return {
     renderedForm: (
-      <FormWrapper requirement={{ fulfilled }}>
+      <FormWrapper>
         <FormContainer>
-          <EntryFormHead
-            title={title || `${t('forms.description') as string}`}
-            valid={valid}
-            tooltip={tooltip}
-            id={id}
-          />
           {renderedDescriptionGerman}
+          <FormRequiredInfo fulfilled={fulfilled} marginBottom/>
           {renderedDescriptionEnglish}
           {renderedDescriptionGermanEasy}
         </FormContainer>

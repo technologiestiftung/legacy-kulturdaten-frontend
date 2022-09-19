@@ -24,7 +24,7 @@ import { Select, SelectSize } from '../select';
 import { Textarea } from '../textarea';
 import { DateListRow } from './DateListRow';
 
-const StyledDateListItemBody = styled.div`
+const StyledDateListItemBody = styled.span`
   display: grid;
   padding: 0.75rem;
 
@@ -42,7 +42,7 @@ const StyledDateListItemBody = styled.div`
   }
 `;
 
-const StyledDateListItemContainer = styled.div<{ columns: number }>`
+const StyledDateListItemContainer = styled.span<{ columns: number }>`
   grid-column: span ${({ columns }) => columns};
 `;
 
@@ -232,7 +232,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               id={`entryformhead-${uid}`}
             />
             <FormGrid>
-              <FormItem width={isUltraOrWider ? FormItemWidth.full : FormItemWidth.half}>
+              <FormItem alignEnd width={isUltraOrWider ? FormItemWidth.full : FormItemWidth.half}>
                 <Select
                   id={`entryformstatusselect-${uid}`}
                   value={attributes.status}
@@ -277,6 +277,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Input
                       debounce
                       type={InputType.text}
+                      lang={language.slice(0,2) as "de" | "en"}
                       label={t(languageTranslationKeys[language]) as string}
                       ariaLabel={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.name || ''}
@@ -316,7 +317,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               })}
               <FormItem width={FormItemWidth.full}>
                 <Info color={InfoColor.grey} title={t('date.titleInfoTitle') as string} noMaxWidth>
-                  <div>
+                  <span>
                     {contentLanguages.map((language: Language, index) => {
                       const currentTranslation = date.relations?.translations
                         ? getTranslation<OfferDateTranslation>(
@@ -327,21 +328,21 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                         : undefined;
 
                       return (
-                        <div key={index}>
+                        <span key={index}>
                           {t(languageTranslationKeys[language])}: {offerTitles[language]}
                           {currentTranslation?.attributes?.name
                             ? ` - ${currentTranslation?.attributes?.name}`
                             : ''}
-                        </div>
+                            <br/>
+                        </span>
                       );
                     })}
-                  </div>
+                  </span>
                 </Info>
               </FormItem>
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead title={`${t('forms.teaser')}`} size={EntryFormHeadSize.small} />
             <FormGrid>
               {contentLanguagesWithEasy.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
@@ -357,7 +358,8 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Textarea
                       debounce
                       id={`${uid}-textarea-${language}`}
-                      label={t(languageTranslationKeys[language]) as string}
+                      label={`${t('forms.teaser')} ${t(languageTranslationKeys[language])}`}
+                      lang={language.slice(0,2)}
                       tooltip={
                         languageTranslationKeys[language] === 'language.de-easy'
                           ? (t('forms.labelGermanEasyTooltip') as string)
@@ -403,10 +405,6 @@ export const DateListItem: React.FC<DateListItemProps> = ({
             </FormGrid>
           </StyledDateListItemContainer>
           <StyledDateListItemContainer columns={3}>
-            <EntryFormHead
-              title={`${t('date.roomInfo')} (${t('forms.optional')})`}
-              size={EntryFormHeadSize.small}
-            />
             <FormGrid>
               {contentLanguages.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
@@ -422,6 +420,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Input
                       debounce
                       type={InputType.text}
+                      lang={language.slice(0,2) as "en" | "de"}
                       label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.roomDescription || ''}
                       onChange={(e) => {
@@ -469,7 +468,9 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               <FormItem width={FormItemWidth.full}>
                 <Input
                   type={InputType.url}
+                  autoComplete="url"
                   label={t('date.ticketLink') as string}
+                  lang={language.slice(0,2) as "en" | "de"}
                   value={date?.attributes?.ticketUrl || ''}
                   placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
                   onChange={(e) =>
@@ -482,11 +483,12 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     })
                   }
                   disabled={!editable}
-                />
+                  />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
                 <Input
                   type={InputType.url}
+                  autoComplete="url"
                   label={t('categories.offer.form.pricing.registrationUrl') as string}
                   value={date?.attributes?.registrationUrl || ''}
                   placeholder={

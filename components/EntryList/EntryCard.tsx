@@ -12,29 +12,37 @@ import { StatusFlag } from '../Status/StatusFlag';
 const StyledEntryCardLink = styled.a`
   text-decoration: none;
   color: inherit;
-`;
-
-const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 0.75rem;
+  `;
+  
+  const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
+  border: 2px solid rgba(0, 0, 0, 0.25);
   background: var(--white);
   border-radius: 0.75rem;
   cursor: pointer;
   transition: box-shadow var(--transition-duration-fast);
 
   &:hover {
-    box-shadow: var(--shadow-sharp-hover);
     border-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  &:focus {
+    border-color: var(--white);
   }
 
   ${({ active }) =>
     active
       ? css`
-          box-shadow: var(--shadow-sharp-active);
+          
           border-color: rgba(0, 0, 0, 1);
 
+          &:focus {
+            box-shadow: none;
+            border-color: white;
+          }
+
           &:hover {
-            box-shadow: var(--shadow-sharp-active);
-            border-color: rgba(0, 0, 0, 1);
+            border-color: rgba(0, 0, 0, 0.5);
           }
         `
       : ''}
@@ -181,7 +189,7 @@ export const EntryCardText = styled.div`
   line-height: var(--line-height-300);
 `;
 
-export const EntryCardGrid = styled.div<{ expanded: boolean; enableUltraWideLayout: boolean }>`
+export const EntryCardGrid = styled.li<{ expanded: boolean; enableUltraWideLayout: boolean }>`
   display: grid;
   grid-template-columns: auto;
   grid-column-gap: 0.75rem;

@@ -6,7 +6,7 @@ import * as feather from 'react-feather';
 import { ComponentVariant, ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 
 import { Label, StyledLabel } from '../label';
 
@@ -230,6 +230,8 @@ const StyledSelect = styled.select<{
   overflow: hidden;
   text-overflow: ellipsis;
 
+  ${focusStyles}
+
   ${({ variant, valid }) => selectVariants[variant](valid)}
 `;
 
@@ -311,7 +313,7 @@ export const Select: React.FC<SelectProps> = ({
     <StyledSelectContainer labelPosition={labelPosition}>
       {label && (
         <Label htmlFor={id}>
-          {label} {required ? ` (${t('forms.required')})` : ''}
+          {label} {required ? ` ${t('forms.required')}` : ''}
         </Label>
       )}
       <StyledSelectAndChevron>
@@ -336,11 +338,11 @@ export const Select: React.FC<SelectProps> = ({
           {children}
         </StyledSelect>
         {icon && feather[icon] && (
-          <StyledSelectIcon size={elementSize}>
+          <StyledSelectIcon size={elementSize} aria-hidden >
             {React.createElement(feather[icon], { size: selectSizeIconSizeMap[elementSize] })}
           </StyledSelectIcon>
         )}
-        <StyledSelectChevron size={elementSize}>
+        <StyledSelectChevron size={elementSize} aria-hidden >
           {React.createElement(feather.ChevronDown, { size: selectSizeIconSizeMap[elementSize] })}
         </StyledSelectChevron>
       </StyledSelectAndChevron>

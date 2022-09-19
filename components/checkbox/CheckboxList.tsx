@@ -6,7 +6,6 @@ import { ComponentVariant, ComponentVariants, ComponentWithVariants } from '../.
 import { useT } from '../../lib/i18n';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
-import { Label } from '../label';
 
 const StyledCheckboxList = styled.div<{ variant?: ComponentVariant }>`
   display: flex;
@@ -24,9 +23,12 @@ const StyledCheckboxList = styled.div<{ variant?: ComponentVariant }>`
 
 const StyedCheckboxListLabel = styled.div`
   margin-bottom: 0.75rem;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
 `;
 
-const StyledCheckboxListItems = styled.div<{ columns?: number }>`
+const StyledCheckboxListItems = styled.ul<{ columns?: number }>`
   display: grid;
   grid-template-columns: auto;
   grid-row-gap: 0.75rem;
@@ -116,9 +118,9 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
     <StyledCheckboxList variant={variant}>
       {label && (
         <StyedCheckboxListLabel>
-          <Label>
-            {label} {required ? ` (${t('forms.required')})` : ''}
-          </Label>
+          <legend>
+            {label} {required ? ` ${t('forms.required')}` : ''}
+          </legend>
         </StyedCheckboxListLabel>
       )}
       <StyledCheckboxListItems columns={columns} id={id}>
@@ -127,6 +129,7 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
             id={id}
             label={label}
             key={index}
+            inList
             checked={
               checkedState[checkboxValue]?.checked || (value && value.includes(checkboxValue))
             }
@@ -163,6 +166,8 @@ export const CheckboxList: React.FC<CheckboxListProps> = ({
         multiple
         required={required}
         value={selectValue}
+        aria-hidden
+        tabIndex={-1}
         onChange={(e) => {
           e.preventDefault();
           e.stopPropagation();

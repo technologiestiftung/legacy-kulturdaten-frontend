@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Breakpoint } from '../../lib/WindowService';
 import { contentGrid, mq } from '../globals/Constants';
+import { useT } from '../../lib/i18n';
 
 export const EntryFormWrapper = styled.div<{
   fullWidth?: boolean;
@@ -27,6 +28,41 @@ export const EntryFormWrapper = styled.div<{
           }
         `}
 `;
+
+const RequiredInfoText = styled.p<{ wrapped?: boolean}>`
+  grid-column: 1 / -1;
+  ${({wrapped}) => 
+    wrapped
+      ? ''
+      : css`
+        padding-left: 1rem;
+        
+        ${mq(Breakpoint.mid)} {
+          padding-left: 1.5rem;
+        }
+        
+        ${mq(Breakpoint.widish)} {
+          grid-column: 2 / -2;
+          padding-left: 0;
+        }
+      `}
+  
+  width: 100%;
+  font-size: var(--font-size-300);
+  line-height: var(--line-height-300);
+  font-weight: 700;
+`;
+
+interface StyledRequiredInfoTextProps {
+  wrapped?: boolean;
+}
+
+export const StyledRequiredInfoText: React.FC<StyledRequiredInfoTextProps> = ({wrapped}) => {
+  const t = useT();
+  return(
+    <RequiredInfoText wrapped={wrapped}>{`${t('forms.requiredInfoText')}`}</RequiredInfoText>
+  )
+}
 
 export const EntryFormContainer = styled.div<{ fullWidth?: boolean; noPadding?: boolean }>`
   width: 100%;
@@ -62,3 +98,19 @@ export const EntryFormContainerColumns = styled.div`
     row-gap: 3rem;
   }
 `;
+
+interface StyledEntryFormContainerProps {
+  children: React.ReactNode;
+  noPadding?,
+  fullWidth?
+}
+
+export const StyledEntryFormContainer: React.FC<StyledEntryFormContainerProps> = ({ children, noPadding, fullWidth }: StyledEntryFormContainerProps) => {
+  return (
+    <EntryFormContainer noPadding={noPadding} fullWidth={fullWidth}>
+      <fieldset tabIndex={0}>
+        {children}
+      </fieldset>
+    </EntryFormContainer>
+  );
+};

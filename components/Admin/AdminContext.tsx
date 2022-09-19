@@ -3,11 +3,9 @@ import React, { ReactNode, useCallback, useContext, useEffect, useState } from '
 import { useRouter } from 'next/router';
 import { routes } from '../../config/routes';
 import { useLocale } from '../../lib/routing';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { useUser } from '../user/useUser';
 import { Cookie, deleteCookie, getCookie, setCookie } from '../../lib/cookies';
 import { defaultOrganizerId } from '../navigation/NavigationContext';
-import { useT } from '../../lib/i18n';
 import { EntryListContext } from '../EntryList/EntryListContext';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
@@ -102,14 +100,11 @@ export const useAdminMode = (): {
 } => {
   const { adminModeActive, activeOrganizerId, setActiveOrganizerId, setAdminModeActive } =
     useContext(AdminContext);
-  const t = useT();
   const router = useRouter();
   const locale = useLocale();
-  const loadingScreen = useLoadingScreen();
   const { reset: resetEntryList } = useContext(EntryListContext);
 
   const quit = useCallback(() => {
-    loadingScreen(t('admin.quit'), async () => {
       setActiveOrganizerId(undefined);
       setAdminModeActive(false);
       resetEntryList();
@@ -117,12 +112,10 @@ export const useAdminMode = (): {
       setTimeout(() => router.push(routes.admin({ locale })), 250);
 
       return { success: true };
-    });
-  }, [t, resetEntryList, loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]);
+  }, [resetEntryList, router, locale, setAdminModeActive, setActiveOrganizerId]);
 
   const start = useCallback(
     (organizerId: string) => {
-      loadingScreen(t('admin.start'), async () => {
         setAdminModeActive(true);
         setActiveOrganizerId(organizerId);
         resetEntryList();
@@ -136,9 +129,8 @@ export const useAdminMode = (): {
         );
 
         return { success: true };
-      });
     },
-    [t, resetEntryList, loadingScreen, router, locale, setAdminModeActive, setActiveOrganizerId]
+    [resetEntryList, router, locale, setAdminModeActive, setActiveOrganizerId]
   );
 
   return {

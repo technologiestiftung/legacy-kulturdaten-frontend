@@ -27,7 +27,7 @@ const StyledFormListField = styled.div<{ last?: boolean }>`
   }
 `;
 
-const StyledFormListFieldLabel = styled.label`
+const StyledFormListFieldLabel = styled.legend`
   position: relative;
   display: flex;
   column-gap: 0.75rem;
@@ -133,8 +133,8 @@ export const FormListField: React.FC<FormListFieldProps> = ({
 
   return (
     <StyledFormListField last={last}>
-      <StyledFormListFieldLabel htmlFor={fieldProps?.id || `${uid}-field`}>
-        <span>{label}</span>
+      <StyledFormListFieldLabel>
+        {label}
         {tooltip && (
           <Tooltip>
             {tooltip.content?.map((item, index) => (

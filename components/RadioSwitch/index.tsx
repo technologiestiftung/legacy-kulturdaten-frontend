@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import * as feather from 'react-feather';
 import { Label, StyledLabel } from '../label';
+import { focusStyles } from '../globals/Constants';
 
 const StyledRadioSwitch = styled.div<{ labelPosition: RadioSwitchLabelPosition }>`
   display: flex;
@@ -62,6 +63,7 @@ const StyledRadioSwitchOptionInput = styled.input`
   border-radius: 1rem;
   pointer-events: none;
   flex-shrink: 0;
+  ${focusStyles}
 
   &::after {
     content: '';
@@ -110,14 +112,14 @@ const StyledRadioSwitchOptionLabel = styled.label<{ active: boolean }>`
         `}
 `;
 
-const StyledRadioSwitchOptionLabelText = styled.div`
+const StyledRadioSwitchOptionLabelText = styled.span`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: var(--font-weight-bold);
   color: inherit;
 `;
 
-const StyledRadioSwitchOptionLabelIcon = styled.div`
+const StyledRadioSwitchOptionLabelIcon = styled.span`
   padding-right: 0.375rem;
   display: flex;
   align-items: center;

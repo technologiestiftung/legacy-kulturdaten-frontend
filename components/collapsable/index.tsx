@@ -13,6 +13,7 @@ const StyledCollapsableContainer = styled.div<{ isCollapsed: boolean }>`
           display: none;
         `
       : css`
+      border-top: 1px solid var(--grey-400);
           height: auto;
           visibility: inherit;
           display: inherit;
