@@ -1400,6 +1400,7 @@ export const enDE: Localization = {
         offer: () => 'Offers',
         location: () => 'Locations',
         organizer: () => 'My Profile',
+        resetPassword: () => 'Reset Password',
         userSettings: () => 'My Settings',
         admin: () => 'Administration',
         developer: () => 'Developer Settings',
