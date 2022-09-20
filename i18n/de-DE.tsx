@@ -1413,6 +1413,7 @@ export const deDE: Localization = {
         offer: () => 'Angebote',
         location: () => 'Orte',
         organizer: () => 'Anbieter:in-Profil',
+        resetPassword: () => 'Passwort zurücksetzen',
         userSettings: () => 'Meine Einstellungen',
         admin: () => 'Administration',
         developer: () => 'Entwickler:innen Einstellungen',
