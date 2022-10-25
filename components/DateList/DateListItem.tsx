@@ -86,8 +86,8 @@ export const DateListItem: React.FC<DateListItemProps> = ({
       attributes.endsAt
         ? new Date(attributes.endsAt)
         : fromDate
-        ? add(fromDate, { hours: 1 })
-        : undefined,
+          ? add(fromDate, { hours: 1 })
+          : undefined,
     [attributes.endsAt, fromDate]
   );
   const today = new Date();
@@ -168,9 +168,8 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                       ...date,
                       attributes: {
                         ...date.attributes,
-                        startsAt: `${formatISO9075(fromDate, { representation: 'date' })}T${
-                          e.target.value
-                        }`,
+                        startsAt: `${formatISO9075(fromDate, { representation: 'date' })}T${e.target.value
+                          }`,
                       },
                     })
                   }
@@ -207,9 +206,8 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                       ...date,
                       attributes: {
                         ...date.attributes,
-                        endsAt: `${formatISO9075(toDate, { representation: 'date' })}T${
-                          e.target.value
-                        }`,
+                        endsAt: `${formatISO9075(toDate, { representation: 'date' })}T${e.target.value
+                          }`,
                       },
                     })
                   }
@@ -266,10 +264,10 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               {contentLanguages.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
                   ? getTranslation<OfferDateTranslation>(
-                      language,
-                      date.relations.translations,
-                      false
-                    )
+                    language,
+                    date.relations.translations,
+                    false
+                  )
                   : undefined;
 
                 return (
@@ -277,7 +275,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Input
                       debounce
                       type={InputType.text}
-                      lang={language.slice(0,2) as "de" | "en"}
+                      lang={language.slice(0, 2) as "de" | "en"}
                       label={t(languageTranslationKeys[language]) as string}
                       ariaLabel={`${t('date.title')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.name || ''}
@@ -302,12 +300,12 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                           type: date?.type,
                           relations: date?.relations
                             ? {
-                                ...date.relations,
-                                translations: [...filteredTranslations, updatedTranslation],
-                              }
+                              ...date.relations,
+                              translations: [...filteredTranslations, updatedTranslation],
+                            }
                             : {
-                                translations: [updatedTranslation],
-                              },
+                              translations: [updatedTranslation],
+                            },
                         });
                       }}
                       disabled={!editable}
@@ -321,10 +319,10 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     {contentLanguages.map((language: Language, index) => {
                       const currentTranslation = date.relations?.translations
                         ? getTranslation<OfferDateTranslation>(
-                            language,
-                            date.relations.translations,
-                            false
-                          )
+                          language,
+                          date.relations.translations,
+                          false
+                        )
                         : undefined;
 
                       return (
@@ -333,7 +331,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                           {currentTranslation?.attributes?.name
                             ? ` - ${currentTranslation?.attributes?.name}`
                             : ''}
-                            <br/>
+                          <br />
                         </span>
                       );
                     })}
@@ -347,10 +345,10 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               {contentLanguagesWithEasy.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
                   ? getTranslation<OfferDateTranslation>(
-                      language,
-                      date.relations.translations,
-                      false
-                    )
+                    language,
+                    date.relations.translations,
+                    false
+                  )
                   : undefined;
 
                 return (
@@ -359,7 +357,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                       debounce
                       id={`${uid}-textarea-${language}`}
                       label={`${t('forms.teaser')} ${t(languageTranslationKeys[language])}`}
-                      lang={language.slice(0,2)}
+                      lang={language.slice(0, 2)}
                       tooltip={
                         languageTranslationKeys[language] === 'language.de-easy'
                           ? (t('forms.labelGermanEasyTooltip') as string)
@@ -388,12 +386,12 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                           type: date?.type,
                           relations: date?.relations
                             ? {
-                                ...date.relations,
-                                translations: [...filteredTranslations, updatedTranslation],
-                              }
+                              ...date.relations,
+                              translations: [...filteredTranslations, updatedTranslation],
+                            }
                             : {
-                                translations: [updatedTranslation],
-                              },
+                              translations: [updatedTranslation],
+                            },
                         });
                       }}
                       rows={5}
@@ -409,10 +407,10 @@ export const DateListItem: React.FC<DateListItemProps> = ({
               {contentLanguages.map((language: Language, index) => {
                 const currentTranslation = date.relations?.translations
                   ? getTranslation<OfferDateTranslation>(
-                      language,
-                      date.relations.translations,
-                      false
-                    )
+                    language,
+                    date.relations.translations,
+                    false
+                  )
                   : undefined;
 
                 return (
@@ -420,7 +418,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     <Input
                       debounce
                       type={InputType.text}
-                      lang={language.slice(0,2) as "en" | "de"}
+                      lang={language.slice(0, 2) as "en" | "de"}
                       label={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
                       value={currentTranslation?.attributes?.roomDescription || ''}
                       onChange={(e) => {
@@ -444,12 +442,12 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                           type: date?.type,
                           relations: date?.relations
                             ? {
-                                ...date.relations,
-                                translations: [...filteredTranslations, updatedTranslation],
-                              }
+                              ...date.relations,
+                              translations: [...filteredTranslations, updatedTranslation],
+                            }
                             : {
-                                translations: [updatedTranslation],
-                              },
+                              translations: [updatedTranslation],
+                            },
                         });
                       }}
                       disabled={!editable}
@@ -470,7 +468,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                   type={InputType.url}
                   autoComplete="url"
                   label={t('date.ticketLink') as string}
-                  lang={language.slice(0,2) as "en" | "de"}
+                  lang={language.slice(0, 2) as "en" | "de"}
                   value={date?.attributes?.ticketUrl || ''}
                   placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
                   onChange={(e) =>
@@ -483,7 +481,7 @@ export const DateListItem: React.FC<DateListItemProps> = ({
                     })
                   }
                   disabled={!editable}
-                  />
+                />
               </FormItem>
               <FormItem width={FormItemWidth.full}>
                 <Input

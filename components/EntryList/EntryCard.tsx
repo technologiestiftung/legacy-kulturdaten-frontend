@@ -14,8 +14,8 @@ const StyledEntryCardLink = styled.a`
   color: inherit;
   border-radius: 0.75rem;
   `;
-  
-  const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
+
+const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
   border: 2px solid rgba(0, 0, 0, 0.25);
   background: var(--white);
   border-radius: 0.75rem;
@@ -33,7 +33,6 @@ const StyledEntryCardLink = styled.a`
   ${({ active }) =>
     active
       ? css`
-          
           border-color: rgba(0, 0, 0, 1);
 
           &:focus {
@@ -86,13 +85,13 @@ const StyledEntryCardTitle = styled.div<{
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             padding: 1.5rem 1.5rem 0.75rem;
             font-size: var(--font-size-600);
             line-height: var(--line-height-600);
           `
-        : ''}
+      : ''}
   }
 
   ${({ active }) =>
@@ -108,11 +107,11 @@ const StyledEntryCardMeta = styled.div<{ menuExpanded: boolean }>`
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             padding: 0 1.5rem;
           `
-        : ''}
+      : ''}
   }
 `;
 const StyledEntryCardImage = styled.div<{ menuExpanded: boolean }>`
@@ -124,12 +123,12 @@ const StyledEntryCardImage = styled.div<{ menuExpanded: boolean }>`
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             max-width: 9.75rem;
             height: 9.75rem;
           `
-        : ''}
+      : ''}
   }
 `;
 
@@ -144,11 +143,11 @@ const StyledEntryCardStatus = styled.div<{ status: PublishedStatus; menuExpanded
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             padding: 1.5rem;
           `
-        : ''}
+      : ''}
   }
 `;
 
@@ -161,8 +160,8 @@ const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             font-size: var(--font-size-300);
             line-height: var(--line-height-300);
             padding: 1.5rem;
@@ -176,7 +175,7 @@ const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
               }
             }
           `
-        : ''}
+      : ''}
   }
 `;
 
@@ -212,12 +211,12 @@ export const EntryCardGrid = styled.li<{ expanded: boolean; enableUltraWideLayou
           }
 
           ${enableUltraWideLayout
-            ? css`
+          ? css`
                 ${mq(Breakpoint.ultra)} {
                   grid-template-columns: 1fr 1fr 1fr;
                 }
               `
-            : ''}
+          : ''}
         `
       : ''}
 `;

@@ -207,38 +207,38 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   return (
     <>
-    { inList
-      ?
-      (<StyledCheckboxListItem disabled={disabled}>
-        <InsideCheckbox 
-          id={id}
-          label={label}
-          ariaLabel={ariaLabel}
-          onChange={onChange}
-          checked={checked}
-          name={name}
-          disabled={disabled}
-          required={required}
-          value={value}
-          valid={valid}
-        />
-      </StyledCheckboxListItem>)
-      :
-      (<StyledCheckbox disabled={disabled}>
-      <InsideCheckbox 
-        id={id}
-        label={label}
-        ariaLabel={ariaLabel}
-        onChange={onChange}
-        checked={checked}
-        name={name}
-        disabled={disabled}
-        required={required}
-        value={value}
-        valid={valid}
-      />
-    </StyledCheckbox>)
-    }
+      {inList
+        ?
+        (<StyledCheckboxListItem disabled={disabled}>
+          <InsideCheckbox
+            id={id}
+            label={label}
+            ariaLabel={ariaLabel}
+            onChange={onChange}
+            checked={checked}
+            name={name}
+            disabled={disabled}
+            required={required}
+            value={value}
+            valid={valid}
+          />
+        </StyledCheckboxListItem>)
+        :
+        (<StyledCheckbox disabled={disabled}>
+          <InsideCheckbox
+            id={id}
+            label={label}
+            ariaLabel={ariaLabel}
+            onChange={onChange}
+            checked={checked}
+            name={name}
+            disabled={disabled}
+            required={required}
+            value={value}
+            valid={valid}
+          />
+        </StyledCheckbox>)
+      }
     </>
   );
 };

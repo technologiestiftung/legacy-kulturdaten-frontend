@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { createRef, Dispatch, LegacyRef, SetStateAction, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { ArrowDown, ArrowUp } from 'react-feather';
 import { dateListRef } from '../../config/categories';
 import { Language } from '../../config/locale';
@@ -23,8 +23,8 @@ const StyledDateList = styled.div`
   width: 100%;
   overflow: hidden;
   `;
-  
-  const StyledDateListTitleRow = styled.tr`
+
+const StyledDateListTitleRow = styled.tr`
   display: flex;
   align-items: stretch;
   width: 100%;
@@ -33,7 +33,7 @@ const StyledDateList = styled.div`
   position: relative;
   overflow: auto;
 `;
-  
+
 const DateListScrollContainer = styled.span`
   border: 1px solid var(--grey-400);
   width: 100%;
@@ -41,7 +41,7 @@ const DateListScrollContainer = styled.span`
   overflow: auto;
 `;
 
-  const StyledDateListBody = styled.table`
+const StyledDateListBody = styled.table`
   border-radius: 0.75rem;
   border-collapse: separate;
   min-width: 100%;
@@ -119,9 +119,9 @@ const StyledDateListItemText = styled.span<{
 
   ${mq(Breakpoint.ultra)} {
     padding: ${({ lessVerticalPadding }) =>
-      lessVerticalPadding ? '1.3125rem 0.75rem' : '1.5rem 0.75rem'};
+    lessVerticalPadding ? '1.3125rem 0.75rem' : '1.5rem 0.75rem'};
     ${({ noPaddingLeft, doublePaddingLeft }) =>
-      noPaddingLeft ? 'padding-left: 0!important;' : doublePaddingLeft ? 'padding-left: 1.5rem;' : ''}
+    noPaddingLeft ? 'padding-left: 0!important;' : doublePaddingLeft ? 'padding-left: 1.5rem;' : ''}
   }
 `;
 
@@ -316,53 +316,53 @@ const DateList: React.FC<DateListProps> = ({
               <StyledDateListTitleRowCell />
             </StyledDateListTitleRow>
           </thead>
-          
-          <tbody>
-          {dates && dates.length > 0 ? (
-            dates.map((date, index) => {
-              const dateId = date?.id;
-              return (
-                <DateListItem
-                  key={index}
-                  date={date}
-                  onChange={(changedDate) =>
-                    onChange(
-                      [
-                        ...dates.slice(0, index),
-                        changedDate,
-                        ...dates.slice(index + 1, dates.length),
-                      ],
-                      date.id
-                    )
-                  }
-                  checked={checkedDateIds?.includes(String(dateId))}
-                  setChecked={(checked) => {
-                    if (checked) {
-                      setCheckedDateIds([
-                        ...checkedDateIds.filter((id) => id !== String(dateId)),
-                        String(dateId),
-                      ]);
-                    } else {
-                      setCheckedDateIds(checkedDateIds.filter((id) => id !== String(dateId)));
-                    }
-                  }}
-                  editable={editable}
-                  lastRow={index === rowCount - 1}
-                  offerTitles={offerTitles}
-                  onDelete={editable && onDelete ? (dateId) => onDelete([dateId]) : undefined}
-                />
-              );
-            })
-          ) : (
 
-            <StyledDateListTitleRow>
-              <td>
-                <StyledDateListPlaceholder>
-                  {t('date.listPlaceholder')}
-                </StyledDateListPlaceholder>
-              </td>
-            </StyledDateListTitleRow>
-          )}
+          <tbody>
+            {dates && dates.length > 0 ? (
+              dates.map((date, index) => {
+                const dateId = date?.id;
+                return (
+                  <DateListItem
+                    key={index}
+                    date={date}
+                    onChange={(changedDate) =>
+                      onChange(
+                        [
+                          ...dates.slice(0, index),
+                          changedDate,
+                          ...dates.slice(index + 1, dates.length),
+                        ],
+                        date.id
+                      )
+                    }
+                    checked={checkedDateIds?.includes(String(dateId))}
+                    setChecked={(checked) => {
+                      if (checked) {
+                        setCheckedDateIds([
+                          ...checkedDateIds.filter((id) => id !== String(dateId)),
+                          String(dateId),
+                        ]);
+                      } else {
+                        setCheckedDateIds(checkedDateIds.filter((id) => id !== String(dateId)));
+                      }
+                    }}
+                    editable={editable}
+                    lastRow={index === rowCount - 1}
+                    offerTitles={offerTitles}
+                    onDelete={editable && onDelete ? (dateId) => onDelete([dateId]) : undefined}
+                  />
+                );
+              })
+            ) : (
+
+              <StyledDateListTitleRow>
+                <td>
+                  <StyledDateListPlaceholder>
+                    {t('date.listPlaceholder')}
+                  </StyledDateListPlaceholder>
+                </td>
+              </StyledDateListTitleRow>
+            )}
           </tbody>
         </StyledDateListBody>
       </DateListScrollContainer>

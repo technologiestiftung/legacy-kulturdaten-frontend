@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Check } from 'react-feather';
 import Link from 'next/link';
-import React from 'react';
+import React, { RefObject } from 'react';
 
 const StyledRequirement = styled.span<{ fulfilled: boolean; hasLink?: boolean }>`
   background: ${({ fulfilled }) => (fulfilled ? 'var(--white-green-o50)' : 'var(--white-red)')};
@@ -85,7 +85,7 @@ export interface RequirementProps {
     href: string;
     ariaLabel: string;
     targetId?: string;
-    targetRef?: any;
+    targetRef?: RefObject<HTMLAnchorElement>;
   };
 }
 
@@ -99,7 +99,7 @@ export const Requirement: React.FC<RequirementProps> = ({
   const renderedRequirement = (
     <StyledRequirement fulfilled={fulfilled} hasLink={hasLink}>
       <StyledRequirementMark fulfilled={fulfilled}>
-        {fulfilled && <Check color="var(--green-publish)"/>}
+        {fulfilled && <Check color="var(--green-publish)" />}
       </StyledRequirementMark>
       <StyledRequirementText>{text}</StyledRequirementText>
     </StyledRequirement>
@@ -112,7 +112,7 @@ export const Requirement: React.FC<RequirementProps> = ({
   return hasLink ? (
     <li>
       <Link href={link.href} passHref>
-        <StyledRequirementLink 
+        <StyledRequirementLink
           aria-label={link.ariaLabel}
           onClick={handleClick}
         >
