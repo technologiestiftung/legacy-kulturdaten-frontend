@@ -202,7 +202,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
   );
 
   useEffect(() => {
-    if(condition) {
+    if (condition) {
       conditionInputRef.current.focus()
     } else {
       confirmButtonRef.current.focus()
@@ -233,7 +233,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
           </StyledConfirmScreenCondition>
         )}
         <StyledConfirmScreenActions>
-          <StyledConfirmScreenAction onClick={onConfirm} tabIndex={0} disabled={!(!condition || conditionValid)}  ref={confirmButtonRef}>
+          <StyledConfirmScreenAction onClick={onConfirm} tabIndex={0} disabled={!(!condition || conditionValid)} ref={confirmButtonRef}>
             {confirmButtonText}
           </StyledConfirmScreenAction>
           <StyledConfirmScreenAction onClick={onCancel} tabIndex={0}>

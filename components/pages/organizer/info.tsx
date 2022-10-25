@@ -531,7 +531,7 @@ export const OrganizerInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
-            <StyledRequiredInfoText/>
+            <StyledRequiredInfoText />
             <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{descriptionForm}</StyledEntryFormContainer>
             <StyledEntryFormContainer>{contactForm}</StyledEntryFormContainer>

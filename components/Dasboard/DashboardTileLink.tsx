@@ -99,11 +99,11 @@ export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
     }
 
     case StandardLinkType.external: {
-      const { title, href } = props;;
+      const { title, href } = props;
       return (
         <StyledDashboardTileLink href={href} rel="noopener noreferrer" target="_blank">
           <span>{title}</span>
-          <ArrowUpRight aria-label={t('links.external.iconAltText') as string}/>
+          <ArrowUpRight aria-label={t('links.external.iconAltText') as string} />
         </StyledDashboardTileLink>
       );
     }

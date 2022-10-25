@@ -98,7 +98,7 @@ const StyledAppTokenListItemDetailsContent = styled.div``;
 
 interface AppTokenListProps {
   tokens: AppToken['data']['attributes'][];
-  onRemove: (tokenId: number) => Promise<any>;
+  onRemove: (tokenId: number) => Promise<void>;
 }
 
 export const AppTokenList: React.FC<AppTokenListProps> = ({

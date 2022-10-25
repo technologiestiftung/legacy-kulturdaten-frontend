@@ -3,7 +3,7 @@ import CharacterCount from '@tiptap/extension-character-count'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import { EditorContent, PureEditorContent, useEditor } from '@tiptap/react'
-import { Ref, useState, useMemo, useEffect } from 'react'
+import { Ref, useState, useMemo, useEffect, LegacyRef, RefObject } from 'react'
 import { useDebounce } from '../../lib/useDebounce';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
@@ -118,16 +118,16 @@ type RichTextEditorProps = {
 
 
 const countAlertCall = (maxLength, count, t) => {
-  const restDigits = maxLength - count 
-    restDigits === 5
-    ? speakerFunction(`5 ${t('richText.charactersLeft_2')}` )
+  const restDigits = maxLength - count
+  restDigits === 5
+    ? speakerFunction(`5 ${t('richText.charactersLeft_2')}`)
     : restDigits === 10
-    ? speakerFunction(`10 ${t('richText.charactersLeft_2')}` )
-    : restDigits === 20
-    ? speakerFunction(`20 ${t('richText.charactersLeft_2')}` )
-    : restDigits === 50
-    ? speakerFunction(`50 ${t('richText.charactersLeft_2')}` )
-    : null
+      ? speakerFunction(`10 ${t('richText.charactersLeft_2')}`)
+      : restDigits === 20
+        ? speakerFunction(`20 ${t('richText.charactersLeft_2')}`)
+        : restDigits === 50
+          ? speakerFunction(`50 ${t('richText.charactersLeft_2')}`)
+          : null
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -155,9 +155,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         placeholder: placeholder || ''
       }),
     ],
-    onUpdate: ({editor}) => {
-      if(editor?.storage?.characterCount.characters() === maxLength) {
-        speakerFunction(`0 ${t('richText.charactersLeft_2')}` )   
+    onUpdate: ({ editor }) => {
+      if (editor?.storage?.characterCount.characters() === maxLength) {
+        speakerFunction(`0 ${t('richText.charactersLeft_2')}`)
       }
       const parsedValue = editor.getHTML()
       updateCount()
@@ -167,9 +167,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     },
     autofocus: false,
     content: intValue,
-  },[intValue])
+  }, [intValue])
   const t = useT();
-  
+
   const updateCount = () => {
     const currentCount = editor?.storage?.characterCount.characters()
     setTextLength(currentCount)
@@ -185,8 +185,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     return null
   }
 
-  const getRef = ():any => {
-    switch(id) {
+  const getRef = (): RefObject<HTMLDivElement> | any => {
+    switch (id) {
       case "organizer-description":
         return organizerDescriptionRef
         break;
@@ -203,25 +203,25 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   return (
     <>
-    <Anchor id={id}/>
-    <RTEContentWrapper
-      aria-label={ariaLabel} 
-      tabIndex={0} 
-      role="group"
-      ref={getRef()}
-    >
-      <Toolbar editor={editor} />
-      <EditorContent
-        editor={editor}
-        aria-invalid={!valid}
-        aria-required={required}
-        ref={contentRef}
-      />
+      <Anchor id={id} />
+      <RTEContentWrapper
+        aria-label={ariaLabel}
+        tabIndex={0}
+        role="group"
+        ref={getRef()}
+      >
+        <Toolbar editor={editor} />
+        <EditorContent
+          editor={editor}
+          aria-invalid={!valid}
+          aria-required={required}
+          ref={contentRef}
+        />
 
-      <StyledCharacterCount>
-        {count} / {maxLength}
-      </StyledCharacterCount>
-    </RTEContentWrapper>
+        <StyledCharacterCount>
+          {count} / {maxLength}
+        </StyledCharacterCount>
+      </RTEContentWrapper>
     </>
   )
 }

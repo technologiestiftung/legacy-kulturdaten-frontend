@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import React, { useState } from 'react';
 import { Check } from 'react-feather';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq, focusStyles } from '../globals/Constants';
+import { mq } from '../globals/Constants';
 
 const StyledRadioVariant = styled.div`
   display: flex;

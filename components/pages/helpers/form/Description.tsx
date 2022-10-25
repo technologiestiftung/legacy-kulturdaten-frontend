@@ -128,8 +128,8 @@ export const useDescription = ({
   const [touched, setTouched] = useState(false);
 
   const converter = useMemo(() => {
-    return new showdown.Converter({metadata: true});
-  },[])
+    return new showdown.Converter({ metadata: true });
+  }, [])
 
   const entryTranslation = getTranslation<
     { attributes: { description: string; teaser: string } } & Translation
@@ -139,12 +139,9 @@ export const useDescription = ({
     return entryTranslation?.attributes[key] || '';
   }, [entryTranslation, key]);
 
-
   const richTextRef = useRef<PureEditorContent>(null);
-
   const [serializedMarkdown, setSerializedMarkdown] = useState<string>('');
-
-  const ariaLabel = `Richtext-editor ${t('date.for')} ${title}${(required || softRequired) &&  t('forms.required')}`
+  const ariaLabel = `Richtext-editor ${t('date.for')} ${title}${(required || softRequired) && t('forms.required')}`
 
   const {
     renderedRichText,
@@ -156,7 +153,6 @@ export const useDescription = ({
       if (richTextRef.current) {
         setTouched(true);
         setSerializedMarkdown(converter.makeMd(changedValue));
-
       }
     },
     required,
@@ -171,8 +167,6 @@ export const useDescription = ({
   const pristine = useMemo(() => {
     if (typeof cachedApiText === 'undefined' || typeof serializedMarkdown === 'undefined') {
       return true;
-    }
-    else {
     }
 
     if (
@@ -190,7 +184,6 @@ export const useDescription = ({
 
     return true;
   }, [cachedApiText, serializedMarkdown]);
-
 
   useEffect(() => {
     if (!touched && serializedMarkdown === '' && cachedApiText) {
@@ -217,7 +210,7 @@ export const useDescription = ({
   return {
     renderedDescription: (
       <StyledDescription>
-        <fieldset lang={language.slice(0,2)}>
+        <fieldset lang={language.slice(0, 2)}>
           {rendered && (
             <>
               <StyledDescriptionTitleStatus>
@@ -296,14 +289,14 @@ export const useDescriptionForm: EntryFormHook = ({
 }) => {
   const t = useT();
 
-  const placeholderText = 
+  const placeholderText =
     category.name === "location"
-    ? t('forms.descriptionLocationPlaceholder') as string
-    : category.name === "offer"
-    ? t('forms.descriptionOfferPlaceholder') as string
-    : category.name === "organizer"
-    ? t('forms.descriptionOrganizerPlaceholder') as string
-    : ""
+      ? t('forms.descriptionLocationPlaceholder') as string
+      : category.name === "offer"
+        ? t('forms.descriptionOfferPlaceholder') as string
+        : category.name === "organizer"
+          ? t('forms.descriptionOrganizerPlaceholder') as string
+          : ""
 
   const {
     renderedDescription: renderedDescriptionGerman,
@@ -375,7 +368,7 @@ export const useDescriptionForm: EntryFormHook = ({
       <FormWrapper>
         <FormContainer>
           {renderedDescriptionGerman}
-          <FormRequiredInfo fulfilled={fulfilled} marginBottom/>
+          <FormRequiredInfo fulfilled={fulfilled} marginBottom />
           {renderedDescriptionEnglish}
           {renderedDescriptionGermanEasy}
         </FormContainer>

@@ -37,36 +37,36 @@ interface SetNameProps {
 // eslint-disable-next-line react/display-name
 const Name = React.forwardRef<HTMLElement, SetNameProps>(
   (props: SetNameProps, ref: RefObject<HTMLInputElement>) => {
-  // set initial value
-  useEffect(() => {
-    if (props.pristine) {
-      props.setValue(props.name);
-    }
-  }, [props]);
+    // set initial value
+    useEffect(() => {
+      if (props.pristine) {
+        props.setValue(props.name);
+      }
+    }, [props]);
 
-  return (
-    <form onSubmit={props.onSubmit}>
-      <Anchor id={props.id}/>
-      <Input
-        label={props.label}
-        ariaLabel={props.ariaLabel}
-        type={InputType.text}
-        ref={ref}
-        placeholder={props.placeholder}
-        value={props.value || ''}
-        onChange={(e) => {
-          props.setValue(e.target.value);
-        }}
-        required={props.required}
-        hint={props.hint}
-        softRequired={props.softRequired}
-        maxLength={defaultMaxLength}
-        tooltip={props.tooltip}
-      />
-      {props.required && <FormRequiredInfo fulfilled={props.value !== ''}/>}
-    </form>
-  );
-});
+    return (
+      <form onSubmit={props.onSubmit}>
+        <Anchor id={props.id} />
+        <Input
+          label={props.label}
+          ariaLabel={props.ariaLabel}
+          type={InputType.text}
+          ref={ref}
+          placeholder={props.placeholder}
+          value={props.value || ''}
+          onChange={(e) => {
+            props.setValue(e.target.value);
+          }}
+          required={props.required}
+          hint={props.hint}
+          softRequired={props.softRequired}
+          maxLength={defaultMaxLength}
+          tooltip={props.tooltip}
+        />
+        {props.required && <FormRequiredInfo fulfilled={props.value !== ''} />}
+      </form>
+    );
+  });
 
 export const useName = <
   EntryType extends CategoryEntry,
@@ -105,8 +105,8 @@ export const useName = <
     category.name === Categories.location
       ? [['organizer', organizerId]]
       : category.name === Categories.offer
-      ? [['organizers', organizerId]]
-      : undefined
+        ? [['organizers', organizerId]]
+        : undefined
   );
   const call = useApiCall();
   const entryTranslation = getTranslation<TranslationType>(
@@ -172,8 +172,8 @@ export const useName = <
     }
   };
 
-  const getRef = ():any => {
-    switch(props.id) {
+  const getRef = (): any => {
+    switch (props.id) {
       case "organizer-name":
         return organizerNameRef
         break;
@@ -185,7 +185,7 @@ export const useName = <
         break;
       default:
         return
-        }
+    }
   }
 
   return {

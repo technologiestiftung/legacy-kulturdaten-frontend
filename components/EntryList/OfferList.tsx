@@ -179,63 +179,63 @@ export const OfferList: React.FC<OfferListProps> = ({
     () =>
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
-            ({ attributes, relations, id }, index) => {
-              const typeNames =
-                relations?.types?.map((type) => {
-                  const typeTranslation = getTranslation<OfferTypeTranslation>(
-                    language,
-                    type.relations.translations
-                  );
-                  return typeTranslation?.attributes.name;
-                }) || [];
+          ({ attributes, relations, id }, index) => {
+            const typeNames =
+              relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              }) || [];
 
-              const mainTypeNames =
-                relations?.mainType?.map((type) => {
-                  const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
-                    language,
-                    type.relations.translations
-                  );
-                  return mainTypeTranslation?.attributes.name;
-                }) || [];
+            const mainTypeNames =
+              relations?.mainType?.map((type) => {
+                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return mainTypeTranslation?.attributes.name;
+              }) || [];
 
-              const href = (sub?: string) =>
-                routes[Routes.offer]({
-                  locale,
-                  query: { organizer: organizerId, id, sub },
-                });
+            const href = (sub?: string) =>
+              routes[Routes.offer]({
+                locale,
+                query: { organizer: organizerId, id, sub },
+              });
 
-              const translations = relations?.translations;
-              const currentTranslation = translations
-                ? getTranslation<OfferTranslation>(language, translations)
-                : undefined;
+            const translations = relations?.translations;
+            const currentTranslation = translations
+              ? getTranslation<OfferTranslation>(language, translations)
+              : undefined;
 
-              const defaultTranslation = translations
-                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
-                : undefined;
+            const defaultTranslation = translations
+              ? getTranslation<OfferTranslation>(defaultLanguage, translations)
+              : undefined;
 
-              return (
-                <EntryCard
-                  onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.offer, id);
-                  }}
-                  href={href('info')}
-                  menuExpanded={expanded}
-                  key={index}
-                  title={
-                    currentTranslation?.attributes?.name ||
-                    defaultTranslation?.attributes?.name ||
-                    categories?.offer?.placeholderName
-                  }
-                  status={attributes?.status || PublishedStatus.draft}
-                  active={router.asPath.includes(href())}
-                  createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
-                  updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
-                  meta={<EntryCardTypesSubjects types={[...mainTypeNames, ...typeNames]} />}
-                />
-              );
-            }
-          )
+            return (
+              <EntryCard
+                onClick={() => {
+                  setMenuExpanded(false);
+                  setLastEntryId(Categories.offer, id);
+                }}
+                href={href('info')}
+                menuExpanded={expanded}
+                key={index}
+                title={
+                  currentTranslation?.attributes?.name ||
+                  defaultTranslation?.attributes?.name ||
+                  categories?.offer?.placeholderName
+                }
+                status={attributes?.status || PublishedStatus.draft}
+                active={router.asPath.includes(href())}
+                createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
+                updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                meta={<EntryCardTypesSubjects types={[...mainTypeNames, ...typeNames]} />}
+              />
+            );
+          }
+        )
         : undefined,
     [
       expanded,
@@ -254,73 +254,73 @@ export const OfferList: React.FC<OfferListProps> = ({
     () =>
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
-            ({ attributes, relations, id }) => {
-              const translations = relations?.translations;
+          ({ attributes, relations, id }) => {
+            const translations = relations?.translations;
 
-              const currentTranslation = translations
-                ? getTranslation<OfferTranslation>(language, translations)
-                : undefined;
+            const currentTranslation = translations
+              ? getTranslation<OfferTranslation>(language, translations)
+              : undefined;
 
-              const defaultTranslation = translations
-                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
-                : undefined;
+            const defaultTranslation = translations
+              ? getTranslation<OfferTranslation>(defaultLanguage, translations)
+              : undefined;
 
-              const href = (sub?: string) =>
-                routes[Routes.offer]({
-                  locale,
-                  query: { organizer: organizerId, id, sub },
-                });
+            const href = (sub?: string) =>
+              routes[Routes.offer]({
+                locale,
+                query: { organizer: organizerId, id, sub },
+              });
 
-              const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
-                <TableLink
-                  onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.organizer, id);
-                  }}
-                  href={href('info')}
-                  isActive={router.asPath.includes(href())}
-                >
-                  {children}
-                </TableLink>
+            const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
+              <TableLink
+                onClick={() => {
+                  setMenuExpanded(false);
+                  setLastEntryId(Categories.organizer, id);
+                }}
+                href={href('info')}
+                isActive={router.asPath.includes(href())}
+              >
+                {children}
+              </TableLink>
+            );
+
+            const typeNames = relations?.types?.map((type) => {
+              const typeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                type.relations.translations
               );
+              return typeTranslation?.attributes.name;
+            });
 
-              const typeNames = relations?.types?.map((type) => {
-                const typeTranslation = getTranslation<OfferTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return typeTranslation?.attributes.name;
-              });
+            const mainTypeNames = relations?.mainType?.map((type) => {
+              const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                type.relations.translations
+              );
+              return mainTypeTranslation?.attributes.name;
+            });
 
-              const mainTypeNames = relations?.mainType?.map((type) => {
-                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return mainTypeTranslation?.attributes.name;
-              });
-
-              return {
-                contents: [
-                  <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name ||
-                      defaultTranslation?.attributes?.name ||
-                      categories?.offer?.placeholderName}
-                  </StyledTableLinkText>,
-                  mainTypeNames?.join(', '),
-                  typeNames?.join(', '),
-                  <StatusFlag status={attributes?.status} key={1} />,
-                  attributes?.updatedAt
-                    ? date(new Date(attributes?.updatedAt), DateFormat.date)
-                    : undefined,
-                  attributes?.createdAt
-                    ? date(new Date(attributes?.createdAt), DateFormat.date)
-                    : undefined,
-                ].slice(0, !expanded ? 2 : undefined),
-                Wrapper: ListLink,
-              };
-            }
-          )
+            return {
+              contents: [
+                <StyledTableLinkText key={0}>
+                  {currentTranslation?.attributes?.name ||
+                    defaultTranslation?.attributes?.name ||
+                    categories?.offer?.placeholderName}
+                </StyledTableLinkText>,
+                mainTypeNames?.join(', '),
+                typeNames?.join(', '),
+                <StatusFlag status={attributes?.status} key={1} />,
+                attributes?.updatedAt
+                  ? date(new Date(attributes?.updatedAt), DateFormat.date)
+                  : undefined,
+                attributes?.createdAt
+                  ? date(new Date(attributes?.createdAt), DateFormat.date)
+                  : undefined,
+              ].slice(0, !expanded ? 2 : undefined),
+              Wrapper: ListLink,
+            };
+          }
+        )
         : undefined,
     [
       list.data,
@@ -336,16 +336,14 @@ export const OfferList: React.FC<OfferListProps> = ({
     ]
   );
 
-
   return (
     <StyledOrganizerList tabIndex={0} ref={offerSidebarRef as LegacyRef<HTMLDivElement>}>
-      <SkipLinkMainContent/>
+      <SkipLinkMainContent />
       <EntryListHead
         title={t('categories.offer.title.plural') as string}
         expanded={expanded}
         setExpanded={setMenuExpanded}
         expandable={expandable}
-        
         actionButton={
           <Button
             size={ButtonSize.big}
@@ -353,11 +351,11 @@ export const OfferList: React.FC<OfferListProps> = ({
             icon="Plus"
             onClick={async () => {
               const res = await createOffer()
-              if(res)speakerFunction(t('speaker.newOffer') as string)
+              if (res) speakerFunction(t('speaker.newOffer') as string)
               setTimeout(() => {
-                document.title = organizerTitle 
-                ? `${organizerTitle} - ${t('general.defaultTitleOffer')}` 
-                : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleOffer')}` 
+                document.title = organizerTitle
+                  ? `${organizerTitle} - ${t('general.defaultTitleOffer')}`
+                  : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleOffer')}`
               }, 500)
             }}
           >
