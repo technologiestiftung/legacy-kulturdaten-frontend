@@ -43,7 +43,6 @@ const StyledTooltip = styled.div`
 
 const createdId = "input-id-" + Math.random().toString(16).slice(2);
 
-
 const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
 const errorBorderShadow = 'inset 0px 0px 0px 0.125rem var(--red-publish)';
 
@@ -179,7 +178,7 @@ export interface InputProps extends ComponentWithVariants {
   hideError?: boolean;
   debounce?: boolean | number;
   tooltip?: string;
-  ref?: any;
+  ref?: RefObject<HTMLInputElement>;
 }
 
 // eslint-disable-next-line react/display-name
@@ -277,7 +276,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <>
             {props.label && (
               <StyledInputLabelContainer lang={props?.lang}>
-                <Label htmlFor={props.id ? props.id : createdId }>
+                <Label htmlFor={props.id ? props.id : createdId}>
                   {props.label}
                   {props.required || props.softRequired ? ` ${t('forms.required')}` : ''}
                 </Label>
@@ -300,7 +299,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               value={props?.debounce ? internalState : props?.value || ''}
               variant={props?.variant}
               aria-label={props?.ariaLabel}
-              id={props.id ? props.id : createdId }
+              id={props.id ? props.id : createdId}
               autoComplete={props?.autoComplete}
               onChange={(e) => {
                 if (
@@ -332,14 +331,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 props?.type === InputType.url
                   ? urlRegExpString
                   : props?.type === InputType.email
-                  ? emailRegExpString
-                  : props?.type === InputType.tel
-                  ? telRegExpString
-                  : undefined
+                    ? emailRegExpString
+                    : props?.type === InputType.tel
+                      ? telRegExpString
+                      : undefined
               }
               onBlur={(e) => {
                 setPristine(false);
-                if(!props.error) {
+                if (!props.error) {
                   normalizeStrings();
                 }
 
@@ -347,13 +346,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   props.onBlur(e);
                 }
               }}
-              onFocus={() => {setPristine(true)}}
+              onFocus={() => { setPristine(true) }}
               onKeyDown={(e) => {
                 if (
                   (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
                   !normalized
                 ) {
-                  if(!props.error) {
+                  if (!props.error) {
                     normalizeStrings();
                   }
                   return true;
@@ -362,7 +361,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             />
           </>
         )}
-        {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid}/>}
+        {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid} />}
         {!pristine && props.error && <StyledError inFormList={props.variant === "formList"}>{props.error}</StyledError>}
       </StyledInputContainer>
     );

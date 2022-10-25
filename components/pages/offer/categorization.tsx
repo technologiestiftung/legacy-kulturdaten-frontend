@@ -31,7 +31,7 @@ import { useOrganizerId } from '../../../lib/useOrganizer';
 import { PublishedStatus } from '../../../lib/api/types/general';
 import { ComponentLoader } from '../../ComponentLoader';
 
-const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id}) => {
+const useOfferMainTypeForm: EntryFormHook = ({ category, query, loaded, required, id }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
   const t = useT();
   const call = useApiCall();
@@ -271,7 +271,7 @@ export const OfferCategorizationPage: React.FC<CategoryEntryPage> = ({
           valid={loaded !== true || (entryTypeSubjectValid && mainTypeValid)}
         />
         <EntryFormWrapper>
-          <StyledRequiredInfoText/>
+          <StyledRequiredInfoText />
           <StyledEntryFormContainer>{mainTypeForm}</StyledEntryFormContainer>
           <StyledEntryFormContainer>{formTypeSubject}</StyledEntryFormContainer>
           <StyledEntryFormContainer>{renderedTagsForm}</StyledEntryFormContainer>
