@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { compareDesc } from 'date-fns';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { dateListRef } from '../../../config/categories';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { useApiCall } from '../../../lib/api';
@@ -22,16 +24,16 @@ import { DateCreate } from '../../DateCreate';
 import { useDateList } from '../../DateList';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { EntryListPagination } from '../../EntryList/EntryListPagination';
 import { mq } from '../../globals/Constants';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { usePublish } from '../../Publish';
 import { RadioVariant, RadioVariantOptionParagraph } from '../../RadioVariant';
 import { EntryFormHook } from '../helpers/form';
 import { FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
+import { speakerFunction } from '../helpers/useSpeaker';
 
 const customFormItemCss = css`
   margin: 0 -0.75rem;
@@ -39,6 +41,11 @@ const customFormItemCss = css`
   ${mq(Breakpoint.mid)} {
     margin: 0;
   }
+`;
+
+const ScrollContainer = styled.div`
+  grid-column: span 4;
+  overflow: hidden;
 `;
 
 const entriesPerPage = 25;
@@ -149,7 +156,6 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
   const formattedDate = useSaveDate(entry);
   const call = useApiCall();
   const [currentPage, setCurrentPage] = useState(1);
-  const loadingScreen = useLoadingScreen();
   const confirmScreen = useConfirmScreen();
   const [dates, setDates] = useState<OfferDate['data'][]>(entry?.data?.relations?.dates);
   const [datesNotPristineList, setDatesNotPristineList] = useState<number[]>([]);
@@ -253,36 +259,31 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         }),
         confirmButtonText: t('general.confirmDelete') as string,
         onConfirm: async () => {
-          loadingScreen(
-            t('general.deleting.loading'),
-            async () => {
-              try {
-                const resp = await call<OfferDelete>(offerDeleteFactory, {
-                  id: entry.data.id,
-                  entry: {
-                    relations: {
-                      dates: dateIds,
-                    },
-                  },
-                });
+          try {
+            const resp = await call<OfferDelete>(offerDeleteFactory, {
+              id: entry.data.id,
+              entry: {
+                relations: {
+                  dates: dateIds,
+                },
+              },
+            });
 
-                if (resp.status === 200) {
-                  setCheckedDateIds(
-                    checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
-                  );
-                  mutateDateList();
-                  return { success: true };
-                }
+            if (resp.status === 200) {
+              setCheckedDateIds(
+                checkedDateIds.filter((dateId) => !dateIds.includes(parseInt(dateId, 10)))
+              );
+              mutateDateList();
+              speakerFunction(t('speaker.deleteDate') as string)
+              return { success: true };
+            }
 
-                return { success: false, error: t('general.serverProblem') };
-              } catch (e) {
-                console.error(e);
+            return { success: false, error: t('general.serverProblem') };
+          } catch (e) {
+            console.error(e);
 
-                return { success: false, error: t('general.serverProblem') };
-              }
-            },
-            t('general.takeAFewSeconds')
-          );
+            return { success: false, error: t('general.serverProblem') };
+          }
         },
       });
     },
@@ -298,7 +299,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
 
   const { renderedCollapsable, isCollapsed, setIsCollapsed } = useCollapsable(
     <FormGrid>
-      <FormItem width={FormItemWidth.full} css={customFormItemCss}>
+      <FormItem childWidth="100%" width={FormItemWidth.full} css={customFormItemCss}>
         {renderedArchivedDateList}
       </FormItem>
     </FormGrid>,
@@ -379,95 +380,90 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
         hint={false}
       />
       <EntryFormWrapper>
-        <EntryFormContainer>{isPermanentForm}</EntryFormContainer>
+        <StyledEntryFormContainer>{isPermanentForm}</StyledEntryFormContainer>
         {!isPermanentValue && (
           <>
-            <EntryFormContainer>
-              <EntryFormHead title={t('date.currentDates') as string} />
-              <FormGrid>
-                <FormItem width={FormItemWidth.full}>
-                  <DateCreate
-                    onSubmit={async (date, recurrence) => {
-                      loadingScreen(
-                        t('dateCreate.loading'),
-                        async () => {
-                          try {
-                            const filteredTranslations = date.relations?.translations?.filter(
-                              (translation) =>
-                                translation?.attributes.name?.length > 0 ||
-                                translation?.attributes.roomDescription?.length > 0 ||
-                                translation?.attributes.teaser?.length > 0
-                            );
+          <StyledEntryFormContainer>
+              <EntryFormHead title={`${t('date.currentDates')} ${t('date.for')} ${renderedEntryHeader.props.children.props.title}`} />
+                <FormGrid>
+                  <FormItem width={FormItemWidth.full}>
+                    <DateCreate
+                      onSubmit={async (date, recurrence) => {
+                        try {
+                          const filteredTranslations = date.relations?.translations?.filter(
+                            (translation) =>
+                              translation?.attributes.name?.length > 0 ||
+                              translation?.attributes.roomDescription?.length > 0 ||
+                              translation?.attributes.teaser?.length > 0
+                          );
 
-                            const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
-                              offerId: entry.data.id,
-                              date: {
-                                ...date,
-                                attributes: {
-                                  ...date.attributes,
-                                },
-                                relations: {
-                                  ...date.relations,
-                                  translations:
-                                    filteredTranslations.length > 0
-                                      ? filteredTranslations
-                                      : undefined,
-                                },
-                                meta: recurrence
-                                  ? {
-                                      recurrenceRule: recurrence,
-                                      startsAt: date?.attributes?.startsAt,
-                                      endsAt: date?.attributes?.endsAt,
-                                    }
-                                  : undefined,
+                          const resp = await call<OfferDateCreate>(offerDateCreateFactory, {
+                            offerId: entry.data.id,
+                            date: {
+                              ...date,
+                              attributes: {
+                                ...date.attributes,
                               },
-                            });
+                              relations: {
+                                ...date.relations,
+                                translations:
+                                  filteredTranslations.length > 0
+                                    ? filteredTranslations
+                                    : undefined,
+                              },
+                              meta: recurrence
+                                ? {
+                                    recurrenceRule: recurrence,
+                                    startsAt: date?.attributes?.startsAt,
+                                    endsAt: date?.attributes?.endsAt,
+                                  }
+                                : undefined,
+                            },
+                          });
 
-                            if (resp.status === 200) {
-                              mutateDateList();
-                              return { success: true };
-                            }
-                          } catch (e) {
-                            console.error(e);
-                            return { success: false, error: t('general.serverProblem') };
+                          if (resp.status === 200) {
+                            mutateDateList();
+                            speakerFunction(t('speaker.newDate') as string)
+                            return { success: true };
                           }
-                        },
-                        t('general.takeAFewSeconds')
-                      );
-                    }}
-                    offerTitles={offerTitles}
-                    submitDelay={500}
-                  />
-                </FormItem>
-                <FormItem width={FormItemWidth.full} css={customFormItemCss}>
-                  {renderedDateList}
-                </FormItem>
-                <FormItem width={FormItemWidth.full}>
-                  {metaDateList?.pages?.lastPage > 1 && (
-                    <EntryListPagination
-                      currentPage={currentPage}
-                      lastPage={metaDateList.pages.lastPage}
-                      totalEntries={metaDateList.pages.total}
-                      entriesPerPage={entriesPerPage}
-                      nextPage={() =>
-                        currentPage < metaDateList.pages.lastPage
-                          ? setCurrentPage(currentPage + 1)
-                          : undefined
-                      }
-                      previousPage={() =>
-                        currentPage > 1 ? setCurrentPage(currentPage - 1) : undefined
-                      }
-                      goToPage={(index: number) =>
-                        index <= metaDateList.pages.lastPage ? setCurrentPage(index) : undefined
-                      }
-                      expanded={true}
-                      noHorizontalPadding
+                        } catch (e) {
+                          console.error(e);
+                          return { success: false, error: t('general.serverProblem') };
+                        }
+                      }}
+                      offerTitles={offerTitles}
+                      submitDelay={500}
                     />
-                  )}
-                </FormItem>
-              </FormGrid>
-            </EntryFormContainer>
-            <EntryFormContainer>
+                  </FormItem>
+                  <ScrollContainer>
+                    {renderedDateList}
+                  </ScrollContainer>
+                  <FormItem width={FormItemWidth.full}>
+                    {metaDateList?.pages?.lastPage > 1 && (
+                      <EntryListPagination
+                        currentPage={currentPage}
+                        lastPage={metaDateList.pages.lastPage}
+                        totalEntries={metaDateList.pages.total}
+                        entriesPerPage={entriesPerPage}
+                        nextPage={() =>
+                          currentPage < metaDateList.pages.lastPage
+                            ? setCurrentPage(currentPage + 1)
+                            : undefined
+                        }
+                        previousPage={() =>
+                          currentPage > 1 ? setCurrentPage(currentPage - 1) : undefined
+                        }
+                        goToPage={(index: number) =>
+                          index <= metaDateList.pages.lastPage ? setCurrentPage(index) : undefined
+                        }
+                        expanded={true}
+                        noHorizontalPadding
+                      />
+                    )}
+                  </FormItem>
+                </FormGrid>
+            </StyledEntryFormContainer>
+            <StyledEntryFormContainer>
               <EntryFormHead
                 title={t('date.archivedDates') as string}
                 expander={{
@@ -478,7 +474,7 @@ export const OfferDatesPage: React.FC<CategoryEntryPage> = ({
                 }}
               />
               {renderedCollapsable}
-            </EntryFormContainer>
+            </StyledEntryFormContainer>
           </>
         )}
       </EntryFormWrapper>

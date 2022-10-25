@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
-import { useCallback, useContext, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState, useRef, useEffect } from 'react';
 import { Breakpoint } from '../../lib/WindowService';
 import { mq } from '../globals/Constants';
 import { ConfirmContext } from './ConfirmContext';
@@ -145,6 +145,10 @@ const StyledConfirmScreenAction = styled.button<{ disabled?: boolean }>`
     background: var(--grey-400);
   }
 
+  &:focus {
+    border: 2px inset blue;
+  }
+
   ${({ disabled }) =>
     disabled &&
     css`
@@ -189,10 +193,21 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
   const [conditionValue, setConditionValue] = useState('');
   const [inputPristine, setInputPristine] = useState(true);
 
+  const confirmButtonRef = useRef(null);
+  const conditionInputRef = useRef(null);
+
   const conditionValid = useMemo(
     () => conditionValue === condition?.value,
     [condition?.value, conditionValue]
   );
+
+  useEffect(() => {
+    if (condition) {
+      conditionInputRef.current.focus()
+    } else {
+      confirmButtonRef.current.focus()
+    }
+  })
 
   return (
     <StyledConfirmScreen visible={visible}>
@@ -205,6 +220,7 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
         {condition && (
           <StyledConfirmScreenCondition>
             <Input
+              ref={conditionInputRef}
               type={InputType.text}
               value={conditionValue}
               label={condition.label}
@@ -217,10 +233,10 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
           </StyledConfirmScreenCondition>
         )}
         <StyledConfirmScreenActions>
-          <StyledConfirmScreenAction onClick={onConfirm} disabled={!(!condition || conditionValid)}>
+          <StyledConfirmScreenAction onClick={onConfirm} tabIndex={0} disabled={!(!condition || conditionValid)} ref={confirmButtonRef}>
             {confirmButtonText}
           </StyledConfirmScreenAction>
-          <StyledConfirmScreenAction onClick={onCancel}>
+          <StyledConfirmScreenAction onClick={onCancel} tabIndex={0}>
             {t('general.cancel')}
           </StyledConfirmScreenAction>
         </StyledConfirmScreenActions>
@@ -232,8 +248,9 @@ export const ConfirmScreen: React.FC<ConfirmScreenProps> = ({
 export const useConfirmScreen = (): ((props: {
   title: React.ReactNode | string;
   message: React.ReactNode | string;
-  confirmButtonText: string;
-  onConfirm: () => Promise<void>;
+  confirmButtonText?: string;
+  confirmText?: string;
+  onConfirm: any;
   condition?: ConfirmCondition;
 }) => void) => {
   const {

@@ -2,9 +2,10 @@ import Link from 'next/link';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { ArrowRight, ArrowUpRight, Plus } from 'react-feather';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';
 import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
+import { useT } from '../../lib/i18n';
 
 const StyledDashboardTileLink = styled.a<{ disabled?: boolean }>`
   color: inherit;
@@ -24,6 +25,7 @@ const StyledDashboardTileLink = styled.a<{ disabled?: boolean }>`
   margin: 0;
   cursor: pointer;
   background: var(--white);
+  ${focusStyles}
 
   &:hover {
     background: var(--grey-200);
@@ -69,11 +71,13 @@ const InternalDashboardTileLink: React.FC<InternalDashboardTileLinkProps> = ({
   href,
   disabled,
 }: InternalDashboardTileLinkProps) => {
+  const t = useT();
+  const linkIconAltText = t('links.internal.iconAltText') as string;
   return (
     <Link href={href} passHref>
-      <StyledDashboardTileLink title={title} disabled={disabled}>
+      <StyledDashboardTileLink title={linkIconAltText + ' ' + title} disabled={disabled}>
         <span>{title}</span>
-        <ArrowRight />
+        <ArrowRight aria-hidden />
       </StyledDashboardTileLink>
     </Link>
   );
@@ -87,6 +91,7 @@ export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
   props: DashboardTileLinkProps
 ) => {
   const { type = StandardLinkType.internal } = props;
+  const t = useT();
 
   switch (type) {
     case StandardLinkType.internal: {
@@ -98,7 +103,7 @@ export const DashboardTileLink: React.FC<DashboardTileLinkProps> = (
       return (
         <StyledDashboardTileLink href={href} rel="noopener noreferrer" target="_blank">
           <span>{title}</span>
-          <ArrowUpRight />
+          <ArrowUpRight aria-label={t('links.external.iconAltText') as string} />
         </StyledDashboardTileLink>
       );
     }

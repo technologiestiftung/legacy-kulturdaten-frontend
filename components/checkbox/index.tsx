@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { ChangeEvent, ChangeEventHandler, useState } from 'react';
 import { Check } from 'react-feather';
 import { useT } from '../../lib/i18n';
+import { focusStyles } from '../globals/Constants';
 
 const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
 
@@ -21,6 +22,7 @@ const StyledCheckboxInput = styled.input<{ valid?: boolean }>`
   padding: 0;
   transition: border var(--transition-duration);
   cursor: inherit;
+  ${focusStyles}
 
   &:disabled {
     border: none;
@@ -37,6 +39,21 @@ const StyledCheckboxInput = styled.input<{ valid?: boolean }>`
 `;
 
 const StyledCheckbox = styled.div<{ disabled?: boolean }>`
+  display: flex;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+
+  &:hover {
+    ${StyledCheckboxInput} {
+      border: 2px solid var(--black);
+
+      &:disabled {
+        border: none;
+      }
+    }
+  }
+`;
+
+const StyledCheckboxListItem = styled.li<{ disabled?: boolean }>`
   display: flex;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 
@@ -96,7 +113,7 @@ const StyledCheckboxLabel = styled.label<{ disabled?: boolean }>`
   }
 `;
 
-export interface CheckboxProps {
+export interface InsideCheckboxProps {
   id: string;
   label?: string | React.ReactNode;
   ariaLabel?: string;
@@ -109,7 +126,7 @@ export interface CheckboxProps {
   valid?: boolean;
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({
+export const InsideCheckbox: React.FC<InsideCheckboxProps> = ({
   id,
   label,
   ariaLabel,
@@ -120,13 +137,13 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   required,
   value,
   valid,
-}: CheckboxProps) => {
+}: InsideCheckboxProps) => {
   const internalState = useState<boolean>(false);
   const checkedState = checked || internalState[0];
   const t = useT();
 
   return (
-    <StyledCheckbox disabled={disabled}>
+    <>
       <StyledCheckboxInputContainer>
         <StyledCheckboxInput
           aria-label={ariaLabel}
@@ -147,15 +164,81 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           valid={valid}
         />
         <StyledCheckboxInputCheck checked={checkedState}>
-          <Check color="var(--black)" />
+          <Check color="var(--black)" aria-hidden="true" />
         </StyledCheckboxInputCheck>
       </StyledCheckboxInputContainer>
       {label && (
         <StyledCheckboxLabel htmlFor={id} disabled={disabled}>
           {label}
-          {required && ` (${t('forms.required')})`}
+          {required && ` ${t('forms.required')}`}
         </StyledCheckboxLabel>
       )}
-    </StyledCheckbox>
+    </>
+  );
+};
+
+export interface CheckboxProps {
+  id: string;
+  label?: string | React.ReactNode;
+  ariaLabel?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  checked?: boolean;
+  name?: string;
+  disabled?: boolean;
+  required?: boolean;
+  value?: string;
+  valid?: boolean;
+  inList?: boolean
+}
+
+export const Checkbox: React.FC<CheckboxProps> = ({
+  id,
+  label,
+  ariaLabel,
+  onChange,
+  checked,
+  name,
+  disabled,
+  required,
+  value,
+  valid,
+  inList,
+}: CheckboxProps) => {
+
+  return (
+    <>
+      {inList
+        ?
+        (<StyledCheckboxListItem disabled={disabled}>
+          <InsideCheckbox
+            id={id}
+            label={label}
+            ariaLabel={ariaLabel}
+            onChange={onChange}
+            checked={checked}
+            name={name}
+            disabled={disabled}
+            required={required}
+            value={value}
+            valid={valid}
+          />
+        </StyledCheckboxListItem>)
+        :
+        (<StyledCheckbox disabled={disabled}>
+          <InsideCheckbox
+            id={id}
+            label={label}
+            ariaLabel={ariaLabel}
+            onChange={onChange}
+            checked={checked}
+            name={name}
+            disabled={disabled}
+            required={required}
+            value={value}
+            valid={valid}
+          />
+        </StyledCheckbox>)
+      }
+    </>
   );
 };

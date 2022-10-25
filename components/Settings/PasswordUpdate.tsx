@@ -5,10 +5,9 @@ import { useT } from '../../lib/i18n';
 import { passwordMinLength } from '../auth/Register';
 import { ButtonType, ButtonSize, ButtonColor, Button } from '../button';
 import { EntryFormHead } from '../EntryForm/EntryFormHead';
-import { EntryFormContainer } from '../EntryForm/wrappers';
+import { StyledEntryFormContainer, StyledRequiredInfoText } from '../EntryForm/wrappers';
 import { Info, InfoColor } from '../info';
 import { Input, InputType } from '../input';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
 import { FormGrid, FormItem, FormItemWidth } from '../pages/helpers/formComponents';
 
 const passwordErrorId = 0;
@@ -22,7 +21,6 @@ export const UserPasswordUpdate: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [success, setSuccess] = useState(false);
   const call = useApiCall();
-  const loadingScreen = useLoadingScreen();
 
   const passwordsMatch = useMemo(
     () => newPassword === confirmPassword,
@@ -66,8 +64,9 @@ export const UserPasswordUpdate: React.FC = () => {
   ]);
 
   return (
-    <EntryFormContainer>
+    <StyledEntryFormContainer>
       <EntryFormHead title={t('settings.password.title') as string} />
+      <StyledRequiredInfoText/>
       {success ? (
         <FormGrid>
           <FormItem width={FormItemWidth.full}>
@@ -76,53 +75,51 @@ export const UserPasswordUpdate: React.FC = () => {
         </FormGrid>
       ) : (
         <form
-          onSubmit={(e) => {
+          onSubmit={async(e) => {
             e.preventDefault();
             e.stopPropagation();
             setErrors([]);
 
             if (valid) {
-              loadingScreen(t('settings.password.loading'), async () => {
-                try {
-                  await call<UserUpdate>(userUpdateFactory, {
-                    user: {
-                      attributes: {
-                        password: oldPassword,
-                        newPassword,
-                        newPasswordConfirmation: confirmPassword,
-                      },
+              try {
+                await call<UserUpdate>(userUpdateFactory, {
+                  user: {
+                    attributes: {
+                      password: oldPassword,
+                      newPassword,
+                      newPasswordConfirmation: confirmPassword,
                     },
-                  });
-                  setSuccess(true);
+                  },
+                });
+                setSuccess(true);
 
-                  setOldPassword('');
-                  setNewPassword('');
-                  setConfirmPassword('');
-                  setPasswordConfirmationBlurred(false);
+                setOldPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setPasswordConfirmationBlurred(false);
 
-                  return { success: true };
-                } catch (e) {
-                  const requestErrors = e.message
-                    ? (JSON.parse(e.message)?.errors as {
-                        rule: string;
-                        field: string;
-                        message: string;
-                      }[])
-                    : undefined;
+                return { success: true };
+              } catch (e) {
+                const requestErrors = e.message
+                  ? (JSON.parse(e.message)?.errors as {
+                      rule: string;
+                      field: string;
+                      message: string;
+                    }[])
+                  : undefined;
 
-                  const visibleError = requestErrors?.find(
-                    (error) => error.message === 'Invalid user credentials'
-                  )
-                    ? (t('settings.password.oldPasswordError') as string)
-                    : (t('register.requestError') as string);
+                const visibleError = requestErrors?.find(
+                  (error) => error.message === 'Invalid user credentials'
+                )
+                  ? (t('settings.password.oldPasswordError') as string)
+                  : (t('register.requestError') as string);
 
-                  setErrors([
-                    { id: requestErrorId, message: visibleError },
-                    ...errors.filter(({ id }) => id !== requestErrorId),
-                  ]);
-                  return { success: false, error: <Info>{visibleError}</Info> };
-                }
-              });
+                setErrors([
+                  { id: requestErrorId, message: visibleError },
+                  ...errors.filter(({ id }) => id !== requestErrorId),
+                ]);
+                return { success: false, error: <Info>{visibleError}</Info> };
+              }
             }
           }}
         >
@@ -134,6 +131,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.oldLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="current-password"
                 id="old-password"
                 minLength={passwordMinLength}
                 required
@@ -146,6 +144,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.newLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="new-password"
                 id="new-password"
                 minLength={passwordMinLength}
                 required
@@ -159,6 +158,7 @@ export const UserPasswordUpdate: React.FC = () => {
                 label={t('settings.password.newConfirmLabel') as string}
                 placeholder={t('register.passwordPlaceholder') as string}
                 type={InputType.password}
+                autoComplete="new-password"
                 id="confirm-password"
                 minLength={passwordMinLength}
                 required
@@ -186,6 +186,6 @@ export const UserPasswordUpdate: React.FC = () => {
           </FormGrid>
         </form>
       )}
-    </EntryFormContainer>
+    </StyledEntryFormContainer>
   );
 };

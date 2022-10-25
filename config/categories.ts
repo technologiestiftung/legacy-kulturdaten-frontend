@@ -37,6 +37,7 @@ import { offerTypeListFactory } from '../lib/api/routes/offerType/list';
 import { defaultLanguage, Language } from './locale';
 import { ParsedUrlQuery } from 'querystring';
 import { Page404 } from '../components/pages/404';
+import { createRef, LegacyRef, Ref } from 'react'
 
 type RequirementAttributes = {
   path: string;
@@ -52,8 +53,10 @@ export type Requirement = {
   publishableKeys: string[];
   attributes: RequirementAttributes[];
   link: {
+    targetId: string;
     href: (query: ParsedUrlQuery) => string;
     ariaLabel: string;
+    targetRef?: any;
   };
 };
 
@@ -73,6 +76,26 @@ export enum CategoriesPlural {
   offers = 'offers',
   locations = 'locations',
 }
+
+export const organizerInternalContactRef: Ref<HTMLInputElement> = createRef();
+export const organizerNameRef: LegacyRef<HTMLLegendElement> = createRef();
+export const organizerDescriptionRef: LegacyRef<HTMLLegendElement> = createRef();
+export const organizerTypeRef: LegacyRef<HTMLLegendElement> = createRef();
+
+export const offerCategoryRef = createRef();
+export const offerNameRef = createRef();
+export const offerDescriptionRef = createRef();
+export const offerTypeRef = createRef();
+
+export const locationNameRef = createRef();
+export const locationDescriptionRef = createRef();
+
+export const mainTitleLink = createRef<HTMLElement>();
+export const offerSidebarRef = createRef<HTMLDivElement>();
+export const locationSidebarRef = createRef<HTMLDivElement>();
+export const mainContentRef = createRef<HTMLElement>();
+
+export const dateListRef = createRef<HTMLTableElement>();
 
 export const useCategories: () => {
   [key in Categories]: Category;
@@ -182,6 +205,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.name') as string,
             }) as string,
+            targetId: '#organizer-name',
+            targetRef: organizerNameRef
           },
         },
         {
@@ -209,6 +234,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.mainContact') as string,
             }) as string,
+            targetId: '#organizer-internal-contact',
+            targetRef: organizerInternalContactRef
           },
         },
         {
@@ -233,6 +260,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.description') as string,
             }) as string,
+            targetId: '#organizer-description',
+            targetRef: organizerDescriptionRef
           },
         },
         {
@@ -253,6 +282,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.organizer.requirements.categorization') as string,
             }) as string,
+            targetId: '#organizer-types',
+            targetRef: organizerTypeRef
           },
         },
       ],
@@ -364,6 +395,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.name') as string,
             }) as string,
+            targetId: '#offer-name',
+            targetRef: offerNameRef
           },
         },
 
@@ -386,6 +419,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.description') as string,
             }) as string,
+            targetId: '#offer-description',
+            targetRef: offerDescriptionRef
           },
         },
         {
@@ -406,6 +441,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.mainType') as string,
             }) as string,
+            targetId: '#offer-main-type',
+            targetRef: offerTypeRef
           },
         },
         {
@@ -423,6 +460,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.offer.requirements.categorization') as string,
             }) as string,
+            targetId: '#offer-types',
+            targetRef: offerCategoryRef
           },
         },
       ],
@@ -519,6 +558,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.location.requirements.name') as string,
             }) as string,
+            targetId: '#location-name',
+            targetRef: locationNameRef
           },
         },
         {
@@ -543,6 +584,8 @@ export const useCategories: () => {
             ariaLabel: t('requirements.nameLabel', {
               fieldName: t('categories.location.requirements.description') as string,
             }) as string,
+            targetId: '#location-description',
+            targetRef: locationDescriptionRef
           },
         },
       ],

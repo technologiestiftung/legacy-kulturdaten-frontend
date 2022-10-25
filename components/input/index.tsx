@@ -16,10 +16,11 @@ import { emailRegExpString, telRegExpString, urlRegExpString } from '../../lib/v
 import { Breakpoint } from '../../lib/WindowService';
 import { Button, ButtonColor, ButtonSize } from '../button';
 import { StyledError } from '../Error';
-import { mq } from '../globals/Constants';
+import { mq, focusStyles } from '../globals/Constants';
 import { Label } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
+import { FormRequiredInfo } from '../pages/helpers/formComponents'
 
 const StyledInputContainer = styled.div`
   display: flex;
@@ -40,15 +41,16 @@ const StyledTooltip = styled.div`
   margin-left: 0.5rem;
 `;
 
+const createdId = "input-id-" + Math.random().toString(16).slice(2);
+
 const borderShadow = 'inset 0px 0px 0px 1px var(--grey-600)';
-const errorBorderShadow = 'inset 0px 0px 0px 1px var(--error)';
-const errorShadow = '0px 0px 0px 0.125rem var(--error-o50)';
+const errorBorderShadow = 'inset 0px 0px 0px 0.125rem var(--red-publish)';
 
 const hintBorderShadow = 'inset 0px 0px 0px 1px rgb(10, 47, 211)';
 const hintShadow = '0px 0px 0px 0.125rem rgba(10, 47, 211, 0.4)';
 
 const errorStyle = css`
-  box-shadow: ${errorBorderShadow}, ${errorShadow}, var(--shadow-inset);
+  box-shadow: ${errorBorderShadow}, var(--shadow-inset);
 `;
 
 const hintStyle = css`
@@ -124,8 +126,15 @@ const StyledInput = styled.input<{
   valid?: boolean;
   hideError?: boolean;
   variant?: ComponentVariant;
+  id?: string;
 }>`
   ${(props) => inputStyles(props)}
+  &::placeholder {
+    color: var(--grey-600);
+    opacity: 1;
+  }
+
+  ${focusStyles}
 `;
 
 export enum InputType {
@@ -158,6 +167,7 @@ export interface InputProps extends ComponentWithVariants {
   max?: number | string;
   maxLength?: number;
   name?: string;
+  lang?: 'en' | 'de';
   placeholder?: string;
   pattern?: string;
   required?: boolean;
@@ -168,6 +178,7 @@ export interface InputProps extends ComponentWithVariants {
   hideError?: boolean;
   debounce?: boolean | number;
   tooltip?: string;
+  ref?: RefObject<HTMLInputElement>;
 }
 
 // eslint-disable-next-line react/display-name
@@ -225,7 +236,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         case InputType.tel: {
           if (typeof props?.value === 'string' && (props?.value as string)?.length > 0) {
-            const normalizedValue = props?.value?.replace(/\+/g, '00')?.match(/[0-9]/g).join('');
+            const normalizedValue = props?.value?.replace(/\+/g, '00')?.match(/[0-9]/g)?.join('');
             setInternalState(normalizedValue);
             props.onChange({
               target: {
@@ -255,7 +266,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         return typeof props?.valid === 'undefined' ? true : props.valid;
       }
     }, [internalState, props?.debounce, props?.softRequired, props?.valid, props?.value]);
-
     return (
       <StyledInputContainer>
         {props.type === InputType.submit ? (
@@ -265,10 +275,10 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ) : (
           <>
             {props.label && (
-              <StyledInputLabelContainer>
-                <Label htmlFor={props.id}>
+              <StyledInputLabelContainer lang={props?.lang}>
+                <Label htmlFor={props.id ? props.id : createdId}>
                   {props.label}
-                  {props.required || props.softRequired ? ` (${t('forms.required')})` : ''}
+                  {props.required || props.softRequired ? ` ${t('forms.required')}` : ''}
                 </Label>
                 {props.tooltip && (
                   <StyledTooltip>
@@ -289,6 +299,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               value={props?.debounce ? internalState : props?.value || ''}
               variant={props?.variant}
               aria-label={props?.ariaLabel}
+              id={props.id ? props.id : createdId}
+              autoComplete={props?.autoComplete}
               onChange={(e) => {
                 if (
                   (props?.type !== InputType.date && props?.type !== InputType.time) ||
@@ -319,33 +331,38 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 props?.type === InputType.url
                   ? urlRegExpString
                   : props?.type === InputType.email
-                  ? emailRegExpString
-                  : props?.type === InputType.tel
-                  ? telRegExpString
-                  : undefined
+                    ? emailRegExpString
+                    : props?.type === InputType.tel
+                      ? telRegExpString
+                      : undefined
               }
               onBlur={(e) => {
                 setPristine(false);
-                normalizeStrings();
+                if (!props.error) {
+                  normalizeStrings();
+                }
 
                 if (props?.onBlur) {
                   props.onBlur(e);
                 }
               }}
+              onFocus={() => { setPristine(true) }}
               onKeyDown={(e) => {
                 if (
                   (e.key.toLowerCase() === 'enter' || e.key.toLowerCase() === 'return') &&
                   !normalized
                 ) {
-                  normalizeStrings();
-
+                  if (!props.error) {
+                    normalizeStrings();
+                  }
                   return true;
                 }
               }}
             />
           </>
         )}
-        {!pristine && props.error && <StyledError>{props.error}</StyledError>}
+        {props.required || props.softRequired && <FormRequiredInfo fulfilled={inputValid} />}
+        {!pristine && props.error && <StyledError inFormList={props.variant === "formList"}>{props.error}</StyledError>}
       </StyledInputContainer>
     );
   }

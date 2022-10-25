@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { LegacyRef, useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
-import { Categories, useCategories } from '../../config/categories';
+import { Categories, offerSidebarRef, useCategories } from '../../config/categories';
 import { OfferList as OfferListCall } from '../../lib/api';
 import { Offer, OfferTranslation, OfferTypeTranslation } from '../../lib/api/types/offer';
 import {
@@ -31,8 +31,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
-import { useOrganizerId } from '../../lib/useOrganizer';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useOrganizerId, useOrganizer } from '../../lib/useOrganizer';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -43,6 +42,8 @@ import {
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
+import { SkipLinkMainContent } from '../navigation/OrganizerBand';
+import { speakerFunction } from '../pages/helpers/useSpeaker';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -117,9 +118,10 @@ export const OfferList: React.FC<OfferListProps> = ({
     [getDispatchFilters, listName]
   );
   const [search, setSearch] = useState<string>();
-  const loadingScreen = useLoadingScreen();
   const createOffer = useCreateOffer();
   const organizerId = useOrganizerId();
+  const organizer = useOrganizer();
+  const organizerTitle = organizer?.data?.relations.translations.filter(translation => translation.attributes.language === language)[0].attributes.name
   const mainTypeOptions = useOfferMainTypeList();
   const typeOptions = useOfferTypeList();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
@@ -177,63 +179,63 @@ export const OfferList: React.FC<OfferListProps> = ({
     () =>
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
-            ({ attributes, relations, id }, index) => {
-              const typeNames =
-                relations?.types?.map((type) => {
-                  const typeTranslation = getTranslation<OfferTypeTranslation>(
-                    language,
-                    type.relations.translations
-                  );
-                  return typeTranslation?.attributes.name;
-                }) || [];
+          ({ attributes, relations, id }, index) => {
+            const typeNames =
+              relations?.types?.map((type) => {
+                const typeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return typeTranslation?.attributes.name;
+              }) || [];
 
-              const mainTypeNames =
-                relations?.mainType?.map((type) => {
-                  const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
-                    language,
-                    type.relations.translations
-                  );
-                  return mainTypeTranslation?.attributes.name;
-                }) || [];
+            const mainTypeNames =
+              relations?.mainType?.map((type) => {
+                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                  language,
+                  type.relations.translations
+                );
+                return mainTypeTranslation?.attributes.name;
+              }) || [];
 
-              const href = (sub?: string) =>
-                routes[Routes.offer]({
-                  locale,
-                  query: { organizer: organizerId, id, sub },
-                });
+            const href = (sub?: string) =>
+              routes[Routes.offer]({
+                locale,
+                query: { organizer: organizerId, id, sub },
+              });
 
-              const translations = relations?.translations;
-              const currentTranslation = translations
-                ? getTranslation<OfferTranslation>(language, translations)
-                : undefined;
+            const translations = relations?.translations;
+            const currentTranslation = translations
+              ? getTranslation<OfferTranslation>(language, translations)
+              : undefined;
 
-              const defaultTranslation = translations
-                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
-                : undefined;
+            const defaultTranslation = translations
+              ? getTranslation<OfferTranslation>(defaultLanguage, translations)
+              : undefined;
 
-              return (
-                <EntryCard
-                  onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.offer, id);
-                  }}
-                  href={href('info')}
-                  menuExpanded={expanded}
-                  key={index}
-                  title={
-                    currentTranslation?.attributes?.name ||
-                    defaultTranslation?.attributes?.name ||
-                    categories?.offer?.placeholderName
-                  }
-                  status={attributes?.status || PublishedStatus.draft}
-                  active={router.asPath.includes(href())}
-                  createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
-                  updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
-                  meta={<EntryCardTypesSubjects types={[...mainTypeNames, ...typeNames]} />}
-                />
-              );
-            }
-          )
+            return (
+              <EntryCard
+                onClick={() => {
+                  setMenuExpanded(false);
+                  setLastEntryId(Categories.offer, id);
+                }}
+                href={href('info')}
+                menuExpanded={expanded}
+                key={index}
+                title={
+                  currentTranslation?.attributes?.name ||
+                  defaultTranslation?.attributes?.name ||
+                  categories?.offer?.placeholderName
+                }
+                status={attributes?.status || PublishedStatus.draft}
+                active={router.asPath.includes(href())}
+                createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
+                updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                meta={<EntryCardTypesSubjects types={[...mainTypeNames, ...typeNames]} />}
+              />
+            );
+          }
+        )
         : undefined,
     [
       expanded,
@@ -252,73 +254,73 @@ export const OfferList: React.FC<OfferListProps> = ({
     () =>
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
-            ({ attributes, relations, id }) => {
-              const translations = relations?.translations;
+          ({ attributes, relations, id }) => {
+            const translations = relations?.translations;
 
-              const currentTranslation = translations
-                ? getTranslation<OfferTranslation>(language, translations)
-                : undefined;
+            const currentTranslation = translations
+              ? getTranslation<OfferTranslation>(language, translations)
+              : undefined;
 
-              const defaultTranslation = translations
-                ? getTranslation<OfferTranslation>(defaultLanguage, translations)
-                : undefined;
+            const defaultTranslation = translations
+              ? getTranslation<OfferTranslation>(defaultLanguage, translations)
+              : undefined;
 
-              const href = (sub?: string) =>
-                routes[Routes.offer]({
-                  locale,
-                  query: { organizer: organizerId, id, sub },
-                });
+            const href = (sub?: string) =>
+              routes[Routes.offer]({
+                locale,
+                query: { organizer: organizerId, id, sub },
+              });
 
-              const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
-                <TableLink
-                  onClick={() => {
-                    setMenuExpanded(false);
-                    setLastEntryId(Categories.organizer, id);
-                  }}
-                  href={href('info')}
-                  isActive={router.asPath.includes(href())}
-                >
-                  {children}
-                </TableLink>
+            const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
+              <TableLink
+                onClick={() => {
+                  setMenuExpanded(false);
+                  setLastEntryId(Categories.organizer, id);
+                }}
+                href={href('info')}
+                isActive={router.asPath.includes(href())}
+              >
+                {children}
+              </TableLink>
+            );
+
+            const typeNames = relations?.types?.map((type) => {
+              const typeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                type.relations.translations
               );
+              return typeTranslation?.attributes.name;
+            });
 
-              const typeNames = relations?.types?.map((type) => {
-                const typeTranslation = getTranslation<OfferTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return typeTranslation?.attributes.name;
-              });
+            const mainTypeNames = relations?.mainType?.map((type) => {
+              const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
+                language,
+                type.relations.translations
+              );
+              return mainTypeTranslation?.attributes.name;
+            });
 
-              const mainTypeNames = relations?.mainType?.map((type) => {
-                const mainTypeTranslation = getTranslation<OfferTypeTranslation>(
-                  language,
-                  type.relations.translations
-                );
-                return mainTypeTranslation?.attributes.name;
-              });
-
-              return {
-                contents: [
-                  <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name ||
-                      defaultTranslation?.attributes?.name ||
-                      categories?.offer?.placeholderName}
-                  </StyledTableLinkText>,
-                  mainTypeNames?.join(', '),
-                  typeNames?.join(', '),
-                  <StatusFlag status={attributes?.status} key={1} />,
-                  attributes?.updatedAt
-                    ? date(new Date(attributes?.updatedAt), DateFormat.date)
-                    : undefined,
-                  attributes?.createdAt
-                    ? date(new Date(attributes?.createdAt), DateFormat.date)
-                    : undefined,
-                ].slice(0, !expanded ? 2 : undefined),
-                Wrapper: ListLink,
-              };
-            }
-          )
+            return {
+              contents: [
+                <StyledTableLinkText key={0}>
+                  {currentTranslation?.attributes?.name ||
+                    defaultTranslation?.attributes?.name ||
+                    categories?.offer?.placeholderName}
+                </StyledTableLinkText>,
+                mainTypeNames?.join(', '),
+                typeNames?.join(', '),
+                <StatusFlag status={attributes?.status} key={1} />,
+                attributes?.updatedAt
+                  ? date(new Date(attributes?.updatedAt), DateFormat.date)
+                  : undefined,
+                attributes?.createdAt
+                  ? date(new Date(attributes?.createdAt), DateFormat.date)
+                  : undefined,
+              ].slice(0, !expanded ? 2 : undefined),
+              Wrapper: ListLink,
+            };
+          }
+        )
         : undefined,
     [
       list.data,
@@ -335,7 +337,8 @@ export const OfferList: React.FC<OfferListProps> = ({
   );
 
   return (
-    <StyledOrganizerList>
+    <StyledOrganizerList tabIndex={0} ref={offerSidebarRef as LegacyRef<HTMLDivElement>}>
+      <SkipLinkMainContent />
       <EntryListHead
         title={t('categories.offer.title.plural') as string}
         expanded={expanded}
@@ -347,11 +350,13 @@ export const OfferList: React.FC<OfferListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.offer.form.create'),
-                async () => await createOffer(),
-                t('general.takeAFewSeconds')
-              );
+              const res = await createOffer()
+              if (res) speakerFunction(t('speaker.newOffer') as string)
+              setTimeout(() => {
+                document.title = organizerTitle
+                  ? `${organizerTitle} - ${t('general.defaultTitleOffer')}`
+                  : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleOffer')}`
+              }, 500)
             }}
           >
             {t('categories.offer.form.create')}
@@ -532,7 +537,7 @@ export const OfferList: React.FC<OfferListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody>
+      <StyledEntryListBody >
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (

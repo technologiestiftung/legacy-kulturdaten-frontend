@@ -12,29 +12,36 @@ import { StatusFlag } from '../Status/StatusFlag';
 const StyledEntryCardLink = styled.a`
   text-decoration: none;
   color: inherit;
-`;
+  border-radius: 0.75rem;
+  `;
 
 const StyledEntryCard = styled.div<{ menuExpanded: boolean; active: boolean; forbidden: boolean }>`
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  border: 2px solid rgba(0, 0, 0, 0.25);
   background: var(--white);
   border-radius: 0.75rem;
   cursor: pointer;
   transition: box-shadow var(--transition-duration-fast);
 
   &:hover {
-    box-shadow: var(--shadow-sharp-hover);
     border-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  &:focus {
+    border-color: var(--white);
   }
 
   ${({ active }) =>
     active
       ? css`
-          box-shadow: var(--shadow-sharp-active);
           border-color: rgba(0, 0, 0, 1);
 
+          &:focus {
+            box-shadow: none;
+            border-color: white;
+          }
+
           &:hover {
-            box-shadow: var(--shadow-sharp-active);
-            border-color: rgba(0, 0, 0, 1);
+            border-color: rgba(0, 0, 0, 0.5);
           }
         `
       : ''}
@@ -78,13 +85,13 @@ const StyledEntryCardTitle = styled.div<{
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             padding: 1.5rem 1.5rem 0.75rem;
             font-size: var(--font-size-600);
             line-height: var(--line-height-600);
           `
-        : ''}
+      : ''}
   }
 
   ${({ active }) =>
@@ -100,11 +107,11 @@ const StyledEntryCardMeta = styled.div<{ menuExpanded: boolean }>`
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             padding: 0 1.5rem;
           `
-        : ''}
+      : ''}
   }
 `;
 const StyledEntryCardImage = styled.div<{ menuExpanded: boolean }>`
@@ -116,12 +123,12 @@ const StyledEntryCardImage = styled.div<{ menuExpanded: boolean }>`
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             max-width: 9.75rem;
             height: 9.75rem;
           `
-        : ''}
+      : ''}
   }
 `;
 
@@ -136,11 +143,11 @@ const StyledEntryCardStatus = styled.div<{ status: PublishedStatus; menuExpanded
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             padding: 1.5rem;
           `
-        : ''}
+      : ''}
   }
 `;
 
@@ -153,8 +160,8 @@ const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
 
   ${mq(Breakpoint.widish)} {
     ${({ menuExpanded }) =>
-      menuExpanded
-        ? css`
+    menuExpanded
+      ? css`
             font-size: var(--font-size-300);
             line-height: var(--line-height-300);
             padding: 1.5rem;
@@ -168,7 +175,7 @@ const StyledEntryCardDates = styled.div<{ menuExpanded: boolean }>`
               }
             }
           `
-        : ''}
+      : ''}
   }
 `;
 
@@ -181,7 +188,7 @@ export const EntryCardText = styled.div`
   line-height: var(--line-height-300);
 `;
 
-export const EntryCardGrid = styled.div<{ expanded: boolean; enableUltraWideLayout: boolean }>`
+export const EntryCardGrid = styled.li<{ expanded: boolean; enableUltraWideLayout: boolean }>`
   display: grid;
   grid-template-columns: auto;
   grid-column-gap: 0.75rem;
@@ -204,12 +211,12 @@ export const EntryCardGrid = styled.div<{ expanded: boolean; enableUltraWideLayo
           }
 
           ${enableUltraWideLayout
-            ? css`
+          ? css`
                 ${mq(Breakpoint.ultra)} {
                   grid-template-columns: 1fr 1fr 1fr;
                 }
               `
-            : ''}
+          : ''}
         `
       : ''}
 `;

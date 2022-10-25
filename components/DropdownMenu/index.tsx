@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as feather from 'react-feather';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq, focusBlackStyles } from '../globals/Constants';
 
 export enum DropdownMenuButtonColor {
   black = 'black',
@@ -59,6 +59,8 @@ const StyledDropdownMenuButton = styled.button<{
   z-index: 2;
   padding: 0;
 
+  ${focusBlackStyles}
+
   ${({ color }) => css`
     background: ${ButtonColors[color].background};
     color: ${ButtonColors[color].color};
@@ -83,14 +85,14 @@ const StyledDropdownMenuButton = styled.button<{
       : ''}
 `;
 
-const StyledDropdownMenuButtonText = styled.div`
+const StyledDropdownMenuButtonText = styled.span`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
   padding: 0.375rem 0 0.375rem 1.125rem;
 `;
 
-const StyledDropdownMenuButtonIcon = styled.div<{
+const StyledDropdownMenuButtonIcon = styled.span<{
   hasText?: boolean;
   size: DropdownMenuButtonSize;
 }>`

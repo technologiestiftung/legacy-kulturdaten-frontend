@@ -15,7 +15,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ info }) => {
     <AuthWrapper image={{ src: loginImage }}>
       <AuthContent>
         {info && <Info {...info}>{t('login.headlineSuccess')}</Info>}
-        <AuthHeadline>{t('login.headline')}</AuthHeadline>
+        <AuthHeadline>
+          <legend>
+            {t('login.headline')}
+          </legend>
+        </AuthHeadline>
         <LoginForm />
       </AuthContent>
     </AuthWrapper>

@@ -30,7 +30,7 @@ export const CSSVars: React.FC = () => (
         --green-light: #41b496;
         --green-mid: #46948c;
         --green-kelly: #91c882;
-        --green-publish: #00835c;
+        --green-publish: #4f9076;
         --red: #b01e1e;
         --red-publish: #e60032;
         --error: #ae0026;
@@ -38,6 +38,7 @@ export const CSSVars: React.FC = () => (
         --error-o50: rgba(174, 0, 38, 0.5);
         --red-50: #f28098;
         --blue: #1e3791;
+        --corporateBlue: #385BA7;
 
         --cyan-dark: #2e91d2;
         --mustard: #dcc82d;
@@ -76,8 +77,8 @@ export const CSSVars: React.FC = () => (
         --shadow-active: 0.125rem 0.125rem 0.5rem -0.25rem var(--black-o70);
         --shadow-inset: inset 0px 0.0625rem 0.375rem var(--black-o25);
         --shadow-light: 0.125rem 0.125rem 10px -0.125rem var(--black-o40);
-        --shadow-sharp-hover: 0 0 0 0.25rem rgba(0, 0, 0, 0.25);
-        --shadow-sharp-active: 0 0 0 0.25rem rgba(0, 0, 0, 0.5);
+        --shadow-sharp-hover: 0 0 0 2px rgba(0, 0, 0, 0.25);
+        --shadow-sharp-active: 0 0 0 2px rgba(0, 0, 0, 1);
 
         --overlay-opacity: 0.75;
 
@@ -199,4 +200,18 @@ export const insetBorderColored = (color: string, ...sides: boolean[]): string =
 export const overlayStyles = css`
   background: #000;
   opacity: var(--overlay-opacity);
+`;
+
+export const focusStyles = css`
+  &:focus {
+    outline: solid #275EC5 2px;
+  }
+`;
+
+export const focusBlackStyles = css`
+  &:focus {
+    outline: solid #275EC5 2px;
+    border: 1px solid white;
+    margin: -1px;
+  }
 `;

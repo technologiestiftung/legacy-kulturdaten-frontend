@@ -83,7 +83,7 @@ const StyledDashboardTileDoneText = styled.div`
   padding: 1.5rem 0.75rem;
 `;
 
-const StyledDashboardTileDigit = styled.div`
+const StyledDashboardTileDigit = styled.span`
   flex-grow: 0;
   flex-shrink: 0;
   background: var(--grey-200);
@@ -117,7 +117,7 @@ const StyledDashboardTileContainerChildren = styled.div`
   }
 `;
 
-const StyledDashboardTileTitle = styled.h3<{ hasDigit?: boolean; variant: DashboardTileVariant }>`
+const StyledDashboardTileTitle = styled.h2<{ hasDigit?: boolean; variant: DashboardTileVariant }>`
   font-size: var(--font-size-400);
   line-height: var(--line-height-400);
   font-weight: 700;
@@ -176,7 +176,7 @@ const StyledDashboardTileContent = styled.div`
   white-space: normal;
 `;
 
-export const DashboardTileText = styled.div`
+export const DashboardTileText = styled.ul`
   display: flex;
   flex-direction: column;
   row-gap: calc(var(--line-height-400) / 2);
@@ -238,7 +238,7 @@ export const DashboardTile: React.FC<DashboardTileProps> = ({
         {digit && <StyledDashboardTileDigit>{digit}</StyledDashboardTileDigit>}
         <StyledDashboardTileContainerChildren>
           <StyledDashboardTileTitle hasDigit={typeof digit !== 'undefined'} variant={variant}>
-            {variant === DashboardTileVariant.hint && <Info />}
+            {variant === DashboardTileVariant.hint && <Info aria-hidden/>}
             <span>{title}</span>
           </StyledDashboardTileTitle>
           <StyledDashboardTileContent>{children}</StyledDashboardTileContent>

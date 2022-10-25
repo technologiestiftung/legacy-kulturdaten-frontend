@@ -9,7 +9,6 @@ import { Category, useEntry } from '../../../../lib/categories';
 import { useT } from '../../../../lib/i18n';
 import { getTranslation } from '../../../../lib/translations';
 import { usePseudoUID } from '../../../../lib/uid';
-import { EntryFormHead } from '../../../EntryForm/EntryFormHead';
 import { Textarea } from '../../../textarea';
 import { FormGrid, FormItem, FormItemWidth } from '../formComponents';
 
@@ -25,6 +24,7 @@ interface SetTeaserProps {
   value: string;
   setValue: (value: string) => void;
   teaser: string;
+  placeholder?: string;
   required?: boolean;
   valid?: boolean;
   hint?: boolean;
@@ -35,6 +35,7 @@ const Teaser: React.FC<SetTeaserProps> = ({
   tooltip,
   ariaLabel,
   onSubmit,
+  placeholder,
   pristine,
   setPristine,
   setValue,
@@ -56,6 +57,7 @@ const Teaser: React.FC<SetTeaserProps> = ({
         id={`${uid}-textarea`}
         label={label}
         ariaLabel={ariaLabel}
+        placeholder={placeholder}
         tooltip={tooltip}
         value={value || ''}
         onChange={(e) => {
@@ -78,6 +80,7 @@ export const useTeaser = <
   category: Category;
   query: ParsedUrlQuery;
   language: Language;
+  placeholder?: string;
   label: string;
   tooltip?: string;
   ariaLabel?: string;
@@ -90,7 +93,7 @@ export const useTeaser = <
   valid: boolean;
   value: string;
 } => {
-  const { category, query, language, label, tooltip, ariaLabel } = props;
+  const { category, query, language, label, placeholder, tooltip, ariaLabel } = props;
 
   const { entry, mutate } = useEntry<EntryType, EntryShowCallType>(category, query);
 
@@ -149,6 +152,7 @@ export const useTeaser = <
         {...{
           pristine,
           setPristine,
+          placeholder,
           value,
           setValue,
           label,
@@ -170,7 +174,7 @@ export const useTeaser = <
   };
 };
 
-export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title }) => {
+export const useTeaserForm: EntryFormHook = ({ category, placeholder, query, loaded }) => {
   const t = useT();
 
   const {
@@ -182,11 +186,9 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
   } = useTeaser({
     category,
     query,
+    placeholder,
     language: Language.de,
-    label: t('forms.labelGerman') as string,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelGerman')}`
-      : `${t('forms.teaser')} ${t('forms.labelGerman')}`,
+    label: `${t('forms.teaser')} ${t('forms.labelGerman')} ${t('forms.teaserCount')}`,
     loaded,
   });
 
@@ -200,11 +202,8 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
     category,
     query,
     language: 'de-easy' as Language,
-    label: t('forms.labelGermanEasy') as string,
+    label: `${t('forms.teaser')} ${t('forms.labelGermanEasy')} ${t('forms.teaserCount')}`,
     tooltip: t('forms.labelGermanEasyTooltip') as string,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelGermanEasy')}`
-      : `${t('forms.teaser')} ${t('forms.labelGermanEasy')}`,
     loaded,
   });
 
@@ -218,10 +217,7 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
     category,
     query,
     language: Language.en,
-    label: t('forms.labelEnglish') as string,
-    ariaLabel: title
-      ? `${title} ${t('forms.labelEnglish')}`
-      : `${t('forms.teaser')} ${t('forms.labelEnglish')}`,
+    label: `${t('forms.teaser')} ${t('forms.labelEnglish')} ${t('forms.teaserCount')}`,
     loaded,
   });
 
@@ -238,11 +234,10 @@ export const useTeaserForm: EntryFormHook = ({ category, query, loaded, title })
   return {
     renderedForm: (
       <div>
-        <EntryFormHead title={title || `${t('forms.teaser') as string}`} valid={valid} />
         <FormGrid>
-          <FormItem width={FormItemWidth.full}>{setTeaserGerman}</FormItem>
-          <FormItem width={FormItemWidth.full}>{setTeaserEnglish}</FormItem>
-          <FormItem width={FormItemWidth.full}>{setTeaserGermanEasy}</FormItem>
+          <FormItem width={FormItemWidth.full} lang="de">{setTeaserGerman}</FormItem>
+          <FormItem width={FormItemWidth.full} lang="en">{setTeaserEnglish}</FormItem>
+          <FormItem width={FormItemWidth.full} lang="de">{setTeaserGermanEasy}</FormItem>
         </FormGrid>
       </div>
     ),

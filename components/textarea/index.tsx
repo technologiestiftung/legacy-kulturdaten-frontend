@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ChangeEventHandler, useEffect, useState } from 'react';
+import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import { ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
@@ -7,6 +7,10 @@ import { inputStyles } from '../input';
 import { Label, StyledLabel } from '../label';
 import { Tooltip } from '../tooltip';
 import { TooltipP } from '../tooltip/TooltipContent';
+import { focusStyles } from '../globals/Constants';
+import { StyledCharacterCount } from '../RichTextEditor';
+import { speakerFunction } from '../pages/helpers/useSpeaker';
+
 
 const StyledTextareaContainer = styled.div`
   display: flex;
@@ -20,6 +24,10 @@ const StyledTextareaContainer = styled.div`
 const StyledTextarea = styled.textarea<{ pristine?: boolean; valid?: boolean }>`
   display: block;
   ${(props) => inputStyles(props)}
+  &::placeholder {
+    opacity: 1;
+  }
+  ${focusStyles}
 `;
 
 const StyledTooltip = styled.div`
@@ -32,6 +40,7 @@ export interface TextareaProps extends ComponentWithVariants {
   onChange: ChangeEventHandler<HTMLTextAreaElement>;
   onBlur?: ChangeEventHandler<HTMLTextAreaElement>;
   label?: string;
+  lang?: string;
   ariaLabel?: string;
   autoComplete?: string;
   autofocus?: boolean;
@@ -54,6 +63,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
   const t = useT();
   const [touched, setTouched] = useState(false);
   const [internalState, setInternalState] = useState(props?.value);
+  const [count, setCount] = useState(0);
   const debouncer = useDebounce();
 
   useEffect(() => {
@@ -64,15 +74,33 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         typeof props?.value === 'number')
     ) {
       setInternalState(props.value);
+      setCount(props.value.length)
     }
   }, [touched, props?.value, internalState]);
 
+
+  const countAlertCall = (maxLength, count, t) => {
+  const restDigits = maxLength - count 
+    restDigits === 0
+    ? speakerFunction(`0 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 5
+    ? speakerFunction(`5 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 10
+    ? speakerFunction(`10 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 20
+    ? speakerFunction(`20 ${t('richText.charactersLeft_2')}` )
+    : restDigits === 50
+    ? speakerFunction(`50 ${t('richText.charactersLeft_2')}` )
+    : null
+}
+
+
   return (
-    <StyledTextareaContainer>
+    <StyledTextareaContainer lang={props?.lang}>
       {props.label && (
         <Label htmlFor={props.id}>
           {props.label}
-          {props.required ? ` (${t('forms.required')})` : ''}
+          {props.required ? ` ${t('forms.required')}` : ''}
           {props.tooltip && (
             <StyledTooltip>
               <Tooltip>
@@ -91,9 +119,14 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         value={props?.debounce ? internalState : props?.value || ''}
         valid={props.valid}
         pristine={pristine}
-        onChange={(e) => {
+        onKeyDown={(e) => {
+          if(props.maxLength === count && e.code !== "Backspace") {
+            speakerFunction(`0 ${t('richText.charactersLeft_2')}` )
+          }
+        }}
+        onChange={async(e) => {
           setTouched(true);
-
+          countAlertCall(props.maxLength, e.target.value.length, t)
           if (props?.debounce) {
             setInternalState(e.target.value);
             debouncer(() => {
@@ -102,6 +135,7 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
           } else {
             props?.onChange(e);
           }
+          setCount(e.target.value.length);
         }}
         onBlur={(e) => {
           if (props?.onBlur) {
@@ -112,6 +146,10 @@ export const Textarea: React.FC<TextareaProps> = (props: TextareaProps) => {
         }}
         aria-label={props?.ariaLabel}
       />
+      {props.maxLength && 
+      <StyledCharacterCount>
+        {count} / {props.maxLength}
+      </StyledCharacterCount>}
     </StyledTextareaContainer>
   );
 };

@@ -38,7 +38,7 @@ export const DateStatusFlag: React.FC<DateStatusFlagProps> = ({
 
   return (
     <StyledDateStatusFlag status={status} disabled={disabled}>
-      {status ? t(OfferDateStatusToL10nMap(editable)[status]) : ''}
+      <p>{status ? t(OfferDateStatusToL10nMap(editable)[status]) : ''}</p>
     </StyledDateStatusFlag>
   );
 };

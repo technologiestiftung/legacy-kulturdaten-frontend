@@ -15,7 +15,7 @@ import { OrganizerBand, OrganizerBandLayout } from '../navigation/OrganizerBand'
 
 const StyledAppLayout = styled.div``;
 
-const Container = styled.div<{ hasOrganizerBand: boolean }>`
+const Container = styled.main<{ hasOrganizerBand: boolean }>`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 100%;
@@ -44,7 +44,7 @@ const Container = styled.div<{ hasOrganizerBand: boolean }>`
   }
 `;
 
-const OrganizerSlot = styled.div<{ adminModeActive: boolean }>`
+const OrganizerSlot = styled.nav<{ adminModeActive: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -63,7 +63,7 @@ const OrganizerSlot = styled.div<{ adminModeActive: boolean }>`
     `}
 `;
 
-const HeaderSlot = styled.div<{ locked: boolean; hasOrganizerBand: boolean }>`
+const HeaderSlot = styled.nav<{ locked: boolean; hasOrganizerBand: boolean }>`
   position: fixed;
   width: 100%;
   z-index: 1001;
@@ -95,7 +95,7 @@ const HeaderSlot = styled.div<{ locked: boolean; hasOrganizerBand: boolean }>`
   }
 `;
 
-const HeaderSlotSecondary = styled.div<{ hasOrganizerBand: boolean; adminModeActive: boolean }>`
+const HeaderSlotSecondary = styled.nav<{ hasOrganizerBand: boolean; adminModeActive: boolean }>`
   ${({ hasOrganizerBand, adminModeActive }) => css`
     background: ${hasOrganizerBand
       ? adminModeActive
@@ -109,20 +109,13 @@ const HeaderSlotSecondary = styled.div<{ hasOrganizerBand: boolean; adminModeAct
   `}
 `;
 
-const MenuSlot = styled.div<{ expanded?: boolean; hasOrganizerBand: boolean }>`
+const MenuSlot = styled.nav<{ expanded?: boolean; hasOrganizerBand: boolean }>`
   position: fixed;
   top: 3rem;
   left: 0;
   z-index: 1000;
   /* overflow: hidden; */
   width: 100%;
-
-  filter: grayscale(1);
-  transform: filter 0.1s;
-
-  &:hover {
-    filter: grayscale(0);
-  }
 
   ${({ hasOrganizerBand, expanded }) => {
     const width = hasOrganizerBand ? '100% - var(--organizer-band-width)' : '100%';
@@ -299,6 +292,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     <StyledAppLayout>
       {bodyLock}
 
+      {activeLayout?.hasOrganizerBand && isMidOrWider && (
+        <OrganizerSlot adminModeActive={adminModeActive}>
+          <OrganizerBand layout={OrganizerBandLayout.narrow} />
+        </OrganizerSlot>
+      )}
       {headerMain && (
         <HeaderSlot
           locked={locked}
@@ -316,11 +314,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         >
           {headerSecondary}
         </HeaderSlotSecondary>
-      )}
-      {activeLayout?.hasOrganizerBand && isMidOrWider && (
-        <OrganizerSlot adminModeActive={adminModeActive}>
-          <OrganizerBand layout={OrganizerBandLayout.narrow} />
-        </OrganizerSlot>
       )}
       {isMidOrWider && sidebar && (
         <MenuSlot

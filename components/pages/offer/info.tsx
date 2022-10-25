@@ -1,7 +1,7 @@
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { useT } from '../../../lib/i18n';
 import { EntryFormHead } from '../../EntryForm/EntryFormHead';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper, StyledRequiredInfoText } from '../../EntryForm/wrappers';
 import { useNameForm } from '../helpers/form/Name';
 import { FormContainer, FormGrid, FormItem, FormItemWidth } from '../helpers/formComponents';
 import { Location } from '../../../lib/api/types/location';
@@ -30,6 +30,7 @@ import { RadioList } from '../../Radio/RadioList';
 import { useTeaserForm } from '../helpers/form/Teaser';
 import { useConfirmExit } from '../../../lib/useConfirmExit';
 import { usePublish } from '../../Publish';
+import { isUrl } from '../../../lib/validations';
 
 const useRoomForm: EntryFormHook = ({ category, query }) => {
   const { entry, mutate } = useEntry<Offer, OfferShow>(category, query);
@@ -58,23 +59,20 @@ const useRoomForm: EntryFormHook = ({ category, query }) => {
 
   const renderedForm = (
     <FormContainer>
-      <EntryFormHead
-        title={t('categories.offer.form.locationInfo') as string}
-        tooltip={t('categories.offer.form.locationInfoTooltip') as string}
-      />
-      <FormGrid>
+      <FormGrid >
         {contentLanguages.map((language: Language, index) => {
           const currentTranslation = translations
             ? getTranslation<OfferTranslation>(language, translations, false)
             : undefined;
 
           return (
-            <FormItem width={FormItemWidth.half} key={index}>
+            <FormItem width={FormItemWidth.half} key={index} lang={language.slice(0,2) as "de" | "en"}>
               <Input
-                label={t(languageTranslationKeys[language]) as string}
+                label={t('categories.offer.form.locationInfo') as string + " " + t(languageTranslationKeys[language]) as string}
                 ariaLabel={`${t('date.roomInfo')} ${t(languageTranslationKeys[language])}`}
                 value={currentTranslation?.attributes?.roomDescription || ''}
                 type={InputType.text}
+                tooltip={index == 0 ? t('categories.offer.form.locationInfoTooltip') as string : undefined}
                 placeholder={`${t('categories.offer.form.locationInfoPlaceholder')} (${t(
                   languageTranslationKeys[language]
                 )})`}
@@ -139,8 +137,18 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
   const call = useApiCall();
   const t = useT();
   const uid = usePseudoUID();
+  const ticketUrlValid = isUrl(attributes?.ticketUrl);
+  const registrationUrlValid = isUrl(attributes?.registrationUrl);
 
   const [attributesFromApi, setAttributesFromApi] = useState<Offer['data']['attributes']>();
+  const [valid, setValid] = useState(false)
+
+  const checkValidity = () => {
+    setValid((!attributes?.ticketUrl || ticketUrlValid) && (!attributes?.registrationUrl || registrationUrlValid))
+  }
+  useEffect(() => {
+    checkValidity()
+  })
 
   const initialAttributes = useMemo(() => entry?.data?.attributes, [entry?.data?.attributes]);
 
@@ -202,19 +210,37 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
         <FormItem width={FormItemWidth.full}>
           <Input
             type={InputType.url}
+            autoComplete="url"
             label={t('categories.offer.form.pricing.ticketUrl') as string}
             value={attributes?.ticketUrl || ''}
             placeholder={t('categories.offer.form.pricing.ticketUrlPlaceholder') as string}
-            onChange={(e) => setAttributes({ ...attributes, ticketUrl: e.target.value })}
+            onChange={(e) => {
+              setAttributes({ ...attributes, ticketUrl: e.target.value })
+              checkValidity()
+            }}
+            error={
+              attributes?.ticketUrl.length && !isUrl(attributes?.ticketUrl)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
         <FormItem width={FormItemWidth.full}>
           <Input
             type={InputType.url}
+            autoComplete="url"
             label={t('categories.offer.form.pricing.registrationUrl') as string}
             value={attributes?.registrationUrl || ''}
             placeholder={t('categories.offer.form.pricing.registrationUrlPlaceholder') as string}
-            onChange={(e) => setAttributes({ ...attributes, registrationUrl: e.target.value })}
+            onChange={(e) => {
+              setAttributes({ ...attributes, registrationUrl: e.target.value })
+              checkValidity()
+            }}
+            error={
+              attributes?.registrationUrl.length && !isUrl(attributes?.registrationUrl)
+                ? (t('forms.urlInvalid') as string)
+                : undefined
+            }
           />
         </FormItem>
       </FormGrid>
@@ -245,7 +271,7 @@ const usePricingForm: EntryFormHook = ({ category, query }) => {
     reset: () => {
       setAttributes(initialAttributes);
     },
-    valid: true,
+    valid,
   };
 };
 
@@ -436,6 +462,8 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     query,
     loaded,
     title: t('categories.offer.form.name') as string,
+    placeholder: t('categories.offer.form.namePlaceholder') as string,
+    hideTitle: true,
     id: 'offer-name',
   });
 
@@ -450,6 +478,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     category,
     query,
     loaded,
+    hideTitle: true,
     id: 'offer-description',
   });
 
@@ -463,6 +492,7 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
     category,
     query,
     loaded,
+    placeholder: t('forms.teaserPlaceholder') as string,
   });
 
   const {
@@ -605,13 +635,14 @@ export const OfferInfoPage: React.FC<CategoryEntryPage> = ({
             valid={loaded === false || valid}
           />
           <EntryFormWrapper>
-            <EntryFormContainer>{nameForm}</EntryFormContainer>
-            <EntryFormContainer>{organizerLocationForm}</EntryFormContainer>
-            <EntryFormContainer>{roomForm}</EntryFormContainer>
-            <EntryFormContainer>{teaserForm}</EntryFormContainer>
-            <EntryFormContainer>{descriptionForm}</EntryFormContainer>
-            <EntryFormContainer>{pricingForm}</EntryFormContainer>
-            <EntryFormContainer>{linksForm}</EntryFormContainer>
+            <StyledRequiredInfoText/>
+            <StyledEntryFormContainer>{nameForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{organizerLocationForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{roomForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{teaserForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{descriptionForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{pricingForm}</StyledEntryFormContainer>
+            <StyledEntryFormContainer>{linksForm}</StyledEntryFormContainer>
           </EntryFormWrapper>
         </div>
       </div>

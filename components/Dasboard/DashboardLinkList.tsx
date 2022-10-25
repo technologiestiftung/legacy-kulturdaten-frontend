@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'react-feather';
+import { useT } from '../../lib/i18n';
 
 import { StandardLink, StandardLinkInternal, StandardLinkType } from '../../lib/generalTypes';
 import { Breakpoint } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq,focusStyles } from '../globals/Constants';
 
 const StyledDashboardLinkList = styled.div`
   font-size: var(--font-size-300);
@@ -60,6 +61,7 @@ const StyledDashboardLinkListLink = styled.a`
   column-gap: 0.375rem;
   flex-grow: 0;
   position: relative;
+  ${focusStyles}
 
   @media screen and (pointer: fine) {
     &:hover {
@@ -96,15 +98,18 @@ const StyledDashboardLinkListLink = styled.a`
   }
 `;
 
+
 const InternalDashboardLinkListLink: React.FC<StandardLinkInternal> = ({
   title,
-  href,
+  href
 }: StandardLinkInternal) => {
+  const t = useT();
+  const linkIconAltText = t('links.internal.iconAltText') as string;
   return (
     <Link href={href} passHref>
       <StyledDashboardLinkListLink title={title}>
         <span>{title}</span>
-        <ArrowRight />
+        <ArrowRight aria-label={linkIconAltText + ' ' + title} />
       </StyledDashboardLinkListLink>
     </Link>
   );
@@ -112,6 +117,7 @@ const InternalDashboardLinkListLink: React.FC<StandardLinkInternal> = ({
 
 export const DashboardLinkListLink: React.FC<StandardLink> = (props: StandardLink) => {
   const { type = StandardLinkType.internal } = props;
+  const t = useT();
 
   switch (type) {
     case StandardLinkType.internal: {
@@ -123,7 +129,7 @@ export const DashboardLinkListLink: React.FC<StandardLink> = (props: StandardLin
       return (
         <StyledDashboardLinkListLink href={href} rel="noopener noreferrer" target="_blank">
           <span>{title}</span>
-          <ArrowUpRight />
+          <ArrowUpRight aria-label={t('links.external.iconAltText') as string} />
         </StyledDashboardLinkListLink>
       );
     }
@@ -138,16 +144,18 @@ interface DashboardLinkListProps {
   links: StandardLink[];
   title?: string;
   text?: React.ReactElement;
+  id?: string;
 }
 
 export const DashboardLinkList: React.FC<DashboardLinkListProps> = ({
   title,
   links,
   text,
+  id,
 }: DashboardLinkListProps) => {
   return (
     <StyledDashboardLinkList>
-      {title && <StyledDashboardLinkListTitle>{title}</StyledDashboardLinkListTitle>}
+      {title && <StyledDashboardLinkListTitle id={id}>{title}</StyledDashboardLinkListTitle>}
       {text && <StyledDashboardLinkListText>{text}</StyledDashboardLinkListText>}
       <StyledDashboardLinkListList>
         {links?.map((link, index) => (

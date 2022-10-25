@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useApiCall } from '../../../lib/api';
 import { Category, CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useT } from '../../../lib/i18n';
@@ -17,7 +17,6 @@ import { OrganizerUpdate, organizerUpdateFactory } from '../../../lib/api/routes
 import { Textarea } from '../../textarea';
 import { usePseudoUID } from '../../../lib/uid';
 import { Button, ButtonColor, ButtonSize } from '../../button';
-import { useLoadingScreen } from '../../Loading/LoadingScreen';
 import { ParsedUrlQuery } from 'querystring';
 import { Role } from '../../../lib/api/types/role';
 import { User } from '../../../lib/api/types/user';
@@ -34,7 +33,6 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
   const [members, setMembers] = useState<string>('');
   const [blurred, setBlurred] = useState(false);
   const uid = usePseudoUID();
-  const loadingScreen = useLoadingScreen();
   const t = useT();
   const call = useApiCall();
   const { entry, mutate } = useEntry(category, query);
@@ -53,6 +51,12 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
     <div>
       <EntryFormHead title={t('team.invite.title') as string} />
       <FormGrid>
+      <FormItem width={FormItemWidth.full}>
+          <Info color={InfoColor.white} noMaxWidth>
+            <span>{t('team.invite.hint', { max: maxInvites })}</span>
+            <span>{t('team.invite.hint2')}</span>
+          </Info>
+        </FormItem>
         <FormItem width={FormItemWidth.full}>
           <Textarea
             label={t('team.invite.label') as string}
@@ -64,12 +68,6 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
             valid={valid}
             onBlur={() => setBlurred(true)}
           />
-        </FormItem>
-        <FormItem width={FormItemWidth.full}>
-          <Info color={InfoColor.white} noMaxWidth>
-            <p>{t('team.invite.hint', { max: maxInvites })}</p>
-            <p>{t('team.invite.hint2')}</p>
-          </Info>
         </FormItem>
         {blurred && !valid && (
           <FormItem width={FormItemWidth.full}>
@@ -83,34 +81,32 @@ const useTeamAddForm = ({ category, query }: { category: Category; query: Parsed
             disabled={empty || !valid}
             onClick={async () => {
               if (membersArray.length > 0) {
-                loadingScreen(t('team.invite.loading'), async () => {
-                  try {
-                    const resp = await call<OrganizerUpdate>(organizerUpdateFactory, {
-                      id: entry?.data.id,
-                      entry: {
-                        relations: {
-                          roles: membersArray.map((member) => ({
-                            attributes: {
-                              role: 'editor',
-                              email: member,
-                            },
-                          })),
-                        },
+                try {
+                  const resp = await call<OrganizerUpdate>(organizerUpdateFactory, {
+                    id: entry?.data.id,
+                    entry: {
+                      relations: {
+                        roles: membersArray.map((member) => ({
+                          attributes: {
+                            role: 'editor',
+                            email: member,
+                          },
+                        })),
                       },
-                    });
+                    },
+                  });
 
-                    if (resp.status === 200) {
-                      mutate();
-                      setMembers('');
-                      return { success: true };
-                    }
-
-                    return { success: false, e: t('general.serverProblem') };
-                  } catch (e) {
-                    console.error(e);
-                    return { success: false, e: t('general.serverProblem') };
+                  if (resp.status === 200) {
+                    mutate();
+                    setMembers('');
+                    return { success: true };
                   }
-                });
+
+                  return { success: false, e: t('general.serverProblem') };
+                } catch (e) {
+                  console.error(e);
+                  return { success: false, e: t('general.serverProblem') };
+                }
               }
             }}
           >
@@ -265,8 +261,8 @@ export const OrganizerTeamPage: React.FC<CategoryEntryPage> = ({
           />
         )}
         <EntryFormWrapper>
-          {userIsOwner && <EntryFormContainer>{inviteForm}</EntryFormContainer>}
-          <EntryFormContainer>{teamForm}</EntryFormContainer>
+          {userIsOwner && <StyledEntryFormContainer>{inviteForm}</StyledEntryFormContainer>}
+          <StyledEntryFormContainer>{teamForm}</StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

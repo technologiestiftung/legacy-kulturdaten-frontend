@@ -2,8 +2,9 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { Check } from 'react-feather';
 import Link from 'next/link';
+import React, { RefObject } from 'react';
 
-const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
+const StyledRequirement = styled.span<{ fulfilled: boolean; hasLink?: boolean }>`
   background: ${({ fulfilled }) => (fulfilled ? 'var(--white-green-o50)' : 'var(--white-red)')};
   color: ${({ fulfilled }) => (fulfilled ? 'var(--black-o70)' : 'var(--black)')};
   border-radius: 0.1875rem;
@@ -38,11 +39,11 @@ const StyledRequirement = styled.div<{ fulfilled: boolean; hasLink?: boolean }>`
     `}
 `;
 
-const StyledRequirementText = styled.div`
+const StyledRequirementText = styled.span`
   flex-grow: 1;
 `;
 
-export const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
+export const StyledRequirementMark = styled.span<{ fulfilled: boolean }>`
   flex-shrink: 0;
   flex-grow: 0;
   min-height: 100%;
@@ -69,7 +70,7 @@ export const StyledRequirementMark = styled.div<{ fulfilled: boolean }>`
             margin: 0.4375rem;
           }
         `
-      : 'opacity: 0.7;'}
+      : ''}
 `;
 
 const StyledRequirementLink = styled.a`
@@ -83,13 +84,15 @@ export interface RequirementProps {
   link?: {
     href: string;
     ariaLabel: string;
+    targetId?: string;
+    targetRef?: RefObject<HTMLAnchorElement>;
   };
 }
 
 export const Requirement: React.FC<RequirementProps> = ({
   text,
   fulfilled,
-  link,
+  link
 }: RequirementProps) => {
   const hasLink = typeof link !== 'undefined';
 
@@ -102,12 +105,21 @@ export const Requirement: React.FC<RequirementProps> = ({
     </StyledRequirement>
   );
 
+  const handleClick = () => {
+    link.targetRef?.current?.focus()
+  }
+
   return hasLink ? (
-    <Link href={link.href} passHref>
-      <StyledRequirementLink aria-label={link.ariaLabel}>
-        {renderedRequirement}
-      </StyledRequirementLink>
-    </Link>
+    <li>
+      <Link href={link.href} passHref>
+        <StyledRequirementLink
+          aria-label={link.ariaLabel}
+          onClick={handleClick}
+        >
+          {renderedRequirement}
+        </StyledRequirementLink>
+      </Link>
+    </li>
   ) : (
     renderedRequirement
   );

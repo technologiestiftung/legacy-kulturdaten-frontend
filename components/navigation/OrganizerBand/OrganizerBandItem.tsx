@@ -2,18 +2,23 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as feather from 'react-feather';
 import Image from 'next/image';
-import React, { RefObject, useMemo, useRef } from 'react';
+import React, { RefObject, useMemo, useRef, useState } from 'react';
 import { OrganizerBandLayout } from '.';
 import { Media } from '../../../lib/api/types/media';
 import { MouseTooltip } from '../../MouseTooltip';
+import { focusStyles } from '../../globals/Constants'
 
-const StyledOrganizerBandItemLogo = styled.div<{
+const StyledOrganizerBandItemLogo = styled.span<{
   active: boolean;
   layout: OrganizerBandLayout;
   noBorder: boolean;
 }>`
   border-radius: calc(0.75rem - 1px);
   width: 100%;
+  ${focusStyles}
+  &:focus {
+    border-color: var(--grey-400);
+  }
 
   flex-grow: 0;
   flex-shrink: 0;
@@ -54,6 +59,7 @@ const StyledOrganizerBandItem = styled.a<{
   flex-direction: row;
   justify-content: center;
   column-gap: 0.75rem;
+
   background: ${({ adminModeActive }) =>
     adminModeActive ? 'rgba(255,255,255,0.25)' : 'var(--grey-200)'};
   border-radius: 0.75rem;
@@ -73,8 +79,8 @@ const StyledOrganizerBandItem = styled.a<{
   ${({ noBorder, active }) =>
     noBorder
       ? css`
-          border: 1px solid transparent;
-
+          border: solid 2px var(--grey-200);
+          color: var(--grey-500);
           &:hover {
             background: var(--white);
             color: var(--grey-600);
@@ -87,7 +93,7 @@ const StyledOrganizerBandItem = styled.a<{
           `}
         `
       : css`
-          border: 1px solid var(--grey-400);
+          border: 2px solid rgba(0, 0, 0, 0.25);
 
           &:hover {
             box-shadow: var(--shadow-sharp-hover);
@@ -104,11 +110,8 @@ const StyledOrganizerBandItem = styled.a<{
             background: var(--white);
             border-color: var(--black);
             color: var(--black);
-            box-shadow: var(--shadow-sharp-active);
 
             &:hover {
-              box-shadow: var(--shadow-sharp-active);
-              border-color: var(--black);
 
               ${StyledOrganizerBandItemLogo} {
                 border-color: var(--black);
@@ -118,7 +121,7 @@ const StyledOrganizerBandItem = styled.a<{
         `}
 `;
 
-const StyledOrganizerBandItemText = styled.div<{
+const StyledOrganizerBandItemText = styled.span<{
   layout: OrganizerBandLayout;
 }>`
   font-size: 1.125rem;
@@ -142,6 +145,31 @@ const StyledOrganizerBandItemText = styled.div<{
     `}
 `;
 
+const StyledSitemapIcon = styled.div`
+  width: 32px;
+  height: 36px;
+  display: flex;
+`;
+
+const StyledOrganizerBandListItem = styled.li<{margin: string}>`
+  margin-top: ${({ margin }) => margin ? 'auto' : '' };
+`
+
+const SitemapIcon: React.FC = () => {
+  return(
+    <StyledSitemapIcon>
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 24.75V11.25" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="7.5" y="6.75" width="21" height="4.5" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M6 24L10.5 18.75H25.4807L30 24" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="3" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="15" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="27" y="24.75" width="6" height="6" stroke="#565656" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </StyledSitemapIcon>
+  )
+}
+
 interface OrganizerBandItemProps {
   children: string;
   active: boolean;
@@ -153,6 +181,7 @@ interface OrganizerBandItemProps {
   logo?: Media['data'];
   asButton?: boolean;
   adminModeActive?: boolean;
+  margin?: string;
 }
 
 const OrganizerBandItemForwarded = (
@@ -167,10 +196,11 @@ const OrganizerBandItemForwarded = (
     logo,
     asButton,
     adminModeActive,
+    margin
   }: OrganizerBandItemProps,
   ref: RefObject<HTMLAnchorElement>
 ) => {
-  const selfRef = useRef<HTMLDivElement>(null);
+  const selfRef = useRef<HTMLLIElement>(null);
   const logoRenditions = useMemo<Media['data']['relations']['renditions']>(
     () => logo?.relations?.renditions?.filter((rendition) => rendition.attributes.base === 96),
     [logo?.relations?.renditions]
@@ -186,8 +216,21 @@ const OrganizerBandItemForwarded = (
     [logoRenditions, logo]
   );
 
+  const [focused, setFocused] = useState(false)
+
+  const getTooltipPosition = () => {
+    if (selfRef.current) {
+
+      const el = selfRef.current
+      const {x, y} = el.getBoundingClientRect();
+
+      return { x: x + el.clientWidth, y: y + el.clientHeight/2}
+    }
+  }
+
+
   return (
-    <div ref={selfRef}>
+    <StyledOrganizerBandListItem margin={margin} ref={selfRef}>
       <StyledOrganizerBandItem
         active={active}
         ref={ref}
@@ -202,26 +245,30 @@ const OrganizerBandItemForwarded = (
         }}
         as={asButton ? 'button' : undefined}
         adminModeActive={adminModeActive}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
       >
         <StyledOrganizerBandItemLogo active={active} layout={layout} noBorder={noBorder}>
           {icon && feather[icon] ? (
             React.createElement(feather[icon])
+          ) : icon === "sitemap" ? (
+            <SitemapIcon />
           ) : logoRendition ? (
             <Image src={logoRendition.url} layout={'fill'} objectFit="contain" alt="" />
           ) : (
-            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow}>
+            <StyledOrganizerBandItemText layout={OrganizerBandLayout.narrow} aria-hidden>
               {children?.slice(0, 1)}
             </StyledOrganizerBandItemText>
           )}
         </StyledOrganizerBandItemLogo>
 
         {layout === OrganizerBandLayout.narrow ? (
-          <MouseTooltip hoverElement={selfRef}>{children}</MouseTooltip>
+          <MouseTooltip hoverElement={selfRef} position={getTooltipPosition()} inFocus={focused}>{children}</MouseTooltip>
         ) : (
           <StyledOrganizerBandItemText layout={layout}>{children}</StyledOrganizerBandItemText>
         )}
       </StyledOrganizerBandItem>
-    </div>
+    </StyledOrganizerBandListItem>
   );
 };
 

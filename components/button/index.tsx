@@ -1,10 +1,11 @@
-import React, { MouseEvent, useRef } from 'react';
+import React, { MouseEvent, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/react';
 import * as feather from 'react-feather';
 import { insetBorderColored } from '../globals/Constants';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { MouseTooltip } from '../MouseTooltip';
+import { focusStyles, focusBlackStyles } from '../globals/Constants';
 
 export enum ButtonColor {
   default = 'default',
@@ -166,7 +167,7 @@ const buttonVariants: { [key in ButtonVariant]: SerializedStyles } = {
   `,
 };
 
-const StyledButtonText = styled.div<{
+const StyledButtonText = styled.span<{
   variant: ButtonVariant;
   size: ButtonSize;
   iconPosition: IconPosition;
@@ -187,7 +188,7 @@ const StyledButtonText = styled.div<{
     `}
 `;
 
-const StyledButtonIcon = styled.div<{
+const StyledButtonIcon = styled.span<{
   size: ButtonSize;
   position: IconPosition;
   hasChildren: boolean;
@@ -270,6 +271,11 @@ const StyledButton = styled.button<{
   cursor: pointer;
   overflow: hidden;
 
+  ${({ color }) => buttonColors[color].background === 'var(--black)' ? focusBlackStyles : focusStyles}
+  :focus {
+    margin: 0;
+  }
+
   ${({ variant }) => buttonVariants[variant]}
 
   ${({ customCss }) => customCss}
@@ -304,6 +310,7 @@ export interface ButtonProps {
   children?: React.ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   onMouseDown?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
+  onMouseUp?: (e: MouseEvent<HTMLButtonElement | HTMLInputElement>) => void;
   disabled?: boolean;
   color?: ButtonColor;
   contentPosition?: ButtonContentPosition;
@@ -330,6 +337,7 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
   onMouseDown,
+  onMouseUp,
   disabled,
   color = ButtonColor.default,
   contentPosition = ButtonContentPosition.default,
@@ -353,9 +361,22 @@ export const Button: React.FC<ButtonProps> = ({
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const hasIcon = Boolean(renderedIcon || (icon && feather[icon]));
 
+  const [focused, setFocused] = useState(false)
+
+  const getTooltipPosition = () => {
+    if (buttonRef.current) {
+
+      const el = buttonRef.current
+      const {x, y} = el.getBoundingClientRect();
+
+      return { x: x, y: y + 2 * el.clientHeight}
+    }
+  }
+
   return (
     <>
-      {tooltip && isMidOrWider && <MouseTooltip hoverElement={buttonRef}>{tooltip}</MouseTooltip>}
+      {tooltip && isMidOrWider && <MouseTooltip position={getTooltipPosition()} hoverElement={buttonRef}>{tooltip}</MouseTooltip>}
+      {tooltip && focused && <MouseTooltip inFocus={focused} position={getTooltipPosition()} hoverElement={buttonRef}>{tooltip}</MouseTooltip>}
       {asInput ? (
         <StyledButton
           ref={buttonRef}
@@ -368,10 +389,18 @@ export const Button: React.FC<ButtonProps> = ({
           id={id}
           name={name}
           type="submit"
-          onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => onClick(e) : undefined}
           onMouseDown={
-            onMouseDown ? (e: MouseEvent<HTMLInputElement>) => onMouseDown(e) : undefined
+            onMouseDown ? () => setFocused(false) : undefined
           }
+                    onClick={onClick ? (e: MouseEvent<HTMLInputElement>) => {
+            onClick(e)
+          } : undefined}
+          onMouseUp={onMouseUp ? (e: MouseEvent<HTMLInputElement>) => {
+            onMouseUp(e)
+            setFocused(false)
+          } : undefined}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           disabled={disabled}
           aria-label={ariaLabel}
           title={title}
@@ -380,10 +409,18 @@ export const Button: React.FC<ButtonProps> = ({
       ) : (
         <StyledButton
           ref={buttonRef}
-          onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => onClick(e) : undefined}
           onMouseDown={
-            onMouseDown ? (e: MouseEvent<HTMLButtonElement>) => onMouseDown(e) : undefined
+            onMouseDown ? () => setFocused(false) : undefined
           }
+                    onClick={onClick ? (e: MouseEvent<HTMLButtonElement>) => {
+            onClick(e)
+          } : undefined}
+          onMouseUp={onMouseUp ? (e: MouseEvent<HTMLInputElement>) => {
+            onMouseUp(e)
+            setFocused(false)
+          } : undefined}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           color={color}
           contentPosition={contentPosition}
           size={size}

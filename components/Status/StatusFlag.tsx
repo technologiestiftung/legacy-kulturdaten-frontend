@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { PublishedStatus } from '../../lib/api/types/general';
 import { useT } from '../../lib/i18n';
 
-const StyledStatusFlag = styled.div<{ status: PublishedStatus; variant: StatusFlagVariant }>`
+const StyledStatusFlag = styled.span<{ status: PublishedStatus; variant: StatusFlagVariant }>`
   display: flex;
 
   ${({ variant }) =>
@@ -24,7 +24,7 @@ const StyledEntryHeaderStatusLabel = styled.div`
   background: var(--white);
 `;
 
-const StyledEntryHeaderStatusFlag = styled.span<{
+const StyledEntryHeaderStatusFlag = styled.strong<{
   status: PublishedStatus;
   variant: StatusFlagVariant;
 }>`

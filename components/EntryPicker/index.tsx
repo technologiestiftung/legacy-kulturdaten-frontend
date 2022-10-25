@@ -12,6 +12,7 @@ import { EntryListContextProvider } from '../EntryList/EntryListContext';
 import { useOverlay } from '../overlay';
 import { OverlayContainer } from '../overlay/OverlayContainer';
 import { OverlayTitleBar } from '../overlay/OverlayTitleBar';
+import { focusBlackStyles } from '../globals/Constants';
 
 const StyledEntryPicker = styled.div`
   position: relative;
@@ -54,6 +55,8 @@ const StyledEntryPickerSlot = styled.button<{ showHint?: boolean; variant: Entry
     box-shadow: var(--shadow-sharp-hover);
     border-color: var(--grey-600);
   }
+
+  ${focusBlackStyles}
 
   ${({ variant }) =>
     variant === EntryPickerVariant.button &&
@@ -114,7 +117,7 @@ const StyledEntryPickerSlotRemove = styled.div`
   bottom: calc(0.75rem - 2px);
 `;
 
-const StyledEntryPickerSlotChoose = styled.div``;
+const StyledEntryPickerSlotChoose = styled.span``;
 
 export enum EntryPickerVariant {
   default = 'default',

@@ -4,7 +4,7 @@ import { CategoryEntry } from '../../../lib/api/types/general';
 import { CategoryEntryPage, useEntry } from '../../../lib/categories';
 import { WindowContext } from '../../../lib/WindowService';
 import { Save } from '../../EntryForm/Save';
-import { EntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
+import { StyledEntryFormContainer, EntryFormWrapper } from '../../EntryForm/wrappers';
 import { useEntryHeader } from '../helpers/useEntryHeader';
 import { useSaveDate } from '../helpers/useSaveDate';
 import { useMediaForm } from '../helpers/media';
@@ -70,7 +70,7 @@ export const OfferMediaPage: React.FC<CategoryEntryPage> = <
       <div>
         <Save onClick={onSave} active={!pristine} date={formattedDate} valid={valid} hint={false} />
         <EntryFormWrapper>
-          <EntryFormContainer>{renderedForm}</EntryFormContainer>
+          <StyledEntryFormContainer>{renderedForm}</StyledEntryFormContainer>
         </EntryFormWrapper>
       </div>
     </>

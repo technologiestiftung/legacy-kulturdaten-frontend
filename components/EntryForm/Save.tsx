@@ -78,7 +78,7 @@ const StyledSaveMessageSymbol = styled.div`
   }
 `;
 
-const StyledSaveMessageText = styled.div`
+const StyledSaveMessageText = styled.p`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
 `;
@@ -137,14 +137,14 @@ const StyledSaveButton = styled.button<{ saving: boolean }>`
         `}
 `;
 
-const StyledSaveButtonText = styled.div`
+const StyledSaveButtonText = styled.span`
   padding: calc(0.5rem - 1px) calc(1rem - 1px);
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   font-weight: 700;
 `;
 
-const StyledSaveButtonIcon = styled.div<{ active: boolean; saving: boolean }>`
+const StyledSaveButtonIcon = styled.span<{ active: boolean; saving: boolean }>`
   @keyframes arrowAnimation {
     0% {
       transform: scale(1.15) translateY(0);

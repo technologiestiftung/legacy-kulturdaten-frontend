@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import formatISO9075 from 'date-fns/formatISO9075';
 import Image from 'next/image';
 import { ExternalLink } from 'react-feather';
+import { StyledRequiredInfoText } from '../EntryForm/wrappers';
 import { contentLanguages, languageTranslationKeys } from '../../config/locales';
 import {
   Media,
@@ -38,6 +39,11 @@ const StyledMediaListItem = styled.div`
   background: var(--white);
   border: 1px solid var(--grey-400);
   border-radius: 0.75rem;
+`;
+
+const StyledMediaListItemTitle = styled.h3`
+  font-weight: 700;
+  padding: 1.5rem 1.5rem 0;
 `;
 
 const StyledMediaListItemMain = styled.div`
@@ -245,21 +251,19 @@ const StyledMediaListItemSub = styled.div`
   }
 `;
 
-const StyledMediaListItemInfo = styled.div`
+const StyledMediaListItemInfo = styled.table`
   font-family: var(--font-family-mono);
   font-size: var(--font-size-200);
   line-height: calc(var(--line-height-200) * 1);
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 0.75rem;
 `;
 
-const StyledMediaListItemInfoText = styled.div`
+const StyledMediaListItemInfoText = styled.td`
   word-break: break-all;
 `;
 
-const StyledMediaListItemInfoLabel = styled.div`
+const StyledMediaListItemInfoLabel = styled.td`
   font-weight: 700;
+  padding-right: 1rem;
 `;
 
 const StyledMediaListItemDelete = styled.div`
@@ -285,6 +289,7 @@ interface MediaListItemProps {
   onChange: (mediaItem: Media['data']) => void;
   valid: boolean;
   onDelete?: (mediaItemId: number) => void;
+  index?: number;
 }
 
 const MediaListItem: React.FC<MediaListItemProps> = ({
@@ -292,6 +297,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
   onChange,
   valid,
   onDelete,
+  index,
 }: MediaListItemProps) => {
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const uid = usePseudoUID();
@@ -316,6 +322,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
 
   return (
     <StyledMediaListItem role="listitem">
+      <StyledMediaListItemTitle>{currentTranslation?.attributes?.alternativeText || `${t('media.image')} ${index}`}</StyledMediaListItemTitle>
       {!valid && (
         <StlyedMediaListItemHint>
           <AlertSymbol />
@@ -357,6 +364,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
           )}
         </StyledMediaListItemThumbnail>
         <StyledMediaListItemFormWrapper>
+          <StyledRequiredInfoText wrapped/>
           <StyledMediaListItemForm>
             {contentLanguages.map((language: Language, index) => {
               const currentTranslation = mediaItem.relations?.translations
@@ -373,9 +381,8 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
                     type={InputType.text}
                     label={`${t('media.alt')} ${t(languageTranslationKeys[language])}`}
                     id={`${uid}-alt-${language}`}
+                    lang={language.slice(0,2) as "de" | "en"}
                     value={currentTranslation?.attributes?.alternativeText || ''}
-                    required={language === defaultLanguage}
-                    softRequired={language === defaultLanguage}
                     tooltip={language === defaultLanguage ? (t('media.altTooltip') as string) : ''}
                     onChange={(e) => {
                       const updatedTranslation = {
@@ -522,31 +529,33 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
       </StyledMediaListItemMain>
       <StyledMediaListItemSub>
         <StyledMediaListItemInfo>
-          {mediaItem.attributes.format && (
-            <>
-              <StyledMediaListItemInfoLabel>{t('media.format')}</StyledMediaListItemInfoLabel>
-              <StyledMediaListItemInfoText>
-                {mediaItem.attributes.format.toUpperCase()}
-              </StyledMediaListItemInfoText>
-            </>
-          )}
-          {mediaItem.attributes.url && (
-            <>
-              <StyledMediaListItemInfoLabel>{t('media.url')}</StyledMediaListItemInfoLabel>
-              <StyledMediaListItemInfoText>{mediaItem.attributes.url}</StyledMediaListItemInfoText>
-            </>
-          )}
-          {mediaItem.attributes.filesize && (
-            <>
-              <StyledMediaListItemInfoLabel>{t('media.size')}</StyledMediaListItemInfoLabel>
-              <StyledMediaListItemInfoText>
-                {formatNumber(
-                  Math.ceil((parseInt(mediaItem.attributes.filesize, 10) / 1024 / 1024) * 100) / 100
-                )}{' '}
-                {t('media.mb')}
-              </StyledMediaListItemInfoText>
-            </>
-          )}
+          <tbody>
+            {mediaItem.attributes.format && (
+              <tr>
+                <StyledMediaListItemInfoLabel>{t('media.format')}</StyledMediaListItemInfoLabel>
+                <StyledMediaListItemInfoText>
+                  {mediaItem.attributes.format.toUpperCase()}
+                </StyledMediaListItemInfoText>
+              </tr>
+            )}
+            {mediaItem.attributes.url && (
+              <tr>
+                <StyledMediaListItemInfoLabel>{t('media.url')}</StyledMediaListItemInfoLabel>
+                <StyledMediaListItemInfoText>{mediaItem.attributes.url}</StyledMediaListItemInfoText>
+              </tr>
+            )}
+            {mediaItem.attributes.filesize && (
+              <tr>
+                <StyledMediaListItemInfoLabel>{t('media.size')}</StyledMediaListItemInfoLabel>
+                <StyledMediaListItemInfoText>
+                  {formatNumber(
+                    Math.ceil((parseInt(mediaItem.attributes.filesize, 10) / 1024 / 1024) * 100) / 100
+                  )}{' '}
+                  {t('media.mb')}
+                </StyledMediaListItemInfoText>
+              </tr>
+            )}
+          </tbody>
         </StyledMediaListItemInfo>
         {onDelete && (
           <StyledMediaListItemDelete>
@@ -623,6 +632,7 @@ export const MediaList: React.FC<MediaListProps> = ({
           key={mediaItem.id}
           valid={itemsValidList[index]}
           mediaItem={mediaItem}
+          index={index + 1}
           onChange={(mediaItem) => {
             onChange(
               [...media.slice(0, index), mediaItem, ...media.slice(index + 1, media.length)],

@@ -14,14 +14,14 @@ import { Checkbox } from '../checkbox';
 import { CheckboxList } from '../checkbox/CheckboxList';
 import { ComponentLoader } from '../ComponentLoader';
 
-const StyledTypesSubjects = styled.div`
+const StyledTypesSubjects = styled.ul`
   display: grid;
   grid-template-columns: auto;
   grid-row-gap: 0.75rem;
   position: relative;
 `;
 
-const StyledTypesSubjectsType = styled.div`
+const StyledTypesSubjectsType = styled.li`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@ const StyledTypesSubjectsTypeHead = styled.div`
   position: relative;
 `;
 
-const StyledTypesSubjectsSubjects = styled.div`
+const StyledTypesSubjectsSubjects = styled.fieldset`
   padding: 0.75rem 0.75rem 1.125rem;
   background: var(--grey-200);
 `;

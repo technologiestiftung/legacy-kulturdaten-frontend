@@ -38,6 +38,9 @@ const StyledTextField = styled(TextField)`
   input {
     height: unset;
     ${inputStyles({})}
+    &::placeholder {
+      opacity: 1;
+    }
   }
 `;
 
@@ -66,7 +69,7 @@ const StyledTagsBox = styled.div`
   margin-bottom: 1.5rem;
 `;
 
-const StyledTagsBoxPlaceholder = styled.div`
+const StyledTagsBoxPlaceholder = styled.p`
   font-size: var(--font-size-300);
   line-height: var(--line-height-300);
   margin-bottom: 0.75rem;

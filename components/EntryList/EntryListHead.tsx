@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { Maximize2, Minimize2 } from 'react-feather';
 import { useT } from '../../lib/i18n';
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
-import { mq } from '../globals/Constants';
+import { mq,focusBlackStyles } from '../globals/Constants';
 
 const StyledEntryListHead = styled.div`
   position: relative;
@@ -81,6 +81,8 @@ const StyledExpandableButton = styled.button`
   padding: 0.75rem;
   border-radius: 0.75rem 0 0 0.75rem;
 
+  ${focusBlackStyles}
+
   &:hover {
     background: var(--grey-600);
   }
@@ -119,7 +121,7 @@ export const EntryListHead: React.FC<EntryListHeadProps> = ({
     <StyledEntryListHead>
       <StyledEntryListHeadTop>
         <StyledEntryListHeadTitleRow>
-          <StyledEntryListHeadTitle noPadding={noPadding}>
+          <StyledEntryListHeadTitle noPadding={noPadding} role="heading" aria-label={title}>
             <span>{title}</span>
           </StyledEntryListHeadTitle>
           <StyledEntryListHeadTitleRowRight>

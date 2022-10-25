@@ -18,8 +18,6 @@ import {
 import { internalRoutes, Routes, routes } from '../../config/routes';
 import { useActiveRoute, useLocale } from '../../lib/routing';
 import { useRouter } from 'next/router';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
-import { useT } from '../../lib/i18n';
 
 const publicRuntimeConfig = getConfig ? getConfig()?.publicRuntimeConfig : undefined;
 
@@ -75,8 +73,6 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   const locale = useLocale();
   const activeRoute = useActiveRoute();
   const router = useRouter();
-  const loadingScreen = useLoadingScreen();
-  const t = useT();
 
   const isInternalRoute = useMemo(() => internalRoutes.includes(activeRoute), [activeRoute]);
 
@@ -240,20 +236,11 @@ export const UserContextProvider: React.FC<UserContextProviderProps> = ({
   );
 
   const logout = useCallback(async () => {
-    loadingScreen(
-      t('logout.loading'),
-      async () => {
-        logoutUser();
+    await logoutUser();
 
-        setTimeout(() => {
-          router.push(routes.login({ locale }));
-        }, 500);
+    await router.push(routes.login({ locale }));
 
-        return { success: true };
-      },
-      t('logout.loadingMessage')
-    );
-  }, [loadingScreen, locale, logoutUser, router, t]);
+  }, [locale, logoutUser, router]);
 
   return (
     <UserContext.Provider

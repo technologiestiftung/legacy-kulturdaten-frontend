@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { LegacyRef, useContext, useEffect, useMemo, useState } from 'react';
 import { EntryListPlaceholder, StyledEntryListBody } from '.';
-import { Categories, useCategories } from '../../config/categories';
+import { Categories, locationSidebarRef, useCategories } from '../../config/categories';
 import { LocationList as LocationListCall } from '../../lib/api';
 import { Location, LocationTranslation, LocationType } from '../../lib/api/types/location';
 import { CategoryExportType, Order, useCreateLocation, useList } from '../../lib/categories';
@@ -24,8 +24,7 @@ import { DateFormat, useDate } from '../../lib/date';
 import { StyledTableLinkText, TableLink } from '../table/TableLink';
 import { Button, ButtonColor, ButtonSize, ButtonVariant } from '../button';
 import { EntryListFiltersBox, StyledFilters } from './EntryListFiltersBox';
-import { useOrganizerId } from '../../lib/useOrganizer';
-import { useLoadingScreen } from '../Loading/LoadingScreen';
+import { useOrganizerId, useOrganizer } from '../../lib/useOrganizer';
 import { useDownload } from '../../lib/api/download';
 import {
   DropdownMenu,
@@ -36,6 +35,8 @@ import {
 import { Breakpoint, useBreakpointOrWider } from '../../lib/WindowService';
 import { defaultLanguage } from '../../config/locale';
 import { Input, InputType } from '../input';
+import { SkipLinkMainContent } from '../navigation/OrganizerBand';
+import { speakerFunction } from '../pages/helpers/useSpeaker';
 
 const StyledOrganizerList = styled.div`
   flex-grow: 1;
@@ -116,16 +117,15 @@ export const LocationList: React.FC<LocationListProps> = ({
     () => getDispatchFilters(listName),
     [getDispatchFilters, listName]
   );
-  const loadingScreen = useLoadingScreen();
   const createLocation = useCreateLocation();
   const organizerId = useOrganizerId();
+  const organizer = useOrganizer();
+  const organizerTitle = organizer?.data?.relations.translations.filter(translation => translation.attributes.language === language)[0].attributes.name
   const download = useDownload();
   const isMidOrWider = useBreakpointOrWider(Breakpoint.mid);
   const isWideOrWider = useBreakpointOrWider(Breakpoint.wide);
   const isUltraOrWider = useBreakpointOrWider(Breakpoint.ultra);
-
   const [search, setSearch] = useState<string>();
-
   const [showAllLocations, setShowAllLocation] = useState(showAllLocationsSwitch ? true : false);
 
   // Set status filter to published if all locations are shown.
@@ -193,71 +193,71 @@ export const LocationList: React.FC<LocationListProps> = ({
     () =>
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
-            ({ attributes, relations, id }, index) => {
-              const href = (sub?: string) =>
-                routes[Routes.location]({
-                  locale,
-                  query: { id, sub, organizer: organizerId },
-                });
+          ({ attributes, relations, id }, index) => {
+            const href = (sub?: string) =>
+              routes[Routes.location]({
+                locale,
+                query: { id, sub, organizer: organizerId },
+              });
 
-              const translations = relations?.translations;
-              const currentTranslation = translations
-                ? getTranslation<LocationTranslation>(language, translations)
-                : undefined;
+            const translations = relations?.translations;
+            const currentTranslation = translations
+              ? getTranslation<LocationTranslation>(language, translations)
+              : undefined;
 
-              const defaultTranslation = translations
-                ? getTranslation<LocationTranslation>(defaultLanguage, translations)
-                : undefined;
+            const defaultTranslation = translations
+              ? getTranslation<LocationTranslation>(defaultLanguage, translations)
+              : undefined;
 
-              const address = relations?.address;
+            const address = relations?.address;
 
-              return (
-                <EntryCard
-                  onClick={() => {
-                    if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
-                      setMenuExpanded(false);
-                      setLastEntryId(Categories.location, id);
+            return (
+              <EntryCard
+                onClick={() => {
+                  if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
+                    setMenuExpanded(false);
+                    setLastEntryId(Categories.location, id);
 
-                      if (typeof customEntryOnClick === 'function') {
-                        customEntryOnClick(Categories.organizer, id);
-                      }
+                    if (typeof customEntryOnClick === 'function') {
+                      customEntryOnClick(Categories.organizer, id);
                     }
-                  }}
-                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
-                  menuExpanded={expanded}
-                  key={index}
-                  title={
-                    currentTranslation?.attributes?.name ||
-                    defaultTranslation?.attributes?.name ||
-                    categories?.location?.placeholderName
                   }
-                  status={attributes?.status || PublishedStatus.draft}
-                  active={router.asPath.includes(href()) || activeEntryId === id}
-                  forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
-                  createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
-                  updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
-                  meta={
-                    attributes?.type === LocationType.physical ? (
-                      address && (
-                        <EntryCardText>
-                          {[
-                            address.attributes.street1,
-                            address.attributes.street2,
-                            address.attributes.zipCode,
-                            address.attributes.city,
-                          ]
-                            .filter((text) => text?.length > 0)
-                            .join(', ')}
-                        </EntryCardText>
-                      )
-                    ) : (
-                      <EntryCardText>virtuell</EntryCardText>
+                }}
+                href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
+                menuExpanded={expanded}
+                key={index}
+                title={
+                  currentTranslation?.attributes?.name ||
+                  defaultTranslation?.attributes?.name ||
+                  categories?.location?.placeholderName
+                }
+                status={attributes?.status || PublishedStatus.draft}
+                active={router.asPath.includes(href()) || activeEntryId === id}
+                forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
+                createdDate={attributes?.createdAt ? new Date(attributes?.createdAt) : undefined}
+                updatedDate={attributes?.updatedAt ? new Date(attributes?.updatedAt) : undefined}
+                meta={
+                  attributes?.type === LocationType.physical ? (
+                    address && (
+                      <EntryCardText>
+                        {[
+                          address.attributes.street1,
+                          address.attributes.street2,
+                          address.attributes.zipCode,
+                          address.attributes.city,
+                        ]
+                          .filter((text) => text?.length > 0)
+                          .join(', ')}
+                      </EntryCardText>
                     )
-                  }
-                />
-              );
-            }
-          )
+                  ) : (
+                    <EntryCardText>virtuell</EntryCardText>
+                  )
+                }
+              />
+            );
+          }
+        )
         : undefined,
     [
       list.data,
@@ -279,78 +279,77 @@ export const LocationList: React.FC<LocationListProps> = ({
     () =>
       list?.data
         ? Object.values(Array.isArray(list.data) ? list.data : [list.data]).map(
-            ({ attributes, relations, id }) => {
-              const translations = relations?.translations;
+          ({ attributes, relations, id }) => {
+            const translations = relations?.translations;
 
-              const currentTranslation = translations
-                ? getTranslation<LocationTranslation>(language, translations)
-                : undefined;
+            const currentTranslation = translations
+              ? getTranslation<LocationTranslation>(language, translations)
+              : undefined;
 
-              const defaultTranslation = translations
-                ? getTranslation<LocationTranslation>(defaultLanguage, translations)
-                : undefined;
+            const defaultTranslation = translations
+              ? getTranslation<LocationTranslation>(defaultLanguage, translations)
+              : undefined;
 
-              const href = (sub?: string) =>
-                routes[Routes.location]({
-                  locale,
-                  query: { id, sub, organizer: organizerId },
-                });
+            const href = (sub?: string) =>
+              routes[Routes.location]({
+                locale,
+                query: { id, sub, organizer: organizerId },
+              });
 
-              const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
-                <TableLink
-                  onClick={() => {
-                    if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
-                      setMenuExpanded(false);
-                      setLastEntryId(Categories.location, id);
+            const ListLink: React.FC<ListLinkProps> = ({ children }: ListLinkProps) => (
+              <TableLink
+                onClick={() => {
+                  if (activeEntryId === id || !chosenEntryIds?.includes(id)) {
+                    setMenuExpanded(false);
+                    setLastEntryId(Categories.location, id);
 
-                      if (typeof customEntryOnClick === 'function') {
-                        customEntryOnClick(Categories.organizer, id);
-                      }
+                    if (typeof customEntryOnClick === 'function') {
+                      customEntryOnClick(Categories.organizer, id);
                     }
-                  }}
-                  href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
-                  isActive={router.asPath.includes(href()) || activeEntryId === id}
-                  forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
-                >
-                  {children}
-                </TableLink>
-              );
+                  }
+                }}
+                href={typeof customEntryOnClick === 'undefined' ? href('info') : undefined}
+                isActive={router.asPath.includes(href()) || activeEntryId === id}
+                forbidden={activeEntryId !== id && chosenEntryIds?.includes(id)}
+              >
+                {children}
+              </TableLink>
+            );
 
-              const address = relations?.address;
+            const address = relations?.address;
 
-              return {
-                contents: [
-                  <StyledTableLinkText key={0}>
-                    {currentTranslation?.attributes?.name ||
-                      defaultTranslation?.attributes?.name ||
-                      categories?.location?.placeholderName}
-                  </StyledTableLinkText>,
-                  `${
-                    attributes?.type === LocationType.physical && address && address.attributes
-                      ? [
-                          address.attributes.street1,
-                          address.attributes.street2,
-                          address.attributes.zipCode,
-                          address.attributes.city,
-                        ]
-                          .filter((text) => text?.length > 0 && text !== 'undefined')
-                          .join(', ')
-                      : attributes?.url
-                      ? attributes.url
-                      : t('categories.location.list.addressPlaceholder')
-                  }`,
-                  <StatusFlag status={attributes?.status} key={1} />,
-                  attributes?.updatedAt
-                    ? date(new Date(attributes?.updatedAt), DateFormat.date)
-                    : undefined,
-                  attributes?.createdAt
-                    ? date(new Date(attributes?.createdAt), DateFormat.date)
-                    : undefined,
-                ].slice(0, !expanded ? 2 : undefined),
-                Wrapper: ListLink,
-              };
-            }
-          )
+            return {
+              contents: [
+                <StyledTableLinkText key={0}>
+                  {currentTranslation?.attributes?.name ||
+                    defaultTranslation?.attributes?.name ||
+                    categories?.location?.placeholderName}
+                </StyledTableLinkText>,
+                `${attributes?.type === LocationType.physical && address && address.attributes
+                  ? [
+                    address.attributes.street1,
+                    address.attributes.street2,
+                    address.attributes.zipCode,
+                    address.attributes.city,
+                  ]
+                    .filter((text) => text?.length > 0 && text !== 'undefined')
+                    .join(', ')
+                  : attributes?.url
+                    ? attributes.url
+                    : t('categories.location.list.addressPlaceholder')
+                }`,
+                <StatusFlag status={attributes?.status} key={1} />,
+                attributes?.updatedAt
+                  ? date(new Date(attributes?.updatedAt), DateFormat.date)
+                  : undefined,
+                attributes?.createdAt
+                  ? date(new Date(attributes?.createdAt), DateFormat.date)
+                  : undefined,
+              ].slice(0, !expanded ? 2 : undefined),
+              Wrapper: ListLink,
+            };
+          }
+        )
         : undefined,
     [
       customEntryOnClick,
@@ -371,7 +370,8 @@ export const LocationList: React.FC<LocationListProps> = ({
   );
 
   return (
-    <StyledOrganizerList>
+    <StyledOrganizerList tabIndex={0} ref={locationSidebarRef as LegacyRef<HTMLDivElement>}>
+      <SkipLinkMainContent />
       <EntryListHead
         title={t('categories.location.title.plural') as string}
         expanded={expanded}
@@ -383,11 +383,13 @@ export const LocationList: React.FC<LocationListProps> = ({
             color={ButtonColor.white}
             icon="Plus"
             onClick={async () => {
-              loadingScreen(
-                t('categories.location.form.create'),
-                async () => await createLocation(),
-                t('general.takeAFewSeconds')
-              );
+              const res = await createLocation()
+              if (res) speakerFunction(t('speaker.newLocation') as string)
+              setTimeout(() => {
+                document.title = organizerTitle
+                  ? `${organizerTitle} - ${t('general.defaultTitleLocation')}`
+                  : `${t('general.defaultTitleOrganizer')} - ${t('general.defaultTitleLocation')}`
+              }, 500)
             }}
           >
             {t('categories.location.form.create')}
@@ -545,7 +547,7 @@ export const LocationList: React.FC<LocationListProps> = ({
           </StyledFilters>
         )}
       </EntryListFiltersBox>
-      <StyledEntryListBody>
+      <StyledEntryListBody >
         {view === EntryListView.cards ? (
           <EntryCardGrid expanded={expanded} enableUltraWideLayout={enableUltraWideLayout}>
             {cards && cards.length > 0 ? (

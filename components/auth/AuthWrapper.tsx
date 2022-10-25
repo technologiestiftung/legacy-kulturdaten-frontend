@@ -128,7 +128,11 @@ interface AuthWrapperProps {
 export const AuthWrapper: React.FC<AuthWrapperProps> = ({ children, image }: AuthWrapperProps) => {
   return (
     <StyledAuthWrapper>
-      <StyledAuthWrapperContent>{children}</StyledAuthWrapperContent>
+      <StyledAuthWrapperContent>
+      <fieldset tabIndex={0}>
+          {children}
+        </fieldset>
+      </StyledAuthWrapperContent>
       <StyledAuthWrapperImage>
         <StyledAuthWrapperImageInner>
           <Image src={image.src} layout="fill" objectFit="cover" alt="" />

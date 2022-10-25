@@ -32,14 +32,16 @@ const StyledDashboardRowContent = styled.div`
 interface DashboardRowProps {
   children: React.ReactNode;
   title?: string;
+  id?: string;
 }
 
 export const DashboardRow: React.FC<DashboardRowProps> = ({
   children,
   title,
+  id
 }: DashboardRowProps) => (
   <StyledDashboardRow>
-    {title && <StyledDashboardRowTitle>{title}</StyledDashboardRowTitle>}
+    {title && <StyledDashboardRowTitle id={id}>{title}</StyledDashboardRowTitle>}
     <StyledDashboardRowContent>{children}</StyledDashboardRowContent>
   </StyledDashboardRow>
 );
