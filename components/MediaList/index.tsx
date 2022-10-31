@@ -330,7 +330,7 @@ const MediaListItem: React.FC<MediaListItemProps> = ({
         </StlyedMediaListItemHint>
       )}
       <StyledMediaListItemMain>
-        <StyledMediaListItemThumbnail role="image">
+        <StyledMediaListItemThumbnail role="img">
           {smallestRendition.width && smallestRendition.height ? (
             <StyledMediaListItemThumbnailInner>
               <StyledMediaListItemThumbnailLink

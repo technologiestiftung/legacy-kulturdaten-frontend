@@ -17,10 +17,28 @@
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "next"
+    "next",
+    "plugin:jsx-a11y/recommended"
+  ],
+  "plugins": [
+    "jsx-a11y"
   ],
   "rules": {
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "jsx-a11y/anchor-is-valid": ["error", {
+    "components": ["Link"],        
+    "specialLink": ["hrefLeft", "hrefRight"],
+    "aspects": ["invalidHref", "preferButton"]   
+    }],
+    "jsx-a11y/no-noninteractive-tabindex": "warn"
   },
-  "ignorePatterns": ["story.tsx", "*.story.tsx", "story.ts", "*.story.tsx", "stories.tsx", "*.stories.tsx", "*.config.ts"]
+  "ignorePatterns": [
+    "story.tsx",
+    "*.story.tsx",
+    "story.ts",
+    "*.story.tsx",
+    "stories.tsx",
+    "*.stories.tsx",
+    "*.config.ts"
+  ]
 }

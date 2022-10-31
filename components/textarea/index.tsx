@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import { ComponentWithVariants } from '../../lib/generalTypes';
 import { useT } from '../../lib/i18n';
 import { useDebounce } from '../../lib/useDebounce';
