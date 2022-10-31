@@ -3,7 +3,7 @@ import CharacterCount from '@tiptap/extension-character-count'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import { EditorContent, PureEditorContent, useEditor } from '@tiptap/react'
-import { Ref, useState, useMemo, useEffect, LegacyRef, RefObject } from 'react'
+import { Ref, useState, useMemo, useEffect, RefObject } from 'react'
 import { useDebounce } from '../../lib/useDebounce';
 import { mq } from '../globals/Constants';
 import { Breakpoint } from '../../lib/WindowService';

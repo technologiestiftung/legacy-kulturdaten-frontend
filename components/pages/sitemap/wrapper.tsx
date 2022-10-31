@@ -316,7 +316,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({ }: SitemapCo
                                               ? firstLinkRefs.current[id] = el
                                               : undefined
                                           )}
-                                          tabIndex={offersLocationsToggled[id] ? 0 : -1}
+                                          tabIndex={offersLocationsToggled[id] ? 0 : -1}// eslint-disable-line
                                         >
                                           {title}
                                         </a>
@@ -357,7 +357,7 @@ export const SitemapContainer: React.FC<SitemapContainerProps> = ({ }: SitemapCo
                                               ? firstLinkRefs.current[id] = el
                                               : undefined
                                           )}
-                                          tabIndex={offersLocationsToggled[id] ? 0 : -1}
+                                          tabIndex={offersLocationsToggled[id] ? 0 : -1}// eslint-disable-line
                                         >
                                           {title}
                                         </a>
