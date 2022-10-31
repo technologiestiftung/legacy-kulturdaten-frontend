@@ -93,7 +93,7 @@ export const RadioList: React.FC<RadioListProps> = ({
 
   return (
     <StyledRadioList variant={variant}>
-      <fieldset>
+      <fieldset tabIndex={0}>
         {label && (
           <StyedRadioListLabel>
             {label} {required ? ` ${t('forms.required')}` : ''}
