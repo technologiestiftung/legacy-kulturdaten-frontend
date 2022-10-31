@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { compareDesc } from 'date-fns';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { dateListRef } from '../../../config/categories';
 import { Language } from '../../../config/locale';
 import { languages } from '../../../config/locales';
 import { useApiCall } from '../../../lib/api';
