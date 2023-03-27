@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/pages/sitemap/wrapper.tsx)
+
+The code defines a React component called `SitemapContainer` that renders a sitemap for the website. The sitemap is organized into different sections, each containing a list of links. The links are generated dynamically based on the current user's permissions and the data available in the system.
+
+The component imports several utility functions and components from other files in the project. These include functions for handling translations, routing, and API requests. The component also imports several styles from the `@emotion/styled` library.
+
+The `SitemapContainer` component uses several hooks to retrieve data from the system. These hooks include `useLanguage`, `useT`, `useUserOrganizerLists`, `useOrganizerId`, `useCategories`, `useLocale`, `useList`, `useRouter`, and `useMemo`. These hooks are used to retrieve information about the current user, the available categories, and the data in the system.
+
+The component then uses this data to generate a list of links for each section of the sitemap. The links are generated dynamically based on the data available in the system. For example, the component generates links to offers, locations, and organizers based on the data available in the system.
+
+The component also includes several helper functions for generating links and handling user interactions. These functions include `dahboardLinks`, `offerLinks`, `locationLinks`, `organizerLinks`, and `toggleNestedNavigation`. These functions are used to generate links for each section of the sitemap and to handle user interactions with the sitemap.
+
+Overall, the `SitemapContainer` component is an important part of the website's navigation system. It provides users with a comprehensive view of the available content on the website and allows them to easily navigate to different sections of the site.
+## Questions: 
+ 1. What is the purpose of the `SitemapContainer` component?
+- The `SitemapContainer` component is responsible for rendering a sitemap of the website, including links to different pages and categories.
+
+2. What libraries and hooks are being used in this file?
+- The file is importing several libraries including `next/link`, `@emotion/styled`, and `react`. It is also using several custom hooks such as `useT`, `useLanguage`, `useLocale`, `useOrganizerId`, `useUserOrganizerLists`, `useList`, and `useRouter`.
+
+3. What is the purpose of the `offersLocationsToggled` state and how is it being used?
+- The `offersLocationsToggled` state is being used to keep track of whether or not the nested navigation for each offer or location category is currently toggled open or closed. It is being used to conditionally render the nested links and to set the focus on the first link when the nested navigation is toggled open.

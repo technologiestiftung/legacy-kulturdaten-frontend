@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/GenericForm/useGenericFormStructure.tsx)
+
+The code defines a set of types, actions, and a reducer function for managing the state of a generic form. It also exports a custom hook that uses this reducer to manage the state of a form based on a given structure of form categories and fields.
+
+The `GenericFormState` type is an object that maps field names to their current values. The `GenericFormAction` type is an object that describes a change to the form state, with a `type` property indicating the type of action and a `payload` property containing any additional data needed to perform the action. The `GenericFormActions` enum defines the possible action types, which are `init` and `set`.
+
+The `genericFormReducer` function is a standard Redux-style reducer that takes the current state and an action and returns a new state based on the action. For the `init` action, it simply returns the provided state. For the `set` action, it returns a new state object with the specified field updated to the specified value.
+
+The `useGenericFormStructure` hook takes a structure of form categories and fields, as well as an optional initial state object, and returns an object with three properties: `renderedForm`, `state`, and `dispatch`. The `renderedForm` property is a React element that renders the form based on the provided structure. The `state` property is the current state of the form, and the `dispatch` property is a function that can be used to dispatch actions to update the form state.
+
+The `useGenericFormStructure` hook uses the `useReducer` hook from React to manage the form state using the `genericFormReducer` function. It maps over the provided form structure to render each category as a collapsible container with the appropriate fields inside. It also uses the `GenericFormCategoryFactory` component to render each field group within a category.
+
+Overall, this code provides a flexible and reusable way to manage the state of a generic form in a React application. By defining a structure of form categories and fields, developers can easily create and manage complex forms with minimal boilerplate code.
+## Questions: 
+ 1. What is the purpose of the `GenericFormStateConsumer` interface?
+- The `GenericFormStateConsumer` interface defines an object with a `state` property of type `GenericFormState` and a `dispatch` property of type `Dispatch<GenericFormAction>`, which can be used to consume the state and dispatch actions of a generic form.
+
+2. What do the `GenericFormActions` enum and `genericFormReducer` function do?
+- The `GenericFormActions` enum defines two actions, `init` and `set`, which can be dispatched to update the state of a generic form. The `genericFormReducer` function is a reducer that handles these actions and returns a new state based on the current state and the action payload.
+
+3. What does the `useGenericFormStructure` hook return?
+- The `useGenericFormStructure` hook returns an object with three properties: `renderedForm`, which is a React element representing the rendered form based on the provided `structure` and current `state`; `state`, which is the current state of the form; and `dispatch`, which is a function that can be used to dispatch actions to update the form state.

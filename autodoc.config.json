@@ -1,0 +1,23 @@
+{
+  "name": "https://github.com/technologiestiftung/kulturdaten-frontend",
+  "repositoryUrl": "https://github.com/technologiestiftung/kulturdaten-frontend",
+  "root": ".",
+  "output": "./.autodoc",
+  "llms": [
+    "gpt-3.5-turbo"
+  ],
+  "ignore": [
+    ".*",
+    "*package-lock.json",
+    "*package.json",
+    "node_modules",
+    "*dist*",
+    "*build*",
+    "*test*",
+    "*.svg",
+    "*.md",
+    "*.mdx",
+    "*.toml",
+    "*autodoc*"
+  ]
+}

@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/pages/[organizer]/profile/[sub].tsx)
+
+The code above is a React component that serves as a subpage for entries in the Kulturdaten-frontend project. It imports the NextPage component from the Next.js library, as well as the useRouter hook and the AppWrapper component from the project's components/wrappers directory. It also imports the useCategories function from the project's config/categories file.
+
+The EntrySubPage component uses the useRouter hook to get the current route's query parameters, specifically the "sub" parameter. It then uses the useCategories function to get the project's categories configuration object, which contains information about the different categories of entries in the project. It specifically gets the "organizer" category object from the categories configuration.
+
+The component then checks if the "organizer" category object exists. If it does, it renders the AppWrapper component with the "subMenuKey" property set to the "organizer" category's subMenuKey value. It also dynamically creates a React component based on the "subPath" query parameter. It does this by checking if the "pages" property of the "organizer" category object has a key that matches the "subPath" value. If it does, it creates the corresponding React component from the "pages" object. If it doesn't, it creates the "404" component from the "pages" object. It passes the "category" object and the current route's query parameters as props to the dynamically created component.
+
+If the "organizer" category object doesn't exist, the component simply renders the AppWrapper component with a "TBD" placeholder.
+
+Overall, this component serves as a flexible and reusable way to render subpages for different categories of entries in the Kulturdaten-frontend project. It uses the project's categories configuration to dynamically create the appropriate React component based on the current route's query parameters.
+## Questions: 
+ 1. What is the purpose of the `useCategories` hook being imported?
+   - The `useCategories` hook is used to retrieve the categories configuration from the `categories.js` file in the `config` folder.
+
+2. What is the significance of the `subPath` variable?
+   - The `subPath` variable is used to retrieve the subpage path from the router query parameters.
+
+3. What is the purpose of the `AppWrapper` component being used?
+   - The `AppWrapper` component is a custom wrapper component that provides a consistent layout and styling for the application. It also accepts a `subMenuKey` prop to highlight the active sub-menu item.

@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/api/routes/offer/date/create.ts)
+
+The code defines an API call for creating an offer date and provides a factory function for creating instances of this API call. The API call is defined as an interface called `OfferDateCreate` which extends another interface called `ApiCall`. The `OfferDateCreate` interface specifies the request and response types for the API call. 
+
+The request type specifies the HTTP method, headers, and body for the API call. The `route` property of the request type is generated using the `apiRoutes.offerDateCreate` function, which takes an object with an `offerId` property and returns a URL string for creating an offer date for the specified offer. The `Authorization` header is set using a token passed to the factory function, and the `Content-Type` header is set to `application/json`. The `body` property of the request type is set to the `date` property of the `query` object passed to the factory function.
+
+The response type specifies the expected HTTP status code and response body for the API call. In this case, the expected status code is 200 and the response body is the same as the request body.
+
+The factory function, `offerDateCreateFactory`, takes a token and a `query` object as arguments and returns an instance of the `OfferDateCreate` interface. The `query` object should have an `offerId` property and a `date` property, which is the data for the offer date to be created. The `route` property of the request type is generated using the `offerId` property of the `query` object. The `Authorization` header is set using the `token` argument, and the `body` property is set using the `date` property of the `query` object.
+
+This code is part of a larger project for managing cultural data. It provides a way to create an offer date for a specific offer using an API call. The factory function allows for easy creation of instances of the API call with the necessary parameters. This code can be used in conjunction with other API calls and functionality in the project to manage cultural data.
+## Questions: 
+ 1. What is the purpose of the `OfferDate` type?
+   - The `OfferDate` type is used to define the shape of the data that is sent and received in the API call.
+2. What is the `offerDateCreateFactory` function used for?
+   - The `offerDateCreateFactory` function is a factory function that creates an instance of the `OfferDateCreate` interface with the provided token and query parameters.
+3. What is the expected response status and body for the `OfferDateCreate` API call?
+   - The expected response status is `200` and the expected response body is the same as the data sent in the request body.

@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/navigation/LocaleSwitch.tsx)
+
+The code defines a React component called `LocaleSwitch` that renders a select input for switching between different language locales. The component is styled using the `styled` function from the `@emotion/styled` package and the `css` function from the `@emotion/react` package. The styling is based on the `switchVariant` prop, which can be one of three values defined in the `LocaleSwitchVariant` enum: `default`, `minimal`, or `settings`.
+
+The component uses several hooks from the `lib` directory of the project. The `useLocale` hook returns the currently active locale, while the `useSwitchLocale` hook returns a function for changing the active locale. The `useT` hook returns a translation function for translating text based on the active locale.
+
+The component renders a `Select` component from the `../select` module, which is also part of the project. The `Select` component is passed several props, including the `label`, `labelPosition`, `ariaLabel`, `ariaLabelledby`, `variant`, `id`, `value`, `icon`, and `onChange`. The `label` prop is set to a translated string, while the `value` prop is set to the currently active locale. The `onChange` prop is set to a function that calls the `switchLocale` function with the selected locale value.
+
+The `Select` component renders a list of `option` elements based on the `locales` object defined in the `config/locales` module of the project. Each `option` element has a value equal to the locale key and displays the locale name as its text content.
+
+The `LocaleSwitch` component is exported as the default export of the module and can be used in other parts of the project to provide a language switching feature. The `switchVariant` prop can be used to customize the appearance of the component based on the context in which it is used.
+## Questions: 
+ 1. What is the purpose of the `LocaleSwitch` component?
+   - The `LocaleSwitch` component is used to allow users to switch between different language locales on the website.
+2. What are the different variants of the `LocaleSwitch` component?
+   - The different variants of the `LocaleSwitch` component are `default`, `minimal`, and `settings`.
+3. What is the purpose of the `useSwitchLocale` hook?
+   - The `useSwitchLocale` hook is used to update the active locale when the user selects a new language from the `LocaleSwitch` component.

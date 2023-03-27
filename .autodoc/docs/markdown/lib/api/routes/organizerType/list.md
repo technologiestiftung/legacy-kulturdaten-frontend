@@ -1,0 +1,14 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/api/routes/organizerType/list.ts)
+
+The code defines an API call to retrieve a list of organizer types from a server. It exports an interface `OrganizerTypeList` that extends `ApiCall`, which specifies the request and response format of the API call. The request object has a `route` property that is a function that returns the URL path for the API endpoint, a `method` property that is set to `'GET'` to indicate that this is an HTTP GET request, and a `headers` property that includes an `Authorization` field for passing an access token to the server. The response object has a `status` property set to `200` to indicate a successful response, and a `body` property that is an array of `OrganizerType` objects.
+
+The code also exports a function `organizerTypeListFactory` that creates an instance of `OrganizerTypeList` with the specified access token. The function takes a single argument `token` that is a string representing the access token. It returns an object that conforms to the `OrganizerTypeList` interface, with the `request` object populated with the API endpoint URL, HTTP method, and access token, and the `response` object initialized with a `status` of `200` and an empty `body`.
+
+This code can be used in the larger project to make API calls to retrieve a list of organizer types from the server. The `organizerTypeListFactory` function can be called with an access token to create an instance of `OrganizerTypeList`, which can then be passed to a function that sends the API request to the server and returns the response. The `OrganizerTypeList` interface can also be used to define the format of the response data, making it easier to handle the data in other parts of the project. For example, the `data` property of the response body can be mapped to an array of `OrganizerType` objects and displayed in a dropdown menu for selecting an organizer type.
+## Questions: 
+ 1. What is the purpose of the `OrganizerTypeList` interface?
+   - The `OrganizerTypeList` interface defines the structure of an API call to retrieve a list of `OrganizerType` data.
+2. What is the `organizerTypeListFactory` function used for?
+   - The `organizerTypeListFactory` function is a factory function that creates an instance of the `OrganizerTypeList` API call with the provided token for authorization.
+3. What is the significance of the `makeBearer` function in the `organizerTypeListFactory` function?
+   - The `makeBearer` function is used to create an authorization header value for the API call by appending the provided token to the string "Bearer ".

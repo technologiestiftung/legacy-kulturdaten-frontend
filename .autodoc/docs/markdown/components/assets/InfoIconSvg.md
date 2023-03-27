@@ -1,0 +1,37 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/assets/InfoIconSvg.tsx)
+
+The code above exports a React functional component called `InfoIconSvg`. This component renders an SVG icon that can be used to represent information or help content in the user interface. The icon consists of two paths, both of which are styled with the `stroke` and `strokeWidth` properties to create a simple line drawing.
+
+The first path (`M10 13.3333V10`) draws a vertical line from the center of the icon to the top, representing an "i" shape commonly used to indicate information. The second path (`M10 6.66663H10.0067`) draws a horizontal line across the center of the icon, creating a crossbar for the "i".
+
+This component can be used in other parts of the `kulturdaten-frontend` project to display information or help content to users. For example, it could be used in a tooltip or popover to provide additional context or instructions for a particular feature or element on the page.
+
+Here is an example of how the `InfoIconSvg` component could be used in a tooltip:
+
+```jsx
+import { InfoIconSvg } from './path/to/InfoIconSvg';
+
+const MyComponent = () => {
+  return (
+    <div>
+      <button>
+        Click me for help <InfoIconSvg />
+      </button>
+      <div className="tooltip">
+        This button does something important. Click it to find out more!
+      </div>
+    </div>
+  );
+};
+```
+
+In this example, the `InfoIconSvg` component is used alongside a button to indicate that clicking the button will provide additional help or information. When the user hovers over the button, a tooltip is displayed with more details about what the button does. The `InfoIconSvg` component helps to visually reinforce the idea that the tooltip contains helpful information.
+## Questions: 
+ 1. What does this code do?
+   This code exports a React functional component that renders an SVG icon of an "i" inside a circle, commonly used to represent information or help.
+
+2. Can this component be customized?
+   Yes, the component can be customized by changing the stroke color and width of the paths that make up the icon.
+
+3. How can this component be used in a project?
+   This component can be imported and used in any React component that needs to display an information icon. It can be rendered as a standalone icon or combined with other components to create more complex UI elements.

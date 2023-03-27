@@ -1,0 +1,26 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/button/ButtonLink.tsx)
+
+The code above defines a React component called `ButtonLink` that renders a button as an anchor tag (`<a>` element) with some additional styling. This component is used to create a button that behaves like a link, allowing users to navigate to a different page or section of the website when clicked.
+
+The component imports the `styled` function from the `@emotion/styled` library, which is used to create a styled version of the anchor tag. The `StyledA` variable defines the styles for the anchor tag, including removing the default underline (`text-decoration: none`) and setting the display to `flex` with a `flex-direction` of `column`. It also includes the `focusStyles` constant from the `../globals/Constants` file, which defines the styles for when the anchor tag is in focus (e.g. when a user tabs to it using the keyboard).
+
+The `ButtonLink` component extends the `ButtonProps` interface, which includes all the props that can be passed to the `Button` component. It also includes an optional `href` prop, which specifies the URL that the anchor tag should link to.
+
+The component is defined using the `React.forwardRef` function, which allows the `ref` prop to be passed to the underlying anchor tag. This is necessary because the `Button` component also uses a `ref` to manage focus and accessibility.
+
+When the `ButtonLink` component is rendered, it creates an instance of the `StyledA` component with the `ref` and `href` props passed down from the `ButtonLink` component. It then renders a `Button` component inside the `StyledA` component, passing all the other props down to the `Button`.
+
+This component can be used throughout the project wherever a button that behaves like a link is needed. For example, it could be used in a navigation menu to create a button that links to a different page, or in a call-to-action section to link to a sign-up form. Here's an example of how the `ButtonLink` component could be used:
+
+```
+<ButtonLink href="/signup" variant="primary">Sign up</ButtonLink>
+```
+## Questions: 
+ 1. What is the purpose of the `ButtonLink` component?
+   - The `ButtonLink` component is a styled anchor tag that wraps around the `Button` component and accepts a `href` prop to create a clickable link.
+
+2. What is the `StyledA` component and what styles does it apply?
+   - The `StyledA` component is a styled anchor tag that removes the default underline and applies flexbox styles to its children. It also includes the `focusStyles` from the `Constants` file.
+
+3. Why is `React.forwardRef` used in the `ButtonLink` component?
+   - `React.forwardRef` is used to pass a ref to the underlying anchor tag so that it can be accessed and manipulated outside of the component. This is useful for cases where the ref needs to be passed to a parent component or used for focus management.

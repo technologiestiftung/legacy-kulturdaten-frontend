@@ -1,0 +1,26 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/next.config.js)
+
+This code exports an object with various configuration options for the kulturdaten-frontend project. 
+
+The `publicRuntimeConfig` object contains configuration options that are available at runtime on the client-side. It includes the default locale, the API base URL, and the names of various cookies used in the project.
+
+The `trailingSlash` option is set to `true`, which means that URLs with a trailing slash will be treated as equivalent to URLs without a trailing slash.
+
+The `i18n` object contains configuration options for internationalization. It includes an array of supported locales and the default locale.
+
+The `images` object contains a list of domains where images are hosted. This is used to configure the `next/image` component in the project.
+
+The `typescript` object contains configuration options for TypeScript. In this case, `ignoreBuildErrors` is set to `true`, which means that build errors related to TypeScript will be ignored.
+
+The `experimental` object contains experimental features that are not yet stable. In this case, `esmExternals` is set to `false`, which means that external dependencies will not be treated as ESM modules.
+
+Finally, the `async redirects()` function returns an array of redirect objects. These objects define URL redirects for various paths in the project. For example, the first redirect object maps the `/catchAll` path to the `/de-DE` path. The `permanent` option is set to `false` for some redirects, which means that they are temporary redirects. 
+
+Overall, this code provides important configuration options for the kulturdaten-frontend project, including internationalization, image hosting, and URL redirects. These options help to ensure that the project is properly configured and functions as intended.
+## Questions: 
+ 1. What is the purpose of the `publicRuntimeConfig` object?
+   - The `publicRuntimeConfig` object contains configuration options that are accessible to the client-side code.
+2. What is the purpose of the `async redirects()` function?
+   - The `async redirects()` function defines a list of URL redirects for the application.
+3. What is the purpose of the `images` object?
+   - The `images` object specifies a list of domains from which the application can load images.

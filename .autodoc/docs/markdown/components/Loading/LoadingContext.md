@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/Loading/LoadingContext.tsx)
+
+The code defines a React context for managing a loading screen component. The LoadingContext type defines the shape of the context object, which includes properties for rendering the loading screen, setting its visibility, loading state, title, message, and error. 
+
+The LoadingContextProvider component is a wrapper that provides the context to its children. It uses the useState hook to manage the state of the loading screen properties, and renders the LoadingScreen component if the render property is true. 
+
+This context can be used by any component that needs to display a loading screen while waiting for data or performing an action. By wrapping a component tree with the LoadingContextProvider, any child component can access the loading screen properties and update them as needed. 
+
+For example, a search results page could use this context to display a loading screen while fetching data from an API. The component responsible for fetching the data could set the loading property to true, and the LoadingScreen component would be rendered with the appropriate message and title. Once the data is fetched, the loading property could be set to false, and the LoadingScreen would be hidden. 
+
+Overall, this code provides a simple and reusable way to manage loading screens in a React application.
+## Questions: 
+ 1. What is the purpose of this code?
+- This code defines a React context and provider for a loading screen component.
+
+2. What are the properties of the `loadingScreen` object in the `LoadingContext` type?
+- The `loadingScreen` object has properties for rendering and visibility of the loading screen, as well as properties for the loading state, title, message, and error.
+
+3. What is the purpose of the `LoadingContextProvider` component?
+- The `LoadingContextProvider` component wraps its children with the `LoadingContext` provider and sets up state for the loading screen properties. It also conditionally renders the `LoadingScreen` component based on the `render` state.
