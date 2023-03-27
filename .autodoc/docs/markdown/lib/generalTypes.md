@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/generalTypes.ts)
+
+This code defines several types and enums that are used throughout the kulturdaten-frontend project. 
+
+The `StandardLinkType` enum defines two possible values for the `type` property of a `StandardLink`: `internal` and `external`. A `StandardLink` is a type that represents a link with a title and a URL, along with a type that indicates whether the link is internal (within the same website) or external (to a different website). 
+
+The `StandardLinkInternal` type is a subset of `StandardLink` that excludes the `type` property. This is useful when working with links that are guaranteed to be internal, since the `type` property is redundant in that case. 
+
+The `ComponentVariants` enum defines two possible values for the `variant` property of a `ComponentWithVariants`: `default` and `formList`. A `ComponentVariant` is a type that represents a string that can be either one of these two values or any other string. A `ComponentWithVariants` is an interface that defines an optional `variant` property that can be of type `ComponentVariant`. This is useful when defining components that can have different visual styles or behaviors depending on the value of the `variant` property. 
+
+Overall, this code provides a set of reusable types and enums that can be used throughout the kulturdaten-frontend project to ensure consistency and reduce duplication. For example, a component that displays a list of links could use the `StandardLink` type to represent each link, and a component that can have different visual styles could use the `ComponentWithVariants` interface to define its `variant` property.
+## Questions: 
+ 1. What is the purpose of the `StandardLink` type and `StandardLinkType` enum?
+   - The `StandardLink` type defines an object with a title, href, and type property, while the `StandardLinkType` enum defines the possible values for the type property (either 'internal' or 'external').
+2. What is the `StandardLinkInternal` type and how is it different from `StandardLink`?
+   - The `StandardLinkInternal` type is a subset of `StandardLink` that excludes the `type` property. This suggests that there may be cases where a link object is needed without specifying its type.
+3. What is the purpose of the `ComponentVariants` enum and `ComponentWithVariants` interface?
+   - The `ComponentVariants` enum defines the possible variants for a component, while the `ComponentWithVariants` interface allows a component to have an optional `variant` property that can be set to one of the defined variants or a custom string. This allows for more flexible and customizable components.

@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/wrappers/ContentWrappers.tsx)
+
+The code above defines two styled components, `ContentWrapper` and `ContentContainer`, using the `styled` function from the `@emotion/styled` library. These components are used to structure the layout of content on a web page in the `kulturdaten-frontend` project.
+
+The `ContentWrapper` component is a container that centers its child elements using the `justify-items` property. It also applies a CSS grid layout with 11 columns using the `contentGrid` function from the `../globals/Constants` module. This function is likely defined elsewhere in the project and returns a CSS string that sets up a grid layout with a specific number of columns and column widths. The `ContentWrapper` component is likely used to wrap the main content of a page and center it horizontally.
+
+The `ContentContainer` component is a container that spans the full width of its parent element (`grid-column: 1 / -1`) and has a flexible height (`display: flex; flex-direction: column; align-items: stretch;`). It also applies vertical padding and a vertical gap between its child elements using the `padding` and `row-gap` properties. The `ContentContainer` component uses media queries (`mq`) to adjust its layout based on the screen size. For example, on screens larger than `Breakpoint.mid`, the `ContentContainer` component increases the vertical gap between its child elements and spans fewer columns (`grid-column: 2 / -2`). On screens larger than `Breakpoint.ultra`, the `ContentContainer` component further increases the vertical gap and spans even fewer columns (`grid-column: 3 / -3`) while also setting a maximum width for its content. The `ContentContainer` component is likely used to wrap sections of content within the `ContentWrapper` component.
+
+Overall, these styled components provide a flexible and responsive layout for the main content of a web page in the `kulturdaten-frontend` project. They can be used to structure and position different types of content, such as text, images, and videos, in a consistent and visually appealing way.
+## Questions: 
+ 1. What is the purpose of the `contentGrid` and `mq` functions imported from other files?
+   - The `contentGrid` function is used to set the grid template columns for the `ContentWrapper` component, while the `mq` function is used to apply media queries based on the `Breakpoint` enum from the `WindowService` module.
+2. What is the significance of the `grid-column` property in the `ContentContainer` component?
+   - The `grid-column` property is used to specify the grid column range that the `ContentContainer` component should span across. In this case, it spans across all columns using the `-1` value.
+3. What is the purpose of the `max-width` property in the `ContentContainer` component's `mq` block?
+   - The `max-width` property is used to set the maximum width of the `ContentContainer` component on screens larger than the `ultra` breakpoint. The value is set using a CSS variable `--max-content-width`.

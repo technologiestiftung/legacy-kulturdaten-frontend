@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/navigation/tabs/index.tsx)
+
+The code defines a React component called `Tabs` that renders a horizontal navigation bar with clickable tabs. The component takes an array of `links` as a prop, where each link is an object with a `title` and an `href`. The `isActive` and `disabled` properties can also be set to indicate whether a tab is currently active or disabled, respectively.
+
+The component is styled using the `styled` function from the `@emotion/styled` library, which allows for writing CSS-in-JS. The `StyledTabs` component defines the outer container for the navigation bar, while the `StyledTabsContainer` component defines the container for the individual tabs. The `StyledTab` component defines the individual tab, and the `StyledTabLink` component defines the link within each tab.
+
+The `StyledTabsContainer` component uses CSS grid to lay out the tabs in a row on smaller screens, and in a grid on larger screens. The number of columns in the grid is determined by the `itemCount` prop, which is set to the length of the `links` array.
+
+The `StyledTabLink` component uses CSS to style the link within each tab. The `isActive` prop is used to style the active tab, while the `disabled` prop is used to disable a tab. The `z-index` property is used to ensure that the active tab appears on top of the other tabs.
+
+The `Tabs` component maps over the `links` array to render each tab. If a tab is disabled, it is rendered as a `div` instead of a link. Otherwise, the `Link` component from the `next/link` library is used to create a client-side navigation link.
+
+Overall, the `Tabs` component provides a reusable navigation bar that can be easily customized and integrated into other components in the larger project.
+## Questions: 
+ 1. What is the purpose of this code?
+- This code defines a Tabs component that renders a navigation bar with clickable tabs, where each tab is a link to a different page.
+
+2. What is the role of the `isActive` and `disabled` props in the `StyledTabLink` component?
+- The `isActive` prop determines whether the current tab is active, and if so, applies a different style to it. The `disabled` prop determines whether the tab is disabled and cannot be clicked.
+
+3. What is the purpose of the `mq` function and the `Breakpoint` enum?
+- The `mq` function is a utility function that generates media queries based on the current breakpoint. The `Breakpoint` enum defines the different breakpoints used in the app, such as `mid` and `widish`, which are used to adjust the layout of the tabs depending on the screen size.

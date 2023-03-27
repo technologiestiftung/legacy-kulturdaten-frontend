@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/format.ts)
+
+The code above is a module that exports functions to format JSON data and generate HTML nodes for displaying the formatted data. The module uses the `dompurify` library to sanitize the generated HTML to prevent cross-site scripting (XSS) attacks.
+
+The `JsonParts` enum defines the different parts of a JSON object that can be formatted, including keys, strings, numbers, booleans, null values, and symbols. The `generateSpan` function takes a `JsonParts` value and an optional string value and returns an HTML span element with a class corresponding to the `JsonParts` value and the string value as its content. The `createHtmlNodes` function takes a string value and determines its `JsonParts` type based on its content. It then calls `generateSpan` to create an HTML span element with the appropriate class and returns it as a string.
+
+The `formatJSON` function takes an unknown value and converts it to a JSON string using `JSON.stringify`. It then uses a regular expression to split the string into its different parts and calls `generateSpan` and `createHtmlNodes` to format each part as an HTML span element. Finally, it uses `dompurify` to sanitize the generated HTML and returns it as a string.
+
+This module can be used in the larger project to display JSON data in a formatted and readable way. It can be imported and used in any component that needs to display JSON data, such as a search results page or a details page for a cultural event. For example, a component that displays a list of events could use this module to format the event data as JSON and display it in a table or card format. The sanitized HTML can be safely inserted into the component's template using Angular's `innerHTML` binding.
+## Questions: 
+ 1. What is the purpose of the `formatJSON` function?
+- The `formatJSON` function takes in an unknown content and returns a prettified and sanitized JSON string with HTML nodes.
+
+2. What is the purpose of the `createHtmlNodes` function?
+- The `createHtmlNodes` function takes in a string value and returns an HTML span element with a class based on the type of the value (e.g. string, number, boolean, null).
+
+3. What is the purpose of the `JsonParts` enum?
+- The `JsonParts` enum defines the different types of JSON values (e.g. key, string, number, boolean, null, symbol) as constants with string values.

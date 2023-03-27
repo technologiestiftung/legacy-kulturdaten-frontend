@@ -1,0 +1,24 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/WindowService.tsx)
+
+The code above defines a React context and two hooks that allow for responsive design in the `https://github.com/technologiestiftung/kulturdaten-frontend` project. 
+
+The `WindowContext` is a context object that provides information about the size of the browser window. It has three properties: `innerWidth`, `innerHeight`, and `rendered`. `innerWidth` and `innerHeight` are numbers that represent the width and height of the browser window, respectively. `rendered` is a boolean that indicates whether the context has been rendered or not. 
+
+The `WindowContextProvider` is a component that wraps its children with the `WindowContext.Provider`. It sets the initial values of `innerWidth` and `innerHeight` to the current width and height of the browser window, respectively. It also sets the `--app-height` and `--app-width` CSS variables to the height and width of the browser window, respectively. Finally, it adds an event listener to the `resize` event of the window object that updates the values of `innerWidth` and `innerHeight` whenever the window is resized. 
+
+The `Breakpoint` enum defines five breakpoints that can be used to define different styles for different screen sizes. The `breakpoints` object maps each breakpoint to a number that represents the minimum width of the screen for that breakpoint. 
+
+The `useBreakpoint` hook returns the current breakpoint based on the `innerWidth` property of the `WindowContext`. It uses the `reduce` method to iterate over the `breakpoints` object and find the first breakpoint whose minimum width is less than or equal to `innerWidth`. 
+
+The `useBreakpointOrWider` hook takes a `breakpoint` argument and returns a boolean that indicates whether the screen is at least as wide as the given breakpoint. It uses the `useMemo` hook to memoize the result of the comparison between `innerWidth` and the minimum width of the given breakpoint. 
+
+Overall, this code provides a way to create responsive designs in the `https://github.com/technologiestiftung/kulturdaten-frontend` project by defining breakpoints and using the `useBreakpoint` and `useBreakpointOrWider` hooks to conditionally render different styles based on the size of the browser window.
+## Questions: 
+ 1. What is the purpose of the `WindowContext` and `WindowContextProvider` components?
+- The `WindowContext` component creates a context object that holds information about the inner width and height of the browser window, as well as whether the component has been rendered. The `WindowContextProvider` component provides this context to its children and updates the context values when the window is resized.
+
+2. What is the purpose of the `Breakpoint` enum and `breakpoints` object?
+- The `Breakpoint` enum defines different breakpoints for the browser window width, and the `breakpoints` object maps each breakpoint to a specific pixel value. This is used to determine the current breakpoint based on the inner width of the window.
+
+3. What is the purpose of the `useBreakpoint` and `useBreakpointOrWider` hooks?
+- The `useBreakpoint` hook returns the current breakpoint based on the inner width of the window, while the `useBreakpointOrWider` hook takes a breakpoint as an argument and returns a boolean indicating whether the current breakpoint is equal to or wider than the specified breakpoint. These hooks can be used to conditionally render components based on the size of the browser window.

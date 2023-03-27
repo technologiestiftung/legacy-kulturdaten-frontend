@@ -1,0 +1,37 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/pages/admin/organizers.tsx)
+
+The code above is a Next.js page component that renders an admin organizers page for the Kulturdaten Frontend project. The purpose of this code is to provide a high-level view of the organizers in the system and allow administrators to manage them. 
+
+The code imports two components from the project: `AdminOrganizersPage` and `AppWrapper`. `AdminOrganizersPage` is a custom component that renders the list of organizers and provides functionality for adding, editing, and deleting organizers. `AppWrapper` is another custom component that provides a wrapper for the entire application, including the header and footer.
+
+The `OrganizersPage` component is a functional component that returns the `AppWrapper` component with the `AdminOrganizersPage` component nested inside. This means that when the `OrganizersPage` is rendered, it will display the `AdminOrganizersPage` component within the `AppWrapper` component.
+
+This code is an important part of the Kulturdaten Frontend project because it provides a central location for administrators to manage organizers. By using the `AdminOrganizersPage` component, administrators can easily add, edit, and delete organizers, which is a critical part of the system's functionality. Additionally, by using the `AppWrapper` component, the page has a consistent look and feel with the rest of the application.
+
+Here is an example of how this component might be used in the larger project:
+
+```
+import OrganizersPage from '../pages/admin/organizers';
+
+const AdminDashboard = () => {
+  return (
+    <div>
+      <h1>Admin Dashboard</h1>
+      <OrganizersPage />
+    </div>
+  );
+};
+
+export default AdminDashboard;
+```
+
+In this example, the `OrganizersPage` component is imported and rendered within an `AdminDashboard` component. This allows administrators to access the organizers page from the main dashboard of the application.
+## Questions: 
+ 1. What is the purpose of the `AdminOrganizersPage` component?
+   - The `AdminOrganizersPage` component is a page component for managing organizers in the admin section of the application.
+
+2. What is the `AppWrapper` component used for?
+   - The `AppWrapper` component is a wrapper component that provides a consistent layout and styling for all pages in the application.
+
+3. What is the significance of the `NextPage` type in the `OrganizersPage` component?
+   - The `NextPage` type is a type definition from the Next.js framework that indicates that the `OrganizersPage` component is a page component that can be rendered by the server or the client.

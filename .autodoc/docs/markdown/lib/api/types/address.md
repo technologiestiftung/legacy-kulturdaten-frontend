@@ -1,0 +1,34 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/api/types/address.ts)
+
+The code above defines a TypeScript type called `Address`. This type is used to represent an address object that can be used in the `kulturdaten-frontend` project. 
+
+The `Address` type has three properties: `type`, `id`, and `attributes`. The `type` property is optional and is set to the string value `'address'`. The `id` property is also optional and is set to a number. The `attributes` property is required and contains an object with five properties: `street1`, `street2`, `city`, `zipCode`, and `district`. 
+
+The `Address` type can be used in various parts of the `kulturdaten-frontend` project where an address object is needed. For example, it can be used in the `Venue` type to represent the address of a venue. 
+
+Here is an example of how the `Address` type can be used in the `Venue` type:
+
+```
+export type Venue = {
+  type?: 'venue';
+  id?: number;
+  attributes: {
+    name: string;
+    address: Address;
+    // other venue properties
+  };
+};
+```
+
+In this example, the `Venue` type has an `attributes` property that contains an `address` property of type `Address`. This allows a venue object to have an associated address object. 
+
+Overall, the `Address` type is a useful tool for representing address objects in the `kulturdaten-frontend` project. Its use helps to ensure consistency and clarity in the codebase.
+## Questions: 
+ 1. What is the purpose of this code?
+   This code defines a TypeScript type called `Address` which represents an address with various attributes.
+
+2. What is the significance of the `type` and `id` properties in the `Address` type?
+   The `type` property is optional and specifies the type of the address (e.g. "address"). The `id` property is also optional and represents a unique identifier for the address.
+
+3. What is the purpose of the `district` property in the `Address` type?
+   The `district` property is optional and represents the district or neighborhood of the address.

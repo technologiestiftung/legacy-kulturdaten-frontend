@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/BodyLock.tsx)
+
+The code defines a React component called `BodyLock` and a custom hook called `useBodyLock`. The purpose of these is to lock the body of the webpage in place when certain conditions are met, such as when a modal or overlay is displayed.
+
+The `BodyLock` component takes in three props: `locked`, a boolean indicating whether the body should be locked or not; `windowScrollY`, a number representing the current scroll position of the window; and `setWindowScrollY`, a function to update the scroll position. The component uses the `useEffect` hook to update the body styles when the `locked` prop changes. If `locked` is true, the component sets a timeout to wait for a font flash workaround, then uses `requestAnimationFrame` to update the body styles to fix the position and hide the overflow. If `locked` is false, the component resets the body styles and scrolls to the previous position.
+
+The `useBodyLock` hook takes in an array of boolean conditions and returns an object with three properties: `bodyLock`, a React element of the `BodyLock` component; `locked`, a boolean indicating whether the body is locked or not; and `windowScrollY`, a number representing the current scroll position of the window. The hook uses the `useMemo` hook to determine if any of the conditions are true, and sets `locked` accordingly. It also uses the `useState` hook to initialize `windowScrollY` to the current scroll position of the window.
+
+This code can be used in the larger project to prevent scrolling of the body when a modal or overlay is displayed. The `useBodyLock` hook can be used to conditionally render the `BodyLock` component based on certain conditions, such as whether a modal is open or not. The `BodyLock` component can be customized with additional styles or props as needed.
+## Questions: 
+ 1. What is the purpose of the `BodyLock` component?
+- The `BodyLock` component is used to lock the body of the document in place when a certain condition is met, and unlock it when the condition is no longer met.
+
+2. What is the purpose of the `useBodyLock` hook?
+- The `useBodyLock` hook is used to determine whether the body should be locked or unlocked based on a set of conditions, and returns the `BodyLock` component along with the current lock status and window scroll position.
+
+3. Why is there a double `requestAnimationFrame` used in the `BodyLock` component?
+- The double `requestAnimationFrame` is used to prevent screen flash on slower (iOS) devices when locking the body, by ensuring that the changes to the body's position and overflow are applied in separate animation frames.

@@ -1,0 +1,18 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/select/story.tsx)
+
+This code defines a set of stories for the `Select` component, which is used in the larger `kulturdaten-frontend` project. The `Select` component is a form control that allows users to select from a list of options. The stories are defined using the `Storybook` library, which is a tool for developing and testing UI components in isolation.
+
+The code defines four different stories for the `Select` component, each with a different set of props. The first story, `SelectDefaultStory`, renders three `Select` components with default props, each with a different set of options. The second story, `SelectDisabledStory`, renders two `Select` components with the `disabled` prop set to `true`. The third story, `SelectMinimalStory`, renders nine `Select` components with the `variant` prop set to `minimal`, each with a different set of options and background colors. The fourth story, `SelectBigStory`, renders three `Select` components with the `size` prop set to `big`. The fifth story, `SelectMinimalBigStory`, renders nine `Select` components with both the `variant` and `size` props set.
+
+Each `Select` component is wrapped in a `StyledTestWrapper` component, which is a custom styled component that defines a grid layout with padding and row gap. The `StyledTestWrapper` component takes two optional props, `background` and `color`, which are used to set the background color and text color of the component.
+
+The `Select` component itself is imported from the `.` module, which is a shorthand for the `./index.tsx` file in the same directory. The `Select` component takes several props, including `id`, `label`, `icon`, `variant`, and `size`. The `id` prop is used to set the `id` attribute of the `select` element, which is used for associating the `select` element with a `label` element. The `label` prop is used to render a label element above the `select` element. The `icon` prop is used to render an icon element to the left of the `select` element. The `variant` prop is used to set the visual style of the `select` element, with `default` and `minimal` options available. The `size` prop is used to set the size of the `select` element, with `default` and `big` options available.
+
+Overall, this code provides a set of stories for the `Select` component, which can be used to test and develop the component in isolation. The stories cover a range of use cases and props, allowing developers to see how the component behaves in different scenarios.
+## Questions: 
+ 1. What is the purpose of the `Select` component and what props does it accept?
+- The `Select` component is used to render a dropdown select input. It accepts props such as `id`, `label`, `variant`, `size`, and `icon`.
+2. What is the purpose of the `StyledTestWrapper` component and what props does it accept?
+- The `StyledTestWrapper` component is a styled div used to wrap the `Select` components in the storybook examples. It accepts optional props for `background` and `color`.
+3. What are the different storybook examples provided for the `Select` component?
+- There are four different storybook examples provided for the `Select` component: `SelectDefaultStory`, `SelectDisabledStory`, `SelectMinimalStory`, and `SelectBigStory`. Each example showcases different combinations of props such as `variant` and `size`.

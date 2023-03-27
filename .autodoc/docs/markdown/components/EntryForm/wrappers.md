@@ -1,0 +1,26 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/EntryForm/wrappers.tsx)
+
+The code above defines several styled components that are used in the Kulturdaten Frontend project. 
+
+The `EntryFormWrapper` component is a styled `div` that takes two optional props: `fullWidth` and `reducedVerticalPadding`. It sets the padding and grid layout for the form wrapper, and adjusts the padding and grid layout for larger screens if `Breakpoint.mid` is reached. If `fullWidth` is true, the component does not apply any additional styles. 
+
+The `RequiredInfoText` component is a styled `p` that takes an optional `wrapped` prop. It sets the grid layout and padding for the required info text in the form. If `wrapped` is true, the component does not apply any additional styles. 
+
+The `StyledRequiredInfoText` component is a functional component that renders the `RequiredInfoText` component with the `wrapped` prop set to the value of the `wrapped` prop passed to it. It also uses the `useT` hook from the `i18n` library to translate the text content of the component. 
+
+The `EntryFormContainer` component is a styled `div` that takes two optional props: `fullWidth` and `noPadding`. It sets the width and padding for the form container, and adjusts the grid layout for larger screens if `Breakpoint.mid` is reached. If `fullWidth` is true, the component adjusts the grid layout for even larger screens. 
+
+The `EntryFormContainerColumns` component is a styled `div` that sets the grid layout for the form container columns. It sets the number of columns and the column and row gaps, and adjusts the row gap for larger screens if `Breakpoint.mid` is reached. 
+
+The `StyledEntryFormContainer` component is a functional component that renders the `EntryFormContainer` component with the `noPadding` and `fullWidth` props set to the values of the `noPadding` and `fullWidth` props passed to it. It also wraps the children of the component in a `fieldset` element with a `tabIndex` of 0. 
+
+These components are used throughout the Kulturdaten Frontend project to style and layout form elements. The `StyledRequiredInfoText` component is used to display the required info text for form fields, and the `StyledEntryFormContainer` component is used to wrap form fields in a container with consistent padding and layout.
+## Questions: 
+ 1. What is the purpose of the `EntryFormWrapper` component?
+- The `EntryFormWrapper` component is used to style a form wrapper with padding and grid layout, and can be customized with props for full width and reduced vertical padding.
+
+2. What is the difference between `RequiredInfoText` and `StyledRequiredInfoText` components?
+- `RequiredInfoText` is a styled component for a paragraph element with conditional padding and grid layout, while `StyledRequiredInfoText` is a functional component that renders `RequiredInfoText` with a translated text prop.
+
+3. What is the purpose of the `StyledEntryFormContainer` component?
+- The `StyledEntryFormContainer` component is used to wrap form fields with a fieldset element and apply padding and grid layout, and can be customized with props for no padding and full width.

@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/useOrganizer.tsx)
+
+The code above is a collection of React hooks that are used to manage the active organizer in the Kulturdaten-frontend project. The hooks are used to retrieve and set the active organizer ID, as well as to handle the active organizer when a user logs in or out.
+
+The `useOrganizerId` hook retrieves the active organizer ID from the `NavigationContext` and sets it based on the value of a cookie or a query parameter in the URL. If the user is in admin mode, the active organizer ID is set to the admin active organizer ID. The hook returns the active organizer ID.
+
+The `useSetOrganizerId` hook sets the active organizer ID in the `NavigationContext` and in a cookie. If the organizer ID is undefined or the default organizer ID, the cookie is deleted and the active organizer ID is set to the default organizer ID.
+
+The `useOrganizer` hook retrieves the organizer data for the active organizer using the `useEntry` hook from the `categories` module. If an error occurs while retrieving the organizer data, the hook sets the `hasError` state to true and returns an error message. Otherwise, the hook returns the organizer data.
+
+The `useHandleActiveOrganizer` hook is used to handle the active organizer when a user logs in or out. If the user is logged in and not in admin mode, the hook checks if the user has access to the active organizer. If the user does not have access to the active organizer, the hook sets the active organizer ID to the first organizer ID in the user's list of organizers and redirects the user to the dashboard page for that organizer. If the user has no organizers, the hook sets the active organizer ID to the default organizer ID and redirects the user to the dashboard page for the default organizer.
+
+Overall, these hooks are used to manage the active organizer in the Kulturdaten-frontend project. They are used to retrieve and set the active organizer ID, retrieve the organizer data for the active organizer, and handle the active organizer when a user logs in or out.
+## Questions: 
+ 1. What is the purpose of the `useOrganizer` hook?
+- The `useOrganizer` hook is used to retrieve the organizer data based on the currently active organizer ID.
+
+2. What is the significance of the `activeOrganizerCookieName` variable?
+- The `activeOrganizerCookieName` variable is used to store the name of the cookie that holds the active organizer ID. If the `publicRuntimeConfig` object is defined, it retrieves the value of `activeOrganizerCookieName` from there, otherwise it defaults to `'ACTIVE_ORGANIZER_ID'`.
+
+3. What is the role of the `useHandleActiveOrganizer` hook?
+- The `useHandleActiveOrganizer` hook is responsible for handling the active organizer ID based on the user's authentication status and the organizer ID in the URL query parameter. It redirects the user to the appropriate dashboard page based on their access rights.

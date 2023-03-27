@@ -1,0 +1,16 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/next-env.d.ts)
+
+This file is a configuration file for the Next.js framework used in the Kulturdaten-frontend project. It includes two reference types, "next" and "next/image-types/global", which are used to provide type definitions for the Next.js framework and its image handling capabilities. 
+
+The file also includes a note stating that it should not be edited, and provides a link to the Next.js documentation for more information on how to use TypeScript with the framework. 
+
+Overall, this file serves as a foundational piece of the Kulturdaten-frontend project, ensuring that the Next.js framework is properly configured and providing type definitions for the project's codebase. While it may not contain any specific functionality or code examples, it is an important part of the project's infrastructure and helps to ensure that the codebase is maintainable and scalable.
+## Questions: 
+ 1. What is the purpose of the "reference types" comments at the top of the file?
+   - These comments are used to reference external type definitions for the Next.js framework and its image types.
+
+2. Why is there a note stating that this file should not be edited?
+   - This note is included to indicate that any changes to this file could potentially cause issues with the Next.js framework and its TypeScript integration.
+
+3. Where can I find more information about using TypeScript with Next.js?
+   - The comment provides a link to the Next.js documentation, which offers more information about using TypeScript with the framework.

@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/DateList/index.tsx)
+
+The code defines a React component called `DateList` that renders a table of dates. The component takes in several props, including an array of dates, a boolean indicating whether the dates are editable, and functions to handle changes to the dates and to delete dates. 
+
+The component renders a table with a header row and a body containing one row for each date. The header row contains column titles for the date fields, including "From", "To", "Title", and "Status". The body rows contain the date information, including the start and end dates, the title of the event, and the status of the date. 
+
+The component also includes a checkbox for each date that allows the user to select multiple dates for deletion. The component also includes sorting functionality for the "From" and "To" columns, which can be activated by clicking on the column header. 
+
+The `useDateList` hook is also defined, which returns the `DateList` component along with functions to get and set the currently checked date IDs. 
+
+Overall, this component is used to display and manage a list of dates for events in the larger project.
+## Questions: 
+ 1. What is the purpose of this code file?
+- This code file contains the implementation of a React component called `DateList` which renders a list of dates with various details and options for editing and deleting.
+
+2. What are the dependencies of this code file?
+- This code file imports several modules from external libraries such as `@emotion/styled`, `react`, and `react-feather`, as well as several modules from other files within the same project.
+
+3. What are some of the props that can be passed to the `DateList` component?
+- Some of the props that can be passed to the `DateList` component include `dates` (an array of date objects to be rendered), `editable` (a boolean indicating whether the list is editable or not), `onChange` (a function to be called when a date is changed), `checkedDateIds` and `setCheckedDateIds` (an array of IDs of checked dates and a function to set the checked IDs, respectively), `offerTitles` (an object containing localized titles for offers), `onDelete` (a function to be called when a date is deleted), and `fromSort` and `endSort` (objects containing information about sorting options for the "from" and "to" dates, respectively).

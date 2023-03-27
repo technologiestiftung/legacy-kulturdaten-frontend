@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/Admin/AdminContext.tsx)
+
+The code defines an AdminContextProvider component that provides an AdminContext to its children. The AdminContext contains information about whether the admin mode is active, the active organizer ID, and methods to set these values. The component also defines a hook called useAdminMode that returns the admin mode status, the active organizer ID, and methods to start and quit the admin mode.
+
+The AdminContextProvider component uses the useUser and useLocale hooks to get the user's authentication status and the current locale. It also uses the useRouter hook to get the current route and push new routes when the admin mode is started or quit.
+
+The setActiveOrganizerId method sets the active organizer ID and saves it in a cookie with a name specified in the publicRuntimeConfig object. If the organizer ID is undefined, the cookie is deleted. The useEffect hook is used to check if the cookie exists and the admin mode is not active, then it sets the admin mode to active and sets the active organizer ID from the cookie. It also pushes a new route to the dashboard with the organizer ID as a query parameter.
+
+The useAdminMode hook returns the admin mode status, the active organizer ID, and methods to start and quit the admin mode. The start method sets the admin mode to active, sets the active organizer ID, and pushes a new route to the dashboard with the organizer ID as a query parameter. The quit method sets the admin mode to inactive, sets the active organizer ID to undefined, and pushes a new route to the admin page.
+
+This code is used to manage the admin mode and the active organizer ID in the Kulturdaten frontend project. The AdminContextProvider component is used to wrap components that need access to the admin mode status and the active organizer ID. The useAdminMode hook is used to get the admin mode status and the active organizer ID and to start and quit the admin mode. The setActiveOrganizerId method is used to set the active organizer ID and save it in a cookie.
+## Questions: 
+ 1. What is the purpose of the `AdminContext` and how is it used?
+- The `AdminContext` is used to manage the state of the admin mode and the active organizer ID. It is created using `React.createContext` and is used to provide the state and functions to its children components using `AdminContext.Provider`.
+
+2. What is the purpose of the `useAdminMode` hook and what does it return?
+- The `useAdminMode` hook is used to access the state and functions provided by the `AdminContext`. It returns an object with the `adminModeActive` boolean, the `activeOrganizerId` string, and the `start` and `quit` functions to respectively start and quit the admin mode.
+
+3. What is the purpose of the `AdminContextProvider` component and what props does it take?
+- The `AdminContextProvider` component is used to wrap its children components and provide the `AdminContext` state and functions to them. It takes a single prop `children` which is a `ReactNode` representing the children components to be wrapped.

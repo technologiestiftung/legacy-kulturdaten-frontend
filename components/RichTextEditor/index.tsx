@@ -60,21 +60,21 @@ const RTEContentWrapper = styled.div`
       font-size: var(--font-size-600);
       line-height: var(--line-height-600);
       font-weight: 700;
-    },
+    };
     h2 {
       font-size: var(--font-size-400);
       line-height: var(--line-height-400);
       font-weight: 700;
-    },
+    };
     h3 {
       font-size: var(--font-size-300);
       line-height: var(--line-height-300);
       font-weight: 700;
-    },
+    };
     strong {
       font-weight: 700;
-    },
-    em {font-style: italic;},
+    };
+    em {font-style: italic;};
 
     p.is-editor-empty:first-of-type::before {
       content: attr(data-placeholder);

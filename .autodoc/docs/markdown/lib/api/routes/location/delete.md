@@ -1,0 +1,20 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/lib/api/routes/location/delete.ts)
+
+The code defines an interface and a factory function for making API calls to delete a location. It imports several modules from the project's codebase, including `apiRoutes`, `makeBearer`, `ApiCall`, and `ApiRoute`. It also imports the `Location` type from the `types/location` module.
+
+The `LocationDelete` interface extends the `ApiCall` interface and defines the shape of the request and response objects for a location deletion API call. The request object includes a `route` property that is generated using the `apiRoutes.locationDelete` function, which takes an `id` parameter and returns an `ApiRoute` object. The request also includes a `method` property set to `'DELETE'`, a `headers` object with an `Authorization` property set to a token generated using the `makeBearer` function, and a `body` property set to a `Location` object or `null`.
+
+The response object includes a `status` property set to `200` and a `body` property with a `data` property set to `null` and a `meta` property with a `message` property set to `'Location deleted successfully'`.
+
+The `locationDeleteFactory` function takes a `token` parameter and a `query` parameter with an `id` property and an `entry` property set to a `Location` object. It returns an object that conforms to the `LocationDelete` interface, with the `request` object populated using the `apiRoutes.locationDelete` function and the `headers` object populated using the `makeBearer` function. The `body` property is set to the `entry` object passed in the `query` parameter.
+
+This code can be used in the larger project to make API calls to delete a location. The `locationDeleteFactory` function can be called with a token and a query object containing the ID of the location to be deleted and a `Location` object representing the location to be deleted. The resulting object can then be passed to a function that makes the API call and handles the response.
+## Questions: 
+ 1. What is the purpose of this code?
+   This code defines an interface and a factory function for making API calls to delete a location using a DELETE request with authorization headers and a JSON body.
+
+2. What dependencies are required for this code to work?
+   This code imports several modules from the parent directory, including `apiRoutes`, `makeBearer`, `ApiCall`, and `ApiRoute`, as well as a `Location` type from a `types` directory.
+
+3. What is the expected response from the API call made by `locationDeleteFactory`?
+   The expected response is a 200 status code with a JSON body containing a `data` property set to `null` and a `meta` property with a `message` property set to `'Location deleted successfully'`.

@@ -1,0 +1,22 @@
+[View code on GitHub](https://github.com/technologiestiftung/kulturdaten-frontend/blob/master/components/Confirm/ConfirmContext.tsx)
+
+The code defines a React context provider for a confirmation dialog screen. The context provider is used to manage the state of the confirmation dialog screen and make it available to child components that need to display the dialog.
+
+The `ConfirmContext` type defines the shape of the context object, which has a single property called `confirmScreen`. The `confirmScreen` property is an object that contains several state variables and functions that are used to manage the confirmation dialog screen. These include `render`, `visible`, `confirmButtonText`, `onConfirm`, `title`, `message`, and `condition`. Each of these variables has a corresponding setter function that can be used to update its value.
+
+The `ConfirmContextProvider` component is a React functional component that takes a `children` prop and returns a `ConfirmContext.Provider` component. The `ConfirmContext.Provider` component wraps the `children` prop and makes the `confirmScreen` object available to all child components that consume the context.
+
+The `ConfirmContextProvider` component also defines several state variables using the `useState` hook. These variables are used to manage the state of the confirmation dialog screen. The `useRouter` hook is used to get access to the Next.js router object, which is used to listen for route changes and close the confirmation dialog screen when the user navigates away from the current page.
+
+The `useKeyboard` hook is used to listen for the `Escape` key and close the confirmation dialog screen when the user presses the key. The `useEffect` hook is used to register and unregister the `handleRouteChange` function as a listener for the `routeChangeStart` event.
+
+The `ConfirmContextProvider` component returns the `ConfirmContext.Provider` component, which wraps the `children` prop and renders the `ConfirmScreen` component if the `render` state variable is `true`. The `ConfirmScreen` component is responsible for rendering the confirmation dialog screen and handling user input.
+
+Overall, this code provides a way to manage the state of a confirmation dialog screen in a React application and make it available to child components that need to display the dialog. It also provides functionality for closing the dialog screen when the user navigates away from the current page or presses the `Escape` key.
+## Questions: 
+ 1. What is the purpose of the `ConfirmContext` and what does it contain?
+- The `ConfirmContext` is a React context that contains a `confirmScreen` object with various properties and methods related to displaying a confirmation screen.
+2. What is the purpose of the `ConfirmContextProvider` component?
+- The `ConfirmContextProvider` component is a wrapper component that provides the `ConfirmContext` to its children components via the `React.createContext` API.
+3. What is the purpose of the `useKeyboard` and `useEffect` hooks in this code?
+- The `useKeyboard` hook listens for a specific keyboard event and performs an action when it occurs, while the `useEffect` hook sets up and cleans up an event listener for a specific router event.
