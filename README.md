@@ -1,5 +1,15 @@
 ![](https://img.shields.io/badge/Built%20with%20%E2%9D%A4%EF%B8%8F-at%20Technologiestiftung%20Berlin-blue) ![Beta](https://github.com/technologiestiftung/kulturdaten-api/workflows/Deploy%3A%20Beta/badge.svg) ![Live](https://github.com/technologiestiftung/kulturdaten-api/workflows/Deploy%3A%20Live/badge.svg)
 
+<br />
+<br />
+
+# ⚠️ This repository is not maintained anymore. The current version of the kulturdaten.berlin webapp can be found [here](https://github.com/technologiestiftung/kulturdaten-webapp)
+
+<br />
+<br />
+<br />
+<br />
+
 # Kulturdaten.Berlin Frontend
 
 The frontend for the Kulturdaten.Berlin API.
